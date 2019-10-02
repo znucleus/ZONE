@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="header :: no-links-header(~{::meta},~{::title})">
+    <!-- csrf -->
+    <meta name="_csrf" content="" th:content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" content="" th:content="${_csrf.headerName}"/>
+    <title th:text="'登录-' + #{ web.title}">ZHE</title>
+</head>
+<body>
+
+<div class="account-pages"></div>
+<div class="clearfix"></div>
+<div class="wrapper-page">
+
+    <div class="account-bg">
+        <div class="card-box mb-0">
+            <div class="text-center m-t-20">
+                <a href="index.html" class="logo">
+                    <i class="zmdi zmdi-group-work icon-c-logo"></i>
+                    <span th:text="#{web.app.name}"></span>
+                </a>
+            </div>
+            <div class="m-t-10 p-20">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h6 class="text-muted text-uppercase m-b-0 m-t-0">登 录</h6>
+                    </div>
+                </div>
+                <form class="m-t-20" action="index.html">
+
+                    <div class="form-group row">
+                        <div class="col-12">
+                            <input class="form-control" placeholder="账号/邮箱/手机号" name="username" id="username" autofocus="autofocus">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-12">
+                            <input class="form-control" name="password" id="password" type="password" placeholder="密码">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="form-group text-danger" id="globalError"></div>
+
+                    <div class="form-group text-center row m-t-10">
+                        <div class="col-12">
+                            <button class="btn btn-success btn-block waves-effect waves-light" type="button" id="login">登 录</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group row m-t-30 mb-0">
+                        <div class="col-12">
+                            <a href="#" th:href="@{/forget_password}" class="text-muted"><i class="fa fa-lock m-r-5"></i> 忘记密码？</a>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <!-- end card-box-->
+
+    <div class="m-t-20">
+        <div class="text-center">
+            <p class="text-white">还没有账号吗？ <a href="" data-toggle="modal" data-target="#modalRegister" class="text-white m-l-5"><b>注册</b></a>
+                <a href="" class="text-white m-l-5" data-toggle="modal" data-target="#modalQuestion">问题反馈</a>
+            </p>
+        </div>
+    </div>
+
+</div>
+<!-- end wrapper page -->
+
+<!-- 注册类型 -->
+<div id="modalRegister" class="modal fade">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">您想注册：</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <button type="button" class="btn btn-outline-primary btn-block" id="student">学生</button>
+                <button type="button" class="btn btn-outline-primary btn-block" id="staff">教职工</button>
+            </div>
+        </div>
+    </div><!-- modal-dialog -->
+</div><!-- modal -->
+
+<!-- 问题反馈 -->
+<div id="modalQuestion" class="modal fade">
+    <div class="modal-dialog modal-dialog-vertical-center" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">问题反馈</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="feedbackForm">
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="realName" id="feedbackRealName"
+                               placeholder="您的姓名">
+                        <div class="invalid-feedback"></div>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="email" name="userEmail" id="feedbackUserEmail"
+                               placeholder="您的邮箱">
+                        <div class="invalid-feedback"></div>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="simpleDes" id="simpleDes" placeholder="简单描述">
+                        <div class="invalid-feedback"></div>
+                    </div>
+                    <div class="form-group">
+                        <textarea rows="3" class="form-control" name="detailDes" id="detailDes"
+                                  placeholder="详细描述"></textarea>
+                        <div class="invalid-feedback"></div>
+                    </div>
+                    <div class="form-group text-danger" id="feedbackError"></div>
+                    <div class="form-group tx-12">请您耐心等待，我们稍后会及时联系您，若处理超时，您还可以加入QQ群:159318834，寻求帮助。</div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal">关闭
+                </button>
+                <button type="button" class="btn btn-primary"
+                        id="feedbackSave">提交
+                </button>
+            </div>
+        </div>
+    </div><!-- modal-dialog -->
+</div><!-- modal -->
+<script src="webjarsjs" th:src="@{/webjarsjs}"></script>
+<script src="webjars/requirejs/require.min.js" th:src="@{/webjars/requirejs/require.min.js}"
+        data-main="/login"></script>
+<script th:inline="javascript">
+    var web_path = /*[[${#httpServletRequest.getScheme()+'://'+#httpServletRequest.getServerName()+':'+#httpServletRequest.getServerPort()+#httpServletRequest.getContextPath()}]]*/ '';
+    require.config({
+        baseUrl: web_path + "/js/login",
+        waitSeconds: 0
+    });
+</script>
+</body>
+</html>

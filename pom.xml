@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>top.zbeboy.zone</groupId>
+    <artifactId>ZONE</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <name>The Parent Project</name>
+    <url>https://www.zbeboy.top</url>
+    <licenses>
+        <license>
+            <name>MIT</name>
+            <url>https://github.com/zbeboy/ZONE/blob/dev/LICENSE</url>
+            <distribution>repo</distribution>
+            <comments>MIT license</comments>
+        </license>
+    </licenses>
+    <organization>
+        <name>Z.核 Team</name>
+        <url>https://www.zbeboy.top</url>
+    </organization>
+
+    <!-- Inherit defaults from Spring Boot -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.1.8.RELEASE</version>
+    </parent>
+
+    <properties>
+        <org.springframework.webflow.version>2.0.5.RELEASE</org.springframework.webflow.version>
+        <spring-security-oauth2.version>2.3.5.RELEASE</spring-security-oauth2.version>
+
+        <org.apache.poi.version>4.0.0</org.apache.poi.version>
+        <ooxml-schemas.version>1.4</ooxml-schemas.version>
+        <org.dom4j.version>2.1.1</org.dom4j.version>
+        <xmlbeans.version>3.0.2</xmlbeans.version>
+
+        <javax.inject.version>1</javax.inject.version>
+        <fastJson.version>1.2.58</fastJson.version>
+        <sendcloud4j.version>0.0.5</sendcloud4j.version>
+        <jsoup.version>1.12.1</jsoup.version>
+        <httpclient.version>4.5.2</httpclient.version>
+
+        <commons-io.verson>2.6</commons-io.verson>
+        <commons-collections4.version>4.2</commons-collections4.version>
+        <commons-compress.version>1.18</commons-compress.version>
+
+        <!-- webjars properties -->
+        <webjars.locator.version>0.34</webjars.locator.version>
+        <webjars.jquery.version>3.3.1</webjars.jquery.version>
+        <webjars.requirejs.version>2.3.6</webjars.requirejs.version>
+        <webjars.requirejs-domready.version>2.0.1-2</webjars.requirejs-domready.version>
+        <webjars.requirejs-text.version>2.0.15</webjars.requirejs-text.version>
+        <webjars.requirejs-css.version>0.1.10</webjars.requirejs-css.version>
+        <webjars.handlebars.version>4.0.11-1</webjars.handlebars.version>
+        <webjars.messenger.version>1.5.0</webjars.messenger.version>
+        <webjars.lodash.version>4.17.4</webjars.lodash.version>
+    </properties>
+
+    <!-- Add typical dependencies for a web application -->
+    <dependencies>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-undertow</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j2</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security.oauth</groupId>
+            <artifactId>spring-security-oauth2</artifactId>
+            <version>${spring-security-oauth2.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-springsecurity5</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-rest</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.session</groupId>
+            <artifactId>spring-session-data-redis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-messaging</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.webflow</groupId>
+            <artifactId>org.springframework.js</artifactId>
+            <version>${org.springframework.webflow.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+
+        <!-- jooq -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jooq</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-codegen</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Developer tools -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+        </dependency>
+
+        <!-- joda time -->
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+        </dependency>
+
+        <!-- alibaba fastjson -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastJson.version}</version>
+        </dependency>
+
+        <!-- jsoup -->
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>${jsoup.version}</version>
+        </dependency>
+
+        <!-- inject -->
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>${javax.inject.version}</version>
+        </dependency>
+
+        <!-- commons-codec -->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+        </dependency>
+
+        <!-- commons-collections -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>${commons-collections4.version}</version>
+        </dependency>
+
+
+        <!-- dom4j -->
+        <dependency>
+            <groupId>org.dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+            <version>${org.dom4j.version}</version>
+        </dependency>
+
+        <!-- poi -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>${org.apache.poi.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>ooxml-schemas</artifactId>
+            <version>${ooxml-schemas.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>${org.apache.poi.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-scratchpad</artifactId>
+            <version>${org.apache.poi.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-excelant</artifactId>
+            <version>${org.apache.poi.version}</version>
+        </dependency>
+
+        <!-- xmlbeans -->
+        <dependency>
+            <groupId>org.apache.xmlbeans</groupId>
+            <artifactId>xmlbeans</artifactId>
+            <version>${xmlbeans.version}</version>
+        </dependency>
+
+        <!-- httpclient -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${httpclient.version}</version>
+        </dependency>
+
+        <!-- compress -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>${commons-compress.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.verson}</version>
+        </dependency>
+
+        <!-- sendCloud mail -->
+        <dependency>
+            <groupId>io.jstack</groupId>
+            <artifactId>sendcloud4j</artifactId>
+            <version>${sendcloud4j.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>jquery</artifactId>
+            <version>${webjars.jquery.version}</version>
+        </dependency>
+
+        <!-- lodash -->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>lodash</artifactId>
+            <version>${webjars.lodash.version}</version>
+        </dependency>
+
+        <!-- messenger -->
+        <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>messenger</artifactId>
+            <version>${webjars.messenger.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.webjars.bower</groupId>
+                    <artifactId>jquery</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- webjars requirejs -->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>requirejs</artifactId>
+            <version>${webjars.requirejs.version}</version>
+        </dependency>
+
+        <!-- requirejs domready -->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>requirejs-domready</artifactId>
+            <version>${webjars.requirejs-domready.version}</version>
+        </dependency>
+
+        <!-- requirejs text -->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>requirejs-text</artifactId>
+            <version>${webjars.requirejs-text.version}</version>
+        </dependency>
+
+        <!-- requirejs css -->
+        <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>require-css</artifactId>
+            <version>${webjars.requirejs-css.version}</version>
+        </dependency>
+
+        <!-- webjars handlebars -->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>handlebars</artifactId>
+            <version>${webjars.handlebars.version}</version>
+        </dependency>
+
+        <!-- use it to automatically resolve the version of any WebJar assets for you -->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>webjars-locator</artifactId>
+            <version>${webjars.locator.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-compress</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <configuration>
+                            <executable>true</executable>
+                            <arguments>
+                                <argument>--spring.profiles.active=secrecy,dev</argument>
+                            </arguments>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.jooq</groupId>
+                        <artifactId>jooq-codegen-maven</artifactId>
+                        <!-- The jOOQ code generation plugin is also executed in the generate-sources phase, prior to compilation -->
+                        <executions>
+                            <execution>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>generate</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <!-- This is a minimal working configuration. See the manual's section about the code generator for more details -->
+                        <configuration>
+                            <jdbc>
+                                <driver>com.mysql.cj.jdbc.Driver</driver>
+                                <url>jdbc:mysql://localhost/zone?useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false&amp;serverTimezone=GMT%2B8</url>
+                                <user>root</user>
+                                <password>123456</password>
+                            </jdbc>
+                            <generator>
+                                <generate>
+                                    <daos>true</daos>
+                                    <validationAnnotations>true</validationAnnotations>
+                                    <springAnnotations>true</springAnnotations>
+                                </generate>
+                                <database>
+                                    <name>org.jooq.meta.mysql.MySQLDatabase</name>
+                                    <includes>.*</includes>
+                                    <excludes>
+                                        flyway_schema_history
+                                    </excludes>
+                                    <inputSchema>zhe</inputSchema>
+                                </database>
+                                <target>
+                                    <packageName>top.zbeboy.zone.domain</packageName>
+                                    <directory>${basedir}/src/main/java</directory>
+                                </target>
+                            </generator>
+                        </configuration>
+                    </plugin>
+
+                    <!-- support git info -->
+                    <plugin>
+                        <groupId>pl.project13.maven</groupId>
+                        <artifactId>git-commit-id-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>prod</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <configuration>
+                            <executable>true</executable>
+                            <arguments>
+                                <argument>--spring.profiles.active=secrecy,prod</argument>
+                            </arguments>
+                        </configuration>
+                    </plugin>
+
+                    <!-- YUI Compressor Maven压缩插件 -->
+                    <plugin>
+                        <groupId>net.alchim31.maven</groupId>
+                        <artifactId>yuicompressor-maven-plugin</artifactId>
+                        <version>1.5.1</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>jslint</goal>
+                                    <goal>compress</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <encoding>UTF-8</encoding>
+                            <nosuffix>true</nosuffix>
+                            <force>true</force>
+                            <jswarn>false</jswarn>
+                            <excludes>
+                                <exclude>**/*.min.js</exclude>
+                                <exclude>**/*.min.css</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+
+                    <!-- support git info -->
+                    <plugin>
+                        <groupId>pl.project13.maven</groupId>
+                        <artifactId>git-commit-id-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <repositories>
+        <repository>
+            <id>spring-milestone</id>
+            <url>https://repo.spring.io/libs-release</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-milestone</id>
+            <url>https://repo.spring.io/libs-release</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+</project>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="header(metas,title,links)">
+    <!-- Common metas -->
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <!-- 360 browser default use webkit -->
+    <meta name="renderer" content="webkit"/>
+    <meta name="keywords" content="" th:content="#{web.meta.keywords}"/>
+    <meta name="description" content="" th:content="#{web.meta.description}"/>
+    <meta name="author" content="" th:content="#{web.meta.author}"/>
+    <!--/* Per-page placeholder for additional metas */-->
+    <th:block th:replace="${metas}" />
+    <title th:replace="${title}">ZHE</title>
+    <!-- Common styles and scripts -->
+    <!-- favicon -->
+    <link rel="icon" href="icon/favicon.ico" th:href="@{/icon/favicon.ico}"/>
+
+    <!-- Bootstrap CSS -->
+    <link href="assets/css/bootstrap.min.css" th:href="@{/assets/css/bootstrap.min.css}" rel="stylesheet" type="text/css" />
+
+    <!-- App CSS -->
+    <link href="assets/css/style.css" th:href="@{/assets/css/style.css}" rel="stylesheet" type="text/css" />
+
+    <!-- Modernizr js -->
+    <script src="assets/js/modernizr.min.js" th:src="@{/assets/js/modernizr.min.js}"></script>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js" th:src="@{/plugin/html5shiv/html5shiv.min.js}"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js" th:src="@{/plugin/respond/respond.min.js}"></script>
+    <![endif]-->
+    <!--/* Per-page placeholder for additional links */-->
+    <th:block th:replace="${links}" />
+</head>
+<head th:fragment="no-metas-header(title,links)">
+    <!-- Common metas -->
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <!-- 360 browser default use webkit -->
+    <meta name="renderer" content="webkit"/>
+    <meta name="keywords" content="" th:content="#{web.meta.keywords}"/>
+    <meta name="description" content="" th:content="#{web.meta.description}"/>
+    <meta name="author" content="" th:content="#{web.meta.author}"/>
+    <title th:replace="${title}">ZHE</title>
+    <!-- Common styles and scripts -->
+    <!-- favicon -->
+    <link rel="icon" href="icon/favicon.ico" th:href="@{/icon/favicon.ico}"/>
+    <!-- Bootstrap CSS -->
+    <link href="assets/css/bootstrap.min.css" th:href="@{/assets/css/bootstrap.min.css}" rel="stylesheet" type="text/css" />
+
+    <!-- App CSS -->
+    <link href="assets/css/style.css" th:href="@{/assets/css/style.css}" rel="stylesheet" type="text/css" />
+
+    <!-- Modernizr js -->
+    <script src="assets/js/modernizr.min.js" th:src="@{/assets/js/modernizr.min.js}"></script>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js" th:src="@{/plugin/html5shiv/html5shiv.min.js}"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js" th:src="@{/plugin/respond/respond.min.js}"></script>
+    <![endif]-->
+    <!--/* Per-page placeholder for additional links */-->
+    <th:block th:replace="${links}" />
+</head>
+<head th:fragment="no-links-header(metas,title)">
+    <!-- Common metas -->
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <!-- 360 browser default use webkit -->
+    <meta name="renderer" content="webkit"/>
+    <meta name="keywords" content="" th:content="#{web.meta.keywords}"/>
+    <meta name="description" content="" th:content="#{web.meta.description}"/>
+    <meta name="author" content="" th:content="#{web.meta.author}"/>
+    <!--/* Per-page placeholder for additional metas */-->
+    <th:block th:replace="${metas}" />
+    <title th:replace="${title}">ZHE</title>
+    <!-- Common styles and scripts -->
+    <!-- favicon -->
+    <link rel="icon" href="icon/favicon.ico" th:href="@{/icon/favicon.ico}"/>
+
+    <!-- Bootstrap CSS -->
+    <link href="assets/css/bootstrap.min.css" th:href="@{/assets/css/bootstrap.min.css}" rel="stylesheet" type="text/css" />
+
+    <!-- App CSS -->
+    <link href="assets/css/style.css" th:href="@{/assets/css/style.css}" rel="stylesheet" type="text/css" />
+
+    <!-- Modernizr js -->
+    <script src="assets/js/modernizr.min.js" th:src="@{/assets/js/modernizr.min.js}"></script>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js" th:src="@{/plugin/html5shiv/html5shiv.min.js}"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js" th:src="@{/plugin/respond/respond.min.js}"></script>
+    <![endif]-->
+</head>
+<head th:fragment="no-links-metas-header(title)">
+    <!-- Common metas -->
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <!-- 360 browser default use webkit -->
+    <meta name="renderer" content="webkit"/>
+    <meta name="keywords" content="" th:content="#{web.meta.keywords}"/>
+    <meta name="description" content="" th:content="#{web.meta.description}"/>
+    <meta name="author" content="" th:content="#{web.meta.author}"/>
+    <!--/* Per-page placeholder for additional metas */-->
+    <title th:replace="${title}">ZHE</title>
+    <!-- Common styles and scripts -->
+    <!-- favicon -->
+    <link rel="icon" href="icon/favicon.ico" th:href="@{/icon/favicon.ico}"/>
+
+    <!-- Bootstrap CSS -->
+    <link href="assets/css/bootstrap.min.css" th:href="@{/assets/css/bootstrap.min.css}" rel="stylesheet" type="text/css" />
+
+    <!-- App CSS -->
+    <link href="assets/css/style.css" th:href="@{/assets/css/style.css}" rel="stylesheet" type="text/css" />
+
+    <!-- Modernizr js -->
+    <script src="assets/js/modernizr.min.js" th:src="@{/assets/js/modernizr.min.js}"></script>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js" th:src="@{/plugin/html5shiv/html5shiv.min.js}"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js" th:src="@{/plugin/respond/respond.min.js}"></script>
+    <![endif]-->
+</head>
+<body></body>
+</html>

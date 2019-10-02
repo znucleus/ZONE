@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Footer</title>
+</head>
+<body>
+<footer class="footer" th:fragment="footer">
+    <a target="_blank" th:href="#{web.foot.gov.href}"
+       style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img
+            th:src="@{/images/beian_logo.png}" style="float:left;"/>
+        <p style="float:left;height:20px;line-height:20px;margin: 0 0 0 5px; "
+           th:text="#{web.foot.gov.information}"></p></a>
+    <p style="font-size: smaller;"><span>&copy;</span> 2016-<span
+            th:text="${#calendars.format(#calendars.createNow(), 'yyyy')}"></span> <span
+            th:utext="#{web.foot.signature}"></span> <span
+                                                           th:text="#{web.foot.filing.information}"></span>
+    </p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper" class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <h4 class="page-title">设置</h4>
+            </div>
+        </div>
+    </div>
+    <!-- end row -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card-box">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <input type="file" class="dropify" name="file" th:data-default-file="@{${avatar}}"
+                               data-max-file-size="1M" data-allowed-file-extensions="jpg png gif jpeg bmp"
+                               data-max-width="500"
+                               data-max-height="500"/>
+                        <input type="hidden" id="avatar" th:value="${avatar}"/>
+                        <div class="col-12 text-danger text-center" id="globalAvatarError">
+                        </div>
+                        <div class="col-12 text-center m-t-10">
+                            <button type="button" class="btn btn-primary waves-effect waves-light" id="updateAvatar">
+                                更新
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <h4 class="header-title m-t-0"><strong>基本资料</strong></h4>
+                        <hr/>
+                        <table class="table table-borderless table-striped mb-0">
+                            <tbody>
+                            <tr>
+                                <td width="35%">账号</td>
+                                <td width="65%"><a href="#" id="username"
+                                                   th:data-pk="${username}" th:text="${username}"></a></td>
+                            </tr>
+                            <tr>
+                                <td width="35%">姓名</td>
+                                <td width="65%"><a href="#" id="realName"
+                                                   th:data-pk="${username}" th:text="${realName}"></a></td>
+                            </tr>
+                            <tr>
+                                <td width="35%">邮箱</td>
+                                <td width="65%"><a href="#" id="email" th:data-pk="${username}" th:text="${email}"></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="35%">手机号</td>
+                                <td width="65%"><a href="javascript:" data-toggle="modal" data-target="#mobileModal"
+                                                   th:text="${mobile}"></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="35%">身份证号</td>
+                                <td width="65%"><a href="#" id="idCard" th:data-pk="${username}"
+                                                   th:text="${idCard}"></a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <h4 class="header-title m-t-20" th:if="${isStudent == 1 || isStaff == 1}"><strong>学校</strong>
+                        </h4>
+                        <hr th:if="${isStudent == 1 || isStaff == 1}"/>
+                        <table class="table table-borderless table-striped mb-0"
+                               th:if="${isStudent == 1 || isStaff == 1}">
+                            <tbody>
+                            <tr th:if="${isStudent == 1}">
+                                <td><a href="javascript:" id="editSchool"
+                                       th:text="${student.schoolName + '-' + student.collegeName + '-' + student.departmentName + '-' + student.scienceName + '-' + student.grade + '-' + student.organizeName}"></a>
+                                    <input type="hidden" id="collegeId" th:value="${student.collegeId}"/>
+                                    <input type="hidden" id="departmentId" th:value="${student.departmentId}"/>
+                                    <input type="hidden" id="scienceId" th:value="${student.scienceId}"/>
+                                    <input type="hidden" id="gradeId" th:value="${student.gradeId}"/>
+                                    <input type="hidden" id="organizeId" th:value="${student.organizeId}"/>
+                                </td>
+                            </tr>
+                            <tr th:if="${isStaff == 1}">
+                                <td><a href="javascript:" id="editSchool"
+                                       th:text="${staff.schoolName + '-' + staff.collegeName + '-' + staff.departmentName}"></a>
+                                    <input type="hidden" id="collegeId" th:value="${staff.collegeId}"/>
+                                    <input type="hidden" id="departmentId" th:value="${staff.departmentId}"/>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <h4 th:if="${isStudent == 1 || isStaff == 1}" class="header-title m-t-20"><strong>更改信息</strong>
+                        </h4>
+                        <hr th:if="${isStudent == 1 || isStaff == 1}"/>
+                        <div th:if="${isStudent == 1}" class="p-20">
+                            <form role="form" id="studentInfoForm">
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <label for="studentNumber">学号</label>
+                                        <input class="form-control" id="studentNumber" name="studentNumber"
+                                               placeholder="学号"
+                                               th:value="${student.studentNumber}">
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="sex">性别</label>
+                                        <select id="sex" name="sex" class="form-control">
+                                            <option value="">请选择性别</option>
+                                            <option value="男">男</option>
+                                            <option value="女">女</option>
+                                        </select>
+                                        <input type="hidden" th:value="${student.sex}" id="sexParam"/>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="birthday">生日</label>
+                                        <input class="form-control" id="birthday" name="birthday" placeholder="生日"
+                                               th:value="${student.birthday}">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <label for="nation">民族</label>
+                                        <select id="nation" name="nationId" class="form-control select2-show-search">
+                                            <option value="" selected>请选择民族</option>
+                                        </select>
+                                        <input type="hidden" th:value="${student.nationId}" id="nationParam"/>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="politicalLandscape">政治面貌</label>
+                                        <select id="politicalLandscape" name="politicalLandscapeId"
+                                                class="form-control">
+                                            <option value="">请选择政治面貌</option>
+                                        </select>
+                                        <input type="hidden" th:value="${student.politicalLandscapeId}"
+                                               id="politicalLandscapeParam"/>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="dormitoryNumber">宿舍号</label>
+                                        <input class="form-control" id="dormitoryNumber" name="dormitoryNumber"
+                                               placeholder="宿舍号" th:value="${student.dormitoryNumber}"
+                                               aria-describedby="dormitoryNumberHelp" data-mask="99-999">
+                                        <div class="invalid-feedback"></div>
+                                        <small id="dormitoryNumberHelp" class="form-text text-muted">如：06-603，6栋603室
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="parentName">家长姓名</label>
+                                        <input class="form-control" id="parentName" name="parentName" placeholder="家长姓名"
+                                               th:value="${student.parentName}">
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="parentContactPhone">家长联系电话</label>
+                                        <input class="form-control" id="parentContactPhone" name="parentContactPhone"
+                                               placeholder="家长联系电话" th:value="${student.parentContactPhone}">
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="familyResidence">家庭居住地</label>
+                                    <input type="text" class="form-control" id="familyResidence" name="familyResidence"
+                                           placeholder="家庭居住地" th:value="${student.familyResidence}">
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="placeOrigin">生源地</label>
+                                    <input type="text" class="form-control" id="placeOrigin" name="placeOrigin"
+                                           placeholder="生源地" th:value="${student.placeOrigin}">
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12 text-danger" id="globalInfoError">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12 text-center">
+                                        <button type="button" class="btn btn-primary waves-effect waves-light"
+                                                id="updateInfo">
+                                            更新信息
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div th:if="${isStaff == 1}" class="p-20">
+                            <form role="form" id="staffInfoForm">
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <label for="staffNumber">工号</label>
+                                        <input class="form-control" id="staffNumber" name="staffNumber"
+                                               placeholder="工号"
+                                               th:value="${staff.staffNumber}">
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="sex">性别</label>
+                                        <select id="sex" name="sex" class="form-control">
+                                            <option value="">请选择性别</option>
+                                            <option value="男">男</option>
+                                            <option value="女">女</option>
+                                        </select>
+                                        <input type="hidden" th:value="${staff.sex}" id="sexParam"/>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="birthday">生日</label>
+                                        <input class="form-control" id="birthday" name="birthday" placeholder="生日"
+                                               th:value="${staff.birthday}">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <label for="nation">民族</label>
+                                        <select id="nation" name="nationId" class="form-control select2-show-search">
+                                            <option value="" selected>请选择民族</option>
+                                        </select>
+                                        <input type="hidden" th:value="${staff.nationId}" id="nationParam"/>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="politicalLandscape">政治面貌</label>
+                                        <select id="politicalLandscape" name="politicalLandscapeId"
+                                                class="form-control">
+                                            <option value="">请选择政治面貌</option>
+                                        </select>
+                                        <input type="hidden" th:value="${staff.politicalLandscapeId}"
+                                               id="politicalLandscapeParam"/>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="academicTitle">职称</label>
+                                        <select id="academicTitle" name="academicTitleId"
+                                                class="form-control">
+                                            <option value="">请选择职称</option>
+                                        </select>
+                                        <input type="hidden" th:value="${staff.academicTitleId}"
+                                               id="academicTitleParam"/>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <label for="post">职务</label>
+                                        <input class="form-control" id="post" name="post" placeholder="职务"
+                                               th:value="${staff.post}">
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="form-group col-md-8">
+                                        <label for="familyResidence">家庭居住地</label>
+                                        <input type="text" class="form-control" id="familyResidence" name="familyResidence"
+                                               placeholder="家庭居住地" th:value="${staff.familyResidence}">
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12 text-danger" id="globalInfoError">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12 text-center">
+                                        <button type="button" class="btn btn-primary waves-effect waves-light"
+                                                id="updateInfo">
+                                            更新信息
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <h4 class="header-title m-t-20"><strong>更改密码</strong></h4>
+                        <hr/>
+                        <div class="p-20">
+                            <form role="form">
+                                <div class="form-group row">
+                                    <label for="oldPassword" class="col-sm-4 form-control-label">旧密码<span
+                                            class="text-danger">*</span></label>
+                                    <div class="col-sm-7">
+                                        <input id="oldPassword" type="password" placeholder="输入旧密码"
+                                               class="form-control">
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="newPassword" class="col-sm-4 form-control-label">新密码<span
+                                            class="text-danger">*</span></label>
+                                    <div class="col-sm-7">
+                                        <input id="newPassword" type="password" aria-describedby="passwordHelp"
+                                               placeholder="输入密码" class="form-control">
+                                        <div class="invalid-feedback"></div>
+                                        <div id="meter2"></div>
+                                        <small id="passwordHelp" class="form-text text-muted">密码为6-16位任意字母或数字，以及下划线
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="confirmPassword" class="col-sm-4 form-control-label">确认新密码
+                                        <span class="text-danger">*</span></label>
+                                    <div class="col-sm-7">
+                                        <input type="password" placeholder="确认密码" class="form-control"
+                                               id="confirmPassword">
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12 text-danger" id="globalPasswordError">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12 text-center">
+                                        <button type="button" class="btn btn-primary waves-effect waves-light"
+                                                id="updatePassword">
+                                            更新密码
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="mobileModal" tabindex="-1" role="dialog" aria-labelledby="mobileModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mobileModalLabel">手机号修改</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="m-t-20">
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <input type="text" class="form-control" placeholder="手机号" id="mobile"
+                                       th:value="${mobile}"/>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="验证码" id="verificationCode"
+                                           aria-label="验证码" aria-describedby="verificationCodeHelp">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="button" id="sendCode">获取
+                                        </button>
+                                    </div>
+                                </div>
+                                <small id="verificationCodeHelp" class="form-text text-muted"></small>
+                            </div>
+                        </div>
+                        <div class="form-group text-danger" id="globalMobileError"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="saveMobile">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="schoolModal" tabindex="-1" role="dialog" aria-labelledby="schoolModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="schoolModalLabel">更改学校</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="m-t-20">
+                        <div class="form-group row" th:if="${isStudent == 1 || isStaff == 1}">
+                            <div class="col-12">
+                                <select class="form-control" id="department" data-placeholder="请选择系">
+                                    <option label="请选择系"></option>
+                                </select>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row" th:if="${isStudent == 1}">
+                            <div class="col-12">
+                                <select class="form-control" id="science" data-placeholder="请选择专业">
+                                    <option label="请选择专业"></option>
+                                </select>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row" th:if="${isStudent == 1}">
+                            <div class="col-12">
+                                <select class="form-control" id="grade" data-placeholder="请选择年级">
+                                    <option label="请选择年级"></option>
+                                </select>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row" th:if="${isStudent == 1}">
+                            <div class="col-12">
+                                <select class="form-control" id="organize" data-placeholder="请选择班级">
+                                    <option label="请选择班级"></option>
+                                </select>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group text-danger" id="globalSchoolError"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="saveSchool">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="usernameParam" th:value="${username}"/>
+    <input type="hidden" id="isStudentParam" th:value="${isStudent}"/>
+    <input type="hidden" id="isStaffParam" th:value="${isStaff}"/>
+    <input type="hidden" class="dy_script" value="/js/platform/user/user_setting.js"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>

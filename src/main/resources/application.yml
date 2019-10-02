@@ -1,0 +1,49 @@
+# spring setting
+spring:
+      profiles:
+        active: secrecy,dev
+      servlet:
+        multipart:
+          max-request-size: 500MB
+          max-file-size: 500MB
+      mail:
+        default-encoding: UTF-8
+        host: smtp.qq.com
+      jooq:
+        sql-dialect: mysql_8_0
+      session:
+        store-type: redis
+
+# project info
+info:
+  build:
+    artifactId: @project.artifactId@
+    version: @project.version@
+
+# zone setting
+zone:
+  async:
+    core-pool-size: 2
+    max-pool-size: 50
+    queue-capacity: 10000
+  constants:
+    web-root: root
+    jooq-dialect: ${spring.jooq.sql-dialect}
+
+# server setting
+server:
+  compression:
+    enabled: true
+    min-response-size: 1
+
+# web manage
+management:
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: WHEN_AUTHORIZED
+

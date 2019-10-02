@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="header :: header(~{::meta},~{::title},~{::link})">
+    <!-- csrf -->
+    <meta name="_csrf" content="" th:content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" content="" th:content="${_csrf.headerName}"/>
+    <title th:text="'学生注册-' + #{ web.title}">ZHE</title>
+
+    <!-- vendor css -->
+    <link rel="stylesheet" href="plugins/select2/css/select2.min.css"
+          th:href="@{/plugins/select2/css/select2.min.css}"/>
+    <link href="plugins/jquery-entropizer/css/jquery-entropizer.min.css" rel="stylesheet"
+          th:href="@{/plugins/jquery-entropizer/css/jquery-entropizer.min.css}"/>
+</head>
+<body>
+
+<div class="account-pages"></div>
+<div class="clearfix"></div>
+<div class="wrapper-page">
+
+    <div class="account-bg">
+        <div class="card-box mb-0">
+            <div class="text-center m-t-20">
+                <a href="index.html" class="logo">
+                    <i class="zmdi zmdi-group-work icon-c-logo"></i>
+                    <span th:text="#{web.app.name}"></span>
+                </a>
+            </div>
+            <div class="m-t-10 p-20">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h6 class="text-muted text-uppercase m-b-0 m-t-0">注 册</h6>
+                    </div>
+                </div>
+                <form class="m-t-20">
+
+                    <div class="form-group row">
+                        <div class="col-12">
+                            <select class="form-control select2-show-search" id="school" data-placeholder="请选择学校">
+                                <option label="请选择学校"></option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-12">
+                            <select class="form-control select2-show-search" id="college" data-placeholder="请选择院">
+                                <option label="请选择院"></option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-12">
+                            <select class="form-control select2-show-search" id="department" data-placeholder="请选择系">
+                                <option label="请选择系"></option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-12">
+                            <select class="form-control select2-show-search" id="science" data-placeholder="请选择专业">
+                                <option label="请选择专业"></option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-12">
+                            <select class="form-control select2-show-search" id="grade" data-placeholder="请选择年级">
+                                <option label="请选择年级"></option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-12">
+                            <select class="form-control select2-show-search" id="organize" data-placeholder="请选择班级">
+                                <option label="请选择班级"></option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-5 col-lg-5 col-xl-5">
+                                    <input type="text" class="form-control" aria-describedby="usernameHelp"
+                                           id="username"
+                                           placeholder="账号"/>
+                                    <div class="invalid-feedback"></div>
+                                    <small id="usernameHelp" class="form-text text-muted">注册后，不能更改</small>
+                                </div>
+                                <div class="col-sm-12 col-md-7 col-lg-7 col-xl-7">
+                                    <input type="email" class="form-control" aria-describedby="emailHelp" id="email"
+                                           placeholder="邮箱"/>
+                                    <div class="invalid-feedback"></div>
+                                    <small id="emailHelp" class="form-text text-muted">您的常用邮箱</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-5 col-lg-5 col-xl-5">
+                                    <input type="text" class="form-control" placeholder="姓名" id="realName"/>
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                                <div class="col-sm-12 col-md-7 col-lg-7 col-xl-7">
+                                    <input type="text" class="form-control" placeholder="学号" id="studentNumber"/>
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-12">
+                            <input type="text" class="form-control" placeholder="手机号" id="mobile"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-12">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="验证码" id="verificationCode" aria-label="验证码" aria-describedby="verificationCodeHelp">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" id="sendCode">获取</button>
+                                </div>
+                            </div>
+                            <small id="verificationCodeHelp" class="form-text text-muted"></small>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-12">
+                            <input type="password" class="form-control" aria-describedby="passwordHelp" id="password" placeholder="密码"/>
+                            <div class="invalid-feedback"></div>
+                            <div id="meter2"></div>
+                            <small id="passwordHelp" class="form-text text-muted">密码为6-16位任意字母或数字，以及下划线</small>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-12">
+                            <input type="password" class="form-control" placeholder="确认密码" id="okPassword"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-12">
+                            <div class="checkbox checkbox-primary">
+                                <input type="checkbox" checked="checked" value="1" id="agreeProtocol" name="agreeProtocol">
+                                <label for="agreeProtocol">同意遵守 <a href="" class="tx-info" data-toggle="modal"
+                                                                     data-target="#modalAgree">《入站协议》</a></label>
+                                <small class="text-danger" id="agreeProtocolError"></small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group text-danger" id="globalError"></div>
+                    <div class="form-group tx-12">点击注册后，我们将发送一封邮件到您的邮箱进行验证，请注意查收。</div>
+
+                    <div class="form-group row text-center m-t-10">
+                        <div class="col-12">
+                            <button class="btn btn-success btn-block waves-effect waves-light" type="button" id="register">注 册</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <!-- end card-box-->
+
+    <div class="m-t-20">
+        <div class="text-center">
+            <p class="text-white">已经有账号了? <a href="" th:href="@{/login}" class="text-white m-l-5"><b>登录</b> </a>
+                <a href="" class="text-white m-l-5" data-toggle="modal" data-target="#modalQuestion">问题反馈</a></p>
+        </div>
+    </div>
+
+</div>
+<!-- end wrapper page -->
+
+<!-- 入站协议 -->
+<div id="modalAgree" class="modal fade">
+    <div class="modal-dialog modal-dialog-vertical-center" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">入站协议</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <ol>
+                    <li>
+                        <p class="mg-b-5">文明用语，友好相处，不允许对他人进行人身攻击或私自公开其个人隐私，若产生相关问题，按照法律相关规定，依法处理，承担后果。</p>
+                    </li>
+                    <li>
+                        <p class="mg-b-5">您在网期间，我们将承诺保护好您的个人隐私不被泄露，若您产生相关法律问题，我们将提供您的信息接受调查。</p>
+                    </li>
+                    <li>
+                        <p class="mg-b-5">本网站遵守开源协议，若您需要引用本网站代码及内容，需注明出处信息，否则根据开源协议（MIT）追究个人责任。</p>
+                    </li>
+                </ol>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal">关闭
+                </button>
+            </div>
+        </div>
+    </div><!-- modal-dialog -->
+</div><!-- modal -->
+
+<!-- 问题反馈 -->
+<div id="modalQuestion" class="modal fade">
+    <div class="modal-dialog modal-dialog-vertical-center" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">问题反馈</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="feedbackForm">
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="realName" id="feedbackRealName"
+                               placeholder="您的姓名">
+                        <div class="invalid-feedback"></div>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="email" name="userEmail" id="feedbackUserEmail"
+                               placeholder="您的邮箱">
+                        <div class="invalid-feedback"></div>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="simpleDes" id="simpleDes" placeholder="简单描述">
+                        <div class="invalid-feedback"></div>
+                    </div>
+                    <div class="form-group">
+                        <textarea rows="3" class="form-control" name="detailDes" id="detailDes"
+                                  placeholder="详细描述"></textarea>
+                        <div class="invalid-feedback"></div>
+                    </div>
+                    <div class="form-group text-danger" id="feedbackError"></div>
+                    <div class="form-group">请您耐心等待，我们稍后会及时联系您，若处理超时，您还可以加入QQ群:159318834，寻求帮助。</div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal">关闭
+                </button>
+                <button type="button" class="btn btn-primary"
+                        id="feedbackSave">提交
+                </button>
+            </div>
+        </div>
+    </div><!-- modal-dialog -->
+</div><!-- modal -->
+<script src="webjarsjs" th:src="@{/webjarsjs}"></script>
+<script src="webjars/requirejs/require.min.js" th:src="@{/webjars/requirejs/require.min.js}"
+        data-main="/student"></script>
+<script th:inline="javascript">
+    var web_path = /*[[${#httpServletRequest.getScheme()+'://'+#httpServletRequest.getServerName()+':'+#httpServletRequest.getServerPort()+#httpServletRequest.getContextPath()}]]*/ '';
+    require.config({
+        baseUrl: web_path + "/js/register",
+        waitSeconds: 0
+    });
+</script>
+</body>
+</html>

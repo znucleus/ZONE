@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="header :: no-metas-header(~{::title},~{::link})">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title th:text="#{web.title}">ZHE</title>
+    <link rel="stylesheet" href="css/index/index.css" th:href="@{/css/index/index.css}"/>
+    <link rel="stylesheet" href="css/index/templatemo-style.css" th:href="@{/css/index/templatemo-style.css}"/>
+</head>
+<body>
+<div id="particles-js"></div>
+
+<ul class="cb-slideshow">
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+</ul>
+
+<div class="container-fluid">
+    <div class="row cb-slideshow-text-container ">
+        <div class="tm-content col-xl-6 col-sm-8 col-xs-8 ml-auto section">
+            <header class="mb-5"><h1 th:text="#{web.app.name}"></h1></header>
+            <P class="mb-5">Z.核(ISY校园).团队致力于校园项目研发，通过人性化设计帮助学生及教职工更轻松的学习与工作. Thank you for visiting our site!</P>
+
+            <div class="row form-section">
+
+                <div class="col-md-5 col-sm-5 col-xs-5">
+                    <button type="button" class="tm-btn-subscribe" id="login">开始使用</button>
+                </div>
+                <div class="col-md-7 col-sm-7 col-xs-7 mt-2">
+                    <audio src="files/music/1.mp3" th:src="@{/files/music/1.mp3}" preload="auto" controls></audio>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <div class="footer-link" th:include="footer::footer">
+    </div>
+</div>
+<script src="webjarsjs" th:src="@{/webjarsjs}"></script>
+<script src="webjars/requirejs/require.min.js" th:src="@{/webjars/requirejs/require.min.js}"
+        data-main="/index"></script>
+<script th:inline="javascript">
+    var web_path = /*[[${#httpServletRequest.getScheme()+'://'+#httpServletRequest.getServerName()+':'+#httpServletRequest.getServerPort()+#httpServletRequest.getContextPath()}]]*/ '';
+    require.config({
+        baseUrl: web_path + "/js/index",
+        waitSeconds: 0
+    });
+</script>
+</body>
+</html>
