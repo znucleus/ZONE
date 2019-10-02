@@ -12,10 +12,12 @@ import org.jooq.UniqueKey;
 import org.jooq.impl.Internal;
 
 import top.zbeboy.zone.domain.tables.AcademicTitle;
-import top.zbeboy.zone.domain.tables.AchievementRelease;
-import top.zbeboy.zone.domain.tables.AchievementSyncData;
-import top.zbeboy.zone.domain.tables.AchievementSyncManifest;
-import top.zbeboy.zone.domain.tables.AchievementSyncStudent;
+import top.zbeboy.zone.domain.tables.AnswerBank;
+import top.zbeboy.zone.domain.tables.AnswerOption;
+import top.zbeboy.zone.domain.tables.AnswerRelease;
+import top.zbeboy.zone.domain.tables.AnswerResult;
+import top.zbeboy.zone.domain.tables.AnswerSolving;
+import top.zbeboy.zone.domain.tables.AnswerSubject;
 import top.zbeboy.zone.domain.tables.Application;
 import top.zbeboy.zone.domain.tables.Authorities;
 import top.zbeboy.zone.domain.tables.Building;
@@ -23,15 +25,12 @@ import top.zbeboy.zone.domain.tables.College;
 import top.zbeboy.zone.domain.tables.CollegeApplication;
 import top.zbeboy.zone.domain.tables.CollegeRole;
 import top.zbeboy.zone.domain.tables.Course;
-import top.zbeboy.zone.domain.tables.CurriculumContent;
-import top.zbeboy.zone.domain.tables.CurriculumRelease;
 import top.zbeboy.zone.domain.tables.Department;
 import top.zbeboy.zone.domain.tables.Files;
 import top.zbeboy.zone.domain.tables.Grade;
 import top.zbeboy.zone.domain.tables.Nation;
 import top.zbeboy.zone.domain.tables.Organize;
 import top.zbeboy.zone.domain.tables.PoliticalLandscape;
-import top.zbeboy.zone.domain.tables.QuestionFeedback;
 import top.zbeboy.zone.domain.tables.Role;
 import top.zbeboy.zone.domain.tables.RoleApplication;
 import top.zbeboy.zone.domain.tables.School;
@@ -46,7 +45,6 @@ import top.zbeboy.zone.domain.tables.SystemOperatorLog;
 import top.zbeboy.zone.domain.tables.SystemSmsLog;
 import top.zbeboy.zone.domain.tables.TrainingAttend;
 import top.zbeboy.zone.domain.tables.TrainingAttendAuthorities;
-import top.zbeboy.zone.domain.tables.TrainingAttendLeaveApply;
 import top.zbeboy.zone.domain.tables.TrainingAttendUsers;
 import top.zbeboy.zone.domain.tables.TrainingLabs;
 import top.zbeboy.zone.domain.tables.TrainingRelease;
@@ -55,10 +53,12 @@ import top.zbeboy.zone.domain.tables.UserNotify;
 import top.zbeboy.zone.domain.tables.Users;
 import top.zbeboy.zone.domain.tables.UsersType;
 import top.zbeboy.zone.domain.tables.records.AcademicTitleRecord;
-import top.zbeboy.zone.domain.tables.records.AchievementReleaseRecord;
-import top.zbeboy.zone.domain.tables.records.AchievementSyncDataRecord;
-import top.zbeboy.zone.domain.tables.records.AchievementSyncManifestRecord;
-import top.zbeboy.zone.domain.tables.records.AchievementSyncStudentRecord;
+import top.zbeboy.zone.domain.tables.records.AnswerBankRecord;
+import top.zbeboy.zone.domain.tables.records.AnswerOptionRecord;
+import top.zbeboy.zone.domain.tables.records.AnswerReleaseRecord;
+import top.zbeboy.zone.domain.tables.records.AnswerResultRecord;
+import top.zbeboy.zone.domain.tables.records.AnswerSolvingRecord;
+import top.zbeboy.zone.domain.tables.records.AnswerSubjectRecord;
 import top.zbeboy.zone.domain.tables.records.ApplicationRecord;
 import top.zbeboy.zone.domain.tables.records.AuthoritiesRecord;
 import top.zbeboy.zone.domain.tables.records.BuildingRecord;
@@ -66,15 +66,12 @@ import top.zbeboy.zone.domain.tables.records.CollegeApplicationRecord;
 import top.zbeboy.zone.domain.tables.records.CollegeRecord;
 import top.zbeboy.zone.domain.tables.records.CollegeRoleRecord;
 import top.zbeboy.zone.domain.tables.records.CourseRecord;
-import top.zbeboy.zone.domain.tables.records.CurriculumContentRecord;
-import top.zbeboy.zone.domain.tables.records.CurriculumReleaseRecord;
 import top.zbeboy.zone.domain.tables.records.DepartmentRecord;
 import top.zbeboy.zone.domain.tables.records.FilesRecord;
 import top.zbeboy.zone.domain.tables.records.GradeRecord;
 import top.zbeboy.zone.domain.tables.records.NationRecord;
 import top.zbeboy.zone.domain.tables.records.OrganizeRecord;
 import top.zbeboy.zone.domain.tables.records.PoliticalLandscapeRecord;
-import top.zbeboy.zone.domain.tables.records.QuestionFeedbackRecord;
 import top.zbeboy.zone.domain.tables.records.RoleApplicationRecord;
 import top.zbeboy.zone.domain.tables.records.RoleRecord;
 import top.zbeboy.zone.domain.tables.records.SchoolRecord;
@@ -88,7 +85,6 @@ import top.zbeboy.zone.domain.tables.records.SystemNotifyRecord;
 import top.zbeboy.zone.domain.tables.records.SystemOperatorLogRecord;
 import top.zbeboy.zone.domain.tables.records.SystemSmsLogRecord;
 import top.zbeboy.zone.domain.tables.records.TrainingAttendAuthoritiesRecord;
-import top.zbeboy.zone.domain.tables.records.TrainingAttendLeaveApplyRecord;
 import top.zbeboy.zone.domain.tables.records.TrainingAttendRecord;
 import top.zbeboy.zone.domain.tables.records.TrainingAttendUsersRecord;
 import top.zbeboy.zone.domain.tables.records.TrainingLabsRecord;
@@ -101,12 +97,12 @@ import top.zbeboy.zone.domain.tables.records.UsersTypeRecord;
 
 /**
  * A class modelling foreign key relationships and constraints of tables of 
- * the <code>zhe</code> schema.
+ * the <code>zone</code> schema.
  */
 @Generated(
     value = {
         "http://www.jooq.org",
-        "jOOQ version:3.11.11"
+        "jOOQ version:3.11.12"
     },
     comments = "This class is generated by jOOQ"
 )
@@ -118,7 +114,6 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final Identity<AcademicTitleRecord, Integer> IDENTITY_ACADEMIC_TITLE = Identities0.IDENTITY_ACADEMIC_TITLE;
-    public static final Identity<AchievementSyncManifestRecord, Integer> IDENTITY_ACHIEVEMENT_SYNC_MANIFEST = Identities0.IDENTITY_ACHIEVEMENT_SYNC_MANIFEST;
     public static final Identity<CollegeRecord, Integer> IDENTITY_COLLEGE = Identities0.IDENTITY_COLLEGE;
     public static final Identity<DepartmentRecord, Integer> IDENTITY_DEPARTMENT = Identities0.IDENTITY_DEPARTMENT;
     public static final Identity<GradeRecord, Integer> IDENTITY_GRADE = Identities0.IDENTITY_GRADE;
@@ -136,10 +131,12 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final UniqueKey<AcademicTitleRecord> KEY_ACADEMIC_TITLE_PRIMARY = UniqueKeys0.KEY_ACADEMIC_TITLE_PRIMARY;
-    public static final UniqueKey<AchievementReleaseRecord> KEY_ACHIEVEMENT_RELEASE_PRIMARY = UniqueKeys0.KEY_ACHIEVEMENT_RELEASE_PRIMARY;
-    public static final UniqueKey<AchievementSyncDataRecord> KEY_ACHIEVEMENT_SYNC_DATA_COURSE_CODE = UniqueKeys0.KEY_ACHIEVEMENT_SYNC_DATA_COURSE_CODE;
-    public static final UniqueKey<AchievementSyncManifestRecord> KEY_ACHIEVEMENT_SYNC_MANIFEST_PRIMARY = UniqueKeys0.KEY_ACHIEVEMENT_SYNC_MANIFEST_PRIMARY;
-    public static final UniqueKey<AchievementSyncStudentRecord> KEY_ACHIEVEMENT_SYNC_STUDENT_PRIMARY = UniqueKeys0.KEY_ACHIEVEMENT_SYNC_STUDENT_PRIMARY;
+    public static final UniqueKey<AnswerBankRecord> KEY_ANSWER_BANK_PRIMARY = UniqueKeys0.KEY_ANSWER_BANK_PRIMARY;
+    public static final UniqueKey<AnswerOptionRecord> KEY_ANSWER_OPTION_PRIMARY = UniqueKeys0.KEY_ANSWER_OPTION_PRIMARY;
+    public static final UniqueKey<AnswerReleaseRecord> KEY_ANSWER_RELEASE_PRIMARY = UniqueKeys0.KEY_ANSWER_RELEASE_PRIMARY;
+    public static final UniqueKey<AnswerResultRecord> KEY_ANSWER_RESULT_PRIMARY = UniqueKeys0.KEY_ANSWER_RESULT_PRIMARY;
+    public static final UniqueKey<AnswerSolvingRecord> KEY_ANSWER_SOLVING_PRIMARY = UniqueKeys0.KEY_ANSWER_SOLVING_PRIMARY;
+    public static final UniqueKey<AnswerSubjectRecord> KEY_ANSWER_SUBJECT_PRIMARY = UniqueKeys0.KEY_ANSWER_SUBJECT_PRIMARY;
     public static final UniqueKey<ApplicationRecord> KEY_APPLICATION_PRIMARY = UniqueKeys0.KEY_APPLICATION_PRIMARY;
     public static final UniqueKey<AuthoritiesRecord> KEY_AUTHORITIES_PRIMARY = UniqueKeys0.KEY_AUTHORITIES_PRIMARY;
     public static final UniqueKey<BuildingRecord> KEY_BUILDING_PRIMARY = UniqueKeys0.KEY_BUILDING_PRIMARY;
@@ -149,15 +146,12 @@ public class Keys {
     public static final UniqueKey<CollegeRoleRecord> KEY_COLLEGE_ROLE_PRIMARY = UniqueKeys0.KEY_COLLEGE_ROLE_PRIMARY;
     public static final UniqueKey<CourseRecord> KEY_COURSE_PRIMARY = UniqueKeys0.KEY_COURSE_PRIMARY;
     public static final UniqueKey<CourseRecord> KEY_COURSE_COURSE_CODE = UniqueKeys0.KEY_COURSE_COURSE_CODE;
-    public static final UniqueKey<CurriculumContentRecord> KEY_CURRICULUM_CONTENT_PRIMARY = UniqueKeys0.KEY_CURRICULUM_CONTENT_PRIMARY;
-    public static final UniqueKey<CurriculumReleaseRecord> KEY_CURRICULUM_RELEASE_PRIMARY = UniqueKeys0.KEY_CURRICULUM_RELEASE_PRIMARY;
     public static final UniqueKey<DepartmentRecord> KEY_DEPARTMENT_PRIMARY = UniqueKeys0.KEY_DEPARTMENT_PRIMARY;
     public static final UniqueKey<FilesRecord> KEY_FILES_PRIMARY = UniqueKeys0.KEY_FILES_PRIMARY;
     public static final UniqueKey<GradeRecord> KEY_GRADE_PRIMARY = UniqueKeys0.KEY_GRADE_PRIMARY;
     public static final UniqueKey<NationRecord> KEY_NATION_PRIMARY = UniqueKeys0.KEY_NATION_PRIMARY;
     public static final UniqueKey<OrganizeRecord> KEY_ORGANIZE_PRIMARY = UniqueKeys0.KEY_ORGANIZE_PRIMARY;
     public static final UniqueKey<PoliticalLandscapeRecord> KEY_POLITICAL_LANDSCAPE_PRIMARY = UniqueKeys0.KEY_POLITICAL_LANDSCAPE_PRIMARY;
-    public static final UniqueKey<QuestionFeedbackRecord> KEY_QUESTION_FEEDBACK_PRIMARY = UniqueKeys0.KEY_QUESTION_FEEDBACK_PRIMARY;
     public static final UniqueKey<RoleRecord> KEY_ROLE_PRIMARY = UniqueKeys0.KEY_ROLE_PRIMARY;
     public static final UniqueKey<RoleRecord> KEY_ROLE_ROLE_EN_NAME = UniqueKeys0.KEY_ROLE_ROLE_EN_NAME;
     public static final UniqueKey<RoleApplicationRecord> KEY_ROLE_APPLICATION_PRIMARY = UniqueKeys0.KEY_ROLE_APPLICATION_PRIMARY;
@@ -176,8 +170,6 @@ public class Keys {
     public static final UniqueKey<SystemSmsLogRecord> KEY_SYSTEM_SMS_LOG_PRIMARY = UniqueKeys0.KEY_SYSTEM_SMS_LOG_PRIMARY;
     public static final UniqueKey<TrainingAttendRecord> KEY_TRAINING_ATTEND_PRIMARY = UniqueKeys0.KEY_TRAINING_ATTEND_PRIMARY;
     public static final UniqueKey<TrainingAttendAuthoritiesRecord> KEY_TRAINING_ATTEND_AUTHORITIES_PRIMARY = UniqueKeys0.KEY_TRAINING_ATTEND_AUTHORITIES_PRIMARY;
-    public static final UniqueKey<TrainingAttendLeaveApplyRecord> KEY_TRAINING_ATTEND_LEAVE_APPLY_PRIMARY = UniqueKeys0.KEY_TRAINING_ATTEND_LEAVE_APPLY_PRIMARY;
-    public static final UniqueKey<TrainingAttendLeaveApplyRecord> KEY_TRAINING_ATTEND_LEAVE_APPLY_TRAINING_ATTEND_ID = UniqueKeys0.KEY_TRAINING_ATTEND_LEAVE_APPLY_TRAINING_ATTEND_ID;
     public static final UniqueKey<TrainingAttendUsersRecord> KEY_TRAINING_ATTEND_USERS_PRIMARY = UniqueKeys0.KEY_TRAINING_ATTEND_USERS_PRIMARY;
     public static final UniqueKey<TrainingAttendUsersRecord> KEY_TRAINING_ATTEND_USERS_TRAINING_ATTEND_ID = UniqueKeys0.KEY_TRAINING_ATTEND_USERS_TRAINING_ATTEND_ID;
     public static final UniqueKey<TrainingLabsRecord> KEY_TRAINING_LABS_PRIMARY = UniqueKeys0.KEY_TRAINING_LABS_PRIMARY;
@@ -196,9 +188,15 @@ public class Keys {
     // FOREIGN KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final ForeignKey<AchievementReleaseRecord, DepartmentRecord> ACHIEVEMENT_RELEASE_IBFK_1 = ForeignKeys0.ACHIEVEMENT_RELEASE_IBFK_1;
-    public static final ForeignKey<AchievementReleaseRecord, UsersRecord> ACHIEVEMENT_RELEASE_IBFK_2 = ForeignKeys0.ACHIEVEMENT_RELEASE_IBFK_2;
-    public static final ForeignKey<AchievementSyncManifestRecord, AchievementReleaseRecord> ACHIEVEMENT_SYNC_MANIFEST_IBFK_1 = ForeignKeys0.ACHIEVEMENT_SYNC_MANIFEST_IBFK_1;
+    public static final ForeignKey<AnswerBankRecord, UsersRecord> ANSWER_BANK_IBFK_1 = ForeignKeys0.ANSWER_BANK_IBFK_1;
+    public static final ForeignKey<AnswerOptionRecord, AnswerSubjectRecord> ANSWER_OPTION_IBFK_1 = ForeignKeys0.ANSWER_OPTION_IBFK_1;
+    public static final ForeignKey<AnswerReleaseRecord, AnswerBankRecord> ANSWER_RELEASE_IBFK_1 = ForeignKeys0.ANSWER_RELEASE_IBFK_1;
+    public static final ForeignKey<AnswerReleaseRecord, UsersRecord> ANSWER_RELEASE_IBFK_2 = ForeignKeys0.ANSWER_RELEASE_IBFK_2;
+    public static final ForeignKey<AnswerResultRecord, AnswerReleaseRecord> ANSWER_RESULT_IBFK_1 = ForeignKeys0.ANSWER_RESULT_IBFK_1;
+    public static final ForeignKey<AnswerSolvingRecord, AnswerSubjectRecord> ANSWER_SOLVING_IBFK_1 = ForeignKeys0.ANSWER_SOLVING_IBFK_1;
+    public static final ForeignKey<AnswerSolvingRecord, AnswerReleaseRecord> ANSWER_SOLVING_IBFK_2 = ForeignKeys0.ANSWER_SOLVING_IBFK_2;
+    public static final ForeignKey<AnswerSubjectRecord, AnswerBankRecord> ANSWER_SUBJECT_IBFK_1 = ForeignKeys0.ANSWER_SUBJECT_IBFK_1;
+    public static final ForeignKey<AnswerSubjectRecord, UsersRecord> ANSWER_SUBJECT_IBFK_2 = ForeignKeys0.ANSWER_SUBJECT_IBFK_2;
     public static final ForeignKey<AuthoritiesRecord, UsersRecord> AUTHORITIES_IBFK_1 = ForeignKeys0.AUTHORITIES_IBFK_1;
     public static final ForeignKey<BuildingRecord, CollegeRecord> BUILDING_IBFK_1 = ForeignKeys0.BUILDING_IBFK_1;
     public static final ForeignKey<CollegeRecord, SchoolRecord> COLLEGE_IBFK_1 = ForeignKeys0.COLLEGE_IBFK_1;
@@ -207,10 +205,6 @@ public class Keys {
     public static final ForeignKey<CollegeRoleRecord, RoleRecord> COLLEGE_ROLE_IBFK_1 = ForeignKeys0.COLLEGE_ROLE_IBFK_1;
     public static final ForeignKey<CollegeRoleRecord, CollegeRecord> COLLEGE_ROLE_IBFK_2 = ForeignKeys0.COLLEGE_ROLE_IBFK_2;
     public static final ForeignKey<CourseRecord, CollegeRecord> COURSE_IBFK_1 = ForeignKeys0.COURSE_IBFK_1;
-    public static final ForeignKey<CurriculumContentRecord, CurriculumReleaseRecord> CURRICULUM_CONTENT_IBFK_1 = ForeignKeys0.CURRICULUM_CONTENT_IBFK_1;
-    public static final ForeignKey<CurriculumContentRecord, UsersRecord> CURRICULUM_CONTENT_IBFK_2 = ForeignKeys0.CURRICULUM_CONTENT_IBFK_2;
-    public static final ForeignKey<CurriculumReleaseRecord, CollegeRecord> CURRICULUM_RELEASE_IBFK_1 = ForeignKeys0.CURRICULUM_RELEASE_IBFK_1;
-    public static final ForeignKey<CurriculumReleaseRecord, UsersRecord> CURRICULUM_RELEASE_IBFK_2 = ForeignKeys0.CURRICULUM_RELEASE_IBFK_2;
     public static final ForeignKey<DepartmentRecord, CollegeRecord> DEPARTMENT_IBFK_1 = ForeignKeys0.DEPARTMENT_IBFK_1;
     public static final ForeignKey<GradeRecord, ScienceRecord> GRADE_IBFK_1 = ForeignKeys0.GRADE_IBFK_1;
     public static final ForeignKey<OrganizeRecord, GradeRecord> ORGANIZE_IBFK_1 = ForeignKeys0.ORGANIZE_IBFK_1;
@@ -227,8 +221,6 @@ public class Keys {
     public static final ForeignKey<TrainingAttendRecord, TrainingReleaseRecord> TRAINING_ATTEND_IBFK_2 = ForeignKeys0.TRAINING_ATTEND_IBFK_2;
     public static final ForeignKey<TrainingAttendAuthoritiesRecord, TrainingAttendRecord> TRAINING_ATTEND_AUTHORITIES_IBFK_1 = ForeignKeys0.TRAINING_ATTEND_AUTHORITIES_IBFK_1;
     public static final ForeignKey<TrainingAttendAuthoritiesRecord, UsersRecord> TRAINING_ATTEND_AUTHORITIES_IBFK_2 = ForeignKeys0.TRAINING_ATTEND_AUTHORITIES_IBFK_2;
-    public static final ForeignKey<TrainingAttendLeaveApplyRecord, TrainingAttendRecord> TRAINING_ATTEND_LEAVE_APPLY_IBFK_1 = ForeignKeys0.TRAINING_ATTEND_LEAVE_APPLY_IBFK_1;
-    public static final ForeignKey<TrainingAttendLeaveApplyRecord, TrainingUsersRecord> TRAINING_ATTEND_LEAVE_APPLY_IBFK_2 = ForeignKeys0.TRAINING_ATTEND_LEAVE_APPLY_IBFK_2;
     public static final ForeignKey<TrainingAttendUsersRecord, TrainingAttendRecord> TRAINING_ATTEND_USERS_IBFK_1 = ForeignKeys0.TRAINING_ATTEND_USERS_IBFK_1;
     public static final ForeignKey<TrainingAttendUsersRecord, TrainingUsersRecord> TRAINING_ATTEND_USERS_IBFK_2 = ForeignKeys0.TRAINING_ATTEND_USERS_IBFK_2;
     public static final ForeignKey<TrainingReleaseRecord, SchoolroomRecord> TRAINING_RELEASE_IBFK_1 = ForeignKeys0.TRAINING_RELEASE_IBFK_1;
@@ -248,7 +240,6 @@ public class Keys {
 
     private static class Identities0 {
         public static Identity<AcademicTitleRecord, Integer> IDENTITY_ACADEMIC_TITLE = Internal.createIdentity(AcademicTitle.ACADEMIC_TITLE, AcademicTitle.ACADEMIC_TITLE.ACADEMIC_TITLE_ID);
-        public static Identity<AchievementSyncManifestRecord, Integer> IDENTITY_ACHIEVEMENT_SYNC_MANIFEST = Internal.createIdentity(AchievementSyncManifest.ACHIEVEMENT_SYNC_MANIFEST, AchievementSyncManifest.ACHIEVEMENT_SYNC_MANIFEST.MANIFEST_ID);
         public static Identity<CollegeRecord, Integer> IDENTITY_COLLEGE = Internal.createIdentity(College.COLLEGE, College.COLLEGE.COLLEGE_ID);
         public static Identity<DepartmentRecord, Integer> IDENTITY_DEPARTMENT = Internal.createIdentity(Department.DEPARTMENT, Department.DEPARTMENT.DEPARTMENT_ID);
         public static Identity<GradeRecord, Integer> IDENTITY_GRADE = Internal.createIdentity(Grade.GRADE, Grade.GRADE.GRADE_ID);
@@ -264,10 +255,12 @@ public class Keys {
 
     private static class UniqueKeys0 {
         public static final UniqueKey<AcademicTitleRecord> KEY_ACADEMIC_TITLE_PRIMARY = Internal.createUniqueKey(AcademicTitle.ACADEMIC_TITLE, "KEY_academic_title_PRIMARY", AcademicTitle.ACADEMIC_TITLE.ACADEMIC_TITLE_ID);
-        public static final UniqueKey<AchievementReleaseRecord> KEY_ACHIEVEMENT_RELEASE_PRIMARY = Internal.createUniqueKey(AchievementRelease.ACHIEVEMENT_RELEASE, "KEY_achievement_release_PRIMARY", AchievementRelease.ACHIEVEMENT_RELEASE.ACHIEVEMENT_RELEASE_ID);
-        public static final UniqueKey<AchievementSyncDataRecord> KEY_ACHIEVEMENT_SYNC_DATA_COURSE_CODE = Internal.createUniqueKey(AchievementSyncData.ACHIEVEMENT_SYNC_DATA, "KEY_achievement_sync_data_course_code", AchievementSyncData.ACHIEVEMENT_SYNC_DATA.COURSE_CODE, AchievementSyncData.ACHIEVEMENT_SYNC_DATA.SCORE, AchievementSyncData.ACHIEVEMENT_SYNC_DATA.ROTATION, AchievementSyncData.ACHIEVEMENT_SYNC_DATA.STUDENT_NUMBER);
-        public static final UniqueKey<AchievementSyncManifestRecord> KEY_ACHIEVEMENT_SYNC_MANIFEST_PRIMARY = Internal.createUniqueKey(AchievementSyncManifest.ACHIEVEMENT_SYNC_MANIFEST, "KEY_achievement_sync_manifest_PRIMARY", AchievementSyncManifest.ACHIEVEMENT_SYNC_MANIFEST.MANIFEST_ID);
-        public static final UniqueKey<AchievementSyncStudentRecord> KEY_ACHIEVEMENT_SYNC_STUDENT_PRIMARY = Internal.createUniqueKey(AchievementSyncStudent.ACHIEVEMENT_SYNC_STUDENT, "KEY_achievement_sync_student_PRIMARY", AchievementSyncStudent.ACHIEVEMENT_SYNC_STUDENT.STUDENT_NUMBER);
+        public static final UniqueKey<AnswerBankRecord> KEY_ANSWER_BANK_PRIMARY = Internal.createUniqueKey(AnswerBank.ANSWER_BANK, "KEY_answer_bank_PRIMARY", AnswerBank.ANSWER_BANK.ANSWER_BANK_ID);
+        public static final UniqueKey<AnswerOptionRecord> KEY_ANSWER_OPTION_PRIMARY = Internal.createUniqueKey(AnswerOption.ANSWER_OPTION, "KEY_answer_option_PRIMARY", AnswerOption.ANSWER_OPTION.ANSWER_OPTION_ID);
+        public static final UniqueKey<AnswerReleaseRecord> KEY_ANSWER_RELEASE_PRIMARY = Internal.createUniqueKey(AnswerRelease.ANSWER_RELEASE, "KEY_answer_release_PRIMARY", AnswerRelease.ANSWER_RELEASE.ANSWER_RELEASE_ID);
+        public static final UniqueKey<AnswerResultRecord> KEY_ANSWER_RESULT_PRIMARY = Internal.createUniqueKey(AnswerResult.ANSWER_RESULT, "KEY_answer_result_PRIMARY", AnswerResult.ANSWER_RESULT.ANSWER_RESULT_ID);
+        public static final UniqueKey<AnswerSolvingRecord> KEY_ANSWER_SOLVING_PRIMARY = Internal.createUniqueKey(AnswerSolving.ANSWER_SOLVING, "KEY_answer_solving_PRIMARY", AnswerSolving.ANSWER_SOLVING.ANSWER_SOLVING_ID);
+        public static final UniqueKey<AnswerSubjectRecord> KEY_ANSWER_SUBJECT_PRIMARY = Internal.createUniqueKey(AnswerSubject.ANSWER_SUBJECT, "KEY_answer_subject_PRIMARY", AnswerSubject.ANSWER_SUBJECT.ANSWER_SUBJECT_ID);
         public static final UniqueKey<ApplicationRecord> KEY_APPLICATION_PRIMARY = Internal.createUniqueKey(Application.APPLICATION, "KEY_application_PRIMARY", Application.APPLICATION.APPLICATION_ID);
         public static final UniqueKey<AuthoritiesRecord> KEY_AUTHORITIES_PRIMARY = Internal.createUniqueKey(Authorities.AUTHORITIES, "KEY_authorities_PRIMARY", Authorities.AUTHORITIES.USERNAME, Authorities.AUTHORITIES.AUTHORITY);
         public static final UniqueKey<BuildingRecord> KEY_BUILDING_PRIMARY = Internal.createUniqueKey(Building.BUILDING, "KEY_building_PRIMARY", Building.BUILDING.BUILDING_ID);
@@ -277,15 +270,12 @@ public class Keys {
         public static final UniqueKey<CollegeRoleRecord> KEY_COLLEGE_ROLE_PRIMARY = Internal.createUniqueKey(CollegeRole.COLLEGE_ROLE, "KEY_college_role_PRIMARY", CollegeRole.COLLEGE_ROLE.ROLE_ID, CollegeRole.COLLEGE_ROLE.COLLEGE_ID);
         public static final UniqueKey<CourseRecord> KEY_COURSE_PRIMARY = Internal.createUniqueKey(Course.COURSE, "KEY_course_PRIMARY", Course.COURSE.COURSE_ID);
         public static final UniqueKey<CourseRecord> KEY_COURSE_COURSE_CODE = Internal.createUniqueKey(Course.COURSE, "KEY_course_course_code", Course.COURSE.COURSE_CODE);
-        public static final UniqueKey<CurriculumContentRecord> KEY_CURRICULUM_CONTENT_PRIMARY = Internal.createUniqueKey(CurriculumContent.CURRICULUM_CONTENT, "KEY_curriculum_content_PRIMARY", CurriculumContent.CURRICULUM_CONTENT.CURRICULUM_RELEASE_ID, CurriculumContent.CURRICULUM_CONTENT.SCHOOLROOM_NAME, CurriculumContent.CURRICULUM_CONTENT.WEEK, CurriculumContent.CURRICULUM_CONTENT.BATCH_NUM);
-        public static final UniqueKey<CurriculumReleaseRecord> KEY_CURRICULUM_RELEASE_PRIMARY = Internal.createUniqueKey(CurriculumRelease.CURRICULUM_RELEASE, "KEY_curriculum_release_PRIMARY", CurriculumRelease.CURRICULUM_RELEASE.CURRICULUM_RELEASE_ID);
         public static final UniqueKey<DepartmentRecord> KEY_DEPARTMENT_PRIMARY = Internal.createUniqueKey(Department.DEPARTMENT, "KEY_department_PRIMARY", Department.DEPARTMENT.DEPARTMENT_ID);
         public static final UniqueKey<FilesRecord> KEY_FILES_PRIMARY = Internal.createUniqueKey(Files.FILES, "KEY_files_PRIMARY", Files.FILES.FILE_ID);
         public static final UniqueKey<GradeRecord> KEY_GRADE_PRIMARY = Internal.createUniqueKey(Grade.GRADE, "KEY_grade_PRIMARY", Grade.GRADE.GRADE_ID);
         public static final UniqueKey<NationRecord> KEY_NATION_PRIMARY = Internal.createUniqueKey(Nation.NATION, "KEY_nation_PRIMARY", Nation.NATION.NATION_ID);
         public static final UniqueKey<OrganizeRecord> KEY_ORGANIZE_PRIMARY = Internal.createUniqueKey(Organize.ORGANIZE, "KEY_organize_PRIMARY", Organize.ORGANIZE.ORGANIZE_ID);
         public static final UniqueKey<PoliticalLandscapeRecord> KEY_POLITICAL_LANDSCAPE_PRIMARY = Internal.createUniqueKey(PoliticalLandscape.POLITICAL_LANDSCAPE, "KEY_political_landscape_PRIMARY", PoliticalLandscape.POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID);
-        public static final UniqueKey<QuestionFeedbackRecord> KEY_QUESTION_FEEDBACK_PRIMARY = Internal.createUniqueKey(QuestionFeedback.QUESTION_FEEDBACK, "KEY_question_feedback_PRIMARY", QuestionFeedback.QUESTION_FEEDBACK.FEEDBACK_ID);
         public static final UniqueKey<RoleRecord> KEY_ROLE_PRIMARY = Internal.createUniqueKey(Role.ROLE, "KEY_role_PRIMARY", Role.ROLE.ROLE_ID);
         public static final UniqueKey<RoleRecord> KEY_ROLE_ROLE_EN_NAME = Internal.createUniqueKey(Role.ROLE, "KEY_role_role_en_name", Role.ROLE.ROLE_EN_NAME);
         public static final UniqueKey<RoleApplicationRecord> KEY_ROLE_APPLICATION_PRIMARY = Internal.createUniqueKey(RoleApplication.ROLE_APPLICATION, "KEY_role_application_PRIMARY", RoleApplication.ROLE_APPLICATION.ROLE_ID, RoleApplication.ROLE_APPLICATION.APPLICATION_ID);
@@ -304,8 +294,6 @@ public class Keys {
         public static final UniqueKey<SystemSmsLogRecord> KEY_SYSTEM_SMS_LOG_PRIMARY = Internal.createUniqueKey(SystemSmsLog.SYSTEM_SMS_LOG, "KEY_system_sms_log_PRIMARY", SystemSmsLog.SYSTEM_SMS_LOG.LOG_ID);
         public static final UniqueKey<TrainingAttendRecord> KEY_TRAINING_ATTEND_PRIMARY = Internal.createUniqueKey(TrainingAttend.TRAINING_ATTEND, "KEY_training_attend_PRIMARY", TrainingAttend.TRAINING_ATTEND.TRAINING_ATTEND_ID);
         public static final UniqueKey<TrainingAttendAuthoritiesRecord> KEY_TRAINING_ATTEND_AUTHORITIES_PRIMARY = Internal.createUniqueKey(TrainingAttendAuthorities.TRAINING_ATTEND_AUTHORITIES, "KEY_training_attend_authorities_PRIMARY", TrainingAttendAuthorities.TRAINING_ATTEND_AUTHORITIES.AUTHORITIES_ID);
-        public static final UniqueKey<TrainingAttendLeaveApplyRecord> KEY_TRAINING_ATTEND_LEAVE_APPLY_PRIMARY = Internal.createUniqueKey(TrainingAttendLeaveApply.TRAINING_ATTEND_LEAVE_APPLY, "KEY_training_attend_leave_apply_PRIMARY", TrainingAttendLeaveApply.TRAINING_ATTEND_LEAVE_APPLY.LEAVE_APPLY_ID);
-        public static final UniqueKey<TrainingAttendLeaveApplyRecord> KEY_TRAINING_ATTEND_LEAVE_APPLY_TRAINING_ATTEND_ID = Internal.createUniqueKey(TrainingAttendLeaveApply.TRAINING_ATTEND_LEAVE_APPLY, "KEY_training_attend_leave_apply_training_attend_id", TrainingAttendLeaveApply.TRAINING_ATTEND_LEAVE_APPLY.TRAINING_ATTEND_ID, TrainingAttendLeaveApply.TRAINING_ATTEND_LEAVE_APPLY.TRAINING_USERS_ID);
         public static final UniqueKey<TrainingAttendUsersRecord> KEY_TRAINING_ATTEND_USERS_PRIMARY = Internal.createUniqueKey(TrainingAttendUsers.TRAINING_ATTEND_USERS, "KEY_training_attend_users_PRIMARY", TrainingAttendUsers.TRAINING_ATTEND_USERS.ATTEND_USERS_ID);
         public static final UniqueKey<TrainingAttendUsersRecord> KEY_TRAINING_ATTEND_USERS_TRAINING_ATTEND_ID = Internal.createUniqueKey(TrainingAttendUsers.TRAINING_ATTEND_USERS, "KEY_training_attend_users_training_attend_id", TrainingAttendUsers.TRAINING_ATTEND_USERS.TRAINING_ATTEND_ID, TrainingAttendUsers.TRAINING_ATTEND_USERS.TRAINING_USERS_ID);
         public static final UniqueKey<TrainingLabsRecord> KEY_TRAINING_LABS_PRIMARY = Internal.createUniqueKey(TrainingLabs.TRAINING_LABS, "KEY_training_labs_PRIMARY", TrainingLabs.TRAINING_LABS.TRAINING_LABS_ID);
@@ -322,50 +310,50 @@ public class Keys {
     }
 
     private static class ForeignKeys0 {
-        public static final ForeignKey<AchievementReleaseRecord, DepartmentRecord> ACHIEVEMENT_RELEASE_IBFK_1 = Internal.createForeignKey(Keys.KEY_DEPARTMENT_PRIMARY, AchievementRelease.ACHIEVEMENT_RELEASE, "achievement_release_ibfk_1", AchievementRelease.ACHIEVEMENT_RELEASE.DEPARTMENT_ID);
-        public static final ForeignKey<AchievementReleaseRecord, UsersRecord> ACHIEVEMENT_RELEASE_IBFK_2 = Internal.createForeignKey(Keys.KEY_USERS_PRIMARY, AchievementRelease.ACHIEVEMENT_RELEASE, "achievement_release_ibfk_2", AchievementRelease.ACHIEVEMENT_RELEASE.RELEASE_USERNAME);
-        public static final ForeignKey<AchievementSyncManifestRecord, AchievementReleaseRecord> ACHIEVEMENT_SYNC_MANIFEST_IBFK_1 = Internal.createForeignKey(Keys.KEY_ACHIEVEMENT_RELEASE_PRIMARY, AchievementSyncManifest.ACHIEVEMENT_SYNC_MANIFEST, "achievement_sync_manifest_ibfk_1", AchievementSyncManifest.ACHIEVEMENT_SYNC_MANIFEST.ACHIEVEMENT_RELEASE_ID);
-        public static final ForeignKey<AuthoritiesRecord, UsersRecord> AUTHORITIES_IBFK_1 = Internal.createForeignKey(Keys.KEY_USERS_PRIMARY, Authorities.AUTHORITIES, "authorities_ibfk_1", Authorities.AUTHORITIES.USERNAME);
-        public static final ForeignKey<BuildingRecord, CollegeRecord> BUILDING_IBFK_1 = Internal.createForeignKey(Keys.KEY_COLLEGE_PRIMARY, Building.BUILDING, "building_ibfk_1", Building.BUILDING.COLLEGE_ID);
-        public static final ForeignKey<CollegeRecord, SchoolRecord> COLLEGE_IBFK_1 = Internal.createForeignKey(Keys.KEY_SCHOOL_PRIMARY, College.COLLEGE, "college_ibfk_1", College.COLLEGE.SCHOOL_ID);
-        public static final ForeignKey<CollegeApplicationRecord, ApplicationRecord> COLLEGE_APPLICATION_IBFK_1 = Internal.createForeignKey(Keys.KEY_APPLICATION_PRIMARY, CollegeApplication.COLLEGE_APPLICATION, "college_application_ibfk_1", CollegeApplication.COLLEGE_APPLICATION.APPLICATION_ID);
-        public static final ForeignKey<CollegeApplicationRecord, CollegeRecord> COLLEGE_APPLICATION_IBFK_2 = Internal.createForeignKey(Keys.KEY_COLLEGE_PRIMARY, CollegeApplication.COLLEGE_APPLICATION, "college_application_ibfk_2", CollegeApplication.COLLEGE_APPLICATION.COLLEGE_ID);
-        public static final ForeignKey<CollegeRoleRecord, RoleRecord> COLLEGE_ROLE_IBFK_1 = Internal.createForeignKey(Keys.KEY_ROLE_PRIMARY, CollegeRole.COLLEGE_ROLE, "college_role_ibfk_1", CollegeRole.COLLEGE_ROLE.ROLE_ID);
-        public static final ForeignKey<CollegeRoleRecord, CollegeRecord> COLLEGE_ROLE_IBFK_2 = Internal.createForeignKey(Keys.KEY_COLLEGE_PRIMARY, CollegeRole.COLLEGE_ROLE, "college_role_ibfk_2", CollegeRole.COLLEGE_ROLE.COLLEGE_ID);
-        public static final ForeignKey<CourseRecord, CollegeRecord> COURSE_IBFK_1 = Internal.createForeignKey(Keys.KEY_COLLEGE_PRIMARY, Course.COURSE, "course_ibfk_1", Course.COURSE.COLLEGE_ID);
-        public static final ForeignKey<CurriculumContentRecord, CurriculumReleaseRecord> CURRICULUM_CONTENT_IBFK_1 = Internal.createForeignKey(Keys.KEY_CURRICULUM_RELEASE_PRIMARY, CurriculumContent.CURRICULUM_CONTENT, "curriculum_content_ibfk_1", CurriculumContent.CURRICULUM_CONTENT.CURRICULUM_RELEASE_ID);
-        public static final ForeignKey<CurriculumContentRecord, UsersRecord> CURRICULUM_CONTENT_IBFK_2 = Internal.createForeignKey(Keys.KEY_USERS_PRIMARY, CurriculumContent.CURRICULUM_CONTENT, "curriculum_content_ibfk_2", CurriculumContent.CURRICULUM_CONTENT.PLAN_USERNAME);
-        public static final ForeignKey<CurriculumReleaseRecord, CollegeRecord> CURRICULUM_RELEASE_IBFK_1 = Internal.createForeignKey(Keys.KEY_COLLEGE_PRIMARY, CurriculumRelease.CURRICULUM_RELEASE, "curriculum_release_ibfk_1", CurriculumRelease.CURRICULUM_RELEASE.COLLEGE_ID);
-        public static final ForeignKey<CurriculumReleaseRecord, UsersRecord> CURRICULUM_RELEASE_IBFK_2 = Internal.createForeignKey(Keys.KEY_USERS_PRIMARY, CurriculumRelease.CURRICULUM_RELEASE, "curriculum_release_ibfk_2", CurriculumRelease.CURRICULUM_RELEASE.RELEASE_USERNAME);
-        public static final ForeignKey<DepartmentRecord, CollegeRecord> DEPARTMENT_IBFK_1 = Internal.createForeignKey(Keys.KEY_COLLEGE_PRIMARY, Department.DEPARTMENT, "department_ibfk_1", Department.DEPARTMENT.COLLEGE_ID);
-        public static final ForeignKey<GradeRecord, ScienceRecord> GRADE_IBFK_1 = Internal.createForeignKey(Keys.KEY_SCIENCE_PRIMARY, Grade.GRADE, "grade_ibfk_1", Grade.GRADE.SCIENCE_ID);
-        public static final ForeignKey<OrganizeRecord, GradeRecord> ORGANIZE_IBFK_1 = Internal.createForeignKey(Keys.KEY_GRADE_PRIMARY, Organize.ORGANIZE, "organize_ibfk_1", Organize.ORGANIZE.GRADE_ID);
-        public static final ForeignKey<RoleApplicationRecord, RoleRecord> ROLE_APPLICATION_IBFK_1 = Internal.createForeignKey(Keys.KEY_ROLE_PRIMARY, RoleApplication.ROLE_APPLICATION, "role_application_ibfk_1", RoleApplication.ROLE_APPLICATION.ROLE_ID);
-        public static final ForeignKey<RoleApplicationRecord, ApplicationRecord> ROLE_APPLICATION_IBFK_2 = Internal.createForeignKey(Keys.KEY_APPLICATION_PRIMARY, RoleApplication.ROLE_APPLICATION, "role_application_ibfk_2", RoleApplication.ROLE_APPLICATION.APPLICATION_ID);
-        public static final ForeignKey<SchoolroomRecord, BuildingRecord> SCHOOLROOM_IBFK_1 = Internal.createForeignKey(Keys.KEY_BUILDING_PRIMARY, Schoolroom.SCHOOLROOM, "schoolroom_ibfk_1", Schoolroom.SCHOOLROOM.BUILDING_ID);
-        public static final ForeignKey<ScienceRecord, DepartmentRecord> SCIENCE_IBFK_1 = Internal.createForeignKey(Keys.KEY_DEPARTMENT_PRIMARY, Science.SCIENCE, "science_ibfk_1", Science.SCIENCE.DEPARTMENT_ID);
-        public static final ForeignKey<StaffRecord, DepartmentRecord> STAFF_IBFK_1 = Internal.createForeignKey(Keys.KEY_DEPARTMENT_PRIMARY, Staff.STAFF, "staff_ibfk_1", Staff.STAFF.DEPARTMENT_ID);
-        public static final ForeignKey<StaffRecord, UsersRecord> STAFF_IBFK_2 = Internal.createForeignKey(Keys.KEY_USERS_PRIMARY, Staff.STAFF, "staff_ibfk_2", Staff.STAFF.USERNAME);
-        public static final ForeignKey<StudentRecord, OrganizeRecord> STUDENT_IBFK_1 = Internal.createForeignKey(Keys.KEY_ORGANIZE_PRIMARY, Student.STUDENT, "student_ibfk_1", Student.STUDENT.ORGANIZE_ID);
-        public static final ForeignKey<StudentRecord, UsersRecord> STUDENT_IBFK_2 = Internal.createForeignKey(Keys.KEY_USERS_PRIMARY, Student.STUDENT, "student_ibfk_2", Student.STUDENT.USERNAME);
-        public static final ForeignKey<SystemNotifyRecord, UsersRecord> SYSTEM_NOTIFY_IBFK_1 = Internal.createForeignKey(Keys.KEY_USERS_PRIMARY, SystemNotify.SYSTEM_NOTIFY, "system_notify_ibfk_1", SystemNotify.SYSTEM_NOTIFY.SEND_USER);
-        public static final ForeignKey<TrainingAttendRecord, SchoolroomRecord> TRAINING_ATTEND_IBFK_1 = Internal.createForeignKey(Keys.KEY_SCHOOLROOM_PRIMARY, TrainingAttend.TRAINING_ATTEND, "training_attend_ibfk_1", TrainingAttend.TRAINING_ATTEND.ATTEND_ROOM);
-        public static final ForeignKey<TrainingAttendRecord, TrainingReleaseRecord> TRAINING_ATTEND_IBFK_2 = Internal.createForeignKey(Keys.KEY_TRAINING_RELEASE_PRIMARY, TrainingAttend.TRAINING_ATTEND, "training_attend_ibfk_2", TrainingAttend.TRAINING_ATTEND.TRAINING_RELEASE_ID);
-        public static final ForeignKey<TrainingAttendAuthoritiesRecord, TrainingAttendRecord> TRAINING_ATTEND_AUTHORITIES_IBFK_1 = Internal.createForeignKey(Keys.KEY_TRAINING_ATTEND_PRIMARY, TrainingAttendAuthorities.TRAINING_ATTEND_AUTHORITIES, "training_attend_authorities_ibfk_1", TrainingAttendAuthorities.TRAINING_ATTEND_AUTHORITIES.TRAINING_ATTEND_ID);
-        public static final ForeignKey<TrainingAttendAuthoritiesRecord, UsersRecord> TRAINING_ATTEND_AUTHORITIES_IBFK_2 = Internal.createForeignKey(Keys.KEY_USERS_PRIMARY, TrainingAttendAuthorities.TRAINING_ATTEND_AUTHORITIES, "training_attend_authorities_ibfk_2", TrainingAttendAuthorities.TRAINING_ATTEND_AUTHORITIES.USERNAME);
-        public static final ForeignKey<TrainingAttendLeaveApplyRecord, TrainingAttendRecord> TRAINING_ATTEND_LEAVE_APPLY_IBFK_1 = Internal.createForeignKey(Keys.KEY_TRAINING_ATTEND_PRIMARY, TrainingAttendLeaveApply.TRAINING_ATTEND_LEAVE_APPLY, "training_attend_leave_apply_ibfk_1", TrainingAttendLeaveApply.TRAINING_ATTEND_LEAVE_APPLY.TRAINING_ATTEND_ID);
-        public static final ForeignKey<TrainingAttendLeaveApplyRecord, TrainingUsersRecord> TRAINING_ATTEND_LEAVE_APPLY_IBFK_2 = Internal.createForeignKey(Keys.KEY_TRAINING_USERS_PRIMARY, TrainingAttendLeaveApply.TRAINING_ATTEND_LEAVE_APPLY, "training_attend_leave_apply_ibfk_2", TrainingAttendLeaveApply.TRAINING_ATTEND_LEAVE_APPLY.TRAINING_USERS_ID);
-        public static final ForeignKey<TrainingAttendUsersRecord, TrainingAttendRecord> TRAINING_ATTEND_USERS_IBFK_1 = Internal.createForeignKey(Keys.KEY_TRAINING_ATTEND_PRIMARY, TrainingAttendUsers.TRAINING_ATTEND_USERS, "training_attend_users_ibfk_1", TrainingAttendUsers.TRAINING_ATTEND_USERS.TRAINING_ATTEND_ID);
-        public static final ForeignKey<TrainingAttendUsersRecord, TrainingUsersRecord> TRAINING_ATTEND_USERS_IBFK_2 = Internal.createForeignKey(Keys.KEY_TRAINING_USERS_PRIMARY, TrainingAttendUsers.TRAINING_ATTEND_USERS, "training_attend_users_ibfk_2", TrainingAttendUsers.TRAINING_ATTEND_USERS.TRAINING_USERS_ID);
-        public static final ForeignKey<TrainingReleaseRecord, SchoolroomRecord> TRAINING_RELEASE_IBFK_1 = Internal.createForeignKey(Keys.KEY_SCHOOLROOM_PRIMARY, TrainingRelease.TRAINING_RELEASE, "training_release_ibfk_1", TrainingRelease.TRAINING_RELEASE.SCHOOLROOM_ID);
-        public static final ForeignKey<TrainingReleaseRecord, UsersRecord> TRAINING_RELEASE_IBFK_2 = Internal.createForeignKey(Keys.KEY_USERS_PRIMARY, TrainingRelease.TRAINING_RELEASE, "training_release_ibfk_2", TrainingRelease.TRAINING_RELEASE.USERNAME);
-        public static final ForeignKey<TrainingReleaseRecord, CourseRecord> TRAINING_RELEASE_IBFK_3 = Internal.createForeignKey(Keys.KEY_COURSE_PRIMARY, TrainingRelease.TRAINING_RELEASE, "training_release_ibfk_3", TrainingRelease.TRAINING_RELEASE.COURSE_ID);
-        public static final ForeignKey<TrainingReleaseRecord, OrganizeRecord> TRAINING_RELEASE_IBFK_4 = Internal.createForeignKey(Keys.KEY_ORGANIZE_PRIMARY, TrainingRelease.TRAINING_RELEASE, "training_release_ibfk_4", TrainingRelease.TRAINING_RELEASE.ORGANIZE_ID);
-        public static final ForeignKey<TrainingUsersRecord, TrainingReleaseRecord> TRAINING_USERS_IBFK_1 = Internal.createForeignKey(Keys.KEY_TRAINING_RELEASE_PRIMARY, TrainingUsers.TRAINING_USERS, "training_users_ibfk_1", TrainingUsers.TRAINING_USERS.TRAINING_RELEASE_ID);
-        public static final ForeignKey<TrainingUsersRecord, StudentRecord> TRAINING_USERS_IBFK_2 = Internal.createForeignKey(Keys.KEY_STUDENT_PRIMARY, TrainingUsers.TRAINING_USERS, "training_users_ibfk_2", TrainingUsers.TRAINING_USERS.STUDENT_ID);
-        public static final ForeignKey<UserNotifyRecord, UsersRecord> USER_NOTIFY_IBFK_1 = Internal.createForeignKey(Keys.KEY_USERS_PRIMARY, UserNotify.USER_NOTIFY, "user_notify_ibfk_1", UserNotify.USER_NOTIFY.SEND_USER);
-        public static final ForeignKey<UserNotifyRecord, UsersRecord> USER_NOTIFY_IBFK_2 = Internal.createForeignKey(Keys.KEY_USERS_PRIMARY, UserNotify.USER_NOTIFY, "user_notify_ibfk_2", UserNotify.USER_NOTIFY.ACCEPT_USER);
-        public static final ForeignKey<UsersRecord, UsersTypeRecord> USERS_IBFK_1 = Internal.createForeignKey(Keys.KEY_USERS_TYPE_PRIMARY, Users.USERS, "users_ibfk_1", Users.USERS.USERS_TYPE_ID);
-        public static final ForeignKey<UsersRecord, FilesRecord> USERS_IBFK_2 = Internal.createForeignKey(Keys.KEY_FILES_PRIMARY, Users.USERS, "users_ibfk_2", Users.USERS.AVATAR);
+        public static final ForeignKey<AnswerBankRecord, UsersRecord> ANSWER_BANK_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_USERS_PRIMARY, AnswerBank.ANSWER_BANK, "answer_bank_ibfk_1", AnswerBank.ANSWER_BANK.USERNAME);
+        public static final ForeignKey<AnswerOptionRecord, AnswerSubjectRecord> ANSWER_OPTION_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_ANSWER_SUBJECT_PRIMARY, AnswerOption.ANSWER_OPTION, "answer_option_ibfk_1", AnswerOption.ANSWER_OPTION.ANSWER_SUBJECT_ID);
+        public static final ForeignKey<AnswerReleaseRecord, AnswerBankRecord> ANSWER_RELEASE_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_ANSWER_BANK_PRIMARY, AnswerRelease.ANSWER_RELEASE, "answer_release_ibfk_1", AnswerRelease.ANSWER_RELEASE.ANSWER_BANK_ID);
+        public static final ForeignKey<AnswerReleaseRecord, UsersRecord> ANSWER_RELEASE_IBFK_2 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_USERS_PRIMARY, AnswerRelease.ANSWER_RELEASE, "answer_release_ibfk_2", AnswerRelease.ANSWER_RELEASE.USERNAME);
+        public static final ForeignKey<AnswerResultRecord, AnswerReleaseRecord> ANSWER_RESULT_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_ANSWER_RELEASE_PRIMARY, AnswerResult.ANSWER_RESULT, "answer_result_ibfk_1", AnswerResult.ANSWER_RESULT.ANSWER_RELEASE_ID);
+        public static final ForeignKey<AnswerSolvingRecord, AnswerSubjectRecord> ANSWER_SOLVING_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_ANSWER_SUBJECT_PRIMARY, AnswerSolving.ANSWER_SOLVING, "answer_solving_ibfk_1", AnswerSolving.ANSWER_SOLVING.ANSWER_SUBJECT_ID);
+        public static final ForeignKey<AnswerSolvingRecord, AnswerReleaseRecord> ANSWER_SOLVING_IBFK_2 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_ANSWER_RELEASE_PRIMARY, AnswerSolving.ANSWER_SOLVING, "answer_solving_ibfk_2", AnswerSolving.ANSWER_SOLVING.ANSWER_RELEASE_ID);
+        public static final ForeignKey<AnswerSubjectRecord, AnswerBankRecord> ANSWER_SUBJECT_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_ANSWER_BANK_PRIMARY, AnswerSubject.ANSWER_SUBJECT, "answer_subject_ibfk_1", AnswerSubject.ANSWER_SUBJECT.ANSWER_BANK_ID);
+        public static final ForeignKey<AnswerSubjectRecord, UsersRecord> ANSWER_SUBJECT_IBFK_2 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_USERS_PRIMARY, AnswerSubject.ANSWER_SUBJECT, "answer_subject_ibfk_2", AnswerSubject.ANSWER_SUBJECT.USERNAME);
+        public static final ForeignKey<AuthoritiesRecord, UsersRecord> AUTHORITIES_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_USERS_PRIMARY, Authorities.AUTHORITIES, "authorities_ibfk_1", Authorities.AUTHORITIES.USERNAME);
+        public static final ForeignKey<BuildingRecord, CollegeRecord> BUILDING_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_COLLEGE_PRIMARY, Building.BUILDING, "building_ibfk_1", Building.BUILDING.COLLEGE_ID);
+        public static final ForeignKey<CollegeRecord, SchoolRecord> COLLEGE_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_SCHOOL_PRIMARY, College.COLLEGE, "college_ibfk_1", College.COLLEGE.SCHOOL_ID);
+        public static final ForeignKey<CollegeApplicationRecord, ApplicationRecord> COLLEGE_APPLICATION_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_APPLICATION_PRIMARY, CollegeApplication.COLLEGE_APPLICATION, "college_application_ibfk_1", CollegeApplication.COLLEGE_APPLICATION.APPLICATION_ID);
+        public static final ForeignKey<CollegeApplicationRecord, CollegeRecord> COLLEGE_APPLICATION_IBFK_2 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_COLLEGE_PRIMARY, CollegeApplication.COLLEGE_APPLICATION, "college_application_ibfk_2", CollegeApplication.COLLEGE_APPLICATION.COLLEGE_ID);
+        public static final ForeignKey<CollegeRoleRecord, RoleRecord> COLLEGE_ROLE_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_ROLE_PRIMARY, CollegeRole.COLLEGE_ROLE, "college_role_ibfk_1", CollegeRole.COLLEGE_ROLE.ROLE_ID);
+        public static final ForeignKey<CollegeRoleRecord, CollegeRecord> COLLEGE_ROLE_IBFK_2 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_COLLEGE_PRIMARY, CollegeRole.COLLEGE_ROLE, "college_role_ibfk_2", CollegeRole.COLLEGE_ROLE.COLLEGE_ID);
+        public static final ForeignKey<CourseRecord, CollegeRecord> COURSE_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_COLLEGE_PRIMARY, Course.COURSE, "course_ibfk_1", Course.COURSE.COLLEGE_ID);
+        public static final ForeignKey<DepartmentRecord, CollegeRecord> DEPARTMENT_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_COLLEGE_PRIMARY, Department.DEPARTMENT, "department_ibfk_1", Department.DEPARTMENT.COLLEGE_ID);
+        public static final ForeignKey<GradeRecord, ScienceRecord> GRADE_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_SCIENCE_PRIMARY, Grade.GRADE, "grade_ibfk_1", Grade.GRADE.SCIENCE_ID);
+        public static final ForeignKey<OrganizeRecord, GradeRecord> ORGANIZE_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_GRADE_PRIMARY, Organize.ORGANIZE, "organize_ibfk_1", Organize.ORGANIZE.GRADE_ID);
+        public static final ForeignKey<RoleApplicationRecord, RoleRecord> ROLE_APPLICATION_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_ROLE_PRIMARY, RoleApplication.ROLE_APPLICATION, "role_application_ibfk_1", RoleApplication.ROLE_APPLICATION.ROLE_ID);
+        public static final ForeignKey<RoleApplicationRecord, ApplicationRecord> ROLE_APPLICATION_IBFK_2 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_APPLICATION_PRIMARY, RoleApplication.ROLE_APPLICATION, "role_application_ibfk_2", RoleApplication.ROLE_APPLICATION.APPLICATION_ID);
+        public static final ForeignKey<SchoolroomRecord, BuildingRecord> SCHOOLROOM_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_BUILDING_PRIMARY, Schoolroom.SCHOOLROOM, "schoolroom_ibfk_1", Schoolroom.SCHOOLROOM.BUILDING_ID);
+        public static final ForeignKey<ScienceRecord, DepartmentRecord> SCIENCE_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_DEPARTMENT_PRIMARY, Science.SCIENCE, "science_ibfk_1", Science.SCIENCE.DEPARTMENT_ID);
+        public static final ForeignKey<StaffRecord, DepartmentRecord> STAFF_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_DEPARTMENT_PRIMARY, Staff.STAFF, "staff_ibfk_1", Staff.STAFF.DEPARTMENT_ID);
+        public static final ForeignKey<StaffRecord, UsersRecord> STAFF_IBFK_2 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_USERS_PRIMARY, Staff.STAFF, "staff_ibfk_2", Staff.STAFF.USERNAME);
+        public static final ForeignKey<StudentRecord, OrganizeRecord> STUDENT_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_ORGANIZE_PRIMARY, Student.STUDENT, "student_ibfk_1", Student.STUDENT.ORGANIZE_ID);
+        public static final ForeignKey<StudentRecord, UsersRecord> STUDENT_IBFK_2 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_USERS_PRIMARY, Student.STUDENT, "student_ibfk_2", Student.STUDENT.USERNAME);
+        public static final ForeignKey<SystemNotifyRecord, UsersRecord> SYSTEM_NOTIFY_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_USERS_PRIMARY, SystemNotify.SYSTEM_NOTIFY, "system_notify_ibfk_1", SystemNotify.SYSTEM_NOTIFY.SEND_USER);
+        public static final ForeignKey<TrainingAttendRecord, SchoolroomRecord> TRAINING_ATTEND_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_SCHOOLROOM_PRIMARY, TrainingAttend.TRAINING_ATTEND, "training_attend_ibfk_1", TrainingAttend.TRAINING_ATTEND.ATTEND_ROOM);
+        public static final ForeignKey<TrainingAttendRecord, TrainingReleaseRecord> TRAINING_ATTEND_IBFK_2 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_TRAINING_RELEASE_PRIMARY, TrainingAttend.TRAINING_ATTEND, "training_attend_ibfk_2", TrainingAttend.TRAINING_ATTEND.TRAINING_RELEASE_ID);
+        public static final ForeignKey<TrainingAttendAuthoritiesRecord, TrainingAttendRecord> TRAINING_ATTEND_AUTHORITIES_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_TRAINING_ATTEND_PRIMARY, TrainingAttendAuthorities.TRAINING_ATTEND_AUTHORITIES, "training_attend_authorities_ibfk_1", TrainingAttendAuthorities.TRAINING_ATTEND_AUTHORITIES.TRAINING_ATTEND_ID);
+        public static final ForeignKey<TrainingAttendAuthoritiesRecord, UsersRecord> TRAINING_ATTEND_AUTHORITIES_IBFK_2 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_USERS_PRIMARY, TrainingAttendAuthorities.TRAINING_ATTEND_AUTHORITIES, "training_attend_authorities_ibfk_2", TrainingAttendAuthorities.TRAINING_ATTEND_AUTHORITIES.USERNAME);
+        public static final ForeignKey<TrainingAttendUsersRecord, TrainingAttendRecord> TRAINING_ATTEND_USERS_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_TRAINING_ATTEND_PRIMARY, TrainingAttendUsers.TRAINING_ATTEND_USERS, "training_attend_users_ibfk_1", TrainingAttendUsers.TRAINING_ATTEND_USERS.TRAINING_ATTEND_ID);
+        public static final ForeignKey<TrainingAttendUsersRecord, TrainingUsersRecord> TRAINING_ATTEND_USERS_IBFK_2 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_TRAINING_USERS_PRIMARY, TrainingAttendUsers.TRAINING_ATTEND_USERS, "training_attend_users_ibfk_2", TrainingAttendUsers.TRAINING_ATTEND_USERS.TRAINING_USERS_ID);
+        public static final ForeignKey<TrainingReleaseRecord, SchoolroomRecord> TRAINING_RELEASE_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_SCHOOLROOM_PRIMARY, TrainingRelease.TRAINING_RELEASE, "training_release_ibfk_1", TrainingRelease.TRAINING_RELEASE.SCHOOLROOM_ID);
+        public static final ForeignKey<TrainingReleaseRecord, UsersRecord> TRAINING_RELEASE_IBFK_2 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_USERS_PRIMARY, TrainingRelease.TRAINING_RELEASE, "training_release_ibfk_2", TrainingRelease.TRAINING_RELEASE.USERNAME);
+        public static final ForeignKey<TrainingReleaseRecord, CourseRecord> TRAINING_RELEASE_IBFK_3 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_COURSE_PRIMARY, TrainingRelease.TRAINING_RELEASE, "training_release_ibfk_3", TrainingRelease.TRAINING_RELEASE.COURSE_ID);
+        public static final ForeignKey<TrainingReleaseRecord, OrganizeRecord> TRAINING_RELEASE_IBFK_4 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_ORGANIZE_PRIMARY, TrainingRelease.TRAINING_RELEASE, "training_release_ibfk_4", TrainingRelease.TRAINING_RELEASE.ORGANIZE_ID);
+        public static final ForeignKey<TrainingUsersRecord, TrainingReleaseRecord> TRAINING_USERS_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_TRAINING_RELEASE_PRIMARY, TrainingUsers.TRAINING_USERS, "training_users_ibfk_1", TrainingUsers.TRAINING_USERS.TRAINING_RELEASE_ID);
+        public static final ForeignKey<TrainingUsersRecord, StudentRecord> TRAINING_USERS_IBFK_2 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_STUDENT_PRIMARY, TrainingUsers.TRAINING_USERS, "training_users_ibfk_2", TrainingUsers.TRAINING_USERS.STUDENT_ID);
+        public static final ForeignKey<UserNotifyRecord, UsersRecord> USER_NOTIFY_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_USERS_PRIMARY, UserNotify.USER_NOTIFY, "user_notify_ibfk_1", UserNotify.USER_NOTIFY.SEND_USER);
+        public static final ForeignKey<UserNotifyRecord, UsersRecord> USER_NOTIFY_IBFK_2 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_USERS_PRIMARY, UserNotify.USER_NOTIFY, "user_notify_ibfk_2", UserNotify.USER_NOTIFY.ACCEPT_USER);
+        public static final ForeignKey<UsersRecord, UsersTypeRecord> USERS_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_USERS_TYPE_PRIMARY, Users.USERS, "users_ibfk_1", Users.USERS.USERS_TYPE_ID);
+        public static final ForeignKey<UsersRecord, FilesRecord> USERS_IBFK_2 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_FILES_PRIMARY, Users.USERS, "users_ibfk_2", Users.USERS.AVATAR);
     }
 }

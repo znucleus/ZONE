@@ -470,7 +470,7 @@
                                     <excludes>
                                         flyway_schema_history
                                     </excludes>
-                                    <inputSchema>zhe</inputSchema>
+                                    <inputSchema>zone</inputSchema>
                                 </database>
                                 <target>
                                     <packageName>top.zbeboy.zone.domain</packageName>
