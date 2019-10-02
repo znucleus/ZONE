@@ -65,7 +65,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf()
-                .ignoringAntMatchers("/remind/**", "/oauth/authorize")
+                .ignoringAntMatchers("/remind/**", "/oauth/authorize", "/rest/**")
                 .and()
                 .headers()
                 // allow same origin to frame our site to support iframe SockJS
@@ -82,7 +82,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and().authorizeRequests().antMatchers("/web/**").access("@webSecurity.check(authentication,request)")
                 .and().authorizeRequests().antMatchers("/special/channel/**").hasAnyRole("SYSTEM", "ADMIN") // 特别通道 跨controller调用共同方法使用
                 .and().authorizeRequests().antMatchers("/user/**", "/remind/**", "/oauth/authorize").authenticated()
-                .and().authorizeRequests().antMatchers("/anyone/**").permitAll()
+                .and().authorizeRequests().antMatchers("/anyone/**", "/rest/**").permitAll()
                 .antMatchers("/metrics/**").hasRole("ACTUATOR")
                 .antMatchers("/health/**").hasRole("ACTUATOR")
                 .antMatchers("/trace/**").hasRole("ACTUATOR")
