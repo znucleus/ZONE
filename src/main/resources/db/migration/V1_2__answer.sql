@@ -59,6 +59,7 @@ CREATE TABLE answer_result(
   user_name VARCHAR(20),
   last_socre DOUBLE,
   total_score DOUBLE NOT NULL,
+  ip_address VARCHAR(50),
   answer_release_id VARCHAR(64) NOT NULL,
   FOREIGN KEY(answer_release_id) REFERENCES answer_release(answer_release_id) ON DELETE CASCADE
 );

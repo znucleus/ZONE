@@ -17,9 +17,8 @@ import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.vo.answer.subject.AnswerSubjectSearchVo;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
-import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 public class AnswerSubjectRestController {
@@ -40,10 +39,11 @@ public class AnswerSubjectRestController {
     @PostMapping("/rest/answer/subject")
     public ResponseEntity<Map<String, Object>> restData(@RequestBody AnswerSubjectSearchVo answerSubjectSearchVo) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        AnswerSubjectRecord answerSubjectRecord =
+        Optional<AnswerSubjectRecord> answerSubjectRecordOptional =
                 answerSubjectService.findByAnswerBankIdAndCustomId(answerSubjectSearchVo.getAnswerBankId(), answerSubjectSearchVo.getCustomId());
         AnswerSubjectBean bean = new AnswerSubjectBean();
-        if (Objects.nonNull(answerSubjectRecord)) {
+        if (answerSubjectRecordOptional.isPresent()) {
+            AnswerSubjectRecord answerSubjectRecord = answerSubjectRecordOptional.get();
             bean.setAnswerSubjectId(answerSubjectRecord.getAnswerSubjectId());
             bean.setContent(answerSubjectRecord.getContent());
             bean.setSubjectType(answerSubjectRecord.getSubjectType());
@@ -52,7 +52,7 @@ public class AnswerSubjectRestController {
             bean.setCustomId(answerSubjectRecord.getCustomId());
             // 选项
             Result<AnswerOptionRecord> records = answerOptionService.findByAnswerSubjectId(answerSubjectRecord.getAnswerSubjectId());
-            if(records.isNotEmpty()){
+            if (records.isNotEmpty()) {
                 bean.setOptions(records.into(AnswerOption.class));
             }
             ajaxUtil.success().msg("获取数据成功").put("subject", bean);

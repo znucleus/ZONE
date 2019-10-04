@@ -97,6 +97,13 @@ public class AnswerResultDao extends DAOImpl<AnswerResultRecord, top.zbeboy.zone
     }
 
     /**
+     * Fetch records that have <code>ip_address IN (values)</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.AnswerResult> fetchByIpAddress(String... values) {
+        return fetch(AnswerResult.ANSWER_RESULT.IP_ADDRESS, values);
+    }
+
+    /**
      * Fetch records that have <code>answer_release_id IN (values)</code>
      */
     public List<top.zbeboy.zone.domain.tables.pojos.AnswerResult> fetchByAnswerReleaseId(String... values) {

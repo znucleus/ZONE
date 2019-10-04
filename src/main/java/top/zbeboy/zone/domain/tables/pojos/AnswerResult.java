@@ -24,13 +24,14 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AnswerResult implements Serializable {
 
-    private static final long serialVersionUID = 1273186320;
+    private static final long serialVersionUID = -495837523;
 
     private String answerResultId;
     private String userId;
     private String userName;
     private Double lastSocre;
     private Double totalScore;
+    private String ipAddress;
     private String answerReleaseId;
 
     public AnswerResult() {}
@@ -41,6 +42,7 @@ public class AnswerResult implements Serializable {
         this.userName = value.userName;
         this.lastSocre = value.lastSocre;
         this.totalScore = value.totalScore;
+        this.ipAddress = value.ipAddress;
         this.answerReleaseId = value.answerReleaseId;
     }
 
@@ -50,6 +52,7 @@ public class AnswerResult implements Serializable {
         String userName,
         Double lastSocre,
         Double totalScore,
+        String ipAddress,
         String answerReleaseId
     ) {
         this.answerResultId = answerResultId;
@@ -57,6 +60,7 @@ public class AnswerResult implements Serializable {
         this.userName = userName;
         this.lastSocre = lastSocre;
         this.totalScore = totalScore;
+        this.ipAddress = ipAddress;
         this.answerReleaseId = answerReleaseId;
     }
 
@@ -106,6 +110,15 @@ public class AnswerResult implements Serializable {
         this.totalScore = totalScore;
     }
 
+    @Size(max = 50)
+    public String getIpAddress() {
+        return this.ipAddress;
+    }
+
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
+    }
+
     @NotNull
     @Size(max = 64)
     public String getAnswerReleaseId() {
@@ -125,6 +138,7 @@ public class AnswerResult implements Serializable {
         sb.append(", ").append(userName);
         sb.append(", ").append(lastSocre);
         sb.append(", ").append(totalScore);
+        sb.append(", ").append(ipAddress);
         sb.append(", ").append(answerReleaseId);
 
         sb.append(")");

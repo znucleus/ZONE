@@ -40,7 +40,7 @@ import top.zbeboy.zone.domain.tables.records.AnswerResultRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AnswerResult extends TableImpl<AnswerResultRecord> {
 
-    private static final long serialVersionUID = -1909866940;
+    private static final long serialVersionUID = -168424905;
 
     /**
      * The reference instance of <code>zone.answer_result</code>
@@ -79,6 +79,11 @@ public class AnswerResult extends TableImpl<AnswerResultRecord> {
      * The column <code>zone.answer_result.total_score</code>.
      */
     public final TableField<AnswerResultRecord, Double> TOTAL_SCORE = createField("total_score", org.jooq.impl.SQLDataType.DOUBLE.nullable(false), this, "");
+
+    /**
+     * The column <code>zone.answer_result.ip_address</code>.
+     */
+    public final TableField<AnswerResultRecord, String> IP_ADDRESS = createField("ip_address", org.jooq.impl.SQLDataType.VARCHAR(50), this, "");
 
     /**
      * The column <code>zone.answer_result.answer_release_id</code>.
