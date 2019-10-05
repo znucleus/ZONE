@@ -36,9 +36,9 @@ public class AnswerResultServiceImpl implements AnswerResultService {
     }
 
     @Override
-    public Optional<AnswerResultRecord> findByUserIdAndIpAddress(String userId, String ipAddress) {
+    public Optional<AnswerResultRecord> findByAnswerReleaseIdAndIpAddress(String answerReleaseId, String ipAddress) {
         return create.selectFrom(ANSWER_RESULT)
-                .where(ANSWER_RESULT.IP_ADDRESS.eq(ipAddress).and(ANSWER_RESULT.USER_ID.eq(userId)))
+                .where(ANSWER_RESULT.IP_ADDRESS.eq(ipAddress).and(ANSWER_RESULT.ANSWER_RELEASE_ID.eq(answerReleaseId)))
                 .fetchOptional();
     }
 

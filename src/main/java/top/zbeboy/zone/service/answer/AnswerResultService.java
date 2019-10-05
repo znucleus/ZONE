@@ -17,13 +17,13 @@ public interface AnswerResultService {
     Optional<AnswerResultRecord> findByAnswerReleaseIdAndUserId(String answerReleaseId, String userId);
 
     /**
-     * 根据ip与用户id查询
+     * 根据ip与发布id查询
      *
-     * @param userId    用户id
+     * @param answerReleaseId    发布id
      * @param ipAddress ip
      * @return 数据
      */
-    Optional<AnswerResultRecord> findByUserIdAndIpAddress(String userId, String ipAddress);
+    Optional<AnswerResultRecord> findByAnswerReleaseIdAndIpAddress(String answerReleaseId, String ipAddress);
 
     /**
      * 保存

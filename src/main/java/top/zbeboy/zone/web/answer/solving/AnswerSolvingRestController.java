@@ -54,7 +54,7 @@ public class AnswerSolvingRestController {
             Optional<AnswerResultRecord> answerResultRecordOptional = answerResultService.findByAnswerReleaseIdAndUserId(answerSolvingCheck.getAnswerReleaseId(), answerSolvingCheck.getUserId());
             if (!answerResultRecordOptional.isPresent()) {
                 String ip = RequestUtil.getIpAddress(request);
-                Optional<AnswerResultRecord> ipCheck = answerResultService.findByUserIdAndIpAddress(answerSolvingCheck.getUserId(), ip);
+                Optional<AnswerResultRecord> ipCheck = answerResultService.findByAnswerReleaseIdAndIpAddress(answerSolvingCheck.getAnswerReleaseId(), ip);
                 if(!ipCheck.isPresent()){
                     // 计算最后结果
                     double lastScore = 0;
@@ -64,6 +64,7 @@ public class AnswerSolvingRestController {
                     int count = 0;
                     AnswerResult answerResult = new AnswerResult();
                     answerResult.setAnswerResultId(UUIDUtil.getUUID());
+                    answerResult.setIpAddress(ip);
                     for (AnswerSolving answerSolving : answerSolvingList) {
                         AnswerSubject answerSubject = answerSubjectService.findById(answerSolving.getAnswerSubjectId());
                         if (Objects.isNull(answerSubject)) {
