@@ -2,44 +2,65 @@
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="header :: no-metas-header(~{::title},~{::link})">
     <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
-    <title th:text="#{web.title}">ZHE</title>
+    <title th:text="#{web.title}">ZONE</title>
+    <!-- bootstrap css -->
+    <link rel="stylesheet" href="plugins/bootstrap/css/bootstrap.min.css" th:href="@{/plugins/bootstrap/css/bootstrap.min.css}"/>
+    <!-- font css -->
+    <link rel="stylesheet" href="css/index/useso.css" th:href="@{/css/index/useso.css}"/>
+    <!-- Custom CSS-->
     <link rel="stylesheet" href="css/index/index.css" th:href="@{/css/index/index.css}"/>
-    <link rel="stylesheet" href="css/index/templatemo-style.css" th:href="@{/css/index/templatemo-style.css}"/>
 </head>
 <body>
-<div id="particles-js"></div>
-
-<ul class="cb-slideshow">
-    <li></li>
-    <li></li>
-    <li></li>
-    <li></li>
-    <li></li>
-    <li></li>
-</ul>
-
-<div class="container-fluid">
-    <div class="row cb-slideshow-text-container ">
-        <div class="tm-content col-xl-6 col-sm-8 col-xs-8 ml-auto section">
-            <header class="mb-5"><h1 th:text="#{web.app.name}"></h1></header>
-            <P class="mb-5">Z.核(ISY校园).团队致力于校园项目研发，通过人性化设计帮助学生及教职工更轻松的学习与工作. Thank you for visiting our site!</P>
-
-            <div class="row form-section">
-
-                <div class="col-md-5 col-sm-5 col-xs-5">
-                    <button type="button" class="tm-btn-subscribe" id="login">开始使用</button>
-                </div>
-                <div class="col-md-7 col-sm-7 col-xs-7 mt-2">
-                    <audio src="files/music/1.mp3" th:src="@{/files/music/1.mp3}" preload="auto" controls></audio>
-                </div>
-
-            </div>
-
-        </div>
-    </div>
-    <div class="footer-link" th:include="footer::footer">
+<!-- Preloader -->
+<div class="preloader">
+    <div class="sk-circle">
+        <div class="sk-circle1 sk-child"></div>
+        <div class="sk-circle2 sk-child"></div>
+        <div class="sk-circle3 sk-child"></div>
+        <div class="sk-circle4 sk-child"></div>
+        <div class="sk-circle5 sk-child"></div>
+        <div class="sk-circle6 sk-child"></div>
+        <div class="sk-circle7 sk-child"></div>
+        <div class="sk-circle8 sk-child"></div>
+        <div class="sk-circle9 sk-child"></div>
+        <div class="sk-circle10 sk-child"></div>
+        <div class="sk-circle11 sk-child"></div>
+        <div class="sk-circle12 sk-child"></div>
     </div>
 </div>
+
+<!-- SITE HEADER -->
+<div class="site-top" id="top">
+    <div class="site-top-overlay"></div>
+    <div class="welcome-text">
+        <div class="container text-center white-text">
+            <div class="col-xs-8 col-xs-offset-2">
+                <h1 class="wow fadeInUp" data-wow-delay="0.4s">ZONE
+                    <small class="small-text white">校园</small>
+                </h1>
+                <a href="login.html" th:href="@{/login}" class="button outline white wow fadeInUp"
+                   data-wow-delay="0.8s">马上登录</a>
+            </div>
+        </div>
+    </div>
+    <!-- SITE-FOOTER -->
+    <footer class="site-footer">
+        <div class="container text-center">
+            <div class="row">
+                <div class="col-md-12">
+                    <ul class="social-icons">
+                        <li><a href="javascript:" class="fa fa-qq"></a></li>
+                        <li><a href="javascript:" class="fa fa-weixin"></a></li>
+                        <li><a href="https://zbeboy.github.io/ZONE/" class="fa fa-github"></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12" th:include="footer::footer"></div>
+            </div>
+        </div>
+    </footer>
+</div> <!-- .site-top -->
 <script src="webjarsjs" th:src="@{/webjarsjs}"></script>
 <script src="webjars/requirejs/require.min.js" th:src="@{/webjars/requirejs/require.min.js}"
         data-main="/index"></script>
