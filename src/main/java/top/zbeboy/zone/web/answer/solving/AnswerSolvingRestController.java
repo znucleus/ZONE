@@ -93,7 +93,7 @@ public class AnswerSolvingRestController {
                     if (!hasError) {
                         answerSolvingService.save(answerSolvingList);
                         answerResultService.save(answerResult);
-                        ajaxUtil.success().msg("保存成功，得分：" + totalScore);
+                        ajaxUtil.success().msg("保存成功，得分：" + lastScore);
                     }
                 } else {
                     ajaxUtil.fail().msg("您已提交过");
