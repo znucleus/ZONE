@@ -10,7 +10,7 @@ spring:
         default-encoding: UTF-8
         host: smtp.qq.com
       jooq:
-        sql-dialect: mysql_8_0
+        sql-dialect: mysql
       session:
         store-type: redis
 

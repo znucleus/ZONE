@@ -26,38 +26,38 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.8.RELEASE</version>
+        <version>2.2.0.RELEASE</version>
     </parent>
 
     <properties>
         <org.springframework.webflow.version>2.0.5.RELEASE</org.springframework.webflow.version>
-        <spring-security-oauth2.version>2.3.5.RELEASE</spring-security-oauth2.version>
+        <spring-security-oauth2.version>2.3.7.RELEASE</spring-security-oauth2.version>
 
-        <org.apache.poi.version>4.0.0</org.apache.poi.version>
+        <org.apache.poi.version>4.1.0</org.apache.poi.version>
         <ooxml-schemas.version>1.4</ooxml-schemas.version>
         <org.dom4j.version>2.1.1</org.dom4j.version>
-        <xmlbeans.version>3.0.2</xmlbeans.version>
+        <xmlbeans.version>3.1.0</xmlbeans.version>
 
         <javax.inject.version>1</javax.inject.version>
-        <fastJson.version>1.2.58</fastJson.version>
+        <fastJson.version>1.2.62</fastJson.version>
         <sendcloud4j.version>0.0.5</sendcloud4j.version>
         <jsoup.version>1.12.1</jsoup.version>
-        <httpclient.version>4.5.2</httpclient.version>
+        <httpclient.version>4.5.10</httpclient.version>
 
         <commons-io.verson>2.6</commons-io.verson>
-        <commons-collections4.version>4.2</commons-collections4.version>
-        <commons-compress.version>1.18</commons-compress.version>
+        <commons-collections4.version>4.4</commons-collections4.version>
+        <commons-compress.version>1.19</commons-compress.version>
 
         <!-- webjars properties -->
-        <webjars.locator.version>0.34</webjars.locator.version>
-        <webjars.jquery.version>3.3.1</webjars.jquery.version>
+        <webjars.locator.version>0.37</webjars.locator.version>
+        <webjars.jquery.version>3.4.1</webjars.jquery.version>
         <webjars.requirejs.version>2.3.6</webjars.requirejs.version>
         <webjars.requirejs-domready.version>2.0.1-2</webjars.requirejs-domready.version>
         <webjars.requirejs-text.version>2.0.15</webjars.requirejs-text.version>
         <webjars.requirejs-css.version>0.1.10</webjars.requirejs-css.version>
-        <webjars.handlebars.version>4.0.11-1</webjars.handlebars.version>
+        <webjars.handlebars.version>4.0.14</webjars.handlebars.version>
         <webjars.messenger.version>1.5.0</webjars.messenger.version>
-        <webjars.lodash.version>4.17.4</webjars.lodash.version>
+        <webjars.lodash.version>4.17.15</webjars.lodash.version>
     </properties>
 
     <!-- Add typical dependencies for a web application -->
