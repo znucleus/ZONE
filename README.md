@@ -1,8 +1,8 @@
 # Z.核
 校园协作平台  
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/zbeboy/ZHE/master/LICENSE) 
-[![GitHub stars](https://img.shields.io/github/stars/zbeboy/ZONE.svg)](https://github.com/zbeboy/ZHE/stargazers) 
-[![Build Status](https://travis-ci.org/zbeboy/ZONE.svg?branch=master)](https://travis-ci.org/zbeboy/ZHE)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/zbeboy/ZONE/master/LICENSE) 
+[![GitHub stars](https://img.shields.io/github/stars/zbeboy/ZONE.svg)](https://github.com/zbeboy/ZONE/stargazers) 
+[![Build Status](https://travis-ci.org/zbeboy/ZONE.svg?branch=master)](https://travis-ci.org/zbeboy/ZONE)
 # 开发环境
 1.JDK 1.8.*;  
 2.Intellij IDEA 2018.2;  
