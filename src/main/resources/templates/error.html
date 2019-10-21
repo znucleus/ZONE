@@ -2,15 +2,17 @@
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" class="pos-relative">
 <head th:include="header :: no-metas-header(~{::title},~{::link})">
     <title>ERROR</title>
-    <!-- bootstrap css -->
-    <link rel="stylesheet" href="plugins/bootstrap/css/bootstrap.min.css" th:href="@{/plugins/bootstrap/css/bootstrap.min.css}"/>
+    <!-- Bracket CSS -->
+    <link rel="stylesheet" href="plugins/css/bracket.css" th:href="@{/plugins/bracket/css/bracket.min.css}" />
 </head>
 <body>
 
-<div class="jumbotron text-center">
-    <h1>暂停服务通知</h1>
-    <p>通告：因2019-10-13 09:00:00 ~ 2019-10-13 22:00:00 进行18级实训考试，期间暂停实习服务，请谅解。</p>
-</div>
+<div class="ht-100v d-flex align-items-center justify-content-center">
+    <div class="wd-lg-70p wd-xl-50p tx-center pd-x-40">
+        <h1 class="tx-100 tx-xs-140 tx-normal tx-inverse tx-roboto mg-b-0" th:text="${status}"></h1>
+        <h5 class="tx-xs-24 tx-normal tx-info mg-b-30 lh-5" th:text="${message}"></h5>
+    </div>
+</div><!-- ht-100v -->
 
 </body>
 </html>
