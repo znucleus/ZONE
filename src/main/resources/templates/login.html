@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" class="pos-relative">
+<head th:include="header :: header(~{::meta},~{::title},~{::link})">
+    <!-- csrf -->
+    <meta name="_csrf" content="" th:content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" content="" th:content="${_csrf.headerName}"/>
+    <title th:text="'登录-' + #{ web.title}">ZHE</title>
+    <!-- Bracket CSS -->
+    <link rel="stylesheet" href="plugins/css/bracket.css" th:href="@{/plugins/bracket/css/bracket.min.css}"/>
+</head>
+<body>
+
+<div class="d-flex align-items-center justify-content-center bg-br-primary ht-100v">
+
+    <div class="login-wrapper wd-300 wd-xs-350 pd-25 pd-xs-40 bg-white rounded shadow-base">
+        <div class="signin-logo tx-center tx-28 tx-bold tx-inverse"><span class="tx-normal">[</span> <span
+                th:text="#{web.app.name}"></span> <span class="tx-normal">]</span></div>
+        <div class="tx-center mg-b-60">登 录</div>
+
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="账号/邮箱/手机号" name="username" id="username"
+                   autofocus="autofocus"/>
+            <div class="invalid-feedback"></div>
+        </div><!-- form-group -->
+        <div class="form-group">
+            <input type="password" class="form-control" placeholder="密码" name="password" id="password"/>
+            <div class="invalid-feedback"></div>
+            <a href="" class="tx-info tx-12 d-block mg-t-10">忘记密码？</a>
+        </div><!-- form-group -->
+        <div class="form-group text-danger text-center" id="globalError"></div>
+        <button class="btn btn-info btn-block" type="button" id="login">登 录</button>
+
+        <div class="mg-t-60 tx-center">还没有账号吗？ <a href="" class="tx-info" data-toggle="modal"
+                                                  data-target="#registerModal">注 册</a></div>
+    </div><!-- login-wrapper -->
+</div><!-- d-flex -->
+
+<div id="registerModal" class="modal fade">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content bd-0 tx-14 wd-200">
+            <div class="modal-header pd-x-20">
+                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">注册：</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body pd-20">
+                <button class="btn btn-primary btn-block mg-b-10" id="student">学生</button>
+                <button class="btn btn-primary btn-block mg-b-10" id="staff">教职工</button>
+            </div>
+        </div>
+    </div><!-- modal-dialog -->
+</div><!-- modal -->
+
+<script src="webjarsjs" th:src="@{/webjarsjs}"></script>
+<script src="webjars/requirejs/require.min.js" th:src="@{/webjars/requirejs/require.min.js}"
+        data-main="/login"></script>
+<script th:inline="javascript">
+    var web_path = /*[[${#httpServletRequest.getScheme()+'://'+#httpServletRequest.getServerName()+':'+#httpServletRequest.getServerPort()+#httpServletRequest.getContextPath()}]]*/ '';
+    require.config({
+        baseUrl: web_path + "/js/login",
+        waitSeconds: 0
+    });
+</script>
+</body>
+</html>
