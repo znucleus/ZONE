@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" class="pos-relative">
+<head th:include="header :: header(~{::meta},~{::title},~{::link})">
+    <!-- csrf -->
+    <meta name="_csrf" content="" th:content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" content="" th:content="${_csrf.headerName}"/>
+    <title th:text="'学生注册-' + #{ web.title}">ZHE</title>
+
+    <link rel="stylesheet" href="plugins/select2/css/select2.min.css"
+          th:href="@{/plugins/select2/css/select2.min.css}"/>
+    <link href="plugins/jquery-entropizer/css/jquery-entropizer.min.css" rel="stylesheet"
+          th:href="@{/plugins/jquery-entropizer/css/jquery-entropizer.min.css}"/>
+
+    <!-- Bracket CSS -->
+    <link rel="stylesheet" href="plugins/css/bracket.css" th:href="@{/plugins/bracket/css/bracket.min.css}"/>
+</head>
+<body>
+
+<div class="d-flex align-items-center justify-content-center bg-br-primary" style="height:170vh;">
+
+    <div class="login-wrapper wd-300 wd-xs-400 pd-25 pd-xs-40 bg-white rounded shadow-base">
+        <div class="signin-logo tx-center tx-28 tx-bold tx-inverse"><span class="tx-normal">[</span> <span
+                th:text="#{web.app.name}"></span> <span class="tx-normal">]</span></div>
+        <div class="tx-center mg-b-40">学生注册</div>
+
+        <div class="form-group">
+            <select class="form-control select2-show-search" id="school" data-placeholder="请选择学校">
+                <option label="请选择学校"></option>
+            </select>
+            <div class="invalid-feedback"></div>
+        </div>
+
+        <div class="form-group">
+            <select class="form-control select2-show-search" id="college" data-placeholder="请选择院">
+                <option label="请选择院"></option>
+            </select>
+            <div class="invalid-feedback"></div>
+        </div>
+
+        <div class="form-group">
+            <select class="form-control select2-show-search" id="department" data-placeholder="请选择系">
+                <option label="请选择系"></option>
+            </select>
+            <div class="invalid-feedback"></div>
+        </div>
+
+        <div class="form-group">
+            <select class="form-control select2-show-search" id="science" data-placeholder="请选择专业">
+                <option label="请选择专业"></option>
+            </select>
+            <div class="invalid-feedback"></div>
+        </div>
+
+        <div class="form-group">
+            <select class="form-control select2-show-search" id="grade" data-placeholder="请选择年级">
+                <option label="请选择年级"></option>
+            </select>
+            <div class="invalid-feedback"></div>
+        </div>
+
+        <div class="form-group">
+            <select class="form-control select2-show-search" id="organize" data-placeholder="请选择班级">
+                <option label="请选择班级"></option>
+            </select>
+            <div class="invalid-feedback"></div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-12 col-md-5 col-lg-5 col-xl-5">
+                    <input type="text" class="form-control" aria-describedby="usernameHelp"
+                           id="username"
+                           placeholder="账号"/>
+                    <div class="invalid-feedback"></div>
+                    <small id="usernameHelp" class="form-text text-muted">注册后，不能更改</small>
+                </div>
+                <div class="col-sm-12 col-md-7 col-lg-7 col-xl-7">
+                    <input type="email" class="form-control" aria-describedby="emailHelp" id="email"
+                           placeholder="邮箱"/>
+                    <div class="invalid-feedback"></div>
+                    <small id="emailHelp" class="form-text text-muted">您的常用邮箱</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-12 col-md-5 col-lg-5 col-xl-5">
+                    <input type="text" class="form-control" placeholder="姓名" id="realName"/>
+                    <div class="invalid-feedback"></div>
+                </div>
+                <div class="col-sm-12 col-md-7 col-lg-7 col-xl-7">
+                    <input type="text" class="form-control" placeholder="学号" id="studentNumber"/>
+                    <div class="invalid-feedback"></div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="手机号" id="mobile"/>
+            <div class="invalid-feedback"></div>
+        </div>
+
+        <div class="form-group">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="验证码" id="verificationCode" aria-label="验证码"
+                       aria-describedby="verificationCodeHelp">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" id="sendCode">获取</button>
+                </div>
+            </div>
+            <small id="verificationCodeHelp" class="form-text text-muted"></small>
+        </div>
+
+        <div class="form-group">
+            <input type="password" class="form-control" aria-describedby="passwordHelp" id="password" placeholder="密码"/>
+            <div class="invalid-feedback"></div>
+            <div id="meter2"></div>
+            <small id="passwordHelp" class="form-text text-muted">密码为6-16位任意字母或数字，以及下划线</small>
+        </div>
+
+        <div class="form-group">
+            <input type="password" class="form-control" placeholder="确认密码" id="okPassword"/>
+            <div class="invalid-feedback"></div>
+        </div>
+
+        <div class="form-group">
+            <div class="checkbox checkbox-primary">
+                <input type="checkbox" checked="checked" value="1" id="agreeProtocol" name="agreeProtocol">
+                <label for="agreeProtocol">同意遵守 <a href="" class="tx-info" data-toggle="modal"
+                                                   data-target="#agreeProtocolModal">《入站协议》</a></label>
+                <small class="text-danger" id="agreeProtocolError"></small>
+            </div>
+        </div>
+
+        <div class="form-group text-danger" id="globalError"></div>
+        <div class="form-group tx-12">点击注册后，我们将发送一封邮件到您的邮箱进行验证，请注意查收。</div>
+
+        <button type="button" class="btn btn-info btn-block" id="register">注 册</button>
+
+        <div class="mg-t-40 tx-center">已经有账号了？<a href="" th:href="@{/login}" class="tx-info">登 录</a></div>
+    </div><!-- login-wrapper -->
+</div><!-- d-flex -->
+
+<!-- 入站协议 -->
+<div id="agreeProtocolModal" class="modal fade">
+    <div class="modal-dialog modal-dialog-vertical-center" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">入站协议</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <ol>
+                    <li>
+                        <p class="mg-b-5">文明用语，友好相处，不允许对他人进行人身攻击或私自公开其个人隐私，若产生相关问题，按照法律相关规定，依法处理，承担后果。</p>
+                    </li>
+                    <li>
+                        <p class="mg-b-5">您在网期间，我们将承诺保护好您的个人隐私不被泄露，若您产生相关法律问题，我们将提供您的信息接受调查。</p>
+                    </li>
+                    <li>
+                        <p class="mg-b-5">本网站遵守开源协议，若您需要引用本网站代码及内容，需注明出处信息，否则根据开源协议（MIT）追究个人责任。</p>
+                    </li>
+                </ol>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal">关闭
+                </button>
+            </div>
+        </div>
+    </div><!-- modal-dialog -->
+</div><!-- modal -->
+<script src="webjarsjs" th:src="@{/webjarsjs}"></script>
+<script src="webjars/requirejs/require.min.js" th:src="@{/webjars/requirejs/require.min.js}"
+        data-main="/student"></script>
+<script th:inline="javascript">
+    var web_path = /*[[${#httpServletRequest.getScheme()+'://'+#httpServletRequest.getServerName()+':'+#httpServletRequest.getServerPort()+#httpServletRequest.getContextPath()}]]*/ '';
+    require.config({
+        baseUrl: web_path + "/js/register",
+        waitSeconds: 0
+    });
+</script>
+</body>
+</html>
