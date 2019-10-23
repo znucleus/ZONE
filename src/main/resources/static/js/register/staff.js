@@ -8,12 +8,11 @@ requirejs.config({
     paths: {
         "csrf": web_path + "/js/util/csrf",
         "tools": web_path + "/js/util/tools",
-        "bootstrap": web_path + "/assets/js/bootstrap.bundle.min",
+        "bootstrap": web_path + "/plugins/bootstrap/js/bootstrap.bundle.min",
         "select2": web_path + "/plugins/select2/js/select2.min",
         "select2-zh-CN": web_path + "/plugins/select2/js/i18n/zh-CN.min",
         "jquery.entropizer": web_path + "/plugins/jquery-entropizer/js/jquery-entropizer.min",
-        "entropizer": web_path + "/plugins/jquery-entropizer/js/entropizer.min",
-        "sweetalert2": web_path + "/plugins/sweetalert2/sweetalert2.all.min"
+        "entropizer": web_path + "/plugins/jquery-entropizer/js/entropizer.min"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -22,9 +21,6 @@ requirejs.config({
         },
         "select2-zh-CN": {
             deps: ["jquery", "select2"]
-        },
-        "sweetalert2": {
-            deps: ["jquery", "css!" + web_path + "/plugins/sweetalert2/sweetalert2.min"]
         }
     }
 });
@@ -41,9 +37,9 @@ requirejs.onError = function (err) {
 };
 
 // require(["module/name", ...], function(params){ ... });
-require(["jquery", "requirejs-domready", "lodash", "sweetalert2", "tools", "bootstrap", "csrf", "select2-zh-CN",
+require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf", "select2-zh-CN",
         "jquery.entropizer"],
-    function ($, domready, _, Swal, tools) {
+    function ($, domready, _, tools) {
         domready(function () {
             //This function is called once the DOM is ready.
             //It will be safe to query the DOM and manipulate
@@ -61,8 +57,7 @@ require(["jquery", "requirejs-domready", "lodash", "sweetalert2", "tools", "boot
                 check_mobile_verification_code: web_path + '/anyone/check/mobile/code',
                 obtain_mobile_code_valid: web_path + '/anyone/data/mobile/code',
                 register_staff: web_path + '/anyone/data/register/staff',
-                register_success: web_path + '/tip/register/success',
-                question_feedback: web_path + '/anyone/data/feedback'
+                register_success: web_path + '/tip/register/success'
             };
 
             var param_id = {
@@ -77,11 +72,7 @@ require(["jquery", "requirejs-domready", "lodash", "sweetalert2", "tools", "boot
                 verificationCode: '#verificationCode',
                 password: '#password',
                 okPassword: '#okPassword',
-                agreeProtocol: '#agreeProtocol',
-                feedbackRealName: '#feedbackRealName',
-                feedbackUserEmail: '#feedbackUserEmail',
-                simpleDes: '#simpleDes',
-                detailDes: '#detailDes'
+                agreeProtocol: '#agreeProtocol'
             };
 
             var button_id = {
@@ -89,11 +80,6 @@ require(["jquery", "requirejs-domready", "lodash", "sweetalert2", "tools", "boot
                     id: '#register',
                     text: '注 册',
                     tip: '注册中...'
-                },
-                feedbackSave: {
-                    id: '#feedbackSave',
-                    text: '提交',
-                    tip: '提交中...'
                 }
             };
 
@@ -109,11 +95,7 @@ require(["jquery", "requirejs-domready", "lodash", "sweetalert2", "tools", "boot
                 verificationCode: '',
                 password: '',
                 okPassword: '',
-                agreeProtocol: '',
-                feedbackRealName: '',
-                feedbackUserEmail: '',
-                simpleDes: '',
-                detailDes: ''
+                agreeProtocol: ''
             };
 
             var configure = {
@@ -138,10 +120,6 @@ require(["jquery", "requirejs-domready", "lodash", "sweetalert2", "tools", "boot
                 param.okPassword = _.trim($(param_id.okPassword).val());
                 var agreeProtocol = $('input[name="agreeProtocol"]:checked').val();
                 param.agreeProtocol = _.isUndefined(agreeProtocol) ? 0 : agreeProtocol;
-                param.feedbackRealName = _.trim($(param_id.feedbackRealName).val());
-                param.feedbackUserEmail = _.trim($(param_id.feedbackUserEmail).val());
-                param.simpleDes = _.trim($(param_id.simpleDes).val());
-                param.detailDes = _.trim($(param_id.detailDes).val());
             }
 
             $(param_id.school).change(function () {
@@ -694,76 +672,6 @@ require(["jquery", "requirejs-domready", "lodash", "sweetalert2", "tools", "boot
                         window.location.href = ajax_url.register_success;
                     } else {
                         globalError.text(data.msg);
-                    }
-                });
-            }
-
-            $(button_id.feedbackSave.id).click(function () {
-                initParam();
-                validFeedbackRealName();
-            });
-
-            function validFeedbackRealName() {
-                var feedbackRealName = param.feedbackRealName;
-                if (feedbackRealName !== '') {
-                    tools.validSuccessDom(param_id.feedbackRealName);
-                    validFeedbackUserEmail();
-                } else {
-                    tools.validErrorDom(param_id.feedbackRealName, "您的姓名？");
-                }
-            }
-
-            function validFeedbackUserEmail() {
-                var feedbackUserEmail = param.feedbackUserEmail;
-                if (feedbackUserEmail !== '') {
-                    var regex = tools.regex.email;
-                    if (regex.test(feedbackUserEmail)) {
-                        tools.validSuccessDom(param_id.feedbackUserEmail);
-                        validSimpleDes();
-                    } else {
-                        tools.validErrorDom(param_id.feedbackUserEmail, '邮箱格式不正确');
-                    }
-                } else {
-                    tools.validErrorDom(param_id.feedbackUserEmail, "您的邮箱？");
-                }
-            }
-
-            function validSimpleDes() {
-                var simpleDes = param.simpleDes;
-                if (simpleDes !== '') {
-                    tools.validSuccessDom(param_id.simpleDes);
-                    validDetailDes();
-                } else {
-                    tools.validErrorDom(param_id.simpleDes, "请简单描述您的问题。");
-                }
-            }
-
-            function validDetailDes() {
-                var detailDes = param.detailDes;
-                if (detailDes !== '') {
-                    tools.validSuccessDom(param_id.detailDes);
-                    sendFeedbackAjax();
-                } else {
-                    tools.validErrorDom(param_id.detailDes, "请详细描述您的问题。");
-                }
-            }
-
-            function sendFeedbackAjax() {
-                tools.buttonLoading(button_id.feedbackSave.id, button_id.feedbackSave.tip);
-                $.post(ajax_url.question_feedback, $('#feedbackForm').serialize(), function (data) {
-                    tools.buttonEndLoading(button_id.feedbackSave.id, button_id.feedbackSave.text);
-                    var feedbackError = $('#feedbackError');
-                    if (data.state) {
-                        feedbackError.text('');
-                        $('#modalQuestion').modal('hide');
-                        Swal.fire({
-                            type: 'success',
-                            text: data.msg,
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-                    } else {
-                        feedbackError.text(data.msg);
                     }
                 });
             }
