@@ -116,21 +116,10 @@
     return false;
   });
 
-
-
-  // This is the right menu icon when it's clicked, the
-  // right sidebar will appear that contains the four tab menu
-  $('#btnRightMenu').on('click', function(){
-    $('body').addClass('show-right');
-    return false;
-  });
-
-
-
   // This will hide sidebar when it's clicked outside of it
   $(document).on('click', function(e){
     e.stopPropagation();
-	
+
 	if(e.target.className.indexOf('ui-datepicker') > -1){
 		return;
 	}
@@ -142,65 +131,10 @@
         $('body').removeClass('show-left');
       }
     }
-
-    // closing right sidebar
-    if($('body').hasClass('show-right')) {
-      var targ = $(e.target).closest('.br-sideright').length;
-      if(!targ) {
-        $('body').removeClass('show-right');
-      }
-    }
   });
-
-
-
-  // displaying time and date in right sidebar
-  var interval = setInterval(function() {
-    var momentNow = moment();
-    $('#brDate').html(momentNow.format('MMMM DD, YYYY') + ' '
-      + momentNow.format('dddd')
-      .substring(0,3).toUpperCase());
-      $('#brTime').html(momentNow.format('hh:mm:ss A'));
-  }, 100);
-
-  // Datepicker
-  if($().datepicker) {
-    $('.form-control-datepicker').datepicker()
-      .on("change", function (e) {
-        console.log("Date changed: ", e.target.value);
-    });
-  }
-
-
 
   // custom scrollbar style
   $('.overflow-y-auto').perfectScrollbar();
-
-  // jquery ui datepicker
-  $('.datepicker').datepicker({
-	  dateFormat: "yy-mm-dd",
-   onSelect: function(text,inst){
-	  console.log(text);
-   }
-  });
-  
-  //星期格式汉化
-  $( ".datepicker" ).datepicker( "option", "dayNamesMin",[ "日", "一", "二", "三", "四", "五", "六" ] ); 
-  
-  //月份格式汉化
-  $( ".datepicker" ).datepicker( "option", "monthNames", [ "一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月" ] );
-
-
-  // switch button
-  $('.switch-button').switchButton();
-
-  // peity charts
-  $('.peity-bar').peity('bar');
-
-  // highlight syntax highlighter
-  $('pre code').each(function(i, block) {
-    hljs.highlightBlock(block);
-  });
 
   // Initialize tooltip
   $('[data-toggle="tooltip"]').tooltip();
@@ -223,26 +157,5 @@
 
     });
   });
-
-
-
-  // Select2 Initialize
-  // Select2 without the search
-  if($().select2) {
-    $('.select2').select2({
-      minimumResultsForSearch: Infinity
-    });
-
-    // Select2 by showing the search
-    $('.select2-show-search').select2({
-      minimumResultsForSearch: ''
-    });
-
-    // Select2 with tagging support
-    $('.select2-tag').select2({
-      tags: true,
-      tokenSeparators: [',', ' ']
-    });
-  }
 
 });
