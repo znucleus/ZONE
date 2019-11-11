@@ -13202,7 +13202,7 @@ textarea.parsley-success:focus {
 }
 @media (max-width: 479px) {
   .br-header-right .dropdown:first-child .dropdown-menu {
-    transform: translateX(86px) !important;
+    transform: translateX(56px) !important;
   }
   .br-header-right .dropdown:nth-child(2) .dropdown-menu {
     transform: translateX(54px) !important;

@@ -22,6 +22,8 @@
                         <h4 class="tx-warning mg-b-20" th:if="${warningTip}" th:text="${title}"></h4>
                         <h4 class="tx-infomg-b-20" th:if="${infoTip}" th:text="${title}"></h4>
                         <p class="mg-b-20 mg-x-20" th:text="${subTitle}"></p>
+                        <a th:href="@{/}" class="btn btn-primary tx-11 tx-uppercase pd-y-12 pd-x-25 tx-mont tx-medium mg-b-20" >首页</a>
+                        <a th:href="@{/login}" class="btn btn-info tx-11 tx-uppercase pd-y-12 pd-x-25 tx-mont tx-medium mg-b-20">登录</a>
                         <button type="button" class="btn btn-light tx-11 tx-uppercase pd-y-12 pd-x-25 tx-mont tx-medium mg-b-20" onclick="history.go(-1);">返回上一页</button>
                     </div><!-- modal-body -->
                 </div><!-- modal-content -->
