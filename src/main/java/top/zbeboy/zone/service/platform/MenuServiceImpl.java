@@ -23,40 +23,26 @@ public class MenuServiceImpl implements MenuService {
         for (Application application : applications) {
             List<Application> childApplications = roleService.findInRoleEnNamesAndApplicationPidRelation(roles, application.getApplicationId());
             if (Objects.nonNull(childApplications) && !childApplications.isEmpty()) {
-                sb.append("<li class=\"has-submenu\">");
-                sb.append("<a href=\"").append(baseUrl(application.getApplicationUrl())).append("\">");
-                sb.append("<i class=\"").append(application.getIcon()).append("\"></i>").append("<span>").append(application.getApplicationName()).append("</span>");
+                sb.append("<a href=\"").append(baseUrl(application.getApplicationUrl())).append("\" class=\"br-menu-link\">");
+                sb.append("<div class=\"br-menu-item\">");
+                sb.append("<i class=\"menu-item-icon ").append(application.getIcon()).append(" tx-20\"></i>");
+                sb.append("<span class=\"menu-item-label\">").append(application.getApplicationName()).append("</span>");
+                sb.append("<i class=\"menu-item-arrow fa fa-angle-down\"></i>");
+                sb.append("</div>");
                 sb.append("</a>");
-                if (childApplications.size() < 8) {
-                    sb.append("<ul class=\"submenu\">");
-                    for (Application childApplication : childApplications) {
-                        sb.append("<li><a href=\"").append(baseUrl(childApplication.getApplicationUrl())).append("\" class=\"dy_href\">").append(childApplication.getApplicationName()).append("</a></li>");
-                    }
-                    sb.append("</ul>");
-                } else {
-                    sb.append("<ul class=\"submenu megamenu\">");
-                    int k = 0;
-                    for (int i = 0; i < childApplications.size(); i += 7) {
-                        sb.append("<li><ul>");
-                        for (int j = 0; j < 8; j++) {
-                            if (k < childApplications.size()) {
-                                sb.append("<li><a href=\"").append(baseUrl(childApplications.get(k).getApplicationUrl())).append("\" class=\"dy_href\">").append(childApplications.get(k).getApplicationName()).append("</a></li>");
-                            }
-                            k++;
-                        }
-                        sb.append("</ul></li>");
-                    }
-                    sb.append("</ul>");
+                sb.append("<ul class=\"br-menu-sub nav flex-column\">");
+                for (Application childApplication : childApplications) {
+                    sb.append("<li class=\"nav-item\"><a href=\"").append(baseUrl(childApplication.getApplicationUrl())).append("\" class=\"nav-link dy_href\">").append(childApplication.getApplicationName()).append("</a></li>");
                 }
-                sb.append("</li>");
+                sb.append("</ul>");
             } else {
-                sb.append("<li>");
-                sb.append("<a href=\"").append(baseUrl(application.getApplicationUrl())).append("\" class=\"dy_href\">");
-                sb.append("<i class=\"").append(application.getIcon()).append("\"></i>").append("<span>").append(application.getApplicationName()).append("</span>");
+                sb.append("<a href=\"").append(baseUrl(application.getApplicationUrl())).append("\" class=\"br-menu-link\">");
+                sb.append("<div class=\"br-menu-item\">");
+                sb.append("<i class=\"menu-item-icon ").append(application.getIcon()).append(" tx-20\"></i>");
+                sb.append("<span class=\"menu-item-label\">").append(application.getApplicationName()).append("</span>");
+                sb.append("</div>");
                 sb.append("</a>");
-                sb.append("</li>");
             }
-
         }
         return sb.toString();
     }

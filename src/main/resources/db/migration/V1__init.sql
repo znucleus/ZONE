@@ -330,23 +330,23 @@ INSERT INTO authorities (username, authority) VALUES ('actuator', 'ROLE_ACTUATOR
 INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
                          application_code, application_en_name, icon)
-VALUES ('855e14c857094f1bb6df3938c2f86900', '实训', 1000, '0', '#', 'training', 'training', 'zmdi zmdi-shape');
+VALUES ('855e14c857094f1bb6df3938c2f86900', '实训', 1000, '0', '#', 'training', 'training', 'fa fa-train');
 INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
                          application_code, application_en_name, icon)
-VALUES ('b5939e89e8794c4e8b2d333a1386fb2a', '实习', 3000, '0', '#', 'internship', 'internship', 'zmdi zmdi-brightness-4');
+VALUES ('b5939e89e8794c4e8b2d333a1386fb2a', '实习', 3000, '0', '#', 'internship', 'internship', 'fa fa-coffee');
 INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
                          application_code, application_en_name, icon)
-VALUES ('69fccdabaa5448c2aeaba56456004ac2', '数据', 5000, '0', '#', 'datas', 'datas', 'zmdi zmdi-cloud');
+VALUES ('69fccdabaa5448c2aeaba56456004ac2', '数据', 5000, '0', '#', 'datas', 'datas', 'fa fa-database');
 INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
                          application_code, application_en_name, icon)
-VALUES ('0eb2165a08824c1cac232d975af392b3', '平台', 6000, '0', '#', 'platform', 'platform', 'zmdi zmdi-flight-takeoff');
+VALUES ('0eb2165a08824c1cac232d975af392b3', '平台', 6000, '0', '#', 'platform', 'platform', 'fa fa-leaf');
 INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
                          application_code, application_en_name, icon)
-VALUES ('e3d45ba55e48462cb47595ce01bba60c', '系统', 7000, '0', '#', 'system', 'system', 'zmdi zmdi-developer-board');
+VALUES ('e3d45ba55e48462cb47595ce01bba60c', '系统', 7000, '0', '#', 'system', 'system', 'fa fa-sitemap');
 
 INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
