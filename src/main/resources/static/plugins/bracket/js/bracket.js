@@ -109,7 +109,7 @@ $(document).ready(function () {
     // will appear pushing the main content.
     $('#btnLeftMenuMobile').on('click', function () {
         $('body').addClass('show-left');
-        $('footer').css('position', 'inherit');
+        $('footer').css('display', 'none');
         return false;
     });
 
@@ -125,10 +125,10 @@ $(document).ready(function () {
         if ($('body').hasClass('show-left')) {
             var targ = $(e.target).closest('.br-sideleft').length;
             if (!targ) {
-                $('footer').css('position', 'absolute');
+                $('footer').css('display', '');
                 $('body').removeClass('show-left');
             } else {
-                $('footer').css('position', 'inherit');
+                $('footer').css('display', 'none');
             }
         }
     });

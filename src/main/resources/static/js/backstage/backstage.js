@@ -9,9 +9,9 @@ requirejs.config({
         "csrf": web_path + "/js/util/csrf",
         "tools": web_path + "/js/util/tools",
         "bootstrap": web_path + "/plugins/bootstrap/js/bootstrap.bundle.min",
-        "bracket": web_path + "/plugins/bracket/js/bracket",
+        "bracket": web_path + "/plugins/bracket/js/bracket.min",
         "perfect-scrollbar.jquery": web_path + "/plugins/perfect-scrollbar/js/perfect-scrollbar.jquery.min",
-        "peity": web_path + "/plugins/peity/jquery.peity"
+        "peity": web_path + "/plugins/peity/jquery.peity.min"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
