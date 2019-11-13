@@ -11,10 +11,12 @@ function cssMinify(cb) {
     const cssFilter = filter(['**', '!**/*.min.css'], {restore: true});
     src(pathPrefix + '**/*.css')
         .pipe(cssFilter)
+		.pipe(cleanCSS({compatibility: 'ie8',debug: true}, (details) => {
+			console.log(`${details.name}: ${details.stats.originalSize}`);
+			console.log(`${details.name}: ${details.stats.minifiedSize}`);
+		}))
         .pipe(rename({suffix: '.min'}))
-        .pipe(cleanCSS({compatibility: 'ie8'}))
         .on('error', log)
-        .pipe(cssFilter.restore)
         .pipe(dest(pathPrefix));
     cb();
 }
@@ -23,10 +25,9 @@ function jsMinify(cb) {
     const jsFilter = filter(['**', '!**/*.min.js'], {restore: true});
     src(pathPrefix + '**/*.js')
         .pipe(jsFilter)
+		.pipe(uglify())
         .pipe(rename({suffix: '.min'}))
-        .pipe(uglify())
         .on('error', log)
-        .pipe(jsFilter.restore)
         .pipe(dest(pathPrefix));
     cb();
 }
