@@ -3,6 +3,8 @@
  */
 define(["jquery", "tools", "jquery.showLoading", "messenger"], function ($, tools) {
 
+    var loadingMessage;
+
     /**
      * load js
      * @param jsPath js path.
@@ -13,7 +15,7 @@ define(["jquery", "tools", "jquery.showLoading", "messenger"], function ($, tool
                 console.log(textStatus);
             })
             .fail(function (jqxhr, settings, exception) {
-                Messenger().post({
+                loadingMessage.update({
                     message: 'Loading js fail !',
                     type: 'error',
                     showCloseButton: true
@@ -23,7 +25,6 @@ define(["jquery", "tools", "jquery.showLoading", "messenger"], function ($, tool
 
     return function (url, targetId, web_path) {
         tools.dataEndLoading();
-        var loadingMessage;
         loadingMessage = Messenger().post({
             message: 'Loading ...',
             type: 'info',
@@ -35,7 +36,6 @@ define(["jquery", "tools", "jquery.showLoading", "messenger"], function ($, tool
             type: 'GET',
             url: web_path + url,
             success: function (data) {
-                $(targetId).addClass('fadeIn');
                 $(targetId).html($(data).html());
                 var scripts = $('.dy_script');
                 for (var i = 0; i < scripts.length; i++) {
@@ -46,22 +46,6 @@ define(["jquery", "tools", "jquery.showLoading", "messenger"], function ($, tool
                     message: 'Loading finish , enjoy you life !',
                     type: 'success',
                     showCloseButton: true
-                });
-
-                if ($('.navbar-toggle').hasClass('open')) {
-                    $('.navbar-toggle').removeClass('open');
-                }
-
-
-                $('#navigation').hide();
-                $('.navigation-menu li.has-submenu a[href="javascript:;"]').each(function () {
-                    if ($(window).width() < 992) {
-                        $(this).parent('li').removeClass('open').find('.submenu:first').removeClass('open');
-                    }
-                });
-
-                $(targetId).on('animationend',function(e){
-                    $(this).removeClass('fadeIn');
                 });
             },
             error: function (XMLHttpRequest) {

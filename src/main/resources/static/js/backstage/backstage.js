@@ -9,13 +9,15 @@ requirejs.config({
         "csrf": web_path + "/js/util/csrf",
         "tools": web_path + "/js/util/tools",
         "ajax.loading.view": web_path + "/js/util/ajax.loading.view",
+        "nav.active": web_path + "/js/util/nav.active",
         "bootstrap": web_path + "/plugins/bootstrap/js/bootstrap.bundle.min",
         "bracket": web_path + "/plugins/bracket/js/bracket.min",
         "perfect-scrollbar.jquery": web_path + "/plugins/perfect-scrollbar/js/perfect-scrollbar.jquery.min",
         "peity": web_path + "/plugins/peity/jquery.peity.min",
         "moment": web_path + "/plugins/moment/moment.min",
         "moment-with-locales": web_path + "/plugins/moment/moment-with-locales.min",
-        "jquery.showLoading": web_path + "/plugins/loading/js/jquery.showLoading.min"
+        "jquery.showLoading": web_path + "/plugins/loading/js/jquery.showLoading.min",
+        "jquery.address": web_path + "/plugins/jquery-address/jquery.address-1.6.min"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -39,6 +41,9 @@ requirejs.config({
         },
         "jquery.showLoading": {
             deps: ["jquery"]
+        },
+        "jquery.address": {
+            deps: ["jquery"]
         }
     }
 });
@@ -55,8 +60,9 @@ requirejs.onError = function (err) {
 };
 
 // require(["module/name", ...], function(params){ ... });
-require(["jquery", "requirejs-domready", "moment-with-locales", "handlebars", "ajax.loading.view", "bootstrap", "bracket", "csrf"],
-    function ($, domready, moment, Handlebars, loadingView) {
+require(["jquery", "requirejs-domready", "moment-with-locales", "handlebars", "ajax.loading.view", "nav.active",
+        "bootstrap", "bracket", "csrf", "jquery.address"],
+    function ($, domready, moment, Handlebars, loadingView, navActive) {
         domready(function () {
             Messenger.options = {
                 extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',
@@ -65,16 +71,61 @@ require(["jquery", "requirejs-domready", "moment-with-locales", "handlebars", "a
 
             moment.locale('zh-cn');
 
+            /*
+             动态链接点击效果
+             */
+            $('.dy_href').click(function () {
+                $.address.title($(this).text() + '-' + $('#webAppName').text());
+                var href = $(this).attr('href');
+                if (href !== 'javascript:;' && href !== '#') {
+                    navActive(href.substring(1));
+                }
+            });
+
+            /*
+             init jquery address.
+             */
+            var isInitAddress = false;
+            var isInitOnAddress = false;
+            $.address.init(function (event) {
+                // 插件初始化,一般这里调用 $('.nav a').address(); 实现链接单击监听
+                $('.dy_href').address();
+                isInitAddress = true;
+            }).change(function (event) {
+                // 当页面地址更改的时候调用,即#号之后的地址更改
+                if (event.value !== '/' && event.value !== '/javascript:;' && event.value !== '/#') {
+                    if (!isInitAddress) {
+                        isInitOnAddress = false;
+                    }
+                    if (!isInitOnAddress) {
+                        loadingView(event.value, '#page-wrapper', web_path);
+                    } else {
+                        isInitOnAddress = false;
+                    }
+                }
+            });
+
+            function initAddressRefresh() {
+                if (!isInitAddress) {
+                    var url = window.location.href;
+                    if (url.lastIndexOf('#') > 0) {
+                        isInitOnAddress = true;
+                        loadingView(url.substring(url.lastIndexOf('#') + 1), '#page-wrapper', web_path);
+                    }
+                }
+            }
+
             var ajax_url = {
                 user_notify: web_path + '/user/data/notify',
                 user_notify_detail: web_path + '/user/notify/detail',
-                user_notify_read: web_path + '/user/notify/read',
+                user_notify_reads: web_path + '/user/notify/reads',
                 system_notify: web_path + '/user/system/notify'
             };
 
             var user_notify_param_id = {
                 userNotifyIcon: '#userNotifyIcon',
-                userNotifyData: '#userNotifyData'
+                userNotifyData: '#userNotifyData',
+                userNotifyReads: '#userNotifyReads'
             };
 
             var system_notify_param_id = {
@@ -83,8 +134,8 @@ require(["jquery", "requirejs-domready", "moment-with-locales", "handlebars", "a
 
             var user_notify_param = {
                 pageNum: 0,
-                length: 3,
-                displayedPages: 3,
+                length: 4,
+                displayedPages: 4,
                 orderColumnName: 'createDate',
                 orderDir: 'desc',
                 extraSearch: JSON.stringify({
@@ -93,7 +144,7 @@ require(["jquery", "requirejs-domready", "moment-with-locales", "handlebars", "a
             };
 
             var modal_id = {
-                userNotifyModal:'#userNotifyModal'
+                userNotifyModal: '#userNotifyModal'
             };
 
             init();
@@ -101,6 +152,7 @@ require(["jquery", "requirejs-domready", "moment-with-locales", "handlebars", "a
             function init() {
                 initUserNotify();
                 initSystemNotify();
+                initAddressRefresh();
             }
 
             // 轮询扫描通知
@@ -170,7 +222,20 @@ require(["jquery", "requirejs-domready", "moment-with-locales", "handlebars", "a
                 // 变为已读
                 var button = $(event.relatedTarget); // Button that triggered the modal
                 var id = button.data('id'); // Extract info from data-* attributes
-                $.post(ajax_url.user_notify_read + '/' + id);
+                $.post(ajax_url.user_notify_reads, {userNotifyId: id});
+            });
+
+            $(user_notify_param_id.userNotifyReads).click(function () {
+                var elements = $(user_notify_param_id.userNotifyData + ' > a');
+                var ids = [];
+                for (var i = 0; i < elements.length; i++) {
+                    ids.push($(elements[i]).attr('data-id'));
+                }
+                if (ids.length > 0) {
+                    $.post(ajax_url.user_notify_reads, {userNotifyId: ids.join(',')}, function (data) {
+                        initUserNotify();
+                    });
+                }
             });
 
             function initSystemNotify() {

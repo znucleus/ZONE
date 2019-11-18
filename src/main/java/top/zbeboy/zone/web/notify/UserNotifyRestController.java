@@ -4,10 +4,7 @@ import org.jooq.Record;
 import org.jooq.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.domain.tables.pojos.UserNotify;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.service.notify.UserNotifyService;
@@ -74,23 +71,26 @@ public class UserNotifyRestController {
     }
 
     /**
-     * 更新状态为已读
+     * 批量更新状态为已读
      *
-     * @param userNotifyId id
+     * @param userNotifyIds ids
      * @return 是否成功
      */
-    @PostMapping("/user/notify/read/{userNotifyId}")
-    public ResponseEntity<Map<String, Object>> userNotifyRead(@PathVariable("userNotifyId") String userNotifyId) {
+    @PostMapping("/user/notify/reads")
+    public ResponseEntity<Map<String, Object>> userNotifyReads(@RequestParam("userNotifyId") String userNotifyIds) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         Users users = usersService.getUserFromSession();
-        // 防止其它人获取别人的私人通知
-        Optional<Record> record = userNotifyService.findByIdAndAcceptUserRelation(userNotifyId, users.getUsername());
-        if (record.isPresent()) {
-            UserNotify userNotify = record.get().into(UserNotify.class);
-            Byte isSee = userNotify.getIsSee();
-            if(Objects.nonNull(isSee) && !BooleanUtil.toBoolean(isSee)){
-                userNotify.setIsSee(BooleanUtil.toByte(true));
-                userNotifyService.update(userNotify);
+        String[] ids = userNotifyIds.split(",");
+        for (String id : ids) {
+            // 防止其它人获取别人的私人通知
+            Optional<Record> record = userNotifyService.findByIdAndAcceptUserRelation(id, users.getUsername());
+            if (record.isPresent()) {
+                UserNotify userNotify = record.get().into(UserNotify.class);
+                Byte isSee = userNotify.getIsSee();
+                if (Objects.nonNull(isSee) && !BooleanUtil.toBoolean(isSee)) {
+                    userNotify.setIsSee(BooleanUtil.toByte(true));
+                    userNotifyService.update(userNotify);
+                }
             }
         }
         ajaxUtil.success().msg("更新成功");

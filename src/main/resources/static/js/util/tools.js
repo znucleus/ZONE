@@ -36,11 +36,11 @@ define(["jquery"], function ($) {
             },
             dataLoading: function () {
                 // 显示遮罩
-                $('#loading-view').showLoading();
+                $('#page-wrapper').showLoading();
             },
             dataEndLoading: function () {
                 // 去除遮罩
-                $('#loading-view').hideLoading();
+                $('#page-wrapper').hideLoading();
             },
             toSize: function (size) {
                 var str = "";

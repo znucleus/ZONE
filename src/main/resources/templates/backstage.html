@@ -23,7 +23,7 @@
 <body>
 <!-- ########## START: LEFT PANEL ########## -->
 <div class="br-logo"><a href="" th:href="@{/web/menu/backstage}"><span>[</span><i
-        style="color: #212529;letter-spacing: -0.5px;" th:text="#{web.app.name}"></i><span>]</span></a></div>
+        style="color: #212529;letter-spacing: -0.5px;" th:text="#{web.app.name}" id="webAppName"></i><span>]</span></a></div>
 <div class="br-sideleft overflow-y-auto">
     <label class="sidebar-label pd-x-15 mg-t-20">导航</label>
     <div class="br-sideleft-menu" th:utext="${menu}">
@@ -54,7 +54,7 @@
                 <div class="dropdown-menu dropdown-menu-header wd-300 pd-0-force">
                     <div class="d-flex align-items-center justify-content-between pd-y-10 pd-x-20 bd-b bd-gray-200">
                         <label class="tx-12 tx-info tx-uppercase tx-semibold tx-spacing-2 mg-b-0">通知</label>
-                        <a href="" class="tx-11">全部标记为已读</a>
+                        <a href="javascript:" class="tx-11" id="userNotifyReads">全部标记为已读</a>
                     </div><!-- d-flex -->
 
                     <div class="media-list">
@@ -65,7 +65,7 @@
                         </div>
 
                         <div class="pd-y-10 tx-center bd-t">
-                            <a href="" class="tx-12"><i class="fa fa-angle-down mg-r-5"></i> 显示所有通知</a>
+                            <a href="#/user/notify" class="tx-12"><i class="fa fa-angle-down mg-r-5"></i> 显示所有通知</a>
                         </div>
                     </div><!-- media-list -->
                 </div><!-- dropdown-menu -->
@@ -90,28 +90,28 @@
 </div><!-- br-header -->
 <!-- ########## END: HEAD PANEL ########## -->
 <!-- ########## START: MAIN PANEL ########## -->
-<div class="br-mainpanel" id="page-wrapper">
-    <div class="pd-30">
-        <h4 class="tx-gray-800 mg-b-5">欢迎您! <span th:text="${realName}"></span></h4>
-    </div><!-- d-flex -->
+<div class="br-mainpanel" id="">
+    <div id="page-wrapper">
+        <div class="pd-30">
+            <h4 class="tx-gray-800 mg-b-5">欢迎您! <span th:text="${realName}"></span></h4>
+        </div><!-- d-flex -->
 
-    <div class="br-pagebody mg-t-5 pd-x-30">
-        <div class="br-section-wrapper">
-            <div id="systemNotifyData">
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="jumbotron">
-                        <h1 class="display-4">Hello, world!</h1>
-                        <p class="lead">躯体总是以惹人厌烦告终。除思想以外，没有什么优美和有意思的东西留下来，因为思想就是生命。 —— 萧伯纳</p>
+        <div class="br-pagebody mg-t-5 pd-x-30">
+            <div class="br-section-wrapper">
+                <div id="systemNotifyData">
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="jumbotron">
+                            <h1 class="display-4">Hello, world!</h1>
+                            <p class="lead">躯体总是以惹人厌烦告终。除思想以外，没有什么优美和有意思的东西留下来，因为思想就是生命。 —— 萧伯纳</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-    </div><!-- br-pagebody -->
+        </div><!-- br-pagebody -->
+    </div>
     <footer class="br-footer" th:include="footer::footer">
-
     </footer>
 </div><!-- br-mainpanel -->
 <!-- ########## END: MAIN PANEL ########## -->
