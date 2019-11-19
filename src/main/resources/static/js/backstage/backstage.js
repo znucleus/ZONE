@@ -17,7 +17,8 @@ requirejs.config({
         "moment": web_path + "/plugins/moment/moment.min",
         "moment-with-locales": web_path + "/plugins/moment/moment-with-locales.min",
         "jquery.showLoading": web_path + "/plugins/loading/js/jquery.showLoading.min",
-        "jquery.address": web_path + "/plugins/jquery-address/jquery.address-1.6.min"
+        "jquery.address": web_path + "/plugins/jquery-address/jquery.address-1.6.min",
+        "jquery.simple-pagination": web_path + "/plugins/jquery-simple-pagination/jquery.simplePagination.min"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -44,6 +45,9 @@ requirejs.config({
         },
         "jquery.address": {
             deps: ["jquery"]
+        },
+        "jquery.simple-pagination": {
+            deps: ["jquery", "css!" + web_path + "/plugins/jquery-simple-pagination/simplePagination.min"]
         }
     }
 });

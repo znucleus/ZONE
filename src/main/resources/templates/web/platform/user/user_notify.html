@@ -4,36 +4,42 @@
     <meta charset="utf-8"/>
 </head>
 <body>
-<div id="page-wrapper" class="container">
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="page-title-box">
-                <h4 class="page-title">通知</h4>
-            </div>
-        </div>
-    </div>
-    <!-- end row -->
-    <div class="row">
-        <div class="col-12">
-            <div class="card-box">
-                <div class="row">
-                    <div class="col-md-3 m-t-10">
-                        <div class="list-group">
-                            <a href="javascript:" id="userNotifyUnRead" class="list-group-item d-flex justify-content-between align-items-center active">
-                                未读
-                                <span class="badge badge-secondary badge-pill" id="unReadNotifyUnReadNum"></span>
-                            </a>
-                            <a href="javascript:" id="userNotifyRead" class="list-group-item d-flex justify-content-between align-items-center">
-                                已读
-                                <span class="badge badge-secondary badge-pill" id="unReadNotifyReadNum"></span>
-                            </a>
+<div id="page-wrapper">
+    <div class="pd-30">
+        <h4 class="tx-gray-800 mg-b-5">通知提醒</h4>
+    </div><!-- d-flex -->
+    <div class="br-pagebody">
+        <div class="br-section-wrapper">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card-box">
+                        <div class="row">
+                            <div class="col-md-3 mg-t-10">
+                                <div class="list-group">
+                                    <a href="javascript:" id="userNotifyUnRead" class="list-group-item d-flex justify-content-between align-items-center active">
+                                        未读
+                                        <span class="badge badge-secondary badge-pill" id="unReadNotifyUnReadNum">0</span>
+                                    </a>
+                                    <a href="javascript:" id="userNotifyRead" class="list-group-item d-flex justify-content-between align-items-center">
+                                        已读
+                                        <span class="badge badge-secondary badge-pill" id="unReadNotifyReadNum"></span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-9 mg-t-10">
+                                <div id="accordion" class="accordion" role="tablist" aria-multiselectable="true">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="jumbotron">
+                                                <h1 class="display-4 text-center"><i class="icon ion-ios-bell-outline tx-60"></i></h1>
+                                                <p class="lead text-center">无任何通知提醒</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <ul class="pagination pull-right" style="margin-top: 20px" id="pagination"></ul>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-9 m-t-10">
-                        <div id="accordion">
-
-                        </div>
-                        <ul class="pagination m-t-20 pull-right" id="pagination"></ul>
                     </div>
                 </div>
             </div>
@@ -44,25 +50,20 @@
     <script id="user-notify-template" type="text/x-handlebars-template">
         {{#each listResult}}
         <div class="card">
-            <div class="card-header" id="heading{{userNotifyId}}">
-                <h5 class="mb-0">
-                    <div class="row">
-                        <div class="col-md-9 col-sm-9">
-                            <button class="btn btn-link userNotify" data-toggle="collapse" data-target="#collapse{{userNotifyId}}"
-                                    aria-expanded="true" aria-controls="collapse{{userNotifyId}}" data-id="{{userNotifyId}}">
-                                {{realName}} - {{notify_title}}
-                            </button>
-                        </div>
-                        <h6 class="col-md-3 col-sm-3 text-right font-weight-light pt-2">
-                            {{createDateStr}}
-                        </h6>
-                    </div>
-                </h5>
+            <div class="card-header" role="tab" id="heading{{userNotifyId}}">
+
+
+                <h6 class="mg-b-0">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{userNotifyId}}"
+                       aria-expanded="true" aria-controls="collapseOne" class="tx-gray-800 transition">
+                        {{realName}} - {{notifyTitle}} <span class="pull-right">{{createDateStr}}</span>
+                    </a>
+                </h6>
             </div>
 
             <div id="collapse{{userNotifyId}}" class="collapse" aria-labelledby="heading{{userNotifyId}}"
                  data-parent="#accordion">
-                <div class="card-body">
+                <div class="card-block pd-20">
                     {{notifyContent}}
                 </div>
             </div>
