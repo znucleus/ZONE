@@ -55,17 +55,15 @@ require(["jquery", "tools", "handlebars", "moment-with-locales", "bootstrap",
             $.get(ajax_url.user_notify, param, function (data) {
                 tools.dataEndLoading();
                 if(data.page.totalSize > 0){
-                    if (!isReadModal) {
-                        $('#unReadNotifyUnReadNum').text(data.page.totalSize);
-                    } else {
-                        $('#unReadNotifyReadNum').text(data.page.totalSize);
-                    }
-
+                    $('#unReadNotifyUnReadNum').text(data.unReadNum);
+                    $('#readNotifyReadNum').text(data.readNum);
                     createPage(data);
                     listData(data);
                 } else {
-                    $('#unReadNotifyUnReadNum').text(0);
+                    $('#unReadNotifyUnReadNum').text(data.unReadNum);
+                    $('#readNotifyReadNum').text(data.readNum);
                     tableData.html(initHtml);
+                    $('#pagination').empty();
                 }
 
             });

@@ -18,11 +18,11 @@
                                 <div class="list-group">
                                     <a href="javascript:" id="userNotifyUnRead" class="list-group-item d-flex justify-content-between align-items-center active">
                                         未读
-                                        <span class="badge badge-secondary badge-pill" id="unReadNotifyUnReadNum">0</span>
+                                        <span class="badge badge-secondary badge-pill" id="unReadNotifyUnReadNum"></span>
                                     </a>
                                     <a href="javascript:" id="userNotifyRead" class="list-group-item d-flex justify-content-between align-items-center">
                                         已读
-                                        <span class="badge badge-secondary badge-pill" id="unReadNotifyReadNum"></span>
+                                        <span class="badge badge-secondary badge-pill" id="readNotifyReadNum"></span>
                                     </a>
                                 </div>
                             </div>
@@ -51,12 +51,10 @@
         {{#each listResult}}
         <div class="card">
             <div class="card-header" role="tab" id="heading{{userNotifyId}}">
-
-
                 <h6 class="mg-b-0">
                     <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{userNotifyId}}"
-                       aria-expanded="true" aria-controls="collapseOne" class="tx-gray-800 transition">
-                        {{realName}} - {{notifyTitle}} <span class="pull-right">{{createDateStr}}</span>
+                       aria-expanded="true" aria-controls="collapseOne" class="tx-gray-800 transition userNotify" data-id="{{userNotifyId}}">
+                        {{realName}} - {{notifyTitle}} <small class="pull-right text-muted">{{createDateStr}}</small>
                     </a>
                 </h6>
             </div>

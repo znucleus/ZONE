@@ -34,6 +34,15 @@ public interface UserNotifyService {
     int countAll(SimplePaginationUtil paginationUtil);
 
     /**
+     * 通过条件统计
+     *
+     * @param acceptUser 接收人
+     * @param isSee      是否已看
+     * @return 数量
+     */
+    int countByAcceptUserAndIsSee(String acceptUser, Byte isSee);
+
+    /**
      * 更新
      *
      * @param userNotify 数据

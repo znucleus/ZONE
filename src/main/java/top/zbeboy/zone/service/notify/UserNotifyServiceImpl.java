@@ -60,6 +60,15 @@ public class UserNotifyServiceImpl implements UserNotifyService, PaginationPlugi
     }
 
     @Override
+    public int countByAcceptUserAndIsSee(String acceptUser, Byte isSee) {
+        Record1<Integer> count = create.selectCount()
+                .from(USER_NOTIFY)
+                .where(USER_NOTIFY.ACCEPT_USER.eq(acceptUser).and(USER_NOTIFY.IS_SEE.eq(isSee)))
+                .fetchOne();
+        return count.value1();
+    }
+
+    @Override
     public void update(UserNotify userNotify) {
         userNotifyDao.update(userNotify);
     }

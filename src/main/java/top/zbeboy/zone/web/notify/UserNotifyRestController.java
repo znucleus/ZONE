@@ -1,5 +1,7 @@
 package top.zbeboy.zone.web.notify;
 
+import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.springframework.http.HttpStatus;
@@ -45,7 +47,22 @@ public class UserNotifyRestController {
             userNotifies.forEach(userNotify -> userNotify.setCreateDateStr(DateTimeUtil.defaultFormatSqlTimestamp(userNotify.getCreateDate())));
         }
         simplePaginationUtil.setTotalSize(userNotifyService.countAll(simplePaginationUtil));
-        ajaxUtil.success().list(userNotifies).page(simplePaginationUtil).msg("获取数据成功");
+
+        int readNum = 0;
+        int unReadNum = 0;
+        JSONObject search = simplePaginationUtil.getSearch();
+        if (Objects.nonNull(search)) {
+            String isSee = StringUtils.trim(search.getString("isSee"));
+            if (StringUtils.equals("1", isSee)) {
+                readNum = simplePaginationUtil.getTotalSize();
+                unReadNum = userNotifyService.countByAcceptUserAndIsSee(users.getUsername(), BooleanUtil.toByte(false));
+            } else if (StringUtils.equals("0", isSee)) {
+                unReadNum = simplePaginationUtil.getTotalSize();
+                readNum = userNotifyService.countByAcceptUserAndIsSee(users.getUsername(), BooleanUtil.toByte(true));
+            }
+        }
+        ajaxUtil.success().list(userNotifies).page(simplePaginationUtil).msg("获取数据成功")
+                .put("readNum", readNum).put("unReadNum", unReadNum);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
