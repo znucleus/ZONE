@@ -90,7 +90,7 @@ public class MainController {
      * @return 后台页.
      */
     @GetMapping(Workbook.WEB_BACKSTAGE)
-    public String backstage(HttpServletRequest request, ModelMap modelMap) {
+    public String backstage(ModelMap modelMap) {
         List<String> roles = usersService.getAuthoritiesFromSession();
         // avatar.
         Users users = usersService.getUserFromSession();

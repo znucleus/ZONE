@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zone.config.CacheBook;
 import top.zbeboy.zone.domain.tables.pojos.Application;
+import top.zbeboy.zone.domain.tables.pojos.Role;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ public class RoleServiceImpl implements RoleService {
         create = dslContext;
     }
 
-    @Cacheable(cacheNames = CacheBook.ROLES, key = "#username")
+    @Cacheable(cacheNames = CacheBook.ROLES_APPLICATION, key = "#username")
     @Override
     public List<Application> findInRoleEnNamesRelation(List<String> roleEnName, String username) {
         List<Application> applicationList = new ArrayList<>();
@@ -77,6 +78,22 @@ public class RoleServiceImpl implements RoleService {
             applicationList = records.into(Application.class);
         }
         return applicationList;
+    }
+
+    @Cacheable(cacheNames = CacheBook.ROLES, key = "#username")
+    @Override
+    public List<Role> findByUsername(String username) {
+        List<Role> roleList = new ArrayList<>();
+        Result<Record> records = create.select()
+                .from(AUTHORITIES)
+                .leftJoin(ROLE)
+                .on(AUTHORITIES.AUTHORITY.eq(ROLE.ROLE_EN_NAME))
+                .where(AUTHORITIES.USERNAME.eq(username))
+                .fetch();
+        if (records.isNotEmpty()) {
+            roleList = records.into(Role.class);
+        }
+        return roleList;
     }
 
     @Override

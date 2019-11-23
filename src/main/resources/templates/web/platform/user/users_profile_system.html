@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="br-profile-page">
+        <div class="card shadow-base bd-0 rounded-0 widget-4">
+            <div class="card-header ht-75">
+                <div class="hidden-xs-down text-white">
+                    用户资料
+                </div>
+            </div><!-- card-header -->
+            <div class="card-body">
+                <div class="card-profile-img">
+                    <img th:src="@{${avatar}}" alt="头像">
+                </div><!-- card-profile-img -->
+                <h4 class="tx-normal tx-roboto tx-white" th:text="${realName}"></h4>
+                <p class="mg-b-25">加入时间：<span th:text="${joinDate}"></span></p>
+
+                <p class="wd-md-500 mg-md-l-auto mg-md-r-auto mg-b-25" th:text="${roles}"></p>
+
+                <p class="mg-b-0 tx-15">
+                    <a href="#/user/profile/edit" class="tx-white-8 mg-r-5 pull-right"><i class="fa fa-pencil"></i>编辑</a>
+                </p>
+            </div><!-- card-body -->
+        </div><!-- card -->
+    </div>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>

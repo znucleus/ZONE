@@ -4,29 +4,37 @@
     <meta charset="UTF-8">
 </head>
 <body>
-
-<div class="d-flex align-items-center justify-content-center bg-br-primary ht-100v">
-    <div class="modal d-block pos-static">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-body tx-center pd-y-20 pd-x-20">
-                    <i class="icon ion-ios-checkmark-outline tx-100 tx-success lh-1 mg-t-20 d-inline-block" th:if="${successTip}"></i>
-                    <i class="icon ion-ios-close-outline tx-100 tx-danger lh-1 mg-t-20 d-inline-block" th:if="${dangerTip}"></i>
-                    <i class="icon ion-information-circled tx-100 tx-warning lh-1 mg-t-20 d-inline-block" th:if="${warningTip}"></i>
-                    <i class="icon ion-chatbubble-working tx-100 tx-info lh-1 mg-t-20 d-inline-block" th:if="${infoTip}"></i>
-                    <h4 class="tx-success mg-b-20" th:if="${successTip}" th:text="${title}"></h4>
-                    <h4 class="tx-danger mg-b-20" th:if="${dangerTip}" th:text="${title}"></h4>
-                    <h4 class="tx-warning mg-b-20" th:if="${warningTip}" th:text="${title}"></h4>
-                    <h4 class="tx-infomg-b-20" th:if="${infoTip}" th:text="${title}"></h4>
-                    <p class="mg-b-20 mg-x-20" th:text="${subTitle}"></p>
-                    <div th:unless="${#lists.isEmpty(buttons)}">
-                        <button type="button" th:each="btn : ${buttons}" th:class="${btn.btnClass + ' tx-11 tx-uppercase pd-y-12 pd-x-25 tx-mont tx-medium mg-b-20'}" th:text="${btn.btnText}"
-                                th:href="@{${btn.btnLink}}" onclick="window.location.href = this.getAttribute('href');"></button>
-                    </div>
-                </div><!-- modal-body -->
-            </div><!-- modal-content -->
-        </div><!-- modal-dialog -->
-    </div><!-- modal -->
-</div><!-- pd-y-50 -->
+<div id="page-wrapper">
+    <div class="d-flex align-items-center justify-content-center ht-100v">
+        <div class="modal d-block pos-static">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body tx-center pd-y-40 pd-x-40">
+                        <i class="icon ion-ios-checkmark-outline tx-100 tx-success lh-1 mg-t-20 d-inline-block"
+                           th:if="${successTip}"></i>
+                        <i class="icon ion-ios-close-outline tx-100 tx-danger lh-1 mg-t-20 d-inline-block"
+                           th:if="${dangerTip}"></i>
+                        <i class="icon ion-information-circled tx-100 tx-warning lh-1 mg-t-20 d-inline-block"
+                           th:if="${warningTip}"></i>
+                        <i class="icon ion-chatbubble-working tx-100 tx-info lh-1 mg-t-20 d-inline-block"
+                           th:if="${infoTip}"></i>
+                        <h4 class="tx-success mg-b-20" th:if="${successTip}" th:text="${title}"></h4>
+                        <h4 class="tx-danger mg-b-20" th:if="${dangerTip}" th:text="${title}"></h4>
+                        <h4 class="tx-warning mg-b-20" th:if="${warningTip}" th:text="${title}"></h4>
+                        <h4 class="tx-infomg-b-20" th:if="${infoTip}" th:text="${title}"></h4>
+                        <p class="mg-b-40 mg-x-40" th:text="${subTitle}"></p>
+                        <div th:unless="${#lists.isEmpty(buttons)}">
+                            <button type="button" th:each="btn : ${buttons}"
+                                    th:class="${btn.btnClass + ' tx-11 tx-uppercase pd-y-12 pd-x-25 tx-mont tx-medium mg-b-20'}"
+                                    th:text="${btn.btnText}"
+                                    th:href="@{${btn.btnLink}}"
+                                    onclick="window.location.href = this.getAttribute('href');"></button>
+                        </div>
+                    </div><!-- modal-body -->
+                </div><!-- modal-content -->
+            </div><!-- modal-dialog -->
+        </div><!-- modal -->
+    </div><!-- pd-y-50 -->
+</div>
 </body>
 </html>

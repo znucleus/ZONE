@@ -1,6 +1,9 @@
 package top.zbeboy.zone.service.platform;
 
+import org.jooq.Record;
+import org.jooq.Result;
 import top.zbeboy.zone.domain.tables.pojos.Application;
+import top.zbeboy.zone.domain.tables.pojos.Role;
 
 import java.util.List;
 
@@ -25,6 +28,14 @@ public interface RoleService {
      * @return 全部菜单应用
      */
     List<Application> findInRoleEnNamesAndApplicationPidRelation(List<String> roleEnName, String applicationPid);
+
+    /**
+     * 通过账号查询角色
+     *
+     * @param username 账号
+     * @return 角色数据
+     */
+    List<Role> findByUsername(String username);
 
     /**
      * 检查当前用户是否有此权限

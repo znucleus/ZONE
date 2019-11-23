@@ -2,6 +2,7 @@ package top.zbeboy.zone.web.platform.user;
 
 
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.jooq.Result;
 import org.slf4j.Logger;
@@ -9,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,7 +32,7 @@ import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BaseImgUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.vo.platform.user.ResetPasswordVo;
-import top.zbeboy.zone.web.vo.plugins.XeditableVo;
+import top.zbeboy.zone.web.vo.platform.user.UsersProfileVo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -71,7 +71,7 @@ public class UsersRestController {
      */
     @PostMapping("/anyone/check/username")
     public ResponseEntity<Map<String, Object>> anyoneCheckUsername(@RequestParam("username") String username) {
-        String param = StringUtils.trimWhitespace(username);
+        String param = StringUtils.deleteWhitespace(username);
         AjaxUtil<Map<String, Object>> ajaxUtil = checkUsername(username);
         if (BooleanUtils.isTrue(ajaxUtil.getState())) {
             UsersRecord users = usersService.findByUsernameUpper(param);
@@ -92,7 +92,7 @@ public class UsersRestController {
      */
     @PostMapping("/anyone/check/email")
     public ResponseEntity<Map<String, Object>> anyoneCheckEmail(@RequestParam("email") String email) {
-        String param = StringUtils.trimWhitespace(email);
+        String param = StringUtils.deleteWhitespace(email);
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         String regex = SystemMailConfig.MAIL_REGEX;
         if (!Pattern.matches(regex, param)) {
@@ -116,7 +116,7 @@ public class UsersRestController {
      */
     @PostMapping("/anyone/check/mobile")
     public ResponseEntity<Map<String, Object>> anyoneCheckMobile(@RequestParam("mobile") String mobile) {
-        String param = StringUtils.trimWhitespace(mobile);
+        String param = StringUtils.deleteWhitespace(mobile);
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         String regex = SystemMobileConfig.MOBILE_REGEX;
         if (!Pattern.matches(regex, param)) {
@@ -158,7 +158,7 @@ public class UsersRestController {
      */
     @PostMapping("/user/check/username/status")
     public ResponseEntity<Map<String, Object>> userCheckStatusByUsername(@RequestParam("username") String username) {
-        String param = org.apache.commons.lang3.StringUtils.trim(username);
+        String param = StringUtils.trim(username);
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         UsersRecord record = usersService.findNormalByUsername(param);
         if (Objects.nonNull(record)) {
@@ -217,21 +217,21 @@ public class UsersRestController {
     /**
      * 用户基本信息更新
      *
-     * @param xeditableVo   xeditable 插件
-     * @param bindingResult 检验
+     * @param usersProfileVo 信息
+     * @param bindingResult  检验
      * @return 是否更新成功
      */
     @PostMapping("/user/update")
-    public ResponseEntity<Map<String, Object>> userUpdate(@Valid XeditableVo xeditableVo, BindingResult bindingResult, HttpSession session, HttpServletRequest request) {
+    public ResponseEntity<Map<String, Object>> userUpdate(@Valid UsersProfileVo usersProfileVo, BindingResult bindingResult, HttpSession session, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
-            String name = StringUtils.trimWhitespace(xeditableVo.getName());
-            String value = StringUtils.trimWhitespace(xeditableVo.getValue());
-            if (org.apache.commons.lang3.StringUtils.equals("username", name)) {
+            String name = StringUtils.deleteWhitespace(usersProfileVo.getName());
+            String value = StringUtils.deleteWhitespace(usersProfileVo.getValue());
+            if (StringUtils.equals("username", name)) {
                 ajaxUtil = checkUsername(value);
                 if (BooleanUtils.isTrue(ajaxUtil.getState())) {
                     Users own = usersService.getUserFromSession();
-                    if (!org.apache.commons.lang3.StringUtils.equals(own.getUsername(), value)) {
+                    if (!StringUtils.equals(own.getUsername(), value)) {
                         Result<UsersRecord> usersRecords = usersService.findByUsernameNeOwn(value, own.getUsername());
                         if (usersRecords.isNotEmpty()) {
                             ajaxUtil.fail().msg("账号已被注册");
@@ -246,18 +246,18 @@ public class UsersRestController {
                 }
             }
 
-            if (org.apache.commons.lang3.StringUtils.equals("realName", name)) {
+            if (StringUtils.equals("realName", name)) {
                 Users users = usersService.getUserFromSession();
                 users.setRealName(value);
                 usersService.update(users);
                 ajaxUtil.success().msg("姓名更新成功");
             }
 
-            if (org.apache.commons.lang3.StringUtils.equals("email", name)) {
+            if (StringUtils.equals("email", name)) {
                 if (Pattern.matches(SystemMailConfig.MAIL_REGEX, value)) {
                     // 检查邮件推送是否被关闭
                     SystemConfigure mailConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
-                    if (org.apache.commons.lang3.StringUtils.equals("1", mailConfigure.getDataValue())) {
+                    if (StringUtils.equals("1", mailConfigure.getDataValue())) {
                         DateTime dateTime = DateTime.now();
                         dateTime = dateTime.plusDays(ZoneProperties.getMail().getValidCodeTime());
 
@@ -277,7 +277,7 @@ public class UsersRestController {
                 }
             }
 
-            if (org.apache.commons.lang3.StringUtils.equals("mobile", name)) {
+            if (StringUtils.equals("mobile", name)) {
                 if (Pattern.matches(SystemMobileConfig.MOBILE_REGEX, value)) {
                     // step 2.手机号是否已验证
                     if (!ObjectUtils.isEmpty(session.getAttribute(value + SystemMobileConfig.MOBILE_VALID))) {
@@ -298,7 +298,7 @@ public class UsersRestController {
                 }
             }
 
-            if (org.apache.commons.lang3.StringUtils.equals("idCard", name)) {
+            if (StringUtils.equals("idCard", name)) {
                 if (Pattern.matches(Workbook.ID_CARD_REGEX, value)) {
                     // 检查是否已经存在该身份证号
                     Users users = usersService.getUserFromSession();
@@ -338,7 +338,7 @@ public class UsersRestController {
         if (BCryptUtil.bCryptPasswordMatches(oldPassword, users.getPassword())) {
             String regex = Workbook.PASSWORD_REGEX;
             if (Pattern.matches(regex, confirmPassword)) {
-                if (org.apache.commons.lang3.StringUtils.equals(newPassword, confirmPassword)) {
+                if (StringUtils.equals(newPassword, confirmPassword)) {
                     users.setPassword(BCryptUtil.bCryptPassword(confirmPassword));
                     usersService.update(users);
                     ajaxUtil.success().msg("密码正确");
@@ -393,7 +393,7 @@ public class UsersRestController {
         try {
             Users users = usersService.getUserFromSession();
             String avatar = users.getAvatar();
-            if (!org.apache.commons.lang3.StringUtils.equals(avatar, Workbook.USERS_AVATAR)) {
+            if (!StringUtils.equals(avatar, Workbook.USERS_AVATAR)) {
                 users.setAvatar(Workbook.USERS_AVATAR);
                 usersService.update(users);
                 Files files = filesService.findById(avatar);
@@ -421,7 +421,7 @@ public class UsersRestController {
      * @return 是否正常
      */
     private AjaxUtil<Map<String, Object>> checkUsername(String username) {
-        String param = StringUtils.trimWhitespace(username);
+        String param = StringUtils.deleteWhitespace(username);
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         // 禁止注册系统账号
         SystemConfigure systemConfigure = systemConfigureService

@@ -18,7 +18,9 @@ requirejs.config({
         "moment-with-locales": web_path + "/plugins/moment/moment-with-locales.min",
         "jquery.showLoading": web_path + "/plugins/loading/js/jquery.showLoading.min",
         "jquery.address": web_path + "/plugins/jquery-address/jquery.address-1.6.min",
-        "jquery.simple-pagination": web_path + "/plugins/jquery-simple-pagination/jquery.simplePagination.min"
+        "jquery.simple-pagination": web_path + "/plugins/jquery-simple-pagination/jquery.simplePagination.min",
+        "dropify": web_path + "/plugins/file-uploads/js/dropify.min",
+        "sweetalert2": web_path + "/plugins/sweetalert2/sweetalert2.all.min"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -48,6 +50,12 @@ requirejs.config({
         },
         "jquery.simple-pagination": {
             deps: ["jquery", "css!" + web_path + "/plugins/jquery-simple-pagination/simplePagination.min"]
+        },
+        "dropify": {
+            deps: ["jquery", "css!" + web_path + "/plugins/file-uploads/css/dropify.min"]
+        },
+        "sweetalert2": {
+            deps: ["jquery", "css!" + web_path + "/plugins/sweetalert2/sweetalert2.min"]
         }
     }
 });

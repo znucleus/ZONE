@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="br-pageheader pd-y-15 pd-l-20">
+        <nav class="breadcrumb pd-0 mg-0 tx-12">
+            <a class="breadcrumb-item" href="#/user/profile">资料</a>
+            <span class="breadcrumb-item active">编辑</span>
+        </nav>
+    </div><!-- br-pageheader -->
+    <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
+        <h4 class="tx-gray-800 mg-b-5">编辑资料</h4>
+        <p class="mg-b-0">编辑您所有个人资料。</p>
+    </div>
+
+    <div class="br-pagebody">
+        <div class="br-section-wrapper">
+            <div class="row">
+                <div class="col-md-4">
+                    <input type="file" class="dropify" name="file" th:data-default-file="@{${avatar}}"
+                           data-max-file-size="1M" data-allowed-file-extensions="jpg png gif jpeg bmp"
+                           data-max-width="500"
+                           data-max-height="500"/>
+                    <input type="hidden" id="avatar" th:value="${avatar}"/>
+                    <div class="col-md-12 text-danger text-center" id="globalAvatarError">
+                    </div>
+                    <div class="col-md-12 text-center m-t-10">
+                        <button type="button" class="btn btn-primary waves-effect waves-light" id="updateAvatar">
+                            更新
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <form class="mg-t-20">
+                        <div class="form-group">
+                            <label for="realName">姓名</label>
+                            <input class="form-control" id="realName" th:value="${realName}" aria-describedby="emailHelp" placeholder="您的姓名">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group text-center">
+                            <button type="button" class="btn btn-primary text-center" id="updateInfo">提交</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" class="dy_script" value="/js/platform/user/users_profile_system_edit.js"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>
