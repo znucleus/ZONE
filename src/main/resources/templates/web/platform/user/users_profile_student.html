@@ -111,43 +111,119 @@
                         <div class="card pd-20 pd-xs-30 shadow-base bd-0 mg-t-30">
                             <div class="row">
                                 <div class="col-lg-4">
-                                    <select class="form-control select2" data-placeholder="Choose one">
-                                        <option label="Choose one"></option>
-                                        <option value="Firefox">Firefox</option>
-                                        <option value="Chrome">Chrome</option>
-                                        <option value="Safari">Safari</option>
-                                        <option value="Opera">Opera</option>
-                                        <option value="Internet Explorer">Internet Explorer</option>
-                                    </select>
-                                </div><!-- col-4 -->
-                                <div class="col-lg-4 mg-t-20 mg-lg-t-0">
-                                    <select class="form-control select2-show-search"
-                                            data-placeholder="Choose one (with searchbox)">
-                                        <option label="Choose one"></option>
-                                        <option value="Firefox">Firefox</option>
-                                        <option value="Chrome">Chrome</option>
-                                        <option value="Safari">Safari</option>
-                                        <option value="Opera">Opera</option>
-                                        <option value="Internet Explorer">Internet Explorer</option>
-                                    </select>
-                                </div><!-- col-4 -->
-                                <div class="col-lg-4 mg-t-20 mg-lg-t-0">
-                                    <select class="form-control select2" data-placeholder="Choose one (disabled)"
-                                            disabled>
-                                        <option label="Choose one"></option>
-                                        <option value="Firefox">Firefox</option>
-                                        <option value="Chrome">Chrome</option>
-                                        <option value="Safari">Safari</option>
-                                        <option value="Opera">Opera</option>
-                                        <option value="Internet Explorer">Internet Explorer</option>
-                                    </select>
-                                </div><!-- col-4 -->
-                            </div><!-- row -->
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <a href="" class="tx-black mg-r-5 pull-right"><i class="fa fa-pencil"></i>编辑</a>
+                                    <div class="form-group row">
+                                        <label for="studentNumber" class="col-sm-3 col-form-label">学号:</label>
+                                        <div class="col-sm-9">
+                                            <input class="form-control" id="studentNumber" name="studentNumber"
+                                                   placeholder="学号"
+                                                   th:value="${student.studentNumber}">
+                                            <div class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group row">
+                                        <label for="sex" class="col-sm-3 col-form-label">性别:</label>
+                                        <div class="col-sm-9">
+                                            <select id="sex" name="sex" class="form-control">
+                                                <option value="">请选择性别</option>
+                                                <option value="男">男</option>
+                                                <option value="女">女</option>
+                                            </select>
+                                            <input type="hidden" th:value="${student.sex}" id="sexParam"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group row">
+                                        <label for="birthday" class="col-sm-3 col-form-label">生日:</label>
+                                        <div class="col-sm-9">
+                                            <input class="form-control" id="birthday" name="birthday" placeholder="生日"
+                                                   th:value="${student.birthday}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group row">
+                                        <label for="nation" class="col-sm-3 col-form-label">民族:</label>
+                                        <div class="col-sm-9">
+                                            <select id="nation" name="nationId" class="form-control select2-show-search">
+                                                <option value="" selected>请选择民族</option>
+                                            </select>
+                                            <input type="hidden" th:value="${student.nationId}" id="nationParam"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group row">
+                                        <label for="politicalLandscape" class="col-sm-3 col-form-label">面貌:</label>
+                                        <div class="col-sm-9">
+                                            <select id="politicalLandscape" name="politicalLandscapeId"
+                                                    class="form-control">
+                                                <option value="">请选择政治面貌</option>
+                                            </select>
+                                            <input type="hidden" th:value="${student.politicalLandscapeId}"
+                                                   id="politicalLandscapeParam"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group row">
+                                        <label for="dormitoryNumber" class="col-sm-3 col-form-label">宿舍号:</label>
+                                        <div class="col-sm-9">
+                                            <input class="form-control" id="dormitoryNumber" name="dormitoryNumber"
+                                                   placeholder="宿舍号" th:value="${student.dormitoryNumber}"
+                                                   aria-describedby="dormitoryNumberHelp" data-mask="99-999">
+                                            <div class="invalid-feedback"></div>
+                                            <small id="dormitoryNumberHelp" class="form-text text-muted">如：06-603，6栋603室
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group row">
+                                        <label for="parentName" class="col-sm-3 col-form-label">家长姓名:</label>
+                                        <div class="col-sm-9">
+                                            <input class="form-control" id="parentName" name="parentName" placeholder="家长姓名"
+                                                   th:value="${student.parentName}">
+                                            <div class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group row">
+                                        <label for="parentContactPhone" class="col-sm-3 col-form-label">家长联系电话:</label>
+                                        <div class="col-sm-9">
+                                            <input class="form-control" id="parentContactPhone" name="parentContactPhone"
+                                                   placeholder="家长联系电话" th:value="${student.parentContactPhone}">
+                                            <div class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-group row">
+                                        <label for="familyResidence" class="col-sm-3 col-form-label">家庭居住地:</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" id="familyResidence" name="familyResidence"
+                                                   placeholder="家庭居住地" th:value="${student.familyResidence}">
+                                            <div class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-group row">
+                                        <label for="placeOrigin" class="col-sm-3 col-form-label">生源地:</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" id="placeOrigin" name="placeOrigin"
+                                                   placeholder="生源地" th:value="${student.placeOrigin}">
+                                            <div class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 mg-t-20 mg-lg-t-0 text-center">
+                                    <button type="button" class="btn btn-primary" id="saveSchool">保存</button>
+                                </div>
+                            </div><!-- row -->
                         </div><!-- card -->
                     </div><!-- col-lg-12 -->
                 </div><!-- row -->

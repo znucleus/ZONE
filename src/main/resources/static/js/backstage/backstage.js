@@ -22,7 +22,10 @@ requirejs.config({
         "dropify": web_path + "/plugins/file-uploads/js/dropify.min",
         "sweetalert2": web_path + "/plugins/sweetalert2/sweetalert2.all.min",
         "select2": web_path + "/plugins/select2/js/select2.min",
-        "select2-zh-CN": web_path + "/plugins/select2/js/i18n/zh-CN.min"
+        "select2-zh-CN": web_path + "/plugins/select2/js/i18n/zh-CN.min",
+        "bootstrap-datepicker": web_path + "/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min",
+        "bootstrap-datepicker-zh-CN": web_path + "/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min",
+        "bootstrap-inputmask": web_path + "/plugins/bootstrap-inputmask/bootstrap-inputmask.min"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -61,6 +64,9 @@ requirejs.config({
         },
         "select2-zh-CN": {
             deps: ["jquery", "select2"]
+        },
+        "bootstrap-datepicker-zh-CN": {
+            deps: ["jquery", "bootstrap-datepicker", "css!" + web_path + "/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min"]
         }
     }
 });

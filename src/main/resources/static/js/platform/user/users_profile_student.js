@@ -1,6 +1,6 @@
 //# sourceURL=users_profile_student.js
 require(["jquery", "lodash", "tools", "sweetalert2", "bootstrap",
-        "csrf",  "select2-zh-CN"],
+        "csrf",  "select2-zh-CN", "bootstrap-datepicker-zh-CN", "bootstrap-inputmask"],
     function ($, _, tools, Swal) {
 
         var ajax_url = {
