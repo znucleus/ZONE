@@ -23,9 +23,9 @@ requirejs.config({
         "sweetalert2": web_path + "/plugins/sweetalert2/sweetalert2.all.min",
         "select2": web_path + "/plugins/select2/js/select2.min",
         "select2-zh-CN": web_path + "/plugins/select2/js/i18n/zh-CN.min",
-        "bootstrap-datepicker": web_path + "/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min",
-        "bootstrap-datepicker-zh-CN": web_path + "/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min",
-        "bootstrap-inputmask": web_path + "/plugins/bootstrap-inputmask/bootstrap-inputmask.min"
+        "bootstrap-inputmask": web_path + "/plugins/bootstrap-inputmask/bootstrap-inputmask.min",
+        "jquery-ui": web_path + "/plugins/jquery-ui/jquery-ui.min",
+        "jquery-toggles": web_path + "/plugins/jquery-toggles/toggles.min"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -65,8 +65,11 @@ requirejs.config({
         "select2-zh-CN": {
             deps: ["jquery", "select2"]
         },
-        "bootstrap-datepicker-zh-CN": {
-            deps: ["jquery", "bootstrap-datepicker", "css!" + web_path + "/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min"]
+        "jquery-ui": {
+            deps: ["jquery"]
+        },
+        "jquery-toggles": {
+            deps: ["jquery", "css!" + web_path + "/plugins/jquery-toggles/toggles-full.min"]
         }
     }
 });

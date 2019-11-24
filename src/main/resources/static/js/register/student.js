@@ -429,7 +429,7 @@ require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf",
                             //设置button效果，开始计时
                             $(btnId).attr("disabled", "true");
                             $(btnId).text(curCount + "秒");
-                            InterValObj = window.setInterval(SetRemainTime, 1000); //启动计时器，1秒执行一次
+                            InterValObj = window.setInterval(setRemainTime, 1000); //启动计时器，1秒执行一次
                             $(param_id.verificationCode).removeClass('is-invalid');
                             verificationCodeHelp.removeClass('text-danger').addClass('text-muted').text(data.msg);
                         } else {
@@ -443,7 +443,7 @@ require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf",
             });
 
             //timer处理函数
-            function SetRemainTime() {
+            function setRemainTime() {
                 if (curCount === 0) {
                     window.clearInterval(InterValObj);//停止计时器
                     $(btnId).removeAttr("disabled");//启用按钮
