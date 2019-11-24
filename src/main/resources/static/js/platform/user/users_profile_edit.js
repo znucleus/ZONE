@@ -1,4 +1,4 @@
-//# sourceURL=users_profile_system_edit.js
+//# sourceURL=users_profile_edit.js
 require(["jquery", "lodash", "tools", "sweetalert2", "bootstrap", "dropify",
         "csrf"],
     function ($, _, tools, Swal) {

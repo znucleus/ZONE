@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8"/>
 </head>
@@ -14,54 +14,90 @@
             </div><!-- card-header -->
             <div class="card-body">
                 <div class="card-profile-img">
-                    <img src="http://via.placeholder.com/280x280" alt="">
+                    <img th:src="@{${avatar}}" alt="头像">
                 </div><!-- card-profile-img -->
-                <h4 class="tx-normal tx-roboto tx-white">赵银</h4>
-                <p class="mg-b-25">加入时间：2019-05-02</p>
+                <h4 class="tx-normal tx-roboto tx-white" th:text="${realName}"></h4>
+                <p class="mg-b-25">加入时间：<span th:text="${joinDate}"></span></p>
 
-                <p class="wd-md-500 mg-md-l-auto mg-md-r-auto mg-b-25">系统</p>
+                <p class="wd-md-500 mg-md-l-auto mg-md-r-auto mg-b-25" th:text="${roles}"></p>
 
                 <p class="mg-b-0 tx-15">
-                    <a href="" class="tx-white-8 mg-r-5 pull-right"><i class="fa fa-pencil"></i>编辑</a>
+                    <a href="#/user/profile/edit" class="tx-white-8 mg-r-5 pull-right"><i
+                            class="fa fa-pencil"></i>编辑</a>
                 </p>
             </div><!-- card-body -->
         </div><!-- card -->
 
         <div class="ht-70 bg-gray-100 pd-x-20 d-flex align-items-center justify-content-center shadow-base">
             <ul class="nav nav-outline active-info align-items-center flex-row" role="tablist">
-                <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#school" role="tab">学校</a></li>
-                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#person" role="tab">个人</a></li>
+                <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#schoolTab" role="tab">学校</a>
+                </li>
+                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#personTab" role="tab">个人</a></li>
             </ul>
         </div>
 
         <div class="tab-content br-profile-body">
-            <div class="tab-pane fade active show" id="school">
+            <div class="tab-pane fade active show" id="schoolTab">
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="card pd-20 pd-xs-30 shadow-base bd-0 mg-t-30">
                             <div class="row">
-                                <div class="col-md-4">
-                                    <span>学校：</span><span></span>
-                                </div>
-                                <div class="col-md-4">
-                                    <span>院：</span><span></span>
-                                </div>
-                                <div class="col-md-4">
-                                    <span>系：</span><span id="updateDepartment"></span>
-                                </div>
-                                <div class="col-md-4">
-                                    <span>专业：</span><span id="updateScience"></span>
-                                </div>
-                                <div class="col-md-4">
-                                    <span>年级：</span><span id="updateGrade"></span>
-                                </div>
-                                <div class="col-md-4">
-                                    <span>班级：</span><span id="updateOrganize"></span>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <a href="" class="tx-black mg-r-5 pull-right"><i class="fa fa-pencil"></i>编辑</a>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <select class="form-control select2-show-search" id="school"
+                                                th:data-placeholder="${student.schoolName}" disabled>
+                                            <option th:label="${student.schoolName}"></option>
+                                        </select>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div><!-- col-4 -->
+                                <div class="col-lg-4 mg-t-20 mg-lg-t-0">
+                                    <div class="form-group">
+                                        <select class="form-control select2-show-search" id="college"
+                                                th:data-placeholder="${student.collegeName}" disabled>
+                                            <option th:label="${student.collegeName}"></option>
+                                        </select>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div><!-- col-4 -->
+                                <div class="col-lg-4 mg-t-20 mg-lg-t-0">
+                                    <div class="form-group">
+                                        <select class="form-control select2-show-search" id="department"
+                                                data-placeholder="请选择系">
+                                            <option label="请选择系"></option>
+                                        </select>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div><!-- col-4 -->
+                                <div class="col-lg-4 mg-t-20 mg-lg-t-0">
+                                    <div class="form-group">
+                                        <select class="form-control select2-show-search" id="science"
+                                                data-placeholder="请选择专业">
+                                            <option label="请选择专业"></option>
+                                        </select>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div><!-- col-4 -->
+                                <div class="col-lg-4 mg-t-20 mg-lg-t-0">
+                                    <div class="form-group">
+                                        <select class="form-control select2-show-search" id="grade"
+                                                data-placeholder="请选择年级">
+                                            <option label="请选择年级"></option>
+                                        </select>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div><!-- col-4 -->
+                                <div class="col-lg-4 mg-t-20 mg-lg-t-0">
+                                    <div class="form-group">
+                                        <select class="form-control select2-show-search" id="organize"
+                                                data-placeholder="请选择班级">
+                                            <option label="请选择班级"></option>
+                                        </select>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div><!-- col-4 -->
+                                <div class="col-lg-12 mg-t-20 mg-lg-t-0 text-center">
+                                    <button type="button" class="btn btn-primary" id="saveSchool">保存</button>
                                 </div>
                             </div>
 
@@ -69,30 +105,44 @@
                     </div><!-- col-lg-12 -->
                 </div><!-- row -->
             </div><!-- tab-pane -->
-            <div class="tab-pane fade" id="person">
+            <div class="tab-pane fade" id="personTab">
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="card pd-20 pd-xs-30 shadow-base bd-0 mg-t-30">
                             <div class="row">
-                                <div class="col-md-4">
-                                    <span>学校：</span><span></span>
-                                </div>
-                                <div class="col-md-4">
-                                    <span>院：</span><span></span>
-                                </div>
-                                <div class="col-md-4">
-                                    <span>系：</span><span ></span>
-                                </div>
-                                <div class="col-md-4">
-                                    <span>专业：</span><span ></span>
-                                </div>
-                                <div class="col-md-4">
-                                    <span>年级：</span><span ></span>
-                                </div>
-                                <div class="col-md-4">
-                                    <span>班级：</span><span ></span>
-                                </div>
-                            </div>
+                                <div class="col-lg-4">
+                                    <select class="form-control select2" data-placeholder="Choose one">
+                                        <option label="Choose one"></option>
+                                        <option value="Firefox">Firefox</option>
+                                        <option value="Chrome">Chrome</option>
+                                        <option value="Safari">Safari</option>
+                                        <option value="Opera">Opera</option>
+                                        <option value="Internet Explorer">Internet Explorer</option>
+                                    </select>
+                                </div><!-- col-4 -->
+                                <div class="col-lg-4 mg-t-20 mg-lg-t-0">
+                                    <select class="form-control select2-show-search"
+                                            data-placeholder="Choose one (with searchbox)">
+                                        <option label="Choose one"></option>
+                                        <option value="Firefox">Firefox</option>
+                                        <option value="Chrome">Chrome</option>
+                                        <option value="Safari">Safari</option>
+                                        <option value="Opera">Opera</option>
+                                        <option value="Internet Explorer">Internet Explorer</option>
+                                    </select>
+                                </div><!-- col-4 -->
+                                <div class="col-lg-4 mg-t-20 mg-lg-t-0">
+                                    <select class="form-control select2" data-placeholder="Choose one (disabled)"
+                                            disabled>
+                                        <option label="Choose one"></option>
+                                        <option value="Firefox">Firefox</option>
+                                        <option value="Chrome">Chrome</option>
+                                        <option value="Safari">Safari</option>
+                                        <option value="Opera">Opera</option>
+                                        <option value="Internet Explorer">Internet Explorer</option>
+                                    </select>
+                                </div><!-- col-4 -->
+                            </div><!-- row -->
                             <div class="row">
                                 <div class="col-md-12">
                                     <a href="" class="tx-black mg-r-5 pull-right"><i class="fa fa-pencil"></i>编辑</a>
@@ -105,6 +155,11 @@
         </div><!-- br-pagebody -->
     </div>
 
+    <input type="hidden" id="collegeId" th:value="${student.collegeId}"/>
+    <input type="hidden" id="departmentId" th:value="${student.departmentId}"/>
+    <input type="hidden" id="scienceId" th:value="${student.scienceId}"/>
+    <input type="hidden" id="gradeId" th:value="${student.gradeId}"/>
+    <input type="hidden" id="organizeId" th:value="${student.organizeId}"/>
     <input type="hidden" class="dy_script" value="/js/platform/user/users_profile_student.js"/>
 </div>
 <!-- /#page-wrapper -->

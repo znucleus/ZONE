@@ -20,7 +20,9 @@ requirejs.config({
         "jquery.address": web_path + "/plugins/jquery-address/jquery.address-1.6.min",
         "jquery.simple-pagination": web_path + "/plugins/jquery-simple-pagination/jquery.simplePagination.min",
         "dropify": web_path + "/plugins/file-uploads/js/dropify.min",
-        "sweetalert2": web_path + "/plugins/sweetalert2/sweetalert2.all.min"
+        "sweetalert2": web_path + "/plugins/sweetalert2/sweetalert2.all.min",
+        "select2": web_path + "/plugins/select2/js/select2.min",
+        "select2-zh-CN": web_path + "/plugins/select2/js/i18n/zh-CN.min"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -56,6 +58,9 @@ requirejs.config({
         },
         "sweetalert2": {
             deps: ["jquery", "css!" + web_path + "/plugins/sweetalert2/sweetalert2.min"]
+        },
+        "select2-zh-CN": {
+            deps: ["jquery", "select2"]
         }
     }
 });

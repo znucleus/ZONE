@@ -117,9 +117,6 @@ public class UsersViewController {
      */
     @GetMapping("/user/profile/edit")
     public String userProfileEdit(ModelMap modelMap) {
-        SystemInlineTipConfig config = new SystemInlineTipConfig();
-        String page;
-
         Users users = usersService.getUserFromSession();
         modelMap.addAttribute("realName", users.getRealName());
         modelMap.addAttribute("joinDate", users.getJoinDate());
@@ -131,43 +128,6 @@ public class UsersViewController {
                 modelMap.addAttribute("avatar", Workbook.DIRECTORY_SPLIT + files.getRelativePath());
             }
         }
-
-        // roles.
-        List<Role> roles = roleService.findByUsername(users.getUsername());
-        List<String> rList = new ArrayList<>();
-        roles.forEach(r -> rList.add(r.getRoleName()));
-        modelMap.addAttribute("roles", String.join(",", rList));
-
-        UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-        if (Objects.nonNull(usersType)) {
-            if (StringUtils.equals(Workbook.SYSTEM_USERS_TYPE, usersType.getUsersTypeName())) {
-                page = "web/platform/user/users_profile_system_edit::#page-wrapper";
-            } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                StudentBean studentBean = new StudentBean();
-                Optional<Record> record = studentService.findByUsernameRelation(users.getUsername());
-                if (record.isPresent()) {
-                    studentBean = record.get().into(StudentBean.class);
-                }
-                modelMap.addAttribute("student", studentBean);
-                page = "web/platform/user/users_profile_student_edit::#page-wrapper";
-            } else if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                StaffBean staffBean = new StaffBean();
-                Optional<Record> record = staffService.findByUsernameRelation(users.getUsername());
-                if (record.isPresent()) {
-                    staffBean = record.get().into(StaffBean.class);
-                }
-                modelMap.addAttribute("staff", staffBean);
-                page = "web/platform/user/users_profile_staff_edit::#page-wrapper";
-            } else {
-                config.buildDangerTip("数据错误", "暂不支持您的用户类型进行修改");
-                config.dataMerging(modelMap);
-                page = "inline_tip::#page-wrapper";
-            }
-        } else {
-            config.buildDangerTip("查询错误", "未查询到您的用户类型");
-            config.dataMerging(modelMap);
-            page = "inline_tip::#page-wrapper";
-        }
-        return page;
+        return "web/platform/user/users_profile_edit::#page-wrapper";
     }
 }
