@@ -140,10 +140,10 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
         init();
 
         function init() {
-            initDepartment($('#collegeId').val());
-            initScience($('#departmentId').val());
-            initGrade($('#scienceId').val());
-            initOrganize($('#gradeId').val());
+            initDepartment(page_param.collegeId);
+            initScience(page_param.departmentId);
+            initGrade(page_param.scienceId);
+            initOrganize(page_param.gradeId);
             initSelect2();
 
             initSex();
