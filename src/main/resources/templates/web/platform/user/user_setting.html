@@ -55,13 +55,13 @@
                         <div class="form-group row">
                             <label for="mobile" class="col-sm-2 col-form-label">手机号:</label>
                             <div class="col-sm-10">
-                                <input type="text" readonly class="form-control-plaintext" id="mobile" th:value="${mobile}">
+                                <input type="text" readonly class="form-control-plaintext" th:value="${mobile}">
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="col-md-6 text-right">
-                    <button class="btn btn-primary mg-b-10">修改</button>
+                    <button class="btn btn-primary mg-b-10" data-toggle="modal" data-target="#mobileModal">修改</button>
                 </div>
                 <div class="col-md-6">
                     <form>
@@ -128,6 +128,51 @@
                     </div>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- 手机号修改Modal -->
+    <div class="modal fade" id="mobileModal" tabindex="-1" role="dialog" aria-labelledby="mobileModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mobileModalLabel">手机号修改</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="mg-t-20">
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <input type="text" class="form-control" placeholder="手机号" id="mobile"
+                                       th:value="${mobile}"/>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="验证码" id="verificationCode"
+                                           aria-label="验证码" aria-describedby="verificationCodeHelp">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="button" id="sendCode">获取
+                                        </button>
+                                    </div>
+                                </div>
+                                <small id="verificationCodeHelp" class="form-text text-muted"></small>
+                            </div>
+                        </div>
+                        <div class="form-group text-danger" id="globalMobileError"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="saveMobile">确定</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                </div>
+            </div>
         </div>
     </div>
 

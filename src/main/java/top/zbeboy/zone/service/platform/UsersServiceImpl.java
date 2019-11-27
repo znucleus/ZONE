@@ -66,19 +66,19 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public Result<UsersRecord> findByIdCardNeOwn(String idCard, String own) {
         return create.selectFrom(USERS)
-                .where(USERS.ID_CARD.eq(idCard).and(USERS.USERNAME.ne(own))).fetch();
+                .where(USERS.ID_CARD.eq(idCard).and(USERS.ID_CARD.ne(own))).fetch();
     }
 
     @Override
     public Result<UsersRecord> findByEmailNeOwn(String email, String own) {
         return create.selectFrom(USERS)
-                .where(USERS.ID_CARD.eq(email).and(USERS.USERNAME.ne(own))).fetch();
+                .where(USERS.EMAIL.eq(email).and(USERS.EMAIL.ne(own))).fetch();
     }
 
     @Override
     public Result<UsersRecord> findByMobileNeOwn(String mobile, String own) {
         return create.selectFrom(USERS)
-                .where(USERS.ID_CARD.eq(mobile).and(USERS.USERNAME.ne(own))).fetch();
+                .where(USERS.MOBILE.eq(mobile).and(USERS.MOBILE.ne(own))).fetch();
     }
 
     @Override

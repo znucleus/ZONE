@@ -25,7 +25,9 @@ requirejs.config({
         "select2-zh-CN": web_path + "/plugins/select2/js/i18n/zh-CN.min",
         "bootstrap-inputmask": web_path + "/plugins/bootstrap-inputmask/bootstrap-inputmask.min",
         "jquery-ui": web_path + "/plugins/jquery-ui/jquery-ui.min",
-        "jquery-toggles": web_path + "/plugins/jquery-toggles/toggles.min"
+        "jquery-toggles": web_path + "/plugins/jquery-toggles/toggles.min",
+        "jquery.entropizer": web_path + "/plugins/jquery-entropizer/js/jquery-entropizer.min",
+        "entropizer": web_path + "/plugins/jquery-entropizer/js/entropizer.min"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -70,6 +72,9 @@ requirejs.config({
         },
         "jquery-toggles": {
             deps: ["jquery", "css!" + web_path + "/plugins/jquery-toggles/toggles-full.min"]
+        },
+        "jquery.entropizer": {
+            deps: ["jquery", "css!" + web_path + "/plugins/jquery-entropizer/css/jquery-entropizer.min"]
         }
     }
 });

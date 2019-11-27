@@ -170,6 +170,31 @@ public class UsersRestController {
     }
 
     /**
+     * 检验手机号是否被注册
+     *
+     * @param mobile 手机号
+     * @return 是否被注册
+     */
+    @PostMapping("/user/check/mobile")
+    public ResponseEntity<Map<String, Object>> userCheckMobile(@RequestParam("mobile") String mobile) {
+        String param = StringUtils.deleteWhitespace(mobile);
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        String regex = SystemMobileConfig.MOBILE_REGEX;
+        if (!Pattern.matches(regex, param)) {
+            ajaxUtil.fail().msg("手机号不正确");
+        } else {
+            Users users = usersService.getUserFromSession();
+            Result<UsersRecord> usersRecords = usersService.findByMobileNeOwn(param, users.getMobile());
+            if (usersRecords.isEmpty()) {
+                ajaxUtil.success().msg("手机号未被注册");
+            } else {
+                ajaxUtil.fail().msg("手机号已被注册");
+            }
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
      * 重置密码
      *
      * @param resetPasswordVo 数据
@@ -369,7 +394,7 @@ public class UsersRestController {
                 if (StringUtils.equals(newPassword, confirmPassword)) {
                     users.setPassword(BCryptUtil.bCryptPassword(confirmPassword));
                     usersService.update(users);
-                    ajaxUtil.success().msg("密码正确");
+                    ajaxUtil.success().msg("更新密码成功");
                 } else {
                     ajaxUtil.fail().msg("密码不一致");
                 }
@@ -377,7 +402,7 @@ public class UsersRestController {
                 ajaxUtil.fail().msg("密码为6-16位任意字母或数字，以及下划线");
             }
         } else {
-            ajaxUtil.fail().msg("密码错误");
+            ajaxUtil.fail().msg("原密码错误");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
