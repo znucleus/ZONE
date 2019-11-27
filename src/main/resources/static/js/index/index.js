@@ -76,5 +76,10 @@ require(["jquery", "bootstrap", "wow", "vegas"], function ($) {
 
     new WOW({mobile: false}).init();
 
-    console.log('%c Welcome to ZONE.', 'color:red');
+    console.log('%c ██████    █      █   █████', 'color:blue');
+    console.log('%c      █    █      █   █   ', 'color:blue');
+    console.log('%c    █      ████████   █████', 'color:red');
+    console.log('%c  █        █      █   █', 'color:red');
+    console.log('%c ██████    █      █   █████', 'color:green');
+    console.log('%c Welcome to Z.核.', 'color:red');
 });
