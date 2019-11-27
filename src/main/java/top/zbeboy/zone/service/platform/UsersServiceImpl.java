@@ -70,6 +70,18 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
+    public Result<UsersRecord> findByEmailNeOwn(String email, String own) {
+        return create.selectFrom(USERS)
+                .where(USERS.ID_CARD.eq(email).and(USERS.USERNAME.ne(own))).fetch();
+    }
+
+    @Override
+    public Result<UsersRecord> findByMobileNeOwn(String mobile, String own) {
+        return create.selectFrom(USERS)
+                .where(USERS.ID_CARD.eq(mobile).and(USERS.USERNAME.ne(own))).fetch();
+    }
+
+    @Override
     public Users findByEmail(String email) {
         return usersDao.fetchOneByEmail(email);
     }

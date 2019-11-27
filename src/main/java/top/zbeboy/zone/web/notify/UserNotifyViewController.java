@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class UserNotifyViewController {
 
     @GetMapping("/user/notify")
-    public String userSetting() {
+    public String userNotify() {
         return "web/platform/user/user_notify::#page-wrapper";
     }
 }

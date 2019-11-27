@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="pd-30">
+        <h4 class="tx-gray-800 mg-b-5">设置</h4>
+        <p class="mg-b-0">修改您的账号密码信息。</p>
+    </div><!-- d-flex -->
+
+    <div class="br-pagebody mg-t-5 pd-x-30">
+        <div class="br-section-wrapper">
+            <h6 class="tx-gray-800 tx-uppercase tx-bold tx-14 mg-b-10">账号资料</h6>
+            <p class="mg-b-25 mg-lg-b-50">请牢记您的账号密码，更换邮箱或手机号时，及时更新资料，避免造成其它影响</p>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <form>
+                        <div class="form-group row">
+                            <label for="username" class="col-sm-2 col-form-label">账号:</label>
+                            <div class="col-sm-10">
+                                <input type="text" readonly class="form-control-plaintext" id="username" th:value="${username}">
+                                <div class="invalid-feedback"></div>
+                                <input type="hidden" id="defaultUsername" th:value="${username}"/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-6 text-right">
+                    <button class="btn btn-success mg-b-10" hidden="hidden" id="updateUsername">确定</button>
+                    <button class="btn btn-secondary mg-b-10" hidden="hidden" id="cancelUpdateUsername">取消</button>
+                    <button class="btn btn-primary mg-b-10" id="editUsername">修改</button>
+                </div>
+                <div class="col-md-6">
+                    <form>
+                        <div class="form-group row">
+                            <label for="email" class="col-sm-2 col-form-label">邮箱:</label>
+                            <div class="col-sm-10">
+                                <input type="email" readonly class="form-control-plaintext" id="email" th:value="${email}">
+                                <div class="invalid-feedback"></div>
+                                <input type="hidden" id="defaultEmail" th:value="${email}"/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-6 text-right">
+                    <button class="btn btn-success mg-b-10" hidden="hidden" id="updateEmail">确定</button>
+                    <button class="btn btn-secondary mg-b-10" hidden="hidden" id="cancelUpdateEmail">取消</button>
+                    <button class="btn btn-primary mg-b-10" id="editEmail">修改</button>
+                </div>
+                <div class="col-md-6">
+                    <form>
+                        <div class="form-group row">
+                            <label for="mobile" class="col-sm-2 col-form-label">手机号:</label>
+                            <div class="col-sm-10">
+                                <input type="text" readonly class="form-control-plaintext" id="mobile" th:value="${mobile}">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-6 text-right">
+                    <button class="btn btn-primary mg-b-10">修改</button>
+                </div>
+                <div class="col-md-6">
+                    <form>
+                        <div class="form-group row">
+                            <label for="idCard" class="col-sm-2 col-form-label">身份证号:</label>
+                            <div class="col-sm-10">
+                                <input type="text" readonly class="form-control-plaintext" id="idCard" th:value="${idCard}">
+                                <div class="invalid-feedback"></div>
+                                <input type="hidden" id="defaultIdCard" th:value="${idCard}"/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-6 text-right">
+                    <button class="btn btn-success mg-b-10" hidden="hidden" id="updateIdCard">确定</button>
+                    <button class="btn btn-secondary mg-b-10" hidden="hidden" id="cancelUpdateIdCard">取消</button>
+                    <button class="btn btn-primary mg-b-10" id="editIdCard">修改</button>
+                </div>
+            </div>
+
+            <h6 class="tx-gray-800 tx-uppercase tx-bold tx-14 mg-t-100 mg-b-10">修改密码</h6>
+            <p class="mg-b-25 mg-lg-b-50">设置常用且复杂的密码能有效避免您的信息泄露</p>
+            <form role="form">
+                <div class="form-group row">
+                    <label for="oldPassword" class="col-sm-4 form-control-label">旧密码<span
+                            class="text-danger">*</span></label>
+                    <div class="col-sm-7">
+                        <input id="oldPassword" type="password" placeholder="输入旧密码"
+                               class="form-control">
+                        <div class="invalid-feedback"></div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="newPassword" class="col-sm-4 form-control-label">新密码<span
+                            class="text-danger">*</span></label>
+                    <div class="col-sm-7">
+                        <input id="newPassword" type="password" aria-describedby="passwordHelp"
+                               placeholder="输入密码" class="form-control">
+                        <div class="invalid-feedback"></div>
+                        <div id="meter2"></div>
+                        <small id="passwordHelp" class="form-text text-muted">密码为6-16位任意字母或数字，以及下划线
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="confirmPassword" class="col-sm-4 form-control-label">确认新密码
+                        <span class="text-danger">*</span></label>
+                    <div class="col-sm-7">
+                        <input type="password" placeholder="确认密码" class="form-control"
+                               id="confirmPassword">
+                        <div class="invalid-feedback"></div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-12 text-danger" id="globalPasswordError">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-12 text-center">
+                        <button type="button" class="btn btn-primary waves-effect waves-light"
+                                id="updatePassword">
+                            保存
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <input type="hidden" class="dy_script" value="/js/platform/user/user_setting.js"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>

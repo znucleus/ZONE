@@ -52,6 +52,24 @@ public interface UsersService {
     Result<UsersRecord> findByIdCardNeOwn(String idCard, String own);
 
     /**
+     * 检查邮箱是否占用
+     *
+     * @param email 邮箱
+     * @param own    账号
+     * @return 检验邮箱
+     */
+    Result<UsersRecord> findByEmailNeOwn(String email, String own);
+
+    /**
+     * 检查手机号是否占用
+     *
+     * @param mobile 手机号
+     * @param own    账号
+     * @return 检验手机号
+     */
+    Result<UsersRecord> findByMobileNeOwn(String mobile, String own);
+
+    /**
      * 根据邮箱查询用户信息(全部)
      *
      * @param email 账号

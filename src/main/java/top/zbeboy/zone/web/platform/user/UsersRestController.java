@@ -233,12 +233,12 @@ public class UsersRestController {
                     Users own = usersService.getUserFromSession();
                     if (!StringUtils.equals(own.getUsername(), value)) {
                         Result<UsersRecord> usersRecords = usersService.findByUsernameNeOwn(value, own.getUsername());
-                        if (usersRecords.isNotEmpty()) {
-                            ajaxUtil.fail().msg("账号已被注册");
-                        } else {
+                        if (usersRecords.isEmpty()) {
                             // 更新
                             usersService.updateUsername(own.getUsername(), value);
                             ajaxUtil.success().msg("账号更新成功");
+                        } else {
+                            ajaxUtil.fail().msg("账号已被注册");
                         }
                     } else {
                         ajaxUtil.fail().msg("账号未改变");
@@ -248,29 +248,43 @@ public class UsersRestController {
 
             if (StringUtils.equals("realName", name)) {
                 Users users = usersService.getUserFromSession();
-                users.setRealName(value);
-                usersService.update(users);
-                ajaxUtil.success().msg("姓名更新成功");
+                if (!StringUtils.equals(users.getRealName(), value)) {
+                    users.setRealName(value);
+                    usersService.update(users);
+                    ajaxUtil.success().msg("姓名更新成功");
+                } else {
+                    ajaxUtil.fail().msg("姓名未改变");
+                }
             }
 
             if (StringUtils.equals("email", name)) {
                 if (Pattern.matches(SystemMailConfig.MAIL_REGEX, value)) {
-                    // 检查邮件推送是否被关闭
-                    SystemConfigure mailConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
-                    if (StringUtils.equals("1", mailConfigure.getDataValue())) {
-                        DateTime dateTime = DateTime.now();
-                        dateTime = dateTime.plusDays(ZoneProperties.getMail().getValidCodeTime());
+                    Users own = usersService.getUserFromSession();
+                    if (!StringUtils.equals(own.getEmail(), value)) {
+                        Result<UsersRecord> usersRecords = usersService.findByEmailNeOwn(value, own.getEmail());
+                        if (usersRecords.isEmpty()) {
+                            // 检查邮件推送是否被关闭
+                            SystemConfigure mailConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
+                            if (StringUtils.equals("1", mailConfigure.getDataValue())) {
+                                DateTime dateTime = DateTime.now();
+                                dateTime = dateTime.plusDays(ZoneProperties.getMail().getValidCodeTime());
 
-                        Users users = usersService.getUserFromSession();
-                        users.setEmail(value);
-                        users.setMailboxVerifyCode(RandomUtil.generateEmailCheckKey());
-                        users.setMailboxVerifyValid(DateTimeUtil.utilDateToSqlTimestamp(dateTime.toDate()));
-                        users.setVerifyMailbox(BooleanUtil.toByte(false));
-                        usersService.update(users);
-                        systemMailService.sendValidEmailMail(users, RequestUtil.getBaseUrl(request));
-                        ajaxUtil.success().msg("邮箱更新成功");
+                                Users users = usersService.getUserFromSession();
+                                users.setEmail(value);
+                                users.setMailboxVerifyCode(RandomUtil.generateEmailCheckKey());
+                                users.setMailboxVerifyValid(DateTimeUtil.utilDateToSqlTimestamp(dateTime.toDate()));
+                                users.setVerifyMailbox(BooleanUtil.toByte(false));
+                                usersService.update(users);
+                                systemMailService.sendValidEmailMail(users, RequestUtil.getBaseUrl(request));
+                                ajaxUtil.success().msg("邮箱更新成功");
+                            } else {
+                                ajaxUtil.fail().msg("邮件推送已被管理员关闭");
+                            }
+                        } else {
+                            ajaxUtil.fail().msg("邮箱已被使用");
+                        }
                     } else {
-                        ajaxUtil.fail().msg("邮件推送已被管理员关闭");
+                        ajaxUtil.fail().msg("邮箱未改变");
                     }
                 } else {
                     ajaxUtil.fail().msg("邮箱格式不正确");
@@ -279,19 +293,29 @@ public class UsersRestController {
 
             if (StringUtils.equals("mobile", name)) {
                 if (Pattern.matches(SystemMobileConfig.MOBILE_REGEX, value)) {
-                    // step 2.手机号是否已验证
-                    if (!ObjectUtils.isEmpty(session.getAttribute(value + SystemMobileConfig.MOBILE_VALID))) {
-                        boolean isValid = (boolean) session.getAttribute(value + SystemMobileConfig.MOBILE_VALID);
-                        if (isValid) {
-                            Users users = usersService.getUserFromSession();
-                            users.setMobile(value);
-                            usersService.update(users);
-                            ajaxUtil.success().msg("更新手机号成功");
+                    Users own = usersService.getUserFromSession();
+                    if (!StringUtils.equals(own.getMobile(), value)) {
+                        Result<UsersRecord> usersRecords = usersService.findByEmailNeOwn(value, own.getMobile());
+                        if (usersRecords.isEmpty()) {
+                            // step 2.手机号是否已验证
+                            if (!ObjectUtils.isEmpty(session.getAttribute(value + SystemMobileConfig.MOBILE_VALID))) {
+                                boolean isValid = (boolean) session.getAttribute(value + SystemMobileConfig.MOBILE_VALID);
+                                if (isValid) {
+                                    Users users = usersService.getUserFromSession();
+                                    users.setMobile(value);
+                                    usersService.update(users);
+                                    ajaxUtil.success().msg("更新手机号成功");
+                                } else {
+                                    ajaxUtil.fail().msg("验证手机号失败");
+                                }
+                            } else {
+                                ajaxUtil.fail().msg("请重新验证手机号");
+                            }
                         } else {
-                            ajaxUtil.fail().msg("验证手机号失败");
+                            ajaxUtil.fail().msg("手机号已被使用");
                         }
                     } else {
-                        ajaxUtil.fail().msg("请重新验证手机号");
+                        ajaxUtil.fail().msg("手机号未改变");
                     }
                 } else {
                     ajaxUtil.fail().msg("手机号不正确");
@@ -300,15 +324,19 @@ public class UsersRestController {
 
             if (StringUtils.equals("idCard", name)) {
                 if (Pattern.matches(Workbook.ID_CARD_REGEX, value)) {
-                    // 检查是否已经存在该身份证号
                     Users users = usersService.getUserFromSession();
-                    Result<UsersRecord> records = usersService.findByIdCardNeOwn(value, users.getUsername());
-                    if (records.isEmpty()) {
-                        users.setIdCard(value);
-                        usersService.update(users);
-                        ajaxUtil.success().msg("身份证号更新成功");
+                    if (!StringUtils.equals(users.getIdCard(), value)) {
+                        // 检查是否已经存在该身份证号
+                        Result<UsersRecord> records = usersService.findByIdCardNeOwn(value, users.getUsername());
+                        if (records.isEmpty()) {
+                            users.setIdCard(value);
+                            usersService.update(users);
+                            ajaxUtil.success().msg("身份证号更新成功");
+                        } else {
+                            ajaxUtil.fail().msg("身份证号已经存在");
+                        }
                     } else {
-                        ajaxUtil.fail().msg("身份证号已经存在");
+                        ajaxUtil.fail().msg("身份证号未改变");
                     }
                 } else {
                     ajaxUtil.fail().msg("身份证号不正确");

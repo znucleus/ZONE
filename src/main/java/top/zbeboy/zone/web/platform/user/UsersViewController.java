@@ -58,8 +58,7 @@ public class UsersViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
 
-        Users usersSession = usersService.getUserFromSession();
-        Users users = usersService.findByUsername(usersSession.getUsername());
+        Users users = usersService.getUserFromSession();
         modelMap.addAttribute("realName", users.getRealName());
         modelMap.addAttribute("joinDate", users.getJoinDate());
 
@@ -129,5 +128,19 @@ public class UsersViewController {
             }
         }
         return "web/platform/user/users_profile_edit::#page-wrapper";
+    }
+
+    /**
+     * 用户设置界面
+     * @return 页面
+     */
+    @GetMapping("/user/setting")
+    public String userSetting(ModelMap modelMap) {
+        Users users = usersService.getUserFromSession();
+        modelMap.addAttribute("username", users.getUsername());
+        modelMap.addAttribute("email", users.getEmail());
+        modelMap.addAttribute("mobile", users.getMobile());
+        modelMap.addAttribute("idCard", users.getIdCard());
+        return "web/platform/user/user_setting::#page-wrapper";
     }
 }
