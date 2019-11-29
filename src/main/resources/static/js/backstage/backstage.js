@@ -117,7 +117,7 @@ require(["jquery", "requirejs-domready", "moment-with-locales", "handlebars", "a
             /*
              动态链接点击效果
              */
-            $('.dy_href').click(function () {
+            $('body').delegate('.dy_href', "click", function () {
                 $.address.title($(this).text() + '-' + $('#webAppName').text());
                 var href = $(this).attr('href');
                 if (href !== 'javascript:;' && href !== '#') {

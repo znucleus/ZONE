@@ -33,6 +33,7 @@ public class SystemApplicationRestController {
     @GetMapping("/web/system/application/data")
     public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
         List<String> headers = new ArrayList<>();
+        headers.add("#");
         headers.add("select");
         headers.add("applicationName");
         headers.add("applicationEnName");
