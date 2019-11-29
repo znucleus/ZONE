@@ -11579,8 +11579,6 @@ table.dataTable.no-footer {
 }
 
 .dataTables_wrapper .dataTables_paginate .paginate_button {
-  padding-top: 0.54rem;
-  padding-bottom: 0.54rem;
   background-color: #e9ecef;
   border-color: transparent;
 }

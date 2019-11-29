@@ -27,7 +27,12 @@ requirejs.config({
         "jquery-ui": web_path + "/plugins/jquery-ui/jquery-ui.min",
         "jquery-toggles": web_path + "/plugins/jquery-toggles/toggles.min",
         "jquery.entropizer": web_path + "/plugins/jquery-entropizer/js/jquery-entropizer.min",
-        "entropizer": web_path + "/plugins/jquery-entropizer/js/entropizer.min"
+        "entropizer": web_path + "/plugins/jquery-entropizer/js/entropizer.min",
+        "check.all": web_path + "/plugins/checkall/checkall.min",
+        "responsive.bootstrap4": web_path + "/plugins/datatables/js/responsive.bootstrap4.min",
+        "datatables.net-responsive": web_path + "/plugins/datatables/js/datatables.responsive.min",
+        "datatables.net": web_path + "/plugins/datatables/js/jquery.dataTables.min",
+        "datatables.net-bs4": web_path + "/plugins/datatables/js/dataTables.bootstrap4.min"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -75,6 +80,13 @@ requirejs.config({
         },
         "jquery.entropizer": {
             deps: ["jquery", "css!" + web_path + "/plugins/jquery-entropizer/css/jquery-entropizer.min"]
+        },
+        "check.all": {
+            deps: ["jquery"]
+        },
+        "responsive.bootstrap4": {
+            deps: ["datatables.net-responsive", "datatables.net-bs4", "datatables.net", "css!" + web_path + "/plugins/datatables/css/dataTables.bootstrap4.min",
+                "css!" + web_path + "/plugins/datatables/css/responsive.bootstrap4.min"]
         }
     }
 });

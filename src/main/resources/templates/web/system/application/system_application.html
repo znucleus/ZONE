@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="pd-30">
+        <h4 class="tx-gray-800 mg-b-5">系统应用</h4>
+        <p class="mg-b-0">设置系统菜单及应用。</p>
+    </div><!-- d-flex -->
+
+    <div class="br-pagebody mg-t-5 pd-x-30">
+        <div class="br-section-wrapper">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <table id="dataTable" class="table table-striped table-bordered dt-responsive nowrap"
+                           cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>
+                                <input type="checkbox" name="checkall" id="checkall"/>
+                            </th>
+                            <th>应用</th>
+                            <th>英文</th>
+                            <th>父级</th>
+                            <th>路径</th>
+                            <th>图标</th>
+                            <th>序号</th>
+                            <th>识别名</th>
+                            <th>过滤url</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--定义操作列按钮模板-->
+    <script id="operator_button" type="text/x-handlebars-template">
+        <div class="btn-group" role="group" >
+            {{#each func}}
+            <button type="button" class="btn btn-{{this.type}} btn-sm {{this.css}}" data-id="{{this.id}}"
+                    data-application="{{this.application}}">{{this.name}}
+            </button>
+            {{/each}}
+        </div>
+    </script>
+
+    <input type="hidden" class="dy_script" value="/js/system/application/system_application.js"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>
