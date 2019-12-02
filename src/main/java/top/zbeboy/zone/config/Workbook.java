@@ -62,7 +62,7 @@ public final class Workbook {
     角色类型参数
      */
     public enum authorities {
-        ROLE_SYSTEM, ROLE_ACTUATOR, ROLE_ADMIN, GIF, PNG
+        ROLE_SYSTEM, ROLE_ACTUATOR, ROLE_ADMIN
     }
 
     /*

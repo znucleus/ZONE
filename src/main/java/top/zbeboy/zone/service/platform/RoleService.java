@@ -1,13 +1,19 @@
 package top.zbeboy.zone.service.platform;
 
-import org.jooq.Record;
-import org.jooq.Result;
 import top.zbeboy.zone.domain.tables.pojos.Application;
 import top.zbeboy.zone.domain.tables.pojos.Role;
 
 import java.util.List;
 
 public interface RoleService {
+
+    /**
+     * 通过角色名查询
+     *
+     * @param roleEnName 角色名
+     * @return 角色
+     */
+    Role findByRoleEnName(String roleEnName);
 
     /**
      * 通过角色英文名查询菜单

@@ -26,10 +26,10 @@ require(["jquery", "handlebars", "nav.active", "responsive.bootstrap4", "check.a
         function getAjaxUrl() {
             return {
                 applications: web_path + '/web/system/application/data',
-                status: '/web/system/application/status',
+                status: web_path + '/web/system/application/status',
                 add: '/web/system/application/add',
                 edit: '/web/system/application/edit',
-                page:'/web/menu/system/application'
+                page: '/web/menu/system/application'
             };
         }
 
@@ -170,7 +170,7 @@ require(["jquery", "handlebars", "nav.active", "responsive.bootstrap4", "check.a
             '<div class="col-md-3 pd-t-2"><input type="text" id="search_en_application" class="form-control form-control-sm" placeholder="英文" /></div>' +
             '<div class="col-md-3 pd-t-2"><input type="text" id="search_application_code" class="form-control form-control-sm" placeholder="识别码" /></div>' +
             '<div class="col-md-3 pd-t-2 text-right "><div class="btn-group" role="group"><button type="button" id="search" class="btn btn-outline-secondary btn-sm"><i class="fa fa-search"></i>搜索</button>' +
-            ' <button type="button" id="reset_search" class="btn btn-outline-secondary btn-sm"><i class="fa fa-repeat"></i>重置</button></div></div>'+
+            ' <button type="button" id="reset_search" class="btn btn-outline-secondary btn-sm"><i class="fa fa-repeat"></i>重置</button></div></div>' +
             '</div></form>';
 
         $('#mytoolbox').append(html);

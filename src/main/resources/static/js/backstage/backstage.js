@@ -24,6 +24,7 @@ requirejs.config({
         "select2": web_path + "/plugins/select2/js/select2.min",
         "select2-zh-CN": web_path + "/plugins/select2/js/i18n/zh-CN.min",
         "bootstrap-inputmask": web_path + "/plugins/bootstrap-inputmask/bootstrap-inputmask.min",
+        "bootstrap-maxlength": web_path + "/plugins/bootstrap-maxlength/bootstrap-maxlength.min",
         "jquery-ui": web_path + "/plugins/jquery-ui/jquery-ui.min",
         "jquery-toggles": web_path + "/plugins/jquery-toggles/toggles.min",
         "jquery.entropizer": web_path + "/plugins/jquery-entropizer/js/jquery-entropizer.min",

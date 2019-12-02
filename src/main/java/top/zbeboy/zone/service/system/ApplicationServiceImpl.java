@@ -4,17 +4,22 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import top.zbeboy.zone.config.CacheBook;
 import top.zbeboy.zone.domain.tables.daos.ApplicationDao;
 import top.zbeboy.zone.domain.tables.pojos.Application;
+import top.zbeboy.zone.domain.tables.records.ApplicationRecord;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zone.service.util.SQLQueryUtil;
 import top.zbeboy.zone.web.bean.notify.UserNotifyBean;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import static top.zbeboy.zone.domain.Tables.APPLICATION;
@@ -39,6 +44,74 @@ public class ApplicationServiceImpl implements ApplicationService, PaginationPlu
     }
 
     @Override
+    public List<Application> findByPid(String pid) {
+        List<Application> applications = new ArrayList<>();
+        Result<ApplicationRecord> applicationRecords = create.selectFrom(APPLICATION)
+                .where(APPLICATION.APPLICATION_PID.eq(pid))
+                .orderBy(APPLICATION.APPLICATION_SORT.asc())
+                .fetch();
+        if (applicationRecords.isNotEmpty()) {
+            applications = applicationRecords.into(Application.class);
+        }
+        return applications;
+    }
+
+    @Override
+    public Result<ApplicationRecord> findInPids(List<String> pids) {
+        return create.selectFrom(APPLICATION)
+                .where(APPLICATION.APPLICATION_PID.in(pids))
+                .fetch();
+    }
+
+    @Override
+    public List<Application> findByApplicationName(String applicationName) {
+        return applicationDao.fetchByApplicationName(applicationName);
+    }
+
+    @Override
+    public Result<ApplicationRecord> findByApplicationNameNeApplicationId(String applicationName, String applicationId) {
+        return create.selectFrom(APPLICATION)
+                .where(APPLICATION.APPLICATION_NAME.eq(applicationName).and(APPLICATION.APPLICATION_ID.ne(applicationId)))
+                .fetch();
+    }
+
+    @Override
+    public List<Application> findByApplicationEnName(String applicationEnName) {
+        return applicationDao.fetchByApplicationEnName(applicationEnName);
+    }
+
+    @Override
+    public Result<ApplicationRecord> findByApplicationEnNameNeApplicationId(String applicationEnName, String applicationId) {
+        return create.selectFrom(APPLICATION)
+                .where(APPLICATION.APPLICATION_EN_NAME.eq(applicationEnName).and(APPLICATION.APPLICATION_ID.ne(applicationId)))
+                .fetch();
+    }
+
+    @Override
+    public List<Application> findByApplicationUrl(String applicationUrl) {
+        return applicationDao.fetchByApplicationUrl(applicationUrl);
+    }
+
+    @Override
+    public Result<ApplicationRecord> findByApplicationUrlNeApplicationId(String applicationUrl, String applicationId) {
+        return create.selectFrom(APPLICATION)
+                .where(APPLICATION.APPLICATION_URL.eq(applicationUrl).and(APPLICATION.APPLICATION_ID.ne(applicationId)))
+                .fetch();
+    }
+
+    @Override
+    public List<Application> findByApplicationCode(String applicationCode) {
+        return applicationDao.fetchByApplicationCode(applicationCode);
+    }
+
+    @Override
+    public Result<ApplicationRecord> findByApplicationCodeNeApplicationId(String applicationCode, String applicationId) {
+        return create.selectFrom(APPLICATION)
+                .where(APPLICATION.APPLICATION_CODE.eq(applicationCode).and(APPLICATION.APPLICATION_ID.ne(applicationId)))
+                .fetch();
+    }
+
+    @Override
     public Result<Record> findAllByPage(DataTablesUtil dataTablesUtil) {
         return queryAllByPage(create, APPLICATION, dataTablesUtil);
     }
@@ -51,6 +124,25 @@ public class ApplicationServiceImpl implements ApplicationService, PaginationPlu
     @Override
     public int countByCondition(DataTablesUtil dataTablesUtil) {
         return countAll(create, APPLICATION, dataTablesUtil);
+    }
+
+    @CacheEvict(cacheNames = {CacheBook.MENU, CacheBook.ROLES_APPLICATION}, allEntries = true)
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void save(Application application) {
+        applicationDao.insert(application);
+    }
+
+    @CacheEvict(cacheNames = {CacheBook.MENU, CacheBook.ROLES_APPLICATION}, allEntries = true)
+    @Override
+    public void update(Application application) {
+        applicationDao.update(application);
+    }
+
+    @CacheEvict(cacheNames = {CacheBook.MENU, CacheBook.ROLES_APPLICATION}, allEntries = true)
+    @Override
+    public void deletes(List<String> ids) {
+        applicationDao.deleteById(ids);
     }
 
     @Override

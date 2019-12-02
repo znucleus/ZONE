@@ -15,9 +15,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zone.config.CacheBook;
+import top.zbeboy.zone.domain.tables.daos.RoleDao;
 import top.zbeboy.zone.domain.tables.pojos.Application;
 import top.zbeboy.zone.domain.tables.pojos.Role;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -30,9 +32,17 @@ public class RoleServiceImpl implements RoleService {
 
     private final DSLContext create;
 
+    @Resource
+    private RoleDao roleDao;
+
     @Autowired
     RoleServiceImpl(DSLContext dslContext) {
         create = dslContext;
+    }
+
+    @Override
+    public Role findByRoleEnName(String roleEnName) {
+        return roleDao.fetchOneByRoleEnName(roleEnName);
     }
 
     @Cacheable(cacheNames = CacheBook.ROLES_APPLICATION, key = "#username")
