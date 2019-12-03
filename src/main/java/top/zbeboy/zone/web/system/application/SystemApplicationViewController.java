@@ -25,15 +25,27 @@ public class SystemApplicationViewController {
         return "web/system/application/system_application::#page-wrapper";
     }
 
+    /**
+     * 添加
+     *
+     * @return 页面
+     */
     @GetMapping("/web/system/application/add")
     public String add() {
         return "web/system/application/system_application_add::#page-wrapper";
     }
 
+    /**
+     * 编辑
+     *
+     * @param id       id
+     * @param modelMap 页面对象
+     * @return 页面
+     */
     @GetMapping("/web/system/application/edit/{id}")
     public String edit(@PathVariable("id") String id, ModelMap modelMap) {
         Application application = applicationService.findById(id);
-        modelMap.addAttribute("application", application);
+        modelMap.addAttribute("systemApplication", application);
         return "web/system/application/system_application_edit::#page-wrapper";
     }
 }

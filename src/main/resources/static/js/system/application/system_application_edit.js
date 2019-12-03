@@ -1,4 +1,4 @@
-//# sourceURL=system_application_add.js
+//# sourceURL=system_application_edit.js
 require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active", "messenger", "jquery.address", "bootstrap-maxlength"],
     function ($, _, tools, Swal, Handlebars, nav_active) {
 
@@ -7,11 +7,11 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
          */
         var ajax_url = {
             pids: web_path + '/web/system/application/pids',
-            save: web_path + '/web/system/application/save',
-            check_name: web_path + '/web/system/application/check/add/name',
-            check_en_name: web_path + '/web/system/application/check/add/en_name',
-            check_url: web_path + '/web/system/application/check/add/url',
-            check_code: web_path + '/web/system/application/check/add/code',
+            update: web_path + '/web/system/application/update',
+            check_name: web_path + '/web/system/application/check/edit/name',
+            check_en_name: web_path + '/web/system/application/check/edit/en_name',
+            check_url: web_path + '/web/system/application/check/edit/url',
+            check_code: web_path + '/web/system/application/check/edit/code',
             back: '/web/menu/system/application'
         };
 
@@ -22,6 +22,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
          参数id
          */
         var param_id = {
+            applicationId: '#applicationId',
             applicationPid: '#applicationPid',
             applicationName: '#applicationName',
             applicationEnName: '#applicationEnName',
@@ -44,6 +45,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
          参数
          */
         var param = {
+            applicationId:'',
             applicationPid: '',
             applicationName: '',
             applicationEnName: '',
@@ -54,10 +56,19 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
             applicationSort: ''
         };
 
+        var page_param = {
+            applicationPid: $('#applicationPidParam').val()
+        };
+
+        var init_configure = {
+            applicationPid: false
+        };
+
         /**
          * 初始化参数
          */
         function initParam() {
+            param.applicationId = _.trim($(param_id.applicationId).val());
             param.applicationPid = _.trim($(param_id.applicationPid).val());
             param.applicationName = _.trim($(param_id.applicationName).val());
             param.applicationEnName = _.trim($(param_id.applicationEnName).val());
@@ -77,6 +88,11 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
             var template = Handlebars.compile(source);
             var html = template(data);
             $(param_id.applicationPid).html(html);
+
+            if (!init_configure.applicationPid) {
+                $('#applicationPid').val(page_param.applicationPid);
+                init_configure.applicationPid = true;
+            }
         }
 
         init();
@@ -194,17 +210,6 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
             }
         });
 
-        // 即时检验序号
-        $(param_id.applicationSort).blur(function () {
-            initParam();
-            var applicationSort = param.applicationSort;
-            if (applicationSort.length <= 0) {
-                tools.validErrorDom(param_id.applicationSort, '请填写序号');
-            } else {
-                tools.validSuccessDom(param_id.applicationSort);
-            }
-        });
-
         /*
         保存数据
         */
@@ -285,24 +290,11 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
                 $.post(ajax_url.check_code, param, function (data) {
                     if (data.state) {
                         tools.validSuccessDom(param_id.applicationCode);
-                        validApplicationSort();
+                        sendAjax();
                     } else {
                         tools.validErrorDom(param_id.applicationCode, data.msg);
                     }
                 });
-            }
-        }
-
-        /**
-         * 检验序号
-         */
-        function validApplicationSort() {
-            var applicationSort = param.applicationSort;
-            if (applicationSort.length <= 0) {
-                tools.validErrorDom(param_id.applicationSort, '请填写序号');
-            } else {
-                tools.validSuccessDom(param_id.applicationSort);
-                sendAjax();
             }
         }
 
@@ -313,7 +305,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
             tools.buttonLoading(button_id.save.id, button_id.save.tip);
             $.ajax({
                 type: 'POST',
-                url: ajax_url.save,
+                url: ajax_url.update,
                 data: $('#app_form').serialize(),
                 success: function (data) {
                     tools.buttonEndLoading(button_id.save.id, button_id.save.text);
