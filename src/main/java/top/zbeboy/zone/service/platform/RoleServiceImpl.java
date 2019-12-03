@@ -1,9 +1,9 @@
 package top.zbeboy.zone.service.platform;
 
-import org.jooq.DSLContext;
-import org.jooq.Record;
-import org.jooq.Record9;
-import org.jooq.Result;
+import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.jooq.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.Authentication;
@@ -18,6 +18,9 @@ import top.zbeboy.zone.config.CacheBook;
 import top.zbeboy.zone.domain.tables.daos.RoleDao;
 import top.zbeboy.zone.domain.tables.pojos.Application;
 import top.zbeboy.zone.domain.tables.pojos.Role;
+import top.zbeboy.zone.service.plugin.PaginationPlugin;
+import top.zbeboy.zone.service.util.SQLQueryUtil;
+import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -28,7 +31,7 @@ import static top.zbeboy.zone.domain.Tables.*;
 
 @Service("roleService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-public class RoleServiceImpl implements RoleService {
+public class RoleServiceImpl implements RoleService, PaginationPlugin<DataTablesUtil> {
 
     private final DSLContext create;
 
@@ -117,5 +120,75 @@ public class RoleServiceImpl implements RoleService {
             }
         }
         return false;
+    }
+
+    @Override
+    public Result<Record> findAllByPage(DataTablesUtil dataTablesUtil) {
+        return queryAllByPage(create, ROLE, dataTablesUtil, false);
+    }
+
+    @Override
+    public int countAll(DataTablesUtil dataTablesUtil) {
+        return countAll(create, ROLE, dataTablesUtil, true);
+    }
+
+    @Override
+    public int countByCondition(DataTablesUtil dataTablesUtil) {
+        return countAll(create, ROLE, dataTablesUtil, false);
+    }
+
+    @Override
+    public Condition searchCondition(DataTablesUtil paginationUtil) {
+        Condition a = null;
+        JSONObject search = paginationUtil.getSearch();
+        if (Objects.nonNull(search)) {
+            String roleName = StringUtils.trim(search.getString("roleName"));
+            if (StringUtils.isNotBlank(roleName)) {
+                a = ROLE.ROLE_NAME.like(SQLQueryUtil.likeAllParam(roleName));
+            }
+        }
+        return a;
+    }
+
+    @Override
+    public void sortCondition(SelectConnectByStep<Record> step, DataTablesUtil paginationUtil) {
+        String orderColumnName = paginationUtil.getOrderColumnName();
+        String orderDir = paginationUtil.getOrderDir();
+        boolean isAsc = StringUtils.equalsIgnoreCase("asc", orderDir);
+        SortField[] sortField = null;
+        if (StringUtils.isNotBlank(orderColumnName)) {
+            if (StringUtils.equals("roleName", orderColumnName)) {
+                sortField = new SortField[1];
+                if (isAsc) {
+                    sortField[0] = ROLE.ROLE_NAME.asc();
+                } else {
+                    sortField[0] = ROLE.ROLE_NAME.desc();
+                }
+            }
+
+            if (StringUtils.equals("roleEnName", orderColumnName)) {
+                sortField = new SortField[1];
+                if (isAsc) {
+                    sortField[0] = ROLE.ROLE_EN_NAME.asc();
+                } else {
+                    sortField[0] = ROLE.ROLE_EN_NAME.desc();
+                }
+            }
+        }
+        sortToFinish(step, sortField);
+    }
+
+    @Override
+    public Condition extraCondition(DataTablesUtil paginationUtil) {
+        Condition a = null;
+        JSONObject search = paginationUtil.getSearch();
+        if (Objects.nonNull(search)) {
+            String roleType = StringUtils.trim(search.getString("roleType"));
+            if (StringUtils.isNotBlank(roleType)) {
+                int roleTypeInt = NumberUtils.toInt(roleType);
+                a = ROLE.ROLE_TYPE.eq(roleTypeInt);
+            }
+        }
+        return a;
     }
 }

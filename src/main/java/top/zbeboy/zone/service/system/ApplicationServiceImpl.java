@@ -26,7 +26,7 @@ import static top.zbeboy.zone.domain.Tables.APPLICATION;
 
 @Service("applicationService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-public class ApplicationServiceImpl implements ApplicationService, PaginationPlugin<UserNotifyBean, DataTablesUtil> {
+public class ApplicationServiceImpl implements ApplicationService, PaginationPlugin<DataTablesUtil> {
 
     private final DSLContext create;
 
@@ -113,7 +113,7 @@ public class ApplicationServiceImpl implements ApplicationService, PaginationPlu
 
     @Override
     public Result<Record> findAllByPage(DataTablesUtil dataTablesUtil) {
-        return queryAllByPage(create, APPLICATION, dataTablesUtil);
+        return queryAllByPage(create, APPLICATION, dataTablesUtil, false);
     }
 
     @Override
@@ -123,7 +123,7 @@ public class ApplicationServiceImpl implements ApplicationService, PaginationPlu
 
     @Override
     public int countByCondition(DataTablesUtil dataTablesUtil) {
-        return countAll(create, APPLICATION, dataTablesUtil);
+        return countAll(create, APPLICATION, dataTablesUtil, false);
     }
 
     @CacheEvict(cacheNames = {CacheBook.MENU, CacheBook.ROLES_APPLICATION}, allEntries = true)

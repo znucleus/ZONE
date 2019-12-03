@@ -39,11 +39,6 @@ require(["jquery", "handlebars", "nav.active", "responsive.bootstrap4", "check.a
         var template = Handlebars.compile($("#operator_button").html());
 
         // datatables 初始化
-        var responsiveHelper = undefined;
-        var breakpointDefinition = {
-            tablet: 1024,
-            phone: 480
-        };
         var tableElement = $('#dataTable');
 
         var myTable = tableElement.DataTable({

@@ -1,11 +1,12 @@
 package top.zbeboy.zone.service.plugin;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.jooq.*;
 import top.zbeboy.zone.web.util.pagination.PaginationUtil;
 
 import java.util.Objects;
 
-public interface PaginationPlugin<T, S extends PaginationUtil> {
+public interface PaginationPlugin<S extends PaginationUtil> {
 
     /**
      * 分页查询
@@ -15,9 +16,9 @@ public interface PaginationPlugin<T, S extends PaginationUtil> {
      * @param paginationUtil 分页工具
      * @return 分页数据
      */
-    default Result<Record> queryAllByPage(final DSLContext create, TableLike<?> table, S paginationUtil) {
+    default Result<Record> queryAllByPage(final DSLContext create, TableLike<?> table, S paginationUtil, boolean useExtraCondition) {
         Result<Record> records;
-        Condition a = searchCondition(paginationUtil);
+        Condition a = useExtraCondition(paginationUtil, useExtraCondition);
         if (Objects.isNull(a)) {
             SelectJoinStep<Record> selectJoinStep = create.select()
                     .from(table);
@@ -39,12 +40,12 @@ public interface PaginationPlugin<T, S extends PaginationUtil> {
      * 多表查询
      *
      * @param selectOnConditionStep 关联表
-     * @param paginationUtil   分页工具
+     * @param paginationUtil        分页工具
      * @return 分页数据
      */
-    default Result<Record> queryAllByPage(SelectOnConditionStep<Record> selectOnConditionStep, S paginationUtil) {
+    default Result<Record> queryAllByPage(SelectOnConditionStep<Record> selectOnConditionStep, S paginationUtil, boolean useExtraCondition) {
         Result<Record> records;
-        Condition a = searchCondition(paginationUtil);
+        Condition a = useExtraCondition(paginationUtil, useExtraCondition);
         if (Objects.isNull(a)) {
             sortCondition(selectOnConditionStep, paginationUtil);
             pagination(selectOnConditionStep, paginationUtil);
@@ -92,8 +93,8 @@ public interface PaginationPlugin<T, S extends PaginationUtil> {
      * 多表额外条件查询
      *
      * @param selectOnConditionStep 关联表
-     * @param extraCondition   额外条件
-     * @param paginationUtil   分页工具
+     * @param extraCondition        额外条件
+     * @param paginationUtil        分页工具
      * @return 分页数据
      */
     default Result<Record> queryAllByPage(SelectOnConditionStep<Record> selectOnConditionStep, Condition extraCondition, S paginationUtil) {
@@ -143,7 +144,7 @@ public interface PaginationPlugin<T, S extends PaginationUtil> {
      * 多表查询全部
      *
      * @param selectOnConditionStep 关联表
-     * @param paginationUtil   分页工具
+     * @param paginationUtil        分页工具
      * @return 全部数据
      */
     default Result<Record> queryAll(SelectOnConditionStep<Record> selectOnConditionStep, S paginationUtil) {
@@ -153,7 +154,7 @@ public interface PaginationPlugin<T, S extends PaginationUtil> {
             sortCondition(selectOnConditionStep, paginationUtil);
             records = selectOnConditionStep.fetch();
         } else {
-            SelectConditionStep<Record> selectConditionStep  = selectOnConditionStep.where(a);
+            SelectConditionStep<Record> selectConditionStep = selectOnConditionStep.where(a);
             sortCondition(selectConditionStep, paginationUtil);
             records = selectConditionStep.fetch();
         }
@@ -192,8 +193,8 @@ public interface PaginationPlugin<T, S extends PaginationUtil> {
      * 多表查询全部数据
      *
      * @param selectOnConditionStep 关联表
-     * @param extraCondition   额外条件
-     * @param paginationUtil   分页工具
+     * @param extraCondition        额外条件
+     * @param paginationUtil        分页工具
      * @return 全部数据
      */
     default Result<Record> queryAll(SelectOnConditionStep<Record> selectOnConditionStep, Condition extraCondition, S paginationUtil) {
@@ -257,7 +258,7 @@ public interface PaginationPlugin<T, S extends PaginationUtil> {
      * 多表根据额外条件统计
      *
      * @param selectOnConditionStep 关联表
-     * @param extraCondition   额外条件
+     * @param extraCondition        额外条件
      * @return 统计结果
      */
     default int countAll(SelectOnConditionStep<Record1<Integer>> selectOnConditionStep, Condition extraCondition) {
@@ -270,14 +271,15 @@ public interface PaginationPlugin<T, S extends PaginationUtil> {
     /**
      * 根据搜索条件统计
      *
-     * @param create         当前查询器
-     * @param table          表
-     * @param paginationUtil 分页工具类
+     * @param create            当前查询器
+     * @param table             表
+     * @param paginationUtil    分页工具类
+     * @param useExtraCondition 是否使用固定额外条件
      * @return 统计结果
      */
-    default int countAll(final DSLContext create, TableLike<?> table, S paginationUtil) {
+    default int countAll(final DSLContext create, TableLike<?> table, S paginationUtil, boolean useExtraCondition) {
         Record1<Integer> count;
-        Condition a = searchCondition(paginationUtil);
+        Condition a = useExtraCondition(paginationUtil, useExtraCondition);
         if (Objects.isNull(a)) {
             SelectJoinStep<Record1<Integer>> selectJoinStep = create.selectCount()
                     .from(table);
@@ -295,12 +297,13 @@ public interface PaginationPlugin<T, S extends PaginationUtil> {
      * 多表根据搜索条件统计
      *
      * @param selectOnConditionStep 关联表
-     * @param paginationUtil   分页工具
+     * @param paginationUtil        分页工具
+     * @param useExtraCondition     是否使用固定额外条件
      * @return 统计结果
      */
-    default int countAll(SelectOnConditionStep<Record1<Integer>> selectOnConditionStep, S paginationUtil) {
+    default int countAll(SelectOnConditionStep<Record1<Integer>> selectOnConditionStep, S paginationUtil, boolean useExtraCondition) {
         Record1<Integer> count;
-        Condition a = searchCondition(paginationUtil);
+        Condition a = useExtraCondition(paginationUtil, useExtraCondition);
         if (Objects.isNull(a)) {
             count = selectOnConditionStep.fetchOne();
         } else {
@@ -341,8 +344,8 @@ public interface PaginationPlugin<T, S extends PaginationUtil> {
      * 多表根据搜索条件以及额外条件统计
      *
      * @param selectOnConditionStep 关联表
-     * @param extraCondition   额外条件
-     * @param paginationUtil   分页工具
+     * @param extraCondition        额外条件
+     * @param paginationUtil        分页工具
      * @return 统计结果
      */
     default int countAll(SelectOnConditionStep<Record1<Integer>> selectOnConditionStep, Condition extraCondition, S paginationUtil) {
@@ -367,6 +370,41 @@ public interface PaginationPlugin<T, S extends PaginationUtil> {
      * @return 条件
      */
     Condition searchCondition(S paginationUtil);
+
+    /**
+     * 额外固定条件
+     *
+     * @param paginationUtil 分页工具类
+     * @return 额外固定条件
+     */
+    default Condition extraCondition(S paginationUtil) {
+        return null;
+    }
+
+    /**
+     * 条件合并
+     *
+     * @param paginationUtil    分页工具类
+     * @param useExtraCondition 优先使用额外条件
+     * @return 各条件合并
+     */
+    default Condition useExtraCondition(S paginationUtil, boolean useExtraCondition) {
+        Condition a;
+        if (BooleanUtils.isFalse(useExtraCondition)) {
+            a = searchCondition(paginationUtil);
+            if (Objects.nonNull(a)) {
+                Condition b = extraCondition(paginationUtil);
+                if (Objects.nonNull(b)) {
+                    a.and(b);
+                }
+            } else {
+                a = extraCondition(paginationUtil);
+            }
+        } else {
+            a = extraCondition(paginationUtil);
+        }
+        return a;
+    }
 
     /**
      * 排序

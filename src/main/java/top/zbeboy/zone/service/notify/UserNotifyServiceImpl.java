@@ -24,7 +24,7 @@ import static top.zbeboy.zone.domain.Tables.USER_NOTIFY;
 
 @Service("userNotifyService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-public class UserNotifyServiceImpl implements UserNotifyService, PaginationPlugin<UserNotifyBean, SimplePaginationUtil> {
+public class UserNotifyServiceImpl implements UserNotifyService, PaginationPlugin<SimplePaginationUtil> {
 
     private final DSLContext create;
 
@@ -51,12 +51,12 @@ public class UserNotifyServiceImpl implements UserNotifyService, PaginationPlugi
                 .from(USER_NOTIFY)
                 .leftJoin(USERS)
                 .on(USER_NOTIFY.SEND_USER.eq(USERS.USERNAME));
-        return queryAllByPage(selectOnConditionStep, paginationUtil);
+        return queryAllByPage(selectOnConditionStep, paginationUtil, false);
     }
 
     @Override
     public int countAll(SimplePaginationUtil paginationUtil) {
-        return countAll(create, USER_NOTIFY, paginationUtil);
+        return countAll(create, USER_NOTIFY, paginationUtil, false);
     }
 
     @Override
