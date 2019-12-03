@@ -165,7 +165,6 @@ require(["jquery", "handlebars", "nav.active", "responsive.bootstrap4", "check.a
         });
 
         var html = '<form><div class="row ">' +
-
             '<div class="col-md-3 pd-t-2"><input type="text" id="search_application" class="form-control form-control-sm" placeholder="应用" /></div>' +
             '<div class="col-md-3 pd-t-2"><input type="text" id="search_en_application" class="form-control form-control-sm" placeholder="英文" /></div>' +
             '<div class="col-md-3 pd-t-2"><input type="text" id="search_application_code" class="form-control form-control-sm" placeholder="识别码" /></div>' +
