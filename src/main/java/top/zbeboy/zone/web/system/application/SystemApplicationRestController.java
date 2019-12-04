@@ -316,16 +316,20 @@ public class SystemApplicationRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
             Application application = applicationService.findById(applicationEditVo.getApplicationId());
-            application.setApplicationName(applicationEditVo.getApplicationName());
-            application.setApplicationSort(applicationEditVo.getApplicationSort());
-            application.setApplicationPid(applicationEditVo.getApplicationPid());
-            application.setApplicationUrl(applicationEditVo.getApplicationUrl());
-            application.setApplicationCode(applicationEditVo.getApplicationCode());
-            application.setApplicationEnName(applicationEditVo.getApplicationEnName());
-            application.setIcon(applicationEditVo.getIcon());
-            application.setApplicationDataUrlStartWith(applicationEditVo.getApplicationDataUrlStartWith());
-            applicationService.update(application);
-            ajaxUtil.success().msg("更新成功");
+            if (Objects.nonNull(application)) {
+                application.setApplicationName(applicationEditVo.getApplicationName());
+                application.setApplicationSort(applicationEditVo.getApplicationSort());
+                application.setApplicationPid(applicationEditVo.getApplicationPid());
+                application.setApplicationUrl(applicationEditVo.getApplicationUrl());
+                application.setApplicationCode(applicationEditVo.getApplicationCode());
+                application.setApplicationEnName(applicationEditVo.getApplicationEnName());
+                application.setIcon(applicationEditVo.getIcon());
+                application.setApplicationDataUrlStartWith(applicationEditVo.getApplicationDataUrlStartWith());
+                applicationService.update(application);
+                ajaxUtil.success().msg("更新成功");
+            } else {
+                ajaxUtil.fail().msg("未查询到应用信息，更新失败");
+            }
         } else {
             ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
