@@ -25,6 +25,7 @@ requirejs.config({
         "select2-zh-CN": web_path + "/plugins/select2/js/i18n/zh-CN.min",
         "bootstrap-inputmask": web_path + "/plugins/bootstrap-inputmask/bootstrap-inputmask.min",
         "bootstrap-maxlength": web_path + "/plugins/bootstrap-maxlength/bootstrap-maxlength.min",
+        "bootstrap-treeview": web_path + "/plugins/bootstrap-treeview/js/bootstrap-treeview.min",
         "jquery-ui": web_path + "/plugins/jquery-ui/jquery-ui.min",
         "jquery-toggles": web_path + "/plugins/jquery-toggles/toggles.min",
         "jquery.entropizer": web_path + "/plugins/jquery-entropizer/js/jquery-entropizer.min",
@@ -88,6 +89,9 @@ requirejs.config({
         "responsive.bootstrap4": {
             deps: ["datatables.net-responsive", "datatables.net-bs4", "datatables.net", "css!" + web_path + "/plugins/datatables/css/dataTables.bootstrap4.min",
                 "css!" + web_path + "/plugins/datatables/css/responsive.bootstrap4.min"]
+        },
+        "bootstrap-treeview":{
+            deps: ["jquery", "css!" + web_path + "/plugins/bootstrap-treeview/css/bootstrap-treeview.min"]
         }
     }
 });

@@ -44,6 +44,11 @@ public class RoleServiceImpl implements RoleService, PaginationPlugin<DataTables
     }
 
     @Override
+    public Role findById(String id) {
+        return roleDao.findById(id);
+    }
+
+    @Override
     public Role findByRoleEnName(String roleEnName) {
         return roleDao.fetchOneByRoleEnName(roleEnName);
     }
@@ -110,6 +115,14 @@ public class RoleServiceImpl implements RoleService, PaginationPlugin<DataTables
     }
 
     @Override
+    public Result<Record> findByRoleNameAndRoleTypeNeRoleId(String roleName, int roleType, String roleId) {
+        return create.select()
+                .from(ROLE)
+                .where(ROLE.ROLE_NAME.eq(roleName).and(ROLE.ROLE_TYPE.eq(roleType)).and(ROLE.ROLE_ID.ne(roleId)))
+                .fetch();
+    }
+
+    @Override
     public Boolean isCurrentUserInRole(String role) {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         Authentication authentication = securityContext.getAuthentication();
@@ -135,6 +148,11 @@ public class RoleServiceImpl implements RoleService, PaginationPlugin<DataTables
     @Override
     public int countByCondition(DataTablesUtil dataTablesUtil) {
         return countAll(create, ROLE, dataTablesUtil, false);
+    }
+
+    @Override
+    public void update(Role role) {
+        roleDao.update(role);
     }
 
     @Override

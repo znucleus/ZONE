@@ -11,6 +11,14 @@ import java.util.List;
 public interface RoleService {
 
     /**
+     * 通过主键查询
+     *
+     * @param id 主键
+     * @return 角色
+     */
+    Role findById(String id);
+
+    /**
      * 通过角色名查询
      *
      * @param roleEnName 角色名
@@ -47,6 +55,16 @@ public interface RoleService {
     List<Role> findByUsername(String username);
 
     /**
+     * 通过角色名与角色类型查询 注：不等于角色id
+     *
+     * @param roleName 角色名
+     * @param roleType 角色类型
+     * @param roleId   角色id
+     * @return 数据
+     */
+    Result<Record> findByRoleNameAndRoleTypeNeRoleId(String roleName, int roleType, String roleId);
+
+    /**
      * 检查当前用户是否有此权限
      *
      * @param role 权限
@@ -65,7 +83,7 @@ public interface RoleService {
     /**
      * 应用 总数
      *
-     *@param dataTablesUtil 工具类
+     * @param dataTablesUtil 工具类
      * @return 总数
      */
     int countAll(DataTablesUtil dataTablesUtil);
@@ -76,4 +94,11 @@ public interface RoleService {
      * @return 条件查询总数
      */
     int countByCondition(DataTablesUtil dataTablesUtil);
+
+    /**
+     * 更新
+     *
+     * @param role 角色
+     */
+    void update(Role role);
 }

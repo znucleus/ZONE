@@ -139,7 +139,6 @@ public class ApplicationServiceImpl implements ApplicationService, PaginationPlu
         applicationDao.update(application);
     }
 
-    @CacheEvict(cacheNames = {CacheBook.MENU, CacheBook.ROLES_APPLICATION}, allEntries = true)
     @Override
     public void deletes(List<String> ids) {
         applicationDao.deleteById(ids);
