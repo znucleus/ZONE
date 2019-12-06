@@ -26,8 +26,8 @@ requirejs.config({
         "bootstrap-inputmask": web_path + "/plugins/bootstrap-inputmask/bootstrap-inputmask.min",
         "bootstrap-maxlength": web_path + "/plugins/bootstrap-maxlength/bootstrap-maxlength.min",
         "bootstrap-treeview": web_path + "/plugins/bootstrap-treeview/js/bootstrap-treeview.min",
-        "jquery-ui": web_path + "/plugins/jquery-ui/jquery-ui.min",
-        "jquery-toggles": web_path + "/plugins/jquery-toggles/toggles.min",
+        "flatpickr": web_path + "/plugins/flatpickr/js/flatpickr.min",
+        "flatpickr-zh": web_path + "/plugins/flatpickr/l10n/zh.min",
         "jquery.entropizer": web_path + "/plugins/jquery-entropizer/js/jquery-entropizer.min",
         "entropizer": web_path + "/plugins/jquery-entropizer/js/entropizer.min",
         "check.all": web_path + "/plugins/checkall/checkall.min",
@@ -74,11 +74,8 @@ requirejs.config({
         "select2-zh-CN": {
             deps: ["jquery", "select2"]
         },
-        "jquery-ui": {
-            deps: ["jquery"]
-        },
-        "jquery-toggles": {
-            deps: ["jquery", "css!" + web_path + "/plugins/jquery-toggles/toggles-full.min"]
+        "flatpickr-zh": {
+            deps: ["jquery", "flatpickr", "css!" + web_path + "/plugins/flatpickr/css/flatpickr.min"]
         },
         "jquery.entropizer": {
             deps: ["jquery", "css!" + web_path + "/plugins/jquery-entropizer/css/jquery-entropizer.min"]
@@ -90,7 +87,7 @@ requirejs.config({
             deps: ["datatables.net-responsive", "datatables.net-bs4", "datatables.net", "css!" + web_path + "/plugins/datatables/css/dataTables.bootstrap4.min",
                 "css!" + web_path + "/plugins/datatables/css/responsive.bootstrap4.min"]
         },
-        "bootstrap-treeview":{
+        "bootstrap-treeview": {
             deps: ["jquery", "css!" + web_path + "/plugins/bootstrap-treeview/css/bootstrap-treeview.min"]
         }
     }

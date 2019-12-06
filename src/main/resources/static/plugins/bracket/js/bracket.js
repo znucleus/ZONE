@@ -117,10 +117,6 @@ $(document).ready(function () {
     $(document).on('click', function (e) {
         e.stopPropagation();
 
-        if (e.target.className.indexOf('ui-datepicker') > -1) {
-            return;
-        }
-
         // closing left sidebar
         if ($('body').hasClass('show-left')) {
             var targ = $(e.target).closest('.br-sideleft').length;

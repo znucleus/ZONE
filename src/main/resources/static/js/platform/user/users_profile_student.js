@@ -1,6 +1,6 @@
 //# sourceURL=users_profile_student.js
 require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "bootstrap",
-        "csrf", "select2-zh-CN", "jquery-ui", "jquery-toggles", "bootstrap-inputmask"],
+        "csrf", "select2-zh-CN", "flatpickr-zh", "bootstrap-inputmask"],
     function ($, _, tools, Swal, moment) {
 
         moment.locale('zh-cn');
@@ -321,21 +321,10 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
             });
         }
 
-        $(param_id.birthday).datepicker({
-            showOtherMonths: true,
-            selectOtherMonths: true,
-            dateFormat: 'yy-mm-dd',
-            changeYear: true,
-            changeMonth: true,
-            monthNamesShort: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
-            defaultDate: moment((new Date().getFullYear() - 22) + "-01-07", "YYYY-DD-MM").toDate()
+        $(param_id.birthday).flatpickr({
+            "locale": "zh",
+            defaultDate: _.trim($(param_id.birthday).val()) !== '' ? moment(_.trim($(param_id.birthday).val()), "YYYY-MM-DD").toDate() : moment((new Date().getFullYear() - 26) + "-01-07", "YYYY-MM-DD").toDate()
         });
-
-        //星期格式汉化
-        $(param_id.birthday).datepicker("option", "dayNamesMin", ["日", "一", "二", "三", "四", "五", "六"]);
-
-        //月份格式汉化
-        $(param_id.birthday).datepicker("option", "monthNames", ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"]);
 
         $(button_id.info.id).click(function () {
             initParam();

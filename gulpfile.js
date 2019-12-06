@@ -22,7 +22,7 @@ function cssMinify(cb) {
 }
 
 function jsMinify(cb) {
-    const jsFilter = filter(['**', '!**/*.min.js'], {restore: true});
+    const jsFilter = filter(['**', '!**/*.min.js']);
     src(pathPrefix + '**/*.js')
         .pipe(jsFilter)
 		.pipe(uglify())
