@@ -522,6 +522,8 @@
                             <nosuffix>true</nosuffix>
                             <force>true</force>
                             <jswarn>false</jswarn>
+                            <excludeResources>true</excludeResources>
+                            <sourceDirectory>${basedir}/src/main/resources/static/js</sourceDirectory>
                             <excludes>
                                 <exclude>**/*.min.js</exclude>
                                 <exclude>**/*.min.css</exclude>
