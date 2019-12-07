@@ -119,12 +119,17 @@ require(["jquery", "requirejs-domready", "moment-with-locales", "handlebars", "a
             /*
              动态链接点击效果
              */
-            $('body').delegate('.dy_href', "click", function () {
+            var bodyElement = $('body');
+            bodyElement.delegate('.dy_href', "click", function (e) {
                 $.address.title($(this).text() + '-' + $('#webAppName').text());
                 var href = $(this).attr('href');
                 if (href !== 'javascript:;' && href !== '#') {
                     navActive(href.substring(1));
                 }
+
+                // closing left sidebar
+                $('footer').css('display', '');
+                $('body').removeClass('show-left');
             });
 
             /*
