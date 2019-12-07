@@ -17,7 +17,8 @@ require(["jquery", "tools", "handlebars", "moment-with-locales", "bootstrap",
             orderColumnName: 'createDate',
             orderDir: 'desc',
             extraSearch: JSON.stringify({
-                isSee: 0
+                isSee: 0,
+                needCount: 1
             })
         };
 
@@ -29,7 +30,7 @@ require(["jquery", "tools", "handlebars", "moment-with-locales", "bootstrap",
             $('#userNotifyRead').removeClass('active');
             $(this).addClass('active');
             param.pageNum = 0;
-            param.extraSearch = JSON.stringify({isSee: 0});
+            param.extraSearch = JSON.stringify({isSee: 0, needCount: 1});
             init();
         });
 
@@ -38,7 +39,7 @@ require(["jquery", "tools", "handlebars", "moment-with-locales", "bootstrap",
             $('#userNotifyUnRead').removeClass('active');
             $(this).addClass('active');
             param.pageNum = 0;
-            param.extraSearch = JSON.stringify({isSee: 1});
+            param.extraSearch = JSON.stringify({isSee: 1, needCount: 1});
             init();
         });
 
@@ -54,7 +55,7 @@ require(["jquery", "tools", "handlebars", "moment-with-locales", "bootstrap",
             tools.dataLoading();
             $.get(ajax_url.user_notify, param, function (data) {
                 tools.dataEndLoading();
-                if(data.page.totalSize > 0){
+                if (data.page.totalSize > 0) {
                     $('#unReadNotifyUnReadNum').text(data.unReadNum);
                     $('#readNotifyReadNum').text(data.readNum);
                     createPage(data);

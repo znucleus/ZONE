@@ -184,7 +184,8 @@ require(["jquery", "requirejs-domready", "moment-with-locales", "handlebars", "a
                 orderColumnName: 'createDate',
                 orderDir: 'desc',
                 extraSearch: JSON.stringify({
-                    isSee: 0
+                    isSee: 0,
+                    needCount: 0
                 })
             };
 

@@ -53,12 +53,16 @@ public class UserNotifyRestController {
         JSONObject search = simplePaginationUtil.getSearch();
         if (Objects.nonNull(search)) {
             String isSee = StringUtils.trim(search.getString("isSee"));
-            if (StringUtils.equals("1", isSee)) {
-                readNum = simplePaginationUtil.getTotalSize();
-                unReadNum = userNotifyService.countByAcceptUserAndIsSee(users.getUsername(), BooleanUtil.toByte(false));
-            } else if (StringUtils.equals("0", isSee)) {
-                unReadNum = simplePaginationUtil.getTotalSize();
-                readNum = userNotifyService.countByAcceptUserAndIsSee(users.getUsername(), BooleanUtil.toByte(true));
+            // 是否需要统计，前台不需要统计
+            String needCount = StringUtils.trim(search.getString("needCount"));
+            if (StringUtils.equals("1", needCount)) {
+                if (StringUtils.equals("1", isSee)) {
+                    readNum = simplePaginationUtil.getTotalSize();
+                    unReadNum = userNotifyService.countByAcceptUserAndIsSee(users.getUsername(), BooleanUtil.toByte(false));
+                } else if (StringUtils.equals("0", isSee)) {
+                    unReadNum = simplePaginationUtil.getTotalSize();
+                    readNum = userNotifyService.countByAcceptUserAndIsSee(users.getUsername(), BooleanUtil.toByte(true));
+                }
             }
         }
         ajaxUtil.success().list(userNotifies).page(simplePaginationUtil).msg("获取数据成功")
