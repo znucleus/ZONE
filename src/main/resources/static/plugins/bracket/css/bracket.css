@@ -9845,6 +9845,17 @@ textarea.parsley-error:active {
   height: 40px;
   text-align: center;
 }
+
+@media screen and (max-width: 767px){
+  .pagination .paginate_button .page-link {
+    color: #495057;
+    padding: 8px 0;
+    width: 26px;
+    height: 36px;
+    text-align: center;
+  }
+}
+
 .pagination .page-item .page-link:hover, .pagination .page-item .page-link:focus {
   background-color: #e9ecef;
 }

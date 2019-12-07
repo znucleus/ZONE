@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import top.zbeboy.zone.annotation.logging.LoggingRecord;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.config.ZoneProperties;
 import top.zbeboy.zone.domain.tables.pojos.Files;
@@ -89,8 +90,9 @@ public class MainController {
      *
      * @return 后台页.
      */
+    @LoggingRecord(module = "Main", methods = "backstage", description = "访问系统主页")
     @GetMapping(Workbook.WEB_BACKSTAGE)
-    public String backstage(ModelMap modelMap) {
+    public String backstage(ModelMap modelMap, HttpServletRequest request) {
         List<String> roles = usersService.getAuthoritiesFromSession();
         // avatar.
         Users users = usersService.getUserFromSession();
