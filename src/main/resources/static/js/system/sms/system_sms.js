@@ -1,24 +1,24 @@
-//# sourceURL=system_mailbox.js
+//# sourceURL=system_sms.js
 require(["jquery", "nav.active", "responsive.bootstrap4"], function ($, navActive) {
 
     /*
-    参数
-    */
+     参数
+     */
     var param = {
-        acceptMail: ''
+        acceptPhone: ''
     };
 
     /*
      web storage key.
     */
     var webStorageKey = {
-        ACCEPT_MAIL: 'SYSTEM_MAILBOX_ACCEPT_MAIL_SEARCH'
+        ACCEPT_PHONE: 'SYSTEM_SMS_ACCEPT_PHONE_SEARCH'
     };
 
     function getAjaxUrl() {
         return {
-            mailboxes: web_path + '/web/system/mailbox/data',
-            page: '/web/menu/system/mailbox'
+            smses: web_path + '/web/system/sms/data',
+            page: '/web/menu/system/sms'
         }
     }
 
@@ -33,7 +33,7 @@ require(["jquery", "nav.active", "responsive.bootstrap4"], function ($, navActiv
         "serverSide": true,// 打开后台分页
         "aaSorting": [[1, 'desc']],// 排序
         "ajax": {
-            "url": getAjaxUrl().mailboxes,
+            "url": getAjaxUrl().smses,
             "dataSrc": "data",
             "data": function (d) {
                 // 添加额外的参数传给服务器
@@ -43,7 +43,7 @@ require(["jquery", "nav.active", "responsive.bootstrap4"], function ($, navActiv
             }
         },
         "columns": [
-            {"data": "acceptMail"},
+            {"data": "acceptPhone"},
             {"data": "sendTimeNew"},
             {"data": "sendCondition"}
         ],
@@ -81,7 +81,7 @@ require(["jquery", "nav.active", "responsive.bootstrap4"], function ($, navActiv
     });
 
     var html = '<form><div class="row ">' +
-        '<div class="col-md-6 pd-t-2"><input type="text" id="search_email" class="form-control form-control-sm" placeholder="邮箱" /></div>' +
+        '<div class="col-md-6 pd-t-2"><input type="text" id="search_phone" class="form-control form-control-sm" placeholder="手机号" /></div>' +
         '<div class="col-md-6 pd-t-2 text-right "><div class="btn-group" role="group"><button type="button" id="search" class="btn btn-outline-secondary btn-sm"><i class="fa fa-search"></i>搜索</button>' +
         ' <button type="button" id="reset_search" class="btn btn-outline-secondary btn-sm"><i class="fa fa-repeat"></i>重置</button></div></div>' +
         '</div></form>';
@@ -92,7 +92,7 @@ require(["jquery", "nav.active", "responsive.bootstrap4"], function ($, navActiv
 
     function getParamId() {
         return {
-            acceptMail: '#search_email'
+            acceptPhone: '#search_phone'
         };
     }
 
@@ -104,22 +104,22 @@ require(["jquery", "nav.active", "responsive.bootstrap4"], function ($, navActiv
     }
 
     function initParam() {
-        param.acceptMail = $(getParamId().acceptMail).val();
+        param.acceptPhone = $(getParamId().acceptPhone).val();
         if (typeof(Storage) !== "undefined") {
-            sessionStorage.setItem(webStorageKey.ACCEPT_MAIL, param.acceptMail);
+            sessionStorage.setItem(webStorageKey.ACCEPT_PHONE, param.acceptPhone);
         }
     }
 
     /*
-        初始化搜索内容
-         */
+    初始化搜索内容
+    */
     function initSearchContent() {
-        var acceptMail = null;
+        var acceptPhone = null;
         if (typeof(Storage) !== "undefined") {
-            acceptMail = sessionStorage.getItem(webStorageKey.ACCEPT_MAIL);
+            acceptPhone = sessionStorage.getItem(webStorageKey.ACCEPT_PHONE);
         }
-        if (acceptMail !== null) {
-            param.acceptMail = acceptMail;
+        if (acceptPhone !== null) {
+            param.acceptPhone = acceptPhone;
         }
     }
 
@@ -127,20 +127,20 @@ require(["jquery", "nav.active", "responsive.bootstrap4"], function ($, navActiv
    初始化搜索框
     */
     function initSearchInput() {
-        var acceptMail = null;
+        var acceptPhone = null;
         if (typeof(Storage) !== "undefined") {
-            acceptMail = sessionStorage.getItem(webStorageKey.ACCEPT_MAIL);
+            acceptPhone = sessionStorage.getItem(webStorageKey.ACCEPT_PHONE);
         }
-        if (acceptMail !== null) {
-            $(getParamId().acceptMail).val(acceptMail);
+        if (acceptPhone !== null) {
+            $(getParamId().acceptPhone).val(acceptPhone);
         }
     }
 
     function cleanParam() {
-        $(getParamId().acceptMail).val('');
+        $(getParamId().acceptPhone).val('');
     }
 
-    $(getParamId().acceptMail).keyup(function (event) {
+    $(getParamId().acceptPhone).keyup(function (event) {
         if (event.keyCode === 13) {
             initParam();
             myTable.ajax.reload();
