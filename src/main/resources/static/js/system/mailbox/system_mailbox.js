@@ -17,7 +17,7 @@ require(["jquery", "nav.active", "responsive.bootstrap4"], function ($, navActiv
 
     function getAjaxUrl() {
         return {
-            mailboxes: '/web/system/mailbox/data',
+            mailboxes: web_path + '/web/system/mailbox/data',
             page: '/web/menu/system/mailbox'
         }
     }
