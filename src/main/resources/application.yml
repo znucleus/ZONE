@@ -46,4 +46,7 @@ management:
   endpoint:
     health:
       show-details: WHEN_AUTHORIZED
+      status:
+        http-mapping:
+          fatal: 200
 

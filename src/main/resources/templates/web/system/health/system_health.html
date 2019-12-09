@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="pd-30">
+        <h4 class="tx-gray-800 mg-b-5">系统状况</h4>
+        <p class="mg-b-0">查看系统状况。</p>
+    </div><!-- d-flex -->
+
+    <div class="br-pagebody mg-t-5 pd-x-30">
+        <div class="br-section-wrapper">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- 整体情况 -->
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">系统</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    总体状况：<span id="allStatus"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    网络状况：<span id="pingStatus"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 邮箱情况 -->
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            <h5 class="card-title">邮箱</h5>
+                            <div class="row card-text">
+                                <div class="col-md-6">
+                                    状况：<span id="mailStatus"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    请求路径：<span id="mailLocation"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 硬盘情况 -->
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            <h5 class="card-title">硬盘</h5>
+                            <div class="row card-text">
+                                <div class="col-md-3">
+                                    状况：<span id="diskStatus"></span>
+                                </div>
+                                <div class="col-md-3">
+                                    总容量：<span id="diskTotal"></span>
+                                </div>
+                                <div class="col-md-3">
+                                    空闲容量：<span id="diskFree"></span>
+                                </div>
+                                <div class="col-md-3">
+                                    阈值：<span id="diskThreshold"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- redis情况 -->
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Redis</h5>
+                            <div class="row card-text">
+                                <div class="col-md-6">
+                                    状况：<span id="redisStatus"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    版本：<span id="redisVersion"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- db情况 -->
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            <h5 class="card-title">数据库</h5>
+                            <div class="row card-text">
+                                <div class="col-md-6">
+                                    状况：<span id="dbStatus"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    数据源：<span id="dbDatabase"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" class="dy_script" value="/js/system/health/system_health.js"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>
