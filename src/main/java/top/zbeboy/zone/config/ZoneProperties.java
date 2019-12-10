@@ -20,8 +20,6 @@ public class ZoneProperties {
 
     private Mail mail = new Mail();
 
-    private Certificate certificate = new Certificate();
-
     public Async getAsync() {
         return async;
     }
@@ -36,10 +34,6 @@ public class ZoneProperties {
 
     public Mail getMail() {
         return mail;
-    }
-
-    public Certificate getCertificate() {
-        return certificate;
     }
 
     /**
@@ -253,21 +247,6 @@ public class ZoneProperties {
 
         public void setPasswordResetTime(int passwordResetTime) {
             this.passwordResetTime = passwordResetTime;
-        }
-    }
-
-    /**
-     * let's encrypt 证书参数
-     */
-    public class Certificate {
-        private String place;
-
-        public String getPlace() {
-            return place;
-        }
-
-        public void setPlace(String place) {
-            this.place = place;
         }
     }
 }
