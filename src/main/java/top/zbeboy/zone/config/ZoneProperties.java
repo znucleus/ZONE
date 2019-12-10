@@ -87,10 +87,6 @@ public class ZoneProperties {
 
         private String jooqDialect;
 
-        private Integer serverHttpPort;
-
-        private Integer serverHttpsPort;
-
         public String getWebRoot() {
             return webRoot;
         }
@@ -105,22 +101,6 @@ public class ZoneProperties {
 
         public void setJooqDialect(String jooqDialect) {
             this.jooqDialect = jooqDialect;
-        }
-
-        public Integer getServerHttpPort() {
-            return serverHttpPort;
-        }
-
-        public void setServerHttpPort(Integer serverHttpPort) {
-            this.serverHttpPort = serverHttpPort;
-        }
-
-        public Integer getServerHttpsPort() {
-            return serverHttpsPort;
-        }
-
-        public void setServerHttpsPort(Integer serverHttpsPort) {
-            this.serverHttpsPort = serverHttpsPort;
         }
     }
 
