@@ -32,7 +32,7 @@ requirejs.config({
         "entropizer": web_path + "/plugins/jquery-entropizer/js/entropizer.min",
         "check.all": web_path + "/plugins/checkall/checkall.min",
         "responsive.bootstrap4": web_path + "/plugins/datatables/js/responsive.bootstrap4.min",
-        "datatables.net-responsive": web_path + "/plugins/datatables/js/datatables.responsive.min",
+        "datatables.net-responsive": web_path + "/plugins/datatables/js/dataTables.responsive.min",
         "datatables.net": web_path + "/plugins/datatables/js/jquery.dataTables.min",
         "datatables.net-bs4": web_path + "/plugins/datatables/js/dataTables.bootstrap4.min"
     },
