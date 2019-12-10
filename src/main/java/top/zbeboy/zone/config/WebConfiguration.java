@@ -9,8 +9,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.thymeleaf.spring5.view.ThymeleafView;
 
-import javax.annotation.Resource;
-
 /**
  * Spring boot web init.
  *
