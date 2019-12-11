@@ -1,6 +1,6 @@
 //# sourceURL=user_setting.js
 require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "bootstrap",
-        "csrf", "select2-zh-CN", "jquery-ui", "jquery-toggles", "jquery.entropizer"],
+        "csrf", "select2-zh-CN", "jquery.entropizer"],
     function ($, _, tools, Swal, moment) {
 
         moment.locale('zh-cn');
