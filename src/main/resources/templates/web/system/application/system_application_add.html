@@ -80,7 +80,7 @@
         <option value="{{applicationId}}">{{applicationName}}</option>
         {{/each}}
     </script>
-    <input type="hidden" class="dy_script" value="/js/system/application/system_application_add.js"/>
+    <input type="hidden" class="dy_script" th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/system/application/system_application_add.js')}"/>
 </div>
 <!-- /#page-wrapper -->
 </body>

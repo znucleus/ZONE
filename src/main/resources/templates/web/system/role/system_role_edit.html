@@ -42,7 +42,7 @@
             </div>
         </div>
     </div>
-    <input type="hidden" class="dy_script" value="/js/system/role/system_role_edit.js"/>
+    <input type="hidden" class="dy_script" th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/system/role/system_role_edit.js')}"/>
 </div>
 <!-- /#page-wrapper -->
 </body>

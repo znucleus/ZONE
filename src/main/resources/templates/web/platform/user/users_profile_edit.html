@@ -49,7 +49,7 @@
         </div>
     </div>
 
-    <input type="hidden" class="dy_script" value="/js/platform/user/users_profile_edit.js"/>
+    <input type="hidden" class="dy_script" th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/platform/user/users_profile_edit.js')}"/>
 </div>
 <!-- /#page-wrapper -->
 </body>

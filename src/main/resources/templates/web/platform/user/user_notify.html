@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8"/>
 </head>
@@ -71,7 +71,7 @@
         {{/each}}
     </script>
 
-    <input type="hidden" class="dy_script" value="/js/platform/user/user_notify.js"/>
+    <input type="hidden" class="dy_script" th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/platform/user/user_notify.js')}"/>
 </div>
 <!-- /#page-wrapper -->
 </body>

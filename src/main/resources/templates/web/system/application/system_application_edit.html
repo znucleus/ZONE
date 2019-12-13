@@ -89,7 +89,7 @@
     </script>
 
     <input type="hidden" id="applicationPidParam" th:value="${systemApplication.applicationPid}"/>
-    <input type="hidden" class="dy_script" value="/js/system/application/system_application_edit.js"/>
+    <input type="hidden" class="dy_script" th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/system/application/system_application_edit.js')}"/>
 </div>
 <!-- /#page-wrapper -->
 </body>

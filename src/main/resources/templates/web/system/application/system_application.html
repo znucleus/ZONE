@@ -53,7 +53,7 @@
         </div>
     </script>
 
-    <input type="hidden" class="dy_script" value="/js/system/application/system_application.js"/>
+    <input type="hidden" class="dy_script" th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/system/application/system_application.js')}"/>
 </div>
 <!-- /#page-wrapper -->
 </body>

@@ -96,7 +96,7 @@
         </div>
     </div>
 
-    <input type="hidden" class="dy_script" value="/js/system/health/system_health.js"/>
+    <input type="hidden" class="dy_script" th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/system/health/system_health.js')}"/>
 </div>
 <!-- /#page-wrapper -->
 </body>

@@ -242,7 +242,7 @@
     <input type="hidden" id="sexParam" th:value="${student.sex}"/>
     <input type="hidden" id="nationParam" th:value="${student.nationId}"/>
     <input type="hidden" id="politicalLandscapeParam" th:value="${student.politicalLandscapeId}"/>
-    <input type="hidden" class="dy_script" value="/js/platform/user/users_profile_student.js"/>
+    <input type="hidden" class="dy_script" th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/platform/user/users_profile_student.js')}"/>
 </div>
 <!-- /#page-wrapper -->
 </body>
