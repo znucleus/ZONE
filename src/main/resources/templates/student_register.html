@@ -180,7 +180,8 @@
     var web_path = /*[[${#httpServletRequest.getContextPath()}]]*/ '';
     require.config({
         baseUrl: web_path + "/js/register",
-        waitSeconds: 0
+        waitSeconds: 0,
+        urlArgs: "v=" + /*[[${staticResourceVersion}]]*/ ''
     });
 </script>
 </body>
