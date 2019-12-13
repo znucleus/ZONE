@@ -787,3 +787,4 @@ INSERT INTO academic_title (academic_title_name) VALUES ('助理研究员');
 INSERT INTO system_configure (data_key, data_value) VALUES ('MAIL_SWITCH','1');
 INSERT INTO system_configure (data_key, data_value) VALUES ('MOBILE_SWITCH','1');
 INSERT INTO system_configure (data_key, data_value) VALUES ('FORBIDDEN_REGISTER','ISY,ZBEBOY');
+INSERT INTO system_configure (data_key, data_value) VALUES ('STATIC_RESOURCES_VERSION','0.01');

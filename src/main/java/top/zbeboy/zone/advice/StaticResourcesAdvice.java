@@ -8,6 +8,7 @@ import top.zbeboy.zone.domain.tables.pojos.SystemConfigure;
 import top.zbeboy.zone.service.system.SystemConfigureService;
 
 import javax.annotation.Resource;
+import java.util.Objects;
 
 @ControllerAdvice
 public class StaticResourcesAdvice {
@@ -23,6 +24,6 @@ public class StaticResourcesAdvice {
     @ModelAttribute("staticResourceVersion")
     public String version() {
         SystemConfigure systemConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.STATIC_RESOURCES_VERSION.name());
-        return StringUtils.defaultString(systemConfigure.getDataValue());
+        return Objects.nonNull(systemConfigure) ? systemConfigure.getDataValue() : "";
     }
 }
