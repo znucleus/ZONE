@@ -1,6 +1,6 @@
 //# sourceURL=system_application.js
-require(["jquery", "handlebars", "nav.active", "responsive.bootstrap4", "check.all", "jquery.address", "messenger"],
-    function ($, Handlebars, navActive) {
+require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootstrap4", "check.all", "jquery.address", "messenger"],
+    function ($, Handlebars, navActive, Swal) {
 
         /*
          参数
@@ -25,7 +25,7 @@ require(["jquery", "handlebars", "nav.active", "responsive.bootstrap4", "check.a
          */
         function getAjaxUrl() {
             return {
-                applications: web_path + '/web/system/application/data',
+                data: web_path + '/web/system/application/data',
                 status: web_path + '/web/system/application/status',
                 add: '/web/system/application/add',
                 edit: '/web/system/application/edit',
@@ -53,7 +53,7 @@ require(["jquery", "handlebars", "nav.active", "responsive.bootstrap4", "check.a
             "serverSide": true,// 打开后台分页
             "aaSorting": [[2, 'asc']],// 排序
             "ajax": {
-                "url": getAjaxUrl().applications,
+                "url": getAjaxUrl().data,
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
@@ -314,24 +314,16 @@ require(["jquery", "handlebars", "nav.active", "responsive.bootstrap4", "check.a
             }
 
             if (applicationIds.length > 0) {
-                var msg;
-                msg = Messenger().post({
-                    message: "确定删除选中的应用吗?",
-                    actions: {
-                        retry: {
-                            label: '确定',
-                            phrase: 'Retrying TIME',
-                            action: function () {
-                                msg.cancel();
-                                dels(applicationIds);
-                            }
-                        },
-                        cancel: {
-                            label: '取消',
-                            action: function () {
-                                return msg.cancel();
-                            }
-                        }
+                Swal.fire({
+                    title: "确定删除选中的应用吗？",
+                    text: "删除后不可恢复！",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    preConfirm: function () {
+                        dels(applicationIds);
                     }
                 });
             } else {
@@ -350,60 +342,48 @@ require(["jquery", "handlebars", "nav.active", "responsive.bootstrap4", "check.a
          删除
          */
         function application_del(applicationId, applicationName) {
-            var msg;
-            msg = Messenger().post({
-                message: "确定删除应用 '" + applicationName + "' 吗?",
-                actions: {
-                    retry: {
-                        label: '确定',
-                        phrase: 'Retrying TIME',
-                        action: function () {
-                            msg.cancel();
-                            del(applicationId);
-                        }
-                    },
-                    cancel: {
-                        label: '取消',
-                        action: function () {
-                            return msg.cancel();
-                        }
-                    }
+            Swal.fire({
+                title: "确定删除应用 '" + applicationName + "' 吗？",
+                text: applicationName + "删除后不可恢复！",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                preConfirm: function () {
+                    del(applicationId);
                 }
             });
         }
 
         function del(applicationId) {
-            sendStatusAjax(applicationId, '删除', 1);
+            sendStatusAjax(applicationId);
         }
 
         function dels(applicationIds) {
-            sendStatusAjax(applicationIds.join(","), '批量删除', 1);
+            sendStatusAjax(applicationIds.join(","));
         }
 
         /**
          * 注销或恢复ajax
          * @param applicationId
-         * @param message
          */
-        function sendStatusAjax(applicationId, message) {
-            Messenger().run({
-                successMessage: message + '应用成功',
-                errorMessage: message + '应用失败',
-                progressMessage: '正在' + message + '应用....'
-            }, {
+        function sendStatusAjax(applicationId) {
+            $.ajax({
+                type: 'POST',
                 url: getAjaxUrl().status,
-                type: 'post',
                 data: {applicationIds: applicationId},
                 success: function (data) {
                     if (data.state) {
                         myTable.ajax.reload();
                     }
                 },
-                error: function (xhr) {
-                    if ((xhr != null ? xhr.status : void 0) === 404) {
-                        return "请求失败";
-                    }
-                    return true;
+                error: function (XMLHttpRequest) {
+                    Messenger().post({
+                        message: 'Request error : ' + XMLHttpRequest.status + " " + XMLHttpRequest.statusText,
+                        type: 'error',
+                        showCloseButton: true
+                    });
                 }
             });
         }

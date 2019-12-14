@@ -176,20 +176,24 @@ public class RoleServiceImpl implements RoleService, PaginationPlugin<DataTables
         SortField[] sortField = null;
         if (StringUtils.isNotBlank(orderColumnName)) {
             if (StringUtils.equals("roleName", orderColumnName)) {
-                sortField = new SortField[1];
+                sortField = new SortField[2];
                 if (isAsc) {
                     sortField[0] = ROLE.ROLE_NAME.asc();
+                    sortField[1] = ROLE.ROLE_ID.asc();
                 } else {
                     sortField[0] = ROLE.ROLE_NAME.desc();
+                    sortField[1] = ROLE.ROLE_ID.desc();
                 }
             }
 
             if (StringUtils.equals("roleEnName", orderColumnName)) {
-                sortField = new SortField[1];
+                sortField = new SortField[2];
                 if (isAsc) {
                     sortField[0] = ROLE.ROLE_EN_NAME.asc();
+                    sortField[1] = ROLE.ROLE_ID.asc();
                 } else {
                     sortField[0] = ROLE.ROLE_EN_NAME.desc();
+                    sortField[1] = ROLE.ROLE_ID.desc();
                 }
             }
         }

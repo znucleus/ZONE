@@ -10,6 +10,7 @@ requirejs.config({
         "tools": web_path + "/js/util/tools",
         "ajax.loading.view": web_path + "/js/util/ajax.loading.view",
         "nav.active": web_path + "/js/util/nav.active",
+        "lodash_plugin": web_path + "/js/util/lodash_plugin",
         "bootstrap": web_path + "/plugins/bootstrap/js/bootstrap.bundle.min",
         "bracket": web_path + "/plugins/bracket/js/bracket.min",
         "perfect-scrollbar.jquery": web_path + "/plugins/perfect-scrollbar/js/perfect-scrollbar.jquery.min",

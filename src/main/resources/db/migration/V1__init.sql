@@ -107,7 +107,6 @@ CREATE TABLE college_application (
 CREATE TABLE college_role (
     role_id VARCHAR(64) NOT NULL,
     college_id INT NOT NULL,
-    allow_agent BOOLEAN DEFAULT 0,
     FOREIGN KEY (role_id)
         REFERENCES role (role_id),
     FOREIGN KEY (college_id)

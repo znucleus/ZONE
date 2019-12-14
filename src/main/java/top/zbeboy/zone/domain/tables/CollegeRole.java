@@ -14,7 +14,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row3;
+import org.jooq.Row2;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -41,7 +41,7 @@ import top.zbeboy.zone.domain.tables.records.CollegeRoleRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class CollegeRole extends TableImpl<CollegeRoleRecord> {
 
-    private static final long serialVersionUID = -2135879588;
+    private static final long serialVersionUID = 1213248135;
 
     /**
      * The reference instance of <code>zone.college_role</code>
@@ -65,11 +65,6 @@ public class CollegeRole extends TableImpl<CollegeRoleRecord> {
      * The column <code>zone.college_role.college_id</code>.
      */
     public final TableField<CollegeRoleRecord, Integer> COLLEGE_ID = createField(DSL.name("college_id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
-
-    /**
-     * The column <code>zone.college_role.allow_agent</code>.
-     */
-    public final TableField<CollegeRoleRecord, Byte> ALLOW_AGENT = createField(DSL.name("allow_agent"), org.jooq.impl.SQLDataType.TINYINT.defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.TINYINT)), this, "");
 
     /**
      * Create a <code>zone.college_role</code> table reference
@@ -164,11 +159,11 @@ public class CollegeRole extends TableImpl<CollegeRoleRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row3 type methods
+    // Row2 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row3<String, Integer, Byte> fieldsRow() {
-        return (Row3) super.fieldsRow();
+    public Row2<String, Integer> fieldsRow() {
+        return (Row2) super.fieldsRow();
     }
 }
