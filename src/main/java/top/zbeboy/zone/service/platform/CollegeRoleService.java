@@ -7,6 +7,15 @@ import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 public interface CollegeRoleService {
 
     /**
+     * 通过角色名和院id查询
+     *
+     * @param roleName  角色名
+     * @param collegeId 院id
+     * @return 结果集
+     */
+    Result<Record> findByRoleNameAndCollegeId(String roleName, int collegeId);
+
+    /**
      * 分页查询
      *
      * @param dataTablesUtil 工具类

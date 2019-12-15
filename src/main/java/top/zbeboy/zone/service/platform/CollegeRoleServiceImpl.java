@@ -51,10 +51,20 @@ public class CollegeRoleServiceImpl implements CollegeRoleService, PaginationPlu
     }
 
     @Override
+    public Result<Record> findByRoleNameAndCollegeId(String roleName, int collegeId) {
+        return create.select()
+                .from(COLLEGE_ROLE)
+                .leftJoin(ROLE)
+                .on(ROLE.ROLE_ID.eq(COLLEGE_ROLE.ROLE_ID))
+                .where(ROLE.ROLE_NAME.eq(roleName).and(COLLEGE_ROLE.COLLEGE_ID.eq(collegeId)))
+                .fetch();
+    }
+
+    @Override
     public Result<Record> findAllByPage(DataTablesUtil dataTablesUtil) {
         SelectOnConditionStep<Record> selectOnConditionStep = create.select()
-                .from(ROLE)
-                .leftJoin(COLLEGE_ROLE)
+                .from(COLLEGE_ROLE)
+                .leftJoin(ROLE)
                 .on(ROLE.ROLE_ID.eq(COLLEGE_ROLE.ROLE_ID))
                 .leftJoin(COLLEGE)
                 .on(COLLEGE_ROLE.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
@@ -66,8 +76,8 @@ public class CollegeRoleServiceImpl implements CollegeRoleService, PaginationPlu
     @Override
     public int countAll(DataTablesUtil dataTablesUtil) {
         SelectOnConditionStep<Record1<Integer>> selectOnConditionStep = create.selectCount()
-                .from(ROLE)
-                .leftJoin(COLLEGE_ROLE)
+                .from(COLLEGE_ROLE)
+                .leftJoin(ROLE)
                 .on(ROLE.ROLE_ID.eq(COLLEGE_ROLE.ROLE_ID))
                 .leftJoin(COLLEGE)
                 .on(COLLEGE_ROLE.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
@@ -79,8 +89,8 @@ public class CollegeRoleServiceImpl implements CollegeRoleService, PaginationPlu
     @Override
     public int countByCondition(DataTablesUtil dataTablesUtil) {
         SelectOnConditionStep<Record1<Integer>> selectOnConditionStep = create.selectCount()
-                .from(ROLE)
-                .leftJoin(COLLEGE_ROLE)
+                .from(COLLEGE_ROLE)
+                .leftJoin(ROLE)
                 .on(ROLE.ROLE_ID.eq(COLLEGE_ROLE.ROLE_ID))
                 .leftJoin(COLLEGE)
                 .on(COLLEGE_ROLE.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
