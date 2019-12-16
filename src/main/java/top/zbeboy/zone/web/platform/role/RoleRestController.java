@@ -15,6 +15,7 @@ import top.zbeboy.zone.domain.tables.pojos.Application;
 import top.zbeboy.zone.domain.tables.pojos.College;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
+import top.zbeboy.zone.service.data.CollegeApplicationService;
 import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.*;
@@ -35,7 +36,6 @@ public class RoleRestController {
 
     @Resource
     private CollegeApplicationService collegeApplicationService;
-
 
     @Resource
     private RoleService roleService;

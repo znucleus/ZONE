@@ -23,6 +23,7 @@ import top.zbeboy.zone.domain.tables.AnswerSolving;
 import top.zbeboy.zone.domain.tables.AnswerSubject;
 import top.zbeboy.zone.domain.tables.Application;
 import top.zbeboy.zone.domain.tables.Authorities;
+import top.zbeboy.zone.domain.tables.AuthorizeType;
 import top.zbeboy.zone.domain.tables.Building;
 import top.zbeboy.zone.domain.tables.College;
 import top.zbeboy.zone.domain.tables.CollegeApplication;
@@ -36,6 +37,7 @@ import top.zbeboy.zone.domain.tables.Organize;
 import top.zbeboy.zone.domain.tables.PoliticalLandscape;
 import top.zbeboy.zone.domain.tables.Role;
 import top.zbeboy.zone.domain.tables.RoleApplication;
+import top.zbeboy.zone.domain.tables.RoleUsers;
 import top.zbeboy.zone.domain.tables.School;
 import top.zbeboy.zone.domain.tables.Schoolroom;
 import top.zbeboy.zone.domain.tables.Science;
@@ -70,7 +72,7 @@ import top.zbeboy.zone.domain.tables.UsersType;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Zone extends SchemaImpl {
 
-    private static final long serialVersionUID = 1019171646;
+    private static final long serialVersionUID = -20842970;
 
     /**
      * The reference instance of <code>zone</code>
@@ -121,6 +123,11 @@ public class Zone extends SchemaImpl {
      * The table <code>zone.authorities</code>.
      */
     public final Authorities AUTHORITIES = top.zbeboy.zone.domain.tables.Authorities.AUTHORITIES;
+
+    /**
+     * The table <code>zone.authorize_type</code>.
+     */
+    public final AuthorizeType AUTHORIZE_TYPE = top.zbeboy.zone.domain.tables.AuthorizeType.AUTHORIZE_TYPE;
 
     /**
      * The table <code>zone.building</code>.
@@ -186,6 +193,11 @@ public class Zone extends SchemaImpl {
      * The table <code>zone.role_application</code>.
      */
     public final RoleApplication ROLE_APPLICATION = top.zbeboy.zone.domain.tables.RoleApplication.ROLE_APPLICATION;
+
+    /**
+     * The table <code>zone.role_users</code>.
+     */
+    public final RoleUsers ROLE_USERS = top.zbeboy.zone.domain.tables.RoleUsers.ROLE_USERS;
 
     /**
      * The table <code>zone.school</code>.
@@ -313,6 +325,7 @@ public class Zone extends SchemaImpl {
             AnswerSubject.ANSWER_SUBJECT,
             Application.APPLICATION,
             Authorities.AUTHORITIES,
+            AuthorizeType.AUTHORIZE_TYPE,
             Building.BUILDING,
             College.COLLEGE,
             CollegeApplication.COLLEGE_APPLICATION,
@@ -326,6 +339,7 @@ public class Zone extends SchemaImpl {
             PoliticalLandscape.POLITICAL_LANDSCAPE,
             Role.ROLE,
             RoleApplication.ROLE_APPLICATION,
+            RoleUsers.ROLE_USERS,
             School.SCHOOL,
             Schoolroom.SCHOOLROOM,
             Science.SCIENCE,

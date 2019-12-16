@@ -15,6 +15,7 @@ import top.zbeboy.zone.domain.tables.AnswerSolving;
 import top.zbeboy.zone.domain.tables.AnswerSubject;
 import top.zbeboy.zone.domain.tables.Application;
 import top.zbeboy.zone.domain.tables.Authorities;
+import top.zbeboy.zone.domain.tables.AuthorizeType;
 import top.zbeboy.zone.domain.tables.Building;
 import top.zbeboy.zone.domain.tables.College;
 import top.zbeboy.zone.domain.tables.CollegeApplication;
@@ -28,6 +29,7 @@ import top.zbeboy.zone.domain.tables.Organize;
 import top.zbeboy.zone.domain.tables.PoliticalLandscape;
 import top.zbeboy.zone.domain.tables.Role;
 import top.zbeboy.zone.domain.tables.RoleApplication;
+import top.zbeboy.zone.domain.tables.RoleUsers;
 import top.zbeboy.zone.domain.tables.School;
 import top.zbeboy.zone.domain.tables.Schoolroom;
 import top.zbeboy.zone.domain.tables.Science;
@@ -108,6 +110,11 @@ public class Tables {
     public static final Authorities AUTHORITIES = Authorities.AUTHORITIES;
 
     /**
+     * The table <code>zone.authorize_type</code>.
+     */
+    public static final AuthorizeType AUTHORIZE_TYPE = AuthorizeType.AUTHORIZE_TYPE;
+
+    /**
      * The table <code>zone.building</code>.
      */
     public static final Building BUILDING = Building.BUILDING;
@@ -171,6 +178,11 @@ public class Tables {
      * The table <code>zone.role_application</code>.
      */
     public static final RoleApplication ROLE_APPLICATION = RoleApplication.ROLE_APPLICATION;
+
+    /**
+     * The table <code>zone.role_users</code>.
+     */
+    public static final RoleUsers ROLE_USERS = RoleUsers.ROLE_USERS;
 
     /**
      * The table <code>zone.school</code>.

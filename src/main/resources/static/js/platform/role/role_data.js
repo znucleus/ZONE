@@ -1,6 +1,4 @@
-/**
- * Created by lenovo on 2016-10-16.
- */
+//# sourceURL=role_data.js
 require(["jquery", "lodash_plugin", "handlebars", "nav.active", "responsive.bootstrap4", "jquery.address", "messenger"],
     function ($, DP, Handlebars, navActive) {
 

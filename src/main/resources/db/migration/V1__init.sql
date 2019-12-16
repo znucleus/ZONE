@@ -77,6 +77,29 @@ CREATE TABLE role_application (
     PRIMARY KEY (role_id , application_id)
 );
 
+CREATE TABLE authorize_type(
+  authorize_type_id VARCHAR(64) PRIMARY KEY ,
+  authorize_type_name VARCHAR(100) NOT NULL UNIQUE
+);
+
+CREATE TABLE role_users(
+   role_users_id VARCHAR(64) PRIMARY KEY ,
+   username VARCHAR(64) NOT NULL,
+   authorize_type_id VARCHAR(64) NOT NULL,
+   data_scope TINYINT NOT NULL,
+   data_id VARCHAR(30) NOT NULL,
+   role_id VARCHAR(200) NOT NULL,
+   duration VARCHAR(5),
+   valid_date DATETIME NOT NULL,
+   expire_date DATETIME NOT NULL,
+   create_date DATETIME NOT NULL,
+   apply_status TINYINT NOT NULL,
+   approver VARCHAR(64) NOT NULL,
+   FOREIGN KEY (username) REFERENCES users(username),
+   FOREIGN KEY (authorize_type_id) REFERENCES authorize_type(authorize_type_id),
+   FOREIGN KEY (approver) REFERENCES users(username)
+);
+
 CREATE TABLE school (
     school_id INT AUTO_INCREMENT PRIMARY KEY,
     school_name VARCHAR(200) NOT NULL,
@@ -532,6 +555,13 @@ VALUES
   ('800fd53d557449ee98b59d562c3ed013', '平台角色', 6020, '0eb2165a08824c1cac232d975af392b3', '/web/menu/platform/role',
    'platform_role', 'platform_role', '',
    '/web/platform/role');
+INSERT INTO application (application_id, application_name, application_sort,
+                         application_pid, application_url,
+                         application_code, application_en_name, icon, application_data_url_start_with)
+VALUES
+  ('308c9005d7e543ebbf49b430ea1add9c', '平台授权', 6030, '0eb2165a08824c1cac232d975af392b3', '/web/menu/platform/authorize',
+   'platform_authorize', 'platform_authorize', '',
+   '/web/platform/authorize');
 
 INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
@@ -627,6 +657,8 @@ VALUES ('220f8f10263c4a38bc1f6b7c42759594', '17506dc86a904051a771bb22cd9c31dd');
 INSERT INTO role_application (role_id, application_id)
 VALUES ('220f8f10263c4a38bc1f6b7c42759594', '800fd53d557449ee98b59d562c3ed013');
 INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', '308c9005d7e543ebbf49b430ea1add9c');
+INSERT INTO role_application (role_id, application_id)
 VALUES ('220f8f10263c4a38bc1f6b7c42759594', '753e7add7a25452f949abb9b9a5519bb');
 INSERT INTO role_application (role_id, application_id)
 VALUES ('220f8f10263c4a38bc1f6b7c42759594', '056b34f340544930b19716455a0ea3d2');
@@ -691,6 +723,8 @@ INSERT INTO role_application (role_id, application_id)
 VALUES ('e813c71358fc4691afeafb438ea53919', 'd58873b68598404fad86d808a28b1400');
 INSERT INTO role_application (role_id, application_id)
 VALUES ('e813c71358fc4691afeafb438ea53919', '800fd53d557449ee98b59d562c3ed013');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('e813c71358fc4691afeafb438ea53919', '308c9005d7e543ebbf49b430ea1add9c');
 
 INSERT INTO role_application (role_id, application_id)
 VALUES ('cd5012abe87246f3ae21c86600c6e12a', 'e3d45ba55e48462cb47595ce01bba60c');

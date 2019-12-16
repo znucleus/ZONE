@@ -1,6 +1,6 @@
 //# sourceURL=role_add.js
 require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active", "messenger", "bootstrap-treeview", "jquery.address",
-    "bootstrap-maxlength"], function ($, _, tools, Swal, Handlebars, navActive) {
+    "bootstrap-maxlength", "select2-zh-CN"], function ($, _, tools, Swal, Handlebars, navActive) {
 
     /*
      ajax url.
@@ -21,8 +21,8 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
      参数id
      */
     var param_id = {
-        schoolId: '#select_school',
-        collegeId: '#select_college',
+        school: '#school',
+        college: '#college',
         roleName: '#roleName'
     };
 
@@ -52,8 +52,8 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
      * 初始化参数
      */
     function initParam() {
-        param.schoolId = $(param_id.schoolId).val();
-        param.collegeId = $(param_id.collegeId).val();
+        param.schoolId = $(param_id.school).val();
+        param.collegeId = _.isUndefined($(param_id.college).val()) ? page_param.collegeId : $(param_id.college).val();
         param.roleName = _.replace(_.trim($(param_id.roleName).val()), ' ', '');
         param.applicationIds = getAllCheckedData();
     }
@@ -76,6 +76,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
             initTreeView(page_param.collegeId);
         }
 
+        initSelect2();
         initMaxLength();
     }
 
@@ -96,6 +97,12 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
         } else {
             $(param_id.college).html('<option label="请选择院"></option>');
         }
+    }
+
+    function initSelect2() {
+        $('.select2-show-search').select2({
+            language: "zh-CN"
+        });
     }
 
     /**
@@ -121,6 +128,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
 
     $(param_id.college).change(function () {
         var v = $(this).val();
+        initTreeView(v);
         if (Number(v) > 0) {
             tools.validSelect2SuccessDom(param_id.college);
         }
@@ -166,21 +174,21 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
     }
 
     function validSchool() {
-        var schoolId = param.schoolId;
+        var schoolId = param.school;
         if (Number(schoolId) <= 0) {
-            tools.validErrorDom(param_id.schoolId, '请选择学校');
+            tools.validSelect2ErrorDom(param_id.school, '请选择学校');
         } else {
-            tools.validSuccessDom(param_id.schoolId);
+            tools.validSelect2SuccessDom(param_id.school);
             validCollege();
         }
     }
 
     function validCollege() {
-        var collegeId = param.collegeId;
+        var collegeId = param.college;
         if (Number(collegeId) <= 0) {
-            tools.validErrorDom(param_id.collegeId, '请选择院');
+            tools.validSelect2ErrorDom(param_id.college, '请选择院');
         } else {
-            tools.validSuccessDom(param_id.collegeId);
+            tools.validSelect2SuccessDom(param_id.college);
             validRoleName();
         }
     }
@@ -212,7 +220,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
         $.ajax({
             type: 'POST',
             url: ajax_url.save,
-            data: $('#app_form').serialize(),
+            data: param,
             success: function (data) {
                 tools.buttonEndLoading(button_id.save.id, button_id.save.text);
                 if (data.state) {
@@ -243,7 +251,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
      */
     function initTreeView(collegeId) {
         if (collegeId > 0) {
-            $.get(web_path + ajax_url.application_json_data, {collegeId: collegeId}, function (data) {
+            $.get(ajax_url.application_json_data, {collegeId: collegeId}, function (data) {
                 if (data.listResult != null) {
                     treeViewData(data.listResult);
                 }
@@ -256,6 +264,13 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
             data: data,
             showIcon: false,
             showCheckbox: true,
+            checkedIcon: 'fa fa-check-circle-o',
+            collapseIcon: 'fa fa-minus',
+            emptyIcon: 'fa',
+            expandIcon: 'fa fa-plus',
+            nodeIcon: 'fa fa-stop',
+            selectedIcon: 'fa fa-stop',
+            uncheckedIcon: 'fa fa-circle-o',
             onNodeChecked: function (event, node) {
                 checkAllParentNode(node);
                 checkAllChildrenNode(node);
