@@ -101,4 +101,11 @@ public interface RoleService {
      * @param role 角色
      */
     void update(Role role);
+
+    /**
+     * 保存
+     *
+     * @param role 角色
+     */
+    void save(Role role);
 }

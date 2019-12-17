@@ -65,6 +65,11 @@ public final class Workbook {
     }
 
     /*
+    角色前缀
+     */
+    public static final String ROLE_PREFIX = "ROLE_";
+
+    /*
     正则
     */
     public static final String USERNAME_REGEX = "^[a-zA-Z0-9]{1,20}$";

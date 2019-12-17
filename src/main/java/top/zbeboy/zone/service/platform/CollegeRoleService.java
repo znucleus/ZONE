@@ -2,6 +2,7 @@ package top.zbeboy.zone.service.platform;
 
 import org.jooq.Record;
 import org.jooq.Result;
+import top.zbeboy.zone.domain.tables.pojos.CollegeRole;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
 public interface CollegeRoleService {
@@ -37,4 +38,11 @@ public interface CollegeRoleService {
      * @return 条件查询总数
      */
     int countByCondition(DataTablesUtil dataTablesUtil);
+
+    /**
+     * 保存
+     *
+     * @param collegeRole 数据
+     */
+    void save(CollegeRole collegeRole);
 }

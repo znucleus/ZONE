@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zone.config.Workbook;
+import top.zbeboy.zone.domain.tables.daos.CollegeRoleDao;
+import top.zbeboy.zone.domain.tables.pojos.CollegeRole;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.service.data.StaffService;
@@ -28,6 +30,9 @@ import static top.zbeboy.zone.domain.Tables.*;
 public class CollegeRoleServiceImpl implements CollegeRoleService, PaginationPlugin<DataTablesUtil> {
 
     private final DSLContext create;
+
+    @Resource
+    private CollegeRoleDao collegeRoleDao;
 
     @Resource
     private RoleService roleService;
@@ -97,6 +102,12 @@ public class CollegeRoleServiceImpl implements CollegeRoleService, PaginationPlu
                 .leftJoin(SCHOOL)
                 .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID));
         return countAll(selectOnConditionStep, dataTablesUtil, false);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void save(CollegeRole collegeRole) {
+        collegeRoleDao.insert(collegeRole);
     }
 
     @Override

@@ -6,26 +6,29 @@ import org.jooq.Record;
 import org.jooq.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.config.Workbook;
-import top.zbeboy.zone.domain.tables.pojos.Application;
-import top.zbeboy.zone.domain.tables.pojos.College;
-import top.zbeboy.zone.domain.tables.pojos.Users;
-import top.zbeboy.zone.domain.tables.pojos.UsersType;
+import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.service.data.CollegeApplicationService;
 import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.*;
+import top.zbeboy.zone.service.util.RandomUtil;
+import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.platform.role.RoleBean;
 import top.zbeboy.zone.web.plugin.treeview.TreeViewData;
 import top.zbeboy.zone.web.util.AjaxUtil;
+import top.zbeboy.zone.web.util.SmallPropsUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zone.web.vo.platform.role.RoleAddVo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.*;
 
 @RestController
@@ -51,6 +54,9 @@ public class RoleRestController {
 
     @Resource
     private StudentService studentService;
+
+    @Resource
+    private RoleApplicationService roleApplicationService;
 
     /**
      * 数据
@@ -110,10 +116,10 @@ public class RoleRestController {
             }
         }
 
-        if(collegeId > 0){
+        if (collegeId > 0) {
             Result<Record> records = collegeRoleService.findByRoleNameAndCollegeId(param, collegeId);
 
-            if(records.isEmpty()){
+            if (records.isEmpty()) {
                 ajaxUtil.success().msg("角色名不重复");
             } else {
                 ajaxUtil.fail().msg("角色名重复");
@@ -122,6 +128,61 @@ public class RoleRestController {
             ajaxUtil.fail().msg("未查询到用户院ID或未选择院");
         }
 
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 保存角色
+     *
+     * @param roleAddVo     数据
+     * @param bindingResult 检验
+     * @return true 保存成功 false 保存失败
+     */
+    @PostMapping("/web/platform/role/save")
+    public ResponseEntity<Map<String, Object>> save(@Valid RoleAddVo roleAddVo, BindingResult bindingResult) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (!bindingResult.hasErrors()) {
+            Role role = new Role();
+            role.setRoleId(UUIDUtil.getUUID());
+            role.setRoleName(StringUtils.deleteWhitespace(roleAddVo.getRoleName()));
+            role.setRoleEnName(Workbook.ROLE_PREFIX + RandomUtil.generateRoleEnName().toUpperCase());
+            role.setRoleType(2);
+            roleService.save(role);
+
+            List<String> ids = SmallPropsUtil.StringIdsToStringList(roleAddVo.getApplicationIds());
+            List<RoleApplication> roleApplications = new ArrayList<>();
+            ids.forEach(id -> roleApplications.add(new RoleApplication(role.getRoleId(), id)));
+            roleApplicationService.batchSave(roleApplications);
+
+            int collegeId = roleAddVo.getCollegeId();
+            if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+                Users users = usersService.getUserFromSession();
+                UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
+                if (Objects.nonNull(usersType)) {
+                    Optional<Record> record = Optional.empty();
+                    if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
+                        record = staffService.findByUsernameRelation(users.getUsername());
+                    } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
+                        record = studentService.findByUsernameRelation(users.getUsername());
+                    }
+
+                    if (record.isPresent()) {
+                        collegeId = record.get().into(College.class).getCollegeId();
+                    }
+                }
+            }
+
+            if (collegeId > 0) {
+                CollegeRole collegeRole = new CollegeRole(role.getRoleId(), collegeId);
+                collegeRoleService.save(collegeRole);
+
+                ajaxUtil.success().msg("保存成功");
+            } else {
+                ajaxUtil.fail().msg("未查询到用户院ID或未选择院");
+            }
+        } else {
+            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 

@@ -155,6 +155,12 @@ public class RoleServiceImpl implements RoleService, PaginationPlugin<DataTables
         roleDao.update(role);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void save(Role role) {
+        roleDao.insert(role);
+    }
+
     @Override
     public Condition searchCondition(DataTablesUtil paginationUtil) {
         Condition a = null;
