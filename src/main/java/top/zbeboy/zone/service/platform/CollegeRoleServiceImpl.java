@@ -66,6 +66,16 @@ public class CollegeRoleServiceImpl implements CollegeRoleService, PaginationPlu
     }
 
     @Override
+    public Result<Record> findByRoleNameAndCollegeIdNeRoleId(String roleName, int collegeId, String roleId) {
+        return create.select()
+                .from(COLLEGE_ROLE)
+                .leftJoin(ROLE)
+                .on(ROLE.ROLE_ID.eq(COLLEGE_ROLE.ROLE_ID))
+                .where(ROLE.ROLE_NAME.eq(roleName).and(COLLEGE_ROLE.COLLEGE_ID.eq(collegeId)).and(ROLE.ROLE_ID.ne(roleId)))
+                .fetch();
+    }
+
+    @Override
     public Result<Record> findAllByPage(DataTablesUtil dataTablesUtil) {
         SelectOnConditionStep<Record> selectOnConditionStep = create.select()
                 .from(COLLEGE_ROLE)
@@ -108,6 +118,13 @@ public class CollegeRoleServiceImpl implements CollegeRoleService, PaginationPlu
     @Override
     public void save(CollegeRole collegeRole) {
         collegeRoleDao.insert(collegeRole);
+    }
+
+    @Override
+    public void deleteByRoleId(String roleId) {
+        create.deleteFrom(COLLEGE_ROLE)
+                .where(COLLEGE_ROLE.ROLE_ID.eq(roleId))
+                .execute();
     }
 
     @Override

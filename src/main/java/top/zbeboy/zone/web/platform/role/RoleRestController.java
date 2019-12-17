@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
+import top.zbeboy.zone.domain.tables.records.RoleApplicationRecord;
 import top.zbeboy.zone.service.data.CollegeApplicationService;
 import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.*;
+import top.zbeboy.zone.service.system.AuthoritiesService;
 import top.zbeboy.zone.service.util.RandomUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.platform.role.RoleBean;
@@ -25,6 +27,7 @@ import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.SmallPropsUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.vo.platform.role.RoleAddVo;
+import top.zbeboy.zone.web.vo.platform.role.RoleEditVo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -57,6 +60,9 @@ public class RoleRestController {
 
     @Resource
     private RoleApplicationService roleApplicationService;
+
+    @Resource
+    private AuthoritiesService authoritiesService;
 
     /**
      * 数据
@@ -132,6 +138,32 @@ public class RoleRestController {
     }
 
     /**
+     * 更新时检验角色是否重复
+     *
+     * @param roleName  角色名
+     * @param collegeId 院id
+     * @param roleId    角色id
+     * @return true 合格 false 不合格
+     */
+    @PostMapping("/web/platform/role/check/edit/name")
+    public ResponseEntity<Map<String, Object>> checkEditName(@RequestParam("roleName") String roleName, int collegeId,
+                                                             @RequestParam("roleId") String roleId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        String param = StringUtils.deleteWhitespace(roleName);
+        if (collegeId > 0) {
+            Result<Record> records = collegeRoleService.findByRoleNameAndCollegeIdNeRoleId(param, collegeId, roleId);
+            if (records.isEmpty()) {
+                ajaxUtil.success().msg("角色名不重复");
+            } else {
+                ajaxUtil.fail().msg("角色名重复");
+            }
+        } else {
+            ajaxUtil.fail().msg("未查询到用户院ID或未选择院");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
      * 保存角色
      *
      * @param roleAddVo     数据
@@ -187,6 +219,62 @@ public class RoleRestController {
     }
 
     /**
+     * 更新
+     *
+     * @param roleEditVo    数据
+     * @param bindingResult 检验
+     * @return true 更新成功 false 更新失败
+     */
+    @PostMapping("/web/platform/role/update")
+    public ResponseEntity<Map<String, Object>> update(@Valid RoleEditVo roleEditVo, BindingResult bindingResult) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (!bindingResult.hasErrors()) {
+            Role role = roleService.findById(roleEditVo.getRoleId());
+            if (Objects.nonNull(role)) {
+                role.setRoleName(StringUtils.deleteWhitespace(roleEditVo.getRoleName()));
+                roleService.update(role);
+
+                // 用户可能同时更改菜单
+                roleApplicationService.deleteByRoleId(role.getRoleId());
+                // 不论是系统角色还是其它角色，不应该能变动角色到其它院下，造成跨院问题
+                List<String> ids = SmallPropsUtil.StringIdsToStringList(roleEditVo.getApplicationIds());
+                List<RoleApplication> roleApplications = new ArrayList<>();
+                ids.forEach(id -> roleApplications.add(new RoleApplication(role.getRoleId(), id)));
+                roleApplicationService.batchSave(roleApplications);
+
+                ajaxUtil.success().msg("更新成功");
+            } else {
+                ajaxUtil.fail().msg("根据角色ID未查询到角色数据");
+            }
+        } else {
+            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 删除角色
+     *
+     * @param roleId 角色id
+     * @return true成功
+     */
+    @PostMapping("/web/platform/role/delete")
+    public ResponseEntity<Map<String, Object>> delete(@RequestParam("roleId") String roleId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        Role role = roleService.findById(roleId);
+        if (Objects.nonNull(role)) {
+            collegeRoleService.deleteByRoleId(roleId);
+            roleApplicationService.deleteByRoleId(roleId);
+            authoritiesService.deleteByAuthorities(role.getRoleEnName());
+            roleService.deleteById(roleId);
+            ajaxUtil.success().msg("删除成功");
+        } else {
+            ajaxUtil.fail().msg("根据角色ID未查询到角色数据");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
      * 数据json
      *
      * @param collegeId 院id
@@ -196,6 +284,24 @@ public class RoleRestController {
     public ResponseEntity<Map<String, Object>> applicationJson(@RequestParam("collegeId") int collegeId) {
         AjaxUtil<TreeViewData> ajaxUtil = AjaxUtil.of();
         ajaxUtil.success().list(toJson("0", collegeId)).msg("获取数据成功");
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 获取角色id 下的 应用id
+     *
+     * @param roleId 角色id
+     * @return 应用
+     */
+    @PostMapping("/web/platform/role/application/data")
+    public ResponseEntity<Map<String, Object>> roleApplicationData(@RequestParam("roleId") String roleId) {
+        AjaxUtil<RoleApplication> ajaxUtil = AjaxUtil.of();
+        Result<RoleApplicationRecord> roleApplicationRecords = roleApplicationService.findByRoleId(roleId);
+        List<RoleApplication> roleApplications = new ArrayList<>();
+        if (roleApplicationRecords.isNotEmpty()) {
+            roleApplications = roleApplicationRecords.into(RoleApplication.class);
+        }
+        ajaxUtil.success().list(roleApplications).msg("获取数据成功");
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 

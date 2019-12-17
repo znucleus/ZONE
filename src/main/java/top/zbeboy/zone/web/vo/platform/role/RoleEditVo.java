@@ -3,13 +3,23 @@ package top.zbeboy.zone.web.vo.platform.role;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-public class RoleAddVo {
+public class RoleEditVo {
+    @NotBlank(message = "角色ID不能为空")
+    @Size(max = 64, message = "角色ID64个字符以内")
+    private String roleId;
     @NotBlank(message = "角色名不能为空")
     @Size(max = 50, message = "角色名50个字符以内")
     private String roleName;
-    private int collegeId;
     @NotBlank(message = "应用ID不能为空")
     private String applicationIds;
+
+    public String getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
+    }
 
     public String getRoleName() {
         return roleName;
@@ -17,14 +27,6 @@ public class RoleAddVo {
 
     public void setRoleName(String roleName) {
         this.roleName = roleName;
-    }
-
-    public int getCollegeId() {
-        return collegeId;
-    }
-
-    public void setCollegeId(int collegeId) {
-        this.collegeId = collegeId;
     }
 
     public String getApplicationIds() {

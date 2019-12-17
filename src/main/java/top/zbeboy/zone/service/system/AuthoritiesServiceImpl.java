@@ -50,4 +50,11 @@ public class AuthoritiesServiceImpl implements AuthoritiesService {
         return create.selectFrom(AUTHORITIES)
                 .where(AUTHORITIES.USERNAME.eq(USERS.USERNAME));
     }
+
+    @Override
+    public void deleteByAuthorities(String authorities) {
+        create.deleteFrom(AUTHORITIES)
+                .where(AUTHORITIES.AUTHORITY.eq(authorities))
+                .execute();
+    }
 }

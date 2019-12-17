@@ -1,16 +1,15 @@
-//# sourceURL=role_add.js
+//# sourceURL=role_edit.js
 require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active", "messenger", "bootstrap-treeview", "jquery.address",
-    "bootstrap-maxlength", "select2-zh-CN"], function ($, _, tools, Swal, Handlebars, navActive) {
+    "bootstrap-maxlength"], function ($, _, tools, Swal, Handlebars, navActive) {
 
     /*
      ajax url.
      */
     var ajax_url = {
-        obtain_school_data: web_path + '/anyone/data/school',
-        obtain_college_data: web_path + '/anyone/data/college',
         application_json_data: web_path + '/web/platform/role/application/json',
-        save: web_path + '/web/platform/role/save',
-        check_name: web_path + '/web/platform/role/check/add/name',
+        role_application_data: web_path + '/web/platform/role/application/data',
+        update: web_path + '/web/platform/role/update',
+        check_name: web_path + '/web/platform/role/check/edit/name',
         page: '/web/menu/platform/role'
     };
 
@@ -21,9 +20,8 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
      参数id
      */
     var param_id = {
-        school: '#school',
-        college: '#college',
-        roleName: '#roleName'
+        roleName: '#roleName',
+        roleId: '#roleId'
     };
 
     var button_id = {
@@ -34,31 +32,30 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
         }
     };
 
+    var page_param = {
+        collegeId: $('#collegeId').val(),
+        roleId: $('#roleId').val()
+    };
+
     /*
      参数
      */
     var param = {
-        schoolId: '',
-        collegeId: '',
         roleName: '',
-        applicationIds: ''
-    };
-
-    var page_param = {
-        collegeId: $('#collegeId').val()
+        applicationIds: '',
+        roleId: '',
+        collegeId:''
     };
 
     /**
      * 初始化参数
      */
     function initParam() {
-        param.schoolId = $(param_id.school).val();
-        param.collegeId = _.isUndefined($(param_id.college).val()) ? page_param.collegeId : $(param_id.college).val();
         param.roleName = _.replace(_.trim($(param_id.roleName).val()), ' ', '');
+        param.roleId = page_param.roleId;
+        param.collegeId = page_param.collegeId;
         param.applicationIds = getAllCheckedData();
     }
-
-    var treeviewId = $('#treeview-checkable');
 
     /*
      初始化数据
@@ -69,40 +66,8 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
      * 初始化界面
      */
     function init() {
-        if (Number(page_param.collegeId) === 0) {
-            initSchool();
-            treeViewData([]);
-        } else {
-            initTreeView(page_param.collegeId);
-        }
-
-        initSelect2();
+        initTreeView(page_param.collegeId);
         initMaxLength();
-    }
-
-    function initSchool() {
-        $.get(ajax_url.obtain_school_data, function (data) {
-            $(param_id.school).select2({
-                data: data.results
-            });
-        });
-    }
-
-    function initCollege(schoolId) {
-        if (Number(schoolId) > 0) {
-            $.get(ajax_url.obtain_college_data, {schoolId: schoolId}, function (data) {
-                $(param_id.college).html('<option label="请选择院"></option>');
-                $(param_id.college).select2({data: data.results});
-            });
-        } else {
-            $(param_id.college).html('<option label="请选择院"></option>');
-        }
-    }
-
-    function initSelect2() {
-        $('.select2-show-search').select2({
-            language: "zh-CN"
-        });
     }
 
     /**
@@ -117,22 +82,6 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
         });
     }
 
-    $(param_id.school).change(function () {
-        var v = $(this).val();
-        initCollege(v);
-
-        if (Number(v) > 0) {
-            tools.validSelect2SuccessDom(param_id.school);
-        }
-    });
-
-    $(param_id.college).change(function () {
-        var v = $(this).val();
-        initTreeView(v);
-        if (Number(v) > 0) {
-            tools.validSelect2SuccessDom(param_id.college);
-        }
-    });
 
     /*
      即时检验角色名
@@ -153,42 +102,13 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
         }
     });
 
-
     /*
      保存数据
      */
     $(button_id.save.id).click(function () {
         initParam();
-        add();
+        validRoleName();
     });
-
-    function add() {
-        if (Number(page_param.collegeId) === 0) {
-            validSchool();
-        } else {
-            validRoleName();
-        }
-    }
-
-    function validSchool() {
-        var schoolId = param.school;
-        if (Number(schoolId) <= 0) {
-            tools.validSelect2ErrorDom(param_id.school, '请选择学校');
-        } else {
-            tools.validSelect2SuccessDom(param_id.school);
-            validCollege();
-        }
-    }
-
-    function validCollege() {
-        var collegeId = param.college;
-        if (Number(collegeId) <= 0) {
-            tools.validSelect2ErrorDom(param_id.college, '请选择院');
-        } else {
-            tools.validSelect2SuccessDom(param_id.college);
-            validRoleName();
-        }
-    }
 
     /**
      * 添加时检验并提交数据
@@ -216,7 +136,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
         tools.buttonLoading(button_id.save.id, button_id.save.tip);
         $.ajax({
             type: 'POST',
-            url: ajax_url.save,
+            url: ajax_url.update,
             data: param,
             success: function (data) {
                 tools.buttonEndLoading(button_id.save.id, button_id.save.text);
@@ -243,6 +163,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
         });
     }
 
+    var treeviewId = $('#treeview-checkable');
     /**
      * 初始化tree view
      */
@@ -275,6 +196,30 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
             onNodeUnchecked: function (event, node) {
                 uncheckAllChildrenNode(node);
                 getAllParent(node);// 若任何子节点选中则取消选中该父节点
+            }
+        });
+
+        selectedApplication();
+    }
+
+    /**
+     * 选中应用
+     */
+    function selectedApplication() {
+        initParam();
+        var roleId = param.roleId;
+        $.post(ajax_url.role_application_data, {roleId: roleId}, function (data) {
+            var list = data.listResult;
+            if (list.length > 0) {
+                var unCheckeds = treeviewId.treeview('getUnchecked');
+                for (var i = 0; i < list.length; i++) {
+                    for (var j = 0; j < unCheckeds.length; j++) {
+                        if (list[i].applicationId === unCheckeds[j].dataId) {
+                            treeviewId.treeview('checkNode', [unCheckeds[j], {silent: true}]);
+                            break;
+                        }
+                    }
+                }
             }
         });
     }

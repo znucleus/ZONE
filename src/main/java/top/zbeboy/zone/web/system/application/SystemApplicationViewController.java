@@ -53,7 +53,7 @@ public class SystemApplicationViewController {
             modelMap.addAttribute("systemApplication", application);
             page = "web/system/application/system_application_edit::#page-wrapper";
         } else {
-            config.buildDangerTip("查询错误", "未查询应用数据");
+            config.buildDangerTip("查询错误", "未查询到应用数据");
             config.dataMerging(modelMap);
             page = "inline_tip::#page-wrapper";
         }

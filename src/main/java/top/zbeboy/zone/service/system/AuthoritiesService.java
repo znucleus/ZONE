@@ -30,4 +30,11 @@ public interface AuthoritiesService {
      * @return exist
      */
     Select<AuthoritiesRecord> existsAuthoritiesSelect();
+
+    /**
+     * 通过权限删除
+     *
+     * @param authorities 权限
+     */
+    void deleteByAuthorities(String authorities);
 }

@@ -41,7 +41,7 @@ public class SystemRoleViewController {
             modelMap.addAttribute("role", role);
             page = "web/system/role/system_role_edit::#page-wrapper";
         } else {
-            config.buildDangerTip("查询错误", "未查询角色数据");
+            config.buildDangerTip("查询错误", "未查询到角色数据");
             config.dataMerging(modelMap);
             page = "inline_tip::#page-wrapper";
         }

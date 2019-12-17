@@ -17,6 +17,16 @@ public interface CollegeRoleService {
     Result<Record> findByRoleNameAndCollegeId(String roleName, int collegeId);
 
     /**
+     * 更新时根据角色名，院id和角色id查询校验
+     *
+     * @param roleName  角色名
+     * @param collegeId 院id
+     * @param roleId    角色id
+     * @return 数据
+     */
+    Result<Record> findByRoleNameAndCollegeIdNeRoleId(String roleName, int collegeId, String roleId);
+
+    /**
      * 分页查询
      *
      * @param dataTablesUtil 工具类
@@ -45,4 +55,11 @@ public interface CollegeRoleService {
      * @param collegeRole 数据
      */
     void save(CollegeRole collegeRole);
+
+    /**
+     * 通过角色id删除
+     *
+     * @param roleId 角色id
+     */
+    void deleteByRoleId(String roleId);
 }
