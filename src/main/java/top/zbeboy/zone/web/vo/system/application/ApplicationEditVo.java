@@ -4,27 +4,27 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 public class ApplicationEditVo {
-    @NotBlank
-    @Size(max = 64)
+    @NotBlank(message = "应用ID不能为空")
+    @Size(max = 64,message = "应用ID64个字符以内")
     private String applicationId;
-    @NotBlank
-    @Size(max = 30)
+    @NotBlank(message = "应用名不能为空")
+    @Size(max = 30, message = "应用名30个字符以内")
     private String applicationName;
     private int applicationSort;
-    @NotBlank
+    @NotBlank(message = "应用父ID不能为空")
     private String applicationPid;
-    @NotBlank
-    @Size(max = 300)
+    @NotBlank(message = "应用URL不能为空")
+    @Size(max = 300, message = "应用URL300个字符以内")
     private String applicationUrl;
-    @NotBlank
-    @Size(max = 100)
+    @NotBlank(message = "应用识别名不能为空")
+    @Size(max = 100, message = "应用识别名100个字符以内")
     private String applicationCode;
-    @NotBlank
-    @Size(max = 100)
+    @NotBlank(message = "应用英文名不能为空")
+    @Size(max = 100, message = "应用英文名100个字符以内")
     private String applicationEnName;
-    @Size(max = 20)
+    @Size(max = 20, message = "图标20个字符以内")
     private String icon;
-    @Size(max = 300)
+    @Size(max = 300, message = "应用过滤链300个字符以内")
     private String applicationDataUrlStartWith;
 
     public String getApplicationId() {
