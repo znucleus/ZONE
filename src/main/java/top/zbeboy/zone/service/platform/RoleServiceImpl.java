@@ -50,16 +50,6 @@ public class RoleServiceImpl implements RoleService, PaginationPlugin<DataTables
     }
 
     @Override
-    public Optional<Record> findCollegeByRoleId(String roleId) {
-        return create.select()
-                .from(ROLE)
-                .leftJoin(COLLEGE_ROLE)
-                .on(ROLE.ROLE_ID.eq(COLLEGE_ROLE.ROLE_ID))
-                .where(ROLE.ROLE_ID.eq(roleId))
-                .fetchOptional();
-    }
-
-    @Override
     public Role findByRoleEnName(String roleEnName) {
         return roleDao.fetchOneByRoleEnName(roleEnName);
     }

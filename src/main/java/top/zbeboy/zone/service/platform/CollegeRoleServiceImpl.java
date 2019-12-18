@@ -56,6 +56,16 @@ public class CollegeRoleServiceImpl implements CollegeRoleService, PaginationPlu
     }
 
     @Override
+    public Optional<Record> findByRoleIdRelation(String roleId) {
+        return create.select()
+                .from(COLLEGE_ROLE)
+                .leftJoin(ROLE)
+                .on(ROLE.ROLE_ID.eq(COLLEGE_ROLE.ROLE_ID))
+                .where(ROLE.ROLE_ID.eq(roleId))
+                .fetchOptional();
+    }
+
+    @Override
     public Result<Record> findByRoleNameAndCollegeId(String roleName, int collegeId) {
         return create.select()
                 .from(COLLEGE_ROLE)
@@ -143,7 +153,7 @@ public class CollegeRoleServiceImpl implements CollegeRoleService, PaginationPlu
                 if (Objects.isNull(a)) {
                     a = SCHOOL.SCHOOL_NAME.like(SQLQueryUtil.likeAllParam(schoolName));
                 } else {
-                    a.and(SCHOOL.SCHOOL_NAME.like(SQLQueryUtil.likeAllParam(schoolName)));
+                    a = a.and(SCHOOL.SCHOOL_NAME.like(SQLQueryUtil.likeAllParam(schoolName)));
                 }
             }
 
@@ -151,7 +161,7 @@ public class CollegeRoleServiceImpl implements CollegeRoleService, PaginationPlu
                 if (Objects.isNull(a)) {
                     a = COLLEGE.COLLEGE_NAME.like(SQLQueryUtil.likeAllParam(collegeName));
                 } else {
-                    a.and(COLLEGE.COLLEGE_NAME.like(SQLQueryUtil.likeAllParam(collegeName)));
+                    a = a.and(COLLEGE.COLLEGE_NAME.like(SQLQueryUtil.likeAllParam(collegeName)));
                 }
             }
         }
@@ -246,7 +256,7 @@ public class CollegeRoleServiceImpl implements CollegeRoleService, PaginationPlu
                     if (Objects.isNull(a)) {
                         a = COLLEGE.COLLEGE_ID.eq(collegeId);
                     } else {
-                        a.and(COLLEGE.COLLEGE_ID.eq(collegeId));
+                        a = a.and(COLLEGE.COLLEGE_ID.eq(collegeId));
                     }
                 }
             }

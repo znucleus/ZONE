@@ -395,7 +395,7 @@ public interface PaginationPlugin<S extends PaginationUtil> {
             if (Objects.nonNull(a)) {
                 Condition b = extraCondition(paginationUtil);
                 if (Objects.nonNull(b)) {
-                    a.and(b);
+                    a = a.and(b);
                 }
             } else {
                 a = extraCondition(paginationUtil);

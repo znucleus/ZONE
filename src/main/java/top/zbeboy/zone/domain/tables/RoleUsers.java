@@ -15,7 +15,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row12;
+import org.jooq.Row13;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -42,7 +42,7 @@ import top.zbeboy.zone.domain.tables.records.RoleUsersRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class RoleUsers extends TableImpl<RoleUsersRecord> {
 
-    private static final long serialVersionUID = 644200257;
+    private static final long serialVersionUID = 647908959;
 
     /**
      * The reference instance of <code>zone.role_users</code>
@@ -90,7 +90,12 @@ public class RoleUsers extends TableImpl<RoleUsersRecord> {
     /**
      * The column <code>zone.role_users.duration</code>.
      */
-    public final TableField<RoleUsersRecord, String> DURATION = createField(DSL.name("duration"), org.jooq.impl.SQLDataType.VARCHAR(5), this, "");
+    public final TableField<RoleUsersRecord, String> DURATION = createField(DSL.name("duration"), org.jooq.impl.SQLDataType.VARCHAR(5).nullable(false), this, "");
+
+    /**
+     * The column <code>zone.role_users.reason</code>.
+     */
+    public final TableField<RoleUsersRecord, String> REASON = createField(DSL.name("reason"), org.jooq.impl.SQLDataType.VARCHAR(200).nullable(false), this, "");
 
     /**
      * The column <code>zone.role_users.valid_date</code>.
@@ -214,11 +219,11 @@ public class RoleUsers extends TableImpl<RoleUsersRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row12 type methods
+    // Row13 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row12<String, String, String, Byte, String, String, String, Timestamp, Timestamp, Timestamp, Byte, String> fieldsRow() {
-        return (Row12) super.fieldsRow();
+    public Row13<String, String, String, Byte, String, String, String, String, Timestamp, Timestamp, Timestamp, Byte, String> fieldsRow() {
+        return (Row13) super.fieldsRow();
     }
 }

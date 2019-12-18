@@ -1,6 +1,6 @@
 //# sourceURL=role_data.js
-require(["jquery", "lodash_plugin", "handlebars", "nav.active", "responsive.bootstrap4", "jquery.address", "messenger"],
-    function ($, DP, Handlebars, navActive) {
+require(["jquery", "lodash_plugin", "sweetalert2", "handlebars", "nav.active", "responsive.bootstrap4", "jquery.address", "messenger"],
+    function ($, DP, Swal, Handlebars, navActive) {
 
         /*
          参数

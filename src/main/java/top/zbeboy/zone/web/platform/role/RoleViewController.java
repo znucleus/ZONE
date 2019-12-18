@@ -109,7 +109,7 @@ public class RoleViewController {
     public String edit(@PathVariable("id") String id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        Optional<Record> record = roleService.findCollegeByRoleId(id);
+        Optional<Record> record = collegeRoleService.findByRoleIdRelation(id);
         if (record.isPresent()) {
             RoleBean role = record.get().into(RoleBean.class);
             modelMap.addAttribute("role", role);

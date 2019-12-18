@@ -89,15 +89,16 @@ CREATE TABLE role_users(
    data_scope TINYINT NOT NULL,
    data_id VARCHAR(30) NOT NULL,
    role_id VARCHAR(200) NOT NULL,
-   duration VARCHAR(5),
+   duration VARCHAR(5) NOT NULL,
+   reason VARCHAR(200) NOT NULL,
    valid_date DATETIME NOT NULL,
    expire_date DATETIME NOT NULL,
    create_date DATETIME NOT NULL,
    apply_status TINYINT NOT NULL,
    approver VARCHAR(64) NOT NULL,
-   FOREIGN KEY (username) REFERENCES users(username),
+   FOREIGN KEY (username) REFERENCES users(username) ON UPDATE CASCADE ON DELETE CASCADE,
    FOREIGN KEY (authorize_type_id) REFERENCES authorize_type(authorize_type_id),
-   FOREIGN KEY (approver) REFERENCES users(username)
+   FOREIGN KEY (approver) REFERENCES users(username) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE school (

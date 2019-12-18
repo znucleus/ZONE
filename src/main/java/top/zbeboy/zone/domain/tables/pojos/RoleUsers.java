@@ -25,7 +25,7 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class RoleUsers implements Serializable {
 
-    private static final long serialVersionUID = -1453859907;
+    private static final long serialVersionUID = -561173630;
 
     private String    roleUsersId;
     private String    username;
@@ -34,6 +34,7 @@ public class RoleUsers implements Serializable {
     private String    dataId;
     private String    roleId;
     private String    duration;
+    private String    reason;
     private Timestamp validDate;
     private Timestamp expireDate;
     private Timestamp createDate;
@@ -50,6 +51,7 @@ public class RoleUsers implements Serializable {
         this.dataId = value.dataId;
         this.roleId = value.roleId;
         this.duration = value.duration;
+        this.reason = value.reason;
         this.validDate = value.validDate;
         this.expireDate = value.expireDate;
         this.createDate = value.createDate;
@@ -65,6 +67,7 @@ public class RoleUsers implements Serializable {
         String    dataId,
         String    roleId,
         String    duration,
+        String    reason,
         Timestamp validDate,
         Timestamp expireDate,
         Timestamp createDate,
@@ -78,6 +81,7 @@ public class RoleUsers implements Serializable {
         this.dataId = dataId;
         this.roleId = roleId;
         this.duration = duration;
+        this.reason = reason;
         this.validDate = validDate;
         this.expireDate = expireDate;
         this.createDate = createDate;
@@ -144,6 +148,7 @@ public class RoleUsers implements Serializable {
         this.roleId = roleId;
     }
 
+    @NotNull
     @Size(max = 5)
     public String getDuration() {
         return this.duration;
@@ -151,6 +156,16 @@ public class RoleUsers implements Serializable {
 
     public void setDuration(String duration) {
         this.duration = duration;
+    }
+
+    @NotNull
+    @Size(max = 200)
+    public String getReason() {
+        return this.reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 
     @NotNull
@@ -210,6 +225,7 @@ public class RoleUsers implements Serializable {
         sb.append(", ").append(dataId);
         sb.append(", ").append(roleId);
         sb.append(", ").append(duration);
+        sb.append(", ").append(reason);
         sb.append(", ").append(validDate);
         sb.append(", ").append(expireDate);
         sb.append(", ").append(createDate);

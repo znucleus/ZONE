@@ -7,7 +7,6 @@ import top.zbeboy.zone.domain.tables.pojos.Role;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface RoleService {
 
@@ -18,14 +17,6 @@ public interface RoleService {
      * @return 角色
      */
     Role findById(String id);
-
-    /**
-     * 根据角色id关联查询院id
-     *
-     * @param roleId 角色id
-     * @return 数据
-     */
-    Optional<Record> findCollegeByRoleId(String roleId);
 
     /**
      * 通过角色名查询

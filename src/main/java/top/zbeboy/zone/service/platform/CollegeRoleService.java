@@ -5,7 +5,17 @@ import org.jooq.Result;
 import top.zbeboy.zone.domain.tables.pojos.CollegeRole;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
+import java.util.Optional;
+
 public interface CollegeRoleService {
+
+    /**
+     * 根据角色id关联查询院id
+     *
+     * @param roleId 角色id
+     * @return 数据
+     */
+    Optional<Record> findByRoleIdRelation(String roleId);
 
     /**
      * 通过角色名和院id查询

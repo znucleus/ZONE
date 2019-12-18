@@ -158,6 +158,20 @@ public class RoleUsersDao extends DAOImpl<RoleUsersRecord, top.zbeboy.zone.domai
     }
 
     /**
+     * Fetch records that have <code>reason BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.RoleUsers> fetchRangeOfReason(String lowerInclusive, String upperInclusive) {
+        return fetchRange(RoleUsers.ROLE_USERS.REASON, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>reason IN (values)</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.RoleUsers> fetchByReason(String... values) {
+        return fetch(RoleUsers.ROLE_USERS.REASON, values);
+    }
+
+    /**
      * Fetch records that have <code>valid_date BETWEEN lowerInclusive AND upperInclusive</code>
      */
     public List<top.zbeboy.zone.domain.tables.pojos.RoleUsers> fetchRangeOfValidDate(Timestamp lowerInclusive, Timestamp upperInclusive) {
