@@ -219,7 +219,6 @@ public class Keys {
     public static final ForeignKey<RoleApplicationRecord, ApplicationRecord> ROLE_APPLICATION_IBFK_2 = ForeignKeys0.ROLE_APPLICATION_IBFK_2;
     public static final ForeignKey<RoleUsersRecord, UsersRecord> ROLE_USERS_IBFK_1 = ForeignKeys0.ROLE_USERS_IBFK_1;
     public static final ForeignKey<RoleUsersRecord, AuthorizeTypeRecord> ROLE_USERS_IBFK_2 = ForeignKeys0.ROLE_USERS_IBFK_2;
-    public static final ForeignKey<RoleUsersRecord, UsersRecord> ROLE_USERS_IBFK_3 = ForeignKeys0.ROLE_USERS_IBFK_3;
     public static final ForeignKey<SchoolroomRecord, BuildingRecord> SCHOOLROOM_IBFK_1 = ForeignKeys0.SCHOOLROOM_IBFK_1;
     public static final ForeignKey<ScienceRecord, DepartmentRecord> SCIENCE_IBFK_1 = ForeignKeys0.SCIENCE_IBFK_1;
     public static final ForeignKey<StaffRecord, DepartmentRecord> STAFF_IBFK_1 = ForeignKeys0.STAFF_IBFK_1;
@@ -347,7 +346,6 @@ public class Keys {
         public static final ForeignKey<RoleApplicationRecord, ApplicationRecord> ROLE_APPLICATION_IBFK_2 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_APPLICATION_PRIMARY, RoleApplication.ROLE_APPLICATION, "role_application_ibfk_2", RoleApplication.ROLE_APPLICATION.APPLICATION_ID);
         public static final ForeignKey<RoleUsersRecord, UsersRecord> ROLE_USERS_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_USERS_PRIMARY, RoleUsers.ROLE_USERS, "role_users_ibfk_1", RoleUsers.ROLE_USERS.USERNAME);
         public static final ForeignKey<RoleUsersRecord, AuthorizeTypeRecord> ROLE_USERS_IBFK_2 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_AUTHORIZE_TYPE_PRIMARY, RoleUsers.ROLE_USERS, "role_users_ibfk_2", RoleUsers.ROLE_USERS.AUTHORIZE_TYPE_ID);
-        public static final ForeignKey<RoleUsersRecord, UsersRecord> ROLE_USERS_IBFK_3 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_USERS_PRIMARY, RoleUsers.ROLE_USERS, "role_users_ibfk_3", RoleUsers.ROLE_USERS.APPROVER);
         public static final ForeignKey<SchoolroomRecord, BuildingRecord> SCHOOLROOM_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_BUILDING_PRIMARY, Schoolroom.SCHOOLROOM, "schoolroom_ibfk_1", Schoolroom.SCHOOLROOM.BUILDING_ID);
         public static final ForeignKey<ScienceRecord, DepartmentRecord> SCIENCE_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_DEPARTMENT_PRIMARY, Science.SCIENCE, "science_ibfk_1", Science.SCIENCE.DEPARTMENT_ID);
         public static final ForeignKey<StaffRecord, DepartmentRecord> STAFF_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_DEPARTMENT_PRIMARY, Staff.STAFF, "staff_ibfk_1", Staff.STAFF.DEPARTMENT_ID);

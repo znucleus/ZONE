@@ -95,10 +95,8 @@ CREATE TABLE role_users(
    expire_date DATETIME NOT NULL,
    create_date DATETIME NOT NULL,
    apply_status TINYINT NOT NULL,
-   approver VARCHAR(64) NOT NULL,
    FOREIGN KEY (username) REFERENCES users(username) ON UPDATE CASCADE ON DELETE CASCADE,
-   FOREIGN KEY (authorize_type_id) REFERENCES authorize_type(authorize_type_id),
-   FOREIGN KEY (approver) REFERENCES users(username) ON UPDATE CASCADE ON DELETE CASCADE
+   FOREIGN KEY (authorize_type_id) REFERENCES authorize_type(authorize_type_id)
 );
 
 CREATE TABLE school (

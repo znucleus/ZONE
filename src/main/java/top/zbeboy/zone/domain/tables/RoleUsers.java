@@ -15,7 +15,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row13;
+import org.jooq.Row12;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -42,7 +42,7 @@ import top.zbeboy.zone.domain.tables.records.RoleUsersRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class RoleUsers extends TableImpl<RoleUsersRecord> {
 
-    private static final long serialVersionUID = 647908959;
+    private static final long serialVersionUID = -805398152;
 
     /**
      * The reference instance of <code>zone.role_users</code>
@@ -118,11 +118,6 @@ public class RoleUsers extends TableImpl<RoleUsersRecord> {
     public final TableField<RoleUsersRecord, Byte> APPLY_STATUS = createField(DSL.name("apply_status"), org.jooq.impl.SQLDataType.TINYINT.nullable(false), this, "");
 
     /**
-     * The column <code>zone.role_users.approver</code>.
-     */
-    public final TableField<RoleUsersRecord, String> APPROVER = createField(DSL.name("approver"), org.jooq.impl.SQLDataType.VARCHAR(64).nullable(false), this, "");
-
-    /**
      * Create a <code>zone.role_users</code> table reference
      */
     public RoleUsers() {
@@ -162,7 +157,7 @@ public class RoleUsers extends TableImpl<RoleUsersRecord> {
 
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.ROLE_USERS_APPROVER, Indexes.ROLE_USERS_AUTHORIZE_TYPE_ID, Indexes.ROLE_USERS_PRIMARY, Indexes.ROLE_USERS_USERNAME);
+        return Arrays.<Index>asList(Indexes.ROLE_USERS_AUTHORIZE_TYPE_ID, Indexes.ROLE_USERS_PRIMARY, Indexes.ROLE_USERS_USERNAME);
     }
 
     @Override
@@ -177,19 +172,15 @@ public class RoleUsers extends TableImpl<RoleUsersRecord> {
 
     @Override
     public List<ForeignKey<RoleUsersRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<RoleUsersRecord, ?>>asList(Keys.ROLE_USERS_IBFK_1, Keys.ROLE_USERS_IBFK_2, Keys.ROLE_USERS_IBFK_3);
+        return Arrays.<ForeignKey<RoleUsersRecord, ?>>asList(Keys.ROLE_USERS_IBFK_1, Keys.ROLE_USERS_IBFK_2);
     }
 
-    public Users roleUsersIbfk_1() {
+    public Users users() {
         return new Users(this, Keys.ROLE_USERS_IBFK_1);
     }
 
     public AuthorizeType authorizeType() {
         return new AuthorizeType(this, Keys.ROLE_USERS_IBFK_2);
-    }
-
-    public Users roleUsersIbfk_3() {
-        return new Users(this, Keys.ROLE_USERS_IBFK_3);
     }
 
     @Override
@@ -219,11 +210,11 @@ public class RoleUsers extends TableImpl<RoleUsersRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row13 type methods
+    // Row12 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row13<String, String, String, Byte, String, String, String, String, Timestamp, Timestamp, Timestamp, Byte, String> fieldsRow() {
-        return (Row13) super.fieldsRow();
+    public Row12<String, String, String, Byte, String, String, String, String, Timestamp, Timestamp, Timestamp, Byte> fieldsRow() {
+        return (Row12) super.fieldsRow();
     }
 }

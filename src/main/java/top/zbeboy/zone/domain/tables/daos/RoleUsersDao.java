@@ -226,18 +226,4 @@ public class RoleUsersDao extends DAOImpl<RoleUsersRecord, top.zbeboy.zone.domai
     public List<top.zbeboy.zone.domain.tables.pojos.RoleUsers> fetchByApplyStatus(Byte... values) {
         return fetch(RoleUsers.ROLE_USERS.APPLY_STATUS, values);
     }
-
-    /**
-     * Fetch records that have <code>approver BETWEEN lowerInclusive AND upperInclusive</code>
-     */
-    public List<top.zbeboy.zone.domain.tables.pojos.RoleUsers> fetchRangeOfApprover(String lowerInclusive, String upperInclusive) {
-        return fetchRange(RoleUsers.ROLE_USERS.APPROVER, lowerInclusive, upperInclusive);
-    }
-
-    /**
-     * Fetch records that have <code>approver IN (values)</code>
-     */
-    public List<top.zbeboy.zone.domain.tables.pojos.RoleUsers> fetchByApprover(String... values) {
-        return fetch(RoleUsers.ROLE_USERS.APPROVER, values);
-    }
 }

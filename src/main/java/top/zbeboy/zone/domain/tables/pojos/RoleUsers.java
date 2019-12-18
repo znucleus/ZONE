@@ -25,7 +25,7 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class RoleUsers implements Serializable {
 
-    private static final long serialVersionUID = -561173630;
+    private static final long serialVersionUID = 699175898;
 
     private String    roleUsersId;
     private String    username;
@@ -39,7 +39,6 @@ public class RoleUsers implements Serializable {
     private Timestamp expireDate;
     private Timestamp createDate;
     private Byte      applyStatus;
-    private String    approver;
 
     public RoleUsers() {}
 
@@ -56,7 +55,6 @@ public class RoleUsers implements Serializable {
         this.expireDate = value.expireDate;
         this.createDate = value.createDate;
         this.applyStatus = value.applyStatus;
-        this.approver = value.approver;
     }
 
     public RoleUsers(
@@ -71,8 +69,7 @@ public class RoleUsers implements Serializable {
         Timestamp validDate,
         Timestamp expireDate,
         Timestamp createDate,
-        Byte      applyStatus,
-        String    approver
+        Byte      applyStatus
     ) {
         this.roleUsersId = roleUsersId;
         this.username = username;
@@ -86,7 +83,6 @@ public class RoleUsers implements Serializable {
         this.expireDate = expireDate;
         this.createDate = createDate;
         this.applyStatus = applyStatus;
-        this.approver = approver;
     }
 
     @NotNull
@@ -204,16 +200,6 @@ public class RoleUsers implements Serializable {
         this.applyStatus = applyStatus;
     }
 
-    @NotNull
-    @Size(max = 64)
-    public String getApprover() {
-        return this.approver;
-    }
-
-    public void setApprover(String approver) {
-        this.approver = approver;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("RoleUsers (");
@@ -230,7 +216,6 @@ public class RoleUsers implements Serializable {
         sb.append(", ").append(expireDate);
         sb.append(", ").append(createDate);
         sb.append(", ").append(applyStatus);
-        sb.append(", ").append(approver);
 
         sb.append(")");
         return sb.toString();
