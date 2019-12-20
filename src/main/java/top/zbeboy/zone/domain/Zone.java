@@ -37,7 +37,7 @@ import top.zbeboy.zone.domain.tables.Organize;
 import top.zbeboy.zone.domain.tables.PoliticalLandscape;
 import top.zbeboy.zone.domain.tables.Role;
 import top.zbeboy.zone.domain.tables.RoleApplication;
-import top.zbeboy.zone.domain.tables.RoleUsers;
+import top.zbeboy.zone.domain.tables.RoleApply;
 import top.zbeboy.zone.domain.tables.School;
 import top.zbeboy.zone.domain.tables.Schoolroom;
 import top.zbeboy.zone.domain.tables.Science;
@@ -72,7 +72,7 @@ import top.zbeboy.zone.domain.tables.UsersType;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Zone extends SchemaImpl {
 
-    private static final long serialVersionUID = -20842970;
+    private static final long serialVersionUID = 487270950;
 
     /**
      * The reference instance of <code>zone</code>
@@ -195,9 +195,9 @@ public class Zone extends SchemaImpl {
     public final RoleApplication ROLE_APPLICATION = top.zbeboy.zone.domain.tables.RoleApplication.ROLE_APPLICATION;
 
     /**
-     * The table <code>zone.role_users</code>.
+     * The table <code>zone.role_apply</code>.
      */
-    public final RoleUsers ROLE_USERS = top.zbeboy.zone.domain.tables.RoleUsers.ROLE_USERS;
+    public final RoleApply ROLE_APPLY = top.zbeboy.zone.domain.tables.RoleApply.ROLE_APPLY;
 
     /**
      * The table <code>zone.school</code>.
@@ -339,7 +339,7 @@ public class Zone extends SchemaImpl {
             PoliticalLandscape.POLITICAL_LANDSCAPE,
             Role.ROLE,
             RoleApplication.ROLE_APPLICATION,
-            RoleUsers.ROLE_USERS,
+            RoleApply.ROLE_APPLY,
             School.SCHOOL,
             Schoolroom.SCHOOLROOM,
             Science.SCIENCE,

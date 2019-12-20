@@ -29,7 +29,7 @@ import top.zbeboy.zone.domain.tables.Organize;
 import top.zbeboy.zone.domain.tables.PoliticalLandscape;
 import top.zbeboy.zone.domain.tables.Role;
 import top.zbeboy.zone.domain.tables.RoleApplication;
-import top.zbeboy.zone.domain.tables.RoleUsers;
+import top.zbeboy.zone.domain.tables.RoleApply;
 import top.zbeboy.zone.domain.tables.School;
 import top.zbeboy.zone.domain.tables.Schoolroom;
 import top.zbeboy.zone.domain.tables.Science;
@@ -180,9 +180,9 @@ public class Tables {
     public static final RoleApplication ROLE_APPLICATION = RoleApplication.ROLE_APPLICATION;
 
     /**
-     * The table <code>zone.role_users</code>.
+     * The table <code>zone.role_apply</code>.
      */
-    public static final RoleUsers ROLE_USERS = RoleUsers.ROLE_USERS;
+    public static final RoleApply ROLE_APPLY = RoleApply.ROLE_APPLY;
 
     /**
      * The table <code>zone.school</code>.

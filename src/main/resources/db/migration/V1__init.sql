@@ -77,28 +77,6 @@ CREATE TABLE role_application (
     PRIMARY KEY (role_id , application_id)
 );
 
-CREATE TABLE authorize_type(
-  authorize_type_id VARCHAR(64) PRIMARY KEY ,
-  authorize_type_name VARCHAR(100) NOT NULL UNIQUE
-);
-
-CREATE TABLE role_users(
-   role_users_id VARCHAR(64) PRIMARY KEY ,
-   username VARCHAR(64) NOT NULL,
-   authorize_type_id VARCHAR(64) NOT NULL,
-   data_scope TINYINT NOT NULL,
-   data_id VARCHAR(30) NOT NULL,
-   role_id VARCHAR(200) NOT NULL,
-   duration VARCHAR(5) NOT NULL,
-   reason VARCHAR(200) NOT NULL,
-   valid_date DATETIME NOT NULL,
-   expire_date DATETIME NOT NULL,
-   create_date DATETIME NOT NULL,
-   apply_status TINYINT NOT NULL,
-   FOREIGN KEY (username) REFERENCES users(username) ON UPDATE CASCADE ON DELETE CASCADE,
-   FOREIGN KEY (authorize_type_id) REFERENCES authorize_type(authorize_type_id)
-);
-
 CREATE TABLE school (
     school_id INT AUTO_INCREMENT PRIMARY KEY,
     school_name VARCHAR(200) NOT NULL,
@@ -225,6 +203,29 @@ CREATE TABLE staff (
         REFERENCES department (department_id),
     FOREIGN KEY (username)
         REFERENCES users (username) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE authorize_type(
+  authorize_type_id INT AUTO_INCREMENT PRIMARY KEY ,
+  authorize_type_name VARCHAR(100) NOT NULL UNIQUE
+);
+
+CREATE TABLE role_apply(
+   role_apply_id VARCHAR(64) PRIMARY KEY ,
+   username VARCHAR(64) NOT NULL,
+   authorize_type_id INT NOT NULL,
+   organize_id INT NOT NULL,
+   role_id VARCHAR(64) NOT NULL,
+   duration VARCHAR(5) NOT NULL,
+   reason VARCHAR(200) NOT NULL,
+   valid_date DATETIME NOT NULL,
+   expire_date DATETIME NOT NULL,
+   create_date DATETIME NOT NULL,
+   apply_status TINYINT NOT NULL,
+   FOREIGN KEY (username) REFERENCES users(username) ON UPDATE CASCADE ON DELETE CASCADE,
+   FOREIGN KEY (authorize_type_id) REFERENCES authorize_type(authorize_type_id),
+   FOREIGN KEY (organize_id) REFERENCES organize(organize_id),
+   FOREIGN KEY (role_id) REFERENCES role(role_id)
 );
 
 CREATE TABLE system_configure(
@@ -815,6 +816,8 @@ INSERT INTO academic_title (academic_title_name) VALUES ('高级实验师');
 INSERT INTO academic_title (academic_title_name) VALUES ('副研究员');
 INSERT INTO academic_title (academic_title_name) VALUES ('研究员');
 INSERT INTO academic_title (academic_title_name) VALUES ('助理研究员');
+
+INSERT INTO authorize_type (authorize_type_name) VALUES ('数据审核');
 
 INSERT INTO system_configure (data_key, data_value) VALUES ('MAIL_SWITCH','1');
 INSERT INTO system_configure (data_key, data_value) VALUES ('MOBILE_SWITCH','1');

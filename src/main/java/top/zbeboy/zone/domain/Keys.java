@@ -34,7 +34,7 @@ import top.zbeboy.zone.domain.tables.Organize;
 import top.zbeboy.zone.domain.tables.PoliticalLandscape;
 import top.zbeboy.zone.domain.tables.Role;
 import top.zbeboy.zone.domain.tables.RoleApplication;
-import top.zbeboy.zone.domain.tables.RoleUsers;
+import top.zbeboy.zone.domain.tables.RoleApply;
 import top.zbeboy.zone.domain.tables.School;
 import top.zbeboy.zone.domain.tables.Schoolroom;
 import top.zbeboy.zone.domain.tables.Science;
@@ -76,8 +76,8 @@ import top.zbeboy.zone.domain.tables.records.NationRecord;
 import top.zbeboy.zone.domain.tables.records.OrganizeRecord;
 import top.zbeboy.zone.domain.tables.records.PoliticalLandscapeRecord;
 import top.zbeboy.zone.domain.tables.records.RoleApplicationRecord;
+import top.zbeboy.zone.domain.tables.records.RoleApplyRecord;
 import top.zbeboy.zone.domain.tables.records.RoleRecord;
-import top.zbeboy.zone.domain.tables.records.RoleUsersRecord;
 import top.zbeboy.zone.domain.tables.records.SchoolRecord;
 import top.zbeboy.zone.domain.tables.records.SchoolroomRecord;
 import top.zbeboy.zone.domain.tables.records.ScienceRecord;
@@ -118,6 +118,7 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final Identity<AcademicTitleRecord, Integer> IDENTITY_ACADEMIC_TITLE = Identities0.IDENTITY_ACADEMIC_TITLE;
+    public static final Identity<AuthorizeTypeRecord, Integer> IDENTITY_AUTHORIZE_TYPE = Identities0.IDENTITY_AUTHORIZE_TYPE;
     public static final Identity<CollegeRecord, Integer> IDENTITY_COLLEGE = Identities0.IDENTITY_COLLEGE;
     public static final Identity<DepartmentRecord, Integer> IDENTITY_DEPARTMENT = Identities0.IDENTITY_DEPARTMENT;
     public static final Identity<GradeRecord, Integer> IDENTITY_GRADE = Identities0.IDENTITY_GRADE;
@@ -161,7 +162,7 @@ public class Keys {
     public static final UniqueKey<RoleRecord> KEY_ROLE_PRIMARY = UniqueKeys0.KEY_ROLE_PRIMARY;
     public static final UniqueKey<RoleRecord> KEY_ROLE_ROLE_EN_NAME = UniqueKeys0.KEY_ROLE_ROLE_EN_NAME;
     public static final UniqueKey<RoleApplicationRecord> KEY_ROLE_APPLICATION_PRIMARY = UniqueKeys0.KEY_ROLE_APPLICATION_PRIMARY;
-    public static final UniqueKey<RoleUsersRecord> KEY_ROLE_USERS_PRIMARY = UniqueKeys0.KEY_ROLE_USERS_PRIMARY;
+    public static final UniqueKey<RoleApplyRecord> KEY_ROLE_APPLY_PRIMARY = UniqueKeys0.KEY_ROLE_APPLY_PRIMARY;
     public static final UniqueKey<SchoolRecord> KEY_SCHOOL_PRIMARY = UniqueKeys0.KEY_SCHOOL_PRIMARY;
     public static final UniqueKey<SchoolroomRecord> KEY_SCHOOLROOM_PRIMARY = UniqueKeys0.KEY_SCHOOLROOM_PRIMARY;
     public static final UniqueKey<ScienceRecord> KEY_SCIENCE_PRIMARY = UniqueKeys0.KEY_SCIENCE_PRIMARY;
@@ -217,8 +218,10 @@ public class Keys {
     public static final ForeignKey<OrganizeRecord, GradeRecord> ORGANIZE_IBFK_1 = ForeignKeys0.ORGANIZE_IBFK_1;
     public static final ForeignKey<RoleApplicationRecord, RoleRecord> ROLE_APPLICATION_IBFK_1 = ForeignKeys0.ROLE_APPLICATION_IBFK_1;
     public static final ForeignKey<RoleApplicationRecord, ApplicationRecord> ROLE_APPLICATION_IBFK_2 = ForeignKeys0.ROLE_APPLICATION_IBFK_2;
-    public static final ForeignKey<RoleUsersRecord, UsersRecord> ROLE_USERS_IBFK_1 = ForeignKeys0.ROLE_USERS_IBFK_1;
-    public static final ForeignKey<RoleUsersRecord, AuthorizeTypeRecord> ROLE_USERS_IBFK_2 = ForeignKeys0.ROLE_USERS_IBFK_2;
+    public static final ForeignKey<RoleApplyRecord, UsersRecord> ROLE_APPLY_IBFK_1 = ForeignKeys0.ROLE_APPLY_IBFK_1;
+    public static final ForeignKey<RoleApplyRecord, AuthorizeTypeRecord> ROLE_APPLY_IBFK_2 = ForeignKeys0.ROLE_APPLY_IBFK_2;
+    public static final ForeignKey<RoleApplyRecord, OrganizeRecord> ROLE_APPLY_IBFK_3 = ForeignKeys0.ROLE_APPLY_IBFK_3;
+    public static final ForeignKey<RoleApplyRecord, RoleRecord> ROLE_APPLY_IBFK_4 = ForeignKeys0.ROLE_APPLY_IBFK_4;
     public static final ForeignKey<SchoolroomRecord, BuildingRecord> SCHOOLROOM_IBFK_1 = ForeignKeys0.SCHOOLROOM_IBFK_1;
     public static final ForeignKey<ScienceRecord, DepartmentRecord> SCIENCE_IBFK_1 = ForeignKeys0.SCIENCE_IBFK_1;
     public static final ForeignKey<StaffRecord, DepartmentRecord> STAFF_IBFK_1 = ForeignKeys0.STAFF_IBFK_1;
@@ -249,6 +252,7 @@ public class Keys {
 
     private static class Identities0 {
         public static Identity<AcademicTitleRecord, Integer> IDENTITY_ACADEMIC_TITLE = Internal.createIdentity(AcademicTitle.ACADEMIC_TITLE, AcademicTitle.ACADEMIC_TITLE.ACADEMIC_TITLE_ID);
+        public static Identity<AuthorizeTypeRecord, Integer> IDENTITY_AUTHORIZE_TYPE = Internal.createIdentity(AuthorizeType.AUTHORIZE_TYPE, AuthorizeType.AUTHORIZE_TYPE.AUTHORIZE_TYPE_ID);
         public static Identity<CollegeRecord, Integer> IDENTITY_COLLEGE = Internal.createIdentity(College.COLLEGE, College.COLLEGE.COLLEGE_ID);
         public static Identity<DepartmentRecord, Integer> IDENTITY_DEPARTMENT = Internal.createIdentity(Department.DEPARTMENT, Department.DEPARTMENT.DEPARTMENT_ID);
         public static Identity<GradeRecord, Integer> IDENTITY_GRADE = Internal.createIdentity(Grade.GRADE, Grade.GRADE.GRADE_ID);
@@ -290,7 +294,7 @@ public class Keys {
         public static final UniqueKey<RoleRecord> KEY_ROLE_PRIMARY = Internal.createUniqueKey(Role.ROLE, "KEY_role_PRIMARY", Role.ROLE.ROLE_ID);
         public static final UniqueKey<RoleRecord> KEY_ROLE_ROLE_EN_NAME = Internal.createUniqueKey(Role.ROLE, "KEY_role_role_en_name", Role.ROLE.ROLE_EN_NAME);
         public static final UniqueKey<RoleApplicationRecord> KEY_ROLE_APPLICATION_PRIMARY = Internal.createUniqueKey(RoleApplication.ROLE_APPLICATION, "KEY_role_application_PRIMARY", RoleApplication.ROLE_APPLICATION.ROLE_ID, RoleApplication.ROLE_APPLICATION.APPLICATION_ID);
-        public static final UniqueKey<RoleUsersRecord> KEY_ROLE_USERS_PRIMARY = Internal.createUniqueKey(RoleUsers.ROLE_USERS, "KEY_role_users_PRIMARY", RoleUsers.ROLE_USERS.ROLE_USERS_ID);
+        public static final UniqueKey<RoleApplyRecord> KEY_ROLE_APPLY_PRIMARY = Internal.createUniqueKey(RoleApply.ROLE_APPLY, "KEY_role_apply_PRIMARY", RoleApply.ROLE_APPLY.ROLE_APPLY_ID);
         public static final UniqueKey<SchoolRecord> KEY_SCHOOL_PRIMARY = Internal.createUniqueKey(School.SCHOOL, "KEY_school_PRIMARY", School.SCHOOL.SCHOOL_ID);
         public static final UniqueKey<SchoolroomRecord> KEY_SCHOOLROOM_PRIMARY = Internal.createUniqueKey(Schoolroom.SCHOOLROOM, "KEY_schoolroom_PRIMARY", Schoolroom.SCHOOLROOM.SCHOOLROOM_ID);
         public static final UniqueKey<ScienceRecord> KEY_SCIENCE_PRIMARY = Internal.createUniqueKey(Science.SCIENCE, "KEY_science_PRIMARY", Science.SCIENCE.SCIENCE_ID);
@@ -344,8 +348,10 @@ public class Keys {
         public static final ForeignKey<OrganizeRecord, GradeRecord> ORGANIZE_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_GRADE_PRIMARY, Organize.ORGANIZE, "organize_ibfk_1", Organize.ORGANIZE.GRADE_ID);
         public static final ForeignKey<RoleApplicationRecord, RoleRecord> ROLE_APPLICATION_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_ROLE_PRIMARY, RoleApplication.ROLE_APPLICATION, "role_application_ibfk_1", RoleApplication.ROLE_APPLICATION.ROLE_ID);
         public static final ForeignKey<RoleApplicationRecord, ApplicationRecord> ROLE_APPLICATION_IBFK_2 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_APPLICATION_PRIMARY, RoleApplication.ROLE_APPLICATION, "role_application_ibfk_2", RoleApplication.ROLE_APPLICATION.APPLICATION_ID);
-        public static final ForeignKey<RoleUsersRecord, UsersRecord> ROLE_USERS_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_USERS_PRIMARY, RoleUsers.ROLE_USERS, "role_users_ibfk_1", RoleUsers.ROLE_USERS.USERNAME);
-        public static final ForeignKey<RoleUsersRecord, AuthorizeTypeRecord> ROLE_USERS_IBFK_2 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_AUTHORIZE_TYPE_PRIMARY, RoleUsers.ROLE_USERS, "role_users_ibfk_2", RoleUsers.ROLE_USERS.AUTHORIZE_TYPE_ID);
+        public static final ForeignKey<RoleApplyRecord, UsersRecord> ROLE_APPLY_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_USERS_PRIMARY, RoleApply.ROLE_APPLY, "role_apply_ibfk_1", RoleApply.ROLE_APPLY.USERNAME);
+        public static final ForeignKey<RoleApplyRecord, AuthorizeTypeRecord> ROLE_APPLY_IBFK_2 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_AUTHORIZE_TYPE_PRIMARY, RoleApply.ROLE_APPLY, "role_apply_ibfk_2", RoleApply.ROLE_APPLY.AUTHORIZE_TYPE_ID);
+        public static final ForeignKey<RoleApplyRecord, OrganizeRecord> ROLE_APPLY_IBFK_3 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_ORGANIZE_PRIMARY, RoleApply.ROLE_APPLY, "role_apply_ibfk_3", RoleApply.ROLE_APPLY.ORGANIZE_ID);
+        public static final ForeignKey<RoleApplyRecord, RoleRecord> ROLE_APPLY_IBFK_4 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_ROLE_PRIMARY, RoleApply.ROLE_APPLY, "role_apply_ibfk_4", RoleApply.ROLE_APPLY.ROLE_ID);
         public static final ForeignKey<SchoolroomRecord, BuildingRecord> SCHOOLROOM_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_BUILDING_PRIMARY, Schoolroom.SCHOOLROOM, "schoolroom_ibfk_1", Schoolroom.SCHOOLROOM.BUILDING_ID);
         public static final ForeignKey<ScienceRecord, DepartmentRecord> SCIENCE_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_DEPARTMENT_PRIMARY, Science.SCIENCE, "science_ibfk_1", Science.SCIENCE.DEPARTMENT_ID);
         public static final ForeignKey<StaffRecord, DepartmentRecord> STAFF_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_DEPARTMENT_PRIMARY, Staff.STAFF, "staff_ibfk_1", Staff.STAFF.DEPARTMENT_ID);

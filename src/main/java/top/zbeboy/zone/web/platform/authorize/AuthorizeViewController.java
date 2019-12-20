@@ -15,4 +15,14 @@ public class AuthorizeViewController {
     public String index() {
         return "web/platform/authorize/authorize_data::#page-wrapper";
     }
+
+    /**
+     * 申请
+     *
+     * @return 页面
+     */
+    @GetMapping("/web/platform/authorize/add")
+    public String add() {
+        return "web/platform/authorize/authorize_add::#page-wrapper";
+    }
 }

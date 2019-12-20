@@ -7,7 +7,28 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "responsive.bootst
         */
         var param = {
             username: '',
-            realName: ''
+            realName: '',
+            organizeName: '',
+            roleName: '',
+            dataRange: ''
+        };
+
+        var button_id = {
+            all: {
+                id: '#all',
+                text: '全部',
+                tip: '查询中...'
+            },
+            person: {
+                id: '#person',
+                text: '本人',
+                tip: '查询中...'
+            },
+            audit: {
+                id: '#audit',
+                text: '待审核',
+                tip: '查询中...'
+            }
         };
 
         /*
@@ -15,7 +36,10 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "responsive.bootst
        */
         var webStorageKey = {
             USERNAME: 'PLATFORM_AUTHORIZE_USERNAME_SEARCH',
-            REAL_NAME: 'PLATFORM_AUTHORIZE_REAL_NAME_SEARCH'
+            REAL_NAME: 'PLATFORM_AUTHORIZE_REAL_NAME_SEARCH',
+            ORGANIZE_NAME: 'PLATFORM_AUTHORIZE_ORGANIZE_NAME_SEARCH',
+            ROLE_NAME: 'PLATFORM_AUTHORIZE_ROLE_NAME_SEARCH',
+            DATA_RANGE: 'PLATFORM_AUTHORIZE_DATA_RANGE_SEARCH'
         };
 
         /*
@@ -43,6 +67,7 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "responsive.bootst
             searching: false,
             "processing": true, // 打开数据加载时的等待效果
             "serverSide": true,// 打开后台分页
+            "aaSorting": [[9, 'desc']],// 排序
             "ajax": {
                 "url": getAjaxUrl().data,
                 "dataSrc": "data",
@@ -57,9 +82,8 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "responsive.bootst
                 {"data": "realName"},
                 {"data": "username"},
                 {"data": "authorizeTypeName"},
-                {"data": "dataScope"},
-                {"data": "dataId"},
-                {"data": "roleId"},
+                {"data": "organizeName"},
+                {"data": "roleName"},
                 {"data": "duration"},
                 {"data": "validDate"},
                 {"data": "expireDate"},
@@ -70,7 +94,7 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "responsive.bootst
             ],
             columnDefs: [
                 {
-                    targets: 4,
+                    targets: 11,
                     orderable: false,
                     render: function (a, b, c, d) {
 
@@ -148,7 +172,10 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "responsive.bootst
         function getParamId() {
             return {
                 username: '#search_username',
-                realName: '#search_real_name'
+                realName: '#search_real_name',
+                organizeName: '#search_organize_name',
+                roleName: '#search_role_name',
+                dataRange: ''
             };
         }
 
@@ -165,9 +192,24 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "responsive.bootst
         function initParam() {
             param.username = $(getParamId().username).val();
             param.realName = $(getParamId().realName).val();
+            param.organizeName = $(getParamId().organizeName).val();
+            param.roleName = $(getParamId().roleName).val();
+
+
+            if ($(button_id.all.id).hasClass('active')) {
+                param.dataRange = '';
+            } else if ($(button_id.person.id).hasClass('active')) {
+                param.dataRange = 1;
+            } else if ($(button_id.audit.id).hasClass('active')) {
+                param.dataRange = 2;
+            }
+
             if (typeof(Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.USERNAME, param.username);
                 sessionStorage.setItem(webStorageKey.REAL_NAME, param.realName);
+                sessionStorage.setItem(webStorageKey.ORGANIZE_NAME, param.organizeName);
+                sessionStorage.setItem(webStorageKey.ROLE_NAME, param.roleName);
+                sessionStorage.setItem(webStorageKey.DATA_RANGE, param.dataRange);
             }
         }
 
@@ -177,9 +219,15 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "responsive.bootst
         function initSearchContent() {
             var username = null;
             var realName = null;
+            var organizeName = null;
+            var roleName = null;
+            var dataRange = null;
             if (typeof(Storage) !== "undefined") {
                 username = sessionStorage.getItem(webStorageKey.USERNAME);
                 realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
+                organizeName = sessionStorage.getItem(webStorageKey.ORGANIZE_NAME);
+                roleName = sessionStorage.getItem(webStorageKey.ROLE_NAME);
+                dataRange = sessionStorage.getItem(webStorageKey.DATA_RANGE);
             }
             if (username !== null) {
                 param.username = username;
@@ -187,6 +235,18 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "responsive.bootst
 
             if (realName !== null) {
                 param.realName = realName;
+            }
+
+            if (organizeName !== null) {
+                param.organizeName = organizeName;
+            }
+
+            if (roleName !== null) {
+                param.roleName = roleName;
+            }
+
+            if (dataRange !== null) {
+                param.dataRange = dataRange;
             }
         }
 
@@ -196,9 +256,15 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "responsive.bootst
         function initSearchInput() {
             var username = null;
             var realName = null;
+            var organizeName = null;
+            var roleName = null;
+            var dataRange = null;
             if (typeof(Storage) !== "undefined") {
                 username = sessionStorage.getItem(webStorageKey.USERNAME);
                 realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
+                organizeName = sessionStorage.getItem(webStorageKey.ORGANIZE_NAME);
+                roleName = sessionStorage.getItem(webStorageKey.ROLE_NAME);
+                dataRange = sessionStorage.getItem(webStorageKey.DATA_RANGE);
             }
             if (username !== null) {
                 $(getParamId().username).val(username);
@@ -206,6 +272,27 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "responsive.bootst
 
             if (realName !== null) {
                 $(getParamId().realName).val(realName);
+            }
+
+            if (organizeName !== null) {
+                $(getParamId().organizeName).val(organizeName);
+            }
+
+            if (roleName !== null) {
+                $(getParamId().roleName).val(roleName);
+            }
+
+            if (dataRange !== null) {
+                $(button_id.all.id).removeClass('active');
+                $(button_id.person.id).removeClass('active');
+                $(button_id.audit.id).removeClass('active');
+                if (Number(dataRange) === 1) {
+                    $(button_id.person.id).addClass('active');
+                } else if (Number(dataRange) === 2) {
+                    $(button_id.audit.id).addClass('active');
+                } else {
+                    $(button_id.all.id).addClass('active');
+                }
             }
         }
 
@@ -215,6 +302,8 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "responsive.bootst
         function cleanParam() {
             $(getParamId().username).val('');
             $(getParamId().realName).val('');
+            $(getParamId().organizeName).val('');
+            $(getParamId().roleName).val('');
         }
 
         $(getParamId().username).keyup(function (event) {
@@ -229,6 +318,47 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "responsive.bootst
                 initParam();
                 myTable.ajax.reload();
             }
+        });
+
+        $(getParamId().organizeName).keyup(function (event) {
+            if (event.keyCode === 13) {
+                initParam();
+                myTable.ajax.reload();
+            }
+        });
+
+        $(getParamId().roleName).keyup(function (event) {
+            if (event.keyCode === 13) {
+                initParam();
+                myTable.ajax.reload();
+            }
+        });
+
+        // 查询全部
+        $(button_id.all.id).click(function () {
+            $(button_id.all.id).addClass('active');
+            $(button_id.person.id).removeClass('active');
+            $(button_id.audit.id).removeClass('active');
+            initParam();
+            myTable.ajax.reload();
+        });
+
+        // 查询本人
+        $(button_id.person.id).click(function () {
+            $(button_id.all.id).removeClass('active');
+            $(button_id.person.id).addClass('active');
+            $(button_id.audit.id).removeClass('active');
+            initParam();
+            myTable.ajax.reload();
+        });
+
+        // 查询待审核
+        $(button_id.audit.id).click(function () {
+            $(button_id.all.id).removeClass('active');
+            $(button_id.person.id).removeClass('active');
+            $(button_id.audit.id).addClass('active');
+            initParam();
+            myTable.ajax.reload();
         });
 
         $('#search').click(function () {

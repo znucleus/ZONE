@@ -29,7 +29,7 @@ import top.zbeboy.zone.domain.tables.records.AuthorizeTypeRecord;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 @Repository
-public class AuthorizeTypeDao extends DAOImpl<AuthorizeTypeRecord, top.zbeboy.zone.domain.tables.pojos.AuthorizeType, String> {
+public class AuthorizeTypeDao extends DAOImpl<AuthorizeTypeRecord, top.zbeboy.zone.domain.tables.pojos.AuthorizeType, Integer> {
 
     /**
      * Create a new AuthorizeTypeDao without any configuration
@@ -47,28 +47,28 @@ public class AuthorizeTypeDao extends DAOImpl<AuthorizeTypeRecord, top.zbeboy.zo
     }
 
     @Override
-    public String getId(top.zbeboy.zone.domain.tables.pojos.AuthorizeType object) {
+    public Integer getId(top.zbeboy.zone.domain.tables.pojos.AuthorizeType object) {
         return object.getAuthorizeTypeId();
     }
 
     /**
      * Fetch records that have <code>authorize_type_id BETWEEN lowerInclusive AND upperInclusive</code>
      */
-    public List<top.zbeboy.zone.domain.tables.pojos.AuthorizeType> fetchRangeOfAuthorizeTypeId(String lowerInclusive, String upperInclusive) {
+    public List<top.zbeboy.zone.domain.tables.pojos.AuthorizeType> fetchRangeOfAuthorizeTypeId(Integer lowerInclusive, Integer upperInclusive) {
         return fetchRange(AuthorizeType.AUTHORIZE_TYPE.AUTHORIZE_TYPE_ID, lowerInclusive, upperInclusive);
     }
 
     /**
      * Fetch records that have <code>authorize_type_id IN (values)</code>
      */
-    public List<top.zbeboy.zone.domain.tables.pojos.AuthorizeType> fetchByAuthorizeTypeId(String... values) {
+    public List<top.zbeboy.zone.domain.tables.pojos.AuthorizeType> fetchByAuthorizeTypeId(Integer... values) {
         return fetch(AuthorizeType.AUTHORIZE_TYPE.AUTHORIZE_TYPE_ID, values);
     }
 
     /**
      * Fetch a unique record that has <code>authorize_type_id = value</code>
      */
-    public top.zbeboy.zone.domain.tables.pojos.AuthorizeType fetchOneByAuthorizeTypeId(String value) {
+    public top.zbeboy.zone.domain.tables.pojos.AuthorizeType fetchOneByAuthorizeTypeId(Integer value) {
         return fetchOne(AuthorizeType.AUTHORIZE_TYPE.AUTHORIZE_TYPE_ID, value);
     }
 

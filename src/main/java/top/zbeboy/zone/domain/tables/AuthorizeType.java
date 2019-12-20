@@ -11,6 +11,7 @@ import javax.annotation.Generated;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
+import org.jooq.Identity;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
@@ -41,7 +42,7 @@ import top.zbeboy.zone.domain.tables.records.AuthorizeTypeRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AuthorizeType extends TableImpl<AuthorizeTypeRecord> {
 
-    private static final long serialVersionUID = 1277289876;
+    private static final long serialVersionUID = -988035838;
 
     /**
      * The reference instance of <code>zone.authorize_type</code>
@@ -59,7 +60,7 @@ public class AuthorizeType extends TableImpl<AuthorizeTypeRecord> {
     /**
      * The column <code>zone.authorize_type.authorize_type_id</code>.
      */
-    public final TableField<AuthorizeTypeRecord, String> AUTHORIZE_TYPE_ID = createField(DSL.name("authorize_type_id"), org.jooq.impl.SQLDataType.VARCHAR(64).nullable(false), this, "");
+    public final TableField<AuthorizeTypeRecord, Integer> AUTHORIZE_TYPE_ID = createField(DSL.name("authorize_type_id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false).identity(true), this, "");
 
     /**
      * The column <code>zone.authorize_type.authorize_type_name</code>.
@@ -110,6 +111,11 @@ public class AuthorizeType extends TableImpl<AuthorizeTypeRecord> {
     }
 
     @Override
+    public Identity<AuthorizeTypeRecord, Integer> getIdentity() {
+        return Keys.IDENTITY_AUTHORIZE_TYPE;
+    }
+
+    @Override
     public UniqueKey<AuthorizeTypeRecord> getPrimaryKey() {
         return Keys.KEY_AUTHORIZE_TYPE_PRIMARY;
     }
@@ -150,7 +156,7 @@ public class AuthorizeType extends TableImpl<AuthorizeTypeRecord> {
     // -------------------------------------------------------------------------
 
     @Override
-    public Row2<String, String> fieldsRow() {
+    public Row2<Integer, String> fieldsRow() {
         return (Row2) super.fieldsRow();
     }
 }

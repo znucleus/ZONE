@@ -24,10 +24,10 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AuthorizeType implements Serializable {
 
-    private static final long serialVersionUID = 1740084586;
+    private static final long serialVersionUID = -1631483855;
 
-    private String authorizeTypeId;
-    private String authorizeTypeName;
+    private Integer authorizeTypeId;
+    private String  authorizeTypeName;
 
     public AuthorizeType() {}
 
@@ -37,20 +37,18 @@ public class AuthorizeType implements Serializable {
     }
 
     public AuthorizeType(
-        String authorizeTypeId,
-        String authorizeTypeName
+        Integer authorizeTypeId,
+        String  authorizeTypeName
     ) {
         this.authorizeTypeId = authorizeTypeId;
         this.authorizeTypeName = authorizeTypeName;
     }
 
-    @NotNull
-    @Size(max = 64)
-    public String getAuthorizeTypeId() {
+    public Integer getAuthorizeTypeId() {
         return this.authorizeTypeId;
     }
 
-    public void setAuthorizeTypeId(String authorizeTypeId) {
+    public void setAuthorizeTypeId(Integer authorizeTypeId) {
         this.authorizeTypeId = authorizeTypeId;
     }
 
