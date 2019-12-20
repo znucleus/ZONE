@@ -18,6 +18,14 @@ public interface CollegeRoleService {
     Optional<Record> findByRoleIdRelation(String roleId);
 
     /**
+     * 根据院id关联查询
+     *
+     * @param collegeId 院id
+     * @return 数据
+     */
+    Result<Record> findByCollegeIdRelation(int collegeId);
+
+    /**
      * 通过角色名和院id查询
      *
      * @param roleName  角色名

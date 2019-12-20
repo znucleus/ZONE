@@ -22,7 +22,7 @@ requirejs.config({
         "jquery.simple-pagination": web_path + "/plugins/jquery-simple-pagination/jquery.simplePagination.min",
         "dropify": web_path + "/plugins/file-uploads/js/dropify.min",
         "sweetalert2": web_path + "/plugins/sweetalert2/sweetalert2.all.min",
-        "select2": web_path + "/plugins/select2/js/select2.min",
+        "select2": web_path + "/plugins/select2/js/select2.full.min",
         "select2-zh-CN": web_path + "/plugins/select2/js/i18n/zh-CN.min",
         "bootstrap-inputmask": web_path + "/plugins/bootstrap-inputmask/bootstrap-inputmask.min",
         "bootstrap-maxlength": web_path + "/plugins/bootstrap-maxlength/bootstrap-maxlength.min",

@@ -66,6 +66,16 @@ public class CollegeRoleServiceImpl implements CollegeRoleService, PaginationPlu
     }
 
     @Override
+    public Result<Record> findByCollegeIdRelation(int collegeId) {
+        return create.select()
+                .from(COLLEGE_ROLE)
+                .leftJoin(ROLE)
+                .on(ROLE.ROLE_ID.eq(COLLEGE_ROLE.ROLE_ID))
+                .where(COLLEGE_ROLE.COLLEGE_ID.eq(collegeId))
+                .fetch();
+    }
+
+    @Override
     public Result<Record> findByRoleNameAndCollegeId(String roleName, int collegeId) {
         return create.select()
                 .from(COLLEGE_ROLE)

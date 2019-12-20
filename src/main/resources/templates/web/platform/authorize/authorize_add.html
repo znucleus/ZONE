@@ -49,19 +49,34 @@
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
-                            <label>生效时间:</label>
-                            <input type="text" class="form-control" id="validDate" name="validDate" placeholder="YYYY-MM-DD">
+                            <label>生效时间</label>
+                            <input type="text" class="form-control" id="validDate" name="validDate" placeholder="生效时间">
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
-                            <label>选择班级</label>
-                            <div class="col-sm-12">
-                                <div id="treeview-checkable"></div>
+                            <label>选择班级
+                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
+                                        data-target="#organizeModal">选择
+                                </button>
+                            </label>
+                            <div class="bd bd-gray-300 rounded table-responsive">
+                                <table class="table mg-b-0">
+                                    <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>班级名</th>
+                                        <th>操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="organizeData">
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                         <div class="form-group">
                             <label>申请原因</label>
-                            <textarea class="form-control" id="reason" name="reason" rows="3"></textarea>
+                            <textarea class="form-control" id="reason" name="reason" rows="3" maxlength="200"
+                                      placeholder="申请原因"></textarea>
                         </div>
                         <div class="form-group text-center">
                             <button type="button" class="btn btn-primary text-center" id="save">保存</button>
@@ -73,7 +88,105 @@
         </div>
     </div>
 
-    <input type="hidden" class="dy_script" th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/platform/authorize/authorize_add.js')}"/>
+    <!-- 班级Modal -->
+    <div id="organizeModal" class="modal fade">
+        <div class="modal-dialog modal-dialog-vertical-center" role="document">
+            <div class="modal-content bd-0 tx-14">
+                <div class="modal-header pd-y-20 pd-x-25">
+                    <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">选择班级</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body pd-25">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <select class="form-control select2-show-search" id="school" data-placeholder="请选择学校"
+                                        style="width: 100%;z-index:1050;">
+                                    <option label="请选择学校"></option>
+                                </select>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <select class="form-control select2-show-search" id="college" data-placeholder="请选择院"
+                                        style="width: 100%">
+                                    <option label="请选择院"></option>
+                                </select>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <select class="form-control select2-show-search" id="department" data-placeholder="请选择系"
+                                        style="width: 100%">
+                                    <option label="请选择系"></option>
+                                </select>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <select class="form-control select2-show-search" id="science" data-placeholder="请选择专业"
+                                        style="width: 100%">
+                                    <option label="请选择专业"></option>
+                                </select>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <select class="form-control select2-show-search" id="grade" data-placeholder="请选择年级"
+                                        style="width: 100%">
+                                    <option label="请选择年级"></option>
+                                </select>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <select class="form-control select2-show-search" id="organize" data-placeholder="请选择班级"
+                                        style="width: 100%">
+                                    <option label="请选择班级"></option>
+                                </select>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary tx-11 tx-uppercase pd-y-12 pd-x-25 tx-mont tx-medium"
+                            id="okOrganize">确定
+                    </button>
+                    <button type="button" class="btn btn-secondary tx-11 tx-uppercase pd-y-12 pd-x-25 tx-mont tx-medium"
+                            data-dismiss="modal">关闭
+                    </button>
+                </div>
+            </div>
+        </div><!-- modal-dialog -->
+    </div><!-- modal -->
+
+    <!--定义班级数据模板-->
+    <script id="organize_data" type="text/x-handlebars-template">
+        {{#each listResult}}
+        <tr>
+            <th scope="row" class="organizeId">{{organizeId}}</th>
+            <td>{{organizeName}}</td>
+            <td>
+                <button class="btn btn-danger btn-sm delOrganize">删除</button>
+            </td>
+        </tr>
+        {{/each}}
+    </script>
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/platform/authorize/authorize_add.js')}"/>
 </div>
 <!-- /#page-wrapper -->
 </body>
