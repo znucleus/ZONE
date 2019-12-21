@@ -54,6 +54,7 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "workbook", "respo
             return {
                 data: web_path + '/web/platform/authorize/data',
                 del: web_path + '/web/platform/authorize/delete',
+                status: web_path + '/web/platform/authorize/status',
                 check_edit_access: web_path + '/web/platform/authorize/check/edit/access',
                 add: '/web/platform/authorize/add',
                 edit: '/web/platform/authorize/edit',
@@ -236,6 +237,14 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "workbook", "respo
 
                 tableElement.delegate('.del', "click", function () {
                     authorize_del($(this).attr('data-id'));
+                });
+
+                tableElement.delegate('.pass', "click", function () {
+                    pass($(this).attr('data-id'));
+                });
+
+                tableElement.delegate('.refuse', "click", function () {
+                    refuse($(this).attr('data-id'));
                 });
                 // 初始化搜索框中内容
                 initSearchInput();
@@ -495,13 +504,45 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "workbook", "respo
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
                 preConfirm: function () {
-                    del(roleApplyId);
+                    sendDelAjax(roleApplyId);
                 }
             });
         }
 
-        function del(roleApplyId) {
-            sendDelAjax(roleApplyId);
+        /*
+         状态成功
+         */
+        function pass(roleApplyId) {
+            Swal.fire({
+                title: "确定通过该申请吗？",
+                text: "请谨慎操作！",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#41dd3f',
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                preConfirm: function () {
+                    sendStatusAjax(roleApplyId, 1);
+                }
+            });
+        }
+
+        /*
+         状态拒绝
+         */
+        function refuse(roleApplyId) {
+            Swal.fire({
+                title: "确定拒绝该申请吗？",
+                text: "请谨慎操作！",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#d6dd1f',
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                preConfirm: function () {
+                    sendStatusAjax(roleApplyId, 2);
+                }
+            });
         }
 
         /**
@@ -513,6 +554,37 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "workbook", "respo
                 type: 'POST',
                 url: getAjaxUrl().del,
                 data: {roleApplyId: roleApplyId},
+                success: function (data) {
+                    Messenger().post({
+                        message: data.msg,
+                        type: data.state ? 'success' : 'error',
+                        showCloseButton: true
+                    });
+
+                    if (data.state) {
+                        myTable.ajax.reload();
+                    }
+                },
+                error: function (XMLHttpRequest) {
+                    Messenger().post({
+                        message: 'Request error : ' + XMLHttpRequest.status + " " + XMLHttpRequest.statusText,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        }
+
+        /**
+         * 状态ajax
+         * @param roleApplyId
+         * @param status
+         */
+        function sendStatusAjax(roleApplyId, status) {
+            $.ajax({
+                type: 'POST',
+                url: getAjaxUrl().status,
+                data: {roleApplyId: roleApplyId, applyStatus: status},
                 success: function (data) {
                     Messenger().post({
                         message: data.msg,
