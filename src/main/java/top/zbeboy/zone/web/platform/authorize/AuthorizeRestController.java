@@ -285,9 +285,9 @@ public class AuthorizeRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
             rule2(ajaxUtil, authorizeEditVo.getRoleApplyId());
-            if(ajaxUtil.getState()){
+            if (ajaxUtil.getState()) {
                 RoleApply roleApply = roleApplyService.findById(authorizeEditVo.getRoleApplyId());
-                if(Objects.nonNull(roleApply)){
+                if (Objects.nonNull(roleApply)) {
                     roleApply.setAuthorizeTypeId(authorizeEditVo.getAuthorizeTypeId());
                     roleApply.setRoleId(authorizeEditVo.getRoleId());
                     roleApply.setDuration(getDuration(authorizeEditVo.getDuration()));
@@ -333,10 +333,35 @@ public class AuthorizeRestController {
     @PostMapping("/web/platform/authorize/delete")
     public ResponseEntity<Map<String, Object>> delete(@RequestParam("roleApplyId") String roleApplyId) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        rule3(ajaxUtil,roleApplyId);
-        if(ajaxUtil.getState()){
+        rule3(ajaxUtil, roleApplyId);
+        if (ajaxUtil.getState()) {
             roleApplyService.deleteById(roleApplyId);
             ajaxUtil.success().msg("删除成功");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 更新状态
+     *
+     * @param roleApplyId id
+     * @param applyStatus 状态
+     * @return true or false
+     */
+    @PostMapping("/web/platform/authorize/status")
+    public ResponseEntity<Map<String, Object>> status(@RequestParam("roleApplyId") String roleApplyId,
+                                                      @RequestParam("applyStatus") Byte applyStatus) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        rule4(ajaxUtil, roleApplyId);
+        if (ajaxUtil.getState()) {
+            RoleApply roleApply = roleApplyService.findById(roleApplyId);
+            if (Objects.nonNull(roleApply)) {
+                roleApply.setApplyStatus(applyStatus);
+                roleApplyService.update(roleApply);
+                ajaxUtil.success().msg("更新状态成功");
+            } else {
+                ajaxUtil.fail().msg("未查询到申请信息");
+            }
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
@@ -483,6 +508,45 @@ public class AuthorizeRestController {
             } else {
                 ajaxUtil.fail().msg("未查询到该申请信息");
             }
+        }
+    }
+
+    private void rule4(AjaxUtil<Map<String, Object>> ajaxUtil, String roleApplyId) {
+        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+            ajaxUtil.success().msg("可操作");
+        } else if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+            // 判断是否同一个院
+            Users users = usersService.getUserFromSession();
+            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
+            if (Objects.nonNull(usersType)) {
+                Optional<Record> record = Optional.empty();
+                if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
+                    record = staffService.findByUsernameRelation(users.getUsername());
+                } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
+                    record = studentService.findByUsernameRelation(users.getUsername());
+                }
+
+                if (record.isPresent()) {
+                    int collegeId = record.get().into(College.class).getCollegeId();
+                    Optional<Record> roleApplyRecord = roleApplyService.findByIdRelation(roleApplyId);
+                    if (roleApplyRecord.isPresent()) {
+                        RoleApplyBean roleApplyBean = roleApplyRecord.get().into(RoleApplyBean.class);
+                        if (collegeId == roleApplyBean.getCollegeId()) {
+                            ajaxUtil.success().msg("可操作");
+                        } else {
+                            ajaxUtil.fail().msg("该账号不在您所属院下，不允许操作");
+                        }
+                    } else {
+                        ajaxUtil.fail().msg("未查询到该申请信息");
+                    }
+                } else {
+                    ajaxUtil.fail().msg("未查询到该用户所属院信息");
+                }
+            } else {
+                ajaxUtil.fail().msg("未查询到该用户类型");
+            }
+        } else {
+            ajaxUtil.fail().msg("您无权限进行操作");
         }
     }
 

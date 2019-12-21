@@ -292,13 +292,9 @@ require(["jquery", "lodash_plugin", "sweetalert2", "handlebars", "nav.active", "
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
                 preConfirm: function () {
-                    del(roleId);
+                    sendDelAjax(roleId);
                 }
             });
-        }
-
-        function del(roleId) {
-            sendDelAjax(roleId);
         }
 
         /**
