@@ -97,24 +97,26 @@ public class AuthorizeRestController {
     /**
      * 根据全部权限类型
      *
+     * @param collegeId 院id
      * @return 数据
      */
     @GetMapping("/web/platform/authorize/role")
-    public ResponseEntity<Map<String, Object>> roleData() {
+    public ResponseEntity<Map<String, Object>> roleData(int collegeId) {
         Select2Data select2Data = Select2Data.of();
-        int collegeId = 0;
-        Users users = usersService.getUserFromSession();
-        UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-        if (Objects.nonNull(usersType)) {
-            Optional<Record> record = Optional.empty();
-            if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                record = staffService.findByUsernameRelation(users.getUsername());
-            } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                record = studentService.findByUsernameRelation(users.getUsername());
-            }
+        if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+            Users users = usersService.getUserFromSession();
+            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
+            if (Objects.nonNull(usersType)) {
+                Optional<Record> record = Optional.empty();
+                if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
+                    record = staffService.findByUsernameRelation(users.getUsername());
+                } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
+                    record = studentService.findByUsernameRelation(users.getUsername());
+                }
 
-            if (record.isPresent()) {
-                collegeId = record.get().into(College.class).getCollegeId();
+                if (record.isPresent()) {
+                    collegeId = record.get().into(College.class).getCollegeId();
+                }
             }
         }
 

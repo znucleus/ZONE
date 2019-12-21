@@ -59,7 +59,7 @@
                                         data-target="#organizeModal">选择
                                 </button>
                             </label>
-                            <div class="bd bd-gray-300 rounded table-responsive">
+                            <div class="bd bd-gray-300 rounded table-responsive" id="organizeId">
                                 <table class="table mg-b-0">
                                     <thead>
                                     <tr>
@@ -72,13 +72,15 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>申请原因</label>
                             <textarea class="form-control" id="reason" name="reason" rows="3" maxlength="200"
                                       placeholder="申请原因"></textarea>
+                            <div class="invalid-feedback"></div>
                         </div>
-                        <div class="form-group text-center">
+                        <div class="form-group text-center mt-5">
                             <button type="button" class="btn btn-primary text-center" id="save">保存</button>
                             <button type="reset" class="btn btn-default">重置</button>
                         </div>
@@ -103,7 +105,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <select class="form-control select2-show-search" id="school" data-placeholder="请选择学校"
-                                        style="width: 100%;z-index:1050;">
+                                        style="width: 100%;">
                                     <option label="请选择学校"></option>
                                 </select>
                                 <div class="invalid-feedback"></div>

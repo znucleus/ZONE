@@ -68,14 +68,22 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
      * 初始化参数
      */
     function initParam() {
-        param.authorizeTypeId = $(param_id.authorizeTypeId).val();
-        param.roleId = $(param_id.roleId).val();
+        param.authorizeTypeId = $(param_id.authorizeType).val();
+        param.roleId = $(param_id.role).val();
         param.duration = $(param_id.duration).val();
-        param.validDate = $(param_id.validDate).val() + ":00";
+
+        var validDate = $(param_id.validDate).val();
+        if (validDate !== '') {
+            param.validDate = $(param_id.validDate).val() + ":00";
+        } else {
+            param.validDate = '';
+        }
 
         var organize = $('.organizeId');
         if (organize && organize.length > 0) {
             param.organizeId = _.trim($(organize[0]).text());
+        } else {
+            param.organizeId = '';
         }
         param.reason = _.trim($(param_id.reason).val());
     }
@@ -83,7 +91,14 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
     $(param_id.validDate).flatpickr({
         "locale": "zh",
         enableTime: true,
-        dateFormat: "Y-m-d H:i"
+        dateFormat: "Y-m-d H:i",
+        onClose: function (selectedDates, dateStr, instance) {
+            if (dateStr !== '') {
+                tools.validSuccessDom(param_id.validDate);
+            } else {
+                tools.validErrorDom(param_id.validDate, '请选择生效时间');
+            }
+        }
     });
 
     /*
@@ -215,6 +230,32 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
         });
     }
 
+    $(param_id.authorizeType).change(function () {
+        var v = $(this).val();
+
+        if (Number(v) > 0) {
+            tools.validSelect2SuccessDom(param_id.authorizeType);
+        }
+    });
+
+    $(param_id.role).change(function () {
+        var v = $(this).val();
+
+        if (v !== '') {
+            tools.validSelect2SuccessDom(param_id.role);
+        }
+    });
+
+    $(param_id.reason).blur(function () {
+        var v = $(this).val();
+
+        if (v !== '') {
+            tools.validSuccessDom(param_id.reason);
+        } else {
+            tools.validErrorDom(param_id.reason, '请填写申请原因');
+        }
+    });
+
     $(param_id.school).change(function () {
         var v = $(this).val();
         initCollege(v);
@@ -282,19 +323,22 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
     var organizeData = $('#organizeData');
     $(button_id.okOrganize.id).click(function () {
         $('#organizeModal').modal('hide');
-        var template = Handlebars.compile($("#organize_data").html());
-        console.log($(param_id.organize).text());
-        var context =
-            {
-                listResult: [
-                    {
-                        "organizeId": $(param_id.organize).val(),
-                        "organizeName": $(param_id.organize).text()
-                    }
-                ]
-            };
+        var organize = $(param_id.organize).val();
+        if (Number(organize) > 0) {
+            tools.validCustomerSingleSuccessDom(param_id.organizeId);
+            var template = Handlebars.compile($("#organize_data").html());
+            var context =
+                {
+                    listResult: [
+                        {
+                            "organizeId": organize,
+                            "organizeName": $(param_id.organize).text()
+                        }
+                    ]
+                };
 
-        organizeData.html(template(context));
+            organizeData.html(template(context));
+        }
     });
 
     organizeData.delegate('.delOrganize', "click", function () {
@@ -306,53 +350,66 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
      */
     $(button_id.save.id).click(function () {
         initParam();
-        add();
+        validAuthorizeType();
     });
 
-    function add() {
-        if (Number(page_param.collegeId) === 0) {
-            validSchool();
+    function validAuthorizeType() {
+        var authorizeTypeId = param.authorizeTypeId;
+        if (Number(authorizeTypeId) <= 0) {
+            tools.validSelect2ErrorDom(param_id.authorizeType, '请选择权限类型');
         } else {
-            validRoleName();
+            tools.validSelect2SuccessDom(param_id.authorizeType);
+            validRole();
         }
     }
 
-    function validSchool() {
-        var schoolId = param.school;
-        if (Number(schoolId) <= 0) {
-            tools.validSelect2ErrorDom(param_id.school, '请选择学校');
+    function validRole() {
+        var roleId = param.roleId;
+        if (roleId === '') {
+            tools.validSelect2ErrorDom(param_id.role, '请选择角色');
         } else {
-            tools.validSelect2SuccessDom(param_id.school);
-            validCollege();
+            tools.validSelect2SuccessDom(param_id.role);
+            validDuration();
         }
     }
 
-    function validCollege() {
-        var collegeId = param.college;
-        if (Number(collegeId) <= 0) {
-            tools.validSelect2ErrorDom(param_id.college, '请选择院');
+    function validDuration() {
+        var duration = param.duration;
+        if (Number(duration) <= 0) {
+            tools.validErrorDom(param_id.duration, '请选择时长');
         } else {
-            tools.validSelect2SuccessDom(param_id.college);
-            validRoleName();
+            tools.validSuccessDom(param_id.duration);
+            validValidDate();
         }
     }
 
-    /**
-     * 添加时检验并提交数据
-     */
-    function validRoleName() {
-        var roleName = param.roleName;
-        if (roleName.length <= 0 || roleName.length > 50) {
-            tools.validErrorDom(param_id.roleName, '角色名50个字符以内');
+    function validValidDate() {
+        var validDate = param.validDate;
+        if (validDate === '') {
+            tools.validErrorDom(param_id.validDate, '请选择生效时间');
         } else {
-            $.post(ajax_url.check_name, param, function (data) {
-                if (data.state) {
-                    tools.validSuccessDom(param_id.roleName);
-                    sendAjax();
-                } else {
-                    tools.validErrorDom(param_id.roleName, data.msg);
-                }
-            });
+            tools.validSuccessDom(param_id.validDate);
+            validOrganize();
+        }
+    }
+
+    function validOrganize() {
+        var organizeId = param.organizeId;
+        if (Number(organizeId) <= 0) {
+            tools.validCustomerSingleErrorDom(param_id.organizeId, '请选择班级');
+        } else {
+            tools.validCustomerSingleSuccessDom(param_id.organizeId);
+            validReason();
+        }
+    }
+
+    function validReason() {
+        var reason = param.reason;
+        if (reason.length <= 0 || reason.length > 200) {
+            tools.validCustomerSingleErrorDom(param_id.reason, '申请原因200个字符以内');
+        } else {
+            tools.validCustomerSingleSuccessDom(param_id.reason);
+            sendAjax();
         }
     }
 
@@ -388,130 +445,6 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
                 });
             }
         });
-    }
-
-    /**
-     * 初始化tree view
-     */
-    function initTreeView(collegeId) {
-        if (collegeId > 0) {
-            $.get(ajax_url.application_json_data, {collegeId: collegeId}, function (data) {
-                if (data.listResult != null) {
-                    treeViewData(data.listResult);
-                }
-            });
-        }
-    }
-
-    function treeViewData(data) {
-        treeviewId.treeview({
-            data: data,
-            showIcon: false,
-            showCheckbox: true,
-            checkedIcon: 'fa fa-check-circle-o',
-            collapseIcon: 'fa fa-minus',
-            emptyIcon: 'fa',
-            expandIcon: 'fa fa-plus',
-            nodeIcon: 'fa fa-stop',
-            selectedIcon: 'fa fa-stop',
-            uncheckedIcon: 'fa fa-circle-o',
-            onNodeChecked: function (event, node) {
-                checkAllParentNode(node);
-                checkAllChildrenNode(node);
-            },
-            onNodeUnchecked: function (event, node) {
-                uncheckAllChildrenNode(node);
-                getAllParent(node);// 若任何子节点选中则取消选中该父节点
-            }
-        });
-    }
-
-    /**
-     * 选中所有父节点
-     * @param node
-     */
-    function checkAllParentNode(node) {
-        if (node.hasOwnProperty('parentId') && node.parentId !== undefined) {
-            var parentNode = treeviewId.treeview('getParent', node);
-            checkAllParentNode(parentNode);
-        }
-        treeviewId.treeview('checkNode', [node.nodeId, {silent: true}]);
-    }
-
-    /**
-     * 取消所有子节点的选中
-     * @param node
-     */
-    function uncheckAllChildrenNode(node) {
-        if (node.hasOwnProperty('nodes') && node.nodes != null) {
-            var n = node.nodes;
-            for (var i = 0; i < n.length; i++) {
-                uncheckAllChildrenNode(n[i]);
-            }
-        }
-        treeviewId.treeview('uncheckNode', [node.nodeId, {silent: true}]);
-    }
-
-    /**
-     * 选中所有子节点
-     * @param node
-     */
-    function checkAllChildrenNode(node) {
-        if (node.hasOwnProperty('nodes') && node.nodes != null) {
-            var n = node.nodes;
-            for (var i = 0; i < n.length; i++) {
-                checkAllChildrenNode(n[i]);
-            }
-        }
-        treeviewId.treeview('checkNode', [node.nodeId, {silent: true}]);
-    }
-
-    var childrenArr = [];
-
-    function getAllChildren(node) {
-        if (node.hasOwnProperty('nodes') && node.nodes != null) {
-            var n = node.nodes;
-            for (var i = 0; i < n.length; i++) {
-                getAllChildren(n[i]);
-            }
-        }
-        childrenArr.push(node);
-    }
-
-    function getAllParent(node) {
-        if (node.hasOwnProperty('parentId') && node.parentId !== undefined) {
-            var parentNode = treeviewId.treeview('getParent', node);
-            childrenArr = [];
-            getAllChildren(parentNode);
-            var parentNodeIsChecked = false;
-            for (var i = 0; i < childrenArr.length; i++) {
-                if (childrenArr[i].nodeId !== parentNode.nodeId && childrenArr[i].state.checked) {
-                    parentNodeIsChecked = true;
-                }
-            }
-            if (!parentNodeIsChecked) {
-                treeviewId.treeview('uncheckNode', [parentNode.nodeId, {silent: true}]);
-                getAllParent(parentNode);
-            }
-
-        }
-    }
-
-    /**
-     * 获取所有选中节点的dataId
-     * @returns {string}
-     */
-    function getAllCheckedData() {
-        var applicationIds = '';
-        var checkeds = treeviewId.treeview('getChecked');
-        var temp = [];
-        for (var i = 0; i < checkeds.length; i++) {
-            temp.push(checkeds[i].dataId);
-        }
-        if (temp.length > 0) {
-            applicationIds = temp.join(",");
-        }
-        return applicationIds;
     }
 
 });
