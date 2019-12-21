@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="utf-8"/>
 </head>
@@ -21,6 +21,11 @@
             <div class="row">
                 <div class="col-md-12">
                     <form id="app_form">
+                        <div class="form-group" sec:authorize="hasAnyRole('ROLE_SYSTEM','ROLE_ADMIN')">
+                            <label>申请账号</label>
+                            <input type="text" class="form-control" id="username" name="username" placeholder="申请账号">
+                            <div class="invalid-feedback"></div>
+                        </div>
                         <div class="form-group">
                             <select class="form-control select2-show-search" id="authorizeType"
                                     th:data-placeholder="请选择权限类型">
@@ -102,25 +107,6 @@
                 </div>
                 <div class="modal-body pd-25">
                     <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <select class="form-control select2-show-search" id="school" data-placeholder="请选择学校"
-                                        style="width: 100%;">
-                                    <option label="请选择学校"></option>
-                                </select>
-                                <div class="invalid-feedback"></div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <select class="form-control select2-show-search" id="college" data-placeholder="请选择院"
-                                        style="width: 100%">
-                                    <option label="请选择院"></option>
-                                </select>
-                                <div class="invalid-feedback"></div>
-                            </div>
-                        </div>
 
                         <div class="col-md-12">
                             <div class="form-group">
@@ -187,6 +173,8 @@
         </tr>
         {{/each}}
     </script>
+
+    <input type="hidden" id="collegeId" th:value="${collegeId}"/>
     <input type="hidden" class="dy_script"
            th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/platform/authorize/authorize_add.js')}"/>
 </div>

@@ -1,6 +1,6 @@
 //# sourceURL=authorize_data.js
-require(["jquery", "sweetalert2", "handlebars", "nav.active", "responsive.bootstrap4", "jquery.address", "messenger"],
-    function ($, Swal, Handlebars, navActive) {
+require(["jquery", "sweetalert2", "handlebars", "nav.active", "workbook", "responsive.bootstrap4", "jquery.address", "messenger"],
+    function ($, Swal, Handlebars, navActive, workbook) {
 
         /*
          参数
@@ -11,6 +11,11 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "responsive.bootst
             organizeName: '',
             roleName: '',
             dataRange: ''
+        };
+
+        var page_param = {
+            authorities: $('#authorities').val(),
+            username: $('#username').val()
         };
 
         var button_id = {
@@ -85,14 +90,28 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "responsive.bootst
                 {"data": "organizeName"},
                 {"data": "roleName"},
                 {"data": "duration"},
-                {"data": "validDate"},
-                {"data": "expireDate"},
+                {"data": "validDateStr"},
+                {"data": "expireDateStr"},
                 {"data": "applyStatus"},
-                {"data": "createDate"},
+                {"data": "createDateStr"},
                 {"data": "reason"},
                 {"data": null}
             ],
             columnDefs: [
+                {
+                    targets: 8,
+                    render: function (a, b, c, d) {
+                        var v = '';
+                        if (c.applyStatus === 0) {
+                            v = '待审核';
+                        } else if (c.applyStatus === 1) {
+                            v = '通过';
+                        } else if (c.applyStatus === 2) {
+                            v = '失败';
+                        }
+                        return v;
+                    }
+                },
                 {
                     targets: 11,
                     orderable: false,
@@ -100,8 +119,54 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "responsive.bootst
 
                         var context =
                             {
-                                func: [
-                                    {
+                                func: []
+                            };
+
+                        if (page_param.authorities === workbook.authorities.ROLE_SYSTEM ||
+                            page_param.authorities === workbook.authorities.ROLE_ADMIN) {
+                            context.func.push({
+                                    "name": "编辑",
+                                    "css": "edit",
+                                    "type": "primary",
+                                    "id": c.roleUsersId
+                                },
+                                {
+                                    "name": "删除",
+                                    "css": "del",
+                                    "type": "danger",
+                                    "id": c.roleUsersId
+                                });
+
+                            if (c.applyStatus === 0) {
+                                context.func.push({
+                                    "name": "通过",
+                                    "css": "pass",
+                                    "type": "success",
+                                    "id": c.roleUsersId
+                                }, {
+                                    "name": "拒绝",
+                                    "css": "refuse",
+                                    "type": "warning",
+                                    "id": c.roleUsersId
+                                });
+                            } else if (c.applyStatus === 1) {
+                                context.func.push({
+                                    "name": "拒绝",
+                                    "css": "refuse",
+                                    "type": "warning",
+                                    "id": c.roleUsersId
+                                });
+                            } else if (c.applyStatus === 2) {
+                                context.func.push({
+                                    "name": "通过",
+                                    "css": "pass",
+                                    "type": "success",
+                                    "id": c.roleUsersId
+                                });
+                            }
+                        } else {
+                            if (c.username === page_param.username) {
+                                context.func.push({
                                         "name": "编辑",
                                         "css": "edit",
                                         "type": "primary",
@@ -112,10 +177,9 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "responsive.bootst
                                         "css": "del",
                                         "type": "danger",
                                         "id": c.roleUsersId
-                                    }
-                                ]
-                            };
-
+                                    });
+                            }
+                        }
                         return template(context);
                     }
                 }
@@ -293,6 +357,8 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "responsive.bootst
                 } else {
                     $(button_id.all.id).addClass('active');
                 }
+            } else {
+                $(button_id.all.id).addClass('active');
             }
         }
 

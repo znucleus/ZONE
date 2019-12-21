@@ -7,6 +7,9 @@ public class RoleApplyBean extends RoleApply {
     private String organizeName;
     private String roleName;
     private String realName;
+    private String validDateStr;
+    private String expireDateStr;
+    private String createDateStr;
 
     public String getAuthorizeTypeName() {
         return authorizeTypeName;
@@ -38,5 +41,29 @@ public class RoleApplyBean extends RoleApply {
 
     public void setRealName(String realName) {
         this.realName = realName;
+    }
+
+    public String getValidDateStr() {
+        return validDateStr;
+    }
+
+    public void setValidDateStr(String validDateStr) {
+        this.validDateStr = validDateStr;
+    }
+
+    public String getExpireDateStr() {
+        return expireDateStr;
+    }
+
+    public void setExpireDateStr(String expireDateStr) {
+        this.expireDateStr = expireDateStr;
+    }
+
+    public String getCreateDateStr() {
+        return createDateStr;
+    }
+
+    public void setCreateDateStr(String createDateStr) {
+        this.createDateStr = createDateStr;
     }
 }

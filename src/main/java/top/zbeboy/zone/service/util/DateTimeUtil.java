@@ -6,6 +6,11 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 
 public class DateTimeUtil {
+
+    public static final String STANDARD_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    public static final String YEAR_MONTH_DAY_FORMAT = "yyyy-MM-dd";
+    public static final String HOUR_MINUTE_FORMAT = "HH:mm";
+
     /**
      * timestamp
      *
@@ -87,7 +92,7 @@ public class DateTimeUtil {
      * @return 格式化后的时间
      */
     public static String defaultFormatUtilDate(java.util.Date date) {
-        return date.toInstant().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        return date.toInstant().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(STANDARD_FORMAT));
     }
 
     /**
@@ -97,7 +102,7 @@ public class DateTimeUtil {
      * @return 格式化后的时间
      */
     public static String defaultFormatSqlTimestamp(java.sql.Timestamp timestamp) {
-        return timestamp.toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        return timestamp.toLocalDateTime().format(DateTimeFormatter.ofPattern(STANDARD_FORMAT));
     }
 
     /**
@@ -107,7 +112,7 @@ public class DateTimeUtil {
      * @return sql date
      */
     public static java.sql.Date defaultParseSqlDate(String date) {
-        return new java.sql.Date(java.sql.Date.from(LocalDate.parse(StringUtils.trim(date), DateTimeFormatter.ofPattern("yyyy-MM-dd")).atStartOfDay(ZoneId.systemDefault()).toInstant()).getTime());
+        return new java.sql.Date(java.sql.Date.from(LocalDate.parse(StringUtils.trim(date), DateTimeFormatter.ofPattern(YEAR_MONTH_DAY_FORMAT)).atStartOfDay(ZoneId.systemDefault()).toInstant()).getTime());
     }
 
     /**
@@ -135,6 +140,16 @@ public class DateTimeUtil {
     /**
      * 格式化成sql date
      *
+     * @param date 日期
+     * @return sql date
+     */
+    public static java.sql.Timestamp defaultParseSqlTimestamp(String date) {
+        return new java.sql.Timestamp(java.sql.Timestamp.from(LocalDateTime.parse(StringUtils.trim(date), DateTimeFormatter.ofPattern(STANDARD_FORMAT)).atZone(ZoneId.systemDefault()).toInstant()).getTime());
+    }
+
+    /**
+     * 格式化成sql date
+     *
      * @param date   date 日期
      * @param format 格式
      * @return sql date
@@ -150,7 +165,7 @@ public class DateTimeUtil {
      * @return sql date
      */
     public static java.sql.Time defaultParseSqlTime(String time) {
-        return new java.sql.Time(java.sql.Time.from(LocalTime.parse(StringUtils.trim(time), DateTimeFormatter.ofPattern("HH:mm")).atDate(LocalDate.now()).atZone(ZoneId.systemDefault()).toInstant()).getTime());
+        return new java.sql.Time(java.sql.Time.from(LocalTime.parse(StringUtils.trim(time), DateTimeFormatter.ofPattern(HOUR_MINUTE_FORMAT)).atDate(LocalDate.now()).atZone(ZoneId.systemDefault()).toInstant()).getTime());
     }
 
     /**

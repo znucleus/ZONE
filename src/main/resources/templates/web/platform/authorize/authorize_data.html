@@ -86,6 +86,8 @@
         </div>
     </script>
 
+    <input type="hidden" id="authorities" th:value="${authorities}"/>
+    <input type="hidden" id="username" th:value="${username}"/>
     <input type="hidden" class="dy_script" th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/platform/authorize/authorize_data.js')}"/>
 </div>
 <!-- /#page-wrapper -->

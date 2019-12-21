@@ -2,6 +2,7 @@ package top.zbeboy.zone.service.platform;
 
 import org.jooq.Record;
 import org.jooq.Result;
+import top.zbeboy.zone.domain.tables.pojos.RoleApply;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
 public interface RoleApplyService {
@@ -28,4 +29,18 @@ public interface RoleApplyService {
      * @return 条件查询总数
      */
     int countByCondition(DataTablesUtil dataTablesUtil);
+
+    /**
+     * 保存
+     *
+     * @param roleApply 数据
+     */
+    void save(RoleApply roleApply);
+
+    /**
+     * 更新
+     *
+     * @param roleApply 数据
+     */
+    void update(RoleApply roleApply);
 }

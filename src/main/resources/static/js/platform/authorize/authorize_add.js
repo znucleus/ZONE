@@ -14,6 +14,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
         obtain_organize_data: web_path + '/anyone/data/organize',
         obtain_authorize_type_data: web_path + '/web/platform/authorize/type',
         obtain_college_role_data: web_path + '/web/platform/authorize/role',
+        check_username: web_path + '/web/platform/authorize/check/add/username',
         save: web_path + '/web/platform/authorize/save',
         page: '/web/menu/platform/authorize'
     };
@@ -25,12 +26,11 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
      参数id
      */
     var param_id = {
-        school: '#school',
-        college: '#college',
         department: '#department',
         science: '#science',
         grade: '#grade',
         organize: '#organize',
+        username: '#username',
         authorizeType: '#authorizeType',
         role: '#role',
         duration: '#duration',
@@ -56,18 +56,25 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
      参数
      */
     var param = {
+        username: '',
         authorizeTypeId: '',
         roleId: '',
         duration: '',
         validDate: '',
         organizeId: '',
-        reason: ''
+        reason: '',
+        collegeId: ''
+    };
+
+    var page_param = {
+        collegeId: $('#collegeId').val()
     };
 
     /**
      * 初始化参数
      */
     function initParam() {
+        param.username = $(param_id.username) ? $(param_id.username).val() : '';
         param.authorizeTypeId = $(param_id.authorizeType).val();
         param.roleId = $(param_id.role).val();
         param.duration = $(param_id.duration).val();
@@ -86,6 +93,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
             param.organizeId = '';
         }
         param.reason = _.trim($(param_id.reason).val());
+        param.collegeId = page_param.collegeId;
     }
 
     $(param_id.validDate).flatpickr({
@@ -112,9 +120,12 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
     function init() {
         initSelect2();
         initAuthorizeType();
-        initCollegeRole();
         initMaxLength();
-        initSchool();
+        if (Number(page_param.collegeId) > 0) {
+            initDepartment(page_param.collegeId);
+            initCollegeRole(page_param.collegeId);
+        }
+
     }
 
     function initAuthorizeType() {
@@ -125,35 +136,12 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
         });
     }
 
-    function initCollegeRole() {
-        $.get(ajax_url.obtain_college_role_data, function (data) {
+    function initCollegeRole(collegeId) {
+        $.get(ajax_url.obtain_college_role_data + '/' + collegeId, function (data) {
             $(param_id.role).select2({
                 data: data.results
             });
         });
-    }
-
-    function initSchool() {
-        $.get(ajax_url.obtain_school_data, function (data) {
-            $(param_id.school).select2({
-                data: data.results,
-                dropdownParent: $("#organizeModal")
-            });
-        });
-    }
-
-    function initCollege(schoolId) {
-        if (Number(schoolId) > 0) {
-            $.get(ajax_url.obtain_college_data, {schoolId: schoolId}, function (data) {
-                $(param_id.college).html('<option label="请选择院"></option>');
-                $(param_id.college).select2({
-                    data: data.results,
-                    dropdownParent: $("#organizeModal")
-                });
-            });
-        } else {
-            $(param_id.college).html('<option label="请选择院"></option>');
-        }
     }
 
     function initDepartment(collegeId) {
@@ -230,6 +218,27 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
         });
     }
 
+    $(param_id.username).blur(function () {
+        initParam();
+        var username = param.username;
+        if (username !== '') {
+            $.post(ajax_url.check_username, param, function (data) {
+                if (data.state) {
+                    tools.validSuccessDom(param_id.username);
+                    if (Number(page_param.collegeId) === 0) {
+                        initDepartment(data.collegeId);
+                        initCollegeRole(data.collegeId);
+                        page_param.collegeId = data.collegeId;
+                    }
+                } else {
+                    tools.validErrorDom(param_id.username, data.msg);
+                }
+            });
+        } else {
+            tools.validErrorDom(param_id.username, '请填写申请账号');
+        }
+    });
+
     $(param_id.authorizeType).change(function () {
         var v = $(this).val();
 
@@ -247,37 +256,12 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
     });
 
     $(param_id.reason).blur(function () {
-        var v = $(this).val();
-
-        if (v !== '') {
+        initParam();
+        var reason = param.reason;
+        if (reason !== '') {
             tools.validSuccessDom(param_id.reason);
         } else {
             tools.validErrorDom(param_id.reason, '请填写申请原因');
-        }
-    });
-
-    $(param_id.school).change(function () {
-        var v = $(this).val();
-        initCollege(v);
-        initDepartment(0);
-        initScience(0);
-        initGrade(0);
-        initOrganize(0);
-
-        if (Number(v) > 0) {
-            tools.validSelect2SuccessDom(param_id.school);
-        }
-    });
-
-    $(param_id.college).change(function () {
-        var v = $(this).val();
-        initDepartment(v);
-        initScience(0);
-        initGrade(0);
-        initOrganize(0);
-
-        if (Number(v) > 0) {
-            tools.validSelect2SuccessDom(param_id.college);
         }
     });
 
@@ -350,8 +334,28 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
      */
     $(button_id.save.id).click(function () {
         initParam();
-        validAuthorizeType();
+        validUsername();
     });
+
+    function validUsername() {
+        var username = param.username;
+        if(!_.isUndefined(username)){
+            if (username !== '') {
+                $.post(ajax_url.check_username, param, function (data) {
+                    if (data.state) {
+                        tools.validSuccessDom(param_id.username);
+                        validAuthorizeType();
+                    } else {
+                        tools.validErrorDom(param_id.username, data.msg);
+                    }
+                });
+            } else {
+                tools.validErrorDom(param_id.username, '请填写申请账号');
+            }
+        } else {
+            validAuthorizeType();
+        }
+    }
 
     function validAuthorizeType() {
         var authorizeTypeId = param.authorizeTypeId;

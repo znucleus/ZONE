@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zone.config.Workbook;
+import top.zbeboy.zone.domain.tables.daos.RoleApplyDao;
+import top.zbeboy.zone.domain.tables.pojos.RoleApply;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.service.data.StaffService;
@@ -31,6 +33,9 @@ import static top.zbeboy.zone.domain.Tables.SCHOOL;
 public class RoleApplyServiceImpl implements RoleApplyService, PaginationPlugin<DataTablesUtil> {
 
     private final DSLContext create;
+
+    @Resource
+    private RoleApplyDao roleApplyDao;
 
     @Resource
     private RoleService roleService;
@@ -101,6 +106,17 @@ public class RoleApplyServiceImpl implements RoleApplyService, PaginationPlugin<
                 .leftJoin(ORGANIZE)
                 .on(ROLE_APPLY.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID));
         return countAll(selectOnConditionStep, dataTablesUtil, false);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void save(RoleApply roleApply) {
+        roleApplyDao.insert(roleApply);
+    }
+
+    @Override
+    public void update(RoleApply roleApply) {
+        roleApplyDao.update(roleApply);
     }
 
     @Override
