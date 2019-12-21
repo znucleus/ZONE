@@ -54,6 +54,7 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "workbook", "respo
             return {
                 data: web_path + '/web/platform/authorize/data',
                 del: web_path + '/web/platform/authorize/delete',
+                check_edit_access: web_path + '/web/platform/authorize/check/edit/access',
                 add: '/web/platform/authorize/add',
                 edit: '/web/platform/authorize/edit',
                 page: '/web/menu/platform/authorize'
@@ -105,9 +106,9 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "workbook", "respo
                         if (c.applyStatus === 0) {
                             v = '待审核';
                         } else if (c.applyStatus === 1) {
-                            v = '通过';
+                            v = '<span class="text-success">通过</span>';
                         } else if (c.applyStatus === 2) {
-                            v = '失败';
+                            v = '<span class="text-danger">未通过</span>';
                         }
                         return v;
                     }
@@ -125,59 +126,74 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "workbook", "respo
                         if (page_param.authorities === workbook.authorities.ROLE_SYSTEM ||
                             page_param.authorities === workbook.authorities.ROLE_ADMIN) {
                             context.func.push({
-                                    "name": "编辑",
-                                    "css": "edit",
-                                    "type": "primary",
-                                    "id": c.roleUsersId
-                                },
-                                {
-                                    "name": "删除",
-                                    "css": "del",
-                                    "type": "danger",
-                                    "id": c.roleUsersId
-                                });
+                                "name": "删除",
+                                "css": "del",
+                                "type": "danger",
+                                "id": c.roleApplyId
+                            });
 
                             if (c.applyStatus === 0) {
                                 context.func.push({
+                                    "name": "编辑",
+                                    "css": "edit",
+                                    "type": "primary",
+                                    "id": c.roleApplyId
+                                }, {
                                     "name": "通过",
                                     "css": "pass",
                                     "type": "success",
-                                    "id": c.roleUsersId
+                                    "id": c.roleApplyId
                                 }, {
                                     "name": "拒绝",
                                     "css": "refuse",
                                     "type": "warning",
-                                    "id": c.roleUsersId
+                                    "id": c.roleApplyId
                                 });
                             } else if (c.applyStatus === 1) {
                                 context.func.push({
                                     "name": "拒绝",
                                     "css": "refuse",
                                     "type": "warning",
-                                    "id": c.roleUsersId
+                                    "id": c.roleApplyId
                                 });
                             } else if (c.applyStatus === 2) {
                                 context.func.push({
+                                    "name": "编辑",
+                                    "css": "edit",
+                                    "type": "primary",
+                                    "id": c.roleApplyId
+                                }, {
                                     "name": "通过",
                                     "css": "pass",
                                     "type": "success",
-                                    "id": c.roleUsersId
+                                    "id": c.roleApplyId
                                 });
                             }
                         } else {
                             if (c.username === page_param.username) {
-                                context.func.push({
-                                        "name": "编辑",
-                                        "css": "edit",
-                                        "type": "primary",
-                                        "id": c.roleUsersId
-                                    },
-                                    {
-                                        "name": "删除",
-                                        "css": "del",
-                                        "type": "danger",
-                                        "id": c.roleUsersId
-                                    });
+                                if (c.applyStatus === 0 || c.applyStatus === 2) {
+                                    context.func.push({
+                                            "name": "编辑",
+                                            "css": "edit",
+                                            "type": "primary",
+                                            "id": c.roleApplyId
+                                        },
+                                        {
+                                            "name": "删除",
+                                            "css": "del",
+                                            "type": "danger",
+                                            "id": c.roleApplyId
+                                        });
+                                } else if (c.applyStatus === 1) {
+                                    context.func.push(
+                                        {
+                                            "name": "删除",
+                                            "css": "del",
+                                            "type": "danger",
+                                            "id": c.roleApplyId
+                                        });
+                                }
+
                             }
                         }
                         return template(context);
@@ -452,14 +468,24 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "workbook", "respo
         /*
          编辑页面
          */
-        function edit(roleUsersId) {
-            $.address.value(getAjaxUrl().edit + '/' + roleUsersId);
+        function edit(roleApplyId) {
+            $.post(getAjaxUrl().check_edit_access, {roleApplyId: roleApplyId}, function (data) {
+                if (data.state) {
+                    $.address.value(getAjaxUrl().edit + '/' + roleApplyId);
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
         }
 
         /*
          删除
          */
-        function authorize_del(roleUsersId) {
+        function authorize_del(roleApplyId) {
             Swal.fire({
                 title: "确定删除申请吗？",
                 text: "删除后不可恢复！",
@@ -469,25 +495,31 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "workbook", "respo
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
                 preConfirm: function () {
-                    del(roleUsersId);
+                    del(roleApplyId);
                 }
             });
         }
 
-        function del(roleUsersId) {
-            sendDelAjax(roleUsersId);
+        function del(roleApplyId) {
+            sendDelAjax(roleApplyId);
         }
 
         /**
          * 删除ajax
-         * @param roleUsersId
+         * @param roleApplyId
          */
-        function sendDelAjax(roleUsersId) {
+        function sendDelAjax(roleApplyId) {
             $.ajax({
                 type: 'POST',
                 url: getAjaxUrl().del,
-                data: {roleUsersId: roleUsersId},
+                data: {roleApplyId: roleApplyId},
                 success: function (data) {
+                    Messenger().post({
+                        message: data.msg,
+                        type: data.state ? 'success' : 'error',
+                        showCloseButton: true
+                    });
+
                     if (data.state) {
                         myTable.ajax.reload();
                     }

@@ -311,6 +311,12 @@ require(["jquery", "lodash_plugin", "sweetalert2", "handlebars", "nav.active", "
                 url: getAjaxUrl().del,
                 data: {roleId: roleId},
                 success: function (data) {
+                    Messenger().post({
+                        message: data.msg,
+                        type: data.state ? 'success' : 'error',
+                        showCloseButton: true
+                    });
+
                     if (data.state) {
                         myTable.ajax.reload();
                     }

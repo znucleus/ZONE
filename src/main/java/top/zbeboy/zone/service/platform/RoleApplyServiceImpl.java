@@ -58,6 +58,31 @@ public class RoleApplyServiceImpl implements RoleApplyService, PaginationPlugin<
     }
 
     @Override
+    public RoleApply findById(String id) {
+        return roleApplyDao.findById(id);
+    }
+
+    @Override
+    public Optional<Record> findByIdRelation(String id) {
+        return create.select()
+                .from(ROLE_APPLY)
+                .leftJoin(AUTHORIZE_TYPE)
+                .on(ROLE_APPLY.AUTHORIZE_TYPE_ID.eq(AUTHORIZE_TYPE.AUTHORIZE_TYPE_ID))
+                .leftJoin(ORGANIZE)
+                .on(ROLE_APPLY.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
+                .leftJoin(GRADE)
+                .on(ORGANIZE.GRADE_ID.eq(GRADE.GRADE_ID))
+                .leftJoin(SCIENCE)
+                .on(GRADE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
+                .leftJoin(DEPARTMENT)
+                .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
+                .leftJoin(COLLEGE)
+                .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
+                .where(ROLE_APPLY.ROLE_APPLY_ID.eq(id))
+                .fetchOptional();
+    }
+
+    @Override
     public Result<Record> findAllByPage(DataTablesUtil dataTablesUtil) {
         SelectOnConditionStep<Record> selectOnConditionStep = create.select()
                 .from(ROLE_APPLY)
@@ -117,6 +142,11 @@ public class RoleApplyServiceImpl implements RoleApplyService, PaginationPlugin<
     @Override
     public void update(RoleApply roleApply) {
         roleApplyDao.update(roleApply);
+    }
+
+    @Override
+    public void deleteById(String id) {
+        roleApplyDao.deleteById(id);
     }
 
     @Override

@@ -1,4 +1,4 @@
-//# sourceURL=authorize_add.js
+//# sourceURL=authorize_edit.js
 require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active", "messenger", "jquery.address",
     "bootstrap-maxlength", "flatpickr-zh", "select2-zh-CN"], function ($, _, tools, Swal, Handlebars, navActive) {
 
@@ -15,7 +15,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
         obtain_authorize_type_data: web_path + '/web/platform/authorize/type',
         obtain_college_role_data: web_path + '/web/platform/authorize/role',
         check_username: web_path + '/web/platform/authorize/check/username',
-        save: web_path + '/web/platform/authorize/save',
+        update: web_path + '/web/platform/authorize/update',
         page: '/web/menu/platform/authorize'
     };
 
@@ -56,6 +56,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
      参数
      */
     var param = {
+        roleApplyId: '',
         username: '',
         authorizeTypeId: '',
         roleId: '',
@@ -67,13 +68,22 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
     };
 
     var page_param = {
-        collegeId: $('#collegeId').val()
+        roleApplyId: $('#roleApplyIdParam').val(),
+        authorizeTypeId: $('#authorizeTypeIdParam').val(),
+        roleId: $('#roleIdParam').val(),
+        duration: $('#durationParam').val(),
+        collegeId: $('#collegeIdParam').val(),
+        departmentId: $('#departmentIdParam').val(),
+        scienceId: $('#scienceIdParam').val(),
+        gradeId: $('#gradeIdParam').val(),
+        organizeId: $('#organizeIdParam').val(),
     };
 
     /**
      * 初始化参数
      */
     function initParam() {
+        param.roleApplyId = page_param.roleApplyId;
         param.username = $(param_id.username).val();
         param.authorizeTypeId = $(param_id.authorizeType).val();
         param.roleId = $(param_id.role).val();
@@ -95,6 +105,15 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
         param.reason = _.trim($(param_id.reason).val());
         param.collegeId = page_param.collegeId;
     }
+
+    var init_configure = {
+        init_department: false,
+        init_science: false,
+        init_grade: false,
+        init_organize: false,
+        init_authorize_type: false,
+        init_college_role: false
+    };
 
     $(param_id.validDate).flatpickr({
         locale: "zh",
@@ -121,37 +140,54 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
         initSelect2();
         initAuthorizeType();
         initMaxLength();
-        if (Number(page_param.collegeId) > 0) {
-            initDepartment(page_param.collegeId);
-            initCollegeRole(page_param.collegeId);
-        }
-
+        initCollegeRole(page_param.collegeId);
+        initDuration();
+        initDepartment(page_param.collegeId);
     }
 
     function initAuthorizeType() {
         $.get(ajax_url.obtain_authorize_type_data, function (data) {
-            $(param_id.authorizeType).select2({
+            var sl = $(param_id.authorizeType).select2({
                 data: data.results
             });
+
+            if (!init_configure.init_authorize_type) {
+                sl.val(page_param.authorizeTypeId).trigger("change");
+                init_configure.init_authorize_type = true;
+            }
         });
     }
 
     function initCollegeRole(collegeId) {
         $.get(ajax_url.obtain_college_role_data + '/' + collegeId, function (data) {
-            $(param_id.role).select2({
+            var sl = $(param_id.role).select2({
                 data: data.results
             });
+
+            if (!init_configure.init_college_role) {
+                sl.val(page_param.roleId).trigger("change");
+                init_configure.init_college_role = true;
+            }
         });
+    }
+
+    function initDuration() {
+        $(param_id.duration).val(page_param.duration);
     }
 
     function initDepartment(collegeId) {
         if (Number(collegeId) > 0) {
             $.get(ajax_url.obtain_department_data, {collegeId: collegeId}, function (data) {
                 $(param_id.department).html('<option label="请选择系"></option>');
-                $(param_id.department).select2({
+                var sl = $(param_id.department).select2({
                     data: data.results,
                     dropdownParent: $("#organizeModal")
                 });
+
+                if (!init_configure.init_department) {
+                    sl.val(page_param.departmentId).trigger("change");
+                    init_configure.init_department = true;
+                }
             });
         } else {
             $(param_id.department).html('<option label="请选择系"></option>');
@@ -162,10 +198,15 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
         if (Number(departmentId) > 0) {
             $.get(ajax_url.obtain_science_data, {departmentId: departmentId}, function (data) {
                 $(param_id.science).html('<option label="请选择专业"></option>');
-                $(param_id.science).select2({
+                var sl = $(param_id.science).select2({
                     data: data.results,
                     dropdownParent: $("#organizeModal")
                 });
+
+                if (!init_configure.init_science) {
+                    sl.val(page_param.scienceId).trigger("change");
+                    init_configure.init_science = true;
+                }
             });
         } else {
             $(param_id.science).html('<option label="请选择专业"></option>');
@@ -176,10 +217,15 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
         if (Number(scienceId) > 0) {
             $.get(ajax_url.obtain_grade_data, {scienceId: scienceId}, function (data) {
                 $(param_id.grade).html('<option label="请选择年级"></option>');
-                $(param_id.grade).select2({
+                var sl = $(param_id.grade).select2({
                     data: data.results,
                     dropdownParent: $("#organizeModal")
                 });
+
+                if (!init_configure.init_grade) {
+                    sl.val(page_param.gradeId).trigger("change");
+                    init_configure.init_grade = true;
+                }
             });
         } else {
             $(param_id.grade).html('<option label="请选择年级"></option>');
@@ -190,10 +236,15 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
         if (Number(gradeId) > 0) {
             $.get(ajax_url.obtain_organize_data, {gradeId: gradeId}, function (data) {
                 $(param_id.organize).html('<option label="请选择班级"></option>');
-                $(param_id.organize).select2({
+                var sl = $(param_id.organize).select2({
                     data: data.results,
                     dropdownParent: $("#organizeModal")
                 });
+
+                if (!init_configure.init_organize) {
+                    sl.val(page_param.organizeId).trigger("change");
+                    init_configure.init_organize = true;
+                }
             });
         } else {
             $(param_id.organize).html('<option label="请选择班级"></option>');
@@ -339,7 +390,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
 
     function validUsername() {
         var username = param.username;
-        if(!_.isUndefined(username)){
+        if (!_.isUndefined(username)) {
             if (username !== '') {
                 $.post(ajax_url.check_username, param, function (data) {
                     if (data.state) {
@@ -424,7 +475,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
         tools.buttonLoading(button_id.save.id, button_id.save.tip);
         $.ajax({
             type: 'POST',
-            url: ajax_url.save,
+            url: ajax_url.update,
             data: param,
             success: function (data) {
                 tools.buttonEndLoading(button_id.save.id, button_id.save.text);

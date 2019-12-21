@@ -374,6 +374,12 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                 url: getAjaxUrl().status,
                 data: {applicationIds: applicationId},
                 success: function (data) {
+                    Messenger().post({
+                        message: data.msg,
+                        type: data.state ? 'success' : 'error',
+                        showCloseButton: true
+                    });
+
                     if (data.state) {
                         myTable.ajax.reload();
                     }

@@ -24,6 +24,7 @@ import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.ByteUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.vo.platform.authorize.AuthorizeAddVo;
+import top.zbeboy.zone.web.vo.platform.authorize.AuthorizeEditVo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -87,7 +88,7 @@ public class AuthorizeRestController {
         List<RoleApplyBean> beans = new ArrayList<>();
         if (Objects.nonNull(records) && records.isNotEmpty()) {
             beans = records.into(RoleApplyBean.class);
-            beans.forEach(b->{
+            beans.forEach(b -> {
                 b.setValidDateStr(DateTimeUtil.defaultFormatSqlTimestamp(b.getValidDate()));
                 b.setExpireDateStr(DateTimeUtil.defaultFormatSqlTimestamp(b.getExpireDate()));
                 b.setCreateDateStr(DateTimeUtil.defaultFormatSqlTimestamp(b.getCreateDate()));
@@ -132,12 +133,12 @@ public class AuthorizeRestController {
     }
 
     /**
-     * 保存时检验账号是否符合规则
+     * 检验账号是否符合规则
      *
      * @param username 账号
      * @return true 合格 false 不合格
      */
-    @PostMapping("/web/platform/authorize/check/add/username")
+    @PostMapping("/web/platform/authorize/check/username")
     public ResponseEntity<Map<String, Object>> checkAddUsername(@RequestParam("username") String username, @RequestParam("collegeId") int collegeId) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         String param = StringUtils.deleteWhitespace(username);
@@ -272,6 +273,74 @@ public class AuthorizeRestController {
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
+    /**
+     * 更新
+     *
+     * @param authorizeEditVo 数据
+     * @param bindingResult   检验
+     * @return true 保存成功 false 保存失败
+     */
+    @PostMapping("/web/platform/authorize/update")
+    public ResponseEntity<Map<String, Object>> update(@Valid AuthorizeEditVo authorizeEditVo, BindingResult bindingResult) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (!bindingResult.hasErrors()) {
+            rule2(ajaxUtil, authorizeEditVo.getRoleApplyId());
+            if(ajaxUtil.getState()){
+                RoleApply roleApply = roleApplyService.findById(authorizeEditVo.getRoleApplyId());
+                if(Objects.nonNull(roleApply)){
+                    roleApply.setAuthorizeTypeId(authorizeEditVo.getAuthorizeTypeId());
+                    roleApply.setRoleId(authorizeEditVo.getRoleId());
+                    roleApply.setDuration(getDuration(authorizeEditVo.getDuration()));
+                    roleApply.setValidDate(DateTimeUtil.defaultParseSqlTimestamp(authorizeEditVo.getValidDate()));
+                    roleApply.setOrganizeId(authorizeEditVo.getOrganizeId());
+                    roleApply.setReason(authorizeEditVo.getReason());
+
+                    // 计算时长
+                    roleApply.setExpireDate(DateTimeUtil.utilDateToSqlTimestamp(getDuration(authorizeEditVo.getValidDate(), authorizeEditVo.getDuration())));
+
+                    roleApplyService.update(roleApply);
+
+                    ajaxUtil.success().msg("更新成功");
+                } else {
+                    ajaxUtil.fail().msg("未查询到申请信息");
+                }
+            }
+        } else {
+            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 编辑页面进入前检验
+     *
+     * @param roleApplyId id
+     * @return 条件
+     */
+    @PostMapping("/web/platform/authorize/check/edit/access")
+    public ResponseEntity<Map<String, Object>> checkEditAccess(@RequestParam("roleApplyId") String roleApplyId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        rule2(ajaxUtil, roleApplyId);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 删除
+     *
+     * @param roleApplyId 角色id
+     * @return true成功
+     */
+    @PostMapping("/web/platform/authorize/delete")
+    public ResponseEntity<Map<String, Object>> delete(@RequestParam("roleApplyId") String roleApplyId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        rule3(ajaxUtil,roleApplyId);
+        if(ajaxUtil.getState()){
+            roleApplyService.deleteById(roleApplyId);
+            ajaxUtil.success().msg("删除成功");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
     private void rule1(AjaxUtil<Map<String, Object>> ajaxUtil, String param, int userCollegeId) {
         List<Authorities> authorities = authoritiesService.findByUsername(param);
         if (Objects.nonNull(authorities) && !authorities.isEmpty()) {
@@ -293,6 +362,127 @@ public class AuthorizeRestController {
             }
         } else {
             ajaxUtil.fail().msg("该账号未通过审核");
+        }
+    }
+
+    private void rule2(AjaxUtil<Map<String, Object>> ajaxUtil, String roleApplyId) {
+        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+            Optional<Record> roleApplyRecord = roleApplyService.findByIdRelation(roleApplyId);
+            if (roleApplyRecord.isPresent()) {
+                RoleApplyBean roleApplyBean = roleApplyRecord.get().into(RoleApplyBean.class);
+                Byte status = roleApplyBean.getApplyStatus();
+                if (status != 1) {
+                    ajaxUtil.success().msg("可操作");
+                } else {
+                    ajaxUtil.fail().msg("申请已通过，不可操作");
+                }
+            } else {
+                ajaxUtil.fail().msg("未查询到该申请信息");
+            }
+        } else if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+            // 判断是否同一个院
+            Users users = usersService.getUserFromSession();
+            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
+            if (Objects.nonNull(usersType)) {
+                Optional<Record> record = Optional.empty();
+                if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
+                    record = staffService.findByUsernameRelation(users.getUsername());
+                } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
+                    record = studentService.findByUsernameRelation(users.getUsername());
+                }
+
+                if (record.isPresent()) {
+                    int collegeId = record.get().into(College.class).getCollegeId();
+                    Optional<Record> roleApplyRecord = roleApplyService.findByIdRelation(roleApplyId);
+                    if (roleApplyRecord.isPresent()) {
+                        RoleApplyBean roleApplyBean = roleApplyRecord.get().into(RoleApplyBean.class);
+                        if (collegeId == roleApplyBean.getCollegeId()) {
+                            Byte status = roleApplyBean.getApplyStatus();
+                            if (status != 1) {
+                                ajaxUtil.success().msg("可操作");
+                            } else {
+                                ajaxUtil.fail().msg("申请已通过，不可操作");
+                            }
+                        } else {
+                            ajaxUtil.fail().msg("该账号不在您所属院下，不允许操作");
+                        }
+                    } else {
+                        ajaxUtil.fail().msg("未查询到该申请信息");
+                    }
+                } else {
+                    ajaxUtil.fail().msg("未查询到该用户所属院信息");
+                }
+            } else {
+                ajaxUtil.fail().msg("未查询到该用户类型");
+            }
+        } else {
+            Optional<Record> roleApplyRecord = roleApplyService.findByIdRelation(roleApplyId);
+            if (roleApplyRecord.isPresent()) {
+                RoleApplyBean roleApplyBean = roleApplyRecord.get().into(RoleApplyBean.class);
+                Users users = usersService.getUserFromSession();
+                if (StringUtils.equals(users.getUsername(), roleApplyBean.getUsername())) {
+                    Byte status = roleApplyBean.getApplyStatus();
+                    if (status != 1) {
+                        ajaxUtil.success().msg("可操作");
+                    } else {
+                        ajaxUtil.fail().msg("申请已通过，不可操作");
+                    }
+                } else {
+                    ajaxUtil.fail().msg("非本人申请，不可操作");
+                }
+            } else {
+                ajaxUtil.fail().msg("未查询到该申请信息");
+            }
+        }
+    }
+
+    private void rule3(AjaxUtil<Map<String, Object>> ajaxUtil, String roleApplyId) {
+        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+            ajaxUtil.success().msg("可操作");
+        } else if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+            // 判断是否同一个院
+            Users users = usersService.getUserFromSession();
+            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
+            if (Objects.nonNull(usersType)) {
+                Optional<Record> record = Optional.empty();
+                if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
+                    record = staffService.findByUsernameRelation(users.getUsername());
+                } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
+                    record = studentService.findByUsernameRelation(users.getUsername());
+                }
+
+                if (record.isPresent()) {
+                    int collegeId = record.get().into(College.class).getCollegeId();
+                    Optional<Record> roleApplyRecord = roleApplyService.findByIdRelation(roleApplyId);
+                    if (roleApplyRecord.isPresent()) {
+                        RoleApplyBean roleApplyBean = roleApplyRecord.get().into(RoleApplyBean.class);
+                        if (collegeId == roleApplyBean.getCollegeId()) {
+                            ajaxUtil.success().msg("可操作");
+                        } else {
+                            ajaxUtil.fail().msg("该账号不在您所属院下，不允许操作");
+                        }
+                    } else {
+                        ajaxUtil.fail().msg("未查询到该申请信息");
+                    }
+                } else {
+                    ajaxUtil.fail().msg("未查询到该用户所属院信息");
+                }
+            } else {
+                ajaxUtil.fail().msg("未查询到该用户类型");
+            }
+        } else {
+            Optional<Record> roleApplyRecord = roleApplyService.findByIdRelation(roleApplyId);
+            if (roleApplyRecord.isPresent()) {
+                RoleApplyBean roleApplyBean = roleApplyRecord.get().into(RoleApplyBean.class);
+                Users users = usersService.getUserFromSession();
+                if (StringUtils.equals(users.getUsername(), roleApplyBean.getUsername())) {
+                    ajaxUtil.success().msg("可操作");
+                } else {
+                    ajaxUtil.fail().msg("非本人申请，不可操作");
+                }
+            } else {
+                ajaxUtil.fail().msg("未查询到该申请信息");
+            }
         }
     }
 

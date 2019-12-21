@@ -5,7 +5,25 @@ import org.jooq.Result;
 import top.zbeboy.zone.domain.tables.pojos.RoleApply;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
+import java.util.Optional;
+
 public interface RoleApplyService {
+
+    /**
+     * 通过主键查询
+     *
+     * @param id 主键
+     * @return 数据
+     */
+    RoleApply findById(String id);
+
+    /**
+     * 通过主键关联查询
+     *
+     * @param id 主键
+     * @return 数据
+     */
+    Optional<Record> findByIdRelation(String id);
 
     /**
      * 分页查询
@@ -43,4 +61,11 @@ public interface RoleApplyService {
      * @param roleApply 数据
      */
     void update(RoleApply roleApply);
+
+    /**
+     * 删除
+     *
+     * @param id 主键
+     */
+    void deleteById(String id);
 }
