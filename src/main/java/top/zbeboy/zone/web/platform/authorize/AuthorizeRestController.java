@@ -99,7 +99,8 @@ public class AuthorizeRestController {
         headers.add("realName");
         headers.add("username");
         headers.add("authorizeTypeName");
-        headers.add("organizeName");
+        headers.add("dataScope");
+        headers.add("dataName");
         headers.add("roleName");
         headers.add("duration");
         headers.add("validDate");
@@ -107,6 +108,7 @@ public class AuthorizeRestController {
         headers.add("applyStatus");
         headers.add("createDate");
         headers.add("reason");
+        headers.add("refuse");
         headers.add("operator");
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
         Result<Record> records = roleApplyService.findAllByPage(dataTablesUtil);
@@ -439,13 +441,15 @@ public class AuthorizeRestController {
      */
     @PostMapping("/web/platform/authorize/status")
     public ResponseEntity<Map<String, Object>> status(@RequestParam("roleApplyId") String roleApplyId,
-                                                      @RequestParam("applyStatus") Byte applyStatus, HttpServletRequest request) {
+                                                      @RequestParam("applyStatus") Byte applyStatus,
+                                                      String refuse, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
                 roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
             RoleApply roleApply = roleApplyService.findById(roleApplyId);
             if (Objects.nonNull(roleApply)) {
                 roleApply.setApplyStatus(applyStatus);
+                roleApply.setRefuse(refuse);
                 roleApplyService.update(roleApply);
                 Users applyUser = usersService.findByUsername(roleApply.getUsername());
                 Users users = usersService.getUserFromSession();
@@ -454,7 +458,7 @@ public class AuthorizeRestController {
                 if (applyStatus == 1) {
                     notify += " 通过了您在" + DateTimeUtil.defaultFormatSqlTimestamp(roleApply.getCreateDate()) + "时创建的平台授权申请。";
                 } else if (applyStatus == 2) {
-                    notify += " 拒绝了您在" + DateTimeUtil.defaultFormatSqlTimestamp(roleApply.getCreateDate()) + "时创建的平台授权申请。";
+                    notify += " 拒绝了您在" + DateTimeUtil.defaultFormatSqlTimestamp(roleApply.getCreateDate()) + "时创建的平台授权申请。原因：" + refuse;
                 }
 
                 // 检查邮件推送是否被关闭

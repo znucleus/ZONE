@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8"/>
 </head>
@@ -63,6 +63,7 @@
                             <th>申请状态</th>
                             <th>创建时间</th>
                             <th>理由</th>
+                            <th>拒绝原因</th>
                             <th>操作</th>
                         </tr>
                         </thead>
@@ -74,9 +75,45 @@
         </div>
     </div>
 
+    <!-- 拒绝原因Modal -->
+    <div id="refuseModal" class="modal fade">
+        <div class="modal-dialog modal-dialog-vertical-center" role="document">
+            <div class="modal-content bd-0 tx-14">
+                <div class="modal-header pd-y-20 pd-x-25">
+                    <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">拒绝原因</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body pd-25">
+                    <div class="row">
+
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <input type="hidden" id="roleApplyId"/>
+                                <label>拒绝原因</label>
+                                <textarea class="form-control" id="refuse" name="reason" rows="3"
+                                          placeholder="拒绝原因"></textarea>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary tx-11 tx-uppercase pd-y-12 pd-x-25 tx-mont tx-medium"
+                            id="okRefuse">确定
+                    </button>
+                    <button type="button" class="btn btn-secondary tx-11 tx-uppercase pd-y-12 pd-x-25 tx-mont tx-medium"
+                            data-dismiss="modal">关闭
+                    </button>
+                </div>
+            </div>
+        </div><!-- modal-dialog -->
+    </div><!-- modal -->
+
     <!--定义操作列按钮模板-->
     <script id="operator_button" type="text/x-handlebars-template">
-        <div class="btn-group" role="group" >
+        <div class="btn-group" role="group">
             {{#each func}}
             <button type="button" class="btn btn-{{this.type}} btn-sm {{this.css}}" data-id="{{this.id}}">{{this.name}}
             </button>
@@ -86,7 +123,8 @@
 
     <input type="hidden" id="authorities" th:value="${authorities}"/>
     <input type="hidden" id="username" th:value="${username}"/>
-    <input type="hidden" class="dy_script" th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/platform/authorize/authorize_data.js')}"/>
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/platform/authorize/authorize_data.js')}"/>
 </div>
 <!-- /#page-wrapper -->
 </body>

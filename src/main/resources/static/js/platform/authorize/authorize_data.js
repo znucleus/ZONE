@@ -96,6 +96,7 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "workbook", "respo
                 {"data": "applyStatus"},
                 {"data": "createDateStr"},
                 {"data": "reason"},
+                {"data": "refuse"},
                 {"data": null}
             ],
             columnDefs: [
@@ -116,13 +117,6 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "workbook", "respo
                     }
                 },
                 {
-                    targets: 4,
-                    orderable: false,
-                    render: function (a, b, c, d) {
-                        return c.dataName;
-                    }
-                },
-                {
                     targets: 9,
                     render: function (a, b, c, d) {
                         var v = '';
@@ -137,7 +131,7 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "workbook", "respo
                     }
                 },
                 {
-                    targets: 12,
+                    targets: 13,
                     orderable: false,
                     render: function (a, b, c, d) {
 
@@ -521,7 +515,7 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "workbook", "respo
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
                 preConfirm: function () {
-                    sendStatusAjax(roleApplyId, 1);
+                    sendStatusAjax(roleApplyId, 1, '');
                 }
             });
         }
@@ -539,7 +533,9 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "workbook", "respo
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
                 preConfirm: function () {
-                    sendStatusAjax(roleApplyId, 2);
+                    $('#refuseModal').modal('show');
+                    $('#refuse').val('');
+                    $('#roleApplyId').val(roleApplyId);
                 }
             });
         }
@@ -574,16 +570,22 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "workbook", "respo
             });
         }
 
+        $('#okRefuse').click(function () {
+            sendStatusAjax($('#roleApplyId').val(), 2, $('#refuse').val());
+            $('#refuseModal').modal('hide');
+        });
+
         /**
          * 状态ajax
          * @param roleApplyId
          * @param status
+         * @param refuse
          */
-        function sendStatusAjax(roleApplyId, status) {
+        function sendStatusAjax(roleApplyId, status, refuse) {
             $.ajax({
                 type: 'POST',
                 url: getAjaxUrl().status,
-                data: {roleApplyId: roleApplyId, applyStatus: status},
+                data: {roleApplyId: roleApplyId, applyStatus: status, refuse: refuse},
                 success: function (data) {
                     Messenger().post({
                         message: data.msg,

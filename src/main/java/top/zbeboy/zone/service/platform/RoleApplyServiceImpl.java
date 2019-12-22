@@ -209,6 +209,28 @@ public class RoleApplyServiceImpl implements RoleApplyService, PaginationPlugin<
                 }
             }
 
+            if (StringUtils.equals("dataScope", orderColumnName)) {
+                sortField = new SortField[2];
+                if (isAsc) {
+                    sortField[0] = ROLE_APPLY.DATA_SCOPE.asc();
+                    sortField[1] = ROLE_APPLY.ROLE_APPLY_ID.asc();
+                } else {
+                    sortField[0] = ROLE_APPLY.DATA_SCOPE.desc();
+                    sortField[1] = ROLE_APPLY.ROLE_APPLY_ID.desc();
+                }
+            }
+
+            if (StringUtils.equals("dataName", orderColumnName)) {
+                sortField = new SortField[2];
+                if (isAsc) {
+                    sortField[0] = ROLE_APPLY.DATA_ID.asc();
+                    sortField[1] = ROLE_APPLY.ROLE_APPLY_ID.asc();
+                } else {
+                    sortField[0] = ROLE_APPLY.DATA_ID.desc();
+                    sortField[1] = ROLE_APPLY.ROLE_APPLY_ID.desc();
+                }
+            }
+
             if (StringUtils.equals("roleName", orderColumnName)) {
                 sortField = new SortField[2];
                 if (isAsc) {
@@ -282,6 +304,17 @@ public class RoleApplyServiceImpl implements RoleApplyService, PaginationPlugin<
                     sortField[1] = ROLE_APPLY.ROLE_APPLY_ID.asc();
                 } else {
                     sortField[0] = ROLE_APPLY.REASON.desc();
+                    sortField[1] = ROLE_APPLY.ROLE_APPLY_ID.desc();
+                }
+            }
+
+            if (StringUtils.equals("refuse", orderColumnName)) {
+                sortField = new SortField[2];
+                if (isAsc) {
+                    sortField[0] = ROLE_APPLY.REFUSE.asc();
+                    sortField[1] = ROLE_APPLY.ROLE_APPLY_ID.asc();
+                } else {
+                    sortField[0] = ROLE_APPLY.REFUSE.desc();
                     sortField[1] = ROLE_APPLY.ROLE_APPLY_ID.desc();
                 }
             }
