@@ -12,7 +12,6 @@ import top.zbeboy.zone.domain.tables.daos.UserNotifyDao;
 import top.zbeboy.zone.domain.tables.pojos.UserNotify;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zone.service.util.SQLQueryUtil;
-import top.zbeboy.zone.web.bean.notify.UserNotifyBean;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
 import javax.annotation.Resource;

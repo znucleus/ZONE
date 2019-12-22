@@ -6,8 +6,6 @@ import org.jooq.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zone.domain.tables.daos.SystemOperatorLogDao;
 import top.zbeboy.zone.domain.tables.pojos.SystemOperatorLog;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;

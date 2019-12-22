@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.service.system.SystemSmsLogService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
-import top.zbeboy.zone.web.bean.system.mailbox.SystemMailboxLogBean;
 import top.zbeboy.zone.web.bean.system.sms.SystemSmsLogBean;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 

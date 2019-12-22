@@ -10,10 +10,9 @@ import top.zbeboy.zone.domain.tables.pojos.AnswerSubject;
 import top.zbeboy.zone.domain.tables.records.AnswerSubjectRecord;
 
 import javax.annotation.Resource;
-
 import java.util.Optional;
 
-import static top.zbeboy.zone.domain.Tables.*;
+import static top.zbeboy.zone.domain.Tables.ANSWER_SUBJECT;
 
 @Service("answerSubjectService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

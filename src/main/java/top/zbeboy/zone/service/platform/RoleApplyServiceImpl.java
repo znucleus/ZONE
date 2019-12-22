@@ -25,8 +25,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static top.zbeboy.zone.domain.Tables.*;
-import static top.zbeboy.zone.domain.Tables.COLLEGE;
-import static top.zbeboy.zone.domain.Tables.SCHOOL;
 
 @Service("roleUsersService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
