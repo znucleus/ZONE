@@ -8,12 +8,12 @@
     <div class="br-pageheader pd-y-15 pd-l-20">
         <nav class="breadcrumb pd-0 mg-0 tx-12">
             <a class="breadcrumb-item dy_href" href="#/web/menu/platform/role">列表</a>
-            <span class="breadcrumb-item active">编辑</span>
+            <span class="breadcrumb-item active">查看</span>
         </nav>
     </div><!-- br-pageheader -->
     <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
         <h4 class="tx-gray-800 mg-b-5">平台角色</h4>
-        <p class="mg-b-0">编辑平台角色。</p>
+        <p class="mg-b-0">查看平台角色。</p>
     </div>
 
     <div class="br-pagebody">
@@ -23,7 +23,7 @@
                     <form id="app_form">
                         <div class="form-group">
                             <label>角色</label>
-                            <input class="form-control" name="roleName" id="roleName" placeholder="角色" th:value="${role.roleName}" maxlength="50"/>
+                            <input class="form-control" name="roleName" id="roleName" placeholder="角色" th:value="${role.roleName}" readonly="readonly"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
@@ -31,10 +31,6 @@
                             <div class="col-sm-12">
                                 <div id="treeview-checkable"></div>
                             </div>
-                        </div>
-                        <div class="form-group text-center">
-                            <button type="button" class="btn btn-primary text-center" id="save">保存</button>
-                            <button type="reset" class="btn btn-default">重置</button>
                         </div>
                     </form>
                 </div>
@@ -44,7 +40,7 @@
 
     <input type="hidden" id="collegeId" th:value="${role.collegeId}"/>
     <input type="hidden" id="roleId" th:value="${role.roleId}"/>
-    <input type="hidden" class="dy_script" th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/platform/role/role_edit.js')}"/>
+    <input type="hidden" class="dy_script" th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/platform/role/role_see.js')}"/>
 </div>
 <!-- /#page-wrapper -->
 </body>

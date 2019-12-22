@@ -64,6 +64,9 @@ public class RoleRestController {
     @Resource
     private AuthoritiesService authoritiesService;
 
+    @Resource
+    private RoleApplyService roleApplyService;
+
     /**
      * 数据
      *
@@ -105,7 +108,8 @@ public class RoleRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         String param = StringUtils.deleteWhitespace(roleName);
 
-        if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
+                roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
             Users users = usersService.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType)) {
@@ -120,20 +124,21 @@ public class RoleRestController {
                     collegeId = record.get().into(College.class).getCollegeId();
                 }
             }
-        }
 
-        if (collegeId > 0) {
-            Result<Record> records = collegeRoleService.findByRoleNameAndCollegeId(param, collegeId);
+            if (collegeId > 0) {
+                Result<Record> records = collegeRoleService.findByRoleNameAndCollegeId(param, collegeId);
 
-            if (records.isEmpty()) {
-                ajaxUtil.success().msg("角色名不重复");
+                if (records.isEmpty()) {
+                    ajaxUtil.success().msg("角色名不重复");
+                } else {
+                    ajaxUtil.fail().msg("角色名重复");
+                }
             } else {
-                ajaxUtil.fail().msg("角色名重复");
+                ajaxUtil.fail().msg("未查询到用户院ID或未选择院");
             }
         } else {
-            ajaxUtil.fail().msg("未查询到用户院ID或未选择院");
+            ajaxUtil.fail().msg("您无权限进行操作");
         }
-
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -150,15 +155,38 @@ public class RoleRestController {
                                                              @RequestParam("roleId") String roleId) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         String param = StringUtils.deleteWhitespace(roleName);
-        if (collegeId > 0) {
-            Result<Record> records = collegeRoleService.findByRoleNameAndCollegeIdNeRoleId(param, collegeId, roleId);
-            if (records.isEmpty()) {
-                ajaxUtil.success().msg("角色名不重复");
+        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
+                roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+            Users users = usersService.getUserFromSession();
+            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
+            if (Objects.nonNull(usersType)) {
+                Optional<Record> record = Optional.empty();
+                if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
+                    record = staffService.findByUsernameRelation(users.getUsername());
+                } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
+                    record = studentService.findByUsernameRelation(users.getUsername());
+                }
+                if (record.isPresent()) {
+                    collegeId = record.get().into(College.class).getCollegeId();
+                } else {
+                    ajaxUtil.fail().msg("未查询到当前用户所属院信息");
+                }
             } else {
-                ajaxUtil.fail().msg("角色名重复");
+                ajaxUtil.fail().msg("未查询到当前用户类型");
+            }
+
+            if (collegeId > 0) {
+                Result<Record> records = collegeRoleService.findByRoleNameAndCollegeIdNeRoleId(param, collegeId, roleId);
+                if (records.isEmpty()) {
+                    ajaxUtil.success().msg("角色名不重复");
+                } else {
+                    ajaxUtil.fail().msg("角色名重复");
+                }
+            } else {
+                ajaxUtil.fail().msg("未查询到用户院ID或未选择院");
             }
         } else {
-            ajaxUtil.fail().msg("未查询到用户院ID或未选择院");
+            ajaxUtil.fail().msg("您无权进行操作");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
@@ -174,20 +202,21 @@ public class RoleRestController {
     public ResponseEntity<Map<String, Object>> save(@Valid RoleAddVo roleAddVo, BindingResult bindingResult) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
-            Role role = new Role();
-            role.setRoleId(UUIDUtil.getUUID());
-            role.setRoleName(StringUtils.deleteWhitespace(roleAddVo.getRoleName()));
-            role.setRoleEnName(Workbook.ROLE_PREFIX + RandomUtil.generateRoleEnName().toUpperCase());
-            role.setRoleType(2);
-            roleService.save(role);
+            if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
+                    roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+                Role role = new Role();
+                role.setRoleId(UUIDUtil.getUUID());
+                role.setRoleName(StringUtils.deleteWhitespace(roleAddVo.getRoleName()));
+                role.setRoleEnName(Workbook.ROLE_PREFIX + RandomUtil.generateRoleEnName().toUpperCase());
+                role.setRoleType(2);
+                roleService.save(role);
 
-            List<String> ids = SmallPropsUtil.StringIdsToStringList(roleAddVo.getApplicationIds());
-            List<RoleApplication> roleApplications = new ArrayList<>();
-            ids.forEach(id -> roleApplications.add(new RoleApplication(role.getRoleId(), id)));
-            roleApplicationService.batchSave(roleApplications);
+                List<String> ids = SmallPropsUtil.StringIdsToStringList(roleAddVo.getApplicationIds());
+                List<RoleApplication> roleApplications = new ArrayList<>();
+                ids.forEach(id -> roleApplications.add(new RoleApplication(role.getRoleId(), id)));
+                roleApplicationService.batchSave(roleApplications);
 
-            int collegeId = roleAddVo.getCollegeId();
-            if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+                int collegeId = roleAddVo.getCollegeId();
                 Users users = usersService.getUserFromSession();
                 UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
                 if (Objects.nonNull(usersType)) {
@@ -202,16 +231,19 @@ public class RoleRestController {
                         collegeId = record.get().into(College.class).getCollegeId();
                     }
                 }
-            }
 
-            if (collegeId > 0) {
-                CollegeRole collegeRole = new CollegeRole(role.getRoleId(), collegeId);
-                collegeRoleService.save(collegeRole);
+                if (collegeId > 0) {
+                    CollegeRole collegeRole = new CollegeRole(role.getRoleId(), collegeId);
+                    collegeRoleService.save(collegeRole);
 
-                ajaxUtil.success().msg("保存成功");
+                    ajaxUtil.success().msg("保存成功");
+                } else {
+                    ajaxUtil.fail().msg("未查询到用户院ID或未选择院");
+                }
             } else {
-                ajaxUtil.fail().msg("未查询到用户院ID或未选择院");
+                ajaxUtil.fail().msg("您无权限进行操作");
             }
+
         } else {
             ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
@@ -229,22 +261,27 @@ public class RoleRestController {
     public ResponseEntity<Map<String, Object>> update(@Valid RoleEditVo roleEditVo, BindingResult bindingResult) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
-            Role role = roleService.findById(roleEditVo.getRoleId());
-            if (Objects.nonNull(role)) {
-                role.setRoleName(StringUtils.deleteWhitespace(roleEditVo.getRoleName()));
-                roleService.update(role);
+            if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
+                    roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+                Role role = roleService.findById(roleEditVo.getRoleId());
+                if (Objects.nonNull(role)) {
+                    role.setRoleName(StringUtils.deleteWhitespace(roleEditVo.getRoleName()));
+                    roleService.update(role);
 
-                // 用户可能同时更改菜单
-                roleApplicationService.deleteByRoleId(role.getRoleId());
-                // 不论是系统角色还是其它角色，不应该能变动角色到其它院下，造成跨院问题
-                List<String> ids = SmallPropsUtil.StringIdsToStringList(roleEditVo.getApplicationIds());
-                List<RoleApplication> roleApplications = new ArrayList<>();
-                ids.forEach(id -> roleApplications.add(new RoleApplication(role.getRoleId(), id)));
-                roleApplicationService.batchSave(roleApplications);
+                    // 用户可能同时更改菜单
+                    roleApplicationService.deleteByRoleId(role.getRoleId());
+                    // 不论是系统角色还是其它角色，不应该能变动角色到其它院下，造成跨院问题
+                    List<String> ids = SmallPropsUtil.StringIdsToStringList(roleEditVo.getApplicationIds());
+                    List<RoleApplication> roleApplications = new ArrayList<>();
+                    ids.forEach(id -> roleApplications.add(new RoleApplication(role.getRoleId(), id)));
+                    roleApplicationService.batchSave(roleApplications);
 
-                ajaxUtil.success().msg("更新成功");
+                    ajaxUtil.success().msg("更新成功");
+                } else {
+                    ajaxUtil.fail().msg("根据角色ID未查询到角色数据");
+                }
             } else {
-                ajaxUtil.fail().msg("根据角色ID未查询到角色数据");
+                ajaxUtil.fail().msg("您无权限进行操作");
             }
         } else {
             ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
@@ -261,15 +298,21 @@ public class RoleRestController {
     @PostMapping("/web/platform/role/delete")
     public ResponseEntity<Map<String, Object>> delete(@RequestParam("roleId") String roleId) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        Role role = roleService.findById(roleId);
-        if (Objects.nonNull(role)) {
-            collegeRoleService.deleteByRoleId(roleId);
-            roleApplicationService.deleteByRoleId(roleId);
-            authoritiesService.deleteByAuthorities(role.getRoleEnName());
-            roleService.deleteById(roleId);
-            ajaxUtil.success().msg("删除成功");
+        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
+                roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+            Role role = roleService.findById(roleId);
+            if (Objects.nonNull(role)) {
+                collegeRoleService.deleteByRoleId(roleId);
+                roleApplicationService.deleteByRoleId(roleId);
+                roleApplyService.deleteByRoleId(roleId);
+                authoritiesService.deleteByAuthorities(role.getRoleEnName());
+                roleService.deleteById(roleId);
+                ajaxUtil.success().msg("删除成功");
+            } else {
+                ajaxUtil.fail().msg("根据角色ID未查询到角色数据");
+            }
         } else {
-            ajaxUtil.fail().msg("根据角色ID未查询到角色数据");
+            ajaxUtil.fail().msg("您无权限进行操作");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
@@ -281,7 +324,7 @@ public class RoleRestController {
      * @return json
      */
     @GetMapping("/web/platform/role/application/json")
-    public ResponseEntity<Map<String, Object>> applicationJson(@RequestParam("collegeId") int collegeId) {
+    public ResponseEntity<Map<String, Object>> applicationJson(@RequestParam("collegeId") int collegeId, Byte isSee) {
         AjaxUtil<TreeViewData> ajaxUtil = AjaxUtil.of();
         ajaxUtil.success().list(toJson("0", collegeId)).msg("获取数据成功");
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);

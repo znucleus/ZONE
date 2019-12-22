@@ -1,6 +1,6 @@
 //# sourceURL=role_edit.js
-require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active", "messenger", "bootstrap-treeview", "jquery.address",
-    "bootstrap-maxlength"], function ($, _, tools, Swal, Handlebars, navActive) {
+require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", "bootstrap-treeview", "jquery.address",
+    "bootstrap-maxlength"], function ($, _, tools, Swal, navActive) {
 
     /*
      ajax url.
@@ -44,7 +44,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
         roleName: '',
         applicationIds: '',
         roleId: '',
-        collegeId:''
+        collegeId: ''
     };
 
     /**
@@ -164,6 +164,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
     }
 
     var treeviewId = $('#treeview-checkable');
+
     /**
      * 初始化tree view
      */

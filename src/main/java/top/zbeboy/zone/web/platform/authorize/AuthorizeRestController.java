@@ -158,13 +158,13 @@ public class AuthorizeRestController {
                 if (record.isPresent()) {
                     userCollegeId = record.get().into(College.class).getCollegeId();
                 } else {
-                    ajaxUtil.fail().msg("未查询到该用户所属院信息");
+                    ajaxUtil.fail().msg("未查询到用户所属院信息");
                 }
             } else {
-                ajaxUtil.fail().msg("未查询到该用户类型");
+                ajaxUtil.fail().msg("未查询到用户类型");
             }
         } else {
-            ajaxUtil.fail().msg("未查询到该账号信息");
+            ajaxUtil.fail().msg("未查询到账号信息");
         }
 
         if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
@@ -223,13 +223,13 @@ public class AuthorizeRestController {
                                 ajaxUtil.fail().msg("您没有权限进行该操作");
                             }
                         } else {
-                            ajaxUtil.fail().msg("未查询到该用户所属院信息");
+                            ajaxUtil.fail().msg("未查询到用户所属院信息");
                         }
                     } else {
-                        ajaxUtil.fail().msg("未查询到该用户类型");
+                        ajaxUtil.fail().msg("未查询到用户类型");
                     }
                 } else {
-                    ajaxUtil.fail().msg("未查询到该账号信息");
+                    ajaxUtil.fail().msg("未查询到账号信息");
                 }
             } else {
                 if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
@@ -402,7 +402,7 @@ public class AuthorizeRestController {
                     ajaxUtil.fail().msg("申请已通过，不可操作");
                 }
             } else {
-                ajaxUtil.fail().msg("未查询到该申请信息");
+                ajaxUtil.fail().msg("未查询到申请信息");
             }
         } else if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
             // 判断是否同一个院
@@ -432,13 +432,13 @@ public class AuthorizeRestController {
                             ajaxUtil.fail().msg("该账号不在您所属院下，不允许操作");
                         }
                     } else {
-                        ajaxUtil.fail().msg("未查询到该申请信息");
+                        ajaxUtil.fail().msg("未查询到申请信息");
                     }
                 } else {
-                    ajaxUtil.fail().msg("未查询到该用户所属院信息");
+                    ajaxUtil.fail().msg("未查询到当前用户所属院信息");
                 }
             } else {
-                ajaxUtil.fail().msg("未查询到该用户类型");
+                ajaxUtil.fail().msg("未查询到当前用户类型");
             }
         } else {
             Optional<Record> roleApplyRecord = roleApplyService.findByIdRelation(roleApplyId);
@@ -456,7 +456,7 @@ public class AuthorizeRestController {
                     ajaxUtil.fail().msg("非本人申请，不可操作");
                 }
             } else {
-                ajaxUtil.fail().msg("未查询到该申请信息");
+                ajaxUtil.fail().msg("未查询到申请信息");
             }
         }
     }
@@ -487,13 +487,13 @@ public class AuthorizeRestController {
                             ajaxUtil.fail().msg("该账号不在您所属院下，不允许操作");
                         }
                     } else {
-                        ajaxUtil.fail().msg("未查询到该申请信息");
+                        ajaxUtil.fail().msg("未查询到申请信息");
                     }
                 } else {
-                    ajaxUtil.fail().msg("未查询到该用户所属院信息");
+                    ajaxUtil.fail().msg("未查询到当前用户所属院信息");
                 }
             } else {
-                ajaxUtil.fail().msg("未查询到该用户类型");
+                ajaxUtil.fail().msg("未查询到当前用户类型");
             }
         } else {
             Optional<Record> roleApplyRecord = roleApplyService.findByIdRelation(roleApplyId);
@@ -506,7 +506,7 @@ public class AuthorizeRestController {
                     ajaxUtil.fail().msg("非本人申请，不可操作");
                 }
             } else {
-                ajaxUtil.fail().msg("未查询到该申请信息");
+                ajaxUtil.fail().msg("未查询到申请信息");
             }
         }
     }
@@ -537,13 +537,13 @@ public class AuthorizeRestController {
                             ajaxUtil.fail().msg("该账号不在您所属院下，不允许操作");
                         }
                     } else {
-                        ajaxUtil.fail().msg("未查询到该申请信息");
+                        ajaxUtil.fail().msg("未查询到申请信息");
                     }
                 } else {
-                    ajaxUtil.fail().msg("未查询到该用户所属院信息");
+                    ajaxUtil.fail().msg("未查询到当前用户所属院信息");
                 }
             } else {
-                ajaxUtil.fail().msg("未查询到该用户类型");
+                ajaxUtil.fail().msg("未查询到当前用户类型");
             }
         } else {
             ajaxUtil.fail().msg("您无权限进行操作");

@@ -1,6 +1,6 @@
 //# sourceURL=role_data.js
-require(["jquery", "lodash_plugin", "sweetalert2", "handlebars", "nav.active", "responsive.bootstrap4", "jquery.address", "messenger"],
-    function ($, DP, Swal, Handlebars, navActive) {
+require(["jquery", "lodash_plugin", "sweetalert2", "handlebars", "nav.active", "workbook", "responsive.bootstrap4", "jquery.address", "messenger"],
+    function ($, DP, Swal, Handlebars, navActive, workbook) {
 
         /*
          参数
@@ -9,6 +9,10 @@ require(["jquery", "lodash_plugin", "sweetalert2", "handlebars", "nav.active", "
             schoolName: '',
             collegeName: '',
             roleName: ''
+        };
+
+        var page_param = {
+            authorities: $('#authorities').val()
         };
 
         /*
@@ -29,6 +33,7 @@ require(["jquery", "lodash_plugin", "sweetalert2", "handlebars", "nav.active", "
                 del: web_path + '/web/platform/role/delete',
                 add: '/web/platform/role/add',
                 edit: '/web/platform/role/edit',
+                see: '/web/platform/role/see',
                 page: '/web/menu/platform/role'
             };
         }
@@ -72,21 +77,32 @@ require(["jquery", "lodash_plugin", "sweetalert2", "handlebars", "nav.active", "
                             {
                                 func: [
                                     {
-                                        "name": "编辑",
-                                        "css": "edit",
-                                        "type": "primary",
-                                        "id": c.roleId,
-                                        "role": c.roleName
-                                    },
-                                    {
-                                        "name": "删除",
-                                        "css": "del",
-                                        "type": "danger",
+                                        "name": "查看",
+                                        "css": "see",
+                                        "type": "success",
                                         "id": c.roleId,
                                         "role": c.roleName
                                     }
                                 ]
                             };
+
+                        if (page_param.authorities === workbook.authorities.ROLE_SYSTEM ||
+                            page_param.authorities === workbook.authorities.ROLE_ADMIN) {
+                            context.func.push({
+                                    "name": "编辑",
+                                    "css": "edit",
+                                    "type": "primary",
+                                    "id": c.roleId,
+                                    "role": c.roleName
+                                },
+                                {
+                                    "name": "删除",
+                                    "css": "del",
+                                    "type": "danger",
+                                    "id": c.roleId,
+                                    "role": c.roleName
+                                });
+                        }
 
                         return template(context);
                     }
@@ -129,13 +145,20 @@ require(["jquery", "lodash_plugin", "sweetalert2", "handlebars", "nav.active", "
                 tableElement.delegate('.del', "click", function () {
                     role_del($(this).attr('data-id'), $(this).attr('data-role'));
                 });
+
+                tableElement.delegate('.see', "click", function () {
+                    see($(this).attr('data-id'));
+                });
                 // 初始化搜索框中内容
                 initSearchInput();
             }
         });
-
-        var global_button = '<button type="button" id="school_add" class="btn btn-outline-primary btn-sm"><i class="fa fa-plus"></i>添加</button>' +
-            '  <button type="button" id="refresh" class="btn btn-light btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
+        var global_button = '';
+        if (page_param.authorities === workbook.authorities.ROLE_SYSTEM ||
+            page_param.authorities === workbook.authorities.ROLE_ADMIN) {
+            global_button += '<button type="button" id="school_add" class="btn btn-outline-primary btn-sm"><i class="fa fa-plus"></i>添加</button>';
+        }
+        global_button += '  <button type="button" id="refresh" class="btn btn-light btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
         $('#global_button').append(global_button);
 
         /*
@@ -277,6 +300,13 @@ require(["jquery", "lodash_plugin", "sweetalert2", "handlebars", "nav.active", "
          */
         function edit(roleId) {
             $.address.value(getAjaxUrl().edit + '/' + roleId);
+        }
+
+        /*
+        查看页面
+        */
+        function see(roleId) {
+            $.address.value(getAjaxUrl().see + '/' + roleId);
         }
 
         /*

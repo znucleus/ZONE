@@ -91,7 +91,7 @@ public class AuthorizeViewController {
                     page = "inline_tip::#page-wrapper";
                 }
             } else {
-                config.buildDangerTip("查询错误", "未查询到用户类型");
+                config.buildDangerTip("查询错误", "未查询到当前用户类型");
                 config.dataMerging(modelMap);
                 page = "inline_tip::#page-wrapper";
             }
@@ -128,7 +128,7 @@ public class AuthorizeViewController {
                 }
 
             } else {
-                config.buildDangerTip("查询错误", "未查询到该申请信息");
+                config.buildDangerTip("查询错误", "未查询到申请信息");
                 config.dataMerging(modelMap);
                 page = "inline_tip::#page-wrapper";
             }
@@ -166,17 +166,17 @@ public class AuthorizeViewController {
                             page = "inline_tip::#page-wrapper";
                         }
                     } else {
-                        config.buildDangerTip("查询错误", "未查询到该申请信息");
+                        config.buildDangerTip("查询错误", "未查询到申请信息");
                         config.dataMerging(modelMap);
                         page = "inline_tip::#page-wrapper";
                     }
                 } else {
-                    config.buildDangerTip("查询错误", "未查询到该用户所属院信息");
+                    config.buildDangerTip("查询错误", "未查询到当前用户所属院信息");
                     config.dataMerging(modelMap);
                     page = "inline_tip::#page-wrapper";
                 }
             } else {
-                config.buildDangerTip("查询错误", "未查询到该用户类型");
+                config.buildDangerTip("查询错误", "未查询到当前用户类型");
                 config.dataMerging(modelMap);
                 page = "inline_tip::#page-wrapper";
             }
@@ -202,7 +202,7 @@ public class AuthorizeViewController {
                     page = "inline_tip::#page-wrapper";
                 }
             } else {
-                config.buildDangerTip("查询错误", "未查询到该申请信息");
+                config.buildDangerTip("查询错误", "未查询到申请信息");
                 config.dataMerging(modelMap);
                 page = "inline_tip::#page-wrapper";
             }

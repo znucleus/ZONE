@@ -68,4 +68,11 @@ public interface RoleApplyService {
      * @param id 主键
      */
     void deleteById(String id);
+
+    /**
+     * 通过角色id删除
+     *
+     * @param roleId 角色id
+     */
+    void deleteByRoleId(String roleId);
 }

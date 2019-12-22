@@ -150,6 +150,13 @@ public class RoleApplyServiceImpl implements RoleApplyService, PaginationPlugin<
     }
 
     @Override
+    public void deleteByRoleId(String roleId) {
+        create.deleteFrom(ROLE_APPLY)
+                .where(ROLE_APPLY.ROLE_ID.eq(roleId))
+                .execute();
+    }
+
+    @Override
     public Condition searchCondition(DataTablesUtil paginationUtil) {
         Condition a = null;
         JSONObject search = paginationUtil.getSearch();
