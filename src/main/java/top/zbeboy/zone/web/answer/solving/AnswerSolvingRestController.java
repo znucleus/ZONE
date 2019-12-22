@@ -55,7 +55,7 @@ public class AnswerSolvingRestController {
             if (!answerResultRecordOptional.isPresent()) {
                 String ip = RequestUtil.getIpAddress(request);
                 Optional<AnswerResultRecord> ipCheck = answerResultService.findByAnswerReleaseIdAndIpAddress(answerSolvingCheck.getAnswerReleaseId(), ip);
-                if(!ipCheck.isPresent()){
+                if (!ipCheck.isPresent()) {
                     // 计算最后结果
                     double lastScore = 0;
                     double totalScore = 0;

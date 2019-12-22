@@ -125,7 +125,7 @@ public class StudentRestController {
             ajaxUtil.fail().msg("学号13位数字");
         } else {
             Optional<Record> record = studentService.findNormalByStudentNumberRelation(studentNumber);
-            if(record.isPresent()){
+            if (record.isPresent()) {
                 ajaxUtil.success().msg("学生信息正常");
             } else {
                 ajaxUtil.fail().msg("未查询到该学生信息或该学生状态异常");
@@ -259,7 +259,7 @@ public class StudentRestController {
                     }
                 }
                 String birthday = studentEditVo.getBirthday();
-                if(StringUtils.isNotBlank(birthday)){
+                if (StringUtils.isNotBlank(birthday)) {
                     student.setBirthday(DateTimeUtil.defaultParseSqlDate(birthday));
                 } else {
                     student.setBirthday(null);
@@ -269,7 +269,7 @@ public class StudentRestController {
                 student.setPoliticalLandscapeId(studentEditVo.getPoliticalLandscapeId());
                 student.setNationId(studentEditVo.getNationId());
                 String dormitoryNumber = studentEditVo.getDormitoryNumber();
-                if(StringUtils.isNotBlank(dormitoryNumber)){
+                if (StringUtils.isNotBlank(dormitoryNumber)) {
                     String regex = Workbook.DORMITORY_NUMBER_REGEX;
                     if (Pattern.matches(regex, dormitoryNumber)) {
                         student.setDormitoryNumber(dormitoryNumber);
@@ -278,7 +278,7 @@ public class StudentRestController {
                     student.setDormitoryNumber(dormitoryNumber);
                 }
                 String parentContactPhone = studentEditVo.getParentContactPhone();
-                if(StringUtils.isNotBlank(parentContactPhone)){
+                if (StringUtils.isNotBlank(parentContactPhone)) {
                     String regex = SystemMobileConfig.MOBILE_REGEX;
                     if (Pattern.matches(regex, parentContactPhone)) {
                         student.setParentContactPhone(parentContactPhone);

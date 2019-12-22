@@ -7,7 +7,7 @@ import java.util.List;
 public class TreeViewData {
     private String text;
     private List<TreeViewData> nodes;
-    private String  dataId;
+    private String dataId;
 
     public TreeViewData() {
     }

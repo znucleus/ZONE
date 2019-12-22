@@ -5,7 +5,7 @@ import javax.validation.constraints.Size;
 
 public class ApplicationEditVo {
     @NotBlank(message = "应用ID不能为空")
-    @Size(max = 64,message = "应用ID64个字符以内")
+    @Size(max = 64, message = "应用ID64个字符以内")
     private String applicationId;
     @NotBlank(message = "应用名不能为空")
     @Size(max = 30, message = "应用名30个字符以内")

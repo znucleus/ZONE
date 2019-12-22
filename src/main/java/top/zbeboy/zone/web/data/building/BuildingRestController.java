@@ -29,7 +29,7 @@ public class BuildingRestController {
     @GetMapping("/user/data/building")
     public ResponseEntity<Map<String, Object>> anyoneData(BuildingVo buildingVo) {
         Select2Data select2Data = Select2Data.of();
-        Result<BuildingRecord> buildings = buildingService.findByCollegeIdAndBuildingIsDel(buildingVo.getCollegeId(),BooleanUtil.toByte(false));
+        Result<BuildingRecord> buildings = buildingService.findByCollegeIdAndBuildingIsDel(buildingVo.getCollegeId(), BooleanUtil.toByte(false));
         buildings.forEach(building -> select2Data.add(building.getBuildingId().toString(), building.getBuildingName()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }

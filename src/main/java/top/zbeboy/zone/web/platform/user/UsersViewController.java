@@ -111,6 +111,7 @@ public class UsersViewController {
 
     /**
      * 用户资料编辑页面
+     *
      * @param modelMap 页面对象
      * @return 页面
      */
@@ -132,6 +133,7 @@ public class UsersViewController {
 
     /**
      * 用户设置界面
+     *
      * @return 页面
      */
     @GetMapping("/user/setting")

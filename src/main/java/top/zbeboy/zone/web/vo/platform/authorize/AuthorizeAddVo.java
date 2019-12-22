@@ -15,15 +15,15 @@ public class AuthorizeAddVo {
     @Size(max = 64, message = "角色ID64个字符以内")
     private String roleId;
     @NotNull(message = "时长不能为空")
-    @Min(value = 1,message = "时长最小值为1")
+    @Min(value = 1, message = "时长最小值为1")
     private int duration;
     @NotBlank(message = "生效时间不能为空")
     private String validDate;
     @NotNull(message = "班级ID不能为空")
-    @Min(value = 1,message = "班级ID最小值为1")
+    @Min(value = 1, message = "班级ID最小值为1")
     private int organizeId;
     @NotBlank(message = "申请原因不能为空")
-    @Size(max = 200,message = "申请原因200个字符以内")
+    @Size(max = 200, message = "申请原因200个字符以内")
     private String reason;
     @NotNull(message = "院ID不能为空")
     @Min(value = 1, message = "院ID最小值为1")

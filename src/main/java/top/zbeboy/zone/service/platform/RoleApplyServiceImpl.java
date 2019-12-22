@@ -101,7 +101,7 @@ public class RoleApplyServiceImpl implements RoleApplyService, PaginationPlugin<
 
     @Override
     public int countAll(DataTablesUtil dataTablesUtil) {
-        SelectOnConditionStep<Record1<Integer>> selectOnConditionStep  = create.selectCount()
+        SelectOnConditionStep<Record1<Integer>> selectOnConditionStep = create.selectCount()
                 .from(ROLE_APPLY)
                 .leftJoin(USERS)
                 .on(ROLE_APPLY.USERNAME.eq(USERS.USERNAME))
@@ -118,7 +118,7 @@ public class RoleApplyServiceImpl implements RoleApplyService, PaginationPlugin<
 
     @Override
     public int countByCondition(DataTablesUtil dataTablesUtil) {
-        SelectOnConditionStep<Record1<Integer>> selectOnConditionStep  = create.selectCount()
+        SelectOnConditionStep<Record1<Integer>> selectOnConditionStep = create.selectCount()
                 .from(ROLE_APPLY)
                 .leftJoin(USERS)
                 .on(ROLE_APPLY.USERNAME.eq(USERS.USERNAME))
@@ -338,9 +338,9 @@ public class RoleApplyServiceImpl implements RoleApplyService, PaginationPlugin<
             if (StringUtils.isNotBlank(dataRange)) {
                 int dataRangeInt = NumberUtils.toInt(dataRange);
                 // 个人
-                if(dataRangeInt == 1){
+                if (dataRangeInt == 1) {
                     a = ROLE_APPLY.USERNAME.eq(users.getUsername());
-                } else if(dataRangeInt == 2){
+                } else if (dataRangeInt == 2) {
                     // 待审核
                     a = ROLE_APPLY.APPLY_STATUS.eq(ByteUtil.toByte(0));
                 }

@@ -5,8 +5,8 @@ import top.zbeboy.zone.domain.tables.pojos.Department;
 public class DepartmentBean extends Department {
     private Byte schoolIsDel;
     private Byte collegeIsDel;
-    private String  collegeName;
-    private String  schoolName;
+    private String collegeName;
+    private String schoolName;
 
     public Byte getSchoolIsDel() {
         return schoolIsDel;

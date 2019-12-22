@@ -55,7 +55,7 @@ public interface UsersService {
      * 检查邮箱是否占用
      *
      * @param email 邮箱
-     * @param own    账号
+     * @param own   账号
      * @return 检验邮箱
      */
     Result<UsersRecord> findByEmailNeOwn(String email, String own);

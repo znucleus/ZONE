@@ -8,7 +8,7 @@ public interface MenuService {
      * 获取角色菜单
      * 缓存:是
      *
-     * @param roles 角色
+     * @param roles    角色
      * @param username 账号
      * @return 菜单html
      */

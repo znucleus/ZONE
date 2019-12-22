@@ -19,8 +19,8 @@ public interface AnswerResultService {
     /**
      * 根据ip与发布id查询
      *
-     * @param answerReleaseId    发布id
-     * @param ipAddress ip
+     * @param answerReleaseId 发布id
+     * @param ipAddress       ip
      * @return 数据
      */
     Optional<AnswerResultRecord> findByAnswerReleaseIdAndIpAddress(String answerReleaseId, String ipAddress);

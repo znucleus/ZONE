@@ -49,7 +49,7 @@ public interface ApplicationService {
      * @param applicationId   应用id
      * @return 应用
      */
-    Result<ApplicationRecord> findByApplicationNameNeApplicationId(String applicationName , String applicationId);
+    Result<ApplicationRecord> findByApplicationNameNeApplicationId(String applicationName, String applicationId);
 
     /**
      * 通过应用英文名查询
@@ -57,7 +57,7 @@ public interface ApplicationService {
      * @param applicationEnName 应用英文名
      * @return 应用
      */
-    List<Application> findByApplicationEnName(String applicationEnName );
+    List<Application> findByApplicationEnName(String applicationEnName);
 
     /**
      * 通过应用英文名与应用id查询
@@ -66,7 +66,7 @@ public interface ApplicationService {
      * @param applicationId     应用id
      * @return 应用
      */
-    Result<ApplicationRecord> findByApplicationEnNameNeApplicationId(String applicationEnName , String applicationId );
+    Result<ApplicationRecord> findByApplicationEnNameNeApplicationId(String applicationEnName, String applicationId);
 
     /**
      * 通过应用链接查询
@@ -91,7 +91,7 @@ public interface ApplicationService {
      * @param applicationCode 应用识别码
      * @return 应用
      */
-    List<Application> findByApplicationCode(String applicationCode );
+    List<Application> findByApplicationCode(String applicationCode);
 
     /**
      * 通过应用识别码与应用id查询

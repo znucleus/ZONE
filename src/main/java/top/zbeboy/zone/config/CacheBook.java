@@ -8,7 +8,7 @@ public final class CacheBook {
     public static final long EXPIRES_SECONDS = 1800L;
     public static final long EXPIRES_MINUTES = 30L;
     public static final long EXPIRES_HOURS = 4;
-    public static final long EXPIRES_DAYS = 1 ;
+    public static final long EXPIRES_DAYS = 1;
     public static final long EXPIRES_YEAR = 365;
 
     /*

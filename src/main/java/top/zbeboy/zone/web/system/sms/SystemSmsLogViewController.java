@@ -12,7 +12,7 @@ public class SystemSmsLogViewController {
      * @return 系统短信页面
      */
     @GetMapping("web/menu/system/sms")
-    public String index()  {
+    public String index() {
         return "web/system/sms/system_sms::#page-wrapper";
     }
 }

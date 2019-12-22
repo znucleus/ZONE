@@ -17,7 +17,7 @@ import java.util.concurrent.Future;
  * @since 1.0
  */
 public class ExceptionHandlingAsyncTaskExecutor implements AsyncTaskExecutor,
-InitializingBean, DisposableBean {
+        InitializingBean, DisposableBean {
 
     private final Logger log = LoggerFactory.getLogger(ExceptionHandlingAsyncTaskExecutor.class);
 
@@ -39,23 +39,23 @@ InitializingBean, DisposableBean {
 
     private <T> Callable<T> createCallable(final Callable<T> task) {
         return () -> {
-        try {
-            return task.call();
-        } catch (Exception e) {
-            handle(e);
-            throw e;
-        }
-    };
+            try {
+                return task.call();
+            } catch (Exception e) {
+                handle(e);
+                throw e;
+            }
+        };
     }
 
     private Runnable createWrappedRunnable(final Runnable task) {
         return () -> {
-        try {
-            task.run();
-        } catch (Exception e) {
-            handle(e);
-        }
-    };
+            try {
+                task.run();
+            } catch (Exception e) {
+                handle(e);
+            }
+        };
     }
 
     private void handle(Exception e) {

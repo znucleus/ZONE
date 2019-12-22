@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service("answerSolvingService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-public class AnswerSolvingServiceImpl implements AnswerSolvingService{
+public class AnswerSolvingServiceImpl implements AnswerSolvingService {
 
     @Resource
     private AnswerSolvingDao answerSolvingDao;

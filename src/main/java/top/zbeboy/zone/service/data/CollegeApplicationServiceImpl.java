@@ -17,7 +17,7 @@ import static top.zbeboy.zone.domain.Tables.COLLEGE_APPLICATION;
 
 @Service("collegeApplicationService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-public class CollegeApplicationServiceImpl implements CollegeApplicationService{
+public class CollegeApplicationServiceImpl implements CollegeApplicationService {
 
     private final DSLContext create;
 

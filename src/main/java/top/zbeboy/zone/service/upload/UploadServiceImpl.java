@@ -122,7 +122,7 @@ public class UploadServiceImpl implements UploadService {
     /**
      * 文件名加后缀补全操作
      *
-     * @param fileName 无后缀的文件名
+     * @param fileName     无后缀的文件名
      * @param fileFullName 文件名全称(带后缀或不带后缀)
      * @return 带后缀的文件名
      */

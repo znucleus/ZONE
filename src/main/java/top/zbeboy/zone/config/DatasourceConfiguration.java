@@ -20,7 +20,7 @@ public class DatasourceConfiguration {
 
     @Bean
     @ConfigurationProperties(prefix = "datasource.mine")
-    public DataSource dataSource(){
+    public DataSource dataSource() {
         return DataSourceBuilder.create()
                 .type(HikariDataSource.class).build();
     }

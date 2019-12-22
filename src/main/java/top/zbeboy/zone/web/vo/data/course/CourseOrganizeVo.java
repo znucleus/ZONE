@@ -1,8 +1,8 @@
 package top.zbeboy.zone.web.vo.data.course;
 
 public class CourseOrganizeVo {
-    private Byte    schoolYear;
-    private Byte    term;
+    private Byte schoolYear;
+    private Byte term;
     private Integer collegeId;
 
     public Byte getSchoolYear() {
