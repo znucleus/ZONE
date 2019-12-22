@@ -214,17 +214,18 @@ CREATE TABLE role_apply(
    role_apply_id VARCHAR(64) PRIMARY KEY ,
    username VARCHAR(64) NOT NULL,
    authorize_type_id INT NOT NULL,
-   organize_id INT NOT NULL,
+   data_scope INT NOT NULL,
+   data_id INT NOT NULL,
    role_id VARCHAR(64) NOT NULL,
    duration VARCHAR(5) NOT NULL,
    reason VARCHAR(200) NOT NULL,
+   refuse VARCHAR(200),
    valid_date DATETIME NOT NULL,
    expire_date DATETIME NOT NULL,
    create_date DATETIME NOT NULL,
    apply_status TINYINT NOT NULL,
    FOREIGN KEY (username) REFERENCES users(username) ON UPDATE CASCADE ON DELETE CASCADE,
    FOREIGN KEY (authorize_type_id) REFERENCES authorize_type(authorize_type_id),
-   FOREIGN KEY (organize_id) REFERENCES organize(organize_id),
    FOREIGN KEY (role_id) REFERENCES role(role_id)
 );
 

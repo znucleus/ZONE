@@ -25,15 +25,17 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class RoleApply implements Serializable {
 
-    private static final long serialVersionUID = 1788194660;
+    private static final long serialVersionUID = 1236882262;
 
     private String    roleApplyId;
     private String    username;
     private Integer   authorizeTypeId;
-    private Integer   organizeId;
+    private Integer   dataScope;
+    private Integer   dataId;
     private String    roleId;
     private String    duration;
     private String    reason;
+    private String    refuse;
     private Timestamp validDate;
     private Timestamp expireDate;
     private Timestamp createDate;
@@ -45,10 +47,12 @@ public class RoleApply implements Serializable {
         this.roleApplyId = value.roleApplyId;
         this.username = value.username;
         this.authorizeTypeId = value.authorizeTypeId;
-        this.organizeId = value.organizeId;
+        this.dataScope = value.dataScope;
+        this.dataId = value.dataId;
         this.roleId = value.roleId;
         this.duration = value.duration;
         this.reason = value.reason;
+        this.refuse = value.refuse;
         this.validDate = value.validDate;
         this.expireDate = value.expireDate;
         this.createDate = value.createDate;
@@ -59,10 +63,12 @@ public class RoleApply implements Serializable {
         String    roleApplyId,
         String    username,
         Integer   authorizeTypeId,
-        Integer   organizeId,
+        Integer   dataScope,
+        Integer   dataId,
         String    roleId,
         String    duration,
         String    reason,
+        String    refuse,
         Timestamp validDate,
         Timestamp expireDate,
         Timestamp createDate,
@@ -71,10 +77,12 @@ public class RoleApply implements Serializable {
         this.roleApplyId = roleApplyId;
         this.username = username;
         this.authorizeTypeId = authorizeTypeId;
-        this.organizeId = organizeId;
+        this.dataScope = dataScope;
+        this.dataId = dataId;
         this.roleId = roleId;
         this.duration = duration;
         this.reason = reason;
+        this.refuse = refuse;
         this.validDate = validDate;
         this.expireDate = expireDate;
         this.createDate = createDate;
@@ -111,12 +119,21 @@ public class RoleApply implements Serializable {
     }
 
     @NotNull
-    public Integer getOrganizeId() {
-        return this.organizeId;
+    public Integer getDataScope() {
+        return this.dataScope;
     }
 
-    public void setOrganizeId(Integer organizeId) {
-        this.organizeId = organizeId;
+    public void setDataScope(Integer dataScope) {
+        this.dataScope = dataScope;
+    }
+
+    @NotNull
+    public Integer getDataId() {
+        return this.dataId;
+    }
+
+    public void setDataId(Integer dataId) {
+        this.dataId = dataId;
     }
 
     @NotNull
@@ -147,6 +164,15 @@ public class RoleApply implements Serializable {
 
     public void setReason(String reason) {
         this.reason = reason;
+    }
+
+    @Size(max = 200)
+    public String getRefuse() {
+        return this.refuse;
+    }
+
+    public void setRefuse(String refuse) {
+        this.refuse = refuse;
     }
 
     @NotNull
@@ -192,10 +218,12 @@ public class RoleApply implements Serializable {
         sb.append(roleApplyId);
         sb.append(", ").append(username);
         sb.append(", ").append(authorizeTypeId);
-        sb.append(", ").append(organizeId);
+        sb.append(", ").append(dataScope);
+        sb.append(", ").append(dataId);
         sb.append(", ").append(roleId);
         sb.append(", ").append(duration);
         sb.append(", ").append(reason);
+        sb.append(", ").append(refuse);
         sb.append(", ").append(validDate);
         sb.append(", ").append(expireDate);
         sb.append(", ").append(createDate);

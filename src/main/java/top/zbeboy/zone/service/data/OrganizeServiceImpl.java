@@ -9,8 +9,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zone.config.CacheBook;
+import top.zbeboy.zone.domain.tables.daos.OrganizeDao;
+import top.zbeboy.zone.domain.tables.pojos.Organize;
 import top.zbeboy.zone.domain.tables.records.OrganizeRecord;
 
+import javax.annotation.Resource;
 import java.util.Optional;
 
 import static top.zbeboy.zone.domain.Tables.*;
@@ -21,9 +24,17 @@ public class OrganizeServiceImpl implements OrganizeService {
 
     private final DSLContext create;
 
+    @Resource
+    private OrganizeDao organizeDao;
+
     @Autowired
     OrganizeServiceImpl(DSLContext dslContext) {
         create = dslContext;
+    }
+
+    @Override
+    public Organize findById(int id) {
+        return organizeDao.findById(id);
     }
 
     @Cacheable(cacheNames = CacheBook.ORGANIZE, key = "#id")

@@ -4,16 +4,12 @@ import top.zbeboy.zone.domain.tables.pojos.RoleApply;
 
 public class RoleApplyBean extends RoleApply {
     private String authorizeTypeName;
-    private String organizeName;
+    private String dataName;
     private String roleName;
     private String realName;
     private String validDateStr;
     private String expireDateStr;
     private String createDateStr;
-    private int gradeId;
-    private int scienceId;
-    private int departmentId;
-    private int collegeId;
     private int durationInt;
 
     public String getAuthorizeTypeName() {
@@ -24,20 +20,20 @@ public class RoleApplyBean extends RoleApply {
         this.authorizeTypeName = authorizeTypeName;
     }
 
-    public String getOrganizeName() {
-        return organizeName;
-    }
-
-    public void setOrganizeName(String organizeName) {
-        this.organizeName = organizeName;
-    }
-
     public String getRoleName() {
         return roleName;
     }
 
     public void setRoleName(String roleName) {
         this.roleName = roleName;
+    }
+
+    public String getDataName() {
+        return dataName;
+    }
+
+    public void setDataName(String dataName) {
+        this.dataName = dataName;
     }
 
     public String getRealName() {
@@ -70,38 +66,6 @@ public class RoleApplyBean extends RoleApply {
 
     public void setCreateDateStr(String createDateStr) {
         this.createDateStr = createDateStr;
-    }
-
-    public int getGradeId() {
-        return gradeId;
-    }
-
-    public void setGradeId(int gradeId) {
-        this.gradeId = gradeId;
-    }
-
-    public int getScienceId() {
-        return scienceId;
-    }
-
-    public void setScienceId(int scienceId) {
-        this.scienceId = scienceId;
-    }
-
-    public int getDepartmentId() {
-        return departmentId;
-    }
-
-    public void setDepartmentId(int departmentId) {
-        this.departmentId = departmentId;
-    }
-
-    public int getCollegeId() {
-        return collegeId;
-    }
-
-    public void setCollegeId(int collegeId) {
-        this.collegeId = collegeId;
     }
 
     public int getDurationInt() {

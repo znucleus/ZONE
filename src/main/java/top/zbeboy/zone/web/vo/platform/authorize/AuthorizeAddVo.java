@@ -19,9 +19,12 @@ public class AuthorizeAddVo {
     private int duration;
     @NotBlank(message = "生效时间不能为空")
     private String validDate;
-    @NotNull(message = "班级ID不能为空")
-    @Min(value = 1, message = "班级ID最小值为1")
-    private int organizeId;
+    @NotNull(message = "数据域不能为空")
+    @Min(value = 1, message = "数据域最小值为1")
+    private int dataScope;
+    @NotNull(message = "数据ID不能为空")
+    @Min(value = 1, message = "数据ID最小值为1")
+    private int dataId;
     @NotBlank(message = "申请原因不能为空")
     @Size(max = 200, message = "申请原因200个字符以内")
     private String reason;
@@ -69,12 +72,20 @@ public class AuthorizeAddVo {
         this.validDate = validDate;
     }
 
-    public int getOrganizeId() {
-        return organizeId;
+    public int getDataScope() {
+        return dataScope;
     }
 
-    public void setOrganizeId(int organizeId) {
-        this.organizeId = organizeId;
+    public void setDataScope(int dataScope) {
+        this.dataScope = dataScope;
+    }
+
+    public int getDataId() {
+        return dataId;
+    }
+
+    public void setDataId(int dataId) {
+        this.dataId = dataId;
     }
 
     public String getReason() {

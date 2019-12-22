@@ -8,7 +8,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zone.config.CacheBook;
+import top.zbeboy.zone.domain.tables.daos.GradeDao;
+import top.zbeboy.zone.domain.tables.pojos.Grade;
 import top.zbeboy.zone.domain.tables.records.GradeRecord;
+
+import javax.annotation.Resource;
 
 import static top.zbeboy.zone.domain.Tables.GRADE;
 
@@ -18,9 +22,17 @@ public class GradeServiceImpl implements GradeService {
 
     private final DSLContext create;
 
+    @Resource
+    private GradeDao gradeDao;
+
     @Autowired
     GradeServiceImpl(DSLContext dslContext) {
         create = dslContext;
+    }
+
+    @Override
+    public Grade findById(int id) {
+        return gradeDao.findById(id);
     }
 
     @Cacheable(cacheNames = CacheBook.GRADES, key = "#scienceId + '_' + #gradeIsDel")

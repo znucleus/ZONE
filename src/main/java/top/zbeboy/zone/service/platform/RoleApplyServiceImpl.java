@@ -66,16 +66,6 @@ public class RoleApplyServiceImpl implements RoleApplyService, PaginationPlugin<
                 .from(ROLE_APPLY)
                 .leftJoin(AUTHORIZE_TYPE)
                 .on(ROLE_APPLY.AUTHORIZE_TYPE_ID.eq(AUTHORIZE_TYPE.AUTHORIZE_TYPE_ID))
-                .leftJoin(ORGANIZE)
-                .on(ROLE_APPLY.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
-                .leftJoin(GRADE)
-                .on(ORGANIZE.GRADE_ID.eq(GRADE.GRADE_ID))
-                .leftJoin(SCIENCE)
-                .on(GRADE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
-                .leftJoin(DEPARTMENT)
-                .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
-                .leftJoin(COLLEGE)
-                .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
                 .where(ROLE_APPLY.ROLE_APPLY_ID.eq(id))
                 .fetchOptional();
     }
@@ -91,9 +81,7 @@ public class RoleApplyServiceImpl implements RoleApplyService, PaginationPlugin<
                 .leftJoin(ROLE)
                 .on(COLLEGE_ROLE.ROLE_ID.eq(ROLE.ROLE_ID))
                 .leftJoin(AUTHORIZE_TYPE)
-                .on(ROLE_APPLY.AUTHORIZE_TYPE_ID.eq(AUTHORIZE_TYPE.AUTHORIZE_TYPE_ID))
-                .leftJoin(ORGANIZE)
-                .on(ROLE_APPLY.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID));
+                .on(ROLE_APPLY.AUTHORIZE_TYPE_ID.eq(AUTHORIZE_TYPE.AUTHORIZE_TYPE_ID));
         return queryAllByPage(selectOnConditionStep, dataTablesUtil, false);
     }
 
@@ -108,9 +96,7 @@ public class RoleApplyServiceImpl implements RoleApplyService, PaginationPlugin<
                 .leftJoin(ROLE)
                 .on(COLLEGE_ROLE.ROLE_ID.eq(ROLE.ROLE_ID))
                 .leftJoin(AUTHORIZE_TYPE)
-                .on(ROLE_APPLY.AUTHORIZE_TYPE_ID.eq(AUTHORIZE_TYPE.AUTHORIZE_TYPE_ID))
-                .leftJoin(ORGANIZE)
-                .on(ROLE_APPLY.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID));
+                .on(ROLE_APPLY.AUTHORIZE_TYPE_ID.eq(AUTHORIZE_TYPE.AUTHORIZE_TYPE_ID));
         return countAll(selectOnConditionStep, dataTablesUtil, true);
     }
 
@@ -125,9 +111,7 @@ public class RoleApplyServiceImpl implements RoleApplyService, PaginationPlugin<
                 .leftJoin(ROLE)
                 .on(COLLEGE_ROLE.ROLE_ID.eq(ROLE.ROLE_ID))
                 .leftJoin(AUTHORIZE_TYPE)
-                .on(ROLE_APPLY.AUTHORIZE_TYPE_ID.eq(AUTHORIZE_TYPE.AUTHORIZE_TYPE_ID))
-                .leftJoin(ORGANIZE)
-                .on(ROLE_APPLY.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID));
+                .on(ROLE_APPLY.AUTHORIZE_TYPE_ID.eq(AUTHORIZE_TYPE.AUTHORIZE_TYPE_ID));
         return countAll(selectOnConditionStep, dataTablesUtil, false);
     }
 
@@ -161,7 +145,6 @@ public class RoleApplyServiceImpl implements RoleApplyService, PaginationPlugin<
         if (Objects.nonNull(search)) {
             String username = StringUtils.trim(search.getString("username"));
             String realName = StringUtils.trim(search.getString("realName"));
-            String organizeName = StringUtils.trim(search.getString("organizeName"));
             String roleName = StringUtils.trim(search.getString("roleName"));
             if (StringUtils.isNotBlank(username)) {
                 a = ROLE_APPLY.USERNAME.like(SQLQueryUtil.likeAllParam(username));
@@ -172,14 +155,6 @@ public class RoleApplyServiceImpl implements RoleApplyService, PaginationPlugin<
                     a = USERS.REAL_NAME.like(SQLQueryUtil.likeAllParam(realName));
                 } else {
                     a = a.and(USERS.REAL_NAME.like(SQLQueryUtil.likeAllParam(realName)));
-                }
-            }
-
-            if (StringUtils.isNotBlank(organizeName)) {
-                if (Objects.isNull(a)) {
-                    a = ORGANIZE.ORGANIZE_NAME.like(SQLQueryUtil.likeAllParam(organizeName));
-                } else {
-                    a = a.and(ORGANIZE.ORGANIZE_NAME.like(SQLQueryUtil.likeAllParam(organizeName)));
                 }
             }
 
@@ -230,17 +205,6 @@ public class RoleApplyServiceImpl implements RoleApplyService, PaginationPlugin<
                     sortField[1] = ROLE_APPLY.ROLE_APPLY_ID.asc();
                 } else {
                     sortField[0] = AUTHORIZE_TYPE.AUTHORIZE_TYPE_NAME.desc();
-                    sortField[1] = ROLE_APPLY.ROLE_APPLY_ID.desc();
-                }
-            }
-
-            if (StringUtils.equals("organizeName", orderColumnName)) {
-                sortField = new SortField[2];
-                if (isAsc) {
-                    sortField[0] = ORGANIZE.ORGANIZE_NAME.asc();
-                    sortField[1] = ROLE_APPLY.ROLE_APPLY_ID.asc();
-                } else {
-                    sortField[0] = ORGANIZE.ORGANIZE_NAME.desc();
                     sortField[1] = ROLE_APPLY.ROLE_APPLY_ID.desc();
                 }
             }

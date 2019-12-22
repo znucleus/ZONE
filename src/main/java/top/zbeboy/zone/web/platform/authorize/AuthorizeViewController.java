@@ -7,11 +7,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zone.config.Workbook;
-import top.zbeboy.zone.domain.tables.pojos.College;
-import top.zbeboy.zone.domain.tables.pojos.Users;
-import top.zbeboy.zone.domain.tables.pojos.UsersType;
-import top.zbeboy.zone.service.data.StaffService;
-import top.zbeboy.zone.service.data.StudentService;
+import top.zbeboy.zone.domain.tables.pojos.*;
+import top.zbeboy.zone.service.data.*;
 import top.zbeboy.zone.service.platform.RoleApplyService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
@@ -43,6 +40,18 @@ public class AuthorizeViewController {
 
     @Resource
     private RoleApplyService roleApplyService;
+
+    @Resource
+    private DepartmentService departmentService;
+
+    @Resource
+    private ScienceService scienceService;
+
+    @Resource
+    private GradeService gradeService;
+
+    @Resource
+    private OrganizeService organizeService;
 
     /**
      * 平台授权限
@@ -112,102 +121,93 @@ public class AuthorizeViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
 
-        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+        boolean canEdit = false;
+        RoleApplyBean roleApplyBean = null;
+        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
+                roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
             Optional<Record> roleApplyRecord = roleApplyService.findByIdRelation(roleUsersId);
             if (roleApplyRecord.isPresent()) {
-                RoleApplyBean roleApplyBean = roleApplyRecord.get().into(RoleApplyBean.class);
-                Byte status = roleApplyBean.getApplyStatus();
-                if (status != 1) {
-                    roleApplyBean.setDurationInt(getDuration(roleApplyBean.getDuration()));
-                    modelMap.addAttribute("roleApply", roleApplyBean);
-                    page = "web/platform/authorize/authorize_edit::#page-wrapper";
-                } else {
-                    config.buildDangerTip("操作错误", "申请已通过，不可操作");
-                    config.dataMerging(modelMap);
-                    page = "inline_tip::#page-wrapper";
-                }
-
-            } else {
-                config.buildDangerTip("查询错误", "未查询到申请信息");
-                config.dataMerging(modelMap);
-                page = "inline_tip::#page-wrapper";
-            }
-        } else if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
-            // 判断是否同一个院
-            Users users = usersService.getUserFromSession();
-            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-            if (Objects.nonNull(usersType)) {
-                Optional<Record> record = Optional.empty();
-                if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                    record = staffService.findByUsernameRelation(users.getUsername());
-                } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                    record = studentService.findByUsernameRelation(users.getUsername());
-                }
-
-                if (record.isPresent()) {
-                    int collegeId = record.get().into(College.class).getCollegeId();
-                    Optional<Record> roleApplyRecord = roleApplyService.findByIdRelation(roleUsersId);
-                    if (roleApplyRecord.isPresent()) {
-                        RoleApplyBean roleApplyBean = roleApplyRecord.get().into(RoleApplyBean.class);
-                        if (collegeId == roleApplyBean.getCollegeId()) {
-                            Byte status = roleApplyBean.getApplyStatus();
-                            if (status != 1) {
-                                roleApplyBean.setDurationInt(getDuration(roleApplyBean.getDuration()));
-                                modelMap.addAttribute("roleApply", roleApplyBean);
-                                page = "web/platform/authorize/authorize_edit::#page-wrapper";
-                            } else {
-                                config.buildDangerTip("操作错误", "申请已通过，不可操作");
-                                config.dataMerging(modelMap);
-                                page = "inline_tip::#page-wrapper";
-                            }
-                        } else {
-                            config.buildDangerTip("操作错误", "该账号不在您所属院下，不允许操作");
-                            config.dataMerging(modelMap);
-                            page = "inline_tip::#page-wrapper";
-                        }
-                    } else {
-                        config.buildDangerTip("查询错误", "未查询到申请信息");
-                        config.dataMerging(modelMap);
-                        page = "inline_tip::#page-wrapper";
-                    }
-                } else {
-                    config.buildDangerTip("查询错误", "未查询到当前用户所属院信息");
-                    config.dataMerging(modelMap);
-                    page = "inline_tip::#page-wrapper";
-                }
-            } else {
-                config.buildDangerTip("查询错误", "未查询到当前用户类型");
-                config.dataMerging(modelMap);
-                page = "inline_tip::#page-wrapper";
+                roleApplyBean = roleApplyRecord.get().into(RoleApplyBean.class);
+                canEdit = true;
             }
         } else {
             Optional<Record> roleApplyRecord = roleApplyService.findByIdRelation(roleUsersId);
             if (roleApplyRecord.isPresent()) {
-                RoleApplyBean roleApplyBean = roleApplyRecord.get().into(RoleApplyBean.class);
+                roleApplyBean = roleApplyRecord.get().into(RoleApplyBean.class);
                 Users users = usersService.getUserFromSession();
                 if (StringUtils.equals(users.getUsername(), roleApplyBean.getUsername())) {
-                    Byte status = roleApplyBean.getApplyStatus();
-                    if (status != 1) {
+                    canEdit = true;
+                }
+            }
+        }
+
+        if (canEdit) {
+            Byte status = roleApplyBean.getApplyStatus();
+            if (status != 1) {
+                Users users = usersService.findByUsername(roleApplyBean.getUsername());
+                if(Objects.nonNull(users)){
+                    int collegeId = 0;
+                    UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
+                    if (Objects.nonNull(usersType)) {
+                        Optional<Record> record = Optional.empty();
+                        if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
+                            record = staffService.findByUsernameRelation(users.getUsername());
+                        } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
+                            record = studentService.findByUsernameRelation(users.getUsername());
+                        }
+
+                        if (record.isPresent()) {
+                            collegeId = record.get().into(College.class).getCollegeId();
+                        }
+                    }
+
+                    if(collegeId > 0){
+                        modelMap.addAttribute("collegeId", collegeId);
                         roleApplyBean.setDurationInt(getDuration(roleApplyBean.getDuration()));
+                        if (roleApplyBean.getDataScope() == 1) {
+                            Department department = departmentService.findById(roleApplyBean.getDataId());
+                            if (Objects.nonNull(department)) {
+                                roleApplyBean.setDataName(department.getDepartmentName());
+                            }
+                        } else if (roleApplyBean.getDataScope() == 2) {
+                            Science science = scienceService.findById(roleApplyBean.getDataId());
+                            if (Objects.nonNull(science)) {
+                                roleApplyBean.setDataName(science.getScienceName());
+                            }
+                        } else if (roleApplyBean.getDataScope() == 3) {
+                            Grade grade = gradeService.findById(roleApplyBean.getDataId());
+                            if (Objects.nonNull(grade)) {
+                                roleApplyBean.setDataName(grade.getGrade() + "");
+                            }
+                        } else if (roleApplyBean.getDataScope() == 4) {
+                            Organize organize = organizeService.findById(roleApplyBean.getDataId());
+                            if (Objects.nonNull(organize)) {
+                                roleApplyBean.setDataName(organize.getOrganizeName());
+                            }
+                        }
                         modelMap.addAttribute("roleApply", roleApplyBean);
                         page = "web/platform/authorize/authorize_edit::#page-wrapper";
                     } else {
-                        config.buildDangerTip("操作错误", "申请已通过，不可操作");
+                        config.buildDangerTip("查询错误", "未查询到申请账号所属院信息");
                         config.dataMerging(modelMap);
                         page = "inline_tip::#page-wrapper";
                     }
                 } else {
-                    config.buildDangerTip("操作错误", "非本人申请，不可操作");
+                    config.buildDangerTip("查询错误", "未查询到申请账号信息");
                     config.dataMerging(modelMap);
                     page = "inline_tip::#page-wrapper";
                 }
+
             } else {
-                config.buildDangerTip("查询错误", "未查询到申请信息");
+                config.buildDangerTip("操作错误", "申请已通过，不可操作");
                 config.dataMerging(modelMap);
                 page = "inline_tip::#page-wrapper";
             }
+        } else {
+            config.buildDangerTip("操作错误", "您无权限进行操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
         }
-
         return page;
     }
 

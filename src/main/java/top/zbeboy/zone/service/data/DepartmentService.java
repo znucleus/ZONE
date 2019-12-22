@@ -2,11 +2,20 @@ package top.zbeboy.zone.service.data;
 
 import org.jooq.Record;
 import org.jooq.Result;
+import top.zbeboy.zone.domain.tables.pojos.Department;
 import top.zbeboy.zone.domain.tables.records.DepartmentRecord;
 
 import java.util.Optional;
 
 public interface DepartmentService {
+
+    /**
+     * 通过主键查询
+     *
+     * @param id 主键
+     * @return 数据
+     */
+    Department findById(int id);
 
     /**
      * 通过系id查询所有信息

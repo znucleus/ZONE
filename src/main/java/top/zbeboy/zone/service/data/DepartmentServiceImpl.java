@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zone.config.CacheBook;
+import top.zbeboy.zone.domain.tables.daos.DepartmentDao;
+import top.zbeboy.zone.domain.tables.pojos.Department;
 import top.zbeboy.zone.domain.tables.records.DepartmentRecord;
 
 import java.util.Optional;
@@ -21,9 +23,16 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     private final DSLContext create;
 
+    private DepartmentDao departmentDao;
+
     @Autowired
     DepartmentServiceImpl(DSLContext dslContext) {
         create = dslContext;
+    }
+
+    @Override
+    public Department findById(int id) {
+        return departmentDao.findById(id);
     }
 
     @Cacheable(cacheNames = CacheBook.DEPARTMENT, key = "#id")

@@ -27,6 +27,7 @@
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
+                            <label>权限类型</label>
                             <select class="form-control select2-show-search" id="authorizeType"
                                     th:data-placeholder="请选择权限类型">
                                 <option th:label="请选择权限类型"></option>
@@ -34,6 +35,7 @@
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
+                            <label>角色</label>
                             <select class="form-control select2-show-search" id="role"
                                     th:data-placeholder="请选择角色">
                                 <option th:label="请选择角色"></option>
@@ -41,6 +43,7 @@
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
+                            <label>时长</label>
                             <select id="duration" name="duration" class="form-control">
                                 <option value="">请选择时长</option>
                                 <option value="1">1天</option>
@@ -59,26 +62,37 @@
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
-                            <label>选择班级
+                            <label>数据域</label>
+                            <select id="dataScope" name="dataScope" class="form-control">
+                                <option value="">请选择域</option>
+                                <option value="1">系</option>
+                                <option value="2">专业</option>
+                                <option value="3">年级</option>
+                                <option value="4">班级</option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>选择数据
                                 <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
-                                        data-target="#organizeModal">选择
+                                        data-target="#dataModal">选择
                                 </button>
                             </label>
-                            <div class="bd bd-gray-300 rounded table-responsive" id="organizeId">
+                            <div class="bd bd-gray-300 rounded table-responsive" id="dataId">
                                 <table class="table mg-b-0">
                                     <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>班级名</th>
+                                        <th>数据</th>
                                         <th>操作</th>
                                     </tr>
                                     </thead>
-                                    <tbody id="organizeData">
+                                    <tbody id="selectData">
                                     <tr>
-                                        <th scope="row" class="organizeId" th:text="${roleApply.organizeId}"></th>
-                                        <td th:text="${roleApply.organizeName}"></td>
+                                        <th scope="row" class="dataId" th:text="${roleApply.dataId}"></th>
+                                        <td th:text="${roleApply.dataName}"></td>
                                         <td>
-                                            <button class="btn btn-danger btn-sm delOrganize">删除</button>
+                                            <button class="btn btn-danger btn-sm del">删除</button>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -102,12 +116,12 @@
         </div>
     </div>
 
-    <!-- 班级Modal -->
-    <div id="organizeModal" class="modal fade">
+    <!-- 数据Modal -->
+    <div id="dataModal" class="modal fade">
         <div class="modal-dialog modal-dialog-vertical-center" role="document">
             <div class="modal-content bd-0 tx-14">
                 <div class="modal-header pd-y-20 pd-x-25">
-                    <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">选择班级</h6>
+                    <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">选择数据</h6>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -118,7 +132,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <select class="form-control select2-show-search" id="department" data-placeholder="请选择系"
-                                        style="width: 100%">
+                                        style="width: 100%" disabled="disabled">
                                     <option label="请选择系"></option>
                                 </select>
                                 <div class="invalid-feedback"></div>
@@ -128,7 +142,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <select class="form-control select2-show-search" id="science" data-placeholder="请选择专业"
-                                        style="width: 100%">
+                                        style="width: 100%" disabled="disabled">
                                     <option label="请选择专业"></option>
                                 </select>
                                 <div class="invalid-feedback"></div>
@@ -138,7 +152,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <select class="form-control select2-show-search" id="grade" data-placeholder="请选择年级"
-                                        style="width: 100%">
+                                        style="width: 100%" disabled="disabled">
                                     <option label="请选择年级"></option>
                                 </select>
                                 <div class="invalid-feedback"></div>
@@ -148,7 +162,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <select class="form-control select2-show-search" id="organize" data-placeholder="请选择班级"
-                                        style="width: 100%">
+                                        style="width: 100%" disabled="disabled">
                                     <option label="请选择班级"></option>
                                 </select>
                                 <div class="invalid-feedback"></div>
@@ -158,7 +172,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary tx-11 tx-uppercase pd-y-12 pd-x-25 tx-mont tx-medium"
-                            id="okOrganize">确定
+                            id="okData">确定
                     </button>
                     <button type="button" class="btn btn-secondary tx-11 tx-uppercase pd-y-12 pd-x-25 tx-mont tx-medium"
                             data-dismiss="modal">关闭
@@ -169,13 +183,13 @@
     </div><!-- modal -->
 
     <!--定义班级数据模板-->
-    <script id="organize_data" type="text/x-handlebars-template">
+    <script id="data_template" type="text/x-handlebars-template">
         {{#each listResult}}
         <tr>
-            <th scope="row" class="organizeId">{{organizeId}}</th>
-            <td>{{organizeName}}</td>
+            <th scope="row" class="dataId">{{dataId}}</th>
+            <td>{{dataName}}</td>
             <td>
-                <button class="btn btn-danger btn-sm delOrganize">删除</button>
+                <button class="btn btn-danger btn-sm del">删除</button>
             </td>
         </tr>
         {{/each}}
@@ -185,11 +199,8 @@
     <input type="hidden" id="authorizeTypeIdParam" th:value="${roleApply.authorizeTypeId}"/>
     <input type="hidden" id="roleIdParam" th:value="${roleApply.roleId}"/>
     <input type="hidden" id="durationParam" th:value="${roleApply.durationInt}"/>
-    <input type="hidden" id="collegeIdParam" th:value="${roleApply.collegeId}"/>
-    <input type="hidden" id="departmentIdParam" th:value="${roleApply.departmentId}"/>
-    <input type="hidden" id="scienceIdParam" th:value="${roleApply.scienceId}"/>
-    <input type="hidden" id="gradeIdParam" th:value="${roleApply.gradeId}"/>
-    <input type="hidden" id="organizeIdParam" th:value="${roleApply.organizeId}"/>
+    <input type="hidden" id="dataScopeParam" th:value="${roleApply.dataScope}"/>
+    <input type="hidden" id="collegeIdParam" th:value="${collegeId}"/>
     <input type="hidden" class="dy_script"
            th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/platform/authorize/authorize_edit.js')}"/>
 </div>

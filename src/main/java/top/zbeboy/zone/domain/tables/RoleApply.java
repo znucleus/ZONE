@@ -15,7 +15,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row11;
+import org.jooq.Row13;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -42,7 +42,7 @@ import top.zbeboy.zone.domain.tables.records.RoleApplyRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class RoleApply extends TableImpl<RoleApplyRecord> {
 
-    private static final long serialVersionUID = 1055602941;
+    private static final long serialVersionUID = 120677316;
 
     /**
      * The reference instance of <code>zone.role_apply</code>
@@ -73,9 +73,14 @@ public class RoleApply extends TableImpl<RoleApplyRecord> {
     public final TableField<RoleApplyRecord, Integer> AUTHORIZE_TYPE_ID = createField(DSL.name("authorize_type_id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
-     * The column <code>zone.role_apply.organize_id</code>.
+     * The column <code>zone.role_apply.data_scope</code>.
      */
-    public final TableField<RoleApplyRecord, Integer> ORGANIZE_ID = createField(DSL.name("organize_id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<RoleApplyRecord, Integer> DATA_SCOPE = createField(DSL.name("data_scope"), org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+
+    /**
+     * The column <code>zone.role_apply.data_id</code>.
+     */
+    public final TableField<RoleApplyRecord, Integer> DATA_ID = createField(DSL.name("data_id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
      * The column <code>zone.role_apply.role_id</code>.
@@ -91,6 +96,11 @@ public class RoleApply extends TableImpl<RoleApplyRecord> {
      * The column <code>zone.role_apply.reason</code>.
      */
     public final TableField<RoleApplyRecord, String> REASON = createField(DSL.name("reason"), org.jooq.impl.SQLDataType.VARCHAR(200).nullable(false), this, "");
+
+    /**
+     * The column <code>zone.role_apply.refuse</code>.
+     */
+    public final TableField<RoleApplyRecord, String> REFUSE = createField(DSL.name("refuse"), org.jooq.impl.SQLDataType.VARCHAR(200), this, "");
 
     /**
      * The column <code>zone.role_apply.valid_date</code>.
@@ -152,7 +162,7 @@ public class RoleApply extends TableImpl<RoleApplyRecord> {
 
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.ROLE_APPLY_AUTHORIZE_TYPE_ID, Indexes.ROLE_APPLY_ORGANIZE_ID, Indexes.ROLE_APPLY_PRIMARY, Indexes.ROLE_APPLY_ROLE_ID, Indexes.ROLE_APPLY_USERNAME);
+        return Arrays.<Index>asList(Indexes.ROLE_APPLY_AUTHORIZE_TYPE_ID, Indexes.ROLE_APPLY_PRIMARY, Indexes.ROLE_APPLY_ROLE_ID, Indexes.ROLE_APPLY_USERNAME);
     }
 
     @Override
@@ -167,7 +177,7 @@ public class RoleApply extends TableImpl<RoleApplyRecord> {
 
     @Override
     public List<ForeignKey<RoleApplyRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<RoleApplyRecord, ?>>asList(Keys.ROLE_APPLY_IBFK_1, Keys.ROLE_APPLY_IBFK_2, Keys.ROLE_APPLY_IBFK_3, Keys.ROLE_APPLY_IBFK_4);
+        return Arrays.<ForeignKey<RoleApplyRecord, ?>>asList(Keys.ROLE_APPLY_IBFK_1, Keys.ROLE_APPLY_IBFK_2, Keys.ROLE_APPLY_IBFK_3);
     }
 
     public Users users() {
@@ -178,12 +188,8 @@ public class RoleApply extends TableImpl<RoleApplyRecord> {
         return new AuthorizeType(this, Keys.ROLE_APPLY_IBFK_2);
     }
 
-    public Organize organize() {
-        return new Organize(this, Keys.ROLE_APPLY_IBFK_3);
-    }
-
     public Role role() {
-        return new Role(this, Keys.ROLE_APPLY_IBFK_4);
+        return new Role(this, Keys.ROLE_APPLY_IBFK_3);
     }
 
     @Override
@@ -213,11 +219,11 @@ public class RoleApply extends TableImpl<RoleApplyRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row11 type methods
+    // Row13 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row11<String, String, Integer, Integer, String, String, String, Timestamp, Timestamp, Timestamp, Byte> fieldsRow() {
-        return (Row11) super.fieldsRow();
+    public Row13<String, String, Integer, Integer, Integer, String, String, String, String, Timestamp, Timestamp, Timestamp, Byte> fieldsRow() {
+        return (Row13) super.fieldsRow();
     }
 }

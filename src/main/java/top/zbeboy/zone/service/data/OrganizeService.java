@@ -2,11 +2,20 @@ package top.zbeboy.zone.service.data;
 
 import org.jooq.Record;
 import org.jooq.Result;
+import top.zbeboy.zone.domain.tables.pojos.Organize;
 import top.zbeboy.zone.domain.tables.records.OrganizeRecord;
 
 import java.util.Optional;
 
 public interface OrganizeService {
+
+    /**
+     * 通过主键查询
+     *
+     * @param id 主键
+     * @return 数据
+     */
+    Organize findById(int id);
 
     /**
      * 通过班级id查询所有信息

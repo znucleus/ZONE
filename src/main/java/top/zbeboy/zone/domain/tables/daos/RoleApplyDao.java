@@ -102,17 +102,31 @@ public class RoleApplyDao extends DAOImpl<RoleApplyRecord, top.zbeboy.zone.domai
     }
 
     /**
-     * Fetch records that have <code>organize_id BETWEEN lowerInclusive AND upperInclusive</code>
+     * Fetch records that have <code>data_scope BETWEEN lowerInclusive AND upperInclusive</code>
      */
-    public List<top.zbeboy.zone.domain.tables.pojos.RoleApply> fetchRangeOfOrganizeId(Integer lowerInclusive, Integer upperInclusive) {
-        return fetchRange(RoleApply.ROLE_APPLY.ORGANIZE_ID, lowerInclusive, upperInclusive);
+    public List<top.zbeboy.zone.domain.tables.pojos.RoleApply> fetchRangeOfDataScope(Integer lowerInclusive, Integer upperInclusive) {
+        return fetchRange(RoleApply.ROLE_APPLY.DATA_SCOPE, lowerInclusive, upperInclusive);
     }
 
     /**
-     * Fetch records that have <code>organize_id IN (values)</code>
+     * Fetch records that have <code>data_scope IN (values)</code>
      */
-    public List<top.zbeboy.zone.domain.tables.pojos.RoleApply> fetchByOrganizeId(Integer... values) {
-        return fetch(RoleApply.ROLE_APPLY.ORGANIZE_ID, values);
+    public List<top.zbeboy.zone.domain.tables.pojos.RoleApply> fetchByDataScope(Integer... values) {
+        return fetch(RoleApply.ROLE_APPLY.DATA_SCOPE, values);
+    }
+
+    /**
+     * Fetch records that have <code>data_id BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.RoleApply> fetchRangeOfDataId(Integer lowerInclusive, Integer upperInclusive) {
+        return fetchRange(RoleApply.ROLE_APPLY.DATA_ID, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>data_id IN (values)</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.RoleApply> fetchByDataId(Integer... values) {
+        return fetch(RoleApply.ROLE_APPLY.DATA_ID, values);
     }
 
     /**
@@ -155,6 +169,20 @@ public class RoleApplyDao extends DAOImpl<RoleApplyRecord, top.zbeboy.zone.domai
      */
     public List<top.zbeboy.zone.domain.tables.pojos.RoleApply> fetchByReason(String... values) {
         return fetch(RoleApply.ROLE_APPLY.REASON, values);
+    }
+
+    /**
+     * Fetch records that have <code>refuse BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.RoleApply> fetchRangeOfRefuse(String lowerInclusive, String upperInclusive) {
+        return fetchRange(RoleApply.ROLE_APPLY.REFUSE, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>refuse IN (values)</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.RoleApply> fetchByRefuse(String... values) {
+        return fetch(RoleApply.ROLE_APPLY.REFUSE, values);
     }
 
     /**

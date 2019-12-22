@@ -8,7 +8,6 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "workbook", "respo
         var param = {
             username: '',
             realName: '',
-            organizeName: '',
             roleName: '',
             dataRange: ''
         };
@@ -42,7 +41,6 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "workbook", "respo
         var webStorageKey = {
             USERNAME: 'PLATFORM_AUTHORIZE_USERNAME_SEARCH',
             REAL_NAME: 'PLATFORM_AUTHORIZE_REAL_NAME_SEARCH',
-            ORGANIZE_NAME: 'PLATFORM_AUTHORIZE_ORGANIZE_NAME_SEARCH',
             ROLE_NAME: 'PLATFORM_AUTHORIZE_ROLE_NAME_SEARCH',
             DATA_RANGE: 'PLATFORM_AUTHORIZE_DATA_RANGE_SEARCH'
         };
@@ -74,7 +72,7 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "workbook", "respo
             searching: false,
             "processing": true, // 打开数据加载时的等待效果
             "serverSide": true,// 打开后台分页
-            "aaSorting": [[9, 'desc']],// 排序
+            "aaSorting": [[11, 'desc']],// 排序
             "ajax": {
                 "url": getAjaxUrl().data,
                 "dataSrc": "data",
@@ -89,7 +87,8 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "workbook", "respo
                 {"data": "realName"},
                 {"data": "username"},
                 {"data": "authorizeTypeName"},
-                {"data": "organizeName"},
+                {"data": "dataScope"},
+                {"data": "dataName"},
                 {"data": "roleName"},
                 {"data": "duration"},
                 {"data": "validDateStr"},
@@ -101,7 +100,30 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "workbook", "respo
             ],
             columnDefs: [
                 {
-                    targets: 8,
+                    targets: 3,
+                    render: function (a, b, c, d) {
+                        var v = '';
+                        if (c.dataScope === 1) {
+                            v = '系';
+                        } else if (c.dataScope === 2) {
+                            v = '专业';
+                        } else if (c.dataScope === 3) {
+                            v = '年级';
+                        } else if (c.dataScope === 4) {
+                            v = '班级';
+                        }
+                        return v;
+                    }
+                },
+                {
+                    targets: 4,
+                    orderable: false,
+                    render: function (a, b, c, d) {
+                        return c.dataName;
+                    }
+                },
+                {
+                    targets: 9,
                     render: function (a, b, c, d) {
                         var v = '';
                         if (c.applyStatus === 0) {
@@ -115,7 +137,7 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "workbook", "respo
                     }
                 },
                 {
-                    targets: 11,
+                    targets: 12,
                     orderable: false,
                     render: function (a, b, c, d) {
 
@@ -262,7 +284,6 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "workbook", "respo
             return {
                 username: '#search_username',
                 realName: '#search_real_name',
-                organizeName: '#search_organize_name',
                 roleName: '#search_role_name',
                 dataRange: ''
             };
@@ -281,7 +302,6 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "workbook", "respo
         function initParam() {
             param.username = $(getParamId().username).val();
             param.realName = $(getParamId().realName).val();
-            param.organizeName = $(getParamId().organizeName).val();
             param.roleName = $(getParamId().roleName).val();
 
 
@@ -296,7 +316,6 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "workbook", "respo
             if (typeof(Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.USERNAME, param.username);
                 sessionStorage.setItem(webStorageKey.REAL_NAME, param.realName);
-                sessionStorage.setItem(webStorageKey.ORGANIZE_NAME, param.organizeName);
                 sessionStorage.setItem(webStorageKey.ROLE_NAME, param.roleName);
                 sessionStorage.setItem(webStorageKey.DATA_RANGE, param.dataRange);
             }
@@ -308,13 +327,11 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "workbook", "respo
         function initSearchContent() {
             var username = null;
             var realName = null;
-            var organizeName = null;
             var roleName = null;
             var dataRange = null;
             if (typeof(Storage) !== "undefined") {
                 username = sessionStorage.getItem(webStorageKey.USERNAME);
                 realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
-                organizeName = sessionStorage.getItem(webStorageKey.ORGANIZE_NAME);
                 roleName = sessionStorage.getItem(webStorageKey.ROLE_NAME);
                 dataRange = sessionStorage.getItem(webStorageKey.DATA_RANGE);
             }
@@ -324,10 +341,6 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "workbook", "respo
 
             if (realName !== null) {
                 param.realName = realName;
-            }
-
-            if (organizeName !== null) {
-                param.organizeName = organizeName;
             }
 
             if (roleName !== null) {
@@ -345,13 +358,11 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "workbook", "respo
         function initSearchInput() {
             var username = null;
             var realName = null;
-            var organizeName = null;
             var roleName = null;
             var dataRange = null;
             if (typeof(Storage) !== "undefined") {
                 username = sessionStorage.getItem(webStorageKey.USERNAME);
                 realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
-                organizeName = sessionStorage.getItem(webStorageKey.ORGANIZE_NAME);
                 roleName = sessionStorage.getItem(webStorageKey.ROLE_NAME);
                 dataRange = sessionStorage.getItem(webStorageKey.DATA_RANGE);
             }
@@ -361,10 +372,6 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "workbook", "respo
 
             if (realName !== null) {
                 $(getParamId().realName).val(realName);
-            }
-
-            if (organizeName !== null) {
-                $(getParamId().organizeName).val(organizeName);
             }
 
             if (roleName !== null) {
@@ -393,7 +400,6 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "workbook", "respo
         function cleanParam() {
             $(getParamId().username).val('');
             $(getParamId().realName).val('');
-            $(getParamId().organizeName).val('');
             $(getParamId().roleName).val('');
         }
 
@@ -405,13 +411,6 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "workbook", "respo
         });
 
         $(getParamId().realName).keyup(function (event) {
-            if (event.keyCode === 13) {
-                initParam();
-                myTable.ajax.reload();
-            }
-        });
-
-        $(getParamId().organizeName).keyup(function (event) {
             if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();

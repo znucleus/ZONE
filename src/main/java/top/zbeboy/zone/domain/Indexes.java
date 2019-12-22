@@ -118,7 +118,6 @@ public class Indexes {
     public static final Index ROLE_APPLICATION_APPLICATION_ID = Indexes0.ROLE_APPLICATION_APPLICATION_ID;
     public static final Index ROLE_APPLICATION_PRIMARY = Indexes0.ROLE_APPLICATION_PRIMARY;
     public static final Index ROLE_APPLY_AUTHORIZE_TYPE_ID = Indexes0.ROLE_APPLY_AUTHORIZE_TYPE_ID;
-    public static final Index ROLE_APPLY_ORGANIZE_ID = Indexes0.ROLE_APPLY_ORGANIZE_ID;
     public static final Index ROLE_APPLY_PRIMARY = Indexes0.ROLE_APPLY_PRIMARY;
     public static final Index ROLE_APPLY_ROLE_ID = Indexes0.ROLE_APPLY_ROLE_ID;
     public static final Index ROLE_APPLY_USERNAME = Indexes0.ROLE_APPLY_USERNAME;
@@ -223,7 +222,6 @@ public class Indexes {
         public static Index ROLE_APPLICATION_APPLICATION_ID = Internal.createIndex("application_id", RoleApplication.ROLE_APPLICATION, new OrderField[] { RoleApplication.ROLE_APPLICATION.APPLICATION_ID }, false);
         public static Index ROLE_APPLICATION_PRIMARY = Internal.createIndex("PRIMARY", RoleApplication.ROLE_APPLICATION, new OrderField[] { RoleApplication.ROLE_APPLICATION.ROLE_ID, RoleApplication.ROLE_APPLICATION.APPLICATION_ID }, true);
         public static Index ROLE_APPLY_AUTHORIZE_TYPE_ID = Internal.createIndex("authorize_type_id", RoleApply.ROLE_APPLY, new OrderField[] { RoleApply.ROLE_APPLY.AUTHORIZE_TYPE_ID }, false);
-        public static Index ROLE_APPLY_ORGANIZE_ID = Internal.createIndex("organize_id", RoleApply.ROLE_APPLY, new OrderField[] { RoleApply.ROLE_APPLY.ORGANIZE_ID }, false);
         public static Index ROLE_APPLY_PRIMARY = Internal.createIndex("PRIMARY", RoleApply.ROLE_APPLY, new OrderField[] { RoleApply.ROLE_APPLY.ROLE_APPLY_ID }, true);
         public static Index ROLE_APPLY_ROLE_ID = Internal.createIndex("role_id", RoleApply.ROLE_APPLY, new OrderField[] { RoleApply.ROLE_APPLY.ROLE_ID }, false);
         public static Index ROLE_APPLY_USERNAME = Internal.createIndex("username", RoleApply.ROLE_APPLY, new OrderField[] { RoleApply.ROLE_APPLY.USERNAME }, false);
