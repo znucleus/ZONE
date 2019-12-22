@@ -70,6 +70,26 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public Result<Record> findAdmin(String authority, int collegeId) {
+        return create.select()
+                .from(STUDENT)
+                .join(USERS)
+                .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                .join(AUTHORITIES)
+                .on(STUDENT.USERNAME.eq(AUTHORITIES.USERNAME))
+                .join(ORGANIZE)
+                .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
+                .join(GRADE)
+                .on(ORGANIZE.GRADE_ID.eq(GRADE.GRADE_ID))
+                .join(SCIENCE)
+                .on(GRADE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
+                .join(DEPARTMENT)
+                .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
+                .where(AUTHORITIES.AUTHORITY.eq(authority).and(DEPARTMENT.COLLEGE_ID.eq(collegeId)))
+                .fetch();
+    }
+
+    @Override
     public Student findByStudentNumber(String studentNumber) {
         return studentDao.fetchOneByStudentNumber(studentNumber);
     }

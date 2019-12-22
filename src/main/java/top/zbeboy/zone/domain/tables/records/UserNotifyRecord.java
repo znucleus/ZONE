@@ -32,7 +32,7 @@ import top.zbeboy.zone.domain.tables.UserNotify;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class UserNotifyRecord extends UpdatableRecordImpl<UserNotifyRecord> implements Record8<String, String, String, Timestamp, String, Byte, String, String> {
 
-    private static final long serialVersionUID = -1973570198;
+    private static final long serialVersionUID = 2056503810;
 
     /**
      * Setter for <code>zone.user_notify.user_notify_id</code>.
@@ -107,6 +107,7 @@ public class UserNotifyRecord extends UpdatableRecordImpl<UserNotifyRecord> impl
     /**
      * Getter for <code>zone.user_notify.notify_type</code>.
      */
+    @NotNull
     @Size(max = 10)
     public String getNotifyType() {
         return (String) get(4);

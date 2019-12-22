@@ -60,6 +60,20 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
+    public Result<Record> findAdmin(String authority, int collegeId) {
+        return create.select()
+                .from(STAFF)
+                .join(USERS)
+                .on(STAFF.USERNAME.eq(USERS.USERNAME))
+                .join(AUTHORITIES)
+                .on(STAFF.USERNAME.eq(AUTHORITIES.USERNAME))
+                .join(DEPARTMENT)
+                .on(STAFF.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
+                .where(AUTHORITIES.AUTHORITY.eq(authority).and(DEPARTMENT.COLLEGE_ID.eq(collegeId)))
+                .fetch();
+    }
+
+    @Override
     public Staff findByStaffNumber(String staffNumber) {
         return staffDao.fetchOneByStaffNumber(staffNumber);
     }

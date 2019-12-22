@@ -28,6 +28,15 @@ public interface StudentService {
     Optional<Record> findByUsernameRelation(String username);
 
     /**
+     * 查询院管理员
+     *
+     * @param authority 权限
+     * @param collegeId 院id
+     * @return 数据
+     */
+    Result<Record> findAdmin(String authority, int collegeId);
+
+    /**
      * 根据学号查询学生信息(全部)
      *
      * @param studentNumber 学号

@@ -28,6 +28,15 @@ public interface StaffService {
     Optional<Record> findByUsernameRelation(String username);
 
     /**
+     * 查询院管理员
+     *
+     * @param authority 权限
+     * @param collegeId 院id
+     * @return 数据
+     */
+    Result<Record> findAdmin(String authority, int collegeId);
+
+    /**
      * 根据工号查询教职工信息(全部)
      *
      * @param staffNumber 工号

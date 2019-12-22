@@ -72,6 +72,12 @@ public class UserNotifyServiceImpl implements UserNotifyService, PaginationPlugi
         userNotifyDao.update(userNotify);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void save(UserNotify userNotify) {
+        userNotifyDao.insert(userNotify);
+    }
+
     @Override
     public Condition searchCondition(SimplePaginationUtil paginationUtil) {
         Condition a = null;

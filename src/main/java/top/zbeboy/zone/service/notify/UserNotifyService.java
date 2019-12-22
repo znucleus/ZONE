@@ -48,4 +48,11 @@ public interface UserNotifyService {
      * @param userNotify 数据
      */
     void update(UserNotify userNotify);
+
+    /**
+     * 保存
+     *
+     * @param userNotify 数据
+     */
+    void save(UserNotify userNotify);
 }

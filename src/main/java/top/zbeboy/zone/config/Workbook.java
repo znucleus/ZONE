@@ -82,6 +82,13 @@ public final class Workbook {
     public static final String YEAR_REGEX = "^\\d{4}$";
 
     /*
+    通知类型参数
+     */
+    public enum notifyType {
+        success, info, warning, danger
+    }
+
+    /*
     系统setting目录
     */
     public static final String SETTINGS_PATH = "." + DIRECTORY_SPLIT + "settings" + DIRECTORY_SPLIT;

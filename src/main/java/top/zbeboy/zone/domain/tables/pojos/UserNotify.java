@@ -25,7 +25,7 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class UserNotify implements Serializable {
 
-    private static final long serialVersionUID = 782416672;
+    private static final long serialVersionUID = 226707780;
 
     private String    userNotifyId;
     private String    notifyTitle;
@@ -108,6 +108,7 @@ public class UserNotify implements Serializable {
         this.createDate = createDate;
     }
 
+    @NotNull
     @Size(max = 10)
     public String getNotifyType() {
         return this.notifyType;

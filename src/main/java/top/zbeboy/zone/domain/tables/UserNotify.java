@@ -42,7 +42,7 @@ import top.zbeboy.zone.domain.tables.records.UserNotifyRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class UserNotify extends TableImpl<UserNotifyRecord> {
 
-    private static final long serialVersionUID = -2049873061;
+    private static final long serialVersionUID = 347196028;
 
     /**
      * The reference instance of <code>zone.user_notify</code>
@@ -80,7 +80,7 @@ public class UserNotify extends TableImpl<UserNotifyRecord> {
     /**
      * The column <code>zone.user_notify.notify_type</code>.
      */
-    public final TableField<UserNotifyRecord, String> NOTIFY_TYPE = createField(DSL.name("notify_type"), org.jooq.impl.SQLDataType.VARCHAR(10).nullable(false).defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.VARCHAR)), this, "");
+    public final TableField<UserNotifyRecord, String> NOTIFY_TYPE = createField(DSL.name("notify_type"), org.jooq.impl.SQLDataType.VARCHAR(10).nullable(false), this, "");
 
     /**
      * The column <code>zone.user_notify.is_see</code>.

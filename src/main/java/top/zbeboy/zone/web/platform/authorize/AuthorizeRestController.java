@@ -14,13 +14,18 @@ import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
+import top.zbeboy.zone.service.notify.UserNotifyService;
 import top.zbeboy.zone.service.platform.*;
 import top.zbeboy.zone.service.system.AuthoritiesService;
+import top.zbeboy.zone.service.system.SystemConfigureService;
+import top.zbeboy.zone.service.system.SystemMailService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
+import top.zbeboy.zone.service.util.RequestUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.platform.authorize.RoleApplyBean;
 import top.zbeboy.zone.web.plugin.select2.Select2Data;
 import top.zbeboy.zone.web.util.AjaxUtil;
+import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.ByteUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.vo.platform.authorize.AuthorizeAddVo;
@@ -60,6 +65,15 @@ public class AuthorizeRestController {
 
     @Resource
     private AuthoritiesService authoritiesService;
+
+    @Resource
+    private SystemMailService systemMailService;
+
+    @Resource
+    private SystemConfigureService systemConfigureService;
+
+    @Resource
+    private UserNotifyService userNotifyService;
 
     /**
      * 数据
@@ -194,7 +208,7 @@ public class AuthorizeRestController {
      * @return true 保存成功 false 保存失败
      */
     @PostMapping("/web/platform/authorize/save")
-    public ResponseEntity<Map<String, Object>> save(@Valid AuthorizeAddVo authorizeAddVo, BindingResult bindingResult) {
+    public ResponseEntity<Map<String, Object>> save(@Valid AuthorizeAddVo authorizeAddVo, BindingResult bindingResult, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
             if (StringUtils.isNotBlank(authorizeAddVo.getUsername())) {
@@ -251,18 +265,58 @@ public class AuthorizeRestController {
                 roleApply.setReason(authorizeAddVo.getReason());
                 roleApply.setApplyStatus(ByteUtil.toByte(0));
                 roleApply.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+
+                Users applyUser;
                 if (StringUtils.isNotBlank(authorizeAddVo.getUsername())) {
                     String param = StringUtils.deleteWhitespace(authorizeAddVo.getUsername());
-                    roleApply.setUsername(param);
+                    applyUser = usersService.findByUsername(param);
                 } else {
-                    Users users = usersService.getUserFromSession();
-                    roleApply.setUsername(users.getUsername());
+                    applyUser = usersService.getUserFromSession();
                 }
+
+                roleApply.setUsername(applyUser.getUsername());
 
                 // 计算时长
                 roleApply.setExpireDate(DateTimeUtil.utilDateToSqlTimestamp(getDuration(authorizeAddVo.getValidDate(), authorizeAddVo.getDuration())));
 
                 roleApplyService.save(roleApply);
+
+                // 查询该申请人所在院所有院管理员
+                List<Users> admins = new ArrayList<>();
+                Result<Record> staffAdmin = staffService.findAdmin(Workbook.authorities.ROLE_ADMIN.name(), authorizeAddVo.getCollegeId());
+                if (staffAdmin.isNotEmpty()) {
+                    admins.addAll(staffAdmin.into(Users.class));
+                }
+
+                Result<Record> studentAdmin = studentService.findAdmin(Workbook.authorities.ROLE_ADMIN.name(), authorizeAddVo.getCollegeId());
+                if (studentAdmin.isNotEmpty()) {
+                    admins.addAll(studentAdmin.into(Users.class));
+                }
+
+                String notify = "用户【" + applyUser.getRealName() +
+                        "-" + applyUser.getUsername() + "】于" +
+                        DateTimeUtil.defaultFormatSqlTimestamp(roleApply.getCreateDate()) +
+                        "提交了新的权限申请，请及时到平台授权菜单审核。";
+                for (Users u : admins) {
+                    // 检查邮件推送是否被关闭
+                    SystemConfigure mailConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
+                    if (StringUtils.equals("1", mailConfigure.getDataValue())) {
+                        systemMailService.sendNotifyMail(u, RequestUtil.getBaseUrl(request), notify);
+                    }
+
+                    UserNotify userNotify = new UserNotify();
+                    userNotify.setUserNotifyId(UUIDUtil.getUUID());
+                    userNotify.setSendUser(applyUser.getUsername());
+                    userNotify.setAcceptUser(u.getUsername());
+                    userNotify.setIsSee(BooleanUtil.toByte(false));
+                    userNotify.setNotifyType(Workbook.notifyType.info.name());
+                    userNotify.setNotifyTitle("平台授权审核提醒");
+                    userNotify.setNotifyContent(notify);
+                    userNotify.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+
+                    userNotifyService.save(userNotify);
+                }
+
 
                 ajaxUtil.success().msg("保存成功");
             }
@@ -350,7 +404,7 @@ public class AuthorizeRestController {
      */
     @PostMapping("/web/platform/authorize/status")
     public ResponseEntity<Map<String, Object>> status(@RequestParam("roleApplyId") String roleApplyId,
-                                                      @RequestParam("applyStatus") Byte applyStatus) {
+                                                      @RequestParam("applyStatus") Byte applyStatus, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         rule4(ajaxUtil, roleApplyId);
         if (ajaxUtil.getState()) {
@@ -358,6 +412,34 @@ public class AuthorizeRestController {
             if (Objects.nonNull(roleApply)) {
                 roleApply.setApplyStatus(applyStatus);
                 roleApplyService.update(roleApply);
+                Users applyUser = usersService.findByUsername(roleApply.getUsername());
+                Users users = usersService.getUserFromSession();
+
+                String notify = "管理员用户【" + users.getRealName() + "】";
+                if (applyStatus == 1) {
+                    notify += " 通过了您在" + DateTimeUtil.defaultFormatSqlTimestamp(roleApply.getCreateDate()) + "时创建的平台授权申请。";
+                } else if (applyStatus == 2) {
+                    notify += " 拒绝了您在" + DateTimeUtil.defaultFormatSqlTimestamp(roleApply.getCreateDate()) + "时创建的平台授权申请。";
+                }
+
+                // 检查邮件推送是否被关闭
+                SystemConfigure mailConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
+                if (StringUtils.equals("1", mailConfigure.getDataValue())) {
+                    systemMailService.sendNotifyMail(applyUser, RequestUtil.getBaseUrl(request), notify);
+                }
+
+                UserNotify userNotify = new UserNotify();
+                userNotify.setUserNotifyId(UUIDUtil.getUUID());
+                userNotify.setSendUser(users.getUsername());
+                userNotify.setAcceptUser(applyUser.getUsername());
+                userNotify.setIsSee(BooleanUtil.toByte(false));
+                userNotify.setNotifyType(Workbook.notifyType.info.name());
+                userNotify.setNotifyTitle("平台授权审核结果提醒");
+                userNotify.setNotifyContent(notify);
+                userNotify.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+
+                userNotifyService.save(userNotify);
+
                 ajaxUtil.success().msg("更新状态成功");
             } else {
                 ajaxUtil.fail().msg("未查询到申请信息");

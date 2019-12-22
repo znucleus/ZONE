@@ -293,7 +293,7 @@ CREATE TABLE user_notify(
   notify_title VARCHAR(100) NOT NULL,
   notify_content VARCHAR(500) NOT NULL,
   create_date DATETIME NOT NULL,
-  notify_type VARCHAR(10) NOT NULL DEFAULT 0,
+  notify_type VARCHAR(10) NOT NULL,
   is_see BOOLEAN DEFAULT 0,
   send_user VARCHAR(64) NOT NULL,
   accept_user VARCHAR(64) NOT NULL,
