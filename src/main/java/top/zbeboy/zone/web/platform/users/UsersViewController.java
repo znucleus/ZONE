@@ -1,4 +1,4 @@
-package top.zbeboy.zone.web.platform.user;
+package top.zbeboy.zone.web.platform.users;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.Record;
