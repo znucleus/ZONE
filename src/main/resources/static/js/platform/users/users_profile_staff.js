@@ -9,11 +9,11 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
             obtain_department_data: web_path + '/anyone/data/department',
             obtain_science_data: web_path + '/anyone/data/science',
             obtain_academic_title_data: web_path + '/anyone/data/academic_title',
-            staff_update_school: web_path + '/user/staff/update/school',
+            staff_update_school: web_path + '/users/staff/update/school',
             obtain_nation_data: web_path + '/anyone/data/nation',
             obtain_political_landscape_data: web_path + '/anyone/data/political_landscape',
-            check_staff_number: web_path + '/user/check/staff/number',
-            staff_update_info: web_path + '/user/staff/update/info'
+            check_staff_number: web_path + '/users/check/staff/number',
+            staff_update_info: web_path + '/users/staff/update/info'
         };
 
         var param_id = {

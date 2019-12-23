@@ -35,7 +35,7 @@ public class UserNotifyRestController {
      * @param simplePaginationUtil 分页工具
      * @return 数据
      */
-    @GetMapping("/user/data/notify")
+    @GetMapping("/users/data/notify")
     public ResponseEntity<Map<String, Object>> userDataNotify(SimplePaginationUtil simplePaginationUtil) {
         AjaxUtil<UserNotifyBean> ajaxUtil = AjaxUtil.of();
         Users users = usersService.getUserFromSession();
@@ -76,7 +76,7 @@ public class UserNotifyRestController {
      * @param userNotifyId 通知id
      * @return 数据
      */
-    @GetMapping("/user/notify/detail/{userNotifyId}")
+    @GetMapping("/users/notify/detail/{userNotifyId}")
     public ResponseEntity<Map<String, Object>> userNotifyDetail(@PathVariable("userNotifyId") String userNotifyId) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         Users users = usersService.getUserFromSession();
@@ -97,7 +97,7 @@ public class UserNotifyRestController {
      * @param userNotifyIds ids
      * @return 是否成功
      */
-    @PostMapping("/user/notify/reads")
+    @PostMapping("/users/notify/reads")
     public ResponseEntity<Map<String, Object>> userNotifyReads(@RequestParam("userNotifyId") String userNotifyIds) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         Users users = usersService.getUserFromSession();

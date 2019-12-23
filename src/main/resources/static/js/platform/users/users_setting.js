@@ -1,4 +1,4 @@
-//# sourceURL=user_setting.js
+//# sourceURL=users_setting.js
 require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "bootstrap",
         "csrf", "select2-zh-CN", "jquery.entropizer"],
     function ($, _, tools, Swal, moment) {
@@ -6,14 +6,14 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
         moment.locale('zh-cn');
 
         var ajax_url = {
-            users_update: web_path + '/user/update',
-            check_password: web_path + '/user/check/password',
+            users_update: web_path + '/users/update',
+            check_password: web_path + '/users/check/password',
             system_configure: web_path + '/anyone/data/configure',
-            check_mobile: web_path + '/user/check/mobile',
+            check_mobile: web_path + '/users/check/mobile',
             send_mobile: web_path + '/anyone/send/mobile',
             check_mobile_verification_code: web_path + '/anyone/check/mobile/code',
             obtain_mobile_code_valid: web_path + '/anyone/data/mobile/code',
-            users_password_update: web_path + '/user/password/update'
+            users_password_update: web_path + '/users/password/update'
         };
 
         var param_id = {

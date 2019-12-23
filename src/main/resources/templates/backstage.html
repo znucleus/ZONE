@@ -69,7 +69,7 @@
                         </div>
 
                         <div class="pd-y-10 tx-center bd-t">
-                            <a href="#/user/notify" class="tx-12 dy_href"><i class="fa fa-angle-down mg-r-5"></i> 显示所有通知</a>
+                            <a href="#/users/notify" class="tx-12 dy_href"><i class="fa fa-angle-down mg-r-5"></i> 显示所有通知</a>
                         </div>
                     </div><!-- media-list -->
                 </div><!-- dropdown-menu -->
@@ -82,8 +82,8 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-header wd-200">
                     <ul class="list-unstyled user-profile-nav">
-                        <li><a href="#/user/profile" class="dy_href"><i class="icon ion-ios-person"></i> 资料</a></li>
-                        <li><a href="#/user/setting" class="dy_href"><i class="icon ion-ios-gear"></i> 设置</a></li>
+                        <li><a href="#/users/profile" class="dy_href"><i class="icon ion-ios-person"></i> 资料</a></li>
+                        <li><a href="#/users/setting" class="dy_href"><i class="icon ion-ios-gear"></i> 设置</a></li>
                         <li><a href="javascript:$('#logout').submit();"><i class="icon ion-power"></i> 退出</a></li>
                     </ul>
                 </div><!-- dropdown-menu -->
@@ -121,7 +121,7 @@
 <!-- ########## END: MAIN PANEL ########## -->
 
 <!--通知模板-->
-<script id="user-notify-template" type="text/x-handlebars-template">
+<script id="users-notify-template" type="text/x-handlebars-template">
     {{#each listResult}}
     <a href="javascript:" data-toggle="modal" data-target="#userNotifyModal" class="media-list-link read"
        data-id="{{userNotifyId}}">

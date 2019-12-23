@@ -26,7 +26,7 @@ public class SystemNotifyRestController {
      *
      * @return 数据
      */
-    @GetMapping("/user/system/notify")
+    @GetMapping("/users/system/notify")
     public ResponseEntity<Map<String, Object>> userSystemNotify() {
         AjaxUtil<SystemNotify> ajaxUtil = AjaxUtil.of();
         List<SystemNotify> systemNotifies = new ArrayList<>();

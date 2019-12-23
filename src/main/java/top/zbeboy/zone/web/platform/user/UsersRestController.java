@@ -138,7 +138,7 @@ public class UsersRestController {
      * @param password 密码
      * @return 是否正确
      */
-    @PostMapping("/user/check/password")
+    @PostMapping("/users/check/password")
     public ResponseEntity<Map<String, Object>> userCheckPassword(@RequestParam("password") String password) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         Users users = usersService.getUserFromSession();
@@ -156,7 +156,7 @@ public class UsersRestController {
      * @param username 账号
      * @return 是否存在以及该用户状态是否正常
      */
-    @PostMapping("/user/check/username/status")
+    @PostMapping("/users/check/username/status")
     public ResponseEntity<Map<String, Object>> userCheckStatusByUsername(@RequestParam("username") String username) {
         String param = StringUtils.trim(username);
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
@@ -175,8 +175,8 @@ public class UsersRestController {
      * @param mobile 手机号
      * @return 是否被注册
      */
-    @PostMapping("/user/check/mobile")
-    public ResponseEntity<Map<String, Object>> userCheckMobile(@RequestParam("mobile") String mobile) {
+    @PostMapping("/users/check/mobile")
+    public ResponseEntity<Map<String, Object>> usersCheckMobile(@RequestParam("mobile") String mobile) {
         String param = StringUtils.deleteWhitespace(mobile);
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         String regex = SystemMobileConfig.MOBILE_REGEX;
@@ -246,8 +246,8 @@ public class UsersRestController {
      * @param bindingResult  检验
      * @return 是否更新成功
      */
-    @PostMapping("/user/update")
-    public ResponseEntity<Map<String, Object>> userUpdate(@Valid UsersProfileVo usersProfileVo, BindingResult bindingResult, HttpSession session, HttpServletRequest request) {
+    @PostMapping("/users/update")
+    public ResponseEntity<Map<String, Object>> usersUpdate(@Valid UsersProfileVo usersProfileVo, BindingResult bindingResult, HttpSession session, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
             String name = StringUtils.deleteWhitespace(usersProfileVo.getName());
@@ -383,7 +383,7 @@ public class UsersRestController {
      * @param confirmPassword 确认密码
      * @return 是否成功
      */
-    @PostMapping("/user/password/update")
+    @PostMapping("/users/password/update")
     public ResponseEntity<Map<String, Object>> userPasswordUpdate(@RequestParam("oldPassword") String oldPassword, @RequestParam("newPassword") String newPassword,
                                                                   @RequestParam("confirmPassword") String confirmPassword) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
@@ -408,14 +408,14 @@ public class UsersRestController {
     }
 
     /**
-     * upload user avatar.
+     * upload users avatar.
      *
      * @param file     base64 file.
      * @param fileName name.
      * @param request  request.
      * @return success or fail.
      */
-    @PostMapping("/user/avatar/upload")
+    @PostMapping("/users/avatar/upload")
     public ResponseEntity<Map<String, Object>> userAvatarUpload(@RequestParam("file") String file, @RequestParam("fileName") String fileName, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         try {
@@ -440,7 +440,7 @@ public class UsersRestController {
      * @param request request.
      * @return success or false
      */
-    @GetMapping("/user/avatar/delete")
+    @GetMapping("/users/avatar/delete")
     public ResponseEntity<Map<String, Object>> userAvatarDelete(HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         try {

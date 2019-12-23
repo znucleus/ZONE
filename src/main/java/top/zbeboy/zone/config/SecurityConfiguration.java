@@ -81,7 +81,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and().rememberMe().rememberMeServices(rememberMeServices())
                 .and().authorizeRequests().antMatchers("/web/**").access("@webSecurity.check(authentication,request)")
                 .and().authorizeRequests().antMatchers("/special/channel/**").hasAnyRole("SYSTEM", "ADMIN") // 特别通道 跨controller调用共同方法使用
-                .and().authorizeRequests().antMatchers("/user/**", "/remind/**", "/oauth/authorize").authenticated()
+                .and().authorizeRequests().antMatchers("/users/**", "/remind/**", "/oauth/authorize").authenticated()
                 .and().authorizeRequests().antMatchers("/anyone/**", "/rest/**").permitAll()
                 .antMatchers("/metrics/**").hasRole("ACTUATOR")
                 .antMatchers("/health/**").hasRole("ACTUATOR")

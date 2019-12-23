@@ -90,7 +90,7 @@ public class StaffRestController {
      * @param staffNumber 工号
      * @return 是否被注册
      */
-    @PostMapping("/user/check/staff/number")
+    @PostMapping("/users/check/staff/number")
     public ResponseEntity<Map<String, Object>> userCheckStaffNumber(@RequestParam("staffNumber") String staffNumber) {
         String param = StringUtils.trim(staffNumber);
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
@@ -191,7 +191,7 @@ public class StaffRestController {
      * @param staffEditVo 数据
      * @return 成功与否
      */
-    @PostMapping("/user/staff/update/school")
+    @PostMapping("/users/staff/update/school")
     public ResponseEntity<Map<String, Object>> userStaffUpdateSchool(StaffEditVo staffEditVo) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (staffEditVo.getDepartmentId() > 0) {
@@ -218,7 +218,7 @@ public class StaffRestController {
      * @param bindingResult 检验
      * @return 更新信息
      */
-    @PostMapping("/user/staff/update/info")
+    @PostMapping("/users/staff/update/info")
     public ResponseEntity<Map<String, Object>> userStudentUpdateInfo(@Valid StaffEditVo staffEditVo, BindingResult bindingResult) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {

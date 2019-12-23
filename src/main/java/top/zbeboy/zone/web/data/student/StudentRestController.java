@@ -91,7 +91,7 @@ public class StudentRestController {
      * @param studentNumber 学号
      * @return 是否被注册
      */
-    @PostMapping("/user/check/student/number")
+    @PostMapping("/users/check/student/number")
     public ResponseEntity<Map<String, Object>> userCheckStudentNumber(@RequestParam("studentNumber") String studentNumber) {
         String param = StringUtils.trim(studentNumber);
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
@@ -116,7 +116,7 @@ public class StudentRestController {
      * @param studentNumber 学号
      * @return 是否存在以及该用户状态是否正常
      */
-    @PostMapping("/user/check/student/status")
+    @PostMapping("/users/check/student/status")
     public ResponseEntity<Map<String, Object>> userCheckStatusByStudentNumber(@RequestParam("studentNumber") String studentNumber) {
         String param = StringUtils.trim(studentNumber);
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
@@ -216,7 +216,7 @@ public class StudentRestController {
      * @param studentEditVo 数据
      * @return 成功与否
      */
-    @PostMapping("/user/student/update/school")
+    @PostMapping("/users/student/update/school")
     public ResponseEntity<Map<String, Object>> userStudentUpdateSchool(StudentEditVo studentEditVo) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (studentEditVo.getOrganizeId() > 0) {
@@ -243,7 +243,7 @@ public class StudentRestController {
      * @param bindingResult 检验
      * @return 更新信息
      */
-    @PostMapping("/user/student/update/info")
+    @PostMapping("/users/student/update/info")
     public ResponseEntity<Map<String, Object>> userStudentUpdateInfo(@Valid StudentEditVo studentEditVo, BindingResult bindingResult) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {

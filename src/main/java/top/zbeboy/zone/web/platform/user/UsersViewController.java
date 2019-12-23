@@ -52,8 +52,8 @@ public class UsersViewController {
      *
      * @return 设置页面
      */
-    @GetMapping("/user/profile")
-    public String userProfile(ModelMap modelMap) {
+    @GetMapping("/users/profile")
+    public String usersProfile(ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
 
@@ -78,7 +78,7 @@ public class UsersViewController {
         UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
         if (Objects.nonNull(usersType)) {
             if (StringUtils.equals(Workbook.SYSTEM_USERS_TYPE, usersType.getUsersTypeName())) {
-                page = "web/platform/user/users_profile_system::#page-wrapper";
+                page = "web/platform/users/users_profile_system::#page-wrapper";
             } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
                 StudentBean studentBean = new StudentBean();
                 Optional<Record> record = studentService.findByUsernameRelation(users.getUsername());
@@ -86,7 +86,7 @@ public class UsersViewController {
                     studentBean = record.get().into(StudentBean.class);
                 }
                 modelMap.addAttribute("student", studentBean);
-                page = "web/platform/user/users_profile_student::#page-wrapper";
+                page = "web/platform/users/users_profile_student::#page-wrapper";
             } else if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                 StaffBean staffBean = new StaffBean();
                 Optional<Record> record = staffService.findByUsernameRelation(users.getUsername());
@@ -94,7 +94,7 @@ public class UsersViewController {
                     staffBean = record.get().into(StaffBean.class);
                 }
                 modelMap.addAttribute("staff", staffBean);
-                page = "web/platform/user/users_profile_staff::#page-wrapper";
+                page = "web/platform/users/users_profile_staff::#page-wrapper";
             } else {
                 config.buildDangerTip("数据错误", "暂不支持您的用户类型进行修改");
                 config.dataMerging(modelMap);
@@ -114,8 +114,8 @@ public class UsersViewController {
      * @param modelMap 页面对象
      * @return 页面
      */
-    @GetMapping("/user/profile/edit")
-    public String userProfileEdit(ModelMap modelMap) {
+    @GetMapping("/users/profile/edit")
+    public String usersProfileEdit(ModelMap modelMap) {
         Users users = usersService.getUserFromSession();
         modelMap.addAttribute("realName", users.getRealName());
         modelMap.addAttribute("joinDate", users.getJoinDate());
@@ -127,7 +127,7 @@ public class UsersViewController {
                 modelMap.addAttribute("avatar", Workbook.DIRECTORY_SPLIT + files.getRelativePath());
             }
         }
-        return "web/platform/user/users_profile_edit::#page-wrapper";
+        return "web/platform/users/users_profile_edit::#page-wrapper";
     }
 
     /**
@@ -135,13 +135,23 @@ public class UsersViewController {
      *
      * @return 页面
      */
-    @GetMapping("/user/setting")
+    @GetMapping("/users/setting")
     public String userSetting(ModelMap modelMap) {
         Users users = usersService.getUserFromSession();
         modelMap.addAttribute("username", users.getUsername());
         modelMap.addAttribute("email", users.getEmail());
         modelMap.addAttribute("mobile", users.getMobile());
         modelMap.addAttribute("idCard", users.getIdCard());
-        return "web/platform/user/user_setting::#page-wrapper";
+        return "web/platform/users/users_setting::#page-wrapper";
+    }
+
+    /**
+     * 平台用户
+     *
+     * @return 平台用户页面
+     */
+    @GetMapping("/web/menu/platform/users")
+    public String index() {
+        return "web/platform/users/users_data::#page-wrapper";
     }
 }

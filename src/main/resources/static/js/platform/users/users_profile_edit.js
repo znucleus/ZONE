@@ -4,9 +4,9 @@ require(["jquery", "lodash", "tools", "sweetalert2", "bootstrap", "dropify",
     function ($, _, tools, Swal) {
 
         var ajax_url = {
-            users_update: web_path + '/user/update',
-            users_avatar_upload: web_path + '/user/avatar/upload',
-            users_avatar_delete: web_path + '/user/avatar/delete'
+            users_update: web_path + '/users/update',
+            users_avatar_upload: web_path + '/users/avatar/upload',
+            users_avatar_delete: web_path + '/users/avatar/delete'
         };
 
         var param_id = {

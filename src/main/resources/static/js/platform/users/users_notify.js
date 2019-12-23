@@ -1,4 +1,4 @@
-//# sourceURL=user_notify.js
+//# sourceURL=users_notify.js
 require(["jquery", "tools", "handlebars", "moment-with-locales", "bootstrap",
         "csrf", "jquery.simple-pagination"],
     function ($, tools, Handlebars, moment) {
@@ -6,8 +6,8 @@ require(["jquery", "tools", "handlebars", "moment-with-locales", "bootstrap",
         moment.locale('zh-cn');
 
         var ajax_url = {
-            user_notify: web_path + '/user/data/notify',
-            user_notify_reads: web_path + '/user/notify/reads'
+            user_notify: web_path + '/users/data/notify',
+            user_notify_reads: web_path + '/users/notify/reads'
         };
 
         var param = {
@@ -109,7 +109,7 @@ require(["jquery", "tools", "handlebars", "moment-with-locales", "bootstrap",
          * @param data 数据
          */
         function listData(data) {
-            var template = Handlebars.compile($("#user-notify-template").html());
+            var template = Handlebars.compile($("#users-notify-template").html());
 
             tableData.html(template(data));
         }

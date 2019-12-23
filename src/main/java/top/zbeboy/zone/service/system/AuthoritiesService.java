@@ -17,7 +17,7 @@ public interface AuthoritiesService {
     List<Authorities> findByUsername(String username);
 
     /**
-     * Check if user is login by remember me cookie, refer
+     * Check if users is login by remember me cookie, refer
      * org.springframework.security.authentication.AuthenticationTrustResolverImpl
      *
      * @return true or false

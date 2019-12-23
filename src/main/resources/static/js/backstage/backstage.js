@@ -168,10 +168,10 @@ require(["jquery", "requirejs-domready", "moment-with-locales", "handlebars", "a
             }
 
             var ajax_url = {
-                user_notify: web_path + '/user/data/notify',
-                user_notify_detail: web_path + '/user/notify/detail',
-                user_notify_reads: web_path + '/user/notify/reads',
-                system_notify: web_path + '/user/system/notify'
+                user_notify: web_path + '/users/data/notify',
+                user_notify_detail: web_path + '/users/notify/detail',
+                user_notify_reads: web_path + '/users/notify/reads',
+                system_notify: web_path + '/users/system/notify'
             };
 
             var user_notify_param_id = {
@@ -240,7 +240,7 @@ require(["jquery", "requirejs-domready", "moment-with-locales", "handlebars", "a
                     var html = '<p class="text-center pd-x-20 pd-y-15"><small>无任何消息</small></p>';
                     $(user_notify_param_id.userNotifyData).html(html);
                 } else {
-                    var template = Handlebars.compile($("#user-notify-template").html());
+                    var template = Handlebars.compile($("#users-notify-template").html());
 
                     Handlebars.registerHelper('create_date', function () {
                         return new Handlebars.SafeString(moment(this.createDateStr, "YYYY-MM-DD HH:mm:ss").fromNow());
