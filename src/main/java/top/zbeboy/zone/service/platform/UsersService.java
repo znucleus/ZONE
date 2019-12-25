@@ -1,8 +1,11 @@
 package top.zbeboy.zone.service.platform;
 
+import org.jooq.Record;
+import org.jooq.Record11;
 import org.jooq.Result;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.records.UsersRecord;
+import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
 import java.sql.Date;
 import java.util.List;
@@ -84,6 +87,28 @@ public interface UsersService {
      * @return 用户全部信息
      */
     Users findByMobile(String mobile);
+
+    /**
+     * 分页查询
+     *
+     * @param dataTablesUtil 工具类
+     * @return 分页数据
+     */
+    Result<Record11<String, String, String, String, String, String, String, Byte, Byte, String, Date>> findAllByPage(DataTablesUtil dataTablesUtil);
+
+    /**
+     * 应用 总数
+     *
+     * @return 总数
+     */
+    int countAll();
+
+    /**
+     * 根据条件查询总数
+     *
+     * @return 条件查询总数
+     */
+    int countByCondition(DataTablesUtil dataTablesUtil);
 
     /**
      * 注意 用于定时 查询未验证用户

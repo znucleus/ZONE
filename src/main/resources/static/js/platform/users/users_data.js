@@ -93,9 +93,9 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                 render: function (a, b, c, d) {
                     var v = '';
                     if (c.accountNonLocked === 0 || c.accountNonLocked == null) {
-                        v = "<span class='text-info'>正常</span>";
+                        v = "<span class='text-danger'>已锁定</span>";
                     } else {
-                        v = "<span class='text-danger'>已注销</span>";
+                        v = "<span class='text-info'>正常</span>";
                     }
                     return v;
                 }
@@ -105,48 +105,52 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                 orderable: false,
                 render: function (a, b, c, d) {
 
-                    var context = null;
+                    var context = {
+                        func: [
+                            {
+                                "name": "设置角色",
+                                "css": "role",
+                                "type": "info",
+                                "id": c.username,
+                                "role": c.roleName
+                            }
+                        ]
+                    };
 
                     if (c.enabled === 1) {
-                        context =
-                            {
-                                func: [
-                                    {
-                                        "name": "注销",
-                                        "css": "del",
-                                        "type": "danger",
-                                        "id": c.username,
-                                        "role": c.roleName
-                                    },
-                                    {
-                                        "name": "设置角色",
-                                        "css": "role",
-                                        "type": "info",
-                                        "id": c.username,
-                                        "role": c.roleName
-                                    }
-                                ]
-                            };
+                        context.func.push({
+                            "name": "注销",
+                            "css": "del",
+                            "type": "danger",
+                            "id": c.username,
+                            "role": c.roleName
+                        });
                     } else {
-                        context =
-                            {
-                                func: [
-                                    {
-                                        "name": "恢复",
-                                        "css": "recovery",
-                                        "type": "warning",
-                                        "id": c.username,
-                                        "role": c.roleName
-                                    },
-                                    {
-                                        "name": "设置角色",
-                                        "css": "role",
-                                        "type": "info",
-                                        "id": c.username,
-                                        "role": c.roleName
-                                    }
-                                ]
-                            };
+                        context.func.push({
+                            "name": "恢复",
+                            "css": "recovery",
+                            "type": "warning",
+                            "id": c.username,
+                            "role": c.roleName
+                        });
+                    }
+
+                    if (c.accountNonLocked === 1) {
+                        context.func.push({
+                            "name": "锁定",
+                            "css": "locked",
+                            "type": "danger",
+                            "id": c.username,
+                            "role": c.roleName
+                        });
+                    } else {
+                        context.func.push({
+                            "name": "解锁",
+                            "css": "unlocked",
+                            "type": "warning",
+                            "id": c.username,
+                            "role": c.roleName
+                        });
                     }
 
                     return template(context);
@@ -512,24 +516,16 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
      * @param username
      */
     function cancel(username) {
-        var msg;
-        msg = Messenger().post({
-            message: "确定注销 '" + username + "' 吗?",
-            actions: {
-                retry: {
-                    label: '确定',
-                    phrase: 'Retrying TIME',
-                    action: function () {
-                        msg.cancel();
-                        toCancel(username);
-                    }
-                },
-                cancel: {
-                    label: '取消',
-                    action: function () {
-                        return msg.cancel();
-                    }
-                }
+        Swal.fire({
+            title: "确定注销 '" + username + "' 吗？",
+            text: "账号注销！",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            preConfirm: function () {
+                toCancel(username);
             }
         });
     }
@@ -539,24 +535,16 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
      * @param username
      */
     function recovery(username) {
-        var msg;
-        msg = Messenger().post({
-            message: "确定恢复 '" + username + "' 吗?",
-            actions: {
-                retry: {
-                    label: '确定',
-                    phrase: 'Retrying TIME',
-                    action: function () {
-                        msg.cancel();
-                        toRecovery(username);
-                    }
-                },
-                cancel: {
-                    label: '取消',
-                    action: function () {
-                        return msg.cancel();
-                    }
-                }
+        Swal.fire({
+            title: "确定恢复 '" + username + "' 吗？",
+            text: "账号恢复！",
+            type: "success",
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            preConfirm: function () {
+                toRecovery(username);
             }
         });
     }
@@ -566,30 +554,22 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
      */
     function cancels() {
         var userIds = [];
-        var ids = $('input[name="pass_check"]:checked');
+        var ids = $('input[name="check"]:checked');
         for (var i = 0; i < ids.length; i++) {
             userIds.push($(ids[i]).val());
         }
 
         if (userIds.length > 0) {
-            var msg;
-            msg = Messenger().post({
-                message: "确定注销选中的用户吗?",
-                actions: {
-                    retry: {
-                        label: '确定',
-                        phrase: 'Retrying TIME',
-                        action: function () {
-                            msg.cancel();
-                            toCancels(userIds);
-                        }
-                    },
-                    cancel: {
-                        label: '取消',
-                        action: function () {
-                            return msg.cancel();
-                        }
-                    }
+            Swal.fire({
+                title: "确定注销选中的用户吗？",
+                text: "账号注销！",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                preConfirm: function () {
+                    toCancels(userIds);
                 }
             });
         } else {
@@ -602,30 +582,22 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
      */
     function recoveries() {
         var userIds = [];
-        var ids = $('input[name="pass_check"]:checked');
+        var ids = $('input[name="check"]:checked');
         for (var i = 0; i < ids.length; i++) {
             userIds.push($(ids[i]).val());
         }
 
         if (userIds.length > 0) {
-            var msg;
-            msg = Messenger().post({
-                message: "确定恢复选中的用户吗?",
-                actions: {
-                    retry: {
-                        label: '确定',
-                        phrase: 'Retrying TIME',
-                        action: function () {
-                            msg.cancel();
-                            toRecoveries(userIds);
-                        }
-                    },
-                    cancel: {
-                        label: '取消',
-                        action: function () {
-                            return msg.cancel();
-                        }
-                    }
+            Swal.fire({
+                title: "确定恢复选中的用户吗？",
+                text: "账号恢复！",
+                type: "success",
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                preConfirm: function () {
+                    toRecoveries(userIds);
                 }
             });
         } else {
@@ -656,24 +628,27 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
      * @param enabled
      */
     function sendUpdateEnabledAjax(username, message, enabled) {
-        Messenger().run({
-            successMessage: message + '用户成功',
-            errorMessage: message + '用户失败',
-            progressMessage: '正在' + message + '用户....'
-        }, {
-            url: web_path + getAjaxUrl().updateEnabled,
-            type: 'post',
+        $.ajax({
+            type: 'POST',
+            url: getAjaxUrl().update,
             data: {userIds: username, enabled: enabled},
             success: function (data) {
+                Messenger().post({
+                    message: data.msg,
+                    type: data.state ? 'success' : 'error',
+                    showCloseButton: true
+                });
+
                 if (data.state) {
-                    passTable.ajax.reload();
+                    myTable.ajax.reload();
                 }
             },
-            error: function (xhr) {
-                if ((xhr != null ? xhr.status : void 0) === 404) {
-                    return "请求失败";
-                }
-                return true;
+            error: function (XMLHttpRequest) {
+                Messenger().post({
+                    message: 'Request error : ' + XMLHttpRequest.status + " " + XMLHttpRequest.statusText,
+                    type: 'error',
+                    showCloseButton: true
+                });
             }
         });
     }

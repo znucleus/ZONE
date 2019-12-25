@@ -369,7 +369,7 @@ public interface PaginationPlugin<S extends PaginationUtil> {
      * @param paginationUtil 分页工具类
      * @return 条件
      */
-    Condition searchCondition(S paginationUtil);
+    default Condition searchCondition(S paginationUtil){return null;}
 
     /**
      * 额外固定条件
@@ -412,7 +412,7 @@ public interface PaginationPlugin<S extends PaginationUtil> {
      * @param step           结果条件
      * @param paginationUtil 分页工具类
      */
-    void sortCondition(SelectConnectByStep<Record> step, S paginationUtil);
+    default void sortCondition(SelectConnectByStep<Record> step, S paginationUtil){}
 
     /**
      * 排序完成

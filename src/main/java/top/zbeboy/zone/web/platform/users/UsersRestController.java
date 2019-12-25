@@ -4,6 +4,8 @@ package top.zbeboy.zone.web.platform.users;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.jooq.Record;
+import org.jooq.Record11;
 import org.jooq.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.config.ZoneProperties;
+import top.zbeboy.zone.domain.tables.pojos.Application;
 import top.zbeboy.zone.domain.tables.pojos.Files;
 import top.zbeboy.zone.domain.tables.pojos.SystemConfigure;
 import top.zbeboy.zone.domain.tables.pojos.Users;
@@ -26,11 +29,14 @@ import top.zbeboy.zone.service.system.FilesService;
 import top.zbeboy.zone.service.system.SystemConfigureService;
 import top.zbeboy.zone.service.system.SystemMailService;
 import top.zbeboy.zone.service.util.*;
+import top.zbeboy.zone.web.bean.platform.users.UsersBean;
+import top.zbeboy.zone.web.bean.system.application.ApplicationBean;
 import top.zbeboy.zone.web.system.mail.SystemMailConfig;
 import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BaseImgUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
+import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.vo.platform.user.ResetPasswordVo;
 import top.zbeboy.zone.web.vo.platform.user.UsersProfileVo;
 
@@ -38,7 +44,10 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -465,6 +474,44 @@ public class UsersRestController {
 
 
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 数据
+     *
+     * @param request 请求
+     * @return 数据
+     */
+    @GetMapping("/web/platform/users/data")
+    public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
+        // 前台数据标题 注：要和前台标题顺序一致，获取order用
+        List<String> headers = new ArrayList<>();
+        headers.add("#");
+        headers.add("select");
+        headers.add("realName");
+        headers.add("username");
+        headers.add("email");
+        headers.add("mobile");
+        headers.add("idCard");
+        headers.add("roleName");
+        headers.add("usersTypeName");
+        headers.add("enabled");
+        headers.add("accountNonLocked");
+        headers.add("langKey");
+        headers.add("joinDate");
+        headers.add("operator");
+
+        DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
+        Result<Record11<String, String, String, String, String, String, String, Byte, Byte, String, Date>> records = usersService.findAllByPage(dataTablesUtil);
+        List<UsersBean> usersBean = new ArrayList<>();
+        if (Objects.nonNull(records) && records.isNotEmpty()) {
+            usersBean = records.into(UsersBean.class);
+        }
+        dataTablesUtil.setData(usersBean);
+        dataTablesUtil.setiTotalRecords(usersService.countAll());
+        dataTablesUtil.setiTotalDisplayRecords(usersService.countByCondition(dataTablesUtil));
+
+        return new ResponseEntity<>(dataTablesUtil, HttpStatus.OK);
     }
 
     /**
