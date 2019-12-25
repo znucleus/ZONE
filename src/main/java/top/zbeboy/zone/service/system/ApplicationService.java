@@ -102,7 +102,6 @@ public interface ApplicationService {
      */
     Result<ApplicationRecord> findByApplicationCodeNeApplicationId(String applicationCode, String applicationId);
 
-
     /**
      * 分页查询
      *
