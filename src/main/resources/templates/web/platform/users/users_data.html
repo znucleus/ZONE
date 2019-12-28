@@ -50,11 +50,14 @@
                         </button>
                     </div>
                 </div>
+
+
                 <div class="col-md-12 mt-2">
                     <table id="dataTable" class="table table-striped table-bordered dt-responsive nowrap"
                            cellspacing="0" width="100%">
                         <thead>
                         <tr>
+                            <th>#</th>
                             <th>
                                 <input type="checkbox" name="checkall" id="checkall"/>
                             </th>
@@ -91,7 +94,8 @@
         </div>
     </script>
 
-    <input type="hidden" class="dy_script" th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/platform/users/users_data.js')}"/>
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/platform/users/users_data.js')}"/>
 </div>
 <!-- /#page-wrapper -->
 </body>

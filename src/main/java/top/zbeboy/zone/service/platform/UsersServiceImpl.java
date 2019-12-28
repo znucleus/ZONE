@@ -18,6 +18,7 @@ import top.zbeboy.zone.domain.tables.records.UsersRecord;
 import top.zbeboy.zone.security.MyUserImpl;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zone.service.system.AuthoritiesService;
+import top.zbeboy.zone.service.util.SQLQueryUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.ByteUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
@@ -105,30 +106,28 @@ public class UsersServiceImpl implements UsersService, PaginationPlugin<DataTabl
 
     @Override
     public Result<Record11<String, String, String, String, String, String, String, Byte, Byte, String, Date>> findAllByPage(DataTablesUtil dataTablesUtil) {
-        Select<AuthoritiesRecord> select = create.selectFrom(AUTHORITIES)
-                .where(AUTHORITIES.USERNAME.eq(USERS.USERNAME));
         SelectOnConditionStep<Record11<String, String, String, String, String, String, String, Byte, Byte, String, Date>> selectConditionStep =
-                create.select(USERS.REAL_NAME, USERS.USERNAME, USERS.EMAIL,USERS.MOBILE,USERS.ID_CARD,
-                listAgg(ROLE.ROLE_NAME, " ").withinGroupOrderBy(ROLE.ROLE_NAME).as("roleName"),
-                USERS_TYPE.USERS_TYPE_NAME, USERS.ENABLED, USERS.ACCOUNT_NON_LOCKED,USERS.LANG_KEY, USERS.JOIN_DATE)
-                    .from(USERS)
-                .join(USERS_TYPE)
-                .on(USERS.USERS_TYPE_ID.eq(USERS_TYPE.USERS_TYPE_ID))
-                .join(AUTHORITIES)
-                .on(USERS.USERNAME.eq(AUTHORITIES.USERNAME))
-                .join(ROLE)
-                .on(ROLE.ROLE_EN_NAME.eq(AUTHORITIES.AUTHORITY));
-        return queryAllByPage(selectConditionStep, dataTablesUtil, false,USERS.USERNAME);
+                create.select(USERS.REAL_NAME, USERS.USERNAME, USERS.EMAIL, USERS.MOBILE, USERS.ID_CARD,
+                        listAgg(ROLE.ROLE_NAME, " ").withinGroupOrderBy(ROLE.ROLE_NAME).as("roleName"),
+                        USERS_TYPE.USERS_TYPE_NAME, USERS.ENABLED, USERS.ACCOUNT_NON_LOCKED, USERS.LANG_KEY, USERS.JOIN_DATE)
+                        .from(USERS)
+                        .join(USERS_TYPE)
+                        .on(USERS.USERS_TYPE_ID.eq(USERS_TYPE.USERS_TYPE_ID))
+                        .join(AUTHORITIES)
+                        .on(USERS.USERNAME.eq(AUTHORITIES.USERNAME))
+                        .join(ROLE)
+                        .on(ROLE.ROLE_EN_NAME.eq(AUTHORITIES.AUTHORITY));
+        return queryAllByPage(selectConditionStep, dataTablesUtil, false, USERS.USERNAME);
     }
 
     @Override
-    public int countAll() {
-        return 0;
+    public int countAll(DataTablesUtil dataTablesUtil) {
+        return countAll(create, USERS, dataTablesUtil, true);
     }
 
     @Override
     public int countByCondition(DataTablesUtil dataTablesUtil) {
-        return 0;
+        return countAll(create, USERS, dataTablesUtil, false);
     }
 
     @Override
@@ -183,17 +182,17 @@ public class UsersServiceImpl implements UsersService, PaginationPlugin<DataTabl
     }
 
     public Result<Record11<String, String, String, String, String, String, String, Byte, Byte, String, Date>> queryAllByPage(SelectOnConditionStep<Record11<String, String, String, String, String, String, String, Byte, Byte, String, Date>> selectOnConditionStep,
-                                         DataTablesUtil paginationUtil, boolean useExtraCondition, GroupField... groupFields) {
+                                                                                                                             DataTablesUtil paginationUtil, boolean useExtraCondition, GroupField... groupFields) {
         Result<Record11<String, String, String, String, String, String, String, Byte, Byte, String, Date>> records;
         Condition a = useExtraCondition(paginationUtil, useExtraCondition);
         if (Objects.isNull(a)) {
-            groupBy(selectOnConditionStep,groupFields);
+            groupBy(selectOnConditionStep, groupFields);
             sortCondition(selectOnConditionStep, paginationUtil);
             pagination(selectOnConditionStep, paginationUtil);
             records = selectOnConditionStep.fetch();
         } else {
             SelectConditionStep<Record11<String, String, String, String, String, String, String, Byte, Byte, String, Date>> selectConditionStep = selectOnConditionStep.where(a);
-            groupBy(selectConditionStep,groupFields);
+            groupBy(selectConditionStep, groupFields);
             sortCondition(selectConditionStep, paginationUtil);
             pagination(selectConditionStep, paginationUtil);
             records = selectConditionStep.fetch();
@@ -203,11 +202,157 @@ public class UsersServiceImpl implements UsersService, PaginationPlugin<DataTabl
 
     @Override
     public Condition searchCondition(DataTablesUtil paginationUtil) {
-        return null;
+        Condition a = null;
+        JSONObject search = paginationUtil.getSearch();
+        if (Objects.nonNull(search)) {
+            String realName = StringUtils.trim(search.getString("realName"));
+            String username = StringUtils.trim(search.getString("username"));
+            String email = StringUtils.trim(search.getString("email"));
+            String mobile = StringUtils.trim(search.getString("mobile"));
+            if (StringUtils.isNotBlank(realName)) {
+                a = USERS.REAL_NAME.like(SQLQueryUtil.likeAllParam(realName));
+            }
+
+            if (StringUtils.isNotBlank(username)) {
+                if (Objects.isNull(a)) {
+                    a = USERS.USERNAME.like(SQLQueryUtil.likeAllParam(username));
+                } else {
+                    a = a.and(USERS.USERNAME.like(SQLQueryUtil.likeAllParam(username)));
+                }
+            }
+
+            if (StringUtils.isNotBlank(email)) {
+                if (Objects.isNull(a)) {
+                    a = USERS.EMAIL.like(SQLQueryUtil.likeAllParam(email));
+                } else {
+                    a = a.and(USERS.EMAIL.like(SQLQueryUtil.likeAllParam(email)));
+                }
+            }
+
+            if (StringUtils.isNotBlank(mobile)) {
+                if (Objects.isNull(a)) {
+                    a = USERS.MOBILE.like(SQLQueryUtil.likeAllParam(mobile));
+                } else {
+                    a = a.and(USERS.MOBILE.like(SQLQueryUtil.likeAllParam(mobile)));
+                }
+            }
+        }
+        return a;
     }
 
     public void sortCondition(SelectConnectByStep<Record11<String, String, String, String, String, String, String, Byte, Byte, String, Date>> step, DataTablesUtil paginationUtil) {
+        String orderColumnName = paginationUtil.getOrderColumnName();
+        String orderDir = paginationUtil.getOrderDir();
+        boolean isAsc = StringUtils.equalsIgnoreCase("asc", orderDir);
+        SortField[] sortField = null;
+        if (StringUtils.isNotBlank(orderColumnName)) {
+            if (StringUtils.equals("realName", orderColumnName)) {
+                sortField = new SortField[2];
+                if (isAsc) {
+                    sortField[0] = USERS.REAL_NAME.asc();
+                    sortField[1] = USERS.USERNAME.asc();
+                } else {
+                    sortField[0] = USERS.REAL_NAME.desc();
+                    sortField[1] = USERS.USERNAME.desc();
+                }
+            }
 
+            if (StringUtils.equals("username", orderColumnName)) {
+                sortField = new SortField[1];
+                if (isAsc) {
+                    sortField[0] = USERS.USERNAME.asc();
+                } else {
+                    sortField[0] = USERS.USERNAME.desc();
+                }
+            }
+
+            if (StringUtils.equals("email", orderColumnName)) {
+                sortField = new SortField[1];
+                if (isAsc) {
+                    sortField[0] = USERS.EMAIL.asc();
+                } else {
+                    sortField[0] = USERS.EMAIL.desc();
+                }
+            }
+
+            if (StringUtils.equals("mobile", orderColumnName)) {
+                sortField = new SortField[1];
+                if (isAsc) {
+                    sortField[0] = USERS.MOBILE.asc();
+                } else {
+                    sortField[0] = USERS.MOBILE.desc();
+                }
+            }
+
+            if (StringUtils.equals("idCard", orderColumnName)) {
+                sortField = new SortField[1];
+                if (isAsc) {
+                    sortField[0] = USERS.ID_CARD.asc();
+                } else {
+                    sortField[0] = USERS.ID_CARD.desc();
+                }
+            }
+
+            if (StringUtils.equals("usersTypeName", orderColumnName)) {
+                sortField = new SortField[2];
+                if (isAsc) {
+                    sortField[0] = USERS_TYPE.USERS_TYPE_NAME.asc();
+                    sortField[1] = USERS.USERNAME.asc();
+                } else {
+                    sortField[0] = USERS_TYPE.USERS_TYPE_NAME.desc();
+                    sortField[1] = USERS.USERNAME.desc();
+                }
+            }
+
+            if (StringUtils.equals("enabled", orderColumnName)) {
+                sortField = new SortField[2];
+                if (isAsc) {
+                    sortField[0] = USERS.ENABLED.asc();
+                    sortField[1] = USERS.USERNAME.asc();
+                } else {
+                    sortField[0] = USERS.ENABLED.desc();
+                    sortField[1] = USERS.USERNAME.desc();
+                }
+            }
+
+            if (StringUtils.equals("accountNonLocked", orderColumnName)) {
+                sortField = new SortField[2];
+                if (isAsc) {
+                    sortField[0] = USERS.ACCOUNT_NON_LOCKED.asc();
+                    sortField[1] = USERS.USERNAME.asc();
+                } else {
+                    sortField[0] = USERS.ACCOUNT_NON_LOCKED.desc();
+                    sortField[1] = USERS.USERNAME.desc();
+                }
+            }
+
+            if (StringUtils.equals("langKey", orderColumnName)) {
+                sortField = new SortField[2];
+                if (isAsc) {
+                    sortField[0] = USERS.LANG_KEY.asc();
+                    sortField[1] = USERS.USERNAME.asc();
+                } else {
+                    sortField[0] = USERS.LANG_KEY.desc();
+                    sortField[1] = USERS.USERNAME.desc();
+                }
+            }
+
+            if (StringUtils.equals("joinDate", orderColumnName)) {
+                sortField = new SortField[1];
+                if (isAsc) {
+                    sortField[0] = USERS.JOIN_DATE.asc();
+                } else {
+                    sortField[0] = USERS.JOIN_DATE.desc();
+                }
+            }
+        }
+        sortFinish(step, sortField);
+    }
+
+    private void sortFinish(SelectConnectByStep<Record11<String, String, String, String, String, String, String, Byte, Byte, String, Date>> step, SortField... sortField) {
+        if (Objects.nonNull(sortField)) {
+            step.orderBy(sortField);
+        }
     }
 
     @Override
@@ -217,38 +362,43 @@ public class UsersServiceImpl implements UsersService, PaginationPlugin<DataTabl
         JSONObject search = paginationUtil.getSearch();
         if (Objects.nonNull(search)) {
             String audited = StringUtils.trim(search.getString("audited"));
-            if(StringUtils.isBlank(audited)){
+            if (StringUtils.isBlank(audited)) {
                 audited = "1";
             }
-                int auditedInt = NumberUtils.toInt(audited);
-                // 已审核
-                if (auditedInt == 1) {
-                    if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
-                        Select<AuthoritiesRecord> select = create.selectFrom(AUTHORITIES)
-                                .where(AUTHORITIES.USERNAME.eq(USERS.USERNAME).and(AUTHORITIES.AUTHORITY.ne(Workbook.authorities.ROLE_SYSTEM.name())));
-                        a = a.andExists(select);
-                    } else {
-                        Select<AuthoritiesRecord> select = create.selectFrom(AUTHORITIES)
-                                .where(AUTHORITIES.USERNAME.eq(USERS.USERNAME).and(AUTHORITIES.AUTHORITY.ne(Workbook.authorities.ROLE_SYSTEM.name())).and(AUTHORITIES.AUTHORITY.ne(Workbook.authorities.ROLE_ACTUATOR.name())));
-                        a = a.andExists(select);
-                    }
-
-                } else if (auditedInt == 2) {
-                    // 未审核
+            int auditedInt = NumberUtils.toInt(audited);
+            // 已审核
+            if (auditedInt == 1) {
+                if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
                     Select<AuthoritiesRecord> select = create.selectFrom(AUTHORITIES)
-                            .where(AUTHORITIES.USERNAME.eq(USERS.USERNAME));
-                    a = a.andNotExists(select);
+                            .where(AUTHORITIES.USERNAME.eq(USERS.USERNAME).and(AUTHORITIES.AUTHORITY.ne(Workbook.authorities.ROLE_SYSTEM.name())));
+                    a = a.andExists(select);
+                } else {
+                    Select<AuthoritiesRecord> select = create.selectFrom(AUTHORITIES)
+                            .where(AUTHORITIES.USERNAME.eq(USERS.USERNAME).and(AUTHORITIES.AUTHORITY.ne(Workbook.authorities.ROLE_SYSTEM.name())).and(AUTHORITIES.AUTHORITY.ne(Workbook.authorities.ROLE_ACTUATOR.name())));
+                    a = a.andExists(select);
                 }
+
+            } else if (auditedInt == 2) {
+                // 未审核
+                Select<AuthoritiesRecord> select = create.selectFrom(AUTHORITIES)
+                        .where(AUTHORITIES.USERNAME.eq(USERS.USERNAME));
+                a = a.andNotExists(select);
+            }
         }
 
         return a;
     }
 
     private void groupBy(SelectConnectByStep<Record11<String, String, String, String, String, String, String, Byte, Byte, String, Date>> step, GroupField... groupFields) {
-
+        if (Objects.nonNull(groupFields)) {
+            step.groupBy(groupFields);
+        }
     }
 
     public void pagination(SelectConnectByStep<Record11<String, String, String, String, String, String, String, Byte, Byte, String, Date>> step, DataTablesUtil paginationUtil) {
+        int start = paginationUtil.getStart();
+        int length = paginationUtil.getLength();
 
+        step.limit(start, length);
     }
 }

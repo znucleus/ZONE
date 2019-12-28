@@ -101,7 +101,7 @@ public interface UsersService {
      *
      * @return 总数
      */
-    int countAll();
+    int countAll(DataTablesUtil dataTablesUtil);
 
     /**
      * 根据条件查询总数

@@ -508,7 +508,7 @@ public class UsersRestController {
             usersBean = records.into(UsersBean.class);
         }
         dataTablesUtil.setData(usersBean);
-        dataTablesUtil.setiTotalRecords(usersService.countAll());
+        dataTablesUtil.setiTotalRecords(usersService.countAll(dataTablesUtil));
         dataTablesUtil.setiTotalDisplayRecords(usersService.countByCondition(dataTablesUtil));
 
         return new ResponseEntity<>(dataTablesUtil, HttpStatus.OK);

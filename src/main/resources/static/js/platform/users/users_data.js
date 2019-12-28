@@ -15,12 +15,48 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
         };
     }
 
+    /*
+    参数
+    */
+    var param = {
+        realName: '',
+        username: '',
+        email: '',
+        mobile: '',
+        audited: 1
+    };
+
+    var button_id = {
+        audited: {
+            id: '#audited',
+            text: '已审核',
+            tip: '查询中...'
+        },
+        unaudited: {
+            id: '#unaudited',
+            text: '未审核',
+            tip: '查询中...'
+        }
+    };
+
+    /*
+     web storage key.
+    */
+    var webStorageKey = {
+        REAL_NAME: 'PLATFORM_USERS_REAL_NAME_SEARCH',
+        USERNAME: 'PLATFORM_USERS_USERNAME_SEARCH',
+        EMAIL: 'PLATFORM_USERS_EMAIL_SEARCH',
+        MOBILE: 'PLATFORM_USERS_MOBILE_SEARCH',
+        AUDITED: 'PLATFORM_USERS_AUDITED_SEARCH'
+    };
+
     // 预编译模板
     var template = Handlebars.compile($("#operator_button").html());
 
+    // datatables 初始化
     var tableElement = $('#dataTable');
 
-    var myTable  = tableElement.DataTable({
+    var myTable = tableElement.DataTable({
         autoWidth: false,
         drawCallback: function (oSettings) {
             $('#checkall').prop('checked', false);
@@ -30,9 +66,9 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
         searching: false,
         "processing": true, // 打开数据加载时的等待效果
         "serverSide": true,// 打开后台分页
-        "aaSorting": [[8, 'desc']],// 排序
+        "aaSorting": [[12, 'desc']],// 排序
         "ajax": {
-            "url": web_path + getAjaxUrl().passData,
+            "url": getAjaxUrl().data,
             "dataSrc": "data",
             "data": function (d) {
                 // 添加额外的参数传给服务器
@@ -69,7 +105,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                 targets: 1,
                 orderable: false,
                 render: function (a, b, c, d) {
-                    return '<input type="checkbox" value="' + c.username + '" name="check"/>';
+                    return '<input type="checkbox" value="' + c.applicationId + '" name="check"/>';
                 }
             },
             {
@@ -81,7 +117,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                 render: function (a, b, c, d) {
                     var v = '';
                     if (c.enabled === 0 || c.enabled == null) {
-                        v= "<span class='text-danger'>已注销</span>";
+                        v = "<span class='text-danger'>已注销</span>";
                     } else {
                         v = "<span class='text-info'>正常</span>";
                     }
@@ -93,7 +129,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                 render: function (a, b, c, d) {
                     var v = '';
                     if (c.accountNonLocked === 0 || c.accountNonLocked == null) {
-                        v = "<span class='text-danger'>已锁定</span>";
+                        v = "<span class='text-warning'>已锁定</span>";
                     } else {
                         v = "<span class='text-info'>正常</span>";
                     }
@@ -139,7 +175,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                         context.func.push({
                             "name": "锁定",
                             "css": "locked",
-                            "type": "danger",
+                            "type": "secondary",
                             "id": c.username,
                             "role": c.roleName
                         });
@@ -147,7 +183,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                         context.func.push({
                             "name": "解锁",
                             "css": "unlocked",
-                            "type": "warning",
+                            "type": "purple",
                             "id": c.username,
                             "role": c.roleName
                         });
@@ -156,6 +192,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                     return template(context);
                 }
             }
+
         ],
         "language": {
             "sProcessing": "处理中...",
@@ -172,8 +209,8 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
             "sInfoThousands": ",",
             "oPaginate": {
                 "sFirst": "首页",
-                "sPrevious": "上页",
-                "sNext": "下页",
+                "sPrevious": "<",
+                "sNext": ">",
                 "sLast": "末页"
             },
             "oAria": {
@@ -181,7 +218,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                 "sSortDescending": ": 以降序排列此列"
             }
         },
-        "dom": "<'row'<'col-sm-2'l><'#global_button.col-sm-7'>r>" +
+        "dom": "<'row'<'col-lg-2 col-md-12'l><'#global_button.col-lg-10 col-md-12'>r>" +
             "t" +
             "<'row'<'col-sm-5'i><'col-sm-7'p>>",
         initComplete: function () {
@@ -203,8 +240,8 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
 
     var global_button = '<button type="button" id="dels" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量注销</button>' +
         '  <button type="button" id="recoveries" class="btn btn-outline btn-warning btn-sm"><i class="fa fa-reply-all"></i>批量恢复</button>' +
-        '  <button type="button" id="locked" class="btn btn-outline btn-warning btn-sm"><i class="fa fa-reply-all"></i>批量锁定</button>' +
-        '  <button type="button" id="unlocked" class="btn btn-outline btn-warning btn-sm"><i class="fa fa-reply-all"></i>批量解锁</button>' +
+        '  <button type="button" id="locked" class="btn btn-outline btn-secondary btn-sm"><i class="fa fa-lock"></i>批量锁定</button>' +
+        '  <button type="button" id="unlocked" class="btn btn-outline btn-purple btn-sm"><i class="fa fa-unlock"></i>批量解锁</button>' +
         '  <button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
     $('#global_button').append(global_button);
 
@@ -222,44 +259,9 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
             username: '#search_username',
             email: '#search_email',
             mobile: '#search_mobile',
-            audited:''
+            audited: ''
         };
     }
-
-    /*
-     参数
-     */
-    var param = {
-        realName: '',
-        username: '',
-        email:'',
-        mobile: '',
-        audited: 1
-    };
-
-    var button_id = {
-        audited: {
-            id: '#audited',
-            text: '已审核',
-            tip: '查询中...'
-        },
-        unaudited: {
-            id: '#unaudited',
-            text: '未审核',
-            tip: '查询中...'
-        }
-    };
-
-    /*
-     web storage key.
-    */
-    var webStorageKey = {
-        REAL_NAME: 'PLATFORM_USERS_REAL_NAME_SEARCH',
-        USERNAME: 'PLATFORM_USERS_USERNAME_SEARCH',
-        EMAIL: 'PLATFORM_USERS_EMAIL_SEARCH',
-        MOBILE: 'PLATFORM_USERS_MOBILE_SEARCH',
-        AUDITED: 'PLATFORM_USERS_AUDITED_SEARCH'
-    };
 
     /*
      得到参数
