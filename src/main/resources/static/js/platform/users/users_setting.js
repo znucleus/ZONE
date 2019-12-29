@@ -9,6 +9,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
             users_update: web_path + '/users/update',
             check_password: web_path + '/users/check/password',
             system_configure: web_path + '/anyone/data/configure',
+            check_email: web_path + '/users/check/email',
             check_mobile: web_path + '/users/check/mobile',
             send_mobile: web_path + '/anyone/send/mobile',
             check_mobile_verification_code: web_path + '/anyone/check/mobile/code',
@@ -19,8 +20,9 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
         var param_id = {
             username: '#username',
             defaultUsername: '#defaultUsername',
+            emailPassword: '#emailPassword',
             email: '#email',
-            defaultEmail: '#defaultEmail',
+            mobilePassword: '#mobilePassword',
             mobile: '#mobile',
             idCard: '#idCard',
             defaultIdCard: '#defaultIdCard',
@@ -44,19 +46,6 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
                 text: '取消',
                 id: '#cancelUpdateUsername'
             },
-            editEmail: {
-                text: '修改',
-                id: '#editEmail'
-            },
-            updateEmail: {
-                tip: '更新中...',
-                text: '确定',
-                id: '#updateEmail'
-            },
-            cancelUpdateEmail: {
-                text: '取消',
-                id: '#cancelUpdateEmail'
-            },
             editIdCard: {
                 text: '修改',
                 id: '#editIdCard'
@@ -69,6 +58,11 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
             cancelUpdateIdCard: {
                 text: '取消',
                 id: '#cancelUpdateIdCard'
+            },
+            saveEmail: {
+                text: '确定',
+                tip: '保存中...',
+                id: '#saveEmail'
             },
             saveMobile: {
                 text: '确定',
@@ -84,7 +78,9 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
 
         var param = {
             username: '',
+            emailPassword: '',
             email: '',
+            mobilePassword: '',
             mobile: '',
             idCard: '',
             verificationCode: '',
@@ -130,7 +126,9 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
 
         function initParam() {
             param.username = _.trim($(param_id.username).val());
+            param.emailPassword = _.trim($(param_id.emailPassword).val());
             param.email = _.trim($(param_id.email).val());
+            param.mobilePassword = _.trim($(param_id.mobilePassword).val());
             param.mobile = _.trim($(param_id.mobile).val());
             param.verificationCode = _.trim($(param_id.verificationCode).val());
             param.idCard = _.trim($(param_id.idCard).val());
@@ -208,58 +206,114 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
             }
         });
 
-        $(button_id.editEmail.id).click(function () {
-            $(this).prop('hidden', true);
-            $(button_id.updateEmail.id).prop('hidden', false);
-            $(button_id.cancelUpdateEmail.id).prop('hidden', false);
-            $(param_id.email).prop('readonly', false).removeClass('form-control-plaintext').addClass('form-control');
-        });
-
-        $(button_id.cancelUpdateEmail.id).click(function () {
-            cancelUpdateEmail();
-        });
-
-        function cancelUpdateEmail() {
-            $(button_id.cancelUpdateEmail.id).prop('hidden', true);
-            $(button_id.updateEmail.id).prop('hidden', true);
-            $(button_id.editEmail.id).prop('hidden', false);
-            $(param_id.email).prop('readonly', true).removeClass('form-control').addClass('form-control-plaintext').val($(param_id.defaultEmail).val());
-            tools.validSuccessDom(param_id.email);
-        }
-
-        $(button_id.updateEmail.id).click(function () {
+        $(param_id.emailPassword).blur(function () {
             initParam();
-            var email = param.email;
-            if (email === '') {
-                tools.validErrorDom(param_id.email, '邮箱不能为空');
+            var emailPassword = param.emailPassword;
+            if (emailPassword !== '') {
+                $.post(ajax_url.check_password, {password: emailPassword}, function (data) {
+                    if (data.state) {
+                        tools.validSuccessDom(param_id.emailPassword);
+                    } else {
+                        tools.validErrorDom(param_id.emailPassword, '密码错误');
+                    }
+                });
             } else {
-                if (!tools.regex.email.test(email)) {
-                    tools.validErrorDom(param_id.email, '邮箱格式不正确');
-                } else {
-                    tools.validSuccessDom(param_id.email);
-                    tools.buttonLoading(button_id.updateEmail.id, button_id.updateEmail.tip);
-                    $.post(ajax_url.users_update, {
-                        name: 'email',
-                        value: email
-                    }, function (data) {
-                        tools.buttonEndLoading(button_id.updateEmail.id, button_id.updateEmail.text);
-                        if (data.state) {
-                            cancelUpdateEmail();
-                            Swal.fire({
-                                title: data.msg,
-                                type: "success",
-                                confirmButtonText: "确定",
-                                preConfirm: function () {
-                                    $('#logout').submit();
-                                }
-                            });
-                        } else {
-                            Swal.fire('更新失败', data.msg, 'error');
-                        }
-                    });
-                }
+                tools.validSuccessDom(param_id.emailPassword);
             }
         });
+
+        $(param_id.email).blur(function () {
+            initParam();
+            var email = param.email;
+            if (email !== '') {
+                var regex = tools.regex.email;
+                if (!regex.test(email)) {
+                    tools.validErrorDom(param_id.email, '邮箱格式不正确');
+                    return;
+                }
+
+                $.post(ajax_url.check_email, {email: email}, function (data) {
+                    if (data.state) {
+                        tools.validSuccessDom(param_id.email);
+                    } else {
+                        tools.validErrorDom(param_id.email, data.msg);
+                    }
+                });
+            } else {
+                tools.validSuccessDom(param_id.email);
+            }
+        });
+
+        $(button_id.saveEmail.id).click(function () {
+            initParam();
+            validEmailPassword();
+        });
+
+        function validEmailPassword() {
+            var emailPassword = param.emailPassword;
+            if (emailPassword !== '') {
+                $.post(ajax_url.check_password, {password: emailPassword}, function (data) {
+                    if (data.state) {
+                        tools.validSuccessDom(param_id.emailPassword);
+                        validEmail();
+                    } else {
+                        tools.validErrorDom(param_id.emailPassword, '密码错误');
+                    }
+                });
+            } else {
+                tools.validErrorDom(param_id.emailPassword, '请填写密码');
+            }
+        }
+
+        function validEmail() {
+            var email = param.email;
+            if (email !== '') {
+                var regex = tools.regex.email;
+                if (!regex.test(email)) {
+                    tools.validErrorDom(param_id.email, '邮箱格式不正确');
+                    return;
+                }
+
+                $.post(ajax_url.check_email, {email: email}, function (data) {
+                    if (data.state) {
+                        tools.validSuccessDom(param_id.email);
+                        saveEmail();
+                    } else {
+                        tools.validErrorDom(param_id.email, data.msg);
+                    }
+                });
+            } else {
+                tools.validErrorDom(param_id.email, "您的邮箱？");
+            }
+        }
+
+        function saveEmail() {
+            // 显示遮罩
+            tools.buttonLoading(button_id.saveEmail.id, button_id.saveEmail.tip);
+            $.post(ajax_url.users_update, {
+                name: 'email',
+                value: param.email,
+                password: param.emailPassword
+            }, function (data) {
+                // 去除遮罩
+                tools.buttonEndLoading(button_id.saveEmail.id, button_id.saveEmail.text);
+                var globalError = $('#globalEmailError');
+                if (data.state) {
+                    globalError.text('');
+                    $('#emailModal').modal('hide');
+                    Swal.fire({
+                        title: data.msg,
+                        type: "success",
+                        confirmButtonText: "确定",
+                        preConfirm: function () {
+                            $('#logout').submit();
+                        }
+                    });
+                } else {
+                    globalError.text(data.msg);
+                }
+            });
+        }
 
         $(button_id.editIdCard.id).click(function () {
             $(this).prop('hidden', true);
@@ -311,6 +365,22 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
                         }
                     });
                 }
+            }
+        });
+
+        $(param_id.mobilePassword).blur(function () {
+            initParam();
+            var mobilePassword = param.mobilePassword;
+            if (mobilePassword !== '') {
+                $.post(ajax_url.check_password, {password: mobilePassword}, function (data) {
+                    if (data.state) {
+                        tools.validSuccessDom(param_id.mobilePassword);
+                    } else {
+                        tools.validErrorDom(param_id.mobilePassword, '密码错误');
+                    }
+                });
+            } else {
+                tools.validSuccessDom(param_id.mobilePassword);
             }
         });
 
@@ -413,8 +483,24 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
 
         $(button_id.saveMobile.id).click(function () {
             initParam();
-            validMobile();
+            validMobilePassword();
         });
+
+        function validMobilePassword() {
+            var mobilePassword = param.mobilePassword;
+            if (mobilePassword !== '') {
+                $.post(ajax_url.check_password, {password: mobilePassword}, function (data) {
+                    if (data.state) {
+                        tools.validSuccessDom(param_id.mobilePassword);
+                        validMobile();
+                    } else {
+                        tools.validErrorDom(param_id.mobilePassword, '密码错误');
+                    }
+                });
+            } else {
+                tools.validErrorDom(param_id.mobilePassword, '请填写密码');
+            }
+        }
 
         function validMobile() {
             var mobile = param.mobile;
@@ -466,7 +552,8 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
             tools.buttonLoading(button_id.saveMobile.id, button_id.saveMobile.tip);
             $.post(ajax_url.users_update, {
                 name: 'mobile',
-                value: param.mobile
+                value: param.mobile,
+                password: param.mobilePassword
             }, function (data) {
                 // 去除遮罩
                 tools.buttonEndLoading(button_id.saveMobile.id, button_id.saveMobile.text);
@@ -495,7 +582,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
 
         function validOldPassword() {
             var oldPassword = param.oldPassword;
-            if (_.trim(oldPassword) !== '') {
+            if (oldPassword !== '') {
                 $.post(ajax_url.check_password, {password: oldPassword}, function (data) {
                     if (data.state) {
                         tools.validSuccessDom(param_id.oldPassword);
@@ -512,7 +599,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
         function validNewPassword() {
             var newPassword = param.newPassword;
             var oldPassword = param.oldPassword;
-            if (_.trim(newPassword) !== '') {
+            if (newPassword !== '') {
                 if (newPassword !== oldPassword) {
                     if (tools.regex.password.test(newPassword)) {
                         if (global_param.password_strong < 55) {
@@ -535,7 +622,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
         function validConfirmPassword() {
             var newPassword = param.newPassword;
             var confirmPassword = param.confirmPassword;
-            if (_.trim(confirmPassword) !== '') {
+            if (confirmPassword !== '') {
                 if (newPassword === confirmPassword) {
                     if (tools.regex.password.test(confirmPassword)) {
                         tools.validSuccessDom(param_id.confirmPassword);

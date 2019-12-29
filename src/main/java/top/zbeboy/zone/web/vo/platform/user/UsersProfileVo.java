@@ -7,6 +7,7 @@ public class UsersProfileVo {
     private String name;
     @NotBlank(message = "参数VALUE不能为空")
     private String value;
+    private String password;
 
     public String getName() {
         return name;
@@ -22,5 +23,13 @@ public class UsersProfileVo {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

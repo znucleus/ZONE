@@ -38,17 +38,14 @@
                         <div class="form-group row">
                             <label for="email" class="col-sm-3 col-form-label">邮箱:</label>
                             <div class="col-sm-9">
-                                <input type="email" readonly class="form-control-plaintext" id="email" th:value="${email}">
+                                <input type="email" readonly class="form-control-plaintext" th:value="${email}">
                                 <div class="invalid-feedback"></div>
-                                <input type="hidden" id="defaultEmail" th:value="${email}"/>
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="col-md-6 text-right">
-                    <button class="btn btn-success mg-b-10" hidden="hidden" id="updateEmail">确定</button>
-                    <button class="btn btn-secondary mg-b-10" hidden="hidden" id="cancelUpdateEmail">取消</button>
-                    <button class="btn btn-primary mg-b-10" id="editEmail">修改</button>
+                    <button class="btn btn-primary mg-b-10" data-toggle="modal" data-target="#emailModal">修改</button>
                 </div>
                 <div class="col-md-6">
                     <form>
@@ -131,6 +128,45 @@
         </div>
     </div>
 
+    <!-- 邮箱修改Modal -->
+    <div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="emailModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="emailModalLabel">邮箱修改</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="mg-t-20">
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <input id="emailPassword" type="password" placeholder="输入登录密码"
+                                       class="form-control">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <input type="text" class="form-control" placeholder="邮箱" id="email"
+                                       th:value="${email}"/>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                        <div class="form-group text-danger" id="globalEmailError"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="saveEmail">确定</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- 手机号修改Modal -->
     <div class="modal fade" id="mobileModal" tabindex="-1" role="dialog" aria-labelledby="mobileModalLabel"
          aria-hidden="true">
@@ -144,6 +180,14 @@
                 </div>
                 <div class="modal-body">
                     <form class="mg-t-20">
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <input id="mobilePassword" type="password" placeholder="输入登录密码"
+                                       class="form-control">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
                         <div class="form-group row">
                             <div class="col-12">
                                 <input type="text" class="form-control" placeholder="手机号" id="mobile"
