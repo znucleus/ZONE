@@ -83,6 +83,35 @@
         </div>
     </div>
 
+    <!-- 角色Modal -->
+    <div class="modal fade" id="roleModal" tabindex="-1" role="dialog" aria-labelledby="roleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="roleModalLabel">设置角色</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="mg-t-20">
+                        <div class="form-group">
+                            <div class="col-12" id="roles">
+                            </div>
+                        </div>
+                        <input name="username" type="hidden" id="roleUsername"/>
+                        <div class="form-group text-danger" id="globalRoleError"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="saveRole">确定</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!--定义操作列按钮模板-->
     <script id="operator_button" type="text/x-handlebars-template">
         <div class="btn-group" role="group">
@@ -92,6 +121,15 @@
             </button>
             {{/each}}
         </div>
+    </script>
+
+    <!--定义角色模板-->
+    <script id="role-template" type="text/x-handlebars-template">
+        {{#each listResult}}
+        <label class="ckbox">
+            <input type="checkbox" value="{{roleEnName}}" name="role"><span class="role_set">{{roleName}}</span>
+        </label>
+        {{/each}}
     </script>
 
     <input type="hidden" class="dy_script"

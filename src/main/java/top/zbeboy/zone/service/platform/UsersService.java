@@ -2,6 +2,7 @@ package top.zbeboy.zone.service.platform;
 
 import org.jooq.Record;
 import org.jooq.Record11;
+import org.jooq.Record12;
 import org.jooq.Result;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.records.UsersRecord;
@@ -94,7 +95,7 @@ public interface UsersService {
      * @param dataTablesUtil 工具类
      * @return 分页数据
      */
-    Result<Record11<String, String, String, String, String, String, String, Byte, Byte, String, Date>> findAllByPage(DataTablesUtil dataTablesUtil);
+    Result<Record12<String, String, String, String, String, Byte, String, String, Byte, Byte, String, Date>> findAllByPage(DataTablesUtil dataTablesUtil);
 
     /**
      * 应用 总数

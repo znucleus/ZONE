@@ -9,7 +9,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
         return {
             data: web_path + '/web/platform/users/data',
             role_data: web_path + '/web/platform/users/role/data',
-            setting_role: web_path + '/web/platform/users/role',
+            setting_role: web_path + '/web/platform/users/role/save',
             update: web_path + '/web/platform/users/update',
             del: web_path + '/web/platform/users/delete'
         };
@@ -141,52 +141,74 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                 orderable: false,
                 render: function (a, b, c, d) {
 
-                    var context = {
-                        func: [
+                    var context = {func: []};
+
+                    var param = getParam();
+                    var audited = Number(param.audited);
+
+                    if (c.verifyMailbox !== null && c.verifyMailbox === 1) {
+                        context.func.push(
                             {
                                 "name": "设置角色",
                                 "css": "role",
                                 "type": "info",
                                 "id": c.username,
                                 "role": c.roleName
-                            }
-                        ]
-                    };
-
-                    if (c.enabled === 1) {
-                        context.func.push({
-                            "name": "注销",
-                            "css": "del",
-                            "type": "danger",
-                            "id": c.username,
-                            "role": c.roleName
-                        });
-                    } else {
-                        context.func.push({
-                            "name": "恢复",
-                            "css": "recovery",
-                            "type": "warning",
-                            "id": c.username,
-                            "role": c.roleName
-                        });
+                            });
                     }
 
-                    if (c.accountNonLocked === 1) {
+                    if(audited === 1){
+                        if (c.enabled === 1) {
+                            context.func.push({
+                                "name": "注销",
+                                "css": "del",
+                                "type": "danger",
+                                "id": c.username,
+                                "role": c.roleName
+                            });
+                        } else {
+                            context.func.push({
+                                "name": "恢复",
+                                "css": "recovery",
+                                "type": "warning",
+                                "id": c.username,
+                                "role": c.roleName
+                            });
+                        }
+
+                        if (c.accountNonLocked === 1) {
+                            context.func.push({
+                                "name": "锁定",
+                                "css": "locked",
+                                "type": "secondary",
+                                "id": c.username,
+                                "role": c.roleName
+                            });
+                        } else {
+                            context.func.push({
+                                "name": "解锁",
+                                "css": "unlocked",
+                                "type": "purple",
+                                "id": c.username,
+                                "role": c.roleName
+                            });
+                        }
+
                         context.func.push({
-                            "name": "锁定",
-                            "css": "locked",
-                            "type": "secondary",
+                            "name": "重置密码",
+                            "css": "resetPassword",
+                            "type": "dark",
                             "id": c.username,
                             "role": c.roleName
                         });
-                    } else {
+                    } else if(audited === 2){
                         context.func.push({
-                            "name": "解锁",
-                            "css": "unlocked",
-                            "type": "purple",
-                            "id": c.username,
-                            "role": c.roleName
-                        });
+                                "name": "删除",
+                                "css": "delete",
+                                "type": "danger",
+                                "id": c.username,
+                                "role": ''
+                            });
                     }
 
                     return template(context);
@@ -450,8 +472,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
      */
     function role(username, role) {
         $.post(getAjaxUrl().role_data, {username: username}, function (data) {
-            var html = roleData(data);
-            $('#roles').html(html);
+            roleData(data);
             var roleNames = role.split(' ');
             var roles = $('.role_set');
             for (var i = 0; i < roles.length; i++) {
@@ -472,14 +493,14 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
      */
     function roleData(data) {
         var template = Handlebars.compile($("#role-template").html());
-        return template(data);
+        $('#roles').html(template(data));
     }
 
     /*
      关闭角色设置modal
      */
     $('#roleModalMiss').click(function () {
-        $('#role_error_msg').addClass('hidden').removeClass('text-danger').text('');
+        $('#globalRoleError').text('');
         $('#roleModal').modal('hide');
     });
 
@@ -487,31 +508,30 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
     $("#saveRole").click(function () {
         var roles = $('input[name="role"]:checked');
         if (roles.length <= 0) {
-            $('#role_error_msg').removeClass('hidden').addClass('text-danger').text('请至少选择一个角色');
+            $('#globalRoleError').text('请至少选择一个角色');
         } else {
-            $('#role_error_msg').addClass('hidden').removeClass('text-danger').text('');
+            $('#globalRoleError').text('');
             var r = [];
             for (var i = 0; i < roles.length; i++) {
                 r.push($(roles[i]).val());
             }
-            $.post(web_path + getAjaxUrl().saveRole, {
-                username: $('#roleUsername').val(),
-                roles: r.join(",")
-            }, function (data) {
-                if (data.state) {
-                    $('#roleModal').modal('toggle');
-                    if (passTable != null) {
-                        passTable.ajax.reload();
-                    }
-                    if (waitTable != null) {
-                        waitTable.ajax.reload();
-                    }
-                } else {
-                    $('#role_error_msg').removeClass('hidden').addClass('text-danger').text(data.msg);
-                }
-            });
+            sendRoleAjax(r.join(','));
         }
     });
+
+    function sendRoleAjax(roles){
+        $.post(getAjaxUrl().setting_role, {
+            username: $('#roleUsername').val(),
+            roles: roles
+        }, function (data) {
+            if (data.state) {
+                $('#roleModal').modal('toggle');
+                myTable.ajax.reload();
+            } else {
+                $('#globalRoleError').text(data.msg);
+            }
+        });
+    }
 
     /**
      * 注销

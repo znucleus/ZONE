@@ -51,10 +51,23 @@ public class AuthoritiesServiceImpl implements AuthoritiesService {
                 .where(AUTHORITIES.USERNAME.eq(USERS.USERNAME));
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void batchSave(List<Authorities> authorities) {
+        authoritiesDao.insert(authorities);
+    }
+
     @Override
     public void deleteByAuthorities(String authorities) {
         create.deleteFrom(AUTHORITIES)
                 .where(AUTHORITIES.AUTHORITY.eq(authorities))
+                .execute();
+    }
+
+    @Override
+    public void deleteByUsername(String username) {
+        create.deleteFrom(AUTHORITIES)
+                .where(AUTHORITIES.USERNAME.eq(username))
                 .execute();
     }
 }

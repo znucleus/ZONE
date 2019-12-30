@@ -105,17 +105,17 @@ public class UsersServiceImpl implements UsersService, PaginationPlugin<DataTabl
     }
 
     @Override
-    public Result<Record11<String, String, String, String, String, String, String, Byte, Byte, String, Date>> findAllByPage(DataTablesUtil dataTablesUtil) {
-        SelectOnConditionStep<Record11<String, String, String, String, String, String, String, Byte, Byte, String, Date>> selectConditionStep =
-                create.select(USERS.REAL_NAME, USERS.USERNAME, USERS.EMAIL, USERS.MOBILE, USERS.ID_CARD,
+    public Result<Record12<String, String, String, String, String, Byte, String, String, Byte, Byte, String, Date>> findAllByPage(DataTablesUtil dataTablesUtil) {
+        SelectOnConditionStep<Record12<String, String, String, String, String, Byte, String, String, Byte, Byte, String, Date>> selectConditionStep =
+                create.select(USERS.REAL_NAME, USERS.USERNAME, USERS.EMAIL, USERS.MOBILE, USERS.ID_CARD, USERS.VERIFY_MAILBOX,
                         listAgg(ROLE.ROLE_NAME, " ").withinGroupOrderBy(ROLE.ROLE_NAME).as("roleName"),
                         USERS_TYPE.USERS_TYPE_NAME, USERS.ENABLED, USERS.ACCOUNT_NON_LOCKED, USERS.LANG_KEY, USERS.JOIN_DATE)
                         .from(USERS)
                         .join(USERS_TYPE)
                         .on(USERS.USERS_TYPE_ID.eq(USERS_TYPE.USERS_TYPE_ID))
-                        .join(AUTHORITIES)
+                        .leftJoin(AUTHORITIES)
                         .on(USERS.USERNAME.eq(AUTHORITIES.USERNAME))
-                        .join(ROLE)
+                        .leftJoin(ROLE)
                         .on(ROLE.ROLE_EN_NAME.eq(AUTHORITIES.AUTHORITY));
         return queryAllByPage(selectConditionStep, dataTablesUtil, false, USERS.USERNAME);
     }
@@ -181,9 +181,9 @@ public class UsersServiceImpl implements UsersService, PaginationPlugin<DataTabl
         usersDao.delete(users);
     }
 
-    public Result<Record11<String, String, String, String, String, String, String, Byte, Byte, String, Date>> queryAllByPage(SelectOnConditionStep<Record11<String, String, String, String, String, String, String, Byte, Byte, String, Date>> selectOnConditionStep,
+    public Result<Record12<String, String, String, String, String, Byte, String, String, Byte, Byte, String, Date>> queryAllByPage(SelectOnConditionStep<Record12<String, String, String, String, String, Byte, String, String, Byte, Byte, String, Date>> selectOnConditionStep,
                                                                                                                              DataTablesUtil paginationUtil, boolean useExtraCondition, GroupField... groupFields) {
-        Result<Record11<String, String, String, String, String, String, String, Byte, Byte, String, Date>> records;
+        Result<Record12<String, String, String, String, String, Byte, String, String, Byte, Byte, String, Date>> records;
         Condition a = useExtraCondition(paginationUtil, useExtraCondition);
         if (Objects.isNull(a)) {
             groupBy(selectOnConditionStep, groupFields);
@@ -191,7 +191,7 @@ public class UsersServiceImpl implements UsersService, PaginationPlugin<DataTabl
             pagination(selectOnConditionStep, paginationUtil);
             records = selectOnConditionStep.fetch();
         } else {
-            SelectConditionStep<Record11<String, String, String, String, String, String, String, Byte, Byte, String, Date>> selectConditionStep = selectOnConditionStep.where(a);
+            SelectConditionStep<Record12<String, String, String, String, String, Byte, String, String, Byte, Byte, String, Date>> selectConditionStep = selectOnConditionStep.where(a);
             groupBy(selectConditionStep, groupFields);
             sortCondition(selectConditionStep, paginationUtil);
             pagination(selectConditionStep, paginationUtil);
@@ -240,7 +240,7 @@ public class UsersServiceImpl implements UsersService, PaginationPlugin<DataTabl
         return a;
     }
 
-    public void sortCondition(SelectConnectByStep<Record11<String, String, String, String, String, String, String, Byte, Byte, String, Date>> step, DataTablesUtil paginationUtil) {
+    public void sortCondition(SelectConnectByStep<Record12<String, String, String, String, String, Byte, String, String, Byte, Byte, String, Date>> step, DataTablesUtil paginationUtil) {
         String orderColumnName = paginationUtil.getOrderColumnName();
         String orderDir = paginationUtil.getOrderDir();
         boolean isAsc = StringUtils.equalsIgnoreCase("asc", orderDir);
@@ -349,7 +349,7 @@ public class UsersServiceImpl implements UsersService, PaginationPlugin<DataTabl
         sortFinish(step, sortField);
     }
 
-    private void sortFinish(SelectConnectByStep<Record11<String, String, String, String, String, String, String, Byte, Byte, String, Date>> step, SortField... sortField) {
+    private void sortFinish(SelectConnectByStep<Record12<String, String, String, String, String, Byte, String, String, Byte, Byte, String, Date>> step, SortField... sortField) {
         if (Objects.nonNull(sortField)) {
             step.orderBy(sortField);
         }
@@ -389,13 +389,13 @@ public class UsersServiceImpl implements UsersService, PaginationPlugin<DataTabl
         return a;
     }
 
-    private void groupBy(SelectConnectByStep<Record11<String, String, String, String, String, String, String, Byte, Byte, String, Date>> step, GroupField... groupFields) {
+    private void groupBy(SelectConnectByStep<Record12<String, String, String, String, String, Byte, String, String, Byte, Byte, String, Date>> step, GroupField... groupFields) {
         if (Objects.nonNull(groupFields)) {
             step.groupBy(groupFields);
         }
     }
 
-    public void pagination(SelectConnectByStep<Record11<String, String, String, String, String, String, String, Byte, Byte, String, Date>> step, DataTablesUtil paginationUtil) {
+    public void pagination(SelectConnectByStep<Record12<String, String, String, String, String, Byte, String, String, Byte, Byte, String, Date>> step, DataTablesUtil paginationUtil) {
         int start = paginationUtil.getStart();
         int length = paginationUtil.getLength();
 

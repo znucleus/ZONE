@@ -4,7 +4,9 @@ package top.zbeboy.zone.web.platform.users;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.jooq.Record;
 import org.jooq.Record11;
+import org.jooq.Record12;
 import org.jooq.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,11 +20,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.config.ZoneProperties;
-import top.zbeboy.zone.domain.tables.pojos.Files;
-import top.zbeboy.zone.domain.tables.pojos.SystemConfigure;
-import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.domain.tables.records.UsersRecord;
+import top.zbeboy.zone.service.data.StaffService;
+import top.zbeboy.zone.service.data.StudentService;
+import top.zbeboy.zone.service.notify.UserNotifyService;
+import top.zbeboy.zone.service.platform.CollegeRoleService;
+import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
+import top.zbeboy.zone.service.platform.UsersTypeService;
+import top.zbeboy.zone.service.system.AuthoritiesService;
 import top.zbeboy.zone.service.system.FilesService;
 import top.zbeboy.zone.service.system.SystemConfigureService;
 import top.zbeboy.zone.service.system.SystemMailService;
@@ -33,6 +40,7 @@ import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BaseImgUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
+import top.zbeboy.zone.web.util.SmallPropsUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.vo.platform.user.ResetPasswordVo;
 import top.zbeboy.zone.web.vo.platform.user.UsersProfileVo;
@@ -43,10 +51,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @RestController
@@ -68,6 +73,27 @@ public class UsersRestController {
 
     @Resource
     private SystemMailService systemMailService;
+
+    @Resource
+    private UserNotifyService userNotifyService;
+
+    @Resource
+    private RoleService roleService;
+
+    @Resource
+    private UsersTypeService usersTypeService;
+
+    @Resource
+    private StudentService studentService;
+
+    @Resource
+    private StaffService staffService;
+
+    @Resource
+    private CollegeRoleService collegeRoleService;
+
+    @Resource
+    private AuthoritiesService authoritiesService;
 
     /**
      * 检验账号是否被注册
@@ -508,7 +534,6 @@ public class UsersRestController {
             ajaxUtil.fail().msg(String.format("上传头像异常:%s", e.getMessage()));
         }
 
-
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -538,7 +563,7 @@ public class UsersRestController {
         headers.add("operator");
 
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
-        Result<Record11<String, String, String, String, String, String, String, Byte, Byte, String, Date>> records = usersService.findAllByPage(dataTablesUtil);
+        Result<Record12<String, String, String, String, String, Byte, String, String, Byte, Byte, String, Date>> records = usersService.findAllByPage(dataTablesUtil);
         List<UsersBean> usersBean = new ArrayList<>();
         if (Objects.nonNull(records) && records.isNotEmpty()) {
             usersBean = records.into(UsersBean.class);
@@ -548,6 +573,113 @@ public class UsersRestController {
         dataTablesUtil.setiTotalDisplayRecords(usersService.countByCondition(dataTablesUtil));
 
         return new ResponseEntity<>(dataTablesUtil, HttpStatus.OK);
+    }
+
+    /**
+     * 用户角色数据
+     *
+     * @param username 用户账号
+     * @return 数据
+     */
+    @PostMapping("/web/platform/users/role/data")
+    public ResponseEntity<Map<String, Object>> roleData(@RequestParam("username") String username) {
+        AjaxUtil<Role> ajaxUtil = AjaxUtil.of();
+        List<Role> roles = new ArrayList<>();
+        Users users = usersService.findByUsername(username);
+        if (Objects.nonNull(users)) {
+            if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+                roles.add(roleService.findByRoleEnName(Workbook.authorities.ROLE_ADMIN.name()));
+                roles.add(roleService.findByRoleEnName(Workbook.authorities.ROLE_ACTUATOR.name()));
+            }
+
+            int collegeId = 0;
+            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
+            if (Objects.nonNull(usersType)) {
+                Optional<Record> record = Optional.empty();
+                if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
+                    record = staffService.findByUsernameRelation(users.getUsername());
+                } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
+                    record = studentService.findByUsernameRelation(users.getUsername());
+                }
+
+                if (record.isPresent()) {
+                    collegeId = record.get().into(College.class).getCollegeId();
+                }
+            }
+
+            if (collegeId > 0) {
+                Result<Record> records = collegeRoleService.findByCollegeIdRelation(collegeId);
+                if (records.isNotEmpty()) {
+                    roles.addAll(records.into(Role.class));
+                }
+            }
+        }
+
+        ajaxUtil.success().list(roles).msg("获取数据成功");
+
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 角色设置
+     *
+     * @param username 账号
+     * @param roles    角色
+     * @param request  请求
+     * @return success or false
+     */
+    @PostMapping("/web/platform/users/role/save")
+    public ResponseEntity<Map<String, Object>> roleSave(@RequestParam("username") String username, @RequestParam("roles") String roles,
+                                                        HttpServletRequest request) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (StringUtils.isNotBlank(roles)) {
+            Users users = usersService.findByUsername(username);
+            if (Objects.nonNull(users)) {
+                if (Objects.nonNull(users.getVerifyMailbox()) && BooleanUtil.toBoolean(users.getVerifyMailbox())) {
+                    List<String> roleList = SmallPropsUtil.StringIdsToStringList(roles);
+                    // 禁止非系统用户 提升用户权限到系统或管理员级别权限
+                    if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) && (roleList.contains(Workbook.authorities.ROLE_SYSTEM.name()) ||
+                            roleList.contains(Workbook.authorities.ROLE_ADMIN.name()) || roleList.contains(Workbook.authorities.ROLE_ACTUATOR.name()))) {
+                        ajaxUtil.fail().msg("禁止非系统用户角色提升用户权限到系统或管理员级别权限");
+                    } else {
+                        authoritiesService.deleteByUsername(username);
+                        List<Authorities> authorities = new ArrayList<>();
+                        roleList.forEach(role -> authorities.add(new Authorities(username, role)));
+                        authoritiesService.batchSave(authorities);
+
+                        String notify = "您的权限已发生变更，请登录查看。";
+
+                        // 检查邮件推送是否被关闭
+                        SystemConfigure mailConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
+                        if (StringUtils.equals("1", mailConfigure.getDataValue())) {
+                            systemMailService.sendNotifyMail(users, RequestUtil.getBaseUrl(request), notify);
+                        }
+
+                        Users curUsers = usersService.getUserFromSession();
+                        UserNotify userNotify = new UserNotify();
+                        userNotify.setUserNotifyId(UUIDUtil.getUUID());
+                        userNotify.setSendUser(curUsers.getUsername());
+                        userNotify.setAcceptUser(users.getUsername());
+                        userNotify.setIsSee(BooleanUtil.toByte(false));
+                        userNotify.setNotifyType(Workbook.notifyType.info.name());
+                        userNotify.setNotifyTitle("权限变更");
+                        userNotify.setNotifyContent(notify);
+                        userNotify.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+
+                        userNotifyService.save(userNotify);
+
+                        ajaxUtil.success().msg("更改用户角色成功");
+                    }
+                } else {
+                    ajaxUtil.fail().msg("该用户未激活邮箱");
+                }
+            } else {
+                ajaxUtil.fail().msg("未查询到该用户信息");
+            }
+        } else {
+            ajaxUtil.fail().msg("用户角色参数异常");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
     /**

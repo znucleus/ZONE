@@ -32,9 +32,23 @@ public interface AuthoritiesService {
     Select<AuthoritiesRecord> existsAuthoritiesSelect();
 
     /**
+     * 批量保存
+     *
+     * @param authorities 数据
+     */
+    void batchSave(List<Authorities> authorities);
+
+    /**
      * 通过权限删除
      *
      * @param authorities 权限
      */
     void deleteByAuthorities(String authorities);
+
+    /**
+     * 通过账号删除
+     *
+     * @param username 账号
+     */
+    void deleteByUsername(String username);
 }
