@@ -1,7 +1,5 @@
 package top.zbeboy.zone.service.platform;
 
-import org.jooq.Record;
-import org.jooq.Record11;
 import org.jooq.Record12;
 import org.jooq.Result;
 import top.zbeboy.zone.domain.tables.pojos.Users;
@@ -157,6 +155,22 @@ public interface UsersService {
     void updateUsername(String oldName, String newName);
 
     /**
+     * 更新注销状态
+     *
+     * @param ids     ids
+     * @param enabled 状态
+     */
+    void updateEnabled(List<String> ids, Byte enabled);
+
+    /**
+     * 更新锁定状态
+     *
+     * @param ids    ids
+     * @param locked 锁定
+     */
+    void updateLocked(List<String> ids, Byte locked);
+
+    /**
      * 解锁用户
      */
     void unlockUsers();
@@ -167,4 +181,11 @@ public interface UsersService {
      * @param users 账号
      */
     void delete(List<Users> users);
+
+    /**
+     * 删除账号
+     *
+     * @param users 账号
+     */
+    void deleteById(List<String> users);
 }

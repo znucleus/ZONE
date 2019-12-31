@@ -5,7 +5,6 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.jooq.Record;
-import org.jooq.Record11;
 import org.jooq.Record12;
 import org.jooq.Result;
 import org.slf4j.Logger;
@@ -678,6 +677,62 @@ public class UsersRestController {
             }
         } else {
             ajaxUtil.fail().msg("用户角色参数异常");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 更新状态
+     *
+     * @param userIds 账号
+     * @param enabled 状态
+     * @return 是否成功
+     */
+    @PostMapping("/web/platform/users/update/enabled")
+    public ResponseEntity<Map<String, Object>> updateEnabled(String userIds, Byte enabled) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (StringUtils.isNotBlank(userIds)) {
+            usersService.updateEnabled(SmallPropsUtil.StringIdsToStringList(userIds), enabled);
+            ajaxUtil.success().msg("注销用户成功");
+        } else {
+            ajaxUtil.fail().msg("用户账号不能为空");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 更新锁定
+     *
+     * @param userIds 账号
+     * @param locked  锁定
+     * @return 是否成功
+     */
+    @PostMapping("/web/platform/users/update/locked")
+    public ResponseEntity<Map<String, Object>> updateLocked(String userIds, Byte locked) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (StringUtils.isNotBlank(userIds)) {
+            usersService.updateLocked(SmallPropsUtil.StringIdsToStringList(userIds), locked);
+            ajaxUtil.success().msg("修改用户锁定状态成功");
+        } else {
+            ajaxUtil.fail().msg("用户账号不能为空");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 删除无角色关联的用户
+     *
+     * @param userIds 用户账号
+     * @return true 成功 false 失败
+     */
+    @PostMapping("/web/platform/users/delete")
+    public ResponseEntity<Map<String, Object>> delete(String userIds) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (StringUtils.isNotBlank(userIds)) {
+            usersService.deleteById(SmallPropsUtil.StringIdsToStringList(userIds));
+            ajaxUtil.success().msg("删除用户成功");
+        } else {
+            ajaxUtil.fail().msg("用户账号不能为空");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }

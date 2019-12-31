@@ -1,7 +1,6 @@
 package top.zbeboy.zone.service.platform;
 
 import com.alibaba.fastjson.JSONObject;
-import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jooq.*;
@@ -20,7 +19,6 @@ import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zone.service.system.AuthoritiesService;
 import top.zbeboy.zone.service.util.SQLQueryUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
-import top.zbeboy.zone.web.util.ByteUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
 import javax.annotation.Resource;
@@ -29,8 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static org.jooq.impl.DSL.listAgg;
 import static top.zbeboy.zone.domain.Tables.*;
-import static org.jooq.impl.DSL.*;
 
 @Service("usersService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -171,6 +169,20 @@ public class UsersServiceImpl implements UsersService, PaginationPlugin<DataTabl
     }
 
     @Override
+    public void updateEnabled(List<String> ids, Byte enabled) {
+        for (String id : ids) {
+            create.update(USERS).set(USERS.ENABLED, enabled).where(USERS.USERNAME.eq(id)).execute();
+        }
+    }
+
+    @Override
+    public void updateLocked(List<String> ids, Byte locked) {
+        for (String id : ids) {
+            create.update(USERS).set(USERS.ACCOUNT_NON_LOCKED, locked).where(USERS.USERNAME.eq(id)).execute();
+        }
+    }
+
+    @Override
     public void unlockUsers() {
         create.update(USERS).set(USERS.ACCOUNT_NON_LOCKED, BooleanUtil.toByte(true))
                 .where(USERS.ACCOUNT_NON_LOCKED.eq(BooleanUtil.toByte(false))).execute();
@@ -181,8 +193,13 @@ public class UsersServiceImpl implements UsersService, PaginationPlugin<DataTabl
         usersDao.delete(users);
     }
 
+    @Override
+    public void deleteById(List<String> users) {
+        usersDao.deleteById(users);
+    }
+
     public Result<Record12<String, String, String, String, String, Byte, String, String, Byte, Byte, String, Date>> queryAllByPage(SelectOnConditionStep<Record12<String, String, String, String, String, Byte, String, String, Byte, Byte, String, Date>> selectOnConditionStep,
-                                                                                                                             DataTablesUtil paginationUtil, boolean useExtraCondition, GroupField... groupFields) {
+                                                                                                                                   DataTablesUtil paginationUtil, boolean useExtraCondition, GroupField... groupFields) {
         Result<Record12<String, String, String, String, String, Byte, String, String, Byte, Byte, String, Date>> records;
         Condition a = useExtraCondition(paginationUtil, useExtraCondition);
         if (Objects.isNull(a)) {

@@ -1,6 +1,6 @@
 //# sourceURL=users_data.js
-require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootstrap4",
-    "check.all", "jquery.address", "messenger"], function ($, Handlebars, navActive, Swal) {
+require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "responsive.bootstrap4",
+    "check.all", "jquery.address", "messenger"], function ($, tools, Handlebars, navActive, Swal) {
 
     /*
      ajax url
@@ -10,7 +10,8 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
             data: web_path + '/web/platform/users/data',
             role_data: web_path + '/web/platform/users/role/data',
             setting_role: web_path + '/web/platform/users/role/save',
-            update: web_path + '/web/platform/users/update',
+            update_enabled: web_path + '/web/platform/users/update/enabled',
+            update_locked: web_path + '/web/platform/users/update/locked',
             del: web_path + '/web/platform/users/delete'
         };
     }
@@ -36,6 +37,11 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
             id: '#unaudited',
             text: '未审核',
             tip: '查询中...'
+        },
+        saveRole: {
+            id: '#saveRole',
+            text: '确定',
+            tip: '保存中...'
         }
     };
 
@@ -105,7 +111,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                 targets: 1,
                 orderable: false,
                 render: function (a, b, c, d) {
-                    return '<input type="checkbox" value="' + c.applicationId + '" name="check"/>';
+                    return '<input type="checkbox" value="' + c.username + '" name="check"/>';
                 }
             },
             {
@@ -157,7 +163,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                             });
                     }
 
-                    if(audited === 1){
+                    if (audited === 1) {
                         if (c.enabled === 1) {
                             context.func.push({
                                 "name": "注销",
@@ -201,14 +207,14 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                             "id": c.username,
                             "role": c.roleName
                         });
-                    } else if(audited === 2){
+                    } else if (audited === 2) {
                         context.func.push({
-                                "name": "删除",
-                                "css": "delete",
-                                "type": "danger",
-                                "id": c.username,
-                                "role": ''
-                            });
+                            "name": "删除",
+                            "css": "delete",
+                            "type": "danger",
+                            "id": c.username,
+                            "role": ''
+                        });
                     }
 
                     return template(context);
@@ -252,27 +258,58 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                 recovery($(this).attr('data-id'));
             });
 
+            tableElement.delegate('.locked', "click", function () {
+                locked($(this).attr('data-id'));
+            });
+
+            tableElement.delegate('.unlocked', "click", function () {
+                unlocked($(this).attr('data-id'));
+            });
+
             tableElement.delegate('.role', "click", function () {
                 role($(this).attr('data-id'), $(this).attr('data-role'));
+            });
+
+            tableElement.delegate('.delete', "click", function () {
+                usersDelete($(this).attr('data-id'));
             });
             // 初始化搜索框中内容
             initSearchInput();
         }
     });
 
-    var global_button = '<button type="button" id="dels" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量注销</button>' +
-        '  <button type="button" id="recoveries" class="btn btn-outline btn-warning btn-sm"><i class="fa fa-reply-all"></i>批量恢复</button>' +
-        '  <button type="button" id="locked" class="btn btn-outline btn-secondary btn-sm"><i class="fa fa-lock"></i>批量锁定</button>' +
-        '  <button type="button" id="unlocked" class="btn btn-outline btn-purple btn-sm"><i class="fa fa-unlock"></i>批量解锁</button>' +
-        '  <button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
-    $('#global_button').append(global_button);
+    var global_button = $('#global_button');
+    function initGlobalButton() {
+        var global_button = '<button type="button" id="dels" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量注销</button>' +
+            '  <button type="button" id="recoveries" class="btn btn-outline btn-warning btn-sm"><i class="fa fa-reply-all"></i>批量恢复</button>' +
+            '  <button type="button" id="locked" class="btn btn-outline btn-secondary btn-sm"><i class="fa fa-lock"></i>批量锁定</button>' +
+            '  <button type="button" id="unlocked" class="btn btn-outline btn-purple btn-sm"><i class="fa fa-unlock"></i>批量解锁</button>';
+        if (Number(param.audited) === 2) {
+            global_button += '  <button type="button" id="deletes" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>';
+        }
 
-    $('#dels').click(function () {
+        global_button += '  <button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
+        $('#global_button').html(global_button);
+    }
+
+    global_button.delegate('#dels', "click", function () {
         cancels();
     });
 
-    $('#recoveries').click(function () {
+    global_button.delegate('#recoveries', "click", function () {
         recoveries();
+    });
+
+    global_button.delegate('#locked', "click", function () {
+        lockeds();
+    });
+
+    global_button.delegate('#unlocked', "click", function () {
+        unlockeds();
+    });
+
+    global_button.delegate('#deletes', "click", function () {
+        usersDeletes();
     });
 
     function getParamId() {
@@ -399,6 +436,8 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
         } else {
             $(button_id.audited.id).addClass('active');
         }
+
+        initGlobalButton();
     }
 
     function cleanParam() {
@@ -440,6 +479,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
         $(button_id.audited.id).addClass('active');
         $(button_id.unaudited.id).removeClass('active');
         initParam();
+        initGlobalButton();
         myTable.ajax.reload();
     });
 
@@ -447,6 +487,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
         $(button_id.unaudited.id).addClass('active');
         $(button_id.audited.id).removeClass('active');
         initParam();
+        initGlobalButton();
         myTable.ajax.reload();
     });
 
@@ -505,7 +546,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
     });
 
     // 保存角色
-    $("#saveRole").click(function () {
+    $(button_id.saveRole.id).click(function () {
         var roles = $('input[name="role"]:checked');
         if (roles.length <= 0) {
             $('#globalRoleError').text('请至少选择一个角色');
@@ -519,11 +560,13 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
         }
     });
 
-    function sendRoleAjax(roles){
+    function sendRoleAjax(roles) {
+        tools.buttonLoading(button_id.saveRole.id, button_id.saveRole.tip);
         $.post(getAjaxUrl().setting_role, {
             username: $('#roleUsername').val(),
             roles: roles
         }, function (data) {
+            tools.buttonEndLoading(button_id.saveRole.id, button_id.saveRole.text);
             if (data.state) {
                 $('#roleModal').modal('toggle');
                 myTable.ajax.reload();
@@ -562,7 +605,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
             text: "账号恢复！",
             type: "success",
             showCancelButton: true,
-            confirmButtonColor: '#d33',
+            confirmButtonColor: '#27dd4b',
             confirmButtonText: "确定",
             cancelButtonText: "取消",
             preConfirm: function () {
@@ -615,7 +658,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                 text: "账号恢复！",
                 type: "success",
                 showCancelButton: true,
-                confirmButtonColor: '#d33',
+                confirmButtonColor: '#27dd4b',
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
                 preConfirm: function () {
@@ -628,32 +671,249 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
     }
 
     function toCancel(username) {
-        sendUpdateEnabledAjax(username, '注销', 0);
+        sendUpdateEnabledAjax(username, 0);
     }
 
     function toRecovery(username) {
-        sendUpdateEnabledAjax(username, '恢复', 1);
+        sendUpdateEnabledAjax(username, 1);
     }
 
     function toCancels(ids) {
-        sendUpdateEnabledAjax(ids.join(","), '批量注销', 0);
+        sendUpdateEnabledAjax(ids.join(","), 0);
     }
 
     function toRecoveries(ids) {
-        sendUpdateEnabledAjax(ids.join(","), '批量恢复', 1);
+        sendUpdateEnabledAjax(ids.join(","), 1);
     }
 
     /**
      * 发送更新用户状态 ajax.
      * @param username
-     * @param message
      * @param enabled
      */
-    function sendUpdateEnabledAjax(username, message, enabled) {
+    function sendUpdateEnabledAjax(username, enabled) {
         $.ajax({
             type: 'POST',
-            url: getAjaxUrl().update,
+            url: getAjaxUrl().update_enabled,
             data: {userIds: username, enabled: enabled},
+            success: function (data) {
+                Messenger().post({
+                    message: data.msg,
+                    type: data.state ? 'success' : 'error',
+                    showCloseButton: true
+                });
+
+                if (data.state) {
+                    myTable.ajax.reload();
+                }
+            },
+            error: function (XMLHttpRequest) {
+                Messenger().post({
+                    message: 'Request error : ' + XMLHttpRequest.status + " " + XMLHttpRequest.statusText,
+                    type: 'error',
+                    showCloseButton: true
+                });
+            }
+        });
+    }
+
+    /**
+     * 锁定
+     * @param username
+     */
+    function locked(username) {
+        Swal.fire({
+            title: "确定锁定 '" + username + "' 吗？",
+            text: "账号锁定！",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: '#534429',
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            preConfirm: function () {
+                toLocked(username);
+            }
+        });
+    }
+
+    /**
+     * 解锁
+     * @param username
+     */
+    function unlocked(username) {
+        Swal.fire({
+            title: "确定解锁 '" + username + "' 吗？",
+            text: "账号解锁！",
+            type: "success",
+            showCancelButton: true,
+            confirmButtonColor: '#082e0f',
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            preConfirm: function () {
+                toUnlocked(username);
+            }
+        });
+    }
+
+    /*
+     批量锁定
+     */
+    function lockeds() {
+        var userIds = [];
+        var ids = $('input[name="check"]:checked');
+        for (var i = 0; i < ids.length; i++) {
+            userIds.push($(ids[i]).val());
+        }
+
+        if (userIds.length > 0) {
+            Swal.fire({
+                title: "确定锁定选中的用户吗？",
+                text: "账号锁定！",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#534429',
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                preConfirm: function () {
+                    toLockeds(userIds);
+                }
+            });
+        } else {
+            Messenger().post("未发现有选中的用户!");
+        }
+    }
+
+    /*
+     批量解锁
+     */
+    function unlockeds() {
+        var userIds = [];
+        var ids = $('input[name="check"]:checked');
+        for (var i = 0; i < ids.length; i++) {
+            userIds.push($(ids[i]).val());
+        }
+
+        if (userIds.length > 0) {
+            Swal.fire({
+                title: "确定解锁选中的用户吗？",
+                text: "账号解锁！",
+                type: "success",
+                showCancelButton: true,
+                confirmButtonColor: '#27dd4b',
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                preConfirm: function () {
+                    toUnlockeds(userIds);
+                }
+            });
+        } else {
+            Messenger().post("未发现有选中的用户!");
+        }
+    }
+
+    function toLocked(username) {
+        sendUpdateLockedAjax(username, 0);
+    }
+
+    function toUnlocked(username) {
+        sendUpdateLockedAjax(username, 1);
+    }
+
+    function toLockeds(ids) {
+        sendUpdateLockedAjax(ids.join(","), 0);
+    }
+
+    function toUnlockeds(ids) {
+        sendUpdateLockedAjax(ids.join(","), 1);
+    }
+
+    /**
+     * 发送更新用户锁定 ajax.
+     * @param username
+     * @param locked
+     */
+    function sendUpdateLockedAjax(username, locked) {
+        $.ajax({
+            type: 'POST',
+            url: getAjaxUrl().update_locked,
+            data: {userIds: username, locked: locked},
+            success: function (data) {
+                Messenger().post({
+                    message: data.msg,
+                    type: data.state ? 'success' : 'error',
+                    showCloseButton: true
+                });
+
+                if (data.state) {
+                    myTable.ajax.reload();
+                }
+            },
+            error: function (XMLHttpRequest) {
+                Messenger().post({
+                    message: 'Request error : ' + XMLHttpRequest.status + " " + XMLHttpRequest.statusText,
+                    type: 'error',
+                    showCloseButton: true
+                });
+            }
+        });
+    }
+
+    function usersDelete(username) {
+        Swal.fire({
+            title: "确定删除 '" + username + "' 吗？",
+            text: "账号删除！",
+            type: "error",
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            preConfirm: function () {
+                toDelete(username);
+            }
+        });
+    }
+
+    /*
+     批量删除
+     */
+    function usersDeletes() {
+        var userIds = [];
+        var ids = $('input[name="check"]:checked');
+        for (var i = 0; i < ids.length; i++) {
+            userIds.push($(ids[i]).val());
+        }
+
+        if (userIds.length > 0) {
+            Swal.fire({
+                title: "确定删除选中的用户吗？",
+                text: "账号删除！",
+                type: "error",
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                preConfirm: function () {
+                    toDeletes(userIds);
+                }
+            });
+        } else {
+            Messenger().post("未发现有选中的用户!");
+        }
+    }
+
+    function toDelete(username) {
+        sendDeleteAjax(username);
+    }
+
+    function toDeletes(ids) {
+        sendDeleteAjax(ids.join(","));
+    }
+
+    function sendDeleteAjax(username) {
+        $.ajax({
+            type: 'POST',
+            url: getAjaxUrl().del,
+            data: {userIds: username},
             success: function (data) {
                 Messenger().post({
                     message: data.msg,
