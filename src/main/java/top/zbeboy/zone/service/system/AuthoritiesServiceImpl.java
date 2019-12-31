@@ -3,6 +3,7 @@ package top.zbeboy.zone.service.system;
 import org.jooq.DSLContext;
 import org.jooq.Select;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
+import top.zbeboy.zone.config.CacheBook;
 import top.zbeboy.zone.domain.tables.daos.AuthoritiesDao;
 import top.zbeboy.zone.domain.tables.pojos.Authorities;
 import top.zbeboy.zone.domain.tables.records.AuthoritiesRecord;
@@ -51,12 +53,14 @@ public class AuthoritiesServiceImpl implements AuthoritiesService {
                 .where(AUTHORITIES.USERNAME.eq(USERS.USERNAME));
     }
 
+    @CacheEvict(cacheNames = CacheBook.ROLES, allEntries = true)
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public void batchSave(List<Authorities> authorities) {
         authoritiesDao.insert(authorities);
     }
 
+    @CacheEvict(cacheNames = CacheBook.ROLES, allEntries = true)
     @Override
     public void deleteByAuthorities(String authorities) {
         create.deleteFrom(AUTHORITIES)
@@ -64,6 +68,7 @@ public class AuthoritiesServiceImpl implements AuthoritiesService {
                 .execute();
     }
 
+    @CacheEvict(cacheNames = CacheBook.ROLES, key = "#username", allEntries = true)
     @Override
     public void deleteByUsername(String username) {
         create.deleteFrom(AUTHORITIES)

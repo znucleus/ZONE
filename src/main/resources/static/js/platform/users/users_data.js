@@ -12,9 +12,12 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "responsi
             setting_role: web_path + '/web/platform/users/role/save',
             update_enabled: web_path + '/web/platform/users/update/enabled',
             update_locked: web_path + '/web/platform/users/update/locked',
-            del: web_path + '/web/platform/users/delete'
+            del: web_path + '/web/platform/users/delete',
+            page: '/web/menu/platform/users'
         };
     }
+
+    navActive(getAjaxUrl().page);
 
     /*
     参数

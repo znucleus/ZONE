@@ -38,24 +38,4 @@ public final class CacheBook {
     public static final String USERS_TYPE_BY_ID = "USERS_TYPE_BY_ID";
     public static final String SYSTEM_CONFIGURE = "SYSTEM_CONFIGURE";
 
-    /*
-    成绩查询业务
-     */
-    public static final String ACHIEVEMENT_SYNC_DATA_COURSE_NAME = "ACHIEVEMENT_SYNC_DATA_COURSE_NAME";
-    public static final String ACHIEVEMENT_SYNC_DATA_COURSE_YEAR = "ACHIEVEMENT_SYNC_DATA_COURSE_YEAR";
-    public static final String ACHIEVEMENT_SYNC_DATA_COURSE_TERM = "ACHIEVEMENT_SYNC_DATA_COURSE_TERM";
-    public static final String ACHIEVEMENT_SYNC_DATA_COURSE_NATURE = "ACHIEVEMENT_SYNC_DATA_COURSE_NATURE";
-    public static final String ACHIEVEMENT_SYNC_DATA_EXAM_TYPE = "ACHIEVEMENT_SYNC_DATA_EXAM_TYPE";
-    public static final String ACHIEVEMENT_SYNC_STUDENT_SEX = "ACHIEVEMENT_SYNC_STUDENT_SEX";
-    public static final String ACHIEVEMENT_SYNC_STUDENT_STUDENT_STATUS = "ACHIEVEMENT_SYNC_STUDENT_STUDENT_STATUS";
-    public static final String ACHIEVEMENT_SYNC_ALL_DATA = "ACHIEVEMENT_SYNC_ALL_DATA_";
-    public static final String ACHIEVEMENT_SYNC_SINGLE_DATA = "ACHIEVEMENT_SYNC_SINGLE_DATA_";
-
-    /*
-    实训业务
-     */
-    public static final String TRAINING_RELEASE_DATA = "TRAINING_RELEASE_DATA";
-    public static final String TRAINING_RELEASE_DATA_RELATION = "TRAINING_RELEASE_DATA_RELATION";
-    public static final String TRAINING_ATTEND_AUTHORITIES = "TRAINING_ATTEND_AUTHORITIES";
-
 }
