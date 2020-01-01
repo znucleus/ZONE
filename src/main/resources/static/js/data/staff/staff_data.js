@@ -1,20 +1,20 @@
-//# sourceURL=users_data.js
-require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2", "responsive.bootstrap4",
-    "check.all", "jquery.address", "messenger"], function ($, tools, Handlebars, navActive, Swal) {
+//# sourceURL=staff_data.js
+require(["jquery", "lodash_plugin", "tools", "handlebars", "nav.active", "sweetalert2", "responsive.bootstrap4",
+    "check.all", "jquery.address", "messenger"], function ($, DP, tools, Handlebars, navActive, Swal) {
 
     /*
      ajax url
      */
     function getAjaxUrl() {
         return {
-            data: web_path + '/web/platform/users/data',
-            role_data: web_path + '/web/platform/users/role/data',
-            setting_role: web_path + '/web/platform/users/role/save',
-            update_enabled: web_path + '/web/platform/users/update/enabled',
-            update_locked: web_path + '/web/platform/users/update/locked',
-            del: web_path + '/web/platform/users/delete',
-            reset_password: web_path + '/web/platform/users/update/password',
-            page: '/web/menu/platform/users'
+            data: web_path + '/web/data/staff/data',
+            role_data: web_path + '/web/data/staff/role/data',
+            setting_role: web_path + '/web/data/staff/role/save',
+            update_enabled: web_path + '/web/data/staff/update/enabled',
+            update_locked: web_path + '/web/data/staff/update/locked',
+            del: web_path + '/web/data/staff/delete',
+            reset_password: web_path + '/web/data/staff/update/password',
+            page: '/web/menu/data/staff'
         };
     }
 
@@ -24,6 +24,10 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
     参数
     */
     var param = {
+        school: '',
+        college: '',
+        department: '',
+        staffNumber: '',
         realName: '',
         username: '',
         email: '',
@@ -53,11 +57,15 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
      web storage key.
     */
     var webStorageKey = {
-        REAL_NAME: 'PLATFORM_USERS_REAL_NAME_SEARCH',
-        USERNAME: 'PLATFORM_USERS_USERNAME_SEARCH',
-        EMAIL: 'PLATFORM_USERS_EMAIL_SEARCH',
-        MOBILE: 'PLATFORM_USERS_MOBILE_SEARCH',
-        AUDITED: 'PLATFORM_USERS_AUDITED_SEARCH'
+        SCHOOL: 'DATA_STAFF_SCHOOL_SEARCH',
+        COLLEGE: 'DATA_STAFF_COLLEGE_SEARCH',
+        DEPARTMENT: 'DATA_STAFF_DEPARTMENT_SEARCH',
+        STAFF_NUMBER: 'DATA_STAFF_STAFF_NUMBER_SEARCH',
+        REAL_NAME: 'DATA_STAFF_REAL_NAME_SEARCH',
+        USERNAME: 'DATA_STAFF_USERNAME_SEARCH',
+        EMAIL: 'DATA_STAFF_EMAIL_SEARCH',
+        MOBILE: 'DATA_STAFF_MOBILE_SEARCH',
+        AUDITED: 'DATA_STAFF_AUDITED_SEARCH'
     };
 
     // 预编译模板
@@ -76,7 +84,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         searching: false,
         "processing": true, // 打开数据加载时的等待效果
         "serverSide": true,// 打开后台分页
-        "aaSorting": [[12, 'desc']],// 排序
+        "aaSorting": [[22, 'desc']],// 排序
         "ajax": {
             "url": getAjaxUrl().data,
             "dataSrc": "data",
@@ -92,11 +100,21 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             {"data": null},
             {"data": "realName"},
             {"data": "username"},
+            {"data": "staffNumber"},
             {"data": "email"},
             {"data": "mobile"},
             {"data": "idCard"},
             {"data": "roleName"},
-            {"data": "usersTypeName"},
+            {"data": "schoolName"},
+            {"data": "collegeName"},
+            {"data": "departmentName"},
+            {"data": "academicTitleName"},
+            {"data": "post"},
+            {"data": "sex"},
+            {"data": "birthday"},
+            {"data": "nationName"},
+            {"data": "politicalLandscapeName"},
+            {"data": "familyResidence"},
             {"data": "enabled"},
             {"data": "accountNonLocked"},
             {"data": "langKey"},
@@ -119,11 +137,11 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 }
             },
             {
-                targets: 7,
+                targets: 8,
                 orderable: false
             },
             {
-                targets: 9,
+                targets: 19,
                 render: function (a, b, c, d) {
                     var v = '';
                     if (c.enabled === 0 || c.enabled == null) {
@@ -135,7 +153,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 }
             },
             {
-                targets: 10,
+                targets: 20,
                 render: function (a, b, c, d) {
                     var v = '';
                     if (c.accountNonLocked === 0 || c.accountNonLocked == null) {
@@ -147,7 +165,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 }
             },
             {
-                targets: 13,
+                targets: 23,
                 orderable: false,
                 render: function (a, b, c, d) {
 
@@ -323,6 +341,10 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
 
     function getParamId() {
         return {
+            school: '#search_school',
+            college: '#search_college',
+            department: '#search_department',
+            staffNumber: '#search_staff_number',
             realName: '#search_real_name',
             username: '#search_username',
             email: '#search_email',
@@ -343,6 +365,10 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
      * @returns {{username: (*|jQuery), mobile: (*|jQuery), usersType: (*|jQuery)}}
      */
     function initParam() {
+        param.school = $(getParamId().school).val();
+        param.college = $(getParamId().college).val();
+        param.department = $(getParamId().department).val();
+        param.staffNumber = $(getParamId().staffNumber).val();
         param.realName = $(getParamId().realName).val();
         param.username = $(getParamId().username).val();
         param.email = $(getParamId().email).val();
@@ -355,6 +381,10 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         }
 
         if (typeof(Storage) !== "undefined") {
+            sessionStorage.setItem(webStorageKey.SCHOOL, DP.defaultUndefinedValue(param.school, ''));
+            sessionStorage.setItem(webStorageKey.COLLEGE, DP.defaultUndefinedValue(param.college, ''));
+            sessionStorage.setItem(webStorageKey.DEPARTMENT, param.department);
+            sessionStorage.setItem(webStorageKey.STAFF_NUMBER, param.staffNumber);
             sessionStorage.setItem(webStorageKey.REAL_NAME, param.realName);
             sessionStorage.setItem(webStorageKey.USERNAME, param.username);
             sessionStorage.setItem(webStorageKey.EMAIL, param.email);
@@ -367,18 +397,42 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
      初始化搜索内容
     */
     function initSearchContent() {
+        var school = null;
+        var college = null;
+        var department = null;
+        var staffNumber = null;
         var realName = null;
         var username = null;
         var email = null;
         var mobile = null;
         var audited = null;
         if (typeof(Storage) !== "undefined") {
+            school = sessionStorage.getItem(webStorageKey.SCHOOL);
+            college = sessionStorage.getItem(webStorageKey.COLLEGE);
+            department = sessionStorage.getItem(webStorageKey.DEPARTMENT);
+            staffNumber = sessionStorage.getItem(webStorageKey.STAFF_NUMBER);
             realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
             username = sessionStorage.getItem(webStorageKey.USERNAME);
             email = sessionStorage.getItem(webStorageKey.EMAIL);
             mobile = sessionStorage.getItem(webStorageKey.MOBILE);
             audited = sessionStorage.getItem(webStorageKey.AUDITED);
         }
+        if (school !== null) {
+            param.school = school;
+        }
+
+        if (college !== null) {
+            param.college = college;
+        }
+
+        if (department !== null) {
+            param.department = department;
+        }
+
+        if (staffNumber !== null) {
+            param.staffNumber = staffNumber;
+        }
+
         if (realName !== null) {
             param.realName = realName;
         }
@@ -404,18 +458,42 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
     初始化搜索框
     */
     function initSearchInput() {
+        var school = null;
+        var college = null;
+        var department = null;
+        var staffNumber = null;
         var realName = null;
         var username = null;
         var email = null;
         var mobile = null;
         var audited = null;
         if (typeof(Storage) !== "undefined") {
+            school = sessionStorage.getItem(webStorageKey.SCHOOL);
+            college = sessionStorage.getItem(webStorageKey.COLLEGE);
+            department = sessionStorage.getItem(webStorageKey.DEPARTMENT);
+            staffNumber = sessionStorage.getItem(webStorageKey.STAFF_NUMBER);
             realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
             username = sessionStorage.getItem(webStorageKey.USERNAME);
             email = sessionStorage.getItem(webStorageKey.EMAIL);
             mobile = sessionStorage.getItem(webStorageKey.MOBILE);
             audited = sessionStorage.getItem(webStorageKey.AUDITED);
         }
+        if (school !== null) {
+            $(getParamId().school).val(school);
+        }
+
+        if (college !== null) {
+            $(getParamId().college).val(college);
+        }
+
+        if (department !== null) {
+            $(getParamId().department).val(department);
+        }
+
+        if (staffNumber !== null) {
+            $(getParamId().staffNumber).val(staffNumber);
+        }
+
         if (realName !== null) {
             $(getParamId().realName).val(realName);
         }
@@ -450,11 +528,43 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
     }
 
     function cleanParam() {
+        $(getParamId().school).val('');
+        $(getParamId().college).val('');
+        $(getParamId().department).val('');
+        $(getParamId().staffNumber).val('');
         $(getParamId().realName).val('');
         $(getParamId().username).val('');
         $(getParamId().email).val('');
         $(getParamId().mobile).val('');
     }
+
+    $(getParamId().school).keyup(function (event) {
+        if (event.keyCode === 13) {
+            initParam();
+            myTable.ajax.reload();
+        }
+    });
+
+    $(getParamId().college).keyup(function (event) {
+        if (event.keyCode === 13) {
+            initParam();
+            myTable.ajax.reload();
+        }
+    });
+
+    $(getParamId().department).keyup(function (event) {
+        if (event.keyCode === 13) {
+            initParam();
+            myTable.ajax.reload();
+        }
+    });
+
+    $(getParamId().staffNumber).keyup(function (event) {
+        if (event.keyCode === 13) {
+            initParam();
+            myTable.ajax.reload();
+        }
+    });
 
     $(getParamId().realName).keyup(function (event) {
         if (event.keyCode === 13) {

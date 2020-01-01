@@ -1,11 +1,15 @@
 package top.zbeboy.zone.service.data;
 
 import org.jooq.Record;
+import org.jooq.Record12;
+import org.jooq.Record21;
 import org.jooq.Result;
 import top.zbeboy.zone.domain.tables.pojos.Staff;
 import top.zbeboy.zone.domain.tables.records.StaffRecord;
+import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.vo.data.staff.StaffAddVo;
 
+import java.sql.Date;
 import java.util.Optional;
 
 public interface StaffService {
@@ -52,6 +56,28 @@ public interface StaffService {
      * @return 检验工号
      */
     Result<StaffRecord> findByStaffNumberNeUsername(String staffNumber, String username);
+
+    /**
+     * 分页查询
+     *
+     * @param dataTablesUtil 工具类
+     * @return 分页数据
+     */
+    Result<Record21<String, String, String, String, String, Byte, String, String, String, String, String, String, String, Date, String, String, String, Byte, Byte, String, Date>> findAllByPage(DataTablesUtil dataTablesUtil);
+
+    /**
+     * 应用 总数
+     *
+     * @return 总数
+     */
+    int countAll(DataTablesUtil dataTablesUtil);
+
+    /**
+     * 根据条件查询总数
+     *
+     * @return 条件查询总数
+     */
+    int countByCondition(DataTablesUtil dataTablesUtil);
 
     /**
      * 保存

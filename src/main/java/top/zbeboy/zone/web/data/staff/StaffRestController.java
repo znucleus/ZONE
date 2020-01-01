@@ -2,11 +2,14 @@ package top.zbeboy.zone.web.data.staff;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.jooq.Record12;
+import org.jooq.Record21;
 import org.jooq.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,9 +27,12 @@ import top.zbeboy.zone.service.system.SystemMailService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.RandomUtil;
 import top.zbeboy.zone.service.util.RequestUtil;
+import top.zbeboy.zone.web.bean.data.staff.StaffBean;
+import top.zbeboy.zone.web.bean.platform.users.UsersBean;
 import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
+import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.vo.data.staff.StaffAddVo;
 import top.zbeboy.zone.web.vo.data.staff.StaffEditVo;
 
@@ -34,9 +40,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.sql.Date;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @RestController
@@ -255,5 +260,54 @@ public class StaffRestController {
             ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 数据
+     *
+     * @param request 请求
+     * @return 数据
+     */
+    @GetMapping("/web/data/staff/data")
+    public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
+        // 前台数据标题 注：要和前台标题顺序一致，获取order用
+        List<String> headers = new ArrayList<>();
+        headers.add("#");
+        headers.add("select");
+        headers.add("realName");
+        headers.add("username");
+        headers.add("staffNumber");
+        headers.add("email");
+        headers.add("mobile");
+        headers.add("idCard");
+        headers.add("roleName");
+        headers.add("schoolName");
+        headers.add("collegeName");
+        headers.add("departmentName");
+        headers.add("academicTitleName");
+        headers.add("post");
+        headers.add("sex");
+        headers.add("birthday");
+        headers.add("nationName");
+        headers.add("politicalLandscapeName");
+        headers.add("familyResidence");
+        headers.add("enabled");
+        headers.add("accountNonLocked");
+        headers.add("langKey");
+        headers.add("joinDate");
+        headers.add("operator");
+
+        DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
+        Result<Record21<String, String, String, String, String, Byte, String, String, String, String, String, String, String, Date, String, String, String, Byte, Byte, String, Date>>
+                records = staffService.findAllByPage(dataTablesUtil);
+        List<StaffBean> beans = new ArrayList<>();
+        if (Objects.nonNull(records) && records.isNotEmpty()) {
+            beans = records.into(StaffBean.class);
+        }
+        dataTablesUtil.setData(beans);
+        dataTablesUtil.setiTotalRecords(staffService.countAll(dataTablesUtil));
+        dataTablesUtil.setiTotalDisplayRecords(staffService.countByCondition(dataTablesUtil));
+
+        return new ResponseEntity<>(dataTablesUtil, HttpStatus.OK);
     }
 }
