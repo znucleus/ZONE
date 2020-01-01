@@ -334,11 +334,14 @@ public class StaffRestController {
     public ResponseEntity<Map<String, Object>> roleData(@RequestParam("username") String username) {
         AjaxUtil<Role> ajaxUtil = AjaxUtil.of();
         List<Role> roles = new ArrayList<>();
+        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
+                roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
 
-        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
-            roles.add(roleService.findByRoleEnName(Workbook.authorities.ROLE_ADMIN.name()));
-            roles.add(roleService.findByRoleEnName(Workbook.authorities.ROLE_ACTUATOR.name()));
-        } else if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+            if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+                roles.add(roleService.findByRoleEnName(Workbook.authorities.ROLE_ADMIN.name()));
+                roles.add(roleService.findByRoleEnName(Workbook.authorities.ROLE_ACTUATOR.name()));
+            }
+
             int collegeId = 0;
             Optional<Record> record = staffService.findByUsernameRelation(username);
             if (record.isPresent()) {
