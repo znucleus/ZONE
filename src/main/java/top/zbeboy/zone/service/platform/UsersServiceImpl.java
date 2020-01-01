@@ -183,6 +183,11 @@ public class UsersServiceImpl implements UsersService, PaginationPlugin<DataTabl
     }
 
     @Override
+    public void updatePassword(String username, String password) {
+        create.update(USERS).set(USERS.PASSWORD, password).where(USERS.USERNAME.eq(username)).execute();
+    }
+
+    @Override
     public void unlockUsers() {
         create.update(USERS).set(USERS.ACCOUNT_NON_LOCKED, BooleanUtil.toByte(true))
                 .where(USERS.ACCOUNT_NON_LOCKED.eq(BooleanUtil.toByte(false))).execute();

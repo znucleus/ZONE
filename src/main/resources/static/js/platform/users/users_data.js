@@ -13,6 +13,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "responsi
             update_enabled: web_path + '/web/platform/users/update/enabled',
             update_locked: web_path + '/web/platform/users/update/locked',
             del: web_path + '/web/platform/users/delete',
+            reset_password: web_path + '/web/platform/users/update/password',
             page: '/web/menu/platform/users'
         };
     }
@@ -276,12 +277,17 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "responsi
             tableElement.delegate('.delete', "click", function () {
                 usersDelete($(this).attr('data-id'));
             });
+
+            tableElement.delegate('.resetPassword', "click", function () {
+                resetPassword($(this).attr('data-id'));
+            });
             // 初始化搜索框中内容
             initSearchInput();
         }
     });
 
     var global_button = $('#global_button');
+
     function initGlobalButton() {
         var global_button = '<button type="button" id="dels" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量注销</button>' +
             '  <button type="button" id="recoveries" class="btn btn-outline btn-warning btn-sm"><i class="fa fa-reply-all"></i>批量恢复</button>' +
@@ -927,6 +933,48 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "responsi
                 if (data.state) {
                     myTable.ajax.reload();
                 }
+            },
+            error: function (XMLHttpRequest) {
+                Messenger().post({
+                    message: 'Request error : ' + XMLHttpRequest.status + " " + XMLHttpRequest.statusText,
+                    type: 'error',
+                    showCloseButton: true
+                });
+            }
+        });
+    }
+
+    function resetPassword(username) {
+        Swal.fire({
+            title: "确定重置 '" + username + "' 的密码吗？",
+            text: "账号密码重置！",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: '#dcdd46',
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            preConfirm: function () {
+                sendResetPasswordAjax(username);
+            }
+        });
+    }
+
+    function sendResetPasswordAjax(username) {
+        $.ajax({
+            type: 'POST',
+            url: getAjaxUrl().reset_password,
+            data: {username: username},
+            success: function (data) {
+                Swal.fire({
+                    title: data.msg,
+                    type: data.state ? 'success' : 'error',
+                    confirmButtonText: "确定",
+                    preConfirm: function () {
+                        if (data.state) {
+                            myTable.ajax.reload();
+                        }
+                    }
+                });
             },
             error: function (XMLHttpRequest) {
                 Messenger().post({

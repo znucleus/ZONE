@@ -720,6 +720,21 @@ public class UsersRestController {
     }
 
     /**
+     * 更新密码
+     *
+     * @param username 账号
+     * @return success or fail
+     */
+    @PostMapping("/web/platform/users/update/password")
+    public ResponseEntity<Map<String, Object>> updatePassword(@RequestParam("username") String username) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        String password = RandomUtil.generatePassword();
+        usersService.updatePassword(username, BCryptUtil.bCryptPassword(password));
+        ajaxUtil.success().msg("更改用户密码成功，新密码为：" + password + "，请牢记或及时更改！");
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
      * 删除无角色关联的用户
      *
      * @param userIds 用户账号

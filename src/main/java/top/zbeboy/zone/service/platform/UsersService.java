@@ -171,6 +171,14 @@ public interface UsersService {
     void updateLocked(List<String> ids, Byte locked);
 
     /**
+     * 更新密码
+     *
+     * @param username 账号
+     * @param password 密码
+     */
+    void updatePassword(String username, String password);
+
+    /**
      * 解锁用户
      */
     void unlockUsers();
