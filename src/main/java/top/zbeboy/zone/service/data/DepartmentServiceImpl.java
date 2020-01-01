@@ -13,6 +13,7 @@ import top.zbeboy.zone.domain.tables.daos.DepartmentDao;
 import top.zbeboy.zone.domain.tables.pojos.Department;
 import top.zbeboy.zone.domain.tables.records.DepartmentRecord;
 
+import javax.annotation.Resource;
 import java.util.Optional;
 
 import static top.zbeboy.zone.domain.Tables.*;
@@ -23,6 +24,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     private final DSLContext create;
 
+    @Resource
     private DepartmentDao departmentDao;
 
     @Autowired

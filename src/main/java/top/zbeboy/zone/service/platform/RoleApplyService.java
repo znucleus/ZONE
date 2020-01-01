@@ -26,6 +26,18 @@ public interface RoleApplyService {
     Optional<Record> findByIdRelation(String id);
 
     /**
+     * 查询数据
+     *
+     * @param username        账号
+     * @param authorizeTypeId 权限类型
+     * @param dataScope       数据域
+     * @param dataId          数据
+     * @param applyStatus     状态
+     * @return 数据
+     */
+    Result<Record> findNormalByUsernameAndAuthorizeTypeIdAndDataScopeAndDataIdAndApplyStatus(String username, int authorizeTypeId, int dataScope, int dataId, Byte applyStatus);
+
+    /**
      * 分页查询
      *
      * @param dataTablesUtil 工具类

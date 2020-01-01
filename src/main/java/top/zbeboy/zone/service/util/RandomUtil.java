@@ -4,7 +4,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 public class RandomUtil {
 
-    private static final int DEF_COUNT = 10;
+    private static final int DEF_COUNT = 15;
 
     private static final int MOBILE_COUNT = 6;
 
