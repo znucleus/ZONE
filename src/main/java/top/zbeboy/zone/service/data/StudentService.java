@@ -1,11 +1,14 @@
 package top.zbeboy.zone.service.data;
 
 import org.jooq.Record;
+import org.jooq.Record21;
 import org.jooq.Result;
 import top.zbeboy.zone.domain.tables.pojos.Student;
 import top.zbeboy.zone.domain.tables.records.StudentRecord;
+import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.vo.data.student.StudentAddVo;
 
+import java.sql.Date;
 import java.util.Optional;
 
 public interface StudentService {
@@ -68,6 +71,28 @@ public interface StudentService {
      * @return 数据
      */
     Result<Record> findByOrganizeId(int organizeId);
+
+    /**
+     * 分页查询
+     *
+     * @param dataTablesUtil 工具类
+     * @return 分页数据
+     */
+    Result<Record> findAllByPage(DataTablesUtil dataTablesUtil);
+
+    /**
+     * 应用 总数
+     *
+     * @return 总数
+     */
+    int countAll(DataTablesUtil dataTablesUtil);
+
+    /**
+     * 根据条件查询总数
+     *
+     * @return 条件查询总数
+     */
+    int countByCondition(DataTablesUtil dataTablesUtil);
 
     /**
      * 保存

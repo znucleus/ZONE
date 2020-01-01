@@ -115,6 +115,33 @@ public interface PaginationPlugin<S extends PaginationUtil> {
     }
 
     /**
+     * 分页带group by
+     *
+     * @param selectOnConditionStep 关联表
+     * @param paginationUtil        分页工具
+     * @param useExtraCondition     使用额外条件
+     * @param groupFields           group by 变量
+     * @return 数据
+     */
+    default Result<Record> queryAllByPageWithGroupBy(SelectOnConditionStep<Record> selectOnConditionStep, S paginationUtil, boolean useExtraCondition, GroupField... groupFields) {
+        Result<Record> records;
+        Condition a = useExtraCondition(paginationUtil, useExtraCondition);
+        if (Objects.isNull(a)) {
+            groupByCondition(selectOnConditionStep, groupFields);
+            sortCondition(selectOnConditionStep, paginationUtil);
+            pagination(selectOnConditionStep, paginationUtil);
+            records = selectOnConditionStep.fetch();
+        } else {
+            SelectConditionStep<Record> selectConditionStep = selectOnConditionStep.where(a);
+            groupByCondition(selectConditionStep, groupFields);
+            sortCondition(selectConditionStep, paginationUtil);
+            pagination(selectConditionStep, paginationUtil);
+            records = selectConditionStep.fetch();
+        }
+        return records;
+    }
+
+    /**
      * 查询全部数据
      *
      * @param create         当前查询器
@@ -369,7 +396,9 @@ public interface PaginationPlugin<S extends PaginationUtil> {
      * @param paginationUtil 分页工具类
      * @return 条件
      */
-    default Condition searchCondition(S paginationUtil){return null;}
+    default Condition searchCondition(S paginationUtil) {
+        return null;
+    }
 
     /**
      * 额外固定条件
@@ -412,7 +441,8 @@ public interface PaginationPlugin<S extends PaginationUtil> {
      * @param step           结果条件
      * @param paginationUtil 分页工具类
      */
-    default void sortCondition(SelectConnectByStep<Record> step, S paginationUtil){}
+    default void sortCondition(SelectConnectByStep<Record> step, S paginationUtil) {
+    }
 
     /**
      * 排序完成
@@ -423,6 +453,18 @@ public interface PaginationPlugin<S extends PaginationUtil> {
     default void sortToFinish(SelectConnectByStep<Record> step, SortField... sortField) {
         if (Objects.nonNull(sortField)) {
             step.orderBy(sortField);
+        }
+    }
+
+    /**
+     * 排序
+     *
+     * @param step        结果条件
+     * @param groupFields 合并条件
+     */
+    default void groupByCondition(SelectConnectByStep<Record> step, GroupField... groupFields) {
+        if (Objects.nonNull(groupFields)) {
+            step.groupBy(groupFields);
         }
     }
 

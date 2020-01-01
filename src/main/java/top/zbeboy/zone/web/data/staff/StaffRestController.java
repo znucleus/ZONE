@@ -551,26 +551,16 @@ public class StaffRestController {
         boolean canOperator = true;
         if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) &&
                 !roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
-            int departmentId = 0;
-            Optional<Record> record = staffService.findByUsernameRelation(username);
-            if (record.isPresent()) {
-                departmentId = record.get().into(Department.class).getDepartmentId();
-            }
-            if (departmentId > 0) {
-                Users curUsers = usersService.getUserFromSession();
-                Result<Record> records =
-                        roleApplyService.findNormalByUsernameAndAuthorizeTypeIdAndDataScopeAndDataIdAndApplyStatus(curUsers.getUsername(), 1, 1, departmentId, ByteUtil.toByte(1));
-                if (records.isEmpty()) {
-                    canOperator = false;
-                }
+            List<String> ids = new ArrayList<>();
+            ids.add(username);
+            if (checkRoleApply(ids)) {
+                String password = RandomUtil.generatePassword();
+                usersService.updatePassword(username, BCryptUtil.bCryptPassword(password));
+                ajaxUtil.success().msg("更改用户密码成功，新密码为：" + password + "，请牢记或及时更改！");
             } else {
-                canOperator = false;
+                ajaxUtil.fail().msg("更改用户密码失败");
             }
-        }
-        if (canOperator) {
-            String password = RandomUtil.generatePassword();
-            usersService.updatePassword(username, BCryptUtil.bCryptPassword(password));
-            ajaxUtil.success().msg("更改用户密码成功，新密码为：" + password + "，请牢记或及时更改！");
+
         } else {
             ajaxUtil.fail().msg("更改用户密码失败");
         }
@@ -611,6 +601,7 @@ public class StaffRestController {
         boolean canOperator = true;
         if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) &&
                 !roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+            Users curUsers = usersService.getUserFromSession();
             for (String id : ids) {
                 int departmentId = 0;
                 Optional<Record> record = staffService.findByUsernameRelation(id);
@@ -618,7 +609,6 @@ public class StaffRestController {
                     departmentId = record.get().into(Department.class).getDepartmentId();
                 }
                 if (departmentId > 0) {
-                    Users curUsers = usersService.getUserFromSession();
                     Result<Record> records =
                             roleApplyService.findNormalByUsernameAndAuthorizeTypeIdAndDataScopeAndDataIdAndApplyStatus(curUsers.getUsername(), 1, 1, departmentId, ByteUtil.toByte(1));
                     if (records.isEmpty()) {
