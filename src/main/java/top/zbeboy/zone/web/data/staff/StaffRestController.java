@@ -334,60 +334,50 @@ public class StaffRestController {
     public ResponseEntity<Map<String, Object>> roleData(@RequestParam("username") String username) {
         AjaxUtil<Role> ajaxUtil = AjaxUtil.of();
         List<Role> roles = new ArrayList<>();
-        Users users = usersService.findByUsername(username);
-        if (Objects.nonNull(users)) {
-            if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
-                roles.add(roleService.findByRoleEnName(Workbook.authorities.ROLE_ADMIN.name()));
-                roles.add(roleService.findByRoleEnName(Workbook.authorities.ROLE_ACTUATOR.name()));
-            } else if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
-                int collegeId = 0;
-                UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-                if (Objects.nonNull(usersType)) {
-                    Optional<Record> record = Optional.empty();
-                    if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                        record = staffService.findByUsernameRelation(users.getUsername());
-                    }
 
-                    if (record.isPresent()) {
-                        collegeId = record.get().into(College.class).getCollegeId();
-                    }
-                }
+        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+            roles.add(roleService.findByRoleEnName(Workbook.authorities.ROLE_ADMIN.name()));
+            roles.add(roleService.findByRoleEnName(Workbook.authorities.ROLE_ACTUATOR.name()));
+        } else if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+            int collegeId = 0;
+            Optional<Record> record = staffService.findByUsernameRelation(username);
+            if (record.isPresent()) {
+                collegeId = record.get().into(College.class).getCollegeId();
+            }
 
-                if (collegeId > 0) {
-                    Result<Record> records = collegeRoleService.findByCollegeIdRelation(collegeId);
-                    if (records.isNotEmpty()) {
-                        roles.addAll(records.into(Role.class));
-                    }
+            if (collegeId > 0) {
+                Result<Record> records = collegeRoleService.findByCollegeIdRelation(collegeId);
+                if (records.isNotEmpty()) {
+                    roles.addAll(records.into(Role.class));
                 }
-            } else {
-                int departmentId = 0;
-                Optional<Record> record = staffService.findByUsernameRelation(users.getUsername());
-                if (record.isPresent()) {
-                    departmentId = record.get().into(Department.class).getDepartmentId();
-                }
+            }
+        } else {
+            int departmentId = 0;
+            Optional<Record> record = staffService.findByUsernameRelation(username);
+            if (record.isPresent()) {
+                departmentId = record.get().into(Department.class).getDepartmentId();
+            }
 
-                if (departmentId > 0) {
-                    Users curUsers = usersService.getUserFromSession();
-                    Result<Record> records =
-                            roleApplyService.findNormalByUsernameAndAuthorizeTypeIdAndDataScopeAndDataIdAndApplyStatus(curUsers.getUsername(), 1, 1, departmentId, ByteUtil.toByte(1));
-                    if (records.isNotEmpty()) {
-                        List<Role> temp = records.into(Role.class);
-                        for (Role t : temp) {
-                            boolean hasRole = false;
-                            for (Role r : roles) {
-                                if (StringUtils.equals(t.getRoleId(), r.getRoleId())) {
-                                    hasRole = true;
-                                    break;
-                                }
+            if (departmentId > 0) {
+                Users curUsers = usersService.getUserFromSession();
+                Result<Record> records =
+                        roleApplyService.findNormalByUsernameAndAuthorizeTypeIdAndDataScopeAndDataIdAndApplyStatus(curUsers.getUsername(), 1, 1, departmentId, ByteUtil.toByte(1));
+                if (records.isNotEmpty()) {
+                    List<Role> temp = records.into(Role.class);
+                    for (Role t : temp) {
+                        boolean hasRole = false;
+                        for (Role r : roles) {
+                            if (StringUtils.equals(t.getRoleId(), r.getRoleId())) {
+                                hasRole = true;
+                                break;
                             }
+                        }
 
-                            if (!hasRole) {
-                                roles.add(t);
-                            }
+                        if (!hasRole) {
+                            roles.add(t);
                         }
                     }
                 }
-
             }
         }
 
