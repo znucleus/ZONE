@@ -13,12 +13,12 @@ public class StaffBean extends Staff {
     private String collegeName;
     private Integer schoolId;
     private String schoolName;
-    private String  nationName;
+    private String nationName;
     private String academicTitleName;
     private String politicalLandscapeName;
     private String roleName;
     private Byte enabled;
-    private Byte      accountNonLocked;
+    private Byte accountNonLocked;
     private String realName;
     private String email;
     private String mobile;
