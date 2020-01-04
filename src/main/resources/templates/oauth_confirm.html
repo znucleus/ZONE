@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" class="pos-relative">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      class="pos-relative">
 <head th:include="header :: header(~{::meta},~{::title},~{::link})">
     <!-- csrf -->
     <meta name="_csrf" content="" th:content="${_csrf.token}"/>
     <!-- default header name is X-CSRF-TOKEN -->
     <meta name="_csrf_header" content="" th:content="${_csrf.headerName}"/>
-    <title th:text="'登录授权-' + #{ web.title}">ZHE</title>
+    <title th:text="'校园网统一认证登录-' + #{ web.title}">ZHE</title>
     <!-- Bracket CSS -->
     <link rel="stylesheet" href="plugins/css/bracket.css" th:href="@{/plugins/bracket/css/bracket.min.css}"/>
 </head>
@@ -16,22 +17,34 @@
     <div class="login-wrapper wd-300 wd-xs-350 pd-25 pd-xs-40 bg-white rounded shadow-base">
         <div class="signin-logo tx-center tx-28 tx-bold tx-inverse"><span class="tx-normal">[</span> <span
                 th:text="#{web.app.name}"></span> <span class="tx-normal">]</span></div>
-        <div class="tx-center mg-b-60">登录授权 <span th:text="${client.clientId}"></span></div>
-
+        <div class="tx-center mg-b-10">校园网统一认证登录</div>
+        <div class="tx-center mg-b-30">授权: <span th:text="${client.clientId}"></span></div>
         <form th:action="@{/oauth/authorize}" method="post" sec:authorize="isAuthenticated()">
-            <input name="user_oauth_approval" value="true" type="hidden" />
-            <ul class="list-unstyled">
-                <li th:each="scope : ${scopes}">
+            <input name="user_oauth_approval" value="true" type="hidden"/>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item" th:each="scope : ${scopes}">
                     <div class="form-group">
                         <span th:text="${scope.key}"></span> :
                         <div th:if="${scope.value}">
-                            <input type="radio" th:name="${scope.key}" value="true"  checked>同意</input>
-                            <input type="radio" th:name="${scope.key}" value="false">拒绝</input>
+                            <label class="rdiobox">
+                                <input type="radio" th:name="${scope.key}" value="true" checked>
+                                <span>同意</span>
+                            </label>
+                            <label class="rdiobox">
+                                <input type="radio" th:name="${scope.key}" value="false">
+                                <span>拒绝</span>
+                            </label>
                         </div>
 
                         <div th:if="${!scope.value}">
-                            <input type="radio" th:name="${scope.key}" value="true">同意</input>
-                            <input type="radio" th:name="${scope.key}" value="false" checked>拒绝</input>
+                            <label class="rdiobox">
+                                <input type="radio" th:name="${scope.key}" value="true">
+                                <span>同意</span>
+                            </label>
+                            <label class="rdiobox">
+                                <input type="radio" th:name="${scope.key}" value="false" checked>
+                                <span>拒绝</span>
+                            </label>
                         </div>
 
                     </div>
@@ -39,6 +52,10 @@
             </ul>
             <button class="btn btn-info btn-block" type="submit">确认授权</button>
         </form>
+
+        <div sec:authorize="isAnonymous()">
+            <div class="tx-center text-input">请先： <a th:href="@{/login}">登录</a></div>
+        </div>
 
     </div><!-- login-wrapper -->
 </div><!-- d-flex -->
