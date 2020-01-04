@@ -41,7 +41,7 @@ public class AnswerSolvingRestController {
      * @return 数据
      */
     @CrossOrigin()
-    @GetMapping("/anyone/answer/result")
+    @GetMapping("/anyone/answer/result/save")
     public ResponseEntity<Map<String, Object>> save(@RequestBody List<AnswerSolving> answerSolvingList, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (Objects.nonNull(answerSolvingList) && !answerSolvingList.isEmpty()) {
