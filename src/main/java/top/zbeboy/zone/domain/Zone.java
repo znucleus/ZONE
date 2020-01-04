@@ -33,6 +33,12 @@ import top.zbeboy.zone.domain.tables.Department;
 import top.zbeboy.zone.domain.tables.Files;
 import top.zbeboy.zone.domain.tables.Grade;
 import top.zbeboy.zone.domain.tables.Nation;
+import top.zbeboy.zone.domain.tables.OauthAccessToken;
+import top.zbeboy.zone.domain.tables.OauthApprovals;
+import top.zbeboy.zone.domain.tables.OauthClientDetails;
+import top.zbeboy.zone.domain.tables.OauthClientToken;
+import top.zbeboy.zone.domain.tables.OauthCode;
+import top.zbeboy.zone.domain.tables.OauthRefreshToken;
 import top.zbeboy.zone.domain.tables.Organize;
 import top.zbeboy.zone.domain.tables.PoliticalLandscape;
 import top.zbeboy.zone.domain.tables.Role;
@@ -72,7 +78,7 @@ import top.zbeboy.zone.domain.tables.UsersType;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Zone extends SchemaImpl {
 
-    private static final long serialVersionUID = 487270950;
+    private static final long serialVersionUID = 1264254656;
 
     /**
      * The reference instance of <code>zone</code>
@@ -173,6 +179,36 @@ public class Zone extends SchemaImpl {
      * The table <code>zone.nation</code>.
      */
     public final Nation NATION = top.zbeboy.zone.domain.tables.Nation.NATION;
+
+    /**
+     * The table <code>zone.oauth_access_token</code>.
+     */
+    public final OauthAccessToken OAUTH_ACCESS_TOKEN = top.zbeboy.zone.domain.tables.OauthAccessToken.OAUTH_ACCESS_TOKEN;
+
+    /**
+     * The table <code>zone.oauth_approvals</code>.
+     */
+    public final OauthApprovals OAUTH_APPROVALS = top.zbeboy.zone.domain.tables.OauthApprovals.OAUTH_APPROVALS;
+
+    /**
+     * The table <code>zone.oauth_client_details</code>.
+     */
+    public final OauthClientDetails OAUTH_CLIENT_DETAILS = top.zbeboy.zone.domain.tables.OauthClientDetails.OAUTH_CLIENT_DETAILS;
+
+    /**
+     * The table <code>zone.oauth_client_token</code>.
+     */
+    public final OauthClientToken OAUTH_CLIENT_TOKEN = top.zbeboy.zone.domain.tables.OauthClientToken.OAUTH_CLIENT_TOKEN;
+
+    /**
+     * The table <code>zone.oauth_code</code>.
+     */
+    public final OauthCode OAUTH_CODE = top.zbeboy.zone.domain.tables.OauthCode.OAUTH_CODE;
+
+    /**
+     * The table <code>zone.oauth_refresh_token</code>.
+     */
+    public final OauthRefreshToken OAUTH_REFRESH_TOKEN = top.zbeboy.zone.domain.tables.OauthRefreshToken.OAUTH_REFRESH_TOKEN;
 
     /**
      * The table <code>zone.organize</code>.
@@ -335,6 +371,12 @@ public class Zone extends SchemaImpl {
             Files.FILES,
             Grade.GRADE,
             Nation.NATION,
+            OauthAccessToken.OAUTH_ACCESS_TOKEN,
+            OauthApprovals.OAUTH_APPROVALS,
+            OauthClientDetails.OAUTH_CLIENT_DETAILS,
+            OauthClientToken.OAUTH_CLIENT_TOKEN,
+            OauthCode.OAUTH_CODE,
+            OauthRefreshToken.OAUTH_REFRESH_TOKEN,
             Organize.ORGANIZE,
             PoliticalLandscape.POLITICAL_LANDSCAPE,
             Role.ROLE,

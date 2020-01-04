@@ -4,6 +4,7 @@ package top.zbeboy.zone.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -65,24 +66,23 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf()
-                .ignoringAntMatchers("/remind/**", "/oauth/authorize", "/rest/**")
+                .ignoringAntMatchers("/rest/**", Workbook.OAUTH_AUTHORIZE)
                 .and()
                 .headers()
                 // allow same origin to frame our site to support iframe SockJS
                 .frameOptions().sameOrigin()
                 .and()
-                .authorizeRequests().antMatchers("/css/**", "/js/**", "/fonts/**", "/images/**", "/plugins/**", "/assets/**", "/files/**", "/webjars/**", "/webjarsjs/**").permitAll()
+                .authorizeRequests().antMatchers("/css/**", "/js/**", "/fonts/**", "/images/**", "/plugins/**", "/files/**", "/webjars/**", "/webjarsjs/**").permitAll()
                 .and().formLogin().loginPage("/login")
                 .successHandler(this.ajaxAuthenticationSuccessHandler)
                 .failureHandler(this.ajaxAuthenticationFailureHandler)
-                .and().sessionManagement().invalidSessionUrl("/login")
                 .and().logout().logoutSuccessUrl("/")
                 .permitAll().invalidateHttpSession(true)
                 .and().rememberMe().rememberMeServices(rememberMeServices())
                 .and().authorizeRequests().antMatchers("/web/**").access("@webSecurity.check(authentication,request)")
                 .and().authorizeRequests().antMatchers("/special/channel/**").hasAnyRole("SYSTEM", "ADMIN") // 特别通道 跨controller调用共同方法使用
-                .and().authorizeRequests().antMatchers("/users/**", "/remind/**", "/oauth/authorize").authenticated()
-                .and().authorizeRequests().antMatchers("/anyone/**", "/rest/**").permitAll()
+                .and().authorizeRequests().antMatchers("/users/**", "/rest/**", Workbook.OAUTH_AUTHORIZE).authenticated()
+                .and().authorizeRequests().antMatchers("/anyone/**").permitAll()
                 .antMatchers("/metrics/**").hasRole("ACTUATOR")
                 .antMatchers("/health/**").hasRole("ACTUATOR")
                 .antMatchers("/trace/**").hasRole("ACTUATOR")
@@ -100,5 +100,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(this.myUserDetailsService).passwordEncoder(passwordEncoder()).and().eraseCredentials(false);
+    }
+
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 }

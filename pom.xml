@@ -31,7 +31,7 @@
 
     <properties>
         <org.springframework.webflow.version>2.0.5.RELEASE</org.springframework.webflow.version>
-        <spring-security-oauth2.version>2.3.7.RELEASE</spring-security-oauth2.version>
+        <spring-security-oauth2-autoconfigure.version>2.2.1.RELEASE</spring-security-oauth2-autoconfigure.version>
 
         <org.apache.poi.version>4.1.0</org.apache.poi.version>
         <ooxml-schemas.version>1.4</ooxml-schemas.version>
@@ -105,9 +105,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.security.oauth</groupId>
-            <artifactId>spring-security-oauth2</artifactId>
-            <version>${spring-security-oauth2.version}</version>
+            <groupId>org.springframework.security.oauth.boot</groupId>
+            <artifactId>spring-security-oauth2-autoconfigure</artifactId>
+            <version>${spring-security-oauth2-autoconfigure.version}</version>
         </dependency>
 
         <dependency>
@@ -543,12 +543,20 @@
 
     <repositories>
         <repository>
+            <id>nexus-aliyun</id>
+            <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+        </repository>
+        <repository>
             <id>spring-milestone</id>
             <url>https://repo.spring.io/libs-release</url>
         </repository>
     </repositories>
 
     <pluginRepositories>
+        <pluginRepository>
+            <id>nexus-aliyun</id>
+            <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+        </pluginRepository>
         <pluginRepository>
             <id>spring-milestone</id>
             <url>https://repo.spring.io/libs-release</url>

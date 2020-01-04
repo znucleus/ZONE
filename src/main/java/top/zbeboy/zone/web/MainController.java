@@ -1,6 +1,9 @@
 package top.zbeboy.zone.web;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
+import org.springframework.security.web.savedrequest.RequestCache;
+import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +19,7 @@ import top.zbeboy.zone.service.system.FilesService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,14 +38,33 @@ public class MainController {
     @Resource
     private FilesService filesService;
 
+    private RequestCache requestCache = new HttpSessionRequestCache();
+
     /**
      * 登录页
      *
      * @return 登录页.
      */
     @GetMapping("/login")
-    public String login() {
-        return !authoritiesService.isAnonymousAuthenticated() ? "redirect:" + Workbook.WEB_BACKSTAGE : "login";
+    public String login(ModelMap modelMap, HttpServletRequest request, HttpServletResponse response) {
+        String page;
+        boolean needSkip = false;
+        SavedRequest savedRequest = requestCache.getRequest(request, response);
+        if (Objects.nonNull(savedRequest)) {
+            String requestURI = savedRequest.getRedirectUrl();
+            if (requestURI.contains(Workbook.OAUTH_AUTHORIZE)) {
+                needSkip = true;
+            }
+        }
+
+        if (!needSkip) {
+            modelMap.put("loginType", "ajax");
+            page = !authoritiesService.isAnonymousAuthenticated() ? "redirect:" + Workbook.WEB_BACKSTAGE : "login";
+        } else {
+            modelMap.put("loginType", "form");
+            page = "login";
+        }
+        return page;
     }
 
     /**

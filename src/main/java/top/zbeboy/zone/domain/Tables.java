@@ -25,6 +25,12 @@ import top.zbeboy.zone.domain.tables.Department;
 import top.zbeboy.zone.domain.tables.Files;
 import top.zbeboy.zone.domain.tables.Grade;
 import top.zbeboy.zone.domain.tables.Nation;
+import top.zbeboy.zone.domain.tables.OauthAccessToken;
+import top.zbeboy.zone.domain.tables.OauthApprovals;
+import top.zbeboy.zone.domain.tables.OauthClientDetails;
+import top.zbeboy.zone.domain.tables.OauthClientToken;
+import top.zbeboy.zone.domain.tables.OauthCode;
+import top.zbeboy.zone.domain.tables.OauthRefreshToken;
 import top.zbeboy.zone.domain.tables.Organize;
 import top.zbeboy.zone.domain.tables.PoliticalLandscape;
 import top.zbeboy.zone.domain.tables.Role;
@@ -158,6 +164,36 @@ public class Tables {
      * The table <code>zone.nation</code>.
      */
     public static final Nation NATION = Nation.NATION;
+
+    /**
+     * The table <code>zone.oauth_access_token</code>.
+     */
+    public static final OauthAccessToken OAUTH_ACCESS_TOKEN = OauthAccessToken.OAUTH_ACCESS_TOKEN;
+
+    /**
+     * The table <code>zone.oauth_approvals</code>.
+     */
+    public static final OauthApprovals OAUTH_APPROVALS = OauthApprovals.OAUTH_APPROVALS;
+
+    /**
+     * The table <code>zone.oauth_client_details</code>.
+     */
+    public static final OauthClientDetails OAUTH_CLIENT_DETAILS = OauthClientDetails.OAUTH_CLIENT_DETAILS;
+
+    /**
+     * The table <code>zone.oauth_client_token</code>.
+     */
+    public static final OauthClientToken OAUTH_CLIENT_TOKEN = OauthClientToken.OAUTH_CLIENT_TOKEN;
+
+    /**
+     * The table <code>zone.oauth_code</code>.
+     */
+    public static final OauthCode OAUTH_CODE = OauthCode.OAUTH_CODE;
+
+    /**
+     * The table <code>zone.oauth_refresh_token</code>.
+     */
+    public static final OauthRefreshToken OAUTH_REFRESH_TOKEN = OauthRefreshToken.OAUTH_REFRESH_TOKEN;
 
     /**
      * The table <code>zone.organize</code>.

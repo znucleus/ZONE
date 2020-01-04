@@ -44,6 +44,10 @@ public final class Workbook {
     后台url
      */
     public static final String WEB_BACKSTAGE = "/web/menu/backstage";
+    /*
+    oauth 授权url
+     */
+    public static final String OAUTH_AUTHORIZE = "/oauth/authorize";
 
     /*
     用户默认头像
