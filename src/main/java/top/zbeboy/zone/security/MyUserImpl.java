@@ -4,9 +4,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 
+import java.io.Serializable;
 import java.util.Collection;
 
-public class MyUserImpl extends User {
+public class MyUserImpl extends User implements Serializable {
 
     private final Users users;
 

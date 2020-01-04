@@ -32,10 +32,11 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 // session creation to be allowed (it's disabled by default in 2.0.6)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .and()
-                .requestMatchers().antMatchers("/rest/**")
+                .requestMatchers().antMatchers("/api/user/**", "/api/weixin/**")
                 .and()
                 .authorizeRequests()
-                .antMatchers("/rest/**").access("#oauth2.hasScope('read')");
+                .antMatchers("/api/user/**").access("#oauth2.hasScope('user:read')")
+                .antMatchers("/api/weixin/**").access("#oauth2.hasScope('weixin')");
         // @formatter:on
     }
 }
