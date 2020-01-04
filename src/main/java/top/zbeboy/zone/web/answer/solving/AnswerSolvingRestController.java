@@ -3,10 +3,7 @@ package top.zbeboy.zone.web.answer.solving;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.domain.tables.pojos.AnswerResult;
 import top.zbeboy.zone.domain.tables.pojos.AnswerSolving;
 import top.zbeboy.zone.domain.tables.pojos.AnswerSubject;
@@ -44,7 +41,7 @@ public class AnswerSolvingRestController {
      * @return 数据
      */
     @CrossOrigin()
-    @PostMapping("/anyone/answer/result")
+    @GetMapping("/anyone/answer/result")
     public ResponseEntity<Map<String, Object>> save(@RequestBody List<AnswerSolving> answerSolvingList, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (Objects.nonNull(answerSolvingList) && !answerSolvingList.isEmpty()) {

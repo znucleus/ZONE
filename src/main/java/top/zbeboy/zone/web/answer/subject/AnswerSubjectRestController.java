@@ -3,10 +3,7 @@ package top.zbeboy.zone.web.answer.subject;
 import org.jooq.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.domain.tables.pojos.AnswerOption;
 import top.zbeboy.zone.domain.tables.records.AnswerOptionRecord;
 import top.zbeboy.zone.domain.tables.records.AnswerSubjectRecord;
@@ -36,8 +33,8 @@ public class AnswerSubjectRestController {
      * @return 数据
      */
     @CrossOrigin()
-    @PostMapping("/anyone/answer/subject")
-    public ResponseEntity<Map<String, Object>> restData(@RequestBody AnswerSubjectSearchVo answerSubjectSearchVo) {
+    @GetMapping("/anyone/answer/subject")
+    public ResponseEntity<Map<String, Object>> data(@RequestBody AnswerSubjectSearchVo answerSubjectSearchVo) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         Optional<AnswerSubjectRecord> answerSubjectRecordOptional =
                 answerSubjectService.findByAnswerBankIdAndCustomId(answerSubjectSearchVo.getAnswerBankId(), answerSubjectSearchVo.getCustomId());

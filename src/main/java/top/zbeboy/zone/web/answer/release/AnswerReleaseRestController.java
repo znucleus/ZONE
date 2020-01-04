@@ -30,7 +30,7 @@ public class AnswerReleaseRestController {
      */
     @CrossOrigin()
     @GetMapping("/anyone/answer/release/{id}")
-    public ResponseEntity<Map<String, Object>> restData(@PathVariable("id") String id) {
+    public ResponseEntity<Map<String, Object>> data(@PathVariable("id") String id) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         AnswerRelease answerRelease = answerReleaseService.findById(id);
         AnswerReleaseBean bean = new AnswerReleaseBean();
