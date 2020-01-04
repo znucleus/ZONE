@@ -58,10 +58,10 @@ public class MainController {
         }
 
         if (!needSkip) {
-            modelMap.put("loginType", "ajax");
+            modelMap.put("loginType", "normal");
             page = !authoritiesService.isAnonymousAuthenticated() ? "redirect:" + Workbook.WEB_BACKSTAGE : "login";
         } else {
-            modelMap.put("loginType", "form");
+            modelMap.put("loginType", "oauth");
             page = "login";
         }
         return page;

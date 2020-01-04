@@ -16,7 +16,8 @@
     <div class="login-wrapper wd-300 wd-xs-350 pd-25 pd-xs-40 bg-white rounded shadow-base">
         <div class="signin-logo tx-center tx-28 tx-bold tx-inverse"><span class="tx-normal">[</span> <span
                 th:text="#{web.app.name}"></span> <span class="tx-normal">]</span></div>
-        <div class="tx-center mg-b-60">登 录</div>
+        <div class="tx-center mg-b-60" th:if="${loginType == 'normal'}">登 录</div>
+        <div class="tx-center mg-b-60" th:if="${loginType == 'oauth'}">校园网统一认证登录</div>
 
         <form th:action="@{/login}" method="post">
             <div class="form-group">
@@ -30,8 +31,8 @@
                 <a href="" th:href="@{/forget_password}" class="tx-info tx-12 d-block mg-t-10">忘记密码？</a>
             </div><!-- form-group -->
             <div class="form-group text-danger text-center" id="globalError"></div>
-            <button class="btn btn-info btn-block" type="button" id="login" th:if="${loginType == 'ajax'}">登 录</button>
-            <button class="btn btn-info btn-block" type="submit" th:if="${loginType == 'form'}">登 录</button>
+            <button class="btn btn-info btn-block" type="button" id="login" th:if="${loginType == 'normal'}">登 录</button>
+            <button class="btn btn-info btn-block" type="submit" th:if="${loginType == 'oauth'}">登 录</button>
         </form>
 
         <div class="mg-t-60 tx-center">还没有账号吗？ <a href="" class="tx-info" data-toggle="modal"
