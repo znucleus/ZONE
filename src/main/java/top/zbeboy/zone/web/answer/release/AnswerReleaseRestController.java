@@ -29,7 +29,7 @@ public class AnswerReleaseRestController {
      * @return 数据
      */
     @CrossOrigin()
-    @GetMapping("/rest/answer/release/{id}")
+    @GetMapping("/anyone/answer/release/{id}")
     public ResponseEntity<Map<String, Object>> restData(@PathVariable("id") String id) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         AnswerRelease answerRelease = answerReleaseService.findById(id);

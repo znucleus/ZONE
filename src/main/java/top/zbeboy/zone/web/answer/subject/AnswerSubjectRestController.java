@@ -36,7 +36,7 @@ public class AnswerSubjectRestController {
      * @return 数据
      */
     @CrossOrigin()
-    @PostMapping("/rest/answer/subject")
+    @PostMapping("/anyone/answer/subject")
     public ResponseEntity<Map<String, Object>> restData(@RequestBody AnswerSubjectSearchVo answerSubjectSearchVo) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         Optional<AnswerSubjectRecord> answerSubjectRecordOptional =
