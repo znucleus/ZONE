@@ -31,6 +31,7 @@
 
     <properties>
         <org.springframework.webflow.version>2.0.5.RELEASE</org.springframework.webflow.version>
+        <spring-security-oauth2.version>2.3.8.RELEASE</spring-security-oauth2.version>
         <spring-security-oauth2-autoconfigure.version>2.2.1.RELEASE</spring-security-oauth2-autoconfigure.version>
 
         <org.apache.poi.version>4.1.0</org.apache.poi.version>
@@ -107,7 +108,7 @@
         <dependency>
             <groupId>org.springframework.security.oauth</groupId>
             <artifactId>spring-security-oauth2</artifactId>
-            <version>2.3.8.RELEASE</version>
+            <version>${spring-security-oauth2.version}</version>
         </dependency>
 
         <dependency>
