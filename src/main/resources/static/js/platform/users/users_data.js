@@ -1,5 +1,5 @@
 //# sourceURL=users_data.js
-require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2", "responsive.bootstrap4",
+require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "responsive.bootstrap4",
     "check.all", "jquery.address", "messenger"], function ($, tools, Handlebars, navActive, Swal) {
 
     /*
