@@ -318,15 +318,15 @@ require(["jquery", "lodash_plugin", "tools", "handlebars", "nav.active", "sweeta
     var global_button = $('#global_button');
 
     function initGlobalButton() {
-        var global_button = '<button type="button" id="dels" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量注销</button>' +
-            '  <button type="button" id="recoveries" class="btn btn-outline btn-warning btn-sm"><i class="fa fa-reply-all"></i>批量恢复</button>' +
-            '  <button type="button" id="locked" class="btn btn-outline btn-secondary btn-sm"><i class="fa fa-lock"></i>批量锁定</button>' +
-            '  <button type="button" id="unlocked" class="btn btn-outline btn-purple btn-sm"><i class="fa fa-unlock"></i>批量解锁</button>';
+        var global_button = '<button type="button" id="dels" class="btn btn-outline-danger btn-sm"><i class="fa fa-trash-o"></i>批量注销</button>' +
+            '  <button type="button" id="recoveries" class="btn btn-outline-warning btn-sm"><i class="fa fa-reply-all"></i>批量恢复</button>' +
+            '  <button type="button" id="locked" class="btn btn-outline-secondary btn-sm"><i class="fa fa-lock"></i>批量锁定</button>' +
+            '  <button type="button" id="unlocked" class="btn btn-outline-purple btn-sm"><i class="fa fa-unlock"></i>批量解锁</button>';
         if (Number(param.audited) === 2) {
-            global_button += '  <button type="button" id="deletes" class="btn btn-outline btn-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>';
+            global_button += '  <button type="button" id="deletes" class="btn btn-outline-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>';
         }
 
-        global_button += '  <button type="button" id="refresh" class="btn btn-outline btn-default btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
+        global_button += '  <button type="button" id="refresh" class="btn btn-light btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
         $('#global_button').html(global_button);
     }
 
