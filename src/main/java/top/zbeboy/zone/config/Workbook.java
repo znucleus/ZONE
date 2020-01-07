@@ -118,29 +118,10 @@ public final class Workbook {
     public static final String INTERNSHIP_JOURNAL_FILE_PATH = SETTINGS_PATH + "internshipJournalTemplate.docx";
 
     /*
-    系统临时路径
-     */
-    public static final String SETTING_TEMP = SETTINGS_PATH + "temp" + DIRECTORY_SPLIT;
-
-    /*
-    TESS路径
-     */
-    public static final String SETTING_TESS = SETTINGS_PATH + "tessdata";
-
-    /*
     image suffix.
     */
     public enum imageSuffix {
         JPG, JPEG, BMP, GIF, PNG
-    }
-
-    /*
-    成绩分制
-     */
-    public enum scoreMake {
-        SCORE_100_90, SCORE_90_80, SCORE_80_70, SCORE_70_60, SCORE_60_0,
-        SCORE_GOOD, SCORE_NICE, SCORE_MIDDLE, SCORE_PASS, SCORE_FAIL,
-        SCORE_QUALIFIED, SCORE_UNQUALIFIED
     }
 
     /**
@@ -151,16 +132,5 @@ public final class Workbook {
      */
     public static String avatarPath(Users users) {
         return USERS_PORTFOLIOS + users.getUsername() + DIRECTORY_SPLIT + "avatar" + DIRECTORY_SPLIT;
-    }
-
-    /**
-     * 课程计划文件路径
-     *
-     * @param schoolName  学校名
-     * @param collegeName 院名
-     * @return 路径
-     */
-    public static String curriculumPath(String schoolName, String collegeName) {
-        return FILES_PORTFOLIOS + schoolName + DIRECTORY_SPLIT + collegeName + DIRECTORY_SPLIT + "curriculum" + DIRECTORY_SPLIT;
     }
 }
