@@ -3,7 +3,6 @@ package top.zbeboy.zone.security;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
@@ -38,14 +37,14 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
             throws IOException, ServletException {
         boolean needSkip = false;
         SavedRequest savedRequest = requestCache.getRequest(request, response);
-        if(Objects.nonNull(savedRequest)){
+        if (Objects.nonNull(savedRequest)) {
             String requestURI = savedRequest.getRedirectUrl();
-            if(requestURI.contains(Workbook.OAUTH_AUTHORIZE)){
+            if (requestURI.contains(Workbook.OAUTH_AUTHORIZE)) {
                 needSkip = true;
             }
         }
 
-        if(!needSkip){
+        if (!needSkip) {
             String username = request.getParameter("username");
             ServletContext context = request.getSession().getServletContext();
             ApplicationContext ctx = WebApplicationContextUtils
@@ -61,6 +60,14 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
             }
             response.getWriter().print(AjaxAuthenticationCode.OK_CODE);
         } else {
+            String username = request.getParameter("username");
+            ServletContext context = request.getSession().getServletContext();
+            ApplicationContext ctx = WebApplicationContextUtils
+                    .getWebApplicationContext(context);
+            SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(), "授权登录成功", DateTimeUtil.getNowSqlTimestamp(), username, RequestUtil.getIpAddress(request));
+            SystemOperatorLogService systemOperatorLogService = (SystemOperatorLogService) Objects.requireNonNull(ctx)
+                    .getBean("systemOperatorLogService");
+            systemOperatorLogService.save(systemLog);
             // 会帮我们跳转到上一次请求的页面上
             super.onAuthenticationSuccess(request, response, authentication);
         }
