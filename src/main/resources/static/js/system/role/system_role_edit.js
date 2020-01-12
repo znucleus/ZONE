@@ -1,6 +1,6 @@
 //# sourceURL=system_role_edit.js
 require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active", "messenger", "bootstrap-treeview", "jquery.address"
-], function ($, _, tools, Swal, Handlebars, nav_active) {
+], function ($, _, tools, Swal, Handlebars, navActive) {
 
     /*
      ajax url.
@@ -10,11 +10,11 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
         role_application_data: web_path + '/web/system/role/application/data',
         update: web_path + '/web/system/role/update',
         check_name: web_path + '/web/system/role/check/edit/name',
-        back: '/web/menu/system/role'
+        page: '/web/menu/system/role'
     };
 
     // 刷新时选中菜单
-    nav_active(ajax_url.back);
+    navActive(ajax_url.page);
 
     /*
      参数id
@@ -127,7 +127,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
                         type: "success",
                         confirmButtonText: "确定",
                         preConfirm: function () {
-                            $.address.value(ajax_url.back);
+                            $.address.value(ajax_url.page);
                         }
                     });
                 } else {
