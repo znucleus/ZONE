@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.vo.data.organize;
 
-public class OrganizeVo {
+public class OrganizeSearchVo {
     private Integer gradeId;
 
     public Integer getGradeId() {

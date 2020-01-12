@@ -86,13 +86,13 @@ require(["jquery", "nav.active", "responsive.bootstrap4"],
             }
         });
 
-        var html = '<form><div class="row ">' +
+        var html = '<div class="row ">' +
             '<div class="col-md-3 pd-t-2"><input type="text" id="search_user" class="form-control form-control-sm" placeholder="用户" /></div>' +
             '<div class="col-md-3 pd-t-2"><input type="text" id="search_behavior" class="form-control form-control-sm" placeholder="行为" /></div>' +
             '<div class="col-md-3 pd-t-2"><input type="text" id="search_ip" class="form-control form-control-sm" placeholder="IP" /></div>' +
             '<div class="col-md-3 pd-t-2 text-right "><div class="btn-group" role="group"><button type="button" id="search" class="btn btn-outline-secondary btn-sm"><i class="fa fa-search"></i>搜索</button>' +
             ' <button type="button" id="reset_search" class="btn btn-outline-secondary btn-sm"><i class="fa fa-repeat"></i>重置</button></div></div>' +
-            '</div></form>';
+            '</div>';
         $('#mytoolbox').append(html);
 
         var global_button = '<button type="button" id="refresh" class="btn btn-light btn-sm"><i class="fa fa-refresh"></i>刷新</button>';

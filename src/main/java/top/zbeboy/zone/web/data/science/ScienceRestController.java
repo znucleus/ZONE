@@ -9,7 +9,7 @@ import top.zbeboy.zone.domain.tables.records.ScienceRecord;
 import top.zbeboy.zone.service.data.ScienceService;
 import top.zbeboy.zone.web.plugin.select2.Select2Data;
 import top.zbeboy.zone.web.util.BooleanUtil;
-import top.zbeboy.zone.web.vo.data.science.ScienceVo;
+import top.zbeboy.zone.web.vo.data.science.ScienceSearchVo;
 
 import javax.annotation.Resource;
 import java.util.Map;
@@ -23,13 +23,13 @@ public class ScienceRestController {
     /**
      * 获取系下全部有效专业
      *
-     * @param scienceVo 查询参数
+     * @param scienceSearchVo 查询参数
      * @return 专业数据
      */
     @GetMapping("/anyone/data/science")
-    public ResponseEntity<Map<String, Object>> anyoneData(ScienceVo scienceVo) {
+    public ResponseEntity<Map<String, Object>> anyoneData(ScienceSearchVo scienceSearchVo) {
         Select2Data select2Data = Select2Data.of();
-        Result<ScienceRecord> sciences = scienceService.findByDepartmentIdAndScienceIsDel(scienceVo.getDepartmentId(), BooleanUtil.toByte(false));
+        Result<ScienceRecord> sciences = scienceService.findByDepartmentIdAndScienceIsDel(scienceSearchVo.getDepartmentId(), BooleanUtil.toByte(false));
         sciences.forEach(science -> select2Data.add(science.getScienceId().toString(), science.getScienceName()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }

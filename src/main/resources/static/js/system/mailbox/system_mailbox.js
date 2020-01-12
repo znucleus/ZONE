@@ -80,11 +80,11 @@ require(["jquery", "nav.active", "responsive.bootstrap4"], function ($, navActiv
         }
     });
 
-    var html = '<form><div class="row ">' +
+    var html = '<div class="row ">' +
         '<div class="col-md-6 pd-t-2"><input type="text" id="search_email" class="form-control form-control-sm" placeholder="邮箱" /></div>' +
         '<div class="col-md-6 pd-t-2 text-right "><div class="btn-group" role="group"><button type="button" id="search" class="btn btn-outline-secondary btn-sm"><i class="fa fa-search"></i>搜索</button>' +
         ' <button type="button" id="reset_search" class="btn btn-outline-secondary btn-sm"><i class="fa fa-repeat"></i>重置</button></div></div>' +
-        '</div></form>';
+        '</div>';
     $('#mytoolbox').append(html);
 
     var global_button = '<button type="button" id="refresh" class="btn btn-light btn-sm"><i class="fa fa-refresh"></i>刷新</button>';

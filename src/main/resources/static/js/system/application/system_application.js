@@ -159,13 +159,13 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
             }
         });
 
-        var html = '<form><div class="row ">' +
+        var html = '<div class="row ">' +
             '<div class="col-md-3 pd-t-2"><input type="text" id="search_application" class="form-control form-control-sm" placeholder="应用" /></div>' +
             '<div class="col-md-3 pd-t-2"><input type="text" id="search_en_application" class="form-control form-control-sm" placeholder="英文" /></div>' +
             '<div class="col-md-3 pd-t-2"><input type="text" id="search_application_code" class="form-control form-control-sm" placeholder="识别码" /></div>' +
             '<div class="col-md-3 pd-t-2 text-right "><div class="btn-group" role="group"><button type="button" id="search" class="btn btn-outline-secondary btn-sm"><i class="fa fa-search"></i>搜索</button>' +
             ' <button type="button" id="reset_search" class="btn btn-outline-secondary btn-sm"><i class="fa fa-repeat"></i>重置</button></div></div>' +
-            '</div></form>';
+            '</div>';
 
         $('#mytoolbox').append(html);
 

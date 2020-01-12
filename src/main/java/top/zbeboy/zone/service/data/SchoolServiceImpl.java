@@ -35,6 +35,11 @@ public class SchoolServiceImpl implements SchoolService, PaginationPlugin<DataTa
         create = dslContext;
     }
 
+    @Override
+    public List<School> findBySchoolName(String schoolName) {
+        return schoolDao.fetchBySchoolName(schoolName);
+    }
+
     @Cacheable(cacheNames = CacheBook.SCHOOLS)
     @Override
     public List<School> findBySchoolIsDel(Byte schoolIsDel) {
@@ -54,6 +59,12 @@ public class SchoolServiceImpl implements SchoolService, PaginationPlugin<DataTa
     @Override
     public int countByCondition(DataTablesUtil dataTablesUtil) {
         return countAll(create, SCHOOL, dataTablesUtil, false);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void save(School school) {
+        schoolDao.insert(school);
     }
 
     @Override

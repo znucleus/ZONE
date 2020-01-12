@@ -9,7 +9,7 @@ import top.zbeboy.zone.domain.tables.records.BuildingRecord;
 import top.zbeboy.zone.service.data.BuildingService;
 import top.zbeboy.zone.web.plugin.select2.Select2Data;
 import top.zbeboy.zone.web.util.BooleanUtil;
-import top.zbeboy.zone.web.vo.data.building.BuildingVo;
+import top.zbeboy.zone.web.vo.data.building.BuildingSearchVo;
 
 import javax.annotation.Resource;
 import java.util.Map;
@@ -23,13 +23,13 @@ public class BuildingRestController {
     /**
      * 根据院获取全部有效楼
      *
-     * @param buildingVo 院id
+     * @param buildingSearchVo 院id
      * @return 楼数据
      */
     @GetMapping("/user/data/building")
-    public ResponseEntity<Map<String, Object>> anyoneData(BuildingVo buildingVo) {
+    public ResponseEntity<Map<String, Object>> anyoneData(BuildingSearchVo buildingSearchVo) {
         Select2Data select2Data = Select2Data.of();
-        Result<BuildingRecord> buildings = buildingService.findByCollegeIdAndBuildingIsDel(buildingVo.getCollegeId(), BooleanUtil.toByte(false));
+        Result<BuildingRecord> buildings = buildingService.findByCollegeIdAndBuildingIsDel(buildingSearchVo.getCollegeId(), BooleanUtil.toByte(false));
         buildings.forEach(building -> select2Data.add(building.getBuildingId().toString(), building.getBuildingName()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }

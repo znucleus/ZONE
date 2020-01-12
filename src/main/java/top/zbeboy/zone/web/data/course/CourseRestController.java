@@ -10,7 +10,7 @@ import top.zbeboy.zone.domain.tables.records.CourseRecord;
 import top.zbeboy.zone.service.data.CourseService;
 import top.zbeboy.zone.web.plugin.select2.Select2Data;
 import top.zbeboy.zone.web.util.BooleanUtil;
-import top.zbeboy.zone.web.vo.data.course.CourseOrganizeVo;
+import top.zbeboy.zone.web.vo.data.course.CourseOrganizeSearchVo;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -28,9 +28,9 @@ public class CourseRestController {
      * @return 课程数据
      */
     @GetMapping("/user/data/course")
-    public ResponseEntity<Map<String, Object>> anyoneData(CourseOrganizeVo courseOrganizeVo) {
+    public ResponseEntity<Map<String, Object>> anyoneData(CourseOrganizeSearchVo courseOrganizeSearchVo) {
         Select2Data select2Data = Select2Data.of();
-        Result<CourseRecord> records = courseService.findBySchoolYearAndTermAndCollegeIdCourseIsDel(courseOrganizeVo.getSchoolYear(), courseOrganizeVo.getTerm(), courseOrganizeVo.getCollegeId(), BooleanUtil.toByte(false));
+        Result<CourseRecord> records = courseService.findBySchoolYearAndTermAndCollegeIdCourseIsDel(courseOrganizeSearchVo.getSchoolYear(), courseOrganizeSearchVo.getTerm(), courseOrganizeSearchVo.getCollegeId(), BooleanUtil.toByte(false));
         if (records.isNotEmpty()) {
             List<Course> courses = records.into(Course.class);
             courses.forEach(course -> select2Data.add(course.getCourseId().toString(), course.getCourseName()));

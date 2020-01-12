@@ -9,7 +9,7 @@ import top.zbeboy.zone.domain.tables.records.OrganizeRecord;
 import top.zbeboy.zone.service.data.OrganizeService;
 import top.zbeboy.zone.web.plugin.select2.Select2Data;
 import top.zbeboy.zone.web.util.BooleanUtil;
-import top.zbeboy.zone.web.vo.data.organize.OrganizeVo;
+import top.zbeboy.zone.web.vo.data.organize.OrganizeSearchVo;
 
 import javax.annotation.Resource;
 import java.util.Map;
@@ -23,13 +23,13 @@ public class OrganizeRestController {
     /**
      * 获取年级下全部有效班级
      *
-     * @param organizeVo 查询参数
+     * @param organizeSearchVo 查询参数
      * @return 班级数据
      */
     @GetMapping("/anyone/data/organize")
-    public ResponseEntity<Map<String, Object>> anyoneData(OrganizeVo organizeVo) {
+    public ResponseEntity<Map<String, Object>> anyoneData(OrganizeSearchVo organizeSearchVo) {
         Select2Data select2Data = Select2Data.of();
-        Result<OrganizeRecord> organizes = organizeService.findByGradeIdAndOrganizeIsDel(organizeVo.getGradeId(), BooleanUtil.toByte(false));
+        Result<OrganizeRecord> organizes = organizeService.findByGradeIdAndOrganizeIsDel(organizeSearchVo.getGradeId(), BooleanUtil.toByte(false));
         organizes.forEach(organize -> select2Data.add(organize.getOrganizeId().toString(), organize.getOrganizeName()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }

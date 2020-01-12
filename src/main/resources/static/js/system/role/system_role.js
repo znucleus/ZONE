@@ -113,11 +113,11 @@ require(["jquery", "handlebars", "nav.active", "responsive.bootstrap4", "jquery.
             }
         });
 
-        var html = '<form><div class="row ">' +
+        var html = '<div class="row ">' +
             '<div class="col-md-9 pd-t-2"><input type="text" id="search_role" class="form-control form-control-sm" placeholder="角色" /></div>' +
             '<div class="col-md-3 pd-t-2 text-right "><div class="btn-group" role="group"><button type="button" id="search" class="btn btn-outline-secondary btn-sm"><i class="fa fa-search"></i>搜索</button>' +
             ' <button type="button" id="reset_search" class="btn btn-outline-secondary btn-sm"><i class="fa fa-repeat"></i>重置</button></div></div>' +
-            '</div></form>';
+            '</div>';
 
         $('#mytoolbox').append(html);
 

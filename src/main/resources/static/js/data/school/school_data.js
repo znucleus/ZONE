@@ -174,11 +174,11 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
             }
         });
 
-        var html = '<form><div class="row ">' +
+        var html = '<div class="row ">' +
             '<div class="col-md-9 pd-t-2"><input type="text" id="search_school" class="form-control form-control-sm" placeholder="学校" /></div>' +
             '<div class="col-md-3 pd-t-2 text-right "><div class="btn-group" role="group"><button type="button" id="search" class="btn btn-outline-secondary btn-sm"><i class="fa fa-search"></i>搜索</button>' +
             '  <button type="button" id="reset_search" class="btn btn-outline-secondary btn-sm"><i class="fa fa-repeat"></i>重置</button></div></div>' +
-            '</div></form>';
+            '</div>';
         $('#mytoolbox').append(html);
 
         var global_button = '<button type="button" id="school_add" class="btn btn-outline-primary btn-sm"><i class="fa fa-plus"></i>添加</button>' +

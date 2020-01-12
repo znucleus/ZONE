@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.vo.data.science;
 
-public class ScienceVo {
+public class ScienceSearchVo {
     private Integer departmentId;
 
     public Integer getDepartmentId() {

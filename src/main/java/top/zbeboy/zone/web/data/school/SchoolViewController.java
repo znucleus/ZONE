@@ -15,4 +15,14 @@ public class SchoolViewController {
     public String index() {
         return "web/data/school/school_data::#page-wrapper";
     }
+
+    /**
+     * 学校数据添加
+     *
+     * @return 添加页面
+     */
+    @GetMapping("/web/data/school/add")
+    public String add() {
+        return "web/data/school/school_add::#page-wrapper";
+    }
 }

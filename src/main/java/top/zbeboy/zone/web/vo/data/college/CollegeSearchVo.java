@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.vo.data.college;
 
-public class CollegeVo {
+public class CollegeSearchVo {
     private Integer schoolId;
 
     public Integer getSchoolId() {

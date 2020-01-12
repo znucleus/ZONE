@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.vo.data.grade;
 
-public class GradeVo {
+public class GradeSearchVo {
     private Integer scienceId;
 
     public Integer getScienceId() {

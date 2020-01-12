@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.vo.data.schoolroom;
 
-public class SchoolroomVo {
+public class SchoolroomSearchVo {
     private Integer buildingId;
 
     public Integer getBuildingId() {

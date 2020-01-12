@@ -10,6 +10,14 @@ import java.util.List;
 public interface SchoolService {
 
     /**
+     * 根据学校名查询 注：等于学校名
+     *
+     * @param schoolName 学校名
+     * @return 数据
+     */
+    List<School> findBySchoolName(String schoolName);
+
+    /**
      * 根据状态查询全部学校
      *
      * @param schoolIsDel 状态
@@ -38,4 +46,11 @@ public interface SchoolService {
      * @return 条件查询总数
      */
     int countByCondition(DataTablesUtil dataTablesUtil);
+
+    /**
+     * 保存
+     *
+     * @param school 数据
+     */
+    void save(School school);
 }

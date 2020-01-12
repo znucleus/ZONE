@@ -1,7 +1,6 @@
-package top.zbeboy.zone.web.vo.data.building;
+package top.zbeboy.zone.web.vo.data.department;
 
-public class BuildingVo {
-
+public class DepartmentSearchVo {
     private Integer collegeId;
 
     public Integer getCollegeId() {

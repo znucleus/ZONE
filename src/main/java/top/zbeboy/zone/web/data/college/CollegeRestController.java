@@ -9,7 +9,7 @@ import top.zbeboy.zone.domain.tables.records.CollegeRecord;
 import top.zbeboy.zone.service.data.CollegeService;
 import top.zbeboy.zone.web.plugin.select2.Select2Data;
 import top.zbeboy.zone.web.util.BooleanUtil;
-import top.zbeboy.zone.web.vo.data.college.CollegeVo;
+import top.zbeboy.zone.web.vo.data.college.CollegeSearchVo;
 
 import javax.annotation.Resource;
 import java.util.Map;
@@ -23,13 +23,13 @@ public class CollegeRestController {
     /**
      * 获取学校下全部有效院
      *
-     * @param collegeVo 查询参数
+     * @param collegeSearchVo 查询参数
      * @return 院数据
      */
     @GetMapping("/anyone/data/college")
-    public ResponseEntity<Map<String, Object>> anyoneData(CollegeVo collegeVo) {
+    public ResponseEntity<Map<String, Object>> anyoneData(CollegeSearchVo collegeSearchVo) {
         Select2Data select2Data = Select2Data.of();
-        Result<CollegeRecord> colleges = collegeService.findBySchoolIdAndCollegeIsDel(collegeVo.getSchoolId(), BooleanUtil.toByte(false));
+        Result<CollegeRecord> colleges = collegeService.findBySchoolIdAndCollegeIsDel(collegeSearchVo.getSchoolId(), BooleanUtil.toByte(false));
         colleges.forEach(college -> select2Data.add(college.getCollegeId().toString(), college.getCollegeName()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
