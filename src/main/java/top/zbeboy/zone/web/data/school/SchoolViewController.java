@@ -1,10 +1,21 @@
 package top.zbeboy.zone.web.data.school;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import top.zbeboy.zone.domain.tables.pojos.School;
+import top.zbeboy.zone.service.data.SchoolService;
+import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
+
+import javax.annotation.Resource;
+import java.util.Objects;
 
 @Controller
 public class SchoolViewController {
+
+    @Resource
+    private SchoolService schoolService;
 
     /**
      * 学校数据
@@ -24,5 +35,28 @@ public class SchoolViewController {
     @GetMapping("/web/data/school/add")
     public String add() {
         return "web/data/school/school_add::#page-wrapper";
+    }
+
+    /**
+     * 学校数据编辑
+     *
+     * @param id       学校id
+     * @param modelMap 页面对象
+     * @return 编辑页面
+     */
+    @GetMapping("/web/data/school/edit/{id}")
+    public String edit(@PathVariable("id") int id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        School school = schoolService.findById(id);
+        if (Objects.nonNull(school)) {
+            modelMap.addAttribute("school", school);
+            page = "web/data/school/school_edit::#page-wrapper";
+        } else {
+            config.buildDangerTip("查询错误", "未查询到学校数据");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
     }
 }

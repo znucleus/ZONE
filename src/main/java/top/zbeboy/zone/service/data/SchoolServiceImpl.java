@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zone.config.CacheBook;
 import top.zbeboy.zone.domain.tables.daos.SchoolDao;
 import top.zbeboy.zone.domain.tables.pojos.School;
+import top.zbeboy.zone.domain.tables.records.SchoolRecord;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zone.service.util.SQLQueryUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
@@ -36,8 +37,20 @@ public class SchoolServiceImpl implements SchoolService, PaginationPlugin<DataTa
     }
 
     @Override
+    public School findById(int id) {
+        return schoolDao.findById(id);
+    }
+
+    @Override
     public List<School> findBySchoolName(String schoolName) {
         return schoolDao.fetchBySchoolName(schoolName);
+    }
+
+    @Override
+    public Result<SchoolRecord> findBySchoolNameNeSchoolId(String schoolName, int schoolId) {
+        return create.selectFrom(SCHOOL)
+                .where(SCHOOL.SCHOOL_NAME.eq(schoolName).and(SCHOOL.SCHOOL_ID.ne(schoolId)))
+                .fetch();
     }
 
     @Cacheable(cacheNames = CacheBook.SCHOOLS)
@@ -65,6 +78,16 @@ public class SchoolServiceImpl implements SchoolService, PaginationPlugin<DataTa
     @Override
     public void save(School school) {
         schoolDao.insert(school);
+    }
+
+    @Override
+    public void update(School school) {
+        schoolDao.update(school);
+    }
+
+    @Override
+    public void updateIsDel(List<Integer> ids, Byte isDel) {
+        ids.forEach(id -> create.update(SCHOOL).set(SCHOOL.SCHOOL_IS_DEL, isDel).where(SCHOOL.SCHOOL_ID.eq(id)).execute());
     }
 
     @Override

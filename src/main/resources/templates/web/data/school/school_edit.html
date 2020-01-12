@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="br-pageheader pd-y-15 pd-l-20">
+        <nav class="breadcrumb pd-0 mg-0 tx-12">
+            <a class="breadcrumb-item dy_href" href="#/web/menu/data/school">列表</a>
+            <span class="breadcrumb-item active">编辑</span>
+        </nav>
+    </div><!-- br-pageheader -->
+    <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
+        <h4 class="tx-gray-800 mg-b-5">学校数据</h4>
+        <p class="mg-b-0">编辑学校数据。</p>
+    </div>
+
+    <div class="br-pagebody">
+        <div class="br-section-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <form id="app_form">
+                        <input type="hidden" name="schoolId" id="schoolId" th:value="${school.schoolId}"/>
+                        <div class="form-group">
+                            <label>学校</label>
+                            <input class="form-control" name="schoolName" id="schoolName" maxlength="200"
+                                   th:value="${school.schoolName}"
+                                   placeholder="学校名"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="ckbox">
+                                <input type="checkbox" name="schoolIsDel" value="1"
+                                       th:if="${school.schoolIsDel == 0 || school.schoolIsDel == null}"/>
+                                <input type="checkbox" name="schoolIsDel" checked="checked" value="1"
+                                       th:if="${school.schoolIsDel == 1}"/>
+                                <span>注销</span>
+                            </label>
+                        </div>
+                        <div class="form-group text-center">
+                            <button type="button" class="btn btn-primary text-center" id="save">保存</button>
+                            <button type="reset" class="btn btn-default">重置</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/data/school/school_edit.js')}"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>
