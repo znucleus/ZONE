@@ -170,16 +170,12 @@ public class UsersServiceImpl implements UsersService, PaginationPlugin<DataTabl
 
     @Override
     public void updateEnabled(List<String> ids, Byte enabled) {
-        for (String id : ids) {
-            create.update(USERS).set(USERS.ENABLED, enabled).where(USERS.USERNAME.eq(id)).execute();
-        }
+        ids.forEach(id -> create.update(USERS).set(USERS.ENABLED, enabled).where(USERS.USERNAME.eq(id)).execute());
     }
 
     @Override
     public void updateLocked(List<String> ids, Byte locked) {
-        for (String id : ids) {
-            create.update(USERS).set(USERS.ACCOUNT_NON_LOCKED, locked).where(USERS.USERNAME.eq(id)).execute();
-        }
+        ids.forEach(id -> create.update(USERS).set(USERS.ACCOUNT_NON_LOCKED, locked).where(USERS.USERNAME.eq(id)).execute());
     }
 
     @Override
