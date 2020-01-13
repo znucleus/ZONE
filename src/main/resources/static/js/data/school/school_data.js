@@ -361,7 +361,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
          */
         function school_recovery(schoolId, schoolName) {
             Swal.fire({
-                title: "确定学校 '" + schoolName + "' 吗？",
+                title: "确定恢复学校 '" + schoolName + "' 吗？",
                 text: "学校恢复！",
                 type: "success",
                 showCancelButton: true,
