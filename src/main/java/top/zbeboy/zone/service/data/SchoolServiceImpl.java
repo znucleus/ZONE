@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -74,17 +75,20 @@ public class SchoolServiceImpl implements SchoolService, PaginationPlugin<DataTa
         return countAll(create, SCHOOL, dataTablesUtil, false);
     }
 
+    @CacheEvict(cacheNames = CacheBook.SCHOOLS, allEntries = true)
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public void save(School school) {
         schoolDao.insert(school);
     }
 
+    @CacheEvict(cacheNames = CacheBook.SCHOOLS, allEntries = true)
     @Override
     public void update(School school) {
         schoolDao.update(school);
     }
 
+    @CacheEvict(cacheNames = CacheBook.SCHOOLS, allEntries = true)
     @Override
     public void updateIsDel(List<Integer> ids, Byte isDel) {
         ids.forEach(id -> create.update(SCHOOL).set(SCHOOL.SCHOOL_IS_DEL, isDel).where(SCHOOL.SCHOOL_ID.eq(id)).execute());
