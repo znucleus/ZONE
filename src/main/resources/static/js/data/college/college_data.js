@@ -103,7 +103,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                                 {
                                     "name": "挂载",
                                     "css": "mount",
-                                    "type": "default",
+                                    "type": "indigo",
                                     "id": c.collegeId,
                                     "college": c.collegeName
                                 }

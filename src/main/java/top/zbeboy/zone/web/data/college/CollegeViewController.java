@@ -15,4 +15,14 @@ public class CollegeViewController {
     public String index() {
         return "web/data/college/college_data::#page-wrapper";
     }
+
+    /**
+     * 院数据添加
+     *
+     * @return 添加页面
+     */
+    @GetMapping("/web/data/college/add")
+    public String add() {
+        return "web/data/college/college_add::#page-wrapper";
+    }
 }

@@ -2,9 +2,11 @@ package top.zbeboy.zone.service.data;
 
 import org.jooq.Record;
 import org.jooq.Result;
+import top.zbeboy.zone.domain.tables.pojos.College;
 import top.zbeboy.zone.domain.tables.records.CollegeRecord;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface CollegeService {
@@ -27,6 +29,23 @@ public interface CollegeService {
     Result<CollegeRecord> findBySchoolIdAndCollegeIsDel(int schoolId, Byte collegeIsDel);
 
     /**
+     * 学校下 院名查询 注：等于院名
+     *
+     * @param collegeName 院名
+     * @param schoolId    学校id
+     * @return 数据
+     */
+    Result<CollegeRecord> findByCollegeNameAndSchoolId(String collegeName, int schoolId);
+
+    /**
+     * 院代码查询 注：等于院代码
+     *
+     * @param collegeCode 院代码
+     * @return 数据
+     */
+    List<College> findByCollegeCode(String collegeCode);
+
+    /**
      * 分页查询
      *
      * @param dataTablesUtil 工具类
@@ -47,4 +66,18 @@ public interface CollegeService {
      * @return 条件查询总数
      */
     int countByCondition(DataTablesUtil dataTablesUtil);
+
+    /**
+     * 保存
+     *
+     * @param college 数据
+     */
+    void save(College college);
+
+    /**
+     * 更新
+     *
+     * @param college 数据
+     */
+    void update(College college);
 }

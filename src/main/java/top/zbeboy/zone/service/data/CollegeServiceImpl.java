@@ -4,16 +4,21 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zone.config.CacheBook;
+import top.zbeboy.zone.domain.tables.daos.CollegeDao;
+import top.zbeboy.zone.domain.tables.pojos.College;
 import top.zbeboy.zone.domain.tables.records.CollegeRecord;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zone.service.util.SQLQueryUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
+import javax.annotation.Resource;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -25,6 +30,9 @@ import static top.zbeboy.zone.domain.Tables.SCHOOL;
 public class CollegeServiceImpl implements CollegeService, PaginationPlugin<DataTablesUtil> {
 
     private final DSLContext create;
+
+    @Resource
+    private CollegeDao collegeDao;
 
     @Autowired
     CollegeServiceImpl(DSLContext dslContext) {
@@ -50,6 +58,18 @@ public class CollegeServiceImpl implements CollegeService, PaginationPlugin<Data
     }
 
     @Override
+    public Result<CollegeRecord> findByCollegeNameAndSchoolId(String collegeName, int schoolId) {
+        return create.selectFrom(COLLEGE)
+                .where(COLLEGE.COLLEGE_NAME.eq(collegeName).and(COLLEGE.SCHOOL_ID.eq(schoolId)))
+                .fetch();
+    }
+
+    @Override
+    public List<College> findByCollegeCode(String collegeCode) {
+        return collegeDao.fetchByCollegeCode(collegeCode);
+    }
+
+    @Override
     public Result<Record> findAllByPage(DataTablesUtil dataTablesUtil) {
         SelectOnConditionStep<Record> selectOnConditionStep =
                 create.select()
@@ -72,6 +92,19 @@ public class CollegeServiceImpl implements CollegeService, PaginationPlugin<Data
                         .leftJoin(SCHOOL)
                         .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID));
         return countAll(selectOnConditionStep, dataTablesUtil, false);
+    }
+
+    @CacheEvict(cacheNames = CacheBook.COLLEGES, allEntries = true)
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void save(College college) {
+        collegeDao.insert(college);
+    }
+
+    @CacheEvict(cacheNames = {CacheBook.COLLEGE, CacheBook.COLLEGES}, allEntries = true)
+    @Override
+    public void update(College college) {
+        collegeDao.update(college);
     }
 
     @Override
