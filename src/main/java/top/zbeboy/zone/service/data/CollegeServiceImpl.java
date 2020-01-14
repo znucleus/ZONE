@@ -39,6 +39,11 @@ public class CollegeServiceImpl implements CollegeService, PaginationPlugin<Data
         create = dslContext;
     }
 
+    @Override
+    public College findById(int id) {
+        return collegeDao.findById(id);
+    }
+
     @Cacheable(cacheNames = CacheBook.COLLEGE, key = "#id")
     @Override
     public Optional<Record> findByIdRelation(int id) {
@@ -65,8 +70,22 @@ public class CollegeServiceImpl implements CollegeService, PaginationPlugin<Data
     }
 
     @Override
+    public Result<CollegeRecord> findByCollegeNameAndSchoolIdNeCollegeId(String collegeName, int collegeId, int schoolId) {
+        return create.selectFrom(COLLEGE)
+                .where(COLLEGE.COLLEGE_NAME.eq(collegeName).and(COLLEGE.COLLEGE_ID.ne(collegeId)).and(COLLEGE.SCHOOL_ID.eq(schoolId)))
+                .fetch();
+    }
+
+    @Override
     public List<College> findByCollegeCode(String collegeCode) {
         return collegeDao.fetchByCollegeCode(collegeCode);
+    }
+
+    @Override
+    public Result<CollegeRecord> findByCollegeCodeNeCollegeId(String collegeCode, int collegeId) {
+        return create.selectFrom(COLLEGE)
+                .where(COLLEGE.COLLEGE_CODE.eq(collegeCode).and(COLLEGE.COLLEGE_ID.ne(collegeId)))
+                .fetch();
     }
 
     @Override
@@ -105,6 +124,12 @@ public class CollegeServiceImpl implements CollegeService, PaginationPlugin<Data
     @Override
     public void update(College college) {
         collegeDao.update(college);
+    }
+
+    @CacheEvict(cacheNames = {CacheBook.COLLEGE, CacheBook.COLLEGES}, allEntries = true)
+    @Override
+    public void updateIsDel(List<Integer> ids, Byte isDel) {
+        ids.forEach(id -> create.update(COLLEGE).set(COLLEGE.COLLEGE_IS_DEL, isDel).where(COLLEGE.COLLEGE_ID.eq(id)).execute());
     }
 
     @Override

@@ -12,6 +12,14 @@ import java.util.Optional;
 public interface CollegeService {
 
     /**
+     * 通过主键查询
+     *
+     * @param id 主键
+     * @return 数据
+     */
+    College findById(int id);
+
+    /**
      * 通过id关联查询
      *
      * @param id 院id
@@ -38,12 +46,31 @@ public interface CollegeService {
     Result<CollegeRecord> findByCollegeNameAndSchoolId(String collegeName, int schoolId);
 
     /**
+     * 查找学校下不等于该院id的院名
+     *
+     * @param collegeName 院名
+     * @param collegeId   院id
+     * @param schoolId    学校id
+     * @return 院
+     */
+    Result<CollegeRecord> findByCollegeNameAndSchoolIdNeCollegeId(String collegeName, int collegeId, int schoolId);
+
+    /**
      * 院代码查询 注：等于院代码
      *
      * @param collegeCode 院代码
      * @return 数据
      */
     List<College> findByCollegeCode(String collegeCode);
+
+    /**
+     * 学校下 院代码查询 注：不等于院id
+     *
+     * @param collegeCode 院代码
+     * @param collegeId   院id
+     * @return 数据
+     */
+    Result<CollegeRecord> findByCollegeCodeNeCollegeId(String collegeCode, int collegeId);
 
     /**
      * 分页查询
@@ -80,4 +107,12 @@ public interface CollegeService {
      * @param college 数据
      */
     void update(College college);
+
+    /**
+     * 更新状态
+     *
+     * @param ids     ids
+     * @param isDel 状态
+     */
+    void updateIsDel(List<Integer> ids, Byte isDel);
 }

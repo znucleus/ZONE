@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="br-pageheader pd-y-15 pd-l-20">
+        <nav class="breadcrumb pd-0 mg-0 tx-12">
+            <a class="breadcrumb-item dy_href" href="#/web/menu/data/college">列表</a>
+            <span class="breadcrumb-item active">编辑</span>
+        </nav>
+    </div><!-- br-pageheader -->
+    <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
+        <h4 class="tx-gray-800 mg-b-5">院数据</h4>
+        <p class="mg-b-0">编辑院数据。</p>
+    </div>
+
+    <div class="br-pagebody">
+        <div class="br-section-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <form id="app_form">
+                        <input type="hidden" name="collegeId" id="collegeId" th:value="${college.collegeId}"/>
+                        <div class="form-group">
+                            <select class="form-control select2-show-search" id="school" name="schoolId"
+                                    th:data-placeholder="请选择学校">
+                                <option th:label="请选择学校"></option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>院</label>
+                            <input class="form-control" name="collegeName" id="collegeName" maxlength="200"
+                                   placeholder="院名" th:value="${college.collegeName}"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>院代码</label>
+                            <input class="form-control" name="collegeCode" id="collegeCode" maxlength="20"
+                                   placeholder="院代码" th:value="${college.collegeCode}"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>院地址</label>
+                            <input class="form-control" name="collegeAddress" id="collegeAddress" maxlength="500"
+                                   placeholder="院地址" th:value="${college.collegeAddress}"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="ckbox">
+                                <input type="checkbox" name="collegeIsDel" value="1" th:if="${college.collegeIsDel == 0 || college.collegeIsDel == null}"/>
+                                <input type="checkbox" name="collegeIsDel" value="1" checked="checked" th:if="${college.collegeIsDel == 1}"/>
+                                <span>注销</span>
+                            </label>
+                        </div>
+                        <div class="form-group text-center">
+                            <button type="button" class="btn btn-primary text-center" id="save">保存</button>
+                            <button type="reset" class="btn btn-default">重置</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" id="schoolId" th:value="${college.schoolId}" />
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/data/college/college_edit.js')}"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>

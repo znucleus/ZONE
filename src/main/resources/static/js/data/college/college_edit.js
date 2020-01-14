@@ -1,4 +1,4 @@
-//# sourceURL=college_add.js
+//# sourceURL=college_edit.js
 require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", "jquery.address", "bootstrap-maxlength", "select2-zh-CN"],
     function ($, _, tools, Swal, navActive) {
 
@@ -7,9 +7,9 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
          */
         var ajax_url = {
             obtain_school_data: web_path + '/anyone/data/school',
-            save: web_path + '/web/data/college/save',
-            check_name: web_path + '/web/data/college/check/add/name',
-            check_code: web_path + '/web/data/college/check/add/code',
+            update: web_path + '/web/data/college/update',
+            check_name: web_path + '/web/data/college/check/edit/name',
+            check_code: web_path + '/web/data/college/check/edit/code',
             page: '/web/menu/data/college'
         };
 
@@ -21,6 +21,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
          */
         var param_id = {
             school: '#school',
+            collegeId: '#collegeId',
             collegeName: '#collegeName',
             collegeCode: '#collegeCode',
             collegeAddress: '#collegeAddress'
@@ -39,9 +40,14 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
          */
         var param = {
             schoolId: '',
+            collegeId: '',
             collegeName: '',
             collegeCode: '',
             collegeAddress: ''
+        };
+
+        var page_param = {
+            schoolId: $('#schoolId').val()
         };
 
         /**
@@ -49,6 +55,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
          */
         function initParam() {
             param.schoolId = $(param_id.school).val();
+            param.collegeId = $(param_id.collegeId).val();
             param.collegeName = _.trim($(param_id.collegeName).val());
             param.collegeCode = _.trim($(param_id.collegeCode).val());
             param.collegeAddress = _.trim($(param_id.collegeAddress).val());
@@ -67,9 +74,11 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
 
         function initSchool() {
             $.get(ajax_url.obtain_school_data, function (data) {
-                $(param_id.school).select2({
+                var sl = $(param_id.school).select2({
                     data: data.results
                 });
+
+                sl.val(page_param.schoolId).trigger("change");
             });
         }
 
@@ -151,7 +160,6 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             }
         });
 
-
         /*
          保存数据
          */
@@ -228,7 +236,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             tools.buttonLoading(button_id.save.id, button_id.save.tip);
             $.ajax({
                 type: 'POST',
-                url: ajax_url.save,
+                url: ajax_url.update,
                 data: $('#app_form').serialize(),
                 success: function (data) {
                     tools.buttonEndLoading(button_id.save.id, button_id.save.text);
