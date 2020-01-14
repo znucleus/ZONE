@@ -1,6 +1,6 @@
 //# sourceURL=role_add.js
-require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active", "messenger", "bootstrap-treeview", "jquery.address",
-    "bootstrap-maxlength", "select2-zh-CN"], function ($, _, tools, Swal, Handlebars, navActive) {
+require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", "bootstrap-treeview", "jquery.address",
+    "bootstrap-maxlength", "select2-zh-CN"], function ($, _, tools, Swal, navActive) {
 
     /*
      ajax url.
