@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
-import top.zbeboy.zone.domain.tables.records.RoleApplicationRecord;
 import top.zbeboy.zone.service.data.CollegeApplicationService;
 import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
@@ -339,11 +338,7 @@ public class RoleRestController {
     @PostMapping("/web/platform/role/application/data")
     public ResponseEntity<Map<String, Object>> roleApplicationData(@RequestParam("roleId") String roleId) {
         AjaxUtil<RoleApplication> ajaxUtil = AjaxUtil.of();
-        Result<RoleApplicationRecord> roleApplicationRecords = roleApplicationService.findByRoleId(roleId);
-        List<RoleApplication> roleApplications = new ArrayList<>();
-        if (roleApplicationRecords.isNotEmpty()) {
-            roleApplications = roleApplicationRecords.into(RoleApplication.class);
-        }
+        List<RoleApplication> roleApplications = roleApplicationService.findByRoleId(roleId);
         ajaxUtil.success().list(roleApplications).msg("获取数据成功");
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }

@@ -7,8 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import top.zbeboy.zone.domain.tables.daos.CollegeApplicationDao;
 import top.zbeboy.zone.domain.tables.pojos.Application;
+import top.zbeboy.zone.domain.tables.pojos.CollegeApplication;
+import top.zbeboy.zone.domain.tables.records.CollegeApplicationRecord;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +24,9 @@ import static top.zbeboy.zone.domain.Tables.COLLEGE_APPLICATION;
 public class CollegeApplicationServiceImpl implements CollegeApplicationService {
 
     private final DSLContext create;
+
+    @Resource
+    private CollegeApplicationDao collegeApplicationDao;
 
     @Autowired
     CollegeApplicationServiceImpl(DSLContext dslContext) {
@@ -40,6 +47,24 @@ public class CollegeApplicationServiceImpl implements CollegeApplicationService 
             applications = records.into(Application.class);
         }
         return applications;
+    }
+
+    @Override
+    public List<CollegeApplication> findByCollegeId(int collegeId) {
+        return collegeApplicationDao.fetchByCollegeId(collegeId);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void batchSave(List<CollegeApplication> collegeApplication) {
+        collegeApplicationDao.insert(collegeApplication);
+    }
+
+    @Override
+    public void deleteByCollegeId(int collegeId) {
+        create.deleteFrom(COLLEGE_APPLICATION)
+                .where(COLLEGE_APPLICATION.COLLEGE_ID.eq(collegeId))
+                .execute();
     }
 
     @Override

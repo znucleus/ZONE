@@ -1,15 +1,18 @@
 package top.zbeboy.zone.web.data.college;
 
+import org.jooq.Record;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zone.domain.tables.pojos.College;
 import top.zbeboy.zone.service.data.CollegeService;
+import top.zbeboy.zone.web.bean.data.college.CollegeBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 
 import javax.annotation.Resource;
 import java.util.Objects;
+import java.util.Optional;
 
 @Controller
 public class CollegeViewController {
@@ -59,4 +62,26 @@ public class CollegeViewController {
         }
         return page;
     }
+
+    /**
+     * 应用挂载
+     *
+     * @return 应用挂载页面
+     */
+    @GetMapping("/web/data/college/mount/{id}")
+    public String mount(@PathVariable("id") int id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        Optional<Record> record = collegeService.findByIdRelation(id);
+        if (record.isPresent()) {
+            modelMap.addAttribute("college", record.get().into(CollegeBean.class));
+            page = "web/data/college/college_mount::#page-wrapper";
+        } else {
+            config.buildDangerTip("查询错误", "未查询到院数据");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
+
 }

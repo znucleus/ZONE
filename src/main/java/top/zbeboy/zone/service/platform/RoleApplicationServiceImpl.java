@@ -32,10 +32,8 @@ public class RoleApplicationServiceImpl implements RoleApplicationService {
     }
 
     @Override
-    public Result<RoleApplicationRecord> findByRoleId(String roleId) {
-        return create.selectFrom(ROLE_APPLICATION)
-                .where(ROLE_APPLICATION.ROLE_ID.eq(roleId))
-                .fetch();
+    public List<RoleApplication> findByRoleId(String roleId) {
+        return  roleApplicationDao.fetchByRoleId(roleId);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)

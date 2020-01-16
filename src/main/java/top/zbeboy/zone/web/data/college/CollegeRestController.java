@@ -10,11 +10,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import top.zbeboy.zone.domain.tables.pojos.Application;
 import top.zbeboy.zone.domain.tables.pojos.College;
+import top.zbeboy.zone.domain.tables.pojos.CollegeApplication;
 import top.zbeboy.zone.domain.tables.records.CollegeRecord;
+import top.zbeboy.zone.service.data.CollegeApplicationService;
 import top.zbeboy.zone.service.data.CollegeService;
+import top.zbeboy.zone.service.system.ApplicationService;
 import top.zbeboy.zone.web.bean.data.college.CollegeBean;
 import top.zbeboy.zone.web.plugin.select2.Select2Data;
+import top.zbeboy.zone.web.plugin.treeview.TreeViewData;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.ByteUtil;
@@ -37,6 +42,12 @@ public class CollegeRestController {
 
     @Resource
     private CollegeService collegeService;
+
+    @Resource
+    private ApplicationService applicationService;
+
+    @Resource
+    private CollegeApplicationService collegeApplicationService;
 
     /**
      * 获取学校下全部有效院
@@ -238,5 +249,72 @@ public class CollegeRestController {
             ajaxUtil.fail().msg("请选择院");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 数据json
+     *
+     * @return json
+     */
+    @GetMapping("/web/data/college/application/json")
+    public ResponseEntity<Map<String, Object>> applicationJson() {
+        AjaxUtil<TreeViewData> ajaxUtil = AjaxUtil.of();
+        ajaxUtil.success().list(toJson("0")).msg("获取数据成功");
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 院与应用数据
+     *
+     * @param collegeId 院id
+     * @return 数据
+     */
+    @PostMapping("/web/data/college/application/data")
+    public ResponseEntity<Map<String, Object>> collegeApplicationData(@RequestParam("collegeId") int collegeId) {
+        AjaxUtil<CollegeApplication> ajaxUtil = AjaxUtil.of();
+        List<CollegeApplication> collegeApplications = collegeApplicationService.findByCollegeId(collegeId);
+        ajaxUtil.success().list(collegeApplications).msg("获取数据成功");
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 更新应用挂载
+     *
+     * @param collegeId      院id
+     * @param applicationIds 应用ids
+     * @return true 更新成功
+     */
+    @PostMapping("/web/data/college/mount")
+    public ResponseEntity<Map<String, Object>> mount(@RequestParam("collegeId") int collegeId, String applicationIds) {
+        AjaxUtil<CollegeApplication> ajaxUtil = AjaxUtil.of();
+        if (collegeId > 0) {
+            collegeApplicationService.deleteByCollegeId(collegeId);
+            // 全部应用下架
+            if (StringUtils.isNotBlank(applicationIds)) {
+                List<String> ids = SmallPropsUtil.StringIdsToStringList(applicationIds);
+                List<CollegeApplication> collegeApplications = new ArrayList<>();
+                ids.forEach(id -> collegeApplications.add(new CollegeApplication(id, collegeId)));
+                collegeApplicationService.batchSave(collegeApplications);
+            }
+            ajaxUtil.success().msg("保存成功");
+        } else {
+            ajaxUtil.fail().msg("院ID为空");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 数据转换为json
+     *
+     * @param id 父id
+     * @return json 数据
+     */
+    private List<TreeViewData> toJson(String id) {
+        List<Application> applications = applicationService.findByPid(id);
+        List<TreeViewData> trees = new ArrayList<>();
+        if (Objects.nonNull(applications)) {
+            applications.forEach(a -> trees.add(new TreeViewData(a.getApplicationName(), toJson(a.getApplicationId()), a.getApplicationId())));
+        }
+        return trees;
     }
 }

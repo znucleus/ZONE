@@ -14,7 +14,7 @@ public interface RoleApplicationService {
      * @param roleId 角色id
      * @return 数据
      */
-    Result<RoleApplicationRecord> findByRoleId(String roleId);
+    List<RoleApplication> findByRoleId(String roleId);
 
     /**
      * 保存
