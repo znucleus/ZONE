@@ -18,6 +18,7 @@ import top.zbeboy.zone.domain.tables.AnswerResult;
 import top.zbeboy.zone.domain.tables.AnswerSolving;
 import top.zbeboy.zone.domain.tables.AnswerSubject;
 import top.zbeboy.zone.domain.tables.Application;
+import top.zbeboy.zone.domain.tables.AttendRelease;
 import top.zbeboy.zone.domain.tables.Authorities;
 import top.zbeboy.zone.domain.tables.AuthorizeType;
 import top.zbeboy.zone.domain.tables.Building;
@@ -92,6 +93,9 @@ public class Indexes {
     public static final Index ANSWER_SUBJECT_PRIMARY = Indexes0.ANSWER_SUBJECT_PRIMARY;
     public static final Index ANSWER_SUBJECT_USERNAME = Indexes0.ANSWER_SUBJECT_USERNAME;
     public static final Index APPLICATION_PRIMARY = Indexes0.APPLICATION_PRIMARY;
+    public static final Index ATTEND_RELEASE_ORGANIZE_ID = Indexes0.ATTEND_RELEASE_ORGANIZE_ID;
+    public static final Index ATTEND_RELEASE_PRIMARY = Indexes0.ATTEND_RELEASE_PRIMARY;
+    public static final Index ATTEND_RELEASE_USERNAME = Indexes0.ATTEND_RELEASE_USERNAME;
     public static final Index AUTHORITIES_PRIMARY = Indexes0.AUTHORITIES_PRIMARY;
     public static final Index AUTHORIZE_TYPE_AUTHORIZE_TYPE_NAME = Indexes0.AUTHORIZE_TYPE_AUTHORIZE_TYPE_NAME;
     public static final Index AUTHORIZE_TYPE_PRIMARY = Indexes0.AUTHORIZE_TYPE_PRIMARY;
@@ -199,6 +203,9 @@ public class Indexes {
         public static Index ANSWER_SUBJECT_PRIMARY = Internal.createIndex("PRIMARY", AnswerSubject.ANSWER_SUBJECT, new OrderField[] { AnswerSubject.ANSWER_SUBJECT.ANSWER_SUBJECT_ID }, true);
         public static Index ANSWER_SUBJECT_USERNAME = Internal.createIndex("username", AnswerSubject.ANSWER_SUBJECT, new OrderField[] { AnswerSubject.ANSWER_SUBJECT.USERNAME }, false);
         public static Index APPLICATION_PRIMARY = Internal.createIndex("PRIMARY", Application.APPLICATION, new OrderField[] { Application.APPLICATION.APPLICATION_ID }, true);
+        public static Index ATTEND_RELEASE_ORGANIZE_ID = Internal.createIndex("organize_id", AttendRelease.ATTEND_RELEASE, new OrderField[] { AttendRelease.ATTEND_RELEASE.ORGANIZE_ID }, false);
+        public static Index ATTEND_RELEASE_PRIMARY = Internal.createIndex("PRIMARY", AttendRelease.ATTEND_RELEASE, new OrderField[] { AttendRelease.ATTEND_RELEASE.ATTEND_RELEASE_ID }, true);
+        public static Index ATTEND_RELEASE_USERNAME = Internal.createIndex("username", AttendRelease.ATTEND_RELEASE, new OrderField[] { AttendRelease.ATTEND_RELEASE.USERNAME }, false);
         public static Index AUTHORITIES_PRIMARY = Internal.createIndex("PRIMARY", Authorities.AUTHORITIES, new OrderField[] { Authorities.AUTHORITIES.USERNAME, Authorities.AUTHORITIES.AUTHORITY }, true);
         public static Index AUTHORIZE_TYPE_AUTHORIZE_TYPE_NAME = Internal.createIndex("authorize_type_name", AuthorizeType.AUTHORIZE_TYPE, new OrderField[] { AuthorizeType.AUTHORIZE_TYPE.AUTHORIZE_TYPE_NAME }, true);
         public static Index AUTHORIZE_TYPE_PRIMARY = Internal.createIndex("PRIMARY", AuthorizeType.AUTHORIZE_TYPE, new OrderField[] { AuthorizeType.AUTHORIZE_TYPE.AUTHORIZE_TYPE_ID }, true);
