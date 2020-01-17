@@ -49,9 +49,9 @@ public class AttendReleaseApiController {
                     attendRelease.setTitle(attendReleaseAddVo.getTitle());
                     attendRelease.setOrganizeId(attendReleaseAddVo.getOrganizeId());
                     attendRelease.setIsAuto(attendReleaseAddVo.getIsAuto());
-                    attendRelease.setAttendStartTime(DateTimeUtil.parseSqlTimestamp(attendReleaseAddVo.getAttendStartTime(), DateTimeUtil.YEAR_MONTH_DAY_FORMAT));
-                    attendRelease.setAttendEndTime(DateTimeUtil.parseSqlTimestamp(attendReleaseAddVo.getAttendEndTime(), DateTimeUtil.YEAR_MONTH_DAY_FORMAT));
-                    attendRelease.setExpireDate(DateTimeUtil.parseSqlTimestamp(attendReleaseAddVo.getExpireDate(), DateTimeUtil.YEAR_MONTH_DAY_FORMAT));
+                    attendRelease.setAttendStartTime(DateTimeUtil.defaultParseSqlTimestamp(attendReleaseAddVo.getAttendStartTime()));
+                    attendRelease.setAttendEndTime(DateTimeUtil.defaultParseSqlTimestamp(attendReleaseAddVo.getAttendEndTime()));
+                    attendRelease.setExpireDate(DateTimeUtil.defaultParseSqlTimestamp(attendReleaseAddVo.getExpireDate()));
                     attendReleaseService.save(attendRelease);
                     ajaxUtil.success().msg("保存成功");
                 } else {
