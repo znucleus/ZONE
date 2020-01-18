@@ -6,6 +6,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.jooq.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,7 @@ import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
 import javax.annotation.Resource;
+import java.security.Principal;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -141,6 +143,15 @@ public class UsersServiceImpl implements UsersService, PaginationPlugin<DataTabl
         Users users = null;
         if (Objects.nonNull(principal) && principal instanceof MyUserImpl) {
             users = ((MyUserImpl) principal).getUsers();
+        }
+        return users;
+    }
+
+    @Override
+    public Users getUserFromOauth(Principal principal) {
+        Users users = null;
+        if (Objects.nonNull(principal) && principal instanceof OAuth2Authentication) {
+            users = ((MyUserImpl) ((OAuth2Authentication) principal).getUserAuthentication().getPrincipal()).getUsers();
         }
         return users;
     }

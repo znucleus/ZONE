@@ -6,6 +6,7 @@ import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.records.UsersRecord;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
+import java.security.Principal;
 import java.sql.Date;
 import java.util.List;
 
@@ -124,6 +125,13 @@ public interface UsersService {
      * @return session中的用户信息
      */
     Users getUserFromSession();
+
+    /**
+     * 从oauth中获取用户完整信息
+     *
+     * @return oauth中的用户信息
+     */
+    Users getUserFromOauth(Principal principal);
 
     /**
      * 从session中获取用户完整权限
