@@ -14,7 +14,6 @@ public class AttendReleaseAddVo {
     @NotBlank(message = "签到结束时间不能为空")
     private String attendEndTime;
     private Byte isAuto;
-    @NotBlank(message = "生成截止日期不能为空")
     private String expireDate;
     @NotNull(message = "班级ID不能为空")
     @Min(value = 1, message = "班级不正确")

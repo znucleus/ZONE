@@ -1,5 +1,6 @@
 package top.zbeboy.zone.api.attend.release;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -13,6 +14,8 @@ import top.zbeboy.zone.service.attend.AttendReleaseService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.util.AjaxUtil;
+import top.zbeboy.zone.web.util.BooleanUtil;
+import top.zbeboy.zone.web.util.ByteUtil;
 import top.zbeboy.zone.web.vo.attend.release.AttendReleaseAddVo;
 
 import javax.annotation.Resource;
@@ -48,10 +51,16 @@ public class AttendReleaseApiController {
                     attendRelease.setReleaseTime(DateTimeUtil.getNowSqlTimestamp());
                     attendRelease.setTitle(attendReleaseAddVo.getTitle());
                     attendRelease.setOrganizeId(attendReleaseAddVo.getOrganizeId());
-                    attendRelease.setIsAuto(attendReleaseAddVo.getIsAuto());
+                    attendRelease.setIsAuto(ByteUtil.toByte(1).equals(attendReleaseAddVo.getIsAuto()) ? ByteUtil.toByte(1) : ByteUtil.toByte(0));
                     attendRelease.setAttendStartTime(DateTimeUtil.defaultParseSqlTimestamp(attendReleaseAddVo.getAttendStartTime()));
                     attendRelease.setAttendEndTime(DateTimeUtil.defaultParseSqlTimestamp(attendReleaseAddVo.getAttendEndTime()));
-                    attendRelease.setExpireDate(DateTimeUtil.defaultParseSqlTimestamp(attendReleaseAddVo.getExpireDate()));
+
+                    if(StringUtils.isBlank(attendReleaseAddVo.getExpireDate())){
+                        attendRelease.setExpireDate(DateTimeUtil.getNowSqlTimestamp());
+                    } else {
+                        attendRelease.setExpireDate(DateTimeUtil.defaultParseSqlTimestamp(attendReleaseAddVo.getExpireDate()));
+                    }
+
                     attendReleaseService.save(attendRelease);
                     ajaxUtil.success().msg("保存成功");
                 } else {
