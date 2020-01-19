@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jooq.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -84,6 +85,13 @@ public class DepartmentServiceImpl implements DepartmentService, PaginationPlugi
     }
 
     @Override
+    public Result<DepartmentRecord> findByDepartmentNameAndCollegeId(String departmentName, int collegeId) {
+        return create.selectFrom(DEPARTMENT)
+                .where(DEPARTMENT.DEPARTMENT_NAME.eq(departmentName).and(DEPARTMENT.COLLEGE_ID.eq(collegeId)))
+                .fetch();
+    }
+
+    @Override
     public Result<Record> findAllByPage(DataTablesUtil dataTablesUtil) {
         SelectOnConditionStep<Record> selectOnConditionStep =
                 create.select()
@@ -115,6 +123,19 @@ public class DepartmentServiceImpl implements DepartmentService, PaginationPlugi
                 .leftJoin(SCHOOL)
                 .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID));
         return countAll(selectOnConditionStep, dataTablesUtil, false);
+    }
+
+    @CacheEvict(cacheNames = CacheBook.DEPARTMENTS, allEntries = true)
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void save(Department department) {
+        departmentDao.insert(department);
+    }
+
+    @CacheEvict(cacheNames = {CacheBook.DEPARTMENT, CacheBook.DEPARTMENTS}, allEntries = true)
+    @Override
+    public void update(Department department) {
+        departmentDao.update(department);
     }
 
     @Override

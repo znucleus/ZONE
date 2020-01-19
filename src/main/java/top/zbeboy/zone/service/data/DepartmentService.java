@@ -37,6 +37,15 @@ public interface DepartmentService {
     Result<DepartmentRecord> findByCollegeIdAndDepartmentIsDel(int collegeId, Byte departmentIsDel);
 
     /**
+     * 院下 系名查询 注：等于系名
+     *
+     * @param departmentName 系名
+     * @param collegeId      院id
+     * @return 数据
+     */
+    Result<DepartmentRecord> findByDepartmentNameAndCollegeId(String departmentName, int collegeId);
+
+    /**
      * 分页查询
      *
      * @param dataTablesUtil 工具类
@@ -57,4 +66,18 @@ public interface DepartmentService {
      * @return 条件查询总数
      */
     int countByCondition(DataTablesUtil dataTablesUtil);
+
+    /**
+     * 保存
+     *
+     * @param department 数据
+     */
+    void save(Department department);
+
+    /**
+     * 更新
+     *
+     * @param department 数据
+     */
+    void update(Department department);
 }
