@@ -25,6 +25,7 @@ import top.zbeboy.zone.service.util.SQLQueryUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -92,6 +93,13 @@ public class DepartmentServiceImpl implements DepartmentService, PaginationPlugi
     }
 
     @Override
+    public Result<DepartmentRecord> findByDepartmentNameAndCollegeIdNeDepartmentId(String departmentName, int collegeId, int departmentId) {
+        return create.selectFrom(DEPARTMENT)
+                .where(DEPARTMENT.DEPARTMENT_NAME.eq(departmentName).and(DEPARTMENT.DEPARTMENT_ID.ne(departmentId)).and(DEPARTMENT.COLLEGE_ID.eq(collegeId)))
+                .fetch();
+    }
+
+    @Override
     public Result<Record> findAllByPage(DataTablesUtil dataTablesUtil) {
         SelectOnConditionStep<Record> selectOnConditionStep =
                 create.select()
@@ -136,6 +144,12 @@ public class DepartmentServiceImpl implements DepartmentService, PaginationPlugi
     @Override
     public void update(Department department) {
         departmentDao.update(department);
+    }
+
+    @CacheEvict(cacheNames = {CacheBook.DEPARTMENT, CacheBook.DEPARTMENTS}, allEntries = true)
+    @Override
+    public void updateIsDel(List<Integer> ids, Byte isDel) {
+        ids.forEach(id -> create.update(DEPARTMENT).set(DEPARTMENT.DEPARTMENT_IS_DEL, isDel).where(DEPARTMENT.DEPARTMENT_ID.eq(id)).execute());
     }
 
     @Override

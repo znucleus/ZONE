@@ -5,15 +5,18 @@ import org.jooq.Record;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.College;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
+import top.zbeboy.zone.service.data.DepartmentService;
 import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
+import top.zbeboy.zone.web.bean.data.department.DepartmentBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 
 import javax.annotation.Resource;
@@ -37,6 +40,9 @@ public class DepartmentViewController {
 
     @Resource
     private StudentService studentService;
+
+    @Resource
+    private DepartmentService departmentService;
 
     /**
      * 系数据
@@ -94,6 +100,37 @@ public class DepartmentViewController {
             modelMap.addAttribute("collegeId", 0);
             page = "web/data/department/department_add::#page-wrapper";
         }
+        return page;
+    }
+
+    /**
+     * 系数据编辑
+     *
+     * @param id       系id
+     * @param modelMap 页面对象
+     * @return 编辑页面
+     */
+    @GetMapping("/web/data/department/edit/{id}")
+    public String edit(@PathVariable("id")int id, ModelMap modelMap ) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        Optional<Record> record = departmentService.findByIdRelation(id);
+        if (record.isPresent()) {
+            DepartmentBean departmentBean = record.get().into(DepartmentBean.class);
+            modelMap.addAttribute("department", departmentBean);
+            if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+                modelMap.addAttribute("collegeId", departmentBean.getCollegeId());
+            } else {
+                modelMap.addAttribute("collegeId", 0);
+            }
+
+            page = "web/data/department/department_edit::#page-wrapper";
+        }  else {
+            config.buildDangerTip("查询错误", "未查询到系数据");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+
         return page;
     }
 }

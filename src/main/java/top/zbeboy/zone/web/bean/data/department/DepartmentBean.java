@@ -7,6 +7,7 @@ public class DepartmentBean extends Department {
     private Byte collegeIsDel;
     private String collegeName;
     private String schoolName;
+    private int schoolId;
 
     public Byte getSchoolIsDel() {
         return schoolIsDel;
@@ -38,5 +39,13 @@ public class DepartmentBean extends Department {
 
     public void setSchoolName(String schoolName) {
         this.schoolName = schoolName;
+    }
+
+    public int getSchoolId() {
+        return schoolId;
+    }
+
+    public void setSchoolId(int schoolId) {
+        this.schoolId = schoolId;
     }
 }
