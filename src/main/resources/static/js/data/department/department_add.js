@@ -1,5 +1,5 @@
 //# sourceURL=department_add.js
-require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", "jquery.address", "bootstrap-maxlength"],
+require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", "jquery.address", "bootstrap-maxlength", "select2-zh-CN"],
     function ($, _, tools, Swal, navActive) {
 
         /*
@@ -39,7 +39,8 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
         var param = {
             schoolId: '',
             collegeId: '',
-            departmentName: ''
+            departmentName: '',
+            departmentIsDel: ''
         };
 
         var page_param = {
@@ -57,6 +58,8 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
                 param.collegeId = page_param.collegeId;
             }
             param.departmentName = _.trim($(param_id.departmentName).val());
+            var departmentIsDel = $('input[name="departmentIsDel"]:checked').val();
+            param.departmentIsDel = _.isUndefined(departmentIsDel) ? 0 : departmentIsDel;
         }
 
         /*
@@ -70,11 +73,8 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
         function init() {
             if (Number(page_param.collegeId) === 0) {
                 initSchool();
-            } else {
-                initCollege(page_param.collegeId);
+                initSelect2();
             }
-
-            initSelect2();
             initMaxLength();
         }
 
@@ -217,7 +217,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             $.ajax({
                 type: 'POST',
                 url: ajax_url.save,
-                data: $('#app_form').serialize(),
+                data: param,
                 success: function (data) {
                     tools.buttonEndLoading(button_id.save.id, button_id.save.text);
                     if (data.state) {
