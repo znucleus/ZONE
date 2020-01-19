@@ -604,12 +604,10 @@ public class StudentServiceImpl implements StudentService, PaginationPlugin<Data
                     }
                 }
 
-                if (collegeId != 0) {
-                    if (Objects.isNull(a)) {
-                        a = COLLEGE.COLLEGE_ID.eq(collegeId);
-                    } else {
-                        a = a.and(COLLEGE.COLLEGE_ID.eq(collegeId));
-                    }
+                if (Objects.isNull(a)) {
+                    a = COLLEGE.COLLEGE_ID.eq(collegeId);
+                } else {
+                    a = a.and(COLLEGE.COLLEGE_ID.eq(collegeId));
                 }
             }
         }

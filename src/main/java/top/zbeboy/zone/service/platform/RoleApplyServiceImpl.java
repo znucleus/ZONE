@@ -375,12 +375,10 @@ public class RoleApplyServiceImpl implements RoleApplyService, PaginationPlugin<
                     }
                 }
 
-                if (collegeId != 0) {
-                    if (Objects.isNull(a)) {
-                        a = COLLEGE_ROLE.COLLEGE_ID.eq(collegeId);
-                    } else {
-                        a = a.and(COLLEGE_ROLE.COLLEGE_ID.eq(collegeId));
-                    }
+                if (Objects.isNull(a)) {
+                    a = COLLEGE_ROLE.COLLEGE_ID.eq(collegeId);
+                } else {
+                    a = a.and(COLLEGE_ROLE.COLLEGE_ID.eq(collegeId));
                 }
             }
         }

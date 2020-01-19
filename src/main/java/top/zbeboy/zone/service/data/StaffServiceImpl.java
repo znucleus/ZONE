@@ -577,12 +577,10 @@ public class StaffServiceImpl implements StaffService, PaginationPlugin<DataTabl
                     }
                 }
 
-                if (collegeId != 0) {
-                    if (Objects.isNull(a)) {
-                        a = COLLEGE.COLLEGE_ID.eq(collegeId);
-                    } else {
-                        a = a.and(COLLEGE.COLLEGE_ID.eq(collegeId));
-                    }
+                if (Objects.isNull(a)) {
+                    a = COLLEGE.COLLEGE_ID.eq(collegeId);
+                } else {
+                    a = a.and(COLLEGE.COLLEGE_ID.eq(collegeId));
                 }
             }
         }
