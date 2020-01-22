@@ -35,6 +35,8 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
             };
         }
 
+        navActive(getAjaxUrl().page);
+
         // 预编译模板
         var template = Handlebars.compile($("#operator_button").html());
 
