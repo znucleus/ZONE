@@ -6,6 +6,7 @@ import org.jooq.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.domain.tables.pojos.AttendRelease;
@@ -85,7 +86,7 @@ public class AttendReleaseApiController {
      * @param principal            当前用户信息
      * @return true or false
      */
-    @PostMapping("/api/attend/data")
+    @GetMapping("/api/attend/data")
     public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil, Principal principal) {
         AjaxUtil<AttendReleaseBean> ajaxUtil = AjaxUtil.of();
         simplePaginationUtil.setPrincipal(principal);
