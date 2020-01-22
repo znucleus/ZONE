@@ -2,8 +2,11 @@ package top.zbeboy.zone.web.util.pagination;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import java.security.Principal;
 
 public class SimplePaginationUtil extends PaginationUtil {
     private int pageNum;
@@ -14,6 +17,7 @@ public class SimplePaginationUtil extends PaginationUtil {
     private String extraSearch;
     private JSONObject search;
     private boolean isToJson;
+    private Principal principal;
 
     public int getPageNum() {
         return pageNum;
@@ -99,6 +103,14 @@ public class SimplePaginationUtil extends PaginationUtil {
         if (BooleanUtils.isTrue(this.isToJson)) {
             this.search.put(key, value);
         }
+    }
 
+    @JsonIgnore
+    public Principal getPrincipal() {
+        return principal;
+    }
+
+    public void setPrincipal(Principal principal) {
+        this.principal = principal;
     }
 }
