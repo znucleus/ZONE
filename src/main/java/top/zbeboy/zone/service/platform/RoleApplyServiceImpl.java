@@ -78,12 +78,12 @@ public class RoleApplyServiceImpl implements RoleApplyService, PaginationPlugin<
                 .join(ROLE)
                 .on(ROLE_APPLY.ROLE_ID.eq(ROLE.ROLE_ID))
                 .where(ROLE_APPLY.USERNAME.eq(username).and(ROLE_APPLY.AUTHORIZE_TYPE_ID.eq(authorizeTypeId))
-                .and(ROLE_APPLY.DATA_SCOPE.eq(dataScope))
-                .and(ROLE_APPLY.DATA_ID.eq(dataId))
-                .and(ROLE_APPLY.VALID_DATE.le(now()))
-                .and(ROLE_APPLY.EXPIRE_DATE.ge(ROLE_APPLY.VALID_DATE))
-                .and(ROLE_APPLY.EXPIRE_DATE.ge(now()))
-                .and(ROLE_APPLY.APPLY_STATUS.eq(applyStatus)))
+                        .and(ROLE_APPLY.DATA_SCOPE.eq(dataScope))
+                        .and(ROLE_APPLY.DATA_ID.eq(dataId))
+                        .and(ROLE_APPLY.VALID_DATE.le(now()))
+                        .and(ROLE_APPLY.EXPIRE_DATE.ge(ROLE_APPLY.VALID_DATE))
+                        .and(ROLE_APPLY.EXPIRE_DATE.ge(now()))
+                        .and(ROLE_APPLY.APPLY_STATUS.eq(applyStatus)))
                 .fetch();
     }
 

@@ -1,8 +1,6 @@
 package top.zbeboy.zone.service.platform;
 
-import org.jooq.Result;
 import top.zbeboy.zone.domain.tables.pojos.RoleApplication;
-import top.zbeboy.zone.domain.tables.records.RoleApplicationRecord;
 
 import java.util.List;
 

@@ -145,7 +145,7 @@ public class AuthorizeViewController {
             Byte status = roleApplyBean.getApplyStatus();
             if (status != 1) {
                 Users users = usersService.findByUsername(roleApplyBean.getUsername());
-                if(Objects.nonNull(users)){
+                if (Objects.nonNull(users)) {
                     int collegeId = 0;
                     UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
                     if (Objects.nonNull(usersType)) {
@@ -161,7 +161,7 @@ public class AuthorizeViewController {
                         }
                     }
 
-                    if(collegeId > 0){
+                    if (collegeId > 0) {
                         modelMap.addAttribute("collegeId", collegeId);
                         roleApplyBean.setDurationInt(getDuration(roleApplyBean.getDuration()));
                         if (roleApplyBean.getDataScope() == 1) {

@@ -11,7 +11,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 import top.zbeboy.zone.config.CacheBook;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.daos.StaffDao;
@@ -208,7 +207,7 @@ public class StaffServiceImpl implements StaffService, PaginationPlugin<DataTabl
     }
 
     public Result<Record21<String, String, String, String, String, Byte, String, String, String, String, String, String, String, Date, String, String, String, Byte, Byte, String, Date>> queryAllByPage(SelectOnConditionStep<Record21<String, String, String, String, String, Byte, String, String, String, String, String, String, String, Date, String, String, String, Byte, Byte, String, Date>> selectOnConditionStep,
-                                                                                                                                   DataTablesUtil paginationUtil, boolean useExtraCondition, GroupField... groupFields) {
+                                                                                                                                                                                                         DataTablesUtil paginationUtil, boolean useExtraCondition, GroupField... groupFields) {
         Result<Record21<String, String, String, String, String, Byte, String, String, String, String, String, String, String, Date, String, String, String, Byte, Byte, String, Date>> records;
         Condition a = useExtraCondition(paginationUtil, useExtraCondition);
         if (Objects.isNull(a)) {

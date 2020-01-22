@@ -1,14 +1,12 @@
 package top.zbeboy.zone.service.data;
 
 import org.jooq.Record;
-import org.jooq.Record21;
 import org.jooq.Result;
 import top.zbeboy.zone.domain.tables.pojos.Student;
 import top.zbeboy.zone.domain.tables.records.StudentRecord;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.vo.data.student.StudentAddVo;
 
-import java.sql.Date;
 import java.util.Optional;
 
 public interface StudentService {

@@ -3,7 +3,7 @@ package top.zbeboy.zone.web.bean.data.science;
 import top.zbeboy.zone.domain.tables.pojos.Science;
 
 public class ScienceBean extends Science {
-    private String  departmentName;
+    private String departmentName;
     private int collegeId;
     private String collegeName;
     private String schoolName;

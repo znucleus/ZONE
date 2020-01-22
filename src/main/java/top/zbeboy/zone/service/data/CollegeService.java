@@ -111,7 +111,7 @@ public interface CollegeService {
     /**
      * 更新状态
      *
-     * @param ids     ids
+     * @param ids   ids
      * @param isDel 状态
      */
     void updateIsDel(List<Integer> ids, Byte isDel);

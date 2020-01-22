@@ -111,7 +111,7 @@ public class DepartmentViewController {
      * @return 编辑页面
      */
     @GetMapping("/web/data/department/edit/{id}")
-    public String edit(@PathVariable("id")int id, ModelMap modelMap ) {
+    public String edit(@PathVariable("id") int id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         Optional<Record> record = departmentService.findByIdRelation(id);
@@ -125,7 +125,7 @@ public class DepartmentViewController {
             }
 
             page = "web/data/department/department_edit::#page-wrapper";
-        }  else {
+        } else {
             config.buildDangerTip("查询错误", "未查询到系数据");
             config.dataMerging(modelMap);
             page = "inline_tip::#page-wrapper";

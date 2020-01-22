@@ -31,7 +31,6 @@ import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.vo.data.student.StudentAddVo;
 
 import javax.annotation.Resource;
-import java.sql.Date;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -151,12 +150,12 @@ public class StudentServiceImpl implements StudentService, PaginationPlugin<Data
     @Override
     public Result<Record> findAllByPage(DataTablesUtil dataTablesUtil) {
         SelectOnConditionStep<Record> selectConditionStep =
-                create.select(USERS.REAL_NAME, STUDENT.STUDENT_NUMBER, USERS.USERNAME, USERS.EMAIL, USERS.MOBILE,USERS.VERIFY_MAILBOX,
+                create.select(USERS.REAL_NAME, STUDENT.STUDENT_NUMBER, USERS.USERNAME, USERS.EMAIL, USERS.MOBILE, USERS.VERIFY_MAILBOX,
                         DSL.listAgg(ROLE.ROLE_NAME, " ").withinGroupOrderBy(ROLE.ROLE_NAME).as("roleName"),
                         SCHOOL.SCHOOL_NAME, COLLEGE.COLLEGE_NAME, DEPARTMENT.DEPARTMENT_NAME, SCIENCE.SCIENCE_NAME, GRADE.GRADE_,
                         ORGANIZE.ORGANIZE_NAME, STUDENT.SEX, STUDENT.BIRTHDAY, NATION.NATION_NAME, POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_NAME,
                         STUDENT.DORMITORY_NUMBER, STUDENT.PLACE_ORIGIN, STUDENT.PARENT_NAME, STUDENT.PARENT_CONTACT_PHONE,
-                        STUDENT.FAMILY_RESIDENCE, USERS.ENABLED, USERS.ACCOUNT_NON_LOCKED,USERS.LANG_KEY, USERS.JOIN_DATE)
+                        STUDENT.FAMILY_RESIDENCE, USERS.ENABLED, USERS.ACCOUNT_NON_LOCKED, USERS.LANG_KEY, USERS.JOIN_DATE)
                         .from(STUDENT)
                         .join(ORGANIZE)
                         .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))

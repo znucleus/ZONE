@@ -1,7 +1,6 @@
 package top.zbeboy.zone.service.platform;
 
 import org.jooq.DSLContext;
-import org.jooq.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
@@ -10,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zone.config.CacheBook;
 import top.zbeboy.zone.domain.tables.daos.RoleApplicationDao;
 import top.zbeboy.zone.domain.tables.pojos.RoleApplication;
-import top.zbeboy.zone.domain.tables.records.RoleApplicationRecord;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -33,7 +31,7 @@ public class RoleApplicationServiceImpl implements RoleApplicationService {
 
     @Override
     public List<RoleApplication> findByRoleId(String roleId) {
-        return  roleApplicationDao.fetchByRoleId(roleId);
+        return roleApplicationDao.fetchByRoleId(roleId);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)

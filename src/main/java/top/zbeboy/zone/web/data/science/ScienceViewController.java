@@ -16,7 +16,6 @@ import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
-import top.zbeboy.zone.web.bean.data.department.DepartmentBean;
 import top.zbeboy.zone.web.bean.data.science.ScienceBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 
@@ -44,7 +43,7 @@ public class ScienceViewController {
 
     @Resource
     private ScienceService scienceService;
-    
+
     /**
      * 专业数据
      *
@@ -111,7 +110,7 @@ public class ScienceViewController {
      * @return 编辑页面
      */
     @GetMapping("/web/data/science/edit/{id}")
-    public String edit(@PathVariable("id")int id, ModelMap modelMap ) {
+    public String edit(@PathVariable("id") int id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         Optional<Record> record = scienceService.findByIdRelation(id);
@@ -125,7 +124,7 @@ public class ScienceViewController {
             }
 
             page = "web/data/science/science_edit::#page-wrapper";
-        }  else {
+        } else {
             config.buildDangerTip("查询错误", "未查询到专业数据");
             config.dataMerging(modelMap);
             page = "inline_tip::#page-wrapper";

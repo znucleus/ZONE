@@ -20,11 +20,9 @@ import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zone.service.util.SQLQueryUtil;
-import top.zbeboy.zone.web.util.ByteUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
 import javax.annotation.Resource;
-
 import java.util.Objects;
 import java.util.Optional;
 
@@ -123,10 +121,10 @@ public class AttendReleaseServiceImpl implements AttendReleaseService, Paginatio
                             // 学生查看可签到本班级数据
                             Optional<Record> record = studentService.findByUsernameRelation(users.getUsername());
                             if (record.isPresent()) {
-                               int organizeId = record.get().get(ORGANIZE.ORGANIZE_ID);
+                                int organizeId = record.get().get(ORGANIZE.ORGANIZE_ID);
                                 a = ATTEND_RELEASE.ORGANIZE_ID.eq(organizeId)
-                                .and(ATTEND_RELEASE.ATTEND_END_TIME.le(now()))
-                                .and(ATTEND_RELEASE.ATTEND_END_TIME.le(ATTEND_RELEASE.ATTEND_START_TIME));
+                                        .and(ATTEND_RELEASE.ATTEND_END_TIME.le(now()))
+                                        .and(ATTEND_RELEASE.ATTEND_END_TIME.le(ATTEND_RELEASE.ATTEND_START_TIME));
                             }
                         } else if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                             a = ATTEND_RELEASE.USERNAME.eq(users.getUsername());

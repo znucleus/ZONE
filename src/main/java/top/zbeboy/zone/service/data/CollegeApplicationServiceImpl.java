@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zone.domain.tables.daos.CollegeApplicationDao;
 import top.zbeboy.zone.domain.tables.pojos.Application;
 import top.zbeboy.zone.domain.tables.pojos.CollegeApplication;
-import top.zbeboy.zone.domain.tables.records.CollegeApplicationRecord;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
