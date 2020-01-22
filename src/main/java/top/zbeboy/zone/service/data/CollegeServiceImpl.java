@@ -93,7 +93,7 @@ public class CollegeServiceImpl implements CollegeService, PaginationPlugin<Data
         SelectOnConditionStep<Record> selectOnConditionStep =
                 create.select()
                         .from(COLLEGE)
-                        .leftJoin(SCHOOL)
+                        .join(SCHOOL)
                         .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID));
         return queryAllByPage(selectOnConditionStep, dataTablesUtil, false);
     }
@@ -108,7 +108,7 @@ public class CollegeServiceImpl implements CollegeService, PaginationPlugin<Data
         SelectOnConditionStep<Record1<Integer>> selectOnConditionStep =
                 create.selectCount()
                         .from(COLLEGE)
-                        .leftJoin(SCHOOL)
+                        .join(SCHOOL)
                         .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID));
         return countAll(selectOnConditionStep, dataTablesUtil, false);
     }
