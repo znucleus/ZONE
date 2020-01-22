@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -24,6 +25,7 @@ import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
 import javax.annotation.Resource;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -33,7 +35,7 @@ import static top.zbeboy.zone.domain.Tables.SCHOOL;
 
 @Service("scienceService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-public class ScienceServiceImpl implements ScienceService , PaginationPlugin<DataTablesUtil> {
+public class ScienceServiceImpl implements ScienceService, PaginationPlugin<DataTablesUtil> {
 
     private final DSLContext create;
 
@@ -60,6 +62,7 @@ public class ScienceServiceImpl implements ScienceService , PaginationPlugin<Dat
         create = dslContext;
     }
 
+    @Cacheable(cacheNames = CacheBook.SCIENCE, key = "#id")
     @Override
     public Science findById(int id) {
         return scienceDao.findById(id);
@@ -70,6 +73,18 @@ public class ScienceServiceImpl implements ScienceService , PaginationPlugin<Dat
     public Result<ScienceRecord> findByDepartmentIdAndScienceIsDel(int departmentId, Byte scienceIsDel) {
         return create.selectFrom(SCIENCE).where(SCIENCE.DEPARTMENT_ID.eq(departmentId)
                 .and(SCIENCE.SCIENCE_IS_DEL.eq(scienceIsDel))).fetch();
+    }
+
+    @Override
+    public Result<ScienceRecord> findByScienceNameAndDepartmentId(String scienceName, int departmentId) {
+        return create.selectFrom(SCIENCE)
+                .where(SCIENCE.SCIENCE_NAME.eq(scienceName).and(SCIENCE.DEPARTMENT_ID.eq(departmentId)))
+                .fetch();
+    }
+
+    @Override
+    public List<Science> findByScienceCode(String scienceCode) {
+        return scienceDao.fetchByScienceCode(scienceCode);
     }
 
     @Override
@@ -110,6 +125,19 @@ public class ScienceServiceImpl implements ScienceService , PaginationPlugin<Dat
                 .join(SCHOOL)
                 .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID));
         return countAll(selectOnConditionStep, dataTablesUtil, false);
+    }
+
+    @CacheEvict(cacheNames = CacheBook.SCIENCES, allEntries = true)
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void save(Science science) {
+        scienceDao.insert(science);
+    }
+
+    @CacheEvict(cacheNames = {CacheBook.SCIENCE, CacheBook.SCIENCES}, allEntries = true)
+    @Override
+    public void update(Science science) {
+        scienceDao.update(science);
     }
 
     @Override
