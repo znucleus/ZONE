@@ -24,14 +24,11 @@ import top.zbeboy.zone.service.util.SQLQueryUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
 import javax.annotation.Resource;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 import static top.zbeboy.zone.domain.Tables.*;
-import static top.zbeboy.zone.domain.Tables.COLLEGE;
-import static top.zbeboy.zone.domain.Tables.SCHOOL;
 
 @Service("scienceService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -62,10 +59,24 @@ public class ScienceServiceImpl implements ScienceService, PaginationPlugin<Data
         create = dslContext;
     }
 
-    @Cacheable(cacheNames = CacheBook.SCIENCE, key = "#id")
     @Override
     public Science findById(int id) {
         return scienceDao.findById(id);
+    }
+
+    @Cacheable(cacheNames = CacheBook.SCIENCE, key = "#id")
+    @Override
+    public Optional<Record> findByIdRelation(int id) {
+        return create.select()
+                .from(SCIENCE)
+                .join(DEPARTMENT)
+                .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
+                .join(COLLEGE)
+                .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
+                .join(SCHOOL)
+                .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
+                .where(SCIENCE.SCIENCE_ID.eq(id))
+                .fetchOptional();
     }
 
     @Cacheable(cacheNames = CacheBook.SCIENCES, key = "#departmentId + '_' + #scienceIsDel")
@@ -85,6 +96,20 @@ public class ScienceServiceImpl implements ScienceService, PaginationPlugin<Data
     @Override
     public List<Science> findByScienceCode(String scienceCode) {
         return scienceDao.fetchByScienceCode(scienceCode);
+    }
+
+    @Override
+    public Result<ScienceRecord> findByScienceNameAndDepartmentIdNeScienceId(String scienceName, int departmentId, int scienceId) {
+        return create.selectFrom(SCIENCE)
+                .where(SCIENCE.SCIENCE_NAME.eq(scienceName).and(SCIENCE.DEPARTMENT_ID.eq(departmentId)).and(SCIENCE.SCIENCE_ID.ne(scienceId)))
+                .fetch();
+    }
+
+    @Override
+    public Result<ScienceRecord> findByScienceCodeNeScienceId(String scienceCode, int scienceId) {
+        return create.selectFrom(SCIENCE)
+                .where(SCIENCE.SCIENCE_CODE.eq(scienceCode).and(SCIENCE.SCIENCE_ID.ne(scienceId)))
+                .fetch();
     }
 
     @Override
@@ -138,6 +163,12 @@ public class ScienceServiceImpl implements ScienceService, PaginationPlugin<Data
     @Override
     public void update(Science science) {
         scienceDao.update(science);
+    }
+
+    @CacheEvict(cacheNames = {CacheBook.SCIENCE, CacheBook.SCIENCES}, allEntries = true)
+    @Override
+    public void updateIsDel(List<Integer> ids, Byte isDel) {
+        ids.forEach(id -> create.update(SCIENCE).set(SCIENCE.SCIENCE_IS_DEL, isDel).where(SCIENCE.SCIENCE_ID.eq(id)).execute());
     }
 
     @Override
