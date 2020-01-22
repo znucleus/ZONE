@@ -115,9 +115,9 @@ public class DepartmentServiceImpl implements DepartmentService, PaginationPlugi
     public int countAll(DataTablesUtil dataTablesUtil) {
         SelectOnConditionStep<Record1<Integer>> selectOnConditionStep = create.selectCount()
                 .from(DEPARTMENT)
-                .leftJoin(COLLEGE)
+                .join(COLLEGE)
                 .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
-                .leftJoin(SCHOOL)
+                .join(SCHOOL)
                 .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID));
         return countAll(selectOnConditionStep, dataTablesUtil, true);
     }
@@ -126,9 +126,9 @@ public class DepartmentServiceImpl implements DepartmentService, PaginationPlugi
     public int countByCondition(DataTablesUtil dataTablesUtil) {
         SelectOnConditionStep<Record1<Integer>> selectOnConditionStep = create.selectCount()
                 .from(DEPARTMENT)
-                .leftJoin(COLLEGE)
+                .join(COLLEGE)
                 .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
-                .leftJoin(SCHOOL)
+                .join(SCHOOL)
                 .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID));
         return countAll(selectOnConditionStep, dataTablesUtil, false);
     }
