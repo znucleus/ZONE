@@ -8,6 +8,11 @@ public class OrganizeBean extends Organize {
     private Byte departmentIsDel;
     private Byte scienceIsDel;
     private Byte gradeIsDel;
+    private int grade;
+    private String scienceName;
+    private String departmentName;
+    private String collegeName;
+    private String schoolName;
 
     public Byte getSchoolIsDel() {
         return schoolIsDel;
@@ -47,5 +52,45 @@ public class OrganizeBean extends Organize {
 
     public void setGradeIsDel(Byte gradeIsDel) {
         this.gradeIsDel = gradeIsDel;
+    }
+
+    public int getGrade() {
+        return grade;
+    }
+
+    public void setGrade(int grade) {
+        this.grade = grade;
+    }
+
+    public String getScienceName() {
+        return scienceName;
+    }
+
+    public void setScienceName(String scienceName) {
+        this.scienceName = scienceName;
+    }
+
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
+    }
+
+    public String getCollegeName() {
+        return collegeName;
+    }
+
+    public void setCollegeName(String collegeName) {
+        this.collegeName = collegeName;
+    }
+
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
     }
 }
