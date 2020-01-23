@@ -323,6 +323,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
                     }
                 },
                 error: function (XMLHttpRequest) {
+                    tools.buttonEndLoading(button_id.save.id, button_id.save.text);
                     Messenger().post({
                         message: 'Request error : ' + XMLHttpRequest.status + " " + XMLHttpRequest.statusText,
                         type: 'error',
