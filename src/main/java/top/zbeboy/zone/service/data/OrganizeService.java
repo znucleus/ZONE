@@ -37,6 +37,15 @@ public interface OrganizeService {
     Result<OrganizeRecord> findByGradeIdAndOrganizeIsDel(int gradeId, Byte organizeIsDel);
 
     /**
+     * 专业下 班级名查询 注：等于班级名
+     *
+     * @param organizeName 班级名
+     * @param scienceId    专业id
+     * @return 数据
+     */
+    Result<Record> findByOrganizeNameAndScienceId(String organizeName, int scienceId);
+
+    /**
      * 分页查询
      *
      * @param dataTablesUtil 工具类
@@ -57,4 +66,18 @@ public interface OrganizeService {
      * @return 条件查询总数
      */
     int countByCondition(DataTablesUtil dataTablesUtil);
+
+    /**
+     * 保存
+     *
+     * @param organize 数据
+     */
+    void save(Organize organize);
+
+    /**
+     * 更新
+     *
+     * @param organize 数据
+     */
+    void update(Organize organize);
 }

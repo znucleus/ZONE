@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -30,7 +31,7 @@ import static top.zbeboy.zone.domain.Tables.*;
 
 @Service("organizeService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-public class OrganizeServiceImpl implements OrganizeService , PaginationPlugin<DataTablesUtil> {
+public class OrganizeServiceImpl implements OrganizeService, PaginationPlugin<DataTablesUtil> {
 
     private final DSLContext create;
 
@@ -89,6 +90,16 @@ public class OrganizeServiceImpl implements OrganizeService , PaginationPlugin<D
     }
 
     @Override
+    public Result<Record> findByOrganizeNameAndScienceId(String organizeName, int scienceId) {
+        return create.select()
+                .from(ORGANIZE)
+                .join(GRADE)
+                .on(ORGANIZE.GRADE_ID.eq(GRADE.GRADE_ID))
+                .where(ORGANIZE.ORGANIZE_NAME.eq(organizeName).and(GRADE.SCIENCE_ID.eq(scienceId)))
+                .fetch();
+    }
+
+    @Override
     public Result<Record> findAllByPage(DataTablesUtil dataTablesUtil) {
         SelectOnConditionStep<Record> selectOnConditionStep =
                 create.select()
@@ -138,6 +149,19 @@ public class OrganizeServiceImpl implements OrganizeService , PaginationPlugin<D
                 .join(SCHOOL)
                 .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID));
         return countAll(selectOnConditionStep, dataTablesUtil, false);
+    }
+
+    @CacheEvict(cacheNames = CacheBook.ORGANIZES, allEntries = true)
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void save(Organize organize) {
+        organizeDao.insert(organize);
+    }
+
+    @CacheEvict(cacheNames = {CacheBook.ORGANIZE, CacheBook.ORGANIZES}, allEntries = true)
+    @Override
+    public void update(Organize organize) {
+        organizeDao.update(organize);
     }
 
     @Override
