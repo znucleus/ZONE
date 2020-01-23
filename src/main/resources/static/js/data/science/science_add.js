@@ -169,9 +169,6 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             }
         });
 
-        /*
-         即时检验系名
-         */
         $(param_id.scienceName).blur(function () {
             initParam();
             var scienceName = param.scienceName;
