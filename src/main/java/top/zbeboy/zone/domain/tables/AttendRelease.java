@@ -15,7 +15,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row9;
+import org.jooq.Row10;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -42,7 +42,7 @@ import top.zbeboy.zone.domain.tables.records.AttendReleaseRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AttendRelease extends TableImpl<AttendReleaseRecord> {
 
-    private static final long serialVersionUID = -1310620530;
+    private static final long serialVersionUID = 598738110;
 
     /**
      * The reference instance of <code>zone.attend_release</code>
@@ -81,6 +81,11 @@ public class AttendRelease extends TableImpl<AttendReleaseRecord> {
      * The column <code>zone.attend_release.is_auto</code>.
      */
     public final TableField<AttendReleaseRecord, Byte> IS_AUTO = createField(DSL.name("is_auto"), org.jooq.impl.SQLDataType.TINYINT.nullable(false).defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.TINYINT)), this, "");
+
+    /**
+     * The column <code>zone.attend_release.valid_date</code>.
+     */
+    public final TableField<AttendReleaseRecord, Timestamp> VALID_DATE = createField(DSL.name("valid_date"), org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
 
     /**
      * The column <code>zone.attend_release.expire_date</code>.
@@ -195,11 +200,11 @@ public class AttendRelease extends TableImpl<AttendReleaseRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row9 type methods
+    // Row10 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row9<String, String, Timestamp, Timestamp, Byte, Timestamp, Integer, String, Timestamp> fieldsRow() {
-        return (Row9) super.fieldsRow();
+    public Row10<String, String, Timestamp, Timestamp, Byte, Timestamp, Timestamp, Integer, String, Timestamp> fieldsRow() {
+        return (Row10) super.fieldsRow();
     }
 }

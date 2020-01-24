@@ -130,6 +130,20 @@ public class AttendReleaseDao extends DAOImpl<AttendReleaseRecord, top.zbeboy.zo
     }
 
     /**
+     * Fetch records that have <code>valid_date BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.AttendRelease> fetchRangeOfValidDate(Timestamp lowerInclusive, Timestamp upperInclusive) {
+        return fetchRange(AttendRelease.ATTEND_RELEASE.VALID_DATE, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>valid_date IN (values)</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.AttendRelease> fetchByValidDate(Timestamp... values) {
+        return fetch(AttendRelease.ATTEND_RELEASE.VALID_DATE, values);
+    }
+
+    /**
      * Fetch records that have <code>expire_date BETWEEN lowerInclusive AND upperInclusive</code>
      */
     public List<top.zbeboy.zone.domain.tables.pojos.AttendRelease> fetchRangeOfExpireDate(Timestamp lowerInclusive, Timestamp upperInclusive) {

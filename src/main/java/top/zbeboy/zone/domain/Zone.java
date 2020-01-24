@@ -23,6 +23,8 @@ import top.zbeboy.zone.domain.tables.AnswerSolving;
 import top.zbeboy.zone.domain.tables.AnswerSubject;
 import top.zbeboy.zone.domain.tables.Application;
 import top.zbeboy.zone.domain.tables.AttendRelease;
+import top.zbeboy.zone.domain.tables.AttendReleaseSub;
+import top.zbeboy.zone.domain.tables.AttendUsers;
 import top.zbeboy.zone.domain.tables.Authorities;
 import top.zbeboy.zone.domain.tables.AuthorizeType;
 import top.zbeboy.zone.domain.tables.Building;
@@ -79,7 +81,7 @@ import top.zbeboy.zone.domain.tables.UsersType;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Zone extends SchemaImpl {
 
-    private static final long serialVersionUID = 1082698655;
+    private static final long serialVersionUID = 834182691;
 
     /**
      * The reference instance of <code>zone</code>
@@ -130,6 +132,16 @@ public class Zone extends SchemaImpl {
      * The table <code>zone.attend_release</code>.
      */
     public final AttendRelease ATTEND_RELEASE = top.zbeboy.zone.domain.tables.AttendRelease.ATTEND_RELEASE;
+
+    /**
+     * The table <code>zone.attend_release_sub</code>.
+     */
+    public final AttendReleaseSub ATTEND_RELEASE_SUB = top.zbeboy.zone.domain.tables.AttendReleaseSub.ATTEND_RELEASE_SUB;
+
+    /**
+     * The table <code>zone.attend_users</code>.
+     */
+    public final AttendUsers ATTEND_USERS = top.zbeboy.zone.domain.tables.AttendUsers.ATTEND_USERS;
 
     /**
      * The table <code>zone.authorities</code>.
@@ -367,6 +379,8 @@ public class Zone extends SchemaImpl {
             AnswerSubject.ANSWER_SUBJECT,
             Application.APPLICATION,
             AttendRelease.ATTEND_RELEASE,
+            AttendReleaseSub.ATTEND_RELEASE_SUB,
+            AttendUsers.ATTEND_USERS,
             Authorities.AUTHORITIES,
             AuthorizeType.AUTHORIZE_TYPE,
             Building.BUILDING,

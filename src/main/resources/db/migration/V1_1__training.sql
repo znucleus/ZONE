@@ -29,7 +29,7 @@ CREATE TABLE training_users(
   FOREIGN KEY(training_release_id) REFERENCES
   training_release(training_release_id) ON DELETE CASCADE,
   FOREIGN KEY(student_id) REFERENCES
-  student(student_id),
+  student(student_id) ON DELETE CASCADE,
   UNIQUE (training_release_id,student_id)
 );
 

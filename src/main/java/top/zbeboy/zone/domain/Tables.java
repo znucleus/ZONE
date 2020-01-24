@@ -15,6 +15,8 @@ import top.zbeboy.zone.domain.tables.AnswerSolving;
 import top.zbeboy.zone.domain.tables.AnswerSubject;
 import top.zbeboy.zone.domain.tables.Application;
 import top.zbeboy.zone.domain.tables.AttendRelease;
+import top.zbeboy.zone.domain.tables.AttendReleaseSub;
+import top.zbeboy.zone.domain.tables.AttendUsers;
 import top.zbeboy.zone.domain.tables.Authorities;
 import top.zbeboy.zone.domain.tables.AuthorizeType;
 import top.zbeboy.zone.domain.tables.Building;
@@ -115,6 +117,16 @@ public class Tables {
      * The table <code>zone.attend_release</code>.
      */
     public static final AttendRelease ATTEND_RELEASE = AttendRelease.ATTEND_RELEASE;
+
+    /**
+     * The table <code>zone.attend_release_sub</code>.
+     */
+    public static final AttendReleaseSub ATTEND_RELEASE_SUB = AttendReleaseSub.ATTEND_RELEASE_SUB;
+
+    /**
+     * The table <code>zone.attend_users</code>.
+     */
+    public static final AttendUsers ATTEND_USERS = AttendUsers.ATTEND_USERS;
 
     /**
      * The table <code>zone.authorities</code>.
