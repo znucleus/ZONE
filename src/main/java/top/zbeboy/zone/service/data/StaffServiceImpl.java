@@ -88,6 +88,16 @@ public class StaffServiceImpl implements StaffService, PaginationPlugin<DataTabl
     }
 
     @Override
+    public Optional<Record> findByUsernameOrStaffNumberRelation(String staff) {
+        return create.select()
+                .from(STAFF)
+                .join(USERS)
+                .on(STAFF.USERNAME.eq(USERS.USERNAME))
+                .where(STAFF.USERNAME.eq(staff).or(STAFF.STAFF_NUMBER.eq(staff)))
+                .fetchOptional();
+    }
+
+    @Override
     public Result<Record> findAdmin(String authority, int collegeId) {
         return create.select()
                 .from(STAFF)

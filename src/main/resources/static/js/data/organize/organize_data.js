@@ -77,6 +77,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
                 {"data": "scienceName"},
                 {"data": "grade"},
                 {"data": "organizeName"},
+                {"data": "realName"},
                 {"data": "organizeIsDel"},
                 {"data": null}
             ],
@@ -96,7 +97,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
                     }
                 },
                 {
-                    targets: 10,
+                    targets: 11,
                     orderable: false,
                     render: function (a, b, c, d) {
 
@@ -134,7 +135,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
                     }
                 },
                 {
-                    targets: 9,
+                    targets: 10,
                     render: function (a, b, c, d) {
                         if (c.organizeIsDel === 0 || c.organizeIsDel == null) {
                             return "<span class='text-info'>正常</span>";

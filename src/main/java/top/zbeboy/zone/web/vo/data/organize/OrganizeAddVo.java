@@ -15,6 +15,7 @@ public class OrganizeAddVo {
     private int scienceId;
     @NotNull(message = "年级不能为空")
     private int grade;
+    private String staff;
 
     public String getOrganizeName() {
         return organizeName;
@@ -46,5 +47,13 @@ public class OrganizeAddVo {
 
     public void setGrade(int grade) {
         this.grade = grade;
+    }
+
+    public String getStaff() {
+        return staff;
+    }
+
+    public void setStaff(String staff) {
+        this.staff = staff;
     }
 }

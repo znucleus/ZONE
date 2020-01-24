@@ -31,6 +31,14 @@ public interface StaffService {
     Optional<Record> findByUsernameRelation(String username);
 
     /**
+     * 根据账号或工号查询
+     *
+     * @param staff 账号/工号
+     * @return 数据
+     */
+    Optional<Record> findByUsernameOrStaffNumberRelation(String staff);
+
+    /**
      * 查询院管理员
      *
      * @param authority 权限

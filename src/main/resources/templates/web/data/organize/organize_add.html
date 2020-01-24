@@ -50,8 +50,8 @@
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
-                            <select class="form-control" name="gradeId" id="grade">
-                                <option>请选择年级</option>
+                            <select class="form-control select2-show-search" name="gradeId" id="grade" data-placeholder="请选择年级">
+                                <option label="请选择年级"></option>
                             </select>
                             <div class="invalid-feedback"></div>
                         </div>
@@ -60,6 +60,13 @@
                             <input class="form-control" name="organizeName" id="organizeName" maxlength="200"
                                    placeholder="班级名"/>
                             <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>班主任</label>
+                            <input class="form-control" name="staff" id="staff"
+                                   placeholder="班主任账号/工号"/>
+                            <div class="invalid-feedback"></div>
+                            <small id="staffHelp" class="form-text text-muted"></small>
                         </div>
                         <div class="form-group">
                             <label class="ckbox">

@@ -113,7 +113,11 @@ public class OrganizeServiceImpl implements OrganizeService, PaginationPlugin<Da
                         .join(COLLEGE)
                         .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
                         .join(SCHOOL)
-                        .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID));
+                        .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
+                        .leftJoin(STAFF)
+                        .on(ORGANIZE.STAFF_ID.eq(STAFF.STAFF_ID))
+                        .leftJoin(USERS)
+                        .on(STAFF.USERNAME.eq(USERS.USERNAME));
         return queryAllByPage(selectOnConditionStep, dataTablesUtil, false);
     }
 
@@ -130,7 +134,11 @@ public class OrganizeServiceImpl implements OrganizeService, PaginationPlugin<Da
                 .join(COLLEGE)
                 .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
                 .join(SCHOOL)
-                .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID));
+                .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
+                .leftJoin(STAFF)
+                .on(ORGANIZE.STAFF_ID.eq(STAFF.STAFF_ID))
+                .leftJoin(USERS)
+                .on(STAFF.USERNAME.eq(USERS.USERNAME));
         return countAll(selectOnConditionStep, dataTablesUtil, true);
     }
 
@@ -147,7 +155,11 @@ public class OrganizeServiceImpl implements OrganizeService, PaginationPlugin<Da
                 .join(COLLEGE)
                 .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
                 .join(SCHOOL)
-                .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID));
+                .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
+                .leftJoin(STAFF)
+                .on(ORGANIZE.STAFF_ID.eq(STAFF.STAFF_ID))
+                .leftJoin(USERS)
+                .on(STAFF.USERNAME.eq(USERS.USERNAME));
         return countAll(selectOnConditionStep, dataTablesUtil, false);
     }
 
@@ -327,6 +339,17 @@ public class OrganizeServiceImpl implements OrganizeService, PaginationPlugin<Da
                     sortField[1] = ORGANIZE.ORGANIZE_ID.asc();
                 } else {
                     sortField[0] = ORGANIZE.ORGANIZE_NAME.desc();
+                    sortField[1] = ORGANIZE.ORGANIZE_ID.desc();
+                }
+            }
+
+            if (StringUtils.equals("realName", orderColumnName)) {
+                sortField = new SortField[2];
+                if (isAsc) {
+                    sortField[0] = USERS.REAL_NAME.asc();
+                    sortField[1] = ORGANIZE.ORGANIZE_ID.asc();
+                } else {
+                    sortField[0] = USERS.REAL_NAME.desc();
                     sortField[1] = ORGANIZE.ORGANIZE_ID.desc();
                 }
             }

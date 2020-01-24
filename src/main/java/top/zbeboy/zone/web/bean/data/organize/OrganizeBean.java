@@ -13,6 +13,7 @@ public class OrganizeBean extends Organize {
     private String departmentName;
     private String collegeName;
     private String schoolName;
+    private String realName;
 
     public Byte getSchoolIsDel() {
         return schoolIsDel;
@@ -92,5 +93,13 @@ public class OrganizeBean extends Organize {
 
     public void setSchoolName(String schoolName) {
         this.schoolName = schoolName;
+    }
+
+    public String getRealName() {
+        return realName;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
     }
 }

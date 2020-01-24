@@ -12,6 +12,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             obtain_science_data: web_path + '/anyone/data/science',
             save: web_path + '/web/data/organize/save',
             check_name: web_path + '/web/data/organize/check/add/name',
+            check_staff: web_path + '/web/data/organize/check/add/staff',
             page: '/web/menu/data/organize'
         };
 
@@ -27,7 +28,8 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             department: '#department',
             science: '#science',
             grade: '#grade',
-            organizeName: '#organizeName'
+            organizeName: '#organizeName',
+            staff:'#staff'
         };
 
         var button_id = {
@@ -48,6 +50,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             scienceId: '',
             grade: '',
             organizeName: '',
+            staff:'',
             organizeIsDel: ''
         };
 
@@ -68,7 +71,8 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             param.departmentId = $(param_id.department).val();
             param.scienceId = $(param_id.science).val();
             param.grade = $(param_id.grade).val();
-            param.organizeName = $(param_id.organizeName).val();
+            param.organizeName = _.trim($(param_id.organizeName).val());
+            param.staff = _.trim($(param_id.staff).val());
             var organizeIsDel = $('input[name="organizeIsDel"]:checked').val();
             param.organizeIsDel = _.isUndefined(organizeIsDel) ? 0 : organizeIsDel;
         }
@@ -243,6 +247,25 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             }
         });
 
+        $(param_id.staff).blur(function () {
+            initParam();
+            var staff = param.staff;
+            if (staff.length > 0) {
+                $.post(ajax_url.check_staff, param, function (data) {
+                    if (data.state) {
+                        $('#staffHelp').text(data.staff.realName + " " + data.staff.mobile);
+                        tools.validSuccessDom(param_id.staff);
+                    } else {
+                        $('#staffHelp').text('');
+                        tools.validErrorDom(param_id.staff, data.msg);
+                    }
+                });
+            } else {
+                $('#staffHelp').text('');
+                tools.validSuccessDom(param_id.staff);
+            }
+        });
+
         /*
          保存数据
          */
@@ -328,11 +351,29 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
                 $.post(ajax_url.check_name, param, function (data) {
                     if (data.state) {
                         tools.validSuccessDom(param_id.organizeName);
-                        sendAjax();
+                        validStaff();
                     } else {
                         tools.validErrorDom(param_id.organizeName, data.msg);
                     }
                 });
+            }
+        }
+
+        function validStaff(){
+            var staff = param.staff;
+            if (staff.length > 0) {
+                $.post(ajax_url.check_staff, param, function (data) {
+                    if (data.state) {
+                        $('#staffHelp').text(data.staff.realName + " " + data.staff.mobile);
+                        tools.validSuccessDom(param_id.staff);
+                        sendAjax();
+                    } else {
+                        $('#staffHelp').text('');
+                        tools.validErrorDom(param_id.staff, data.msg);
+                    }
+                });
+            } else {
+                tools.validSuccessDom(param_id.staff);
             }
         }
 
