@@ -57,6 +57,11 @@ public class AttendReleaseServiceImpl implements AttendReleaseService, Paginatio
     }
 
     @Override
+    public AttendRelease findById(String id) {
+        return attendReleaseDao.findById(id);
+    }
+
+    @Override
     public Result<AttendReleaseRecord> findIsAuto() {
         return create.selectFrom(ATTEND_RELEASE)
                 .where(ATTEND_RELEASE.IS_AUTO.eq(ByteUtil.toByte(1))
@@ -92,6 +97,11 @@ public class AttendReleaseServiceImpl implements AttendReleaseService, Paginatio
     @Override
     public void save(AttendRelease attendRelease) {
         attendReleaseDao.insert(attendRelease);
+    }
+
+    @Override
+    public void update(AttendRelease attendRelease) {
+        attendReleaseDao.update(attendRelease);
     }
 
     @Override

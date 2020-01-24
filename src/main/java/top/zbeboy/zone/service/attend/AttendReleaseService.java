@@ -9,6 +9,14 @@ import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 public interface AttendReleaseService {
 
     /**
+     * 根据主键查询
+     *
+     * @param id 主键
+     * @return 数据
+     */
+    AttendRelease findById(String id);
+
+    /**
      * 查询自动生成数据
      *
      * @return 数据
@@ -36,4 +44,11 @@ public interface AttendReleaseService {
      * @param attendRelease 数据
      */
     void save(AttendRelease attendRelease);
+
+    /**
+     * 更新
+     *
+     * @param attendRelease 数据
+     */
+    void update(AttendRelease attendRelease);
 }

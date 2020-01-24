@@ -57,6 +57,22 @@ public class AttendReleaseSubServiceImpl implements AttendReleaseSubService, Pag
     }
 
     @Override
+    public AttendReleaseSub findById(int id) {
+        return attendReleaseSubDao.findById(id);
+    }
+
+    @Override
+    public Optional<Record> findByIdRelation(int id) {
+        return create.select()
+                .from(ATTEND_RELEASE_SUB)
+                .leftJoin(ORGANIZE)
+                .on(ATTEND_RELEASE_SUB.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
+                .leftJoin(USERS)
+                .on(ATTEND_RELEASE_SUB.USERNAME.eq(USERS.USERNAME))
+                .fetchOptional();
+    }
+
+    @Override
     public Result<Record> findAllByPage(SimplePaginationUtil paginationUtil) {
         SelectOnConditionStep<Record> selectOnConditionStep = create.select()
                 .from(ATTEND_RELEASE_SUB)
@@ -96,6 +112,16 @@ public class AttendReleaseSubServiceImpl implements AttendReleaseSubService, Pag
     @Override
     public void batchSave(List<AttendReleaseSub> attendReleaseSubs) {
         attendReleaseSubDao.insert(attendReleaseSubs);
+    }
+
+    @Override
+    public void deleteById(int id) {
+        attendReleaseSubDao.deleteById(id);
+    }
+
+    @Override
+    public void update(AttendReleaseSub attendReleaseSub) {
+        attendReleaseSubDao.update(attendReleaseSub);
     }
 
     @Override

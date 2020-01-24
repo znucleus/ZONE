@@ -5,13 +5,8 @@ import org.jooq.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
-import top.zbeboy.zone.domain.tables.pojos.AttendRelease;
-import top.zbeboy.zone.domain.tables.pojos.AttendUsers;
-import top.zbeboy.zone.domain.tables.pojos.Student;
-import top.zbeboy.zone.domain.tables.pojos.Users;
+import org.springframework.web.bind.annotation.*;
+import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.service.attend.AttendReleaseService;
 import top.zbeboy.zone.service.attend.AttendReleaseSubService;
 import top.zbeboy.zone.service.attend.AttendUsersService;
@@ -26,14 +21,12 @@ import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.ByteUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zone.web.vo.attend.release.AttendReleaseAddVo;
+import top.zbeboy.zone.web.vo.attend.release.AttendReleaseEditVo;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 public class AttendReleaseApiController {
@@ -173,6 +166,107 @@ public class AttendReleaseApiController {
         }
         simplePaginationUtil.setTotalSize(attendReleaseSubService.countAll(simplePaginationUtil));
         ajaxUtil.success().list(beans).page(simplePaginationUtil).msg("获取数据成功");
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 通过id查询子表数据
+     *
+     * @param attendReleaseSubId 子表id
+     * @return 数据
+     */
+    @GetMapping("/api/attend/sub/query/{id}")
+    public ResponseEntity<Map<String, Object>> subQuery(@PathVariable("id") int attendReleaseSubId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        Optional<Record> record = attendReleaseSubService.findByIdRelation(attendReleaseSubId);
+        if (record.isPresent()) {
+            AttendReleaseSubBean attendReleaseSub = record.get().into(AttendReleaseSubBean.class);
+            attendReleaseSub.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(attendReleaseSub.getReleaseTime()));
+            attendReleaseSub.setAttendStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(attendReleaseSub.getAttendStartTime()));
+            attendReleaseSub.setAttendEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(attendReleaseSub.getAttendEndTime()));
+            ajaxUtil.success().msg("查询数据成功").put("attendReleaseSub", attendReleaseSub);
+        } else {
+            ajaxUtil.fail().msg("根据ID未查询到签到发布子表数据");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 根据id删除子表数据
+     *
+     * @param attendReleaseSubId 子表数据
+     * @return 数据
+     */
+    @PostMapping("/api/attend/sub/delete")
+    public ResponseEntity<Map<String, Object>> subDelete(@RequestParam("id") int attendReleaseSubId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        attendReleaseSubService.deleteById(attendReleaseSubId);
+        ajaxUtil.success().msg("删除数据成功");
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 更新
+     *
+     * @param attendReleaseEditVo 数据
+     * @param bindingResult       校验
+     * @return true or false
+     */
+    @PostMapping("/api/attend/update")
+    public ResponseEntity<Map<String, Object>> update(@Valid AttendReleaseEditVo attendReleaseEditVo, BindingResult bindingResult) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+
+        if (!bindingResult.hasErrors()) {
+            // 更新子表
+            AttendReleaseSub attendReleaseSub = attendReleaseSubService.findById(attendReleaseEditVo.getAttendReleaseSubId());
+            if (Objects.nonNull(attendReleaseSub)) {
+                attendReleaseSub.setTitle(attendReleaseEditVo.getTitle());
+                attendReleaseSub.setIsAuto(ByteUtil.toByte(1).equals(attendReleaseEditVo.getIsAuto()) ? ByteUtil.toByte(1) : ByteUtil.toByte(0));
+
+                // 选择自动生成
+                if (BooleanUtil.toBoolean(attendReleaseEditVo.getIsAuto())) {
+                    // 如果生效时间是未来，这个签到开始，结束时间，日期必须是生效时间日期
+                    String attendStartTimeSuffix = attendReleaseEditVo.getAttendStartTime().split(" ")[1];
+                    String attendEndTimeSuffix = attendReleaseEditVo.getAttendEndTime().split(" ")[1];
+                    String validDatePrefix = attendReleaseEditVo.getValidDate().split(" ")[0];
+
+                    attendReleaseSub.setAttendStartTime(DateTimeUtil.defaultParseSqlTimestamp(validDatePrefix + " " + attendStartTimeSuffix));
+                    attendReleaseSub.setAttendEndTime(DateTimeUtil.defaultParseSqlTimestamp(validDatePrefix + " " + attendEndTimeSuffix));
+
+                    attendReleaseSub.setValidDate(DateTimeUtil.defaultParseSqlTimestamp(attendReleaseEditVo.getValidDate()));
+                    attendReleaseSub.setExpireDate(DateTimeUtil.defaultParseSqlTimestamp(attendReleaseEditVo.getExpireDate()));
+                } else {
+                    // 非自动生成，立即生效且失效
+                    attendReleaseSub.setValidDate(DateTimeUtil.getNowSqlTimestamp());
+                    attendReleaseSub.setExpireDate(DateTimeUtil.getNowSqlTimestamp());
+                    attendReleaseSub.setAttendStartTime(DateTimeUtil.defaultParseSqlTimestamp(attendReleaseEditVo.getAttendStartTime()));
+                    attendReleaseSub.setAttendEndTime(DateTimeUtil.defaultParseSqlTimestamp(attendReleaseEditVo.getAttendEndTime()));
+                }
+
+                attendReleaseSubService.update(attendReleaseSub);
+
+                // 更新主表
+                AttendRelease attendRelease = attendReleaseService.findById(attendReleaseSub.getAttendReleaseId());
+                if (Objects.nonNull(attendRelease)) {
+                    attendRelease.setTitle(attendReleaseSub.getTitle());
+                    attendRelease.setIsAuto(attendReleaseSub.getIsAuto());
+                    attendRelease.setValidDate(attendReleaseSub.getValidDate());
+                    attendRelease.setExpireDate(attendReleaseSub.getExpireDate());
+                    attendRelease.setAttendStartTime(attendReleaseSub.getAttendStartTime());
+                    attendRelease.setAttendEndTime(attendReleaseSub.getAttendEndTime());
+
+                    attendReleaseService.update(attendRelease);
+
+                    ajaxUtil.success().msg("更新成功");
+                } else {
+                    ajaxUtil.fail().msg("根据ID未查询到签到发布主表数据");
+                }
+            } else {
+                ajaxUtil.fail().msg("根据ID未查询到签到发布子表数据");
+            }
+        } else {
+            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }
