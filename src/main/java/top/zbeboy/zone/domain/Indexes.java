@@ -18,6 +18,7 @@ import top.zbeboy.zone.domain.tables.AnswerResult;
 import top.zbeboy.zone.domain.tables.AnswerSolving;
 import top.zbeboy.zone.domain.tables.AnswerSubject;
 import top.zbeboy.zone.domain.tables.Application;
+import top.zbeboy.zone.domain.tables.AttendData;
 import top.zbeboy.zone.domain.tables.AttendRelease;
 import top.zbeboy.zone.domain.tables.AttendReleaseSub;
 import top.zbeboy.zone.domain.tables.AttendUsers;
@@ -95,6 +96,8 @@ public class Indexes {
     public static final Index ANSWER_SUBJECT_PRIMARY = Indexes0.ANSWER_SUBJECT_PRIMARY;
     public static final Index ANSWER_SUBJECT_USERNAME = Indexes0.ANSWER_SUBJECT_USERNAME;
     public static final Index APPLICATION_PRIMARY = Indexes0.APPLICATION_PRIMARY;
+    public static final Index ATTEND_DATA_ATTEND_RELEASE_SUB_ID = Indexes0.ATTEND_DATA_ATTEND_RELEASE_SUB_ID;
+    public static final Index ATTEND_DATA_PRIMARY = Indexes0.ATTEND_DATA_PRIMARY;
     public static final Index ATTEND_RELEASE_ORGANIZE_ID = Indexes0.ATTEND_RELEASE_ORGANIZE_ID;
     public static final Index ATTEND_RELEASE_PRIMARY = Indexes0.ATTEND_RELEASE_PRIMARY;
     public static final Index ATTEND_RELEASE_USERNAME = Indexes0.ATTEND_RELEASE_USERNAME;
@@ -102,7 +105,7 @@ public class Indexes {
     public static final Index ATTEND_RELEASE_SUB_ORGANIZE_ID = Indexes0.ATTEND_RELEASE_SUB_ORGANIZE_ID;
     public static final Index ATTEND_RELEASE_SUB_PRIMARY = Indexes0.ATTEND_RELEASE_SUB_PRIMARY;
     public static final Index ATTEND_RELEASE_SUB_USERNAME = Indexes0.ATTEND_RELEASE_SUB_USERNAME;
-    public static final Index ATTEND_USERS_ATTEND_RELEASE_SUB_ID = Indexes0.ATTEND_USERS_ATTEND_RELEASE_SUB_ID;
+    public static final Index ATTEND_USERS_ATTEND_RELEASE_ID = Indexes0.ATTEND_USERS_ATTEND_RELEASE_ID;
     public static final Index ATTEND_USERS_PRIMARY = Indexes0.ATTEND_USERS_PRIMARY;
     public static final Index ATTEND_USERS_STUDENT_ID = Indexes0.ATTEND_USERS_STUDENT_ID;
     public static final Index AUTHORITIES_PRIMARY = Indexes0.AUTHORITIES_PRIMARY;
@@ -212,6 +215,8 @@ public class Indexes {
         public static Index ANSWER_SUBJECT_PRIMARY = Internal.createIndex("PRIMARY", AnswerSubject.ANSWER_SUBJECT, new OrderField[] { AnswerSubject.ANSWER_SUBJECT.ANSWER_SUBJECT_ID }, true);
         public static Index ANSWER_SUBJECT_USERNAME = Internal.createIndex("username", AnswerSubject.ANSWER_SUBJECT, new OrderField[] { AnswerSubject.ANSWER_SUBJECT.USERNAME }, false);
         public static Index APPLICATION_PRIMARY = Internal.createIndex("PRIMARY", Application.APPLICATION, new OrderField[] { Application.APPLICATION.APPLICATION_ID }, true);
+        public static Index ATTEND_DATA_ATTEND_RELEASE_SUB_ID = Internal.createIndex("attend_release_sub_id", AttendData.ATTEND_DATA, new OrderField[] { AttendData.ATTEND_DATA.ATTEND_RELEASE_SUB_ID }, false);
+        public static Index ATTEND_DATA_PRIMARY = Internal.createIndex("PRIMARY", AttendData.ATTEND_DATA, new OrderField[] { AttendData.ATTEND_DATA.ATTEND_USERS_ID, AttendData.ATTEND_DATA.ATTEND_RELEASE_SUB_ID }, true);
         public static Index ATTEND_RELEASE_ORGANIZE_ID = Internal.createIndex("organize_id", AttendRelease.ATTEND_RELEASE, new OrderField[] { AttendRelease.ATTEND_RELEASE.ORGANIZE_ID }, false);
         public static Index ATTEND_RELEASE_PRIMARY = Internal.createIndex("PRIMARY", AttendRelease.ATTEND_RELEASE, new OrderField[] { AttendRelease.ATTEND_RELEASE.ATTEND_RELEASE_ID }, true);
         public static Index ATTEND_RELEASE_USERNAME = Internal.createIndex("username", AttendRelease.ATTEND_RELEASE, new OrderField[] { AttendRelease.ATTEND_RELEASE.USERNAME }, false);
@@ -219,7 +224,7 @@ public class Indexes {
         public static Index ATTEND_RELEASE_SUB_ORGANIZE_ID = Internal.createIndex("organize_id", AttendReleaseSub.ATTEND_RELEASE_SUB, new OrderField[] { AttendReleaseSub.ATTEND_RELEASE_SUB.ORGANIZE_ID }, false);
         public static Index ATTEND_RELEASE_SUB_PRIMARY = Internal.createIndex("PRIMARY", AttendReleaseSub.ATTEND_RELEASE_SUB, new OrderField[] { AttendReleaseSub.ATTEND_RELEASE_SUB.ATTEND_RELEASE_SUB_ID }, true);
         public static Index ATTEND_RELEASE_SUB_USERNAME = Internal.createIndex("username", AttendReleaseSub.ATTEND_RELEASE_SUB, new OrderField[] { AttendReleaseSub.ATTEND_RELEASE_SUB.USERNAME }, false);
-        public static Index ATTEND_USERS_ATTEND_RELEASE_SUB_ID = Internal.createIndex("attend_release_sub_id", AttendUsers.ATTEND_USERS, new OrderField[] { AttendUsers.ATTEND_USERS.ATTEND_RELEASE_SUB_ID }, false);
+        public static Index ATTEND_USERS_ATTEND_RELEASE_ID = Internal.createIndex("attend_release_id", AttendUsers.ATTEND_USERS, new OrderField[] { AttendUsers.ATTEND_USERS.ATTEND_RELEASE_ID }, false);
         public static Index ATTEND_USERS_PRIMARY = Internal.createIndex("PRIMARY", AttendUsers.ATTEND_USERS, new OrderField[] { AttendUsers.ATTEND_USERS.ATTEND_USERS_ID }, true);
         public static Index ATTEND_USERS_STUDENT_ID = Internal.createIndex("student_id", AttendUsers.ATTEND_USERS, new OrderField[] { AttendUsers.ATTEND_USERS.STUDENT_ID }, false);
         public static Index AUTHORITIES_PRIMARY = Internal.createIndex("PRIMARY", Authorities.AUTHORITIES, new OrderField[] { Authorities.AUTHORITIES.USERNAME, Authorities.AUTHORITIES.AUTHORITY }, true);

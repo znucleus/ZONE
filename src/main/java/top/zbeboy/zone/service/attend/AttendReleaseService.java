@@ -3,9 +3,17 @@ package top.zbeboy.zone.service.attend;
 import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.zone.domain.tables.pojos.AttendRelease;
+import top.zbeboy.zone.domain.tables.records.AttendReleaseRecord;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
 public interface AttendReleaseService {
+
+    /**
+     * 查询自动生成数据
+     *
+     * @return 数据
+     */
+    Result<AttendReleaseRecord> findIsAuto();
 
     /**
      * 分布查询

@@ -88,31 +88,17 @@ public class AttendUsersDao extends DAOImpl<AttendUsersRecord, top.zbeboy.zone.d
     }
 
     /**
-     * Fetch records that have <code>status BETWEEN lowerInclusive AND upperInclusive</code>
+     * Fetch records that have <code>attend_release_id BETWEEN lowerInclusive AND upperInclusive</code>
      */
-    public List<top.zbeboy.zone.domain.tables.pojos.AttendUsers> fetchRangeOfStatus(Byte lowerInclusive, Byte upperInclusive) {
-        return fetchRange(AttendUsers.ATTEND_USERS.STATUS, lowerInclusive, upperInclusive);
+    public List<top.zbeboy.zone.domain.tables.pojos.AttendUsers> fetchRangeOfAttendReleaseId(String lowerInclusive, String upperInclusive) {
+        return fetchRange(AttendUsers.ATTEND_USERS.ATTEND_RELEASE_ID, lowerInclusive, upperInclusive);
     }
 
     /**
-     * Fetch records that have <code>status IN (values)</code>
+     * Fetch records that have <code>attend_release_id IN (values)</code>
      */
-    public List<top.zbeboy.zone.domain.tables.pojos.AttendUsers> fetchByStatus(Byte... values) {
-        return fetch(AttendUsers.ATTEND_USERS.STATUS, values);
-    }
-
-    /**
-     * Fetch records that have <code>attend_release_sub_id BETWEEN lowerInclusive AND upperInclusive</code>
-     */
-    public List<top.zbeboy.zone.domain.tables.pojos.AttendUsers> fetchRangeOfAttendReleaseSubId(String lowerInclusive, String upperInclusive) {
-        return fetchRange(AttendUsers.ATTEND_USERS.ATTEND_RELEASE_SUB_ID, lowerInclusive, upperInclusive);
-    }
-
-    /**
-     * Fetch records that have <code>attend_release_sub_id IN (values)</code>
-     */
-    public List<top.zbeboy.zone.domain.tables.pojos.AttendUsers> fetchByAttendReleaseSubId(String... values) {
-        return fetch(AttendUsers.ATTEND_USERS.ATTEND_RELEASE_SUB_ID, values);
+    public List<top.zbeboy.zone.domain.tables.pojos.AttendUsers> fetchByAttendReleaseId(String... values) {
+        return fetch(AttendUsers.ATTEND_USERS.ATTEND_RELEASE_ID, values);
     }
 
     /**
@@ -127,20 +113,6 @@ public class AttendUsersDao extends DAOImpl<AttendUsersRecord, top.zbeboy.zone.d
      */
     public List<top.zbeboy.zone.domain.tables.pojos.AttendUsers> fetchByCreateDate(Timestamp... values) {
         return fetch(AttendUsers.ATTEND_USERS.CREATE_DATE, values);
-    }
-
-    /**
-     * Fetch records that have <code>operate_date BETWEEN lowerInclusive AND upperInclusive</code>
-     */
-    public List<top.zbeboy.zone.domain.tables.pojos.AttendUsers> fetchRangeOfOperateDate(Timestamp lowerInclusive, Timestamp upperInclusive) {
-        return fetchRange(AttendUsers.ATTEND_USERS.OPERATE_DATE, lowerInclusive, upperInclusive);
-    }
-
-    /**
-     * Fetch records that have <code>operate_date IN (values)</code>
-     */
-    public List<top.zbeboy.zone.domain.tables.pojos.AttendUsers> fetchByOperateDate(Timestamp... values) {
-        return fetch(AttendUsers.ATTEND_USERS.OPERATE_DATE, values);
     }
 
     /**

@@ -14,6 +14,7 @@ import top.zbeboy.zone.domain.tables.AnswerResult;
 import top.zbeboy.zone.domain.tables.AnswerSolving;
 import top.zbeboy.zone.domain.tables.AnswerSubject;
 import top.zbeboy.zone.domain.tables.Application;
+import top.zbeboy.zone.domain.tables.AttendData;
 import top.zbeboy.zone.domain.tables.AttendRelease;
 import top.zbeboy.zone.domain.tables.AttendReleaseSub;
 import top.zbeboy.zone.domain.tables.AttendUsers;
@@ -112,6 +113,11 @@ public class Tables {
      * The table <code>zone.application</code>.
      */
     public static final Application APPLICATION = Application.APPLICATION;
+
+    /**
+     * The table <code>zone.attend_data</code>.
+     */
+    public static final AttendData ATTEND_DATA = AttendData.ATTEND_DATA;
 
     /**
      * The table <code>zone.attend_release</code>.

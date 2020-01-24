@@ -13,6 +13,7 @@ import top.zbeboy.zone.domain.tables.daos.AttendReleaseDao;
 import top.zbeboy.zone.domain.tables.pojos.AttendRelease;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
+import top.zbeboy.zone.domain.tables.records.AttendReleaseRecord;
 import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.RoleService;
@@ -20,6 +21,7 @@ import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zone.service.util.SQLQueryUtil;
+import top.zbeboy.zone.web.util.ByteUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
 import javax.annotation.Resource;
@@ -56,6 +58,16 @@ public class AttendReleaseServiceImpl implements AttendReleaseService, Paginatio
     @Autowired
     AttendReleaseServiceImpl(DSLContext dslContext) {
         create = dslContext;
+    }
+
+    @Override
+    public Result<AttendReleaseRecord> findIsAuto() {
+        return create.selectFrom(ATTEND_RELEASE)
+                .where(ATTEND_RELEASE.IS_AUTO.eq(ByteUtil.toByte(1))
+                .and(ATTEND_RELEASE.VALID_DATE.le(now()))
+                .and(ATTEND_RELEASE.EXPIRE_DATE.gt(now()))
+                .and(ATTEND_RELEASE.EXPIRE_DATE.gt(ATTEND_RELEASE.VALID_DATE)))
+                .fetch();
     }
 
     @Override

@@ -7,15 +7,22 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import top.zbeboy.zone.domain.tables.pojos.AttendRelease;
+import top.zbeboy.zone.domain.tables.pojos.AttendReleaseSub;
 import top.zbeboy.zone.domain.tables.pojos.SystemOperatorLog;
 import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zone.domain.tables.records.AttendReleaseRecord;
 import top.zbeboy.zone.domain.tables.records.UsersRecord;
+import top.zbeboy.zone.service.attend.AttendReleaseService;
+import top.zbeboy.zone.service.attend.AttendReleaseSubService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.system.SystemOperatorLogService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -55,6 +62,12 @@ public class ScheduledConfiguration {
     @Resource
     private SystemOperatorLogService systemOperatorLogService;
 
+    @Resource
+    private AttendReleaseService attendReleaseService;
+
+    @Resource
+    private AttendReleaseSubService attendReleaseSubService;
+
     /**
      * 清理未验证用户信息
      * 每月2号 晚间1点15分
@@ -85,6 +98,42 @@ public class ScheduledConfiguration {
     public void unlockUsers() {
         this.usersService.unlockUsers();
         log.info(">>>>>>>>>>>>> scheduled ... unlock users ");
+    }
+
+    /**
+     * 自动生成签到数据
+     */
+    @Scheduled(cron = "0 5 00 * * ?") // 每天 晚间12点05分
+    public void generateAttend() {
+        Result<AttendReleaseRecord> releaseRecords = attendReleaseService.findIsAuto();
+        if(releaseRecords.isNotEmpty()){
+            List<AttendRelease> attendReleases = releaseRecords.into(AttendRelease.class);
+            List<AttendReleaseSub> attendReleaseSubs = new ArrayList<>();
+
+            String timePrefix = DateTimeUtil.formatUtilDate(new Date(),DateTimeUtil.YEAR_MONTH_DAY_FORMAT);
+            for(AttendRelease releaseRecord :attendReleases){
+                String attendStartTime = DateTimeUtil.defaultFormatSqlTimestamp(releaseRecord.getAttendStartTime());
+                String attendEndTime = DateTimeUtil.defaultFormatSqlTimestamp(releaseRecord.getAttendEndTime());
+                String attendStartTimeSuffix = attendStartTime.split(" ")[1];
+                String attendEndTimeSuffix = attendEndTime.split(" ")[1];
+                AttendReleaseSub attendReleaseSub = new AttendReleaseSub();
+                attendReleaseSub.setTitle(releaseRecord.getTitle());
+                attendReleaseSub.setAttendStartTime(DateTimeUtil.defaultParseSqlTimestamp(timePrefix + " " + attendStartTimeSuffix));
+                attendReleaseSub.setAttendEndTime(DateTimeUtil.defaultParseSqlTimestamp(timePrefix + " " + attendEndTimeSuffix));
+                attendReleaseSub.setIsAuto(releaseRecord.getIsAuto());
+                attendReleaseSub.setValidDate(releaseRecord.getValidDate());
+                attendReleaseSub.setExpireDate(releaseRecord.getExpireDate());
+                attendReleaseSub.setOrganizeId(releaseRecord.getOrganizeId());
+                attendReleaseSub.setUsername(releaseRecord.getUsername());
+                attendReleaseSub.setAttendReleaseId(releaseRecord.getAttendReleaseId());
+                attendReleaseSub.setReleaseTime(DateTimeUtil.getNowSqlTimestamp());
+
+                attendReleaseSubs.add(attendReleaseSub);
+            }
+
+            attendReleaseSubService.batchSave(attendReleaseSubs);
+        }
+        log.info(">>>>>>>>>>>>> scheduled ... generate attend ");
     }
 
 }

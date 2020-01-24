@@ -25,14 +25,12 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AttendUsers implements Serializable {
 
-    private static final long serialVersionUID = 1628810029;
+    private static final long serialVersionUID = 1357383615;
 
     private String    attendUsersId;
     private Integer   studentId;
-    private Byte      status;
-    private String    attendReleaseSubId;
+    private String    attendReleaseId;
     private Timestamp createDate;
-    private Timestamp operateDate;
     private String    remark;
 
     public AttendUsers() {}
@@ -40,28 +38,22 @@ public class AttendUsers implements Serializable {
     public AttendUsers(AttendUsers value) {
         this.attendUsersId = value.attendUsersId;
         this.studentId = value.studentId;
-        this.status = value.status;
-        this.attendReleaseSubId = value.attendReleaseSubId;
+        this.attendReleaseId = value.attendReleaseId;
         this.createDate = value.createDate;
-        this.operateDate = value.operateDate;
         this.remark = value.remark;
     }
 
     public AttendUsers(
         String    attendUsersId,
         Integer   studentId,
-        Byte      status,
-        String    attendReleaseSubId,
+        String    attendReleaseId,
         Timestamp createDate,
-        Timestamp operateDate,
         String    remark
     ) {
         this.attendUsersId = attendUsersId;
         this.studentId = studentId;
-        this.status = status;
-        this.attendReleaseSubId = attendReleaseSubId;
+        this.attendReleaseId = attendReleaseId;
         this.createDate = createDate;
-        this.operateDate = operateDate;
         this.remark = remark;
     }
 
@@ -84,22 +76,14 @@ public class AttendUsers implements Serializable {
         this.studentId = studentId;
     }
 
-    public Byte getStatus() {
-        return this.status;
-    }
-
-    public void setStatus(Byte status) {
-        this.status = status;
-    }
-
     @NotNull
     @Size(max = 64)
-    public String getAttendReleaseSubId() {
-        return this.attendReleaseSubId;
+    public String getAttendReleaseId() {
+        return this.attendReleaseId;
     }
 
-    public void setAttendReleaseSubId(String attendReleaseSubId) {
-        this.attendReleaseSubId = attendReleaseSubId;
+    public void setAttendReleaseId(String attendReleaseId) {
+        this.attendReleaseId = attendReleaseId;
     }
 
     @NotNull
@@ -109,14 +93,6 @@ public class AttendUsers implements Serializable {
 
     public void setCreateDate(Timestamp createDate) {
         this.createDate = createDate;
-    }
-
-    public Timestamp getOperateDate() {
-        return this.operateDate;
-    }
-
-    public void setOperateDate(Timestamp operateDate) {
-        this.operateDate = operateDate;
     }
 
     @Size(max = 200)
@@ -134,10 +110,8 @@ public class AttendUsers implements Serializable {
 
         sb.append(attendUsersId);
         sb.append(", ").append(studentId);
-        sb.append(", ").append(status);
-        sb.append(", ").append(attendReleaseSubId);
+        sb.append(", ").append(attendReleaseId);
         sb.append(", ").append(createDate);
-        sb.append(", ").append(operateDate);
         sb.append(", ").append(remark);
 
         sb.append(")");

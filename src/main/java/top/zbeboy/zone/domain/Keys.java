@@ -19,6 +19,7 @@ import top.zbeboy.zone.domain.tables.AnswerResult;
 import top.zbeboy.zone.domain.tables.AnswerSolving;
 import top.zbeboy.zone.domain.tables.AnswerSubject;
 import top.zbeboy.zone.domain.tables.Application;
+import top.zbeboy.zone.domain.tables.AttendData;
 import top.zbeboy.zone.domain.tables.AttendRelease;
 import top.zbeboy.zone.domain.tables.AttendReleaseSub;
 import top.zbeboy.zone.domain.tables.AttendUsers;
@@ -68,6 +69,7 @@ import top.zbeboy.zone.domain.tables.records.AnswerResultRecord;
 import top.zbeboy.zone.domain.tables.records.AnswerSolvingRecord;
 import top.zbeboy.zone.domain.tables.records.AnswerSubjectRecord;
 import top.zbeboy.zone.domain.tables.records.ApplicationRecord;
+import top.zbeboy.zone.domain.tables.records.AttendDataRecord;
 import top.zbeboy.zone.domain.tables.records.AttendReleaseRecord;
 import top.zbeboy.zone.domain.tables.records.AttendReleaseSubRecord;
 import top.zbeboy.zone.domain.tables.records.AttendUsersRecord;
@@ -130,6 +132,7 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final Identity<AcademicTitleRecord, Integer> IDENTITY_ACADEMIC_TITLE = Identities0.IDENTITY_ACADEMIC_TITLE;
+    public static final Identity<AttendReleaseSubRecord, Integer> IDENTITY_ATTEND_RELEASE_SUB = Identities0.IDENTITY_ATTEND_RELEASE_SUB;
     public static final Identity<AuthorizeTypeRecord, Integer> IDENTITY_AUTHORIZE_TYPE = Identities0.IDENTITY_AUTHORIZE_TYPE;
     public static final Identity<CollegeRecord, Integer> IDENTITY_COLLEGE = Identities0.IDENTITY_COLLEGE;
     public static final Identity<DepartmentRecord, Integer> IDENTITY_DEPARTMENT = Identities0.IDENTITY_DEPARTMENT;
@@ -155,6 +158,7 @@ public class Keys {
     public static final UniqueKey<AnswerSolvingRecord> KEY_ANSWER_SOLVING_PRIMARY = UniqueKeys0.KEY_ANSWER_SOLVING_PRIMARY;
     public static final UniqueKey<AnswerSubjectRecord> KEY_ANSWER_SUBJECT_PRIMARY = UniqueKeys0.KEY_ANSWER_SUBJECT_PRIMARY;
     public static final UniqueKey<ApplicationRecord> KEY_APPLICATION_PRIMARY = UniqueKeys0.KEY_APPLICATION_PRIMARY;
+    public static final UniqueKey<AttendDataRecord> KEY_ATTEND_DATA_PRIMARY = UniqueKeys0.KEY_ATTEND_DATA_PRIMARY;
     public static final UniqueKey<AttendReleaseRecord> KEY_ATTEND_RELEASE_PRIMARY = UniqueKeys0.KEY_ATTEND_RELEASE_PRIMARY;
     public static final UniqueKey<AttendReleaseSubRecord> KEY_ATTEND_RELEASE_SUB_PRIMARY = UniqueKeys0.KEY_ATTEND_RELEASE_SUB_PRIMARY;
     public static final UniqueKey<AttendUsersRecord> KEY_ATTEND_USERS_PRIMARY = UniqueKeys0.KEY_ATTEND_USERS_PRIMARY;
@@ -223,13 +227,15 @@ public class Keys {
     public static final ForeignKey<AnswerSolvingRecord, AnswerReleaseRecord> ANSWER_SOLVING_IBFK_2 = ForeignKeys0.ANSWER_SOLVING_IBFK_2;
     public static final ForeignKey<AnswerSubjectRecord, AnswerBankRecord> ANSWER_SUBJECT_IBFK_1 = ForeignKeys0.ANSWER_SUBJECT_IBFK_1;
     public static final ForeignKey<AnswerSubjectRecord, UsersRecord> ANSWER_SUBJECT_IBFK_2 = ForeignKeys0.ANSWER_SUBJECT_IBFK_2;
+    public static final ForeignKey<AttendDataRecord, AttendUsersRecord> ATTEND_DATA_IBFK_2 = ForeignKeys0.ATTEND_DATA_IBFK_2;
+    public static final ForeignKey<AttendDataRecord, AttendReleaseSubRecord> ATTEND_DATA_IBFK_1 = ForeignKeys0.ATTEND_DATA_IBFK_1;
     public static final ForeignKey<AttendReleaseRecord, OrganizeRecord> ATTEND_RELEASE_IBFK_1 = ForeignKeys0.ATTEND_RELEASE_IBFK_1;
     public static final ForeignKey<AttendReleaseRecord, UsersRecord> ATTEND_RELEASE_IBFK_2 = ForeignKeys0.ATTEND_RELEASE_IBFK_2;
     public static final ForeignKey<AttendReleaseSubRecord, OrganizeRecord> ATTEND_RELEASE_SUB_IBFK_2 = ForeignKeys0.ATTEND_RELEASE_SUB_IBFK_2;
     public static final ForeignKey<AttendReleaseSubRecord, UsersRecord> ATTEND_RELEASE_SUB_IBFK_3 = ForeignKeys0.ATTEND_RELEASE_SUB_IBFK_3;
     public static final ForeignKey<AttendReleaseSubRecord, AttendReleaseRecord> ATTEND_RELEASE_SUB_IBFK_1 = ForeignKeys0.ATTEND_RELEASE_SUB_IBFK_1;
     public static final ForeignKey<AttendUsersRecord, StudentRecord> ATTEND_USERS_IBFK_2 = ForeignKeys0.ATTEND_USERS_IBFK_2;
-    public static final ForeignKey<AttendUsersRecord, AttendReleaseSubRecord> ATTEND_USERS_IBFK_1 = ForeignKeys0.ATTEND_USERS_IBFK_1;
+    public static final ForeignKey<AttendUsersRecord, AttendReleaseRecord> ATTEND_USERS_IBFK_1 = ForeignKeys0.ATTEND_USERS_IBFK_1;
     public static final ForeignKey<AuthoritiesRecord, UsersRecord> AUTHORITIES_IBFK_1 = ForeignKeys0.AUTHORITIES_IBFK_1;
     public static final ForeignKey<BuildingRecord, CollegeRecord> BUILDING_IBFK_1 = ForeignKeys0.BUILDING_IBFK_1;
     public static final ForeignKey<CollegeRecord, SchoolRecord> COLLEGE_IBFK_1 = ForeignKeys0.COLLEGE_IBFK_1;
@@ -276,6 +282,7 @@ public class Keys {
 
     private static class Identities0 {
         public static Identity<AcademicTitleRecord, Integer> IDENTITY_ACADEMIC_TITLE = Internal.createIdentity(AcademicTitle.ACADEMIC_TITLE, AcademicTitle.ACADEMIC_TITLE.ACADEMIC_TITLE_ID);
+        public static Identity<AttendReleaseSubRecord, Integer> IDENTITY_ATTEND_RELEASE_SUB = Internal.createIdentity(AttendReleaseSub.ATTEND_RELEASE_SUB, AttendReleaseSub.ATTEND_RELEASE_SUB.ATTEND_RELEASE_SUB_ID);
         public static Identity<AuthorizeTypeRecord, Integer> IDENTITY_AUTHORIZE_TYPE = Internal.createIdentity(AuthorizeType.AUTHORIZE_TYPE, AuthorizeType.AUTHORIZE_TYPE.AUTHORIZE_TYPE_ID);
         public static Identity<CollegeRecord, Integer> IDENTITY_COLLEGE = Internal.createIdentity(College.COLLEGE, College.COLLEGE.COLLEGE_ID);
         public static Identity<DepartmentRecord, Integer> IDENTITY_DEPARTMENT = Internal.createIdentity(Department.DEPARTMENT, Department.DEPARTMENT.DEPARTMENT_ID);
@@ -299,6 +306,7 @@ public class Keys {
         public static final UniqueKey<AnswerSolvingRecord> KEY_ANSWER_SOLVING_PRIMARY = Internal.createUniqueKey(AnswerSolving.ANSWER_SOLVING, "KEY_answer_solving_PRIMARY", AnswerSolving.ANSWER_SOLVING.ANSWER_SOLVING_ID);
         public static final UniqueKey<AnswerSubjectRecord> KEY_ANSWER_SUBJECT_PRIMARY = Internal.createUniqueKey(AnswerSubject.ANSWER_SUBJECT, "KEY_answer_subject_PRIMARY", AnswerSubject.ANSWER_SUBJECT.ANSWER_SUBJECT_ID);
         public static final UniqueKey<ApplicationRecord> KEY_APPLICATION_PRIMARY = Internal.createUniqueKey(Application.APPLICATION, "KEY_application_PRIMARY", Application.APPLICATION.APPLICATION_ID);
+        public static final UniqueKey<AttendDataRecord> KEY_ATTEND_DATA_PRIMARY = Internal.createUniqueKey(AttendData.ATTEND_DATA, "KEY_attend_data_PRIMARY", AttendData.ATTEND_DATA.ATTEND_USERS_ID, AttendData.ATTEND_DATA.ATTEND_RELEASE_SUB_ID);
         public static final UniqueKey<AttendReleaseRecord> KEY_ATTEND_RELEASE_PRIMARY = Internal.createUniqueKey(AttendRelease.ATTEND_RELEASE, "KEY_attend_release_PRIMARY", AttendRelease.ATTEND_RELEASE.ATTEND_RELEASE_ID);
         public static final UniqueKey<AttendReleaseSubRecord> KEY_ATTEND_RELEASE_SUB_PRIMARY = Internal.createUniqueKey(AttendReleaseSub.ATTEND_RELEASE_SUB, "KEY_attend_release_sub_PRIMARY", AttendReleaseSub.ATTEND_RELEASE_SUB.ATTEND_RELEASE_SUB_ID);
         public static final UniqueKey<AttendUsersRecord> KEY_ATTEND_USERS_PRIMARY = Internal.createUniqueKey(AttendUsers.ATTEND_USERS, "KEY_attend_users_PRIMARY", AttendUsers.ATTEND_USERS.ATTEND_USERS_ID);
@@ -365,13 +373,15 @@ public class Keys {
         public static final ForeignKey<AnswerSolvingRecord, AnswerReleaseRecord> ANSWER_SOLVING_IBFK_2 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_ANSWER_RELEASE_PRIMARY, AnswerSolving.ANSWER_SOLVING, "answer_solving_ibfk_2", AnswerSolving.ANSWER_SOLVING.ANSWER_RELEASE_ID);
         public static final ForeignKey<AnswerSubjectRecord, AnswerBankRecord> ANSWER_SUBJECT_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_ANSWER_BANK_PRIMARY, AnswerSubject.ANSWER_SUBJECT, "answer_subject_ibfk_1", AnswerSubject.ANSWER_SUBJECT.ANSWER_BANK_ID);
         public static final ForeignKey<AnswerSubjectRecord, UsersRecord> ANSWER_SUBJECT_IBFK_2 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_USERS_PRIMARY, AnswerSubject.ANSWER_SUBJECT, "answer_subject_ibfk_2", AnswerSubject.ANSWER_SUBJECT.USERNAME);
+        public static final ForeignKey<AttendDataRecord, AttendUsersRecord> ATTEND_DATA_IBFK_2 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_ATTEND_USERS_PRIMARY, AttendData.ATTEND_DATA, "attend_data_ibfk_2", AttendData.ATTEND_DATA.ATTEND_USERS_ID);
+        public static final ForeignKey<AttendDataRecord, AttendReleaseSubRecord> ATTEND_DATA_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_ATTEND_RELEASE_SUB_PRIMARY, AttendData.ATTEND_DATA, "attend_data_ibfk_1", AttendData.ATTEND_DATA.ATTEND_RELEASE_SUB_ID);
         public static final ForeignKey<AttendReleaseRecord, OrganizeRecord> ATTEND_RELEASE_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_ORGANIZE_PRIMARY, AttendRelease.ATTEND_RELEASE, "attend_release_ibfk_1", AttendRelease.ATTEND_RELEASE.ORGANIZE_ID);
         public static final ForeignKey<AttendReleaseRecord, UsersRecord> ATTEND_RELEASE_IBFK_2 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_USERS_PRIMARY, AttendRelease.ATTEND_RELEASE, "attend_release_ibfk_2", AttendRelease.ATTEND_RELEASE.USERNAME);
         public static final ForeignKey<AttendReleaseSubRecord, OrganizeRecord> ATTEND_RELEASE_SUB_IBFK_2 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_ORGANIZE_PRIMARY, AttendReleaseSub.ATTEND_RELEASE_SUB, "attend_release_sub_ibfk_2", AttendReleaseSub.ATTEND_RELEASE_SUB.ORGANIZE_ID);
         public static final ForeignKey<AttendReleaseSubRecord, UsersRecord> ATTEND_RELEASE_SUB_IBFK_3 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_USERS_PRIMARY, AttendReleaseSub.ATTEND_RELEASE_SUB, "attend_release_sub_ibfk_3", AttendReleaseSub.ATTEND_RELEASE_SUB.USERNAME);
         public static final ForeignKey<AttendReleaseSubRecord, AttendReleaseRecord> ATTEND_RELEASE_SUB_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_ATTEND_RELEASE_PRIMARY, AttendReleaseSub.ATTEND_RELEASE_SUB, "attend_release_sub_ibfk_1", AttendReleaseSub.ATTEND_RELEASE_SUB.ATTEND_RELEASE_ID);
         public static final ForeignKey<AttendUsersRecord, StudentRecord> ATTEND_USERS_IBFK_2 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_STUDENT_PRIMARY, AttendUsers.ATTEND_USERS, "attend_users_ibfk_2", AttendUsers.ATTEND_USERS.STUDENT_ID);
-        public static final ForeignKey<AttendUsersRecord, AttendReleaseSubRecord> ATTEND_USERS_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_ATTEND_RELEASE_SUB_PRIMARY, AttendUsers.ATTEND_USERS, "attend_users_ibfk_1", AttendUsers.ATTEND_USERS.ATTEND_RELEASE_SUB_ID);
+        public static final ForeignKey<AttendUsersRecord, AttendReleaseRecord> ATTEND_USERS_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_ATTEND_RELEASE_PRIMARY, AttendUsers.ATTEND_USERS, "attend_users_ibfk_1", AttendUsers.ATTEND_USERS.ATTEND_RELEASE_ID);
         public static final ForeignKey<AuthoritiesRecord, UsersRecord> AUTHORITIES_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_USERS_PRIMARY, Authorities.AUTHORITIES, "authorities_ibfk_1", Authorities.AUTHORITIES.USERNAME);
         public static final ForeignKey<BuildingRecord, CollegeRecord> BUILDING_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_COLLEGE_PRIMARY, Building.BUILDING, "building_ibfk_1", Building.BUILDING.COLLEGE_ID);
         public static final ForeignKey<CollegeRecord, SchoolRecord> COLLEGE_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_SCHOOL_PRIMARY, College.COLLEGE, "college_ibfk_1", College.COLLEGE.SCHOOL_ID);

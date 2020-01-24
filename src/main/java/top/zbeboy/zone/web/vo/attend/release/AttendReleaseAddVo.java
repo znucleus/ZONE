@@ -13,7 +13,9 @@ public class AttendReleaseAddVo {
     private String attendStartTime;
     @NotBlank(message = "签到结束时间不能为空")
     private String attendEndTime;
+    @NotNull(message = "是否自动生成不能为空")
     private Byte isAuto;
+    private String validDate;
     private String expireDate;
     @NotNull(message = "班级ID不能为空")
     @Min(value = 1, message = "班级不正确")
@@ -49,6 +51,14 @@ public class AttendReleaseAddVo {
 
     public void setIsAuto(Byte isAuto) {
         this.isAuto = isAuto;
+    }
+
+    public String getValidDate() {
+        return validDate;
+    }
+
+    public void setValidDate(String validDate) {
+        this.validDate = validDate;
     }
 
     public String getExpireDate() {

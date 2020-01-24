@@ -12,6 +12,7 @@ import javax.annotation.Generated;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
+import org.jooq.Identity;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
@@ -42,7 +43,7 @@ import top.zbeboy.zone.domain.tables.records.AttendReleaseSubRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AttendReleaseSub extends TableImpl<AttendReleaseSubRecord> {
 
-    private static final long serialVersionUID = 1807060150;
+    private static final long serialVersionUID = 1506162097;
 
     /**
      * The reference instance of <code>zone.attend_release_sub</code>
@@ -60,7 +61,7 @@ public class AttendReleaseSub extends TableImpl<AttendReleaseSubRecord> {
     /**
      * The column <code>zone.attend_release_sub.attend_release_sub_id</code>.
      */
-    public final TableField<AttendReleaseSubRecord, String> ATTEND_RELEASE_SUB_ID = createField(DSL.name("attend_release_sub_id"), org.jooq.impl.SQLDataType.VARCHAR(64).nullable(false), this, "");
+    public final TableField<AttendReleaseSubRecord, Integer> ATTEND_RELEASE_SUB_ID = createField(DSL.name("attend_release_sub_id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false).identity(true), this, "");
 
     /**
      * The column <code>zone.attend_release_sub.title</code>.
@@ -156,6 +157,11 @@ public class AttendReleaseSub extends TableImpl<AttendReleaseSubRecord> {
     }
 
     @Override
+    public Identity<AttendReleaseSubRecord, Integer> getIdentity() {
+        return Keys.IDENTITY_ATTEND_RELEASE_SUB;
+    }
+
+    @Override
     public UniqueKey<AttendReleaseSubRecord> getPrimaryKey() {
         return Keys.KEY_ATTEND_RELEASE_SUB_PRIMARY;
     }
@@ -213,7 +219,7 @@ public class AttendReleaseSub extends TableImpl<AttendReleaseSubRecord> {
     // -------------------------------------------------------------------------
 
     @Override
-    public Row11<String, String, Timestamp, Timestamp, Byte, Timestamp, Timestamp, Integer, String, String, Timestamp> fieldsRow() {
+    public Row11<Integer, String, Timestamp, Timestamp, Byte, Timestamp, Timestamp, Integer, String, String, Timestamp> fieldsRow() {
         return (Row11) super.fieldsRow();
     }
 }

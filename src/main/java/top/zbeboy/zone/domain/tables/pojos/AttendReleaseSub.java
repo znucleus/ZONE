@@ -25,9 +25,9 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AttendReleaseSub implements Serializable {
 
-    private static final long serialVersionUID = -1417580349;
+    private static final long serialVersionUID = 673245510;
 
-    private String    attendReleaseSubId;
+    private Integer   attendReleaseSubId;
     private String    title;
     private Timestamp attendStartTime;
     private Timestamp attendEndTime;
@@ -56,7 +56,7 @@ public class AttendReleaseSub implements Serializable {
     }
 
     public AttendReleaseSub(
-        String    attendReleaseSubId,
+        Integer   attendReleaseSubId,
         String    title,
         Timestamp attendStartTime,
         Timestamp attendEndTime,
@@ -81,13 +81,11 @@ public class AttendReleaseSub implements Serializable {
         this.releaseTime = releaseTime;
     }
 
-    @NotNull
-    @Size(max = 64)
-    public String getAttendReleaseSubId() {
+    public Integer getAttendReleaseSubId() {
         return this.attendReleaseSubId;
     }
 
-    public void setAttendReleaseSubId(String attendReleaseSubId) {
+    public void setAttendReleaseSubId(Integer attendReleaseSubId) {
         this.attendReleaseSubId = attendReleaseSubId;
     }
 

@@ -15,7 +15,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row7;
+import org.jooq.Row5;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -42,7 +42,7 @@ import top.zbeboy.zone.domain.tables.records.AttendUsersRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AttendUsers extends TableImpl<AttendUsersRecord> {
 
-    private static final long serialVersionUID = -1683281288;
+    private static final long serialVersionUID = 1454694020;
 
     /**
      * The reference instance of <code>zone.attend_users</code>
@@ -68,24 +68,14 @@ public class AttendUsers extends TableImpl<AttendUsersRecord> {
     public final TableField<AttendUsersRecord, Integer> STUDENT_ID = createField(DSL.name("student_id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
-     * The column <code>zone.attend_users.status</code>.
+     * The column <code>zone.attend_users.attend_release_id</code>.
      */
-    public final TableField<AttendUsersRecord, Byte> STATUS = createField(DSL.name("status"), org.jooq.impl.SQLDataType.TINYINT.nullable(false).defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.TINYINT)), this, "");
-
-    /**
-     * The column <code>zone.attend_users.attend_release_sub_id</code>.
-     */
-    public final TableField<AttendUsersRecord, String> ATTEND_RELEASE_SUB_ID = createField(DSL.name("attend_release_sub_id"), org.jooq.impl.SQLDataType.VARCHAR(64).nullable(false), this, "");
+    public final TableField<AttendUsersRecord, String> ATTEND_RELEASE_ID = createField(DSL.name("attend_release_id"), org.jooq.impl.SQLDataType.VARCHAR(64).nullable(false), this, "");
 
     /**
      * The column <code>zone.attend_users.create_date</code>.
      */
     public final TableField<AttendUsersRecord, Timestamp> CREATE_DATE = createField(DSL.name("create_date"), org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
-
-    /**
-     * The column <code>zone.attend_users.operate_date</code>.
-     */
-    public final TableField<AttendUsersRecord, Timestamp> OPERATE_DATE = createField(DSL.name("operate_date"), org.jooq.impl.SQLDataType.TIMESTAMP, this, "");
 
     /**
      * The column <code>zone.attend_users.remark</code>.
@@ -132,7 +122,7 @@ public class AttendUsers extends TableImpl<AttendUsersRecord> {
 
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.ATTEND_USERS_ATTEND_RELEASE_SUB_ID, Indexes.ATTEND_USERS_PRIMARY, Indexes.ATTEND_USERS_STUDENT_ID);
+        return Arrays.<Index>asList(Indexes.ATTEND_USERS_ATTEND_RELEASE_ID, Indexes.ATTEND_USERS_PRIMARY, Indexes.ATTEND_USERS_STUDENT_ID);
     }
 
     @Override
@@ -154,8 +144,8 @@ public class AttendUsers extends TableImpl<AttendUsersRecord> {
         return new Student(this, Keys.ATTEND_USERS_IBFK_2);
     }
 
-    public AttendReleaseSub attendReleaseSub() {
-        return new AttendReleaseSub(this, Keys.ATTEND_USERS_IBFK_1);
+    public AttendRelease attendRelease() {
+        return new AttendRelease(this, Keys.ATTEND_USERS_IBFK_1);
     }
 
     @Override
@@ -185,11 +175,11 @@ public class AttendUsers extends TableImpl<AttendUsersRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row7 type methods
+    // Row5 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row7<String, Integer, Byte, String, Timestamp, Timestamp, String> fieldsRow() {
-        return (Row7) super.fieldsRow();
+    public Row5<String, Integer, String, Timestamp, String> fieldsRow() {
+        return (Row5) super.fieldsRow();
     }
 }

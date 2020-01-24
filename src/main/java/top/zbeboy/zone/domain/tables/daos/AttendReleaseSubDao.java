@@ -30,7 +30,7 @@ import top.zbeboy.zone.domain.tables.records.AttendReleaseSubRecord;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 @Repository
-public class AttendReleaseSubDao extends DAOImpl<AttendReleaseSubRecord, top.zbeboy.zone.domain.tables.pojos.AttendReleaseSub, String> {
+public class AttendReleaseSubDao extends DAOImpl<AttendReleaseSubRecord, top.zbeboy.zone.domain.tables.pojos.AttendReleaseSub, Integer> {
 
     /**
      * Create a new AttendReleaseSubDao without any configuration
@@ -48,28 +48,28 @@ public class AttendReleaseSubDao extends DAOImpl<AttendReleaseSubRecord, top.zbe
     }
 
     @Override
-    public String getId(top.zbeboy.zone.domain.tables.pojos.AttendReleaseSub object) {
+    public Integer getId(top.zbeboy.zone.domain.tables.pojos.AttendReleaseSub object) {
         return object.getAttendReleaseSubId();
     }
 
     /**
      * Fetch records that have <code>attend_release_sub_id BETWEEN lowerInclusive AND upperInclusive</code>
      */
-    public List<top.zbeboy.zone.domain.tables.pojos.AttendReleaseSub> fetchRangeOfAttendReleaseSubId(String lowerInclusive, String upperInclusive) {
+    public List<top.zbeboy.zone.domain.tables.pojos.AttendReleaseSub> fetchRangeOfAttendReleaseSubId(Integer lowerInclusive, Integer upperInclusive) {
         return fetchRange(AttendReleaseSub.ATTEND_RELEASE_SUB.ATTEND_RELEASE_SUB_ID, lowerInclusive, upperInclusive);
     }
 
     /**
      * Fetch records that have <code>attend_release_sub_id IN (values)</code>
      */
-    public List<top.zbeboy.zone.domain.tables.pojos.AttendReleaseSub> fetchByAttendReleaseSubId(String... values) {
+    public List<top.zbeboy.zone.domain.tables.pojos.AttendReleaseSub> fetchByAttendReleaseSubId(Integer... values) {
         return fetch(AttendReleaseSub.ATTEND_RELEASE_SUB.ATTEND_RELEASE_SUB_ID, values);
     }
 
     /**
      * Fetch a unique record that has <code>attend_release_sub_id = value</code>
      */
-    public top.zbeboy.zone.domain.tables.pojos.AttendReleaseSub fetchOneByAttendReleaseSubId(String value) {
+    public top.zbeboy.zone.domain.tables.pojos.AttendReleaseSub fetchOneByAttendReleaseSubId(Integer value) {
         return fetchOne(AttendReleaseSub.ATTEND_RELEASE_SUB.ATTEND_RELEASE_SUB_ID, value);
     }
 
