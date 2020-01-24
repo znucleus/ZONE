@@ -5,15 +5,18 @@ import org.jooq.Record;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.College;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
+import top.zbeboy.zone.service.data.OrganizeService;
 import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
+import top.zbeboy.zone.web.bean.data.organize.OrganizeBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 
 import javax.annotation.Resource;
@@ -37,6 +40,9 @@ public class OrganizeViewController {
 
     @Resource
     private StudentService studentService;
+
+    @Resource
+    private OrganizeService organizeService;
 
     /**
      * 班级数据
@@ -93,6 +99,37 @@ public class OrganizeViewController {
             modelMap.addAttribute("collegeId", 0);
             page = "web/data/organize/organize_add::#page-wrapper";
         }
+        return page;
+    }
+
+    /**
+     * 班级数据编辑
+     *
+     * @param id       班级id
+     * @param modelMap 页面对象
+     * @return 编辑页面
+     */
+    @GetMapping("/web/data/organize/edit/{id}")
+    public String edit(@PathVariable("id") int id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        Optional<Record> record = organizeService.findByIdRelation(id);
+        if (record.isPresent()) {
+            OrganizeBean organizeBean = record.get().into(OrganizeBean.class);
+            modelMap.addAttribute("organize", organizeBean);
+            if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+                modelMap.addAttribute("collegeId", organizeBean.getCollegeId());
+            } else {
+                modelMap.addAttribute("collegeId", 0);
+            }
+
+            page = "web/data/organize/organize_edit::#page-wrapper";
+        } else {
+            config.buildDangerTip("查询错误", "未查询到班级数据");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+
         return page;
     }
 }

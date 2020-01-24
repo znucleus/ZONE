@@ -10,8 +10,9 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             obtain_college_data: web_path + '/anyone/data/college',
             obtain_department_data: web_path + '/anyone/data/department',
             obtain_science_data: web_path + '/anyone/data/science',
-            save: web_path + '/web/data/organize/save',
-            check_name: web_path + '/web/data/organize/check/add/name',
+            obtain_grade_data: web_path + '/anyone/data/grade',
+            update: web_path + '/web/data/organize/update',
+            check_name: web_path + '/web/data/organize/check/edit/name',
             check_staff: web_path + '/web/data/organize/check/add/staff',
             page: '/web/menu/data/organize'
         };
@@ -48,14 +49,29 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             collegeId: '',
             departmentId: '',
             scienceId: '',
-            grade: '',
+            gradeId: '',
+            organizeId:'',
             organizeName: '',
             staff:'',
             organizeIsDel: ''
         };
 
         var page_param = {
+            paramSchoolId:$('#paramSchoolId').val(),
+            paramCollegeId:$('#paramCollegeId').val(),
+            paramDepartmentId:$('#paramDepartmentId').val(),
+            paramScienceId:$('#paramScienceId').val(),
+            paramGradeId:$('#paramGradeId').val(),
+            paramOrganizeId:$('#paramOrganizeId').val(),
             collegeId: $('#collegeId').val()
+        };
+
+        var init_configure = {
+            init_school: false,
+            init_college: false,
+            init_department:false,
+            init_science:false,
+            init_grade:false
         };
 
         /**
@@ -70,7 +86,8 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             }
             param.departmentId = $(param_id.department).val();
             param.scienceId = $(param_id.science).val();
-            param.grade = $(param_id.grade).val();
+            param.gradeId = $(param_id.grade).val();
+            param.organizeId = page_param.paramOrganizeId;
             param.organizeName = _.trim($(param_id.organizeName).val());
             param.staff = _.trim($(param_id.staff).val());
             var organizeIsDel = $('input[name="organizeIsDel"]:checked').val();
@@ -97,9 +114,13 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
 
         function initSchool() {
             $.get(ajax_url.obtain_school_data, function (data) {
-                $(param_id.school).select2({
+                var sl = $(param_id.school).select2({
                     data: data.results
                 });
+                if (!init_configure.init_school) {
+                    sl.val(page_param.paramSchoolId).trigger("change");
+                    init_configure.init_school = true;
+                }
             });
         }
 
@@ -107,7 +128,11 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             if (Number(schoolId) > 0) {
                 $.get(ajax_url.obtain_college_data, {schoolId: schoolId}, function (data) {
                     $(param_id.college).html('<option label="请选择院"></option>');
-                    $(param_id.college).select2({data: data.results});
+                    var sl =  $(param_id.college).select2({data: data.results});
+                    if (!init_configure.init_college) {
+                        sl.val(page_param.paramCollegeId).trigger("change");
+                        init_configure.init_college = true;
+                    }
                 });
             } else {
                 $(param_id.college).html('<option label="请选择院"></option>');
@@ -118,7 +143,11 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             if (Number(collegeId) > 0) {
                 $.get(ajax_url.obtain_department_data, {collegeId: collegeId}, function (data) {
                     $(param_id.department).html('<option label="请选择系"></option>');
-                    $(param_id.department).select2({data: data.results});
+                    var sl = $(param_id.department).select2({data: data.results});
+                    if (!init_configure.init_department) {
+                        sl.val(page_param.paramDepartmentId).trigger("change");
+                        init_configure.init_department = true;
+                    }
                 });
             } else {
                 $(param_id.department).html('<option label="请选择系"></option>');
@@ -129,7 +158,11 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             if (Number(departmentId) > 0) {
                 $.get(ajax_url.obtain_science_data, {departmentId: departmentId}, function (data) {
                     $(param_id.science).html('<option label="请选择专业"></option>');
-                    $(param_id.science).select2({data: data.results});
+                    var sl =  $(param_id.science).select2({data: data.results});
+                    if (!init_configure.init_science) {
+                        sl.val(page_param.paramScienceId).trigger("change");
+                        init_configure.init_science = true;
+                    }
                 });
             } else {
                 $(param_id.science).html('<option label="请选择专业"></option>');
@@ -138,26 +171,14 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
 
         function initGrade(scienceId) {
             if (Number(scienceId) > 0) {
-                $(param_id.grade).html('<option label="请选择年级"></option>');
-                var date = new Date();
-                var year = date.getFullYear();
-                var beforeYear = year - 5;
-                var afterYear = year + 3;
-                var yearArr = [];
-                for (var i = beforeYear; i <= year; i++) {
-                    yearArr.push({
-                        id: i,
-                        text: i + '级'
-                    });
-                }
-
-                for (var j = year + 1; j <= afterYear; j++) {
-                    yearArr.push({
-                        id: j,
-                        text: j + '级'
-                    });
-                }
-                $(param_id.grade).select2({data: yearArr});
+                $.get(ajax_url.obtain_grade_data, {scienceId: scienceId}, function (data) {
+                    $(param_id.grade).html('<option label="请选择年级"></option>');
+                    var sl =  $(param_id.grade).select2({data: data.results});
+                    if (!init_configure.init_grade) {
+                        sl.val(page_param.paramGradeId).trigger("change");
+                        init_configure.init_grade = true;
+                    }
+                });
             } else {
                 $(param_id.grade).html('<option label="请选择年级"></option>');
             }
@@ -385,7 +406,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             tools.buttonLoading(button_id.save.id, button_id.save.tip);
             $.ajax({
                 type: 'POST',
-                url: ajax_url.save,
+                url: ajax_url.update,
                 data: param,
                 success: function (data) {
                     tools.buttonEndLoading(button_id.save.id, button_id.save.text);

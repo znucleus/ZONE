@@ -24,6 +24,7 @@ import top.zbeboy.zone.service.util.SQLQueryUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -78,6 +79,10 @@ public class OrganizeServiceImpl implements OrganizeService, PaginationPlugin<Da
                 .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
                 .join(SCHOOL)
                 .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
+                .leftJoin(STAFF)
+                .on(ORGANIZE.STAFF_ID.eq(STAFF.STAFF_ID))
+                .leftJoin(USERS)
+                .on(STAFF.USERNAME.eq(USERS.USERNAME))
                 .where(ORGANIZE.ORGANIZE_ID.eq(id))
                 .fetchOptional();
     }
@@ -96,6 +101,16 @@ public class OrganizeServiceImpl implements OrganizeService, PaginationPlugin<Da
                 .join(GRADE)
                 .on(ORGANIZE.GRADE_ID.eq(GRADE.GRADE_ID))
                 .where(ORGANIZE.ORGANIZE_NAME.eq(organizeName).and(GRADE.SCIENCE_ID.eq(scienceId)))
+                .fetch();
+    }
+
+    @Override
+    public Result<Record> findByOrganizeNameAndScienceIdNeOrganizeId(String organizeName, int scienceId, int organizeId) {
+        return create.select()
+                .from(ORGANIZE)
+                .join(GRADE)
+                .on(ORGANIZE.GRADE_ID.eq(GRADE.GRADE_ID))
+                .where(ORGANIZE.ORGANIZE_NAME.eq(organizeName).and(GRADE.SCIENCE_ID.eq(scienceId)).and(ORGANIZE.ORGANIZE_ID.ne(organizeId)))
                 .fetch();
     }
 
@@ -174,6 +189,12 @@ public class OrganizeServiceImpl implements OrganizeService, PaginationPlugin<Da
     @Override
     public void update(Organize organize) {
         organizeDao.update(organize);
+    }
+
+    @CacheEvict(cacheNames = {CacheBook.ORGANIZE, CacheBook.ORGANIZES}, allEntries = true)
+    @Override
+    public void updateIsDel(List<Integer> ids, Byte isDel) {
+        ids.forEach(id -> create.update(ORGANIZE).set(ORGANIZE.ORGANIZE_IS_DEL, isDel).where(ORGANIZE.ORGANIZE_ID.eq(id)).execute());
     }
 
     @Override

@@ -6,6 +6,7 @@ import top.zbeboy.zone.domain.tables.pojos.Organize;
 import top.zbeboy.zone.domain.tables.records.OrganizeRecord;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface OrganizeService {
@@ -46,6 +47,17 @@ public interface OrganizeService {
     Result<Record> findByOrganizeNameAndScienceId(String organizeName, int scienceId);
 
     /**
+     * 查找专业下不等于该班级id的班级名
+     *
+     * @param organizeName 班级名
+     * @param organizeId   班级id
+     * @param scienceId    专业id
+     * @return 数据
+     */
+    Result<Record> findByOrganizeNameAndScienceIdNeOrganizeId(String organizeName, int scienceId, int organizeId);
+
+
+    /**
      * 分页查询
      *
      * @param dataTablesUtil 工具类
@@ -80,4 +92,12 @@ public interface OrganizeService {
      * @param organize 数据
      */
     void update(Organize organize);
+
+    /**
+     * 更新状态
+     *
+     * @param ids   ids
+     * @param isDel 状态
+     */
+    void updateIsDel(List<Integer> ids, Byte isDel);
 }

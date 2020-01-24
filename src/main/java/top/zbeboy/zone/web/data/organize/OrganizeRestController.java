@@ -24,8 +24,10 @@ import top.zbeboy.zone.web.plugin.select2.Select2Data;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.ByteUtil;
+import top.zbeboy.zone.web.util.SmallPropsUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.vo.data.organize.OrganizeAddVo;
+import top.zbeboy.zone.web.vo.data.organize.OrganizeEditVo;
 import top.zbeboy.zone.web.vo.data.organize.OrganizeSearchVo;
 
 import javax.annotation.Resource;
@@ -191,6 +193,83 @@ public class OrganizeRestController {
             }
         } else {
             ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 更新时检验班级名是否重复
+     *
+     * @param organizeId   班级id
+     * @param organizeName 班级名
+     * @param scienceId    专业id
+     * @return true 合格 false 不合格
+     */
+    @PostMapping("/web/data/organize/check/edit/name")
+    public ResponseEntity<Map<String, Object>> checkEditName(@RequestParam("organizeId") int organizeId,
+                                                             @RequestParam("organizeName") String organizeName,
+                                                             @RequestParam("scienceId") int scienceId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        String param = StringUtils.deleteWhitespace(organizeName);
+        Result<Record> organizeRecords = organizeService.findByOrganizeNameAndScienceIdNeOrganizeId(param, scienceId, organizeId);
+        if (organizeRecords.isEmpty()) {
+            ajaxUtil.success().msg("班级名不重复");
+        } else {
+            ajaxUtil.fail().msg("专业名重复");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 更新班级信息
+     *
+     * @param organizeEditVo 班级
+     * @param bindingResult  检验
+     * @return true 保存成功 false 保存失败
+     */
+    @PostMapping("/web/data/organize/update")
+    public ResponseEntity<Map<String, Object>> update(@Valid OrganizeEditVo organizeEditVo, BindingResult bindingResult) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (!bindingResult.hasErrors()) {
+            Organize organize = organizeService.findById(organizeEditVo.getOrganizeId());
+            organize.setOrganizeIsDel(ByteUtil.toByte(1).equals(organizeEditVo.getOrganizeIsDel()) ? ByteUtil.toByte(1) : ByteUtil.toByte(0));
+            organize.setOrganizeName(organizeEditVo.getOrganizeName());
+            organize.setGradeId(organizeEditVo.getGradeId());
+            if (StringUtils.isNotBlank(organizeEditVo.getStaff())) {
+                Optional<Record> staffRecord = staffService.findByUsernameOrStaffNumberRelation(organizeEditVo.getStaff());
+                if (staffRecord.isPresent()) {
+                    Staff staff = staffRecord.get().into(Staff.class);
+                    organize.setStaffId(staff.getStaffId());
+                    organizeService.update(organize);
+                    ajaxUtil.success().msg("更新成功");
+                } else {
+                    ajaxUtil.fail().msg("未查询到教职工信息");
+                }
+            } else {
+                organizeService.update(organize);
+                ajaxUtil.success().msg("更新成功");
+            }
+        } else {
+            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 批量更改班级状态
+     *
+     * @param organizeIds 班级ids
+     * @param isDel       is_del
+     * @return true注销成功
+     */
+    @PostMapping("/web/data/organize/status")
+    public ResponseEntity<Map<String, Object>> status(String organizeIds, Byte isDel) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (StringUtils.isNotBlank(organizeIds)) {
+            organizeService.updateIsDel(SmallPropsUtil.StringIdsToNumberList(organizeIds), isDel);
+            ajaxUtil.success().msg("更新状态成功");
+        } else {
+            ajaxUtil.fail().msg("请选择班级");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
