@@ -20,6 +20,7 @@ import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.attend.AttendReleaseBean;
+import top.zbeboy.zone.web.bean.attend.AttendReleaseSubBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.ByteUtil;
@@ -147,6 +148,30 @@ public class AttendReleaseApiController {
             beans.forEach(bean -> bean.setAttendEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getAttendEndTime())));
         }
         simplePaginationUtil.setTotalSize(attendReleaseService.countAll(simplePaginationUtil));
+        ajaxUtil.success().list(beans).page(simplePaginationUtil).msg("获取数据成功");
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 列表数据
+     *
+     * @param simplePaginationUtil 数据
+     * @param principal            当前用户信息
+     * @return true or false
+     */
+    @GetMapping("/api/attend/sub/data")
+    public ResponseEntity<Map<String, Object>> subData(SimplePaginationUtil simplePaginationUtil, Principal principal) {
+        AjaxUtil<AttendReleaseSubBean> ajaxUtil = AjaxUtil.of();
+        simplePaginationUtil.setPrincipal(principal);
+        List<AttendReleaseSubBean> beans = new ArrayList<>();
+        Result<Record> records = attendReleaseSubService.findAllByPage(simplePaginationUtil);
+        if (records.isNotEmpty()) {
+            beans = records.into(AttendReleaseSubBean.class);
+            beans.forEach(bean -> bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime())));
+            beans.forEach(bean -> bean.setAttendStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getAttendStartTime())));
+            beans.forEach(bean -> bean.setAttendEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getAttendEndTime())));
+        }
+        simplePaginationUtil.setTotalSize(attendReleaseSubService.countAll(simplePaginationUtil));
         ajaxUtil.success().list(beans).page(simplePaginationUtil).msg("获取数据成功");
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }

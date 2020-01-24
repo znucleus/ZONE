@@ -14,7 +14,6 @@ import top.zbeboy.zone.domain.tables.pojos.AttendRelease;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.domain.tables.records.AttendReleaseRecord;
-import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
@@ -50,9 +49,6 @@ public class AttendReleaseServiceImpl implements AttendReleaseService, Paginatio
     private UsersTypeService usersTypeService;
 
     @Resource
-    private StaffService staffService;
-
-    @Resource
     private StudentService studentService;
 
     @Autowired
@@ -64,9 +60,9 @@ public class AttendReleaseServiceImpl implements AttendReleaseService, Paginatio
     public Result<AttendReleaseRecord> findIsAuto() {
         return create.selectFrom(ATTEND_RELEASE)
                 .where(ATTEND_RELEASE.IS_AUTO.eq(ByteUtil.toByte(1))
-                .and(ATTEND_RELEASE.VALID_DATE.le(now()))
-                .and(ATTEND_RELEASE.EXPIRE_DATE.gt(now()))
-                .and(ATTEND_RELEASE.EXPIRE_DATE.gt(ATTEND_RELEASE.VALID_DATE)))
+                        .and(ATTEND_RELEASE.VALID_DATE.le(now()))
+                        .and(ATTEND_RELEASE.EXPIRE_DATE.gt(now()))
+                        .and(ATTEND_RELEASE.EXPIRE_DATE.gt(ATTEND_RELEASE.VALID_DATE)))
                 .fetch();
     }
 
@@ -135,8 +131,9 @@ public class AttendReleaseServiceImpl implements AttendReleaseService, Paginatio
                             if (record.isPresent()) {
                                 int organizeId = record.get().get(ORGANIZE.ORGANIZE_ID);
                                 a = ATTEND_RELEASE.ORGANIZE_ID.eq(organizeId)
-                                        .and(ATTEND_RELEASE.ATTEND_END_TIME.le(now()))
-                                        .and(ATTEND_RELEASE.ATTEND_END_TIME.le(ATTEND_RELEASE.ATTEND_START_TIME));
+                                        .and(ATTEND_RELEASE.ATTEND_START_TIME.le(now()))
+                                        .and(ATTEND_RELEASE.ATTEND_END_TIME.gt(now()))
+                                        .and(ATTEND_RELEASE.ATTEND_END_TIME.gt(ATTEND_RELEASE.ATTEND_START_TIME));
                             }
                         } else if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                             a = ATTEND_RELEASE.USERNAME.eq(users.getUsername());
