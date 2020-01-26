@@ -5,6 +5,7 @@ import org.jooq.Record;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.College;
 import top.zbeboy.zone.domain.tables.pojos.Users;
@@ -16,6 +17,8 @@ import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
+import top.zbeboy.zone.web.bean.data.course.CourseBean;
+import top.zbeboy.zone.web.bean.data.department.DepartmentBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 
 import javax.annotation.Resource;
@@ -99,6 +102,37 @@ public class CourseViewController {
             modelMap.addAttribute("collegeId", 0);
             page = "web/data/course/course_add::#page-wrapper";
         }
+        return page;
+    }
+
+    /**
+     * 课程数据编辑
+     *
+     * @param id       课程id
+     * @param modelMap 页面对象
+     * @return 编辑页面
+     */
+    @GetMapping("/web/data/course/edit/{id}")
+    public String edit(@PathVariable("id") int id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        Optional<Record> record = courseService.findByIdRelation(id);
+        if (record.isPresent()) {
+            CourseBean courseBean = record.get().into(CourseBean.class);
+            modelMap.addAttribute("course", courseBean);
+            if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+                modelMap.addAttribute("collegeId", courseBean.getCollegeId());
+            } else {
+                modelMap.addAttribute("collegeId", 0);
+            }
+
+            page = "web/data/course/course_edit::#page-wrapper";
+        } else {
+            config.buildDangerTip("查询错误", "未查询到课程数据");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+
         return page;
     }
 }

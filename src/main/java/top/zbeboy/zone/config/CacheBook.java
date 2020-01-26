@@ -19,6 +19,7 @@ public final class CacheBook {
     public static final String COLLEGE = "COLLEGE";
     public static final String COLLEGES = "COLLEGES";
     public static final String COURSES = "COURSES";
+    public static final String COURSE = "COURSE";
     public static final String DEPARTMENT = "DEPARTMENT";
     public static final String DEPARTMENTS = "DEPARTMENTS";
     public static final String GRADES = "GRADES";

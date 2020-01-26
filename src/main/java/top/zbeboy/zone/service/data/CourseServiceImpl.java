@@ -24,13 +24,11 @@ import top.zbeboy.zone.service.util.SQLQueryUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
 import javax.annotation.Resource;
-
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 import static top.zbeboy.zone.domain.Tables.*;
-import static top.zbeboy.zone.domain.Tables.COLLEGE;
-import static top.zbeboy.zone.domain.Tables.SCHOOL;
 
 @Service("courseService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -61,11 +59,29 @@ public class CourseServiceImpl implements CourseService, PaginationPlugin<DataTa
         create = dslContext;
     }
 
+    @Override
+    public Course findById(int id) {
+        return courseDao.findById(id);
+    }
+
+    @Cacheable(cacheNames = CacheBook.COURSE, key = "#id")
+    @Override
+    public Optional<Record> findByIdRelation(int id) {
+        return create.select()
+                .from(COURSE)
+                .join(COLLEGE)
+                .on(COURSE.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
+                .join(SCHOOL)
+                .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
+                .where(COURSE.COURSE_ID.eq(id))
+                .fetchOptional();
+    }
+
     @Cacheable(cacheNames = CacheBook.COURSES, key = "#schoolYear + '_' + #term + '_' + #collegeId + '_' + #courseIsDel")
     @Override
     public Result<CourseRecord> findBySchoolYearAndTermAndCollegeIdAndCourseIsDel(Byte schoolYear, Byte term, int collegeId, Byte courseIsDel) {
         return create.selectFrom(COURSE)
-                .where(COURSE.SCHOOL_YEAR.eq(schoolYear).and(COURSE.TERM.eq(term)).and(COURSE.COURSE_ID.eq(collegeId)).and(COURSE.COURSE_IS_DEL.eq(courseIsDel)))
+                .where(COURSE.SCHOOL_YEAR.eq(schoolYear).and(COURSE.TERM.eq(term)).and(COURSE.COLLEGE_ID.eq(collegeId)).and(COURSE.COURSE_IS_DEL.eq(courseIsDel)))
                 .fetch();
     }
 
@@ -73,6 +89,13 @@ public class CourseServiceImpl implements CourseService, PaginationPlugin<DataTa
     public Result<CourseRecord> findByCourseNameAndCollegeId(String courseName, int collegeId) {
         return create.selectFrom(COURSE)
                 .where(COURSE.COURSE_NAME.eq(courseName).and(COURSE.COLLEGE_ID.eq(collegeId)))
+                .fetch();
+    }
+
+    @Override
+    public Result<CourseRecord> findByCourseNameAndCollegeIdNeCourseId(String courseName, int collegeId, int courseId) {
+        return create.selectFrom(COURSE)
+                .where(COURSE.COURSE_NAME.eq(courseName).and(COURSE.COURSE_ID.ne(courseId)).and(COURSE.COLLEGE_ID.eq(collegeId)))
                 .fetch();
     }
 
@@ -115,6 +138,18 @@ public class CourseServiceImpl implements CourseService, PaginationPlugin<DataTa
     @Override
     public void save(Course course) {
         courseDao.insert(course);
+    }
+
+    @CacheEvict(cacheNames = {CacheBook.COURSE, CacheBook.COURSES}, allEntries = true)
+    @Override
+    public void update(Course course) {
+        courseDao.update(course);
+    }
+
+    @CacheEvict(cacheNames = {CacheBook.COURSE, CacheBook.COURSES}, allEntries = true)
+    @Override
+    public void updateIsDel(List<Integer> ids, Byte isDel) {
+        ids.forEach(id -> create.update(COURSE).set(COURSE.COURSE_IS_DEL, isDel).where(COURSE.COURSE_ID.eq(id)).execute());
     }
 
     @Override

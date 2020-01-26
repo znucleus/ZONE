@@ -6,7 +6,27 @@ import top.zbeboy.zone.domain.tables.pojos.Course;
 import top.zbeboy.zone.domain.tables.records.CourseRecord;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
+import java.util.List;
+import java.util.Optional;
+
 public interface CourseService {
+
+    /**
+     * 根据主键查询
+     *
+     * @param id 主键
+     * @return 数据
+     */
+    Course findById(int id);
+
+    /**
+     * 通过课程id查询所有信息
+     * 缓存:是
+     *
+     * @param id 课程id
+     * @return 所有信息
+     */
+    Optional<Record> findByIdRelation(int id);
 
     /**
      * 根据学年，学期，院id，状态查询有效课程
@@ -27,6 +47,16 @@ public interface CourseService {
      * @return 数据
      */
     Result<CourseRecord> findByCourseNameAndCollegeId(String courseName, int collegeId);
+
+    /**
+     * 查找院下不等于该课程id的课程名
+     *
+     * @param courseName 课程名
+     * @param courseId   课程id
+     * @param collegeId  院id
+     * @return 数据
+     */
+    Result<CourseRecord> findByCourseNameAndCollegeIdNeCourseId(String courseName, int collegeId, int courseId);
 
     /**
      * 分页查询
@@ -56,4 +86,19 @@ public interface CourseService {
      * @param course 课程
      */
     void save(Course course);
+
+    /**
+     * 更新
+     *
+     * @param course 数据
+     */
+    void update(Course course);
+
+    /**
+     * 更新状态
+     *
+     * @param ids   ids
+     * @param isDel 状态
+     */
+    void updateIsDel(List<Integer> ids, Byte isDel);
 }
