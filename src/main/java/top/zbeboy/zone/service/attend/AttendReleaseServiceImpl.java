@@ -77,6 +77,16 @@ public class AttendReleaseServiceImpl implements AttendReleaseService, Paginatio
                 .from(ATTEND_RELEASE)
                 .leftJoin(ORGANIZE)
                 .on(ATTEND_RELEASE.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
+                .join(GRADE)
+                .on(ORGANIZE.GRADE_ID.eq(GRADE.GRADE_ID))
+                .join(SCIENCE)
+                .on(GRADE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
+                .join(DEPARTMENT)
+                .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
+                .join(COLLEGE)
+                .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
+                .join(SCHOOL)
+                .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
                 .leftJoin(USERS)
                 .on(ATTEND_RELEASE.USERNAME.eq(USERS.USERNAME));
         return queryAllByPage(selectOnConditionStep, paginationUtil, false);
@@ -88,6 +98,16 @@ public class AttendReleaseServiceImpl implements AttendReleaseService, Paginatio
                 .from(ATTEND_RELEASE)
                 .leftJoin(ORGANIZE)
                 .on(ATTEND_RELEASE.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
+                .join(GRADE)
+                .on(ORGANIZE.GRADE_ID.eq(GRADE.GRADE_ID))
+                .join(SCIENCE)
+                .on(GRADE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
+                .join(DEPARTMENT)
+                .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
+                .join(COLLEGE)
+                .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
+                .join(SCHOOL)
+                .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
                 .leftJoin(USERS)
                 .on(ATTEND_RELEASE.USERNAME.eq(USERS.USERNAME));
         return countAll(selectOnConditionStep, paginationUtil, false);

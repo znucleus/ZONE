@@ -8,6 +8,10 @@ public class AttendReleaseSubBean extends AttendReleaseSub {
     private String attendStartTimeStr;
     private String attendEndTimeStr;
     private String releaseTimeStr;
+    private String  collegeName;
+    private String  schoolName;
+    private String validDateStr;
+    private String expireDateStr;
 
     public String getRealName() {
         return realName;
@@ -47,5 +51,37 @@ public class AttendReleaseSubBean extends AttendReleaseSub {
 
     public void setReleaseTimeStr(String releaseTimeStr) {
         this.releaseTimeStr = releaseTimeStr;
+    }
+
+    public String getCollegeName() {
+        return collegeName;
+    }
+
+    public void setCollegeName(String collegeName) {
+        this.collegeName = collegeName;
+    }
+
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
+    }
+
+    public String getValidDateStr() {
+        return validDateStr;
+    }
+
+    public void setValidDateStr(String validDateStr) {
+        this.validDateStr = validDateStr;
+    }
+
+    public String getExpireDateStr() {
+        return expireDateStr;
+    }
+
+    public void setExpireDateStr(String expireDateStr) {
+        this.expireDateStr = expireDateStr;
     }
 }
