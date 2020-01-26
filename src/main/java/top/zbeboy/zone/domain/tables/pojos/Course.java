@@ -24,12 +24,14 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Course implements Serializable {
 
-    private static final long serialVersionUID = 1026917658;
+    private static final long serialVersionUID = 1735664867;
 
     private Integer courseId;
     private String  courseName;
     private Double  courseCredit;
     private String  courseBrief;
+    private Double  courseHours;
+    private Byte    courseType;
     private Byte    courseIsDel;
     private String  courseCode;
     private Byte    schoolYear;
@@ -43,6 +45,8 @@ public class Course implements Serializable {
         this.courseName = value.courseName;
         this.courseCredit = value.courseCredit;
         this.courseBrief = value.courseBrief;
+        this.courseHours = value.courseHours;
+        this.courseType = value.courseType;
         this.courseIsDel = value.courseIsDel;
         this.courseCode = value.courseCode;
         this.schoolYear = value.schoolYear;
@@ -55,6 +59,8 @@ public class Course implements Serializable {
         String  courseName,
         Double  courseCredit,
         String  courseBrief,
+        Double  courseHours,
+        Byte    courseType,
         Byte    courseIsDel,
         String  courseCode,
         Byte    schoolYear,
@@ -65,6 +71,8 @@ public class Course implements Serializable {
         this.courseName = courseName;
         this.courseCredit = courseCredit;
         this.courseBrief = courseBrief;
+        this.courseHours = courseHours;
+        this.courseType = courseType;
         this.courseIsDel = courseIsDel;
         this.courseCode = courseCode;
         this.schoolYear = schoolYear;
@@ -108,6 +116,22 @@ public class Course implements Serializable {
         this.courseBrief = courseBrief;
     }
 
+    public Double getCourseHours() {
+        return this.courseHours;
+    }
+
+    public void setCourseHours(Double courseHours) {
+        this.courseHours = courseHours;
+    }
+
+    public Byte getCourseType() {
+        return this.courseType;
+    }
+
+    public void setCourseType(Byte courseType) {
+        this.courseType = courseType;
+    }
+
     public Byte getCourseIsDel() {
         return this.courseIsDel;
     }
@@ -116,7 +140,6 @@ public class Course implements Serializable {
         this.courseIsDel = courseIsDel;
     }
 
-    @NotNull
     @Size(max = 20)
     public String getCourseCode() {
         return this.courseCode;
@@ -161,6 +184,8 @@ public class Course implements Serializable {
         sb.append(", ").append(courseName);
         sb.append(", ").append(courseCredit);
         sb.append(", ").append(courseBrief);
+        sb.append(", ").append(courseHours);
+        sb.append(", ").append(courseType);
         sb.append(", ").append(courseIsDel);
         sb.append(", ").append(courseCode);
         sb.append(", ").append(schoolYear);

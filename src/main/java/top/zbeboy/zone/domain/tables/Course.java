@@ -14,7 +14,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row9;
+import org.jooq.Row11;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -41,7 +41,7 @@ import top.zbeboy.zone.domain.tables.records.CourseRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Course extends TableImpl<CourseRecord> {
 
-    private static final long serialVersionUID = 1209434649;
+    private static final long serialVersionUID = 101497471;
 
     /**
      * The reference instance of <code>zone.course</code>
@@ -77,6 +77,16 @@ public class Course extends TableImpl<CourseRecord> {
     public final TableField<CourseRecord, String> COURSE_BRIEF = createField(DSL.name("course_brief"), org.jooq.impl.SQLDataType.VARCHAR(500), this, "");
 
     /**
+     * The column <code>zone.course.course_hours</code>.
+     */
+    public final TableField<CourseRecord, Double> COURSE_HOURS = createField(DSL.name("course_hours"), org.jooq.impl.SQLDataType.DOUBLE, this, "");
+
+    /**
+     * The column <code>zone.course.course_type</code>.
+     */
+    public final TableField<CourseRecord, Byte> COURSE_TYPE = createField(DSL.name("course_type"), org.jooq.impl.SQLDataType.TINYINT, this, "");
+
+    /**
      * The column <code>zone.course.course_is_del</code>.
      */
     public final TableField<CourseRecord, Byte> COURSE_IS_DEL = createField(DSL.name("course_is_del"), org.jooq.impl.SQLDataType.TINYINT, this, "");
@@ -84,7 +94,7 @@ public class Course extends TableImpl<CourseRecord> {
     /**
      * The column <code>zone.course.course_code</code>.
      */
-    public final TableField<CourseRecord, String> COURSE_CODE = createField(DSL.name("course_code"), org.jooq.impl.SQLDataType.VARCHAR(20).nullable(false), this, "");
+    public final TableField<CourseRecord, String> COURSE_CODE = createField(DSL.name("course_code"), org.jooq.impl.SQLDataType.VARCHAR(20), this, "");
 
     /**
      * The column <code>zone.course.school_year</code>.
@@ -141,7 +151,7 @@ public class Course extends TableImpl<CourseRecord> {
 
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.COURSE_COLLEGE_ID, Indexes.COURSE_COURSE_CODE, Indexes.COURSE_PRIMARY);
+        return Arrays.<Index>asList(Indexes.COURSE_COLLEGE_ID, Indexes.COURSE_PRIMARY);
     }
 
     @Override
@@ -151,7 +161,7 @@ public class Course extends TableImpl<CourseRecord> {
 
     @Override
     public List<UniqueKey<CourseRecord>> getKeys() {
-        return Arrays.<UniqueKey<CourseRecord>>asList(Keys.KEY_COURSE_PRIMARY, Keys.KEY_COURSE_COURSE_CODE);
+        return Arrays.<UniqueKey<CourseRecord>>asList(Keys.KEY_COURSE_PRIMARY);
     }
 
     @Override
@@ -190,11 +200,11 @@ public class Course extends TableImpl<CourseRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row9 type methods
+    // Row11 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row9<Integer, String, Double, String, Byte, String, Byte, Byte, Integer> fieldsRow() {
-        return (Row9) super.fieldsRow();
+    public Row11<Integer, String, Double, String, Double, Byte, Byte, String, Byte, Byte, Integer> fieldsRow() {
+        return (Row11) super.fieldsRow();
     }
 }

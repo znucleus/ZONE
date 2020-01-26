@@ -171,7 +171,6 @@ public class Keys {
     public static final UniqueKey<CollegeApplicationRecord> KEY_COLLEGE_APPLICATION_PRIMARY = UniqueKeys0.KEY_COLLEGE_APPLICATION_PRIMARY;
     public static final UniqueKey<CollegeRoleRecord> KEY_COLLEGE_ROLE_PRIMARY = UniqueKeys0.KEY_COLLEGE_ROLE_PRIMARY;
     public static final UniqueKey<CourseRecord> KEY_COURSE_PRIMARY = UniqueKeys0.KEY_COURSE_PRIMARY;
-    public static final UniqueKey<CourseRecord> KEY_COURSE_COURSE_CODE = UniqueKeys0.KEY_COURSE_COURSE_CODE;
     public static final UniqueKey<DepartmentRecord> KEY_DEPARTMENT_PRIMARY = UniqueKeys0.KEY_DEPARTMENT_PRIMARY;
     public static final UniqueKey<FilesRecord> KEY_FILES_PRIMARY = UniqueKeys0.KEY_FILES_PRIMARY;
     public static final UniqueKey<GradeRecord> KEY_GRADE_PRIMARY = UniqueKeys0.KEY_GRADE_PRIMARY;
@@ -319,7 +318,6 @@ public class Keys {
         public static final UniqueKey<CollegeApplicationRecord> KEY_COLLEGE_APPLICATION_PRIMARY = Internal.createUniqueKey(CollegeApplication.COLLEGE_APPLICATION, "KEY_college_application_PRIMARY", CollegeApplication.COLLEGE_APPLICATION.APPLICATION_ID, CollegeApplication.COLLEGE_APPLICATION.COLLEGE_ID);
         public static final UniqueKey<CollegeRoleRecord> KEY_COLLEGE_ROLE_PRIMARY = Internal.createUniqueKey(CollegeRole.COLLEGE_ROLE, "KEY_college_role_PRIMARY", CollegeRole.COLLEGE_ROLE.ROLE_ID, CollegeRole.COLLEGE_ROLE.COLLEGE_ID);
         public static final UniqueKey<CourseRecord> KEY_COURSE_PRIMARY = Internal.createUniqueKey(Course.COURSE, "KEY_course_PRIMARY", Course.COURSE.COURSE_ID);
-        public static final UniqueKey<CourseRecord> KEY_COURSE_COURSE_CODE = Internal.createUniqueKey(Course.COURSE, "KEY_course_course_code", Course.COURSE.COURSE_CODE);
         public static final UniqueKey<DepartmentRecord> KEY_DEPARTMENT_PRIMARY = Internal.createUniqueKey(Department.DEPARTMENT, "KEY_department_PRIMARY", Department.DEPARTMENT.DEPARTMENT_ID);
         public static final UniqueKey<FilesRecord> KEY_FILES_PRIMARY = Internal.createUniqueKey(Files.FILES, "KEY_files_PRIMARY", Files.FILES.FILE_ID);
         public static final UniqueKey<GradeRecord> KEY_GRADE_PRIMARY = Internal.createUniqueKey(Grade.GRADE, "KEY_grade_PRIMARY", Grade.GRADE.GRADE_ID);

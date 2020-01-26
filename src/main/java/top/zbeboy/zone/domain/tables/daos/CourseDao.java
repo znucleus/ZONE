@@ -115,6 +115,34 @@ public class CourseDao extends DAOImpl<CourseRecord, top.zbeboy.zone.domain.tabl
     }
 
     /**
+     * Fetch records that have <code>course_hours BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.Course> fetchRangeOfCourseHours(Double lowerInclusive, Double upperInclusive) {
+        return fetchRange(Course.COURSE.COURSE_HOURS, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>course_hours IN (values)</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.Course> fetchByCourseHours(Double... values) {
+        return fetch(Course.COURSE.COURSE_HOURS, values);
+    }
+
+    /**
+     * Fetch records that have <code>course_type BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.Course> fetchRangeOfCourseType(Byte lowerInclusive, Byte upperInclusive) {
+        return fetchRange(Course.COURSE.COURSE_TYPE, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>course_type IN (values)</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.Course> fetchByCourseType(Byte... values) {
+        return fetch(Course.COURSE.COURSE_TYPE, values);
+    }
+
+    /**
      * Fetch records that have <code>course_is_del BETWEEN lowerInclusive AND upperInclusive</code>
      */
     public List<top.zbeboy.zone.domain.tables.pojos.Course> fetchRangeOfCourseIsDel(Byte lowerInclusive, Byte upperInclusive) {
@@ -140,13 +168,6 @@ public class CourseDao extends DAOImpl<CourseRecord, top.zbeboy.zone.domain.tabl
      */
     public List<top.zbeboy.zone.domain.tables.pojos.Course> fetchByCourseCode(String... values) {
         return fetch(Course.COURSE.COURSE_CODE, values);
-    }
-
-    /**
-     * Fetch a unique record that has <code>course_code = value</code>
-     */
-    public top.zbeboy.zone.domain.tables.pojos.Course fetchOneByCourseCode(String value) {
-        return fetchOne(Course.COURSE.COURSE_CODE, value);
     }
 
     /**

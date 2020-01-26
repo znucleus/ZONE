@@ -121,7 +121,6 @@ public class Indexes {
     public static final Index COLLEGE_ROLE_COLLEGE_ID = Indexes0.COLLEGE_ROLE_COLLEGE_ID;
     public static final Index COLLEGE_ROLE_PRIMARY = Indexes0.COLLEGE_ROLE_PRIMARY;
     public static final Index COURSE_COLLEGE_ID = Indexes0.COURSE_COLLEGE_ID;
-    public static final Index COURSE_COURSE_CODE = Indexes0.COURSE_COURSE_CODE;
     public static final Index COURSE_PRIMARY = Indexes0.COURSE_PRIMARY;
     public static final Index DEPARTMENT_COLLEGE_ID = Indexes0.DEPARTMENT_COLLEGE_ID;
     public static final Index DEPARTMENT_PRIMARY = Indexes0.DEPARTMENT_PRIMARY;
@@ -240,7 +239,6 @@ public class Indexes {
         public static Index COLLEGE_ROLE_COLLEGE_ID = Internal.createIndex("college_id", CollegeRole.COLLEGE_ROLE, new OrderField[] { CollegeRole.COLLEGE_ROLE.COLLEGE_ID }, false);
         public static Index COLLEGE_ROLE_PRIMARY = Internal.createIndex("PRIMARY", CollegeRole.COLLEGE_ROLE, new OrderField[] { CollegeRole.COLLEGE_ROLE.ROLE_ID, CollegeRole.COLLEGE_ROLE.COLLEGE_ID }, true);
         public static Index COURSE_COLLEGE_ID = Internal.createIndex("college_id", Course.COURSE, new OrderField[] { Course.COURSE.COLLEGE_ID }, false);
-        public static Index COURSE_COURSE_CODE = Internal.createIndex("course_code", Course.COURSE, new OrderField[] { Course.COURSE.COURSE_CODE }, true);
         public static Index COURSE_PRIMARY = Internal.createIndex("PRIMARY", Course.COURSE, new OrderField[] { Course.COURSE.COURSE_ID }, true);
         public static Index DEPARTMENT_COLLEGE_ID = Internal.createIndex("college_id", Department.DEPARTMENT, new OrderField[] { Department.DEPARTMENT.COLLEGE_ID }, false);
         public static Index DEPARTMENT_PRIMARY = Internal.createIndex("PRIMARY", Department.DEPARTMENT, new OrderField[] { Department.DEPARTMENT.DEPARTMENT_ID }, true);
