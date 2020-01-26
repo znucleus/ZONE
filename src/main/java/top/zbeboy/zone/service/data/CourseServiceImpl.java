@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zone.config.CacheBook;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.daos.CourseDao;
+import top.zbeboy.zone.domain.tables.pojos.Course;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.domain.tables.records.CourseRecord;
@@ -68,6 +70,13 @@ public class CourseServiceImpl implements CourseService, PaginationPlugin<DataTa
     }
 
     @Override
+    public Result<CourseRecord> findByCourseNameAndCollegeId(String courseName, int collegeId) {
+        return create.selectFrom(COURSE)
+                .where(COURSE.COURSE_NAME.eq(courseName).and(COURSE.COLLEGE_ID.eq(collegeId)))
+                .fetch();
+    }
+
+    @Override
     public Result<Record> findAllByPage(DataTablesUtil dataTablesUtil) {
         SelectOnConditionStep<Record> selectOnConditionStep =
                 create.select()
@@ -99,6 +108,13 @@ public class CourseServiceImpl implements CourseService, PaginationPlugin<DataTa
                 .join(SCHOOL)
                 .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID));
         return countAll(selectOnConditionStep, dataTablesUtil, false);
+    }
+
+    @CacheEvict(cacheNames = CacheBook.COURSES, allEntries = true)
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void save(Course course) {
+        courseDao.insert(course);
     }
 
     @Override

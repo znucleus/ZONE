@@ -11,6 +11,7 @@ import javax.annotation.Generated;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
+import org.jooq.Identity;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
@@ -41,7 +42,7 @@ import top.zbeboy.zone.domain.tables.records.BuildingRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Building extends TableImpl<BuildingRecord> {
 
-    private static final long serialVersionUID = -1515626044;
+    private static final long serialVersionUID = -1080631919;
 
     /**
      * The reference instance of <code>zone.building</code>
@@ -59,7 +60,7 @@ public class Building extends TableImpl<BuildingRecord> {
     /**
      * The column <code>zone.building.building_id</code>.
      */
-    public final TableField<BuildingRecord, Integer> BUILDING_ID = createField(DSL.name("building_id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<BuildingRecord, Integer> BUILDING_ID = createField(DSL.name("building_id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false).identity(true), this, "");
 
     /**
      * The column <code>zone.building.building_name</code>.
@@ -117,6 +118,11 @@ public class Building extends TableImpl<BuildingRecord> {
     @Override
     public List<Index> getIndexes() {
         return Arrays.<Index>asList(Indexes.BUILDING_COLLEGE_ID, Indexes.BUILDING_PRIMARY);
+    }
+
+    @Override
+    public Identity<BuildingRecord, Integer> getIdentity() {
+        return Keys.IDENTITY_BUILDING;
     }
 
     @Override

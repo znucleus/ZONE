@@ -30,7 +30,7 @@ import top.zbeboy.zone.domain.tables.Course;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class CourseRecord extends UpdatableRecordImpl<CourseRecord> implements Record11<Integer, String, Double, String, Double, Byte, Byte, String, Byte, Byte, Integer> {
 
-    private static final long serialVersionUID = -1498481488;
+    private static final long serialVersionUID = 1511200368;
 
     /**
      * Setter for <code>zone.course.course_id</code>.
@@ -42,7 +42,6 @@ public class CourseRecord extends UpdatableRecordImpl<CourseRecord> implements R
     /**
      * Getter for <code>zone.course.course_id</code>.
      */
-    @NotNull
     public Integer getCourseId() {
         return (Integer) get(0);
     }

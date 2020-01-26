@@ -30,7 +30,7 @@ import top.zbeboy.zone.domain.tables.Building;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class BuildingRecord extends UpdatableRecordImpl<BuildingRecord> implements Record4<Integer, String, Byte, Integer> {
 
-    private static final long serialVersionUID = 956675358;
+    private static final long serialVersionUID = -545607126;
 
     /**
      * Setter for <code>zone.building.building_id</code>.
@@ -42,7 +42,6 @@ public class BuildingRecord extends UpdatableRecordImpl<BuildingRecord> implemen
     /**
      * Getter for <code>zone.building.building_id</code>.
      */
-    @NotNull
     public Integer getBuildingId() {
         return (Integer) get(0);
     }

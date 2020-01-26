@@ -11,6 +11,7 @@ import javax.annotation.Generated;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
+import org.jooq.Identity;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
@@ -41,7 +42,7 @@ import top.zbeboy.zone.domain.tables.records.CourseRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Course extends TableImpl<CourseRecord> {
 
-    private static final long serialVersionUID = 101497471;
+    private static final long serialVersionUID = 1496862022;
 
     /**
      * The reference instance of <code>zone.course</code>
@@ -59,7 +60,7 @@ public class Course extends TableImpl<CourseRecord> {
     /**
      * The column <code>zone.course.course_id</code>.
      */
-    public final TableField<CourseRecord, Integer> COURSE_ID = createField(DSL.name("course_id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<CourseRecord, Integer> COURSE_ID = createField(DSL.name("course_id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false).identity(true), this, "");
 
     /**
      * The column <code>zone.course.course_name</code>.
@@ -152,6 +153,11 @@ public class Course extends TableImpl<CourseRecord> {
     @Override
     public List<Index> getIndexes() {
         return Arrays.<Index>asList(Indexes.COURSE_COLLEGE_ID, Indexes.COURSE_PRIMARY);
+    }
+
+    @Override
+    public Identity<CourseRecord, Integer> getIdentity() {
+        return Keys.IDENTITY_COURSE;
     }
 
     @Override

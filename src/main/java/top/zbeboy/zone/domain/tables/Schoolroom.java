@@ -11,6 +11,7 @@ import javax.annotation.Generated;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
+import org.jooq.Identity;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
@@ -41,7 +42,7 @@ import top.zbeboy.zone.domain.tables.records.SchoolroomRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Schoolroom extends TableImpl<SchoolroomRecord> {
 
-    private static final long serialVersionUID = 657570979;
+    private static final long serialVersionUID = 546225378;
 
     /**
      * The reference instance of <code>zone.schoolroom</code>
@@ -59,7 +60,7 @@ public class Schoolroom extends TableImpl<SchoolroomRecord> {
     /**
      * The column <code>zone.schoolroom.schoolroom_id</code>.
      */
-    public final TableField<SchoolroomRecord, Integer> SCHOOLROOM_ID = createField(DSL.name("schoolroom_id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<SchoolroomRecord, Integer> SCHOOLROOM_ID = createField(DSL.name("schoolroom_id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false).identity(true), this, "");
 
     /**
      * The column <code>zone.schoolroom.building_id</code>.
@@ -117,6 +118,11 @@ public class Schoolroom extends TableImpl<SchoolroomRecord> {
     @Override
     public List<Index> getIndexes() {
         return Arrays.<Index>asList(Indexes.SCHOOLROOM_BUILDING_ID, Indexes.SCHOOLROOM_PRIMARY);
+    }
+
+    @Override
+    public Identity<SchoolroomRecord, Integer> getIdentity() {
+        return Keys.IDENTITY_SCHOOLROOM;
     }
 
     @Override

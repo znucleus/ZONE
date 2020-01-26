@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="br-pageheader pd-y-15 pd-l-20">
+        <nav class="breadcrumb pd-0 mg-0 tx-12">
+            <a class="breadcrumb-item dy_href" href="#/web/menu/data/course">列表</a>
+            <span class="breadcrumb-item active">添加</span>
+        </nav>
+    </div><!-- br-pageheader -->
+    <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
+        <h4 class="tx-gray-800 mg-b-5">课程数据</h4>
+        <p class="mg-b-0">添加课程数据。</p>
+    </div>
+
+    <div class="br-pagebody">
+        <div class="br-section-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <form id="app_form">
+                        <div class="form-group" sec:authorize="hasRole('ROLE_SYSTEM')">
+                            <select class="form-control select2-show-search" id="school" name="schoolId"
+                                    th:data-placeholder="请选择学校">
+                                <option th:label="请选择学校"></option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group" sec:authorize="hasRole('ROLE_SYSTEM')">
+                            <select class="form-control select2-show-search" id="college" name="collegeId"
+                                    data-placeholder="请选择院">
+                                <option label="请选择院"></option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>课程</label>
+                            <input class="form-control" name="courseName" id="courseName" maxlength="100"
+                                   placeholder="课程名"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>学分</label>
+                            <input class="form-control" type="number" name="courseCredit" id="courseCredit"
+                                   placeholder="学分"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>学时</label>
+                            <input class="form-control" type="number" name="courseHours" id="courseHours"
+                                   placeholder="学时"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>类型</label>
+                            <select class="form-control" id="courseType" name="courseType">
+                                <option value="-1">请选择课程类型</option>
+                                <option value="1">实践</option>
+                                <option value="0">理论</option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>年级</label>
+                            <select class="form-control" id="schoolYear" name="schoolYear">
+                                <option value="-1">请选择年级</option>
+                                <option value="1">大一</option>
+                                <option value="2">大二</option>
+                                <option value="3">大三</option>
+                                <option value="4">大四</option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>学期</label>
+                            <select class="form-control" id="term" name="term">
+                                <option value="-1">请选择学期</option>
+                                <option value="0">上学期</option>
+                                <option value="1">下学期</option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>课程代码</label>
+                            <input class="form-control" name="courseCode" id="courseCode" placeholder="课程代码"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>课程简介</label>
+                            <textarea class="form-control" id="courseBrief" name="courseBrief" maxlength="500"
+                                      rows="3"></textarea>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="ckbox">
+                                <input type="checkbox" name="courseIsDel" value="1"/>
+                                <span>注销</span>
+                            </label>
+                        </div>
+                        <div class="form-group text-center">
+                            <button type="button" class="btn btn-primary text-center" id="save">保存</button>
+                            <button type="reset" class="btn btn-default">重置</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" id="collegeId" th:value="${collegeId}"/>
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/data/course/course_add.js')}"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>

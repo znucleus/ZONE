@@ -30,7 +30,7 @@ import top.zbeboy.zone.domain.tables.Schoolroom;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class SchoolroomRecord extends UpdatableRecordImpl<SchoolroomRecord> implements Record4<Integer, Integer, String, Byte> {
 
-    private static final long serialVersionUID = -523212884;
+    private static final long serialVersionUID = -1103706712;
 
     /**
      * Setter for <code>zone.schoolroom.schoolroom_id</code>.
@@ -42,7 +42,6 @@ public class SchoolroomRecord extends UpdatableRecordImpl<SchoolroomRecord> impl
     /**
      * Getter for <code>zone.schoolroom.schoolroom_id</code>.
      */
-    @NotNull
     public Integer getSchoolroomId() {
         return (Integer) get(0);
     }

@@ -94,6 +94,52 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
                     }
                 },
                 {
+                    targets: 8,
+                    render: function (a, b, c, d) {
+                        var v = '';
+                        if (c.courseType === 0) {
+                            v = '理论';
+                        } else if (c.courseType === 1) {
+                            v = "实践";
+                        } else {
+                            v = "未知";
+                        }
+                        return v;
+                    }
+                },
+                {
+                    targets: 10,
+                    render: function (a, b, c, d) {
+                        var v = '';
+                        if (c.schoolYear === 1) {
+                            v = '大一';
+                        } else if (c.schoolYear === 2) {
+                            v = "大二";
+                        } else if (c.schoolYear === 3) {
+                            v = "大三";
+                        } else if (c.schoolYear === 4) {
+                            v = "大四";
+                        } else {
+                            v = "未知";
+                        }
+                        return v;
+                    }
+                },
+                {
+                    targets: 11,
+                    render: function (a, b, c, d) {
+                        var v = '';
+                        if (c.term === 0) {
+                            v = '上学期';
+                        } else if (c.term === 1) {
+                            v = "下学期";
+                        } else {
+                            v = "未知";
+                        }
+                        return v;
+                    }
+                },
+                {
                     targets: 14,
                     orderable: false,
                     render: function (a, b, c, d) {
@@ -132,7 +178,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
                     }
                 },
                 {
-                    targets: 6,
+                    targets: 12,
                     render: function (a, b, c, d) {
                         if (c.courseIsDel === 0 || c.courseIsDel == null) {
                             return "<span class='text-info'>正常</span>";

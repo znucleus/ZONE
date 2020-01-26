@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.vo.data.course;
 
-public class CourseOrganizeSearchVo {
+public class CourseSearchVo {
     private Byte schoolYear;
     private Byte term;
     private Integer collegeId;

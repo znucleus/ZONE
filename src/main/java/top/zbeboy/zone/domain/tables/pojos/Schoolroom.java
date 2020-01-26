@@ -24,7 +24,7 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Schoolroom implements Serializable {
 
-    private static final long serialVersionUID = 1370046673;
+    private static final long serialVersionUID = 775867081;
 
     private Integer schoolroomId;
     private Integer buildingId;
@@ -52,7 +52,6 @@ public class Schoolroom implements Serializable {
         this.schoolroomIsDel = schoolroomIsDel;
     }
 
-    @NotNull
     public Integer getSchoolroomId() {
         return this.schoolroomId;
     }

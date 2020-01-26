@@ -258,7 +258,7 @@ CREATE TABLE system_sms_log(
 );
 
 CREATE TABLE building(
-  building_id INT PRIMARY KEY,
+  building_id INT AUTO_INCREMENT PRIMARY KEY,
   building_name VARCHAR(30) NOT NULL,
   building_is_del BOOLEAN,
   college_id INT NOT NULL,
@@ -267,7 +267,7 @@ CREATE TABLE building(
 );
 
 CREATE TABLE schoolroom(
-  schoolroom_id INT PRIMARY KEY,
+  schoolroom_id INT AUTO_INCREMENT PRIMARY KEY,
   building_id INT NOT NULL,
   building_code VARCHAR(10) NOT NULL,
   schoolroom_is_del BOOLEAN,
@@ -276,7 +276,7 @@ CREATE TABLE schoolroom(
 );
 
 CREATE TABLE course(
-  course_id INT PRIMARY KEY,
+  course_id INT AUTO_INCREMENT PRIMARY KEY,
   course_name VARCHAR(100) NOT NULL,
   course_credit DOUBLE,
   course_brief VARCHAR(500),
