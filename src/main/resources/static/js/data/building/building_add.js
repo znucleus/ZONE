@@ -1,4 +1,4 @@
-//# sourceURL=department_add.js
+//# sourceURL=building_add.js
 require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", "jquery.address", "bootstrap-maxlength", "select2-zh-CN"],
     function ($, _, tools, Swal, navActive) {
 
