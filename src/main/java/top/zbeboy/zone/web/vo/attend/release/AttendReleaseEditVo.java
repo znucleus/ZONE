@@ -20,9 +20,6 @@ public class AttendReleaseEditVo {
     private Byte isAuto;
     private String validDate;
     private String expireDate;
-    @NotNull(message = "班级ID不能为空")
-    @Min(value = 1, message = "班级不正确")
-    private int organizeId;
 
     public int getAttendReleaseSubId() {
         return attendReleaseSubId;
@@ -78,13 +75,5 @@ public class AttendReleaseEditVo {
 
     public void setExpireDate(String expireDate) {
         this.expireDate = expireDate;
-    }
-
-    public int getOrganizeId() {
-        return organizeId;
-    }
-
-    public void setOrganizeId(int organizeId) {
-        this.organizeId = organizeId;
     }
 }
