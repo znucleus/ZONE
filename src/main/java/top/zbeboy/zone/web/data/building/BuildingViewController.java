@@ -5,15 +5,20 @@ import org.jooq.Record;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.College;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
+import top.zbeboy.zone.service.data.BuildingService;
 import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
+import top.zbeboy.zone.web.bean.data.building.BuildingBean;
+import top.zbeboy.zone.web.bean.data.department.DepartmentBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 
 import javax.annotation.Resource;
@@ -37,6 +42,9 @@ public class BuildingViewController {
 
     @Resource
     private StudentService studentService;
+
+    @Resource
+    private BuildingService buildingService;
 
     /**
      * 楼数据
@@ -94,6 +102,38 @@ public class BuildingViewController {
             modelMap.addAttribute("collegeId", 0);
             page = "web/data/building/building_add::#page-wrapper";
         }
+        return page;
+    }
+
+
+    /**
+     * 楼数据编辑
+     *
+     * @param id       系id
+     * @param modelMap 页面对象
+     * @return 编辑页面
+     */
+    @GetMapping("/web/data/building/edit/{id}")
+    public String edit(@PathVariable("id") int id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        Optional<Record> record = buildingService.findByIdRelation(id);
+        if (record.isPresent()) {
+            BuildingBean buildingBean = record.get().into(BuildingBean.class);
+            modelMap.addAttribute("building", buildingBean);
+            if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+                modelMap.addAttribute("collegeId", buildingBean.getCollegeId());
+            } else {
+                modelMap.addAttribute("collegeId", 0);
+            }
+
+            page = "web/data/building/building_edit::#page-wrapper";
+        } else {
+            config.buildDangerTip("查询错误", "未查询到楼数据");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+
         return page;
     }
 }

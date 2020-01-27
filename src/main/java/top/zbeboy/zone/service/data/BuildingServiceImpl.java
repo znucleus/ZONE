@@ -92,6 +92,13 @@ public class BuildingServiceImpl implements BuildingService, PaginationPlugin<Da
     }
 
     @Override
+    public Result<BuildingRecord> findByBuildingNameAndCollegeIdNeBuildingId(String buildingName, int collegeId, int buildingId) {
+        return create.selectFrom(BUILDING)
+                .where(BUILDING.BUILDING_NAME.eq(buildingName).and(BUILDING.COLLEGE_ID.eq(collegeId)).and(BUILDING.BUILDING_ID.ne(buildingId)))
+                .fetch();
+    }
+
+    @Override
     public Result<Record> findAllByPage(DataTablesUtil dataTablesUtil) {
         SelectOnConditionStep<Record> selectOnConditionStep =
                 create.select()

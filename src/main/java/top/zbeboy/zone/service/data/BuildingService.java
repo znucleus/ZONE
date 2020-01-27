@@ -47,6 +47,16 @@ public interface BuildingService {
     Result<BuildingRecord> findByBuildingNameAndCollegeId(String buildingName, int collegeId);
 
     /**
+     * 查找院下不等于该楼id的楼名
+     *
+     * @param buildingName 楼名
+     * @param collegeId    院id
+     * @param buildingId   楼id
+     * @return 数据
+     */
+    Result<BuildingRecord> findByBuildingNameAndCollegeIdNeBuildingId(String buildingName, int collegeId, int buildingId);
+
+    /**
      * 分页查询
      *
      * @param dataTablesUtil 工具类

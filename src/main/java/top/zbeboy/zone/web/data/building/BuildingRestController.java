@@ -18,8 +18,10 @@ import top.zbeboy.zone.web.plugin.select2.Select2Data;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.ByteUtil;
+import top.zbeboy.zone.web.util.SmallPropsUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.vo.data.building.BuildingAddVo;
+import top.zbeboy.zone.web.vo.data.building.BuildingEditVo;
 import top.zbeboy.zone.web.vo.data.building.BuildingSearchVo;
 
 import javax.annotation.Resource;
@@ -120,6 +122,76 @@ public class BuildingRestController {
             ajaxUtil.success().msg("保存成功");
         } else {
             ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 检验编辑时楼名重复
+     *
+     * @param buildingId   楼id
+     * @param buildingName 楼名
+     * @param collegeId    院id
+     * @return true 合格 false 不合格
+     */
+    @PostMapping("/web/data/building/check/edit/name")
+    public ResponseEntity<Map<String, Object>> checkEditName(@RequestParam("buildingId") int buildingId,
+                                                             @RequestParam("buildingName") String buildingName,
+                                                             @RequestParam("collegeId") int collegeId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        String param = StringUtils.deleteWhitespace(buildingName);
+        Result<BuildingRecord> buildingRecords = buildingService.findByBuildingNameAndCollegeIdNeBuildingId(param, collegeId, buildingId);
+        if (buildingRecords.isEmpty()) {
+            ajaxUtil.success().msg("楼名不重复");
+        } else {
+            ajaxUtil.fail().msg("楼名重复");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 保存楼更改
+     *
+     * @param buildingEditVo 楼
+     * @param bindingResult  检验
+     * @return true 更改成功 false 更改失败
+     */
+
+    @PostMapping("/web/data/building/update")
+    public ResponseEntity<Map<String, Object>> update(@Valid BuildingEditVo buildingEditVo, BindingResult bindingResult) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (!bindingResult.hasErrors()) {
+            Building building = buildingService.findById(buildingEditVo.getBuildingId());
+            if (Objects.nonNull(building)) {
+                building.setBuildingIsDel(ByteUtil.toByte(1).equals(buildingEditVo.getBuildingIsDel()) ? ByteUtil.toByte(1) : ByteUtil.toByte(0));
+                building.setBuildingName(buildingEditVo.getBuildingName());
+                building.setCollegeId(buildingEditVo.getCollegeId());
+                buildingService.update(building);
+                ajaxUtil.success().msg("更新成功");
+            } else {
+                ajaxUtil.fail().msg("根据楼ID未查询到楼数据");
+            }
+        } else {
+            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 批量更改楼状态
+     *
+     * @param buildingIds 楼ids
+     * @param isDel       is_del
+     * @return true注销成功
+     */
+    @PostMapping("/web/data/building/status")
+    public ResponseEntity<Map<String, Object>> status(String buildingIds, Byte isDel) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (StringUtils.isNotBlank(buildingIds)) {
+            buildingService.updateIsDel(SmallPropsUtil.StringIdsToNumberList(buildingIds), isDel);
+            ajaxUtil.success().msg("更新状态成功");
+        } else {
+            ajaxUtil.fail().msg("请选择楼");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
