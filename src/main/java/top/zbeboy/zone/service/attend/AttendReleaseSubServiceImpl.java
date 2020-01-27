@@ -5,9 +5,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jooq.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import top.zbeboy.zone.config.CacheBook;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.daos.AttendReleaseSubDao;
 import top.zbeboy.zone.domain.tables.pojos.AttendReleaseSub;
@@ -62,6 +65,7 @@ public class AttendReleaseSubServiceImpl implements AttendReleaseSubService, Pag
         return attendReleaseSubDao.findById(id);
     }
 
+    @Cacheable(cacheNames = CacheBook.ATTEND_RELEASE_SUB, key = "#id")
     @Override
     public Optional<Record> findByIdRelation(int id) {
         return create.select()
@@ -157,11 +161,13 @@ public class AttendReleaseSubServiceImpl implements AttendReleaseSubService, Pag
         attendReleaseSubDao.insert(attendReleaseSubs);
     }
 
+    @CacheEvict(cacheNames = CacheBook.ATTEND_RELEASE_SUB, key = "#id")
     @Override
     public void deleteById(int id) {
         attendReleaseSubDao.deleteById(id);
     }
 
+    @CacheEvict(cacheNames = CacheBook.ATTEND_RELEASE_SUB, key = "#attendReleaseSub.attendReleaseSubId")
     @Override
     public void update(AttendReleaseSub attendReleaseSub) {
         attendReleaseSubDao.update(attendReleaseSub);

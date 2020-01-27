@@ -41,4 +41,9 @@ public final class CacheBook {
     public static final String USERS_TYPE_BY_ID = "USERS_TYPE_BY_ID";
     public static final String SYSTEM_CONFIGURE = "SYSTEM_CONFIGURE";
 
+    /*
+    签到业务
+     */
+    public static final String ATTEND_RELEASE_SUB = "ATTEND_RELEASE_SUB";
+
 }

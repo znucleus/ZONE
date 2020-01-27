@@ -20,6 +20,7 @@ public interface AttendReleaseSubService {
 
     /**
      * 根据主键关联查询
+     * 缓存:是
      *
      * @param id 主键
      * @return 数据
