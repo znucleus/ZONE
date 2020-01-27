@@ -16,6 +16,7 @@ public final class CacheBook {
      */
     public static final String ACADEMIC_TITLES = "ACADEMIC_TITLES";
     public static final String BUILDINGS = "BUILDINGS";
+    public static final String BUILDING = "BUILDING";
     public static final String COLLEGE = "COLLEGE";
     public static final String COLLEGES = "COLLEGES";
     public static final String COURSES = "COURSES";

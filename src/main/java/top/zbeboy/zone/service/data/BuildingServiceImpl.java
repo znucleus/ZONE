@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zone.config.CacheBook;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.daos.BuildingDao;
+import top.zbeboy.zone.domain.tables.pojos.Building;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.domain.tables.records.BuildingRecord;
@@ -22,13 +24,11 @@ import top.zbeboy.zone.service.util.SQLQueryUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
 import javax.annotation.Resource;
-
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 import static top.zbeboy.zone.domain.Tables.*;
-import static top.zbeboy.zone.domain.Tables.COLLEGE;
-import static top.zbeboy.zone.domain.Tables.SCHOOL;
 
 @Service("buildingService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -59,11 +59,36 @@ public class BuildingServiceImpl implements BuildingService, PaginationPlugin<Da
         create = dslContext;
     }
 
+    @Override
+    public Building findById(int id) {
+        return buildingDao.findById(id);
+    }
+
+    @Cacheable(cacheNames = CacheBook.BUILDING, key = "#id")
+    @Override
+    public Optional<Record> findByIdRelation(int id) {
+        return create.select()
+                .from(BUILDING)
+                .join(COLLEGE)
+                .on(BUILDING.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
+                .join(SCHOOL)
+                .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
+                .where(BUILDING.BUILDING_ID.eq(id))
+                .fetchOptional();
+    }
+
     @Cacheable(cacheNames = CacheBook.BUILDINGS, key = "#collegeId + '_' + #buildingIsDel")
     @Override
     public Result<BuildingRecord> findByCollegeIdAndBuildingIsDel(int collegeId, Byte buildingIsDel) {
         return create.selectFrom(BUILDING).where(BUILDING.COLLEGE_ID.eq(collegeId)
                 .and(BUILDING.BUILDING_IS_DEL.eq(buildingIsDel))).fetch();
+    }
+
+    @Override
+    public Result<BuildingRecord> findByBuildingNameAndCollegeId(String buildingName, int collegeId) {
+        return create.selectFrom(BUILDING)
+                .where(BUILDING.BUILDING_NAME.eq(buildingName).and(BUILDING.COLLEGE_ID.eq(collegeId)))
+                .fetch();
     }
 
     @Override
@@ -98,6 +123,25 @@ public class BuildingServiceImpl implements BuildingService, PaginationPlugin<Da
                 .join(SCHOOL)
                 .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID));
         return countAll(selectOnConditionStep, dataTablesUtil, false);
+    }
+
+    @CacheEvict(cacheNames = CacheBook.BUILDINGS, allEntries = true)
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void save(Building building) {
+        buildingDao.insert(building);
+    }
+
+    @CacheEvict(cacheNames = {CacheBook.BUILDING, CacheBook.BUILDINGS}, allEntries = true)
+    @Override
+    public void update(Building building) {
+        buildingDao.update(building);
+    }
+
+    @CacheEvict(cacheNames = {CacheBook.BUILDING, CacheBook.BUILDINGS}, allEntries = true)
+    @Override
+    public void updateIsDel(List<Integer> ids, Byte isDel) {
+        ids.forEach(id -> create.update(BUILDING).set(BUILDING.BUILDING_IS_DEL, isDel).where(BUILDING.BUILDING_ID.eq(id)).execute());
     }
 
     @Override

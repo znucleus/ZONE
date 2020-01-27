@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="br-pageheader pd-y-15 pd-l-20">
+        <nav class="breadcrumb pd-0 mg-0 tx-12">
+            <a class="breadcrumb-item dy_href" href="#/web/menu/data/building">列表</a>
+            <span class="breadcrumb-item active">添加</span>
+        </nav>
+    </div><!-- br-pageheader -->
+    <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
+        <h4 class="tx-gray-800 mg-b-5">楼数据</h4>
+        <p class="mg-b-0">添加楼数据。</p>
+    </div>
+
+    <div class="br-pagebody">
+        <div class="br-section-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <form id="app_form">
+                        <div class="form-group" sec:authorize="hasRole('ROLE_SYSTEM')">
+                            <select class="form-control select2-show-search" id="school" name="schoolId"
+                                    th:data-placeholder="请选择学校">
+                                <option th:label="请选择学校"></option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group" sec:authorize="hasRole('ROLE_SYSTEM')">
+                            <select class="form-control select2-show-search" id="college" name="collegeId"
+                                    data-placeholder="请选择院">
+                                <option label="请选择院"></option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>楼</label>
+                            <input class="form-control" name="buildingName" id="buildingName" maxlength="30" placeholder="楼名"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="ckbox">
+                                <input type="checkbox" name="buildingIsDel" value="1"/>
+                                <span>注销</span>
+                            </label>
+                        </div>
+                        <div class="form-group text-center">
+                            <button type="button" class="btn btn-primary text-center" id="save">保存</button>
+                            <button type="reset" class="btn btn-default">重置</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" id="collegeId" th:value="${collegeId}"/>
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/data/building/building_add.js')}"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>
