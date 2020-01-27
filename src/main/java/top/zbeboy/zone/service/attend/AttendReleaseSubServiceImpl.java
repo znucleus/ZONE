@@ -80,6 +80,7 @@ public class AttendReleaseSubServiceImpl implements AttendReleaseSubService, Pag
                 .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
                 .leftJoin(USERS)
                 .on(ATTEND_RELEASE_SUB.USERNAME.eq(USERS.USERNAME))
+                .where(ATTEND_RELEASE_SUB.ATTEND_RELEASE_SUB_ID.eq(id))
                 .fetchOptional();
     }
 
