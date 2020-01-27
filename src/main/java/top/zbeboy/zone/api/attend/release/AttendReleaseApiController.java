@@ -188,6 +188,8 @@ public class AttendReleaseApiController {
             attendReleaseSub.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(attendReleaseSub.getReleaseTime()));
             attendReleaseSub.setAttendStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(attendReleaseSub.getAttendStartTime()));
             attendReleaseSub.setAttendEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(attendReleaseSub.getAttendEndTime()));
+            attendReleaseSub.setValidDateStr(DateTimeUtil.defaultFormatSqlTimestamp(attendReleaseSub.getValidDate()));
+            attendReleaseSub.setExpireDateStr(DateTimeUtil.defaultFormatSqlTimestamp(attendReleaseSub.getExpireDate()));
             ajaxUtil.success().msg("查询数据成功").put("attendReleaseSub", attendReleaseSub);
         } else {
             ajaxUtil.fail().msg("根据ID未查询到签到发布子表数据");
