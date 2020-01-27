@@ -26,8 +26,8 @@ public class SchoolroomRestController {
      * @param schoolroomSearchVo 查询参数
      * @return 教室数据
      */
-    @GetMapping("/user/data/schoolroom")
-    public ResponseEntity<Map<String, Object>> anyoneData(SchoolroomSearchVo schoolroomSearchVo) {
+    @GetMapping("/users/data/schoolroom")
+    public ResponseEntity<Map<String, Object>> usersData(SchoolroomSearchVo schoolroomSearchVo) {
         Select2Data select2Data = Select2Data.of();
         Result<SchoolroomRecord> schoolrooms = schoolroomService.findByBuildingIdAndSchoolroomIsDel(schoolroomSearchVo.getBuildingId(), BooleanUtil.toByte(false));
         schoolrooms.forEach(schoolroom -> select2Data.add(schoolroom.getSchoolroomId().toString(), schoolroom.getBuildingCode()));
