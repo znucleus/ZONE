@@ -1,22 +1,30 @@
 package top.zbeboy.zone.web.data.schoolroom;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import top.zbeboy.zone.domain.tables.pojos.Schoolroom;
 import top.zbeboy.zone.domain.tables.records.SchoolroomRecord;
 import top.zbeboy.zone.service.data.SchoolroomService;
-import top.zbeboy.zone.web.bean.data.building.BuildingBean;
 import top.zbeboy.zone.web.bean.data.schoolroom.SchoolroomBean;
 import top.zbeboy.zone.web.plugin.select2.Select2Data;
+import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
+import top.zbeboy.zone.web.util.ByteUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zone.web.vo.data.schoolroom.SchoolroomAddVo;
 import top.zbeboy.zone.web.vo.data.schoolroom.SchoolroomSearchVo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -71,5 +79,48 @@ public class SchoolroomRestController {
         dataTablesUtil.setiTotalRecords(schoolroomService.countAll(dataTablesUtil));
         dataTablesUtil.setiTotalDisplayRecords(schoolroomService.countByCondition(dataTablesUtil));
         return new ResponseEntity<>(dataTablesUtil, HttpStatus.OK);
+    }
+
+    /**
+     * 保存时检验教室是否重复
+     *
+     * @param buildingCode 教室名
+     * @param buildingId   楼id
+     * @return true 合格 false 不合格
+     */
+    @PostMapping("/web/data/schoolroom/check/add/code")
+    public ResponseEntity<Map<String, Object>> checkAddCode(@RequestParam("buildingCode") String buildingCode, @RequestParam("buildingId") int buildingId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        String param = StringUtils.deleteWhitespace(buildingCode);
+        Result<SchoolroomRecord> records = schoolroomService.findByBuildingCodeAndBuildingId(param, buildingId);
+        if (records.isEmpty()) {
+            ajaxUtil.success().msg("教室不重复");
+        } else {
+            ajaxUtil.fail().msg("教室重复");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 保存教室信息
+     *
+     * @param schoolroomAddVo 教室
+     * @param bindingResult   检验
+     * @return true 保存成功 false 保存失败
+     */
+    @PostMapping("/web/data/schoolroom/save")
+    public ResponseEntity<Map<String, Object>> save(@Valid SchoolroomAddVo schoolroomAddVo, BindingResult bindingResult) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (!bindingResult.hasErrors()) {
+            Schoolroom schoolroom = new Schoolroom();
+            schoolroom.setSchoolroomIsDel(ByteUtil.toByte(1).equals(schoolroomAddVo.getSchoolroomIsDel()) ? ByteUtil.toByte(1) : ByteUtil.toByte(0));
+            schoolroom.setBuildingCode(schoolroomAddVo.getBuildingCode());
+            schoolroom.setBuildingId(schoolroomAddVo.getBuildingId());
+            schoolroomService.save(schoolroom);
+            ajaxUtil.success().msg("保存成功");
+        } else {
+            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

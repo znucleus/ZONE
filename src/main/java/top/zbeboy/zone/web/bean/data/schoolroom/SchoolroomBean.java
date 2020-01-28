@@ -8,6 +8,7 @@ public class SchoolroomBean extends Schoolroom {
     private String collegeName;
     private String schoolName;
     private int schoolId;
+    private int collegeId;
     private String buildingName;
 
     public Byte getSchoolIsDel() {
@@ -48,6 +49,14 @@ public class SchoolroomBean extends Schoolroom {
 
     public void setSchoolId(int schoolId) {
         this.schoolId = schoolId;
+    }
+
+    public int getCollegeId() {
+        return collegeId;
+    }
+
+    public void setCollegeId(int collegeId) {
+        this.collegeId = collegeId;
     }
 
     public String getBuildingName() {

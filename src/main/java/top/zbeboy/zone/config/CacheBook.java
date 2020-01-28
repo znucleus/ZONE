@@ -29,6 +29,7 @@ public final class CacheBook {
     public static final String ORGANIZES = "ORGANIZES";
     public static final String POLITICAL_LANDSCAPES = "POLITICAL_LANDSCAPES";
     public static final String SCHOOLROOMS = "SCHOOLROOMS";
+    public static final String SCHOOLROOM = "SCHOOLROOM";
     public static final String SCHOOLS = "SCHOOLS";
     public static final String SCIENCES = "SCIENCES";
     public static final String SCIENCE = "SCIENCE";

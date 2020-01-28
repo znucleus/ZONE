@@ -4,12 +4,16 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zone.config.CacheBook;
 import top.zbeboy.zone.config.Workbook;
+import top.zbeboy.zone.domain.tables.daos.SchoolroomDao;
+import top.zbeboy.zone.domain.tables.pojos.Building;
+import top.zbeboy.zone.domain.tables.pojos.Schoolroom;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.domain.tables.records.SchoolroomRecord;
@@ -21,6 +25,7 @@ import top.zbeboy.zone.service.util.SQLQueryUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -33,6 +38,9 @@ import static top.zbeboy.zone.domain.Tables.SCHOOL;
 public class SchoolroomServiceImpl implements SchoolroomService, PaginationPlugin<DataTablesUtil> {
 
     private final DSLContext create;
+
+    @Resource
+    private SchoolroomDao schoolroomDao;
 
     @Resource
     private RoleService roleService;
@@ -54,11 +62,45 @@ public class SchoolroomServiceImpl implements SchoolroomService, PaginationPlugi
         create = dslContext;
     }
 
+    @Override
+    public Schoolroom findById(int id) {
+        return schoolroomDao.findById(id);
+    }
+
+    @Cacheable(cacheNames = CacheBook.SCHOOLROOM, key = "#id")
+    @Override
+    public Optional<Record> findByIdRelation(int id) {
+        return create.select()
+                .from(SCHOOLROOM)
+                .join(BUILDING)
+                .on(SCHOOLROOM.BUILDING_ID.eq(BUILDING.BUILDING_ID))
+                .join(COLLEGE)
+                .on(BUILDING.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
+                .join(SCHOOL)
+                .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
+                .where(SCHOOLROOM.SCHOOLROOM_ID.eq(id))
+                .fetchOptional();
+    }
+
     @Cacheable(cacheNames = CacheBook.SCHOOLROOMS, key = "#buildingId + '_' + #schoolroomIsDel")
     @Override
     public Result<SchoolroomRecord> findByBuildingIdAndSchoolroomIsDel(int buildingId, Byte schoolroomIsDel) {
         return create.selectFrom(SCHOOLROOM).where(SCHOOLROOM.BUILDING_ID.eq(buildingId)
                 .and(SCHOOLROOM.SCHOOLROOM_IS_DEL.eq(schoolroomIsDel))).fetch();
+    }
+
+    @Override
+    public Result<SchoolroomRecord> findByBuildingCodeAndBuildingId(String buildingCode, int buildingId) {
+        return create.selectFrom(SCHOOLROOM)
+                .where(SCHOOLROOM.BUILDING_CODE.eq(buildingCode).and(SCHOOLROOM.BUILDING_ID.eq(buildingId)))
+                .fetch();
+    }
+
+    @Override
+    public Result<SchoolroomRecord> findByBuildingCodeAndBuildingIdNeSchoolroomId(String buildingCode, int buildingId, int schoolroomId) {
+        return create.selectFrom(SCHOOLROOM)
+                .where(SCHOOLROOM.BUILDING_CODE.eq(buildingCode).and(SCHOOLROOM.BUILDING_ID.eq(buildingId).and(SCHOOLROOM.SCHOOLROOM_ID.ne(schoolroomId))))
+                .fetch();
     }
 
     @Override
@@ -99,6 +141,25 @@ public class SchoolroomServiceImpl implements SchoolroomService, PaginationPlugi
                 .join(SCHOOL)
                 .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID));
         return countAll(selectOnConditionStep, dataTablesUtil, false);
+    }
+
+    @CacheEvict(cacheNames = CacheBook.SCHOOLROOMS, allEntries = true)
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void save(Schoolroom schoolroom) {
+        schoolroomDao.insert(schoolroom);
+    }
+
+    @CacheEvict(cacheNames = {CacheBook.SCHOOLROOM, CacheBook.SCHOOLROOMS}, allEntries = true)
+    @Override
+    public void update(Schoolroom schoolroom) {
+schoolroomDao.update(schoolroom);
+    }
+
+    @CacheEvict(cacheNames = {CacheBook.SCHOOLROOM, CacheBook.SCHOOLROOMS}, allEntries = true)
+    @Override
+    public void updateIsDel(List<Integer> ids, Byte isDel) {
+        ids.forEach(id -> create.update(SCHOOLROOM).set(SCHOOLROOM.SCHOOLROOM_IS_DEL, isDel).where(SCHOOLROOM.SCHOOLROOM_ID.eq(id)).execute());
     }
 
     @Override
