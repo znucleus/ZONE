@@ -1,6 +1,6 @@
 //# sourceURL=nation_data.js
-require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootstrap4", "check.all", "jquery.address", "messenger"],
-    function ($, Handlebars, navActive, Swal) {
+require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2", "responsive.bootstrap4", "check.all", "jquery.address", "messenger"],
+    function ($, _, tools, Handlebars, navActive, Swal) {
 
         /*
          参数
@@ -13,9 +13,31 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
             nationName: ''
         };
 
-        var update_param = {
+        var edit_param = {
             nationId: '',
             nationName: ''
+        };
+
+        var add_param_id = {
+            nationName: '#addNationName'
+        };
+
+        var edit_param_id = {
+            nationId:'#editNationId',
+            nationName: '#editNationName'
+        };
+
+        var button_id = {
+            add: {
+                id: '#add',
+                text: '保存',
+                tip: '保存中...'
+            },
+            edit:{
+                id: '#edit',
+                text: '保存',
+                tip: '保存中...'
+            }
         };
 
         /*
@@ -32,9 +54,9 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
             return {
                 data: web_path + '/web/data/nation/data',
                 save: web_path + '/web/data/nation/save',
-                check_add_name: web_path + '/web/data/school/check/add/name',
+                check_add_name: web_path + '/web/data/nation/check/add/name',
                 update: web_path + '/web/data/nation/update',
-                check_edit_name: web_path + '/web/data/school/check/edit/name',
+                check_edit_name: web_path + '/web/data/nation/check/edit/name',
                 page: '/web/menu/data/nation'
             };
         }
@@ -117,7 +139,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                 "<'row'<'col-sm-5'i><'col-sm-7'p>>",
             initComplete: function () {
                 tableElement.delegate('.edit', "click", function () {
-                    // edit($(this).attr('data-id'), $(this).attr('data-value'));
+                    edit($(this).attr('data-id'), $(this).attr('data-value'));
                 });
 
                 // 初始化搜索框中内容
@@ -221,6 +243,164 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
          添加页面
          */
         $('#nation_add').click(function () {
-            $('#addNationModal').modal('show');
+            $('#addModal').modal('show');
         });
+
+        /*
+         编辑页面
+         */
+        function edit(nationId, nationName) {
+            $(edit_param_id.nationId).val(nationId);
+            $(edit_param_id.nationName).val(nationName);
+            $('#editModal').modal('show');
+        }
+
+        function initDataParam() {
+            add_param.nationName = _.trim($(add_param_id.nationName).val());
+
+            edit_param.nationId = $(edit_param_id.nationId).val();
+            edit_param.nationName = _.trim($(edit_param_id.nationName).val());
+        }
+
+        /*
+         即时检验民族
+         */
+        $(add_param_id.nationName).blur(function () {
+            initDataParam();
+            var nationName = $(add_param_id.nationName).val();
+            if (nationName.length <= 0 || nationName.length > 30) {
+                tools.validErrorDom(add_param_id.nationName, '民族30个字符以内');
+            } else {
+                $.post(getAjaxUrl().check_add_name, add_param, function (data) {
+                    if (data.state) {
+                        tools.validSuccessDom(add_param_id.nationName);
+                    } else {
+                        tools.validErrorDom(add_param_id.nationName, data.msg);
+                    }
+                });
+            }
+        });
+
+        $(edit_param_id.nationName).blur(function () {
+            initDataParam();
+            var nationName = $(edit_param_id.nationName).val();
+            if (nationName.length <= 0 || nationName.length > 30) {
+                tools.validErrorDom(edit_param_id.nationName, '民族30个字符以内');
+            } else {
+                $.post(getAjaxUrl().check_edit_name, edit_param, function (data) {
+                    if (data.state) {
+                        tools.validSuccessDom(edit_param_id.nationName);
+                    } else {
+                        tools.validErrorDom(edit_param_id.nationName, data.msg);
+                    }
+                });
+            }
+        });
+
+        $(button_id.add.id).click(function () {
+            initDataParam();
+            validAddName();
+        });
+
+        $(button_id.edit.id).click(function () {
+            initDataParam();
+            validEditName();
+        });
+
+        function validAddName() {
+            var nationName = $(add_param_id.nationName).val();
+            if (nationName.length <= 0 || nationName.length > 30) {
+                tools.validErrorDom(add_param_id.nationName, '民族30个字符以内');
+            } else {
+                $.post(getAjaxUrl().check_add_name, add_param, function (data) {
+                    if (data.state) {
+                        tools.validSuccessDom(add_param_id.nationName);
+                        sendAddAjax();
+                    } else {
+                        tools.validErrorDom(add_param_id.nationName, data.msg);
+                    }
+                });
+            }
+        }
+
+        function validEditName() {
+            var nationName = $(edit_param_id.nationName).val();
+            if (nationName.length <= 0 || nationName.length > 30) {
+                tools.validErrorDom(edit_param_id.nationName, '民族30个字符以内');
+            } else {
+                $.post(getAjaxUrl().check_edit_name, edit_param, function (data) {
+                    if (data.state) {
+                        tools.validSuccessDom(edit_param_id.nationName);
+                        sendEditAjax();
+                    } else {
+                        tools.validErrorDom(edit_param_id.nationName, data.msg);
+                    }
+                });
+            }
+        }
+
+        /**
+         * 发送数据到后台
+         */
+        function sendAddAjax() {
+            tools.buttonLoading(button_id.add.id, button_id.add.tip);
+            $.ajax({
+                type: 'POST',
+                url: getAjaxUrl().save,
+                data: add_param,
+                success: function (data) {
+                    tools.buttonEndLoading(button_id.add.id, button_id.add.text);
+                    var globalError = $('#globalAddError');
+                    if (data.state) {
+                        globalError.text('');
+                        $(add_param_id.nationName).val('');
+                        $('#addModal').modal('hide');
+                        myTable.ajax.reload();
+                        Swal.fire('保存成功', data.msg, 'success');
+                    } else {
+                        globalError.text(data.msg);
+                    }
+                },
+                error: function (XMLHttpRequest) {
+                    tools.buttonEndLoading(button_id.add.id, button_id.add.text);
+                    Messenger().post({
+                        message: 'Request error : ' + XMLHttpRequest.status + " " + XMLHttpRequest.statusText,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        }
+
+        function sendEditAjax() {
+            tools.buttonLoading(button_id.edit.id, button_id.edit.tip);
+            $.ajax({
+                type: 'POST',
+                url: getAjaxUrl().update,
+                data: edit_param,
+                success: function (data) {
+                    tools.buttonEndLoading(button_id.edit.id, button_id.edit.text);
+                    var globalError = $('#globalEditError');
+                    if (data.state) {
+                        globalError.text('');
+                        $('#editModal').modal('hide');
+                        $(edit_param_id.nationId).val('');
+                        $(edit_param_id.nationName).val('');
+                        myTable.ajax.reload();
+                        Swal.fire('保存成功', data.msg, 'success');
+                    } else {
+                        globalError.text(data.msg);
+                    }
+                },
+                error: function (XMLHttpRequest) {
+                    tools.buttonEndLoading(button_id.edit.id, button_id.edit.text);
+                    Messenger().post({
+                        message: 'Request error : ' + XMLHttpRequest.status + " " + XMLHttpRequest.statusText,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        }
+
     });

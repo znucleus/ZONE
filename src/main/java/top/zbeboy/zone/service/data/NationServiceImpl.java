@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zone.config.CacheBook;
 import top.zbeboy.zone.domain.tables.daos.NationDao;
 import top.zbeboy.zone.domain.tables.pojos.Nation;
+import top.zbeboy.zone.domain.tables.records.NationRecord;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zone.service.util.SQLQueryUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
@@ -20,7 +22,6 @@ import java.util.List;
 import java.util.Objects;
 
 import static top.zbeboy.zone.domain.Tables.NATION;
-import static top.zbeboy.zone.domain.Tables.SCHOOL;
 
 @Service("nationService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -36,10 +37,27 @@ public class NationServiceImpl implements NationService, PaginationPlugin<DataTa
         create = dslContext;
     }
 
+    @Override
+    public Nation findById(int id) {
+        return nationDao.findById(id);
+    }
+
     @Cacheable(cacheNames = CacheBook.NATIONS)
     @Override
     public List<Nation> findAll() {
         return nationDao.findAll();
+    }
+
+    @Override
+    public List<Nation> findByNationName(String nationName) {
+        return nationDao.fetchByNationName(nationName);
+    }
+
+    @Override
+    public Result<NationRecord> findByNationNameNeNationId(String nationName, int nationId) {
+        return create.selectFrom(NATION)
+                .where(NATION.NATION_NAME.eq(nationName).and(NATION.NATION_ID.ne(nationId)))
+                .fetch();
     }
 
     @Override
@@ -55,6 +73,19 @@ public class NationServiceImpl implements NationService, PaginationPlugin<DataTa
     @Override
     public int countByCondition(DataTablesUtil dataTablesUtil) {
         return countAll(create, NATION, dataTablesUtil, false);
+    }
+
+    @CacheEvict(cacheNames = CacheBook.NATIONS, allEntries = true)
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void save(Nation nation) {
+        nationDao.insert(nation);
+    }
+
+    @CacheEvict(cacheNames = CacheBook.NATIONS, allEntries = true)
+    @Override
+    public void update(Nation nation) {
+        nationDao.update(nation);
     }
 
     @Override
