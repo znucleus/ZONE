@@ -1,4 +1,4 @@
-//# sourceURL=nation_data.js
+//# sourceURL=politics_data.js
 require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2", "responsive.bootstrap4", "check.all", "jquery.address", "messenger"],
     function ($, _, tools, Handlebars, navActive, Swal) {
 
