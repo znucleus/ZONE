@@ -8,7 +8,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
         var ajax_url = {
             obtain_department_data: web_path + '/anyone/data/department',
             obtain_science_data: web_path + '/anyone/data/science',
-            obtain_academic_title_data: web_path + '/anyone/data/academic_title',
+            obtain_academic_title_data: web_path + '/anyone/data/academic',
             staff_update_school: web_path + '/users/staff/update/school',
             obtain_nation_data: web_path + '/anyone/data/nation',
             obtain_political_landscape_data: web_path + '/anyone/data/politics',
