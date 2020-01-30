@@ -15,7 +15,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row4;
+import org.jooq.Row6;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -42,7 +42,7 @@ import top.zbeboy.zone.domain.tables.records.AttendDataRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AttendData extends TableImpl<AttendDataRecord> {
 
-    private static final long serialVersionUID = -1902929442;
+    private static final long serialVersionUID = -1110323699;
 
     /**
      * The reference instance of <code>zone.attend_data</code>
@@ -66,6 +66,16 @@ public class AttendData extends TableImpl<AttendDataRecord> {
      * The column <code>zone.attend_data.attend_release_sub_id</code>.
      */
     public final TableField<AttendDataRecord, Integer> ATTEND_RELEASE_SUB_ID = createField(DSL.name("attend_release_sub_id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+
+    /**
+     * The column <code>zone.attend_data.location</code>.
+     */
+    public final TableField<AttendDataRecord, String> LOCATION = createField(DSL.name("location"), org.jooq.impl.SQLDataType.VARCHAR(30), this, "");
+
+    /**
+     * The column <code>zone.attend_data.address</code>.
+     */
+    public final TableField<AttendDataRecord, String> ADDRESS = createField(DSL.name("address"), org.jooq.impl.SQLDataType.VARCHAR(300), this, "");
 
     /**
      * The column <code>zone.attend_data.create_date</code>.
@@ -170,11 +180,11 @@ public class AttendData extends TableImpl<AttendDataRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row4 type methods
+    // Row6 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row4<String, Integer, Timestamp, String> fieldsRow() {
-        return (Row4) super.fieldsRow();
+    public Row6<String, Integer, String, String, Timestamp, String> fieldsRow() {
+        return (Row6) super.fieldsRow();
     }
 }

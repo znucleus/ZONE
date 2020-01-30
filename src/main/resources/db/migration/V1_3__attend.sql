@@ -43,6 +43,8 @@ CREATE TABLE attend_users(
 CREATE TABLE attend_data(
  attend_users_id VARCHAR(64) NOT NULL,
  attend_release_sub_id INT NOT NULL,
+ location VARCHAR(30),
+ address VARCHAR(300),
  create_date TIMESTAMP NOT NULL,
  remark VARCHAR(200),
  PRIMARY KEY(attend_users_id, attend_release_sub_id),

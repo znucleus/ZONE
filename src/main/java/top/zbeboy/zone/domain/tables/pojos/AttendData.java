@@ -25,10 +25,12 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AttendData implements Serializable {
 
-    private static final long serialVersionUID = -442837182;
+    private static final long serialVersionUID = 2107955869;
 
     private String    attendUsersId;
     private Integer   attendReleaseSubId;
+    private String    location;
+    private String    address;
     private Timestamp createDate;
     private String    remark;
 
@@ -37,6 +39,8 @@ public class AttendData implements Serializable {
     public AttendData(AttendData value) {
         this.attendUsersId = value.attendUsersId;
         this.attendReleaseSubId = value.attendReleaseSubId;
+        this.location = value.location;
+        this.address = value.address;
         this.createDate = value.createDate;
         this.remark = value.remark;
     }
@@ -44,11 +48,15 @@ public class AttendData implements Serializable {
     public AttendData(
         String    attendUsersId,
         Integer   attendReleaseSubId,
+        String    location,
+        String    address,
         Timestamp createDate,
         String    remark
     ) {
         this.attendUsersId = attendUsersId;
         this.attendReleaseSubId = attendReleaseSubId;
+        this.location = location;
+        this.address = address;
         this.createDate = createDate;
         this.remark = remark;
     }
@@ -70,6 +78,24 @@ public class AttendData implements Serializable {
 
     public void setAttendReleaseSubId(Integer attendReleaseSubId) {
         this.attendReleaseSubId = attendReleaseSubId;
+    }
+
+    @Size(max = 30)
+    public String getLocation() {
+        return this.location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    @Size(max = 300)
+    public String getAddress() {
+        return this.address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     @NotNull
@@ -96,6 +122,8 @@ public class AttendData implements Serializable {
 
         sb.append(attendUsersId);
         sb.append(", ").append(attendReleaseSubId);
+        sb.append(", ").append(location);
+        sb.append(", ").append(address);
         sb.append(", ").append(createDate);
         sb.append(", ").append(remark);
 

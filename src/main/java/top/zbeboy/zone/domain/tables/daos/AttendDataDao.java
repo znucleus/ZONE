@@ -82,6 +82,34 @@ public class AttendDataDao extends DAOImpl<AttendDataRecord, top.zbeboy.zone.dom
     }
 
     /**
+     * Fetch records that have <code>location BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.AttendData> fetchRangeOfLocation(String lowerInclusive, String upperInclusive) {
+        return fetchRange(AttendData.ATTEND_DATA.LOCATION, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>location IN (values)</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.AttendData> fetchByLocation(String... values) {
+        return fetch(AttendData.ATTEND_DATA.LOCATION, values);
+    }
+
+    /**
+     * Fetch records that have <code>address BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.AttendData> fetchRangeOfAddress(String lowerInclusive, String upperInclusive) {
+        return fetchRange(AttendData.ATTEND_DATA.ADDRESS, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>address IN (values)</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.AttendData> fetchByAddress(String... values) {
+        return fetch(AttendData.ATTEND_DATA.ADDRESS, values);
+    }
+
+    /**
      * Fetch records that have <code>create_date BETWEEN lowerInclusive AND upperInclusive</code>
      */
     public List<top.zbeboy.zone.domain.tables.pojos.AttendData> fetchRangeOfCreateDate(Timestamp lowerInclusive, Timestamp upperInclusive) {
