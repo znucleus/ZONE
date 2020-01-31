@@ -36,6 +36,7 @@ CREATE TABLE attend_users(
  attend_release_id VARCHAR(64) NOT NULL,
  create_date TIMESTAMP NOT NULL,
  remark VARCHAR(200),
+ UNIQUE (student_id,attend_release_id),
  FOREIGN KEY(attend_release_id) REFERENCES attend_release(attend_release_id) ON DELETE CASCADE,
  FOREIGN KEY(student_id) REFERENCES student(student_id) ON DELETE CASCADE
 );

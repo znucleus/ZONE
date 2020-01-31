@@ -165,6 +165,7 @@ public class Keys {
     public static final UniqueKey<AttendReleaseRecord> KEY_ATTEND_RELEASE_PRIMARY = UniqueKeys0.KEY_ATTEND_RELEASE_PRIMARY;
     public static final UniqueKey<AttendReleaseSubRecord> KEY_ATTEND_RELEASE_SUB_PRIMARY = UniqueKeys0.KEY_ATTEND_RELEASE_SUB_PRIMARY;
     public static final UniqueKey<AttendUsersRecord> KEY_ATTEND_USERS_PRIMARY = UniqueKeys0.KEY_ATTEND_USERS_PRIMARY;
+    public static final UniqueKey<AttendUsersRecord> KEY_ATTEND_USERS_STUDENT_ID = UniqueKeys0.KEY_ATTEND_USERS_STUDENT_ID;
     public static final UniqueKey<AuthoritiesRecord> KEY_AUTHORITIES_PRIMARY = UniqueKeys0.KEY_AUTHORITIES_PRIMARY;
     public static final UniqueKey<AuthorizeTypeRecord> KEY_AUTHORIZE_TYPE_PRIMARY = UniqueKeys0.KEY_AUTHORIZE_TYPE_PRIMARY;
     public static final UniqueKey<AuthorizeTypeRecord> KEY_AUTHORIZE_TYPE_AUTHORIZE_TYPE_NAME = UniqueKeys0.KEY_AUTHORIZE_TYPE_AUTHORIZE_TYPE_NAME;
@@ -315,6 +316,7 @@ public class Keys {
         public static final UniqueKey<AttendReleaseRecord> KEY_ATTEND_RELEASE_PRIMARY = Internal.createUniqueKey(AttendRelease.ATTEND_RELEASE, "KEY_attend_release_PRIMARY", AttendRelease.ATTEND_RELEASE.ATTEND_RELEASE_ID);
         public static final UniqueKey<AttendReleaseSubRecord> KEY_ATTEND_RELEASE_SUB_PRIMARY = Internal.createUniqueKey(AttendReleaseSub.ATTEND_RELEASE_SUB, "KEY_attend_release_sub_PRIMARY", AttendReleaseSub.ATTEND_RELEASE_SUB.ATTEND_RELEASE_SUB_ID);
         public static final UniqueKey<AttendUsersRecord> KEY_ATTEND_USERS_PRIMARY = Internal.createUniqueKey(AttendUsers.ATTEND_USERS, "KEY_attend_users_PRIMARY", AttendUsers.ATTEND_USERS.ATTEND_USERS_ID);
+        public static final UniqueKey<AttendUsersRecord> KEY_ATTEND_USERS_STUDENT_ID = Internal.createUniqueKey(AttendUsers.ATTEND_USERS, "KEY_attend_users_student_id", AttendUsers.ATTEND_USERS.STUDENT_ID, AttendUsers.ATTEND_USERS.ATTEND_RELEASE_ID);
         public static final UniqueKey<AuthoritiesRecord> KEY_AUTHORITIES_PRIMARY = Internal.createUniqueKey(Authorities.AUTHORITIES, "KEY_authorities_PRIMARY", Authorities.AUTHORITIES.USERNAME, Authorities.AUTHORITIES.AUTHORITY);
         public static final UniqueKey<AuthorizeTypeRecord> KEY_AUTHORIZE_TYPE_PRIMARY = Internal.createUniqueKey(AuthorizeType.AUTHORIZE_TYPE, "KEY_authorize_type_PRIMARY", AuthorizeType.AUTHORIZE_TYPE.AUTHORIZE_TYPE_ID);
         public static final UniqueKey<AuthorizeTypeRecord> KEY_AUTHORIZE_TYPE_AUTHORIZE_TYPE_NAME = Internal.createUniqueKey(AuthorizeType.AUTHORIZE_TYPE, "KEY_authorize_type_authorize_type_name", AuthorizeType.AUTHORIZE_TYPE.AUTHORIZE_TYPE_NAME);

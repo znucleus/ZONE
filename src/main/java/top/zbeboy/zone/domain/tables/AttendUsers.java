@@ -42,7 +42,7 @@ import top.zbeboy.zone.domain.tables.records.AttendUsersRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AttendUsers extends TableImpl<AttendUsersRecord> {
 
-    private static final long serialVersionUID = 1454694020;
+    private static final long serialVersionUID = 827909785;
 
     /**
      * The reference instance of <code>zone.attend_users</code>
@@ -132,7 +132,7 @@ public class AttendUsers extends TableImpl<AttendUsersRecord> {
 
     @Override
     public List<UniqueKey<AttendUsersRecord>> getKeys() {
-        return Arrays.<UniqueKey<AttendUsersRecord>>asList(Keys.KEY_ATTEND_USERS_PRIMARY);
+        return Arrays.<UniqueKey<AttendUsersRecord>>asList(Keys.KEY_ATTEND_USERS_PRIMARY, Keys.KEY_ATTEND_USERS_STUDENT_ID);
     }
 
     @Override

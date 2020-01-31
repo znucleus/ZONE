@@ -225,7 +225,7 @@ public class Indexes {
         public static Index ATTEND_RELEASE_SUB_USERNAME = Internal.createIndex("username", AttendReleaseSub.ATTEND_RELEASE_SUB, new OrderField[] { AttendReleaseSub.ATTEND_RELEASE_SUB.USERNAME }, false);
         public static Index ATTEND_USERS_ATTEND_RELEASE_ID = Internal.createIndex("attend_release_id", AttendUsers.ATTEND_USERS, new OrderField[] { AttendUsers.ATTEND_USERS.ATTEND_RELEASE_ID }, false);
         public static Index ATTEND_USERS_PRIMARY = Internal.createIndex("PRIMARY", AttendUsers.ATTEND_USERS, new OrderField[] { AttendUsers.ATTEND_USERS.ATTEND_USERS_ID }, true);
-        public static Index ATTEND_USERS_STUDENT_ID = Internal.createIndex("student_id", AttendUsers.ATTEND_USERS, new OrderField[] { AttendUsers.ATTEND_USERS.STUDENT_ID }, false);
+        public static Index ATTEND_USERS_STUDENT_ID = Internal.createIndex("student_id", AttendUsers.ATTEND_USERS, new OrderField[] { AttendUsers.ATTEND_USERS.STUDENT_ID, AttendUsers.ATTEND_USERS.ATTEND_RELEASE_ID }, true);
         public static Index AUTHORITIES_PRIMARY = Internal.createIndex("PRIMARY", Authorities.AUTHORITIES, new OrderField[] { Authorities.AUTHORITIES.USERNAME, Authorities.AUTHORITIES.AUTHORITY }, true);
         public static Index AUTHORIZE_TYPE_AUTHORIZE_TYPE_NAME = Internal.createIndex("authorize_type_name", AuthorizeType.AUTHORIZE_TYPE, new OrderField[] { AuthorizeType.AUTHORIZE_TYPE.AUTHORIZE_TYPE_NAME }, true);
         public static Index AUTHORIZE_TYPE_PRIMARY = Internal.createIndex("PRIMARY", AuthorizeType.AUTHORIZE_TYPE, new OrderField[] { AuthorizeType.AUTHORIZE_TYPE.AUTHORIZE_TYPE_ID }, true);
