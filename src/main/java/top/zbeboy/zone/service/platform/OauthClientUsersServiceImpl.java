@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zone.config.Workbook;
+import top.zbeboy.zone.domain.tables.daos.OauthClientUsersDao;
+import top.zbeboy.zone.domain.tables.pojos.OauthClientUsers;
 import top.zbeboy.zone.domain.tables.pojos.Users;
-import top.zbeboy.zone.service.data.StaffService;
-import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zone.service.util.SQLQueryUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
@@ -25,6 +25,9 @@ import static top.zbeboy.zone.domain.Tables.*;
 public class OauthClientUsersServiceImpl implements OauthClientUsersService, PaginationPlugin<DataTablesUtil> {
 
     private final DSLContext create;
+
+    @Resource
+    private OauthClientUsersDao oauthClientUsersDao;
 
     @Resource
     private RoleService roleService;
@@ -69,6 +72,17 @@ public class OauthClientUsersServiceImpl implements OauthClientUsersService, Pag
                 .leftJoin(USERS)
                 .on(OAUTH_CLIENT_USERS.USERNAME.eq(USERS.USERNAME));
         return countAll(selectOnConditionStep, dataTablesUtil, false);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void save(OauthClientUsers oauthClientUsers) {
+        oauthClientUsersDao.insert(oauthClientUsers);
+    }
+
+    @Override
+    public void update(OauthClientUsers oauthClientUsers) {
+        oauthClientUsersDao.update(oauthClientUsers);
     }
 
     @Override

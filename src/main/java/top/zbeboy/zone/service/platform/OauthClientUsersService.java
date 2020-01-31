@@ -2,6 +2,7 @@ package top.zbeboy.zone.service.platform;
 
 import org.jooq.Record;
 import org.jooq.Result;
+import top.zbeboy.zone.domain.tables.pojos.OauthClientUsers;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
 public interface OauthClientUsersService {
@@ -27,4 +28,18 @@ public interface OauthClientUsersService {
      * @return 条件查询总数
      */
     int countByCondition(DataTablesUtil dataTablesUtil);
+
+    /**
+     * 保存
+     *
+     * @param oauthClientUsers 数据
+     */
+    void save(OauthClientUsers oauthClientUsers);
+
+    /**
+     * 更新
+     *
+     * @param oauthClientUsers 数据
+     */
+    void update(OauthClientUsers oauthClientUsers);
 }

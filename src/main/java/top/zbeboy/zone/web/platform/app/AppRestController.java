@@ -4,17 +4,29 @@ import org.jooq.Record;
 import org.jooq.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.zbeboy.zone.domain.tables.pojos.OauthClientDetails;
+import top.zbeboy.zone.domain.tables.pojos.OauthClientUsers;
+import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zone.service.platform.OauthClientDetailsService;
 import top.zbeboy.zone.service.platform.OauthClientUsersService;
+import top.zbeboy.zone.service.platform.UsersService;
+import top.zbeboy.zone.service.util.BCryptUtil;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.web.bean.platform.app.OauthClientUsersBean;
+import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zone.web.vo.platform.app.AppAddVo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @RestController
@@ -22,6 +34,12 @@ public class AppRestController {
 
     @Resource
     private OauthClientUsersService oauthClientUsersService;
+
+    @Resource
+    private OauthClientDetailsService oauthClientDetailsService;
+
+    @Resource
+    private UsersService usersService;
 
     /**
      * 数据
@@ -53,5 +71,47 @@ public class AppRestController {
         dataTablesUtil.setiTotalRecords(oauthClientUsersService.countAll(dataTablesUtil));
         dataTablesUtil.setiTotalDisplayRecords(oauthClientUsersService.countByCondition(dataTablesUtil));
         return new ResponseEntity<>(dataTablesUtil, HttpStatus.OK);
+    }
+
+    /**
+     * 保存
+     *
+     * @param appAddVo      应用
+     * @param bindingResult 检验
+     * @return true 保存成功 false 保存失败
+     */
+    @PostMapping("/web/platform/app/save")
+    public ResponseEntity<Map<String, Object>> save(@Valid AppAddVo appAddVo, BindingResult bindingResult) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (!bindingResult.hasErrors()) {
+            OauthClientDetails oauthClientDetails = new OauthClientDetails();
+            oauthClientDetails.setClientId(appAddVo.getClientId());
+            oauthClientDetails.setResourceIds("product_api");
+            oauthClientDetails.setClientSecret(BCryptUtil.bCryptPassword(appAddVo.getSecret()));
+            oauthClientDetails.setScope("api");
+            oauthClientDetails.setAuthorizedGrantTypes("authorization_code,refresh_token");
+            oauthClientDetails.setWebServerRedirectUri(appAddVo.getWebServerRedirectUri());
+            oauthClientDetails.setAccessTokenValidity(604800);
+            oauthClientDetails.setRefreshTokenValidity(1209600);
+            oauthClientDetails.setAutoapprove("true");
+
+            oauthClientDetailsService.save(oauthClientDetails);
+
+            OauthClientUsers oauthClientUsers = new OauthClientUsers();
+            oauthClientUsers.setClientId(appAddVo.getClientId());
+            oauthClientUsers.setSecret(appAddVo.getSecret());
+            oauthClientUsers.setAppName(appAddVo.getAppName());
+
+            Users users = usersService.getUserFromSession();
+            oauthClientUsers.setUsername(users.getUsername());
+            oauthClientUsers.setRemark(appAddVo.getRemark());
+            oauthClientUsers.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+
+            oauthClientUsersService.save(oauthClientUsers);
+            ajaxUtil.success().msg("保存成功");
+        } else {
+            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }
