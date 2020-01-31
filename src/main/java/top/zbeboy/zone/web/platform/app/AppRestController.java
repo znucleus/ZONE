@@ -7,15 +7,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.config.Workbook;
+import top.zbeboy.zone.domain.tables.pojos.OauthAccessToken;
 import top.zbeboy.zone.domain.tables.pojos.OauthClientDetails;
 import top.zbeboy.zone.domain.tables.pojos.OauthClientUsers;
 import top.zbeboy.zone.domain.tables.pojos.Users;
-import top.zbeboy.zone.service.platform.OauthClientDetailsService;
-import top.zbeboy.zone.service.platform.OauthClientUsersService;
-import top.zbeboy.zone.service.platform.RoleService;
-import top.zbeboy.zone.service.platform.UsersService;
+import top.zbeboy.zone.service.platform.*;
 import top.zbeboy.zone.service.util.BCryptUtil;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.web.bean.platform.app.OauthClientUsersBean;
@@ -37,6 +36,15 @@ public class AppRestController {
 
     @Resource
     private OauthClientDetailsService oauthClientDetailsService;
+
+    @Resource
+    private OauthAccessTokenService oauthAccessTokenService;
+
+    @Resource
+    private OauthRefreshTokenService oauthRefreshTokenService;
+
+    @Resource
+    private OauthApprovalsService oauthApprovalsService;
 
     @Resource
     private UsersService usersService;
@@ -154,6 +162,42 @@ public class AppRestController {
             }
         } else {
             ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 根据客户端id删除
+     *
+     * @param clientId 客户端id
+     * @return true or false
+     */
+    @PostMapping("/web/platform/app/delete")
+    public ResponseEntity<Map<String, Object>> delete(@RequestParam("clientId") String clientId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        Optional<Record> record;
+        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+            record = oauthClientUsersService.findByIdRelation(clientId);
+        } else {
+            Users users = usersService.getUserFromSession();
+            record = oauthClientUsersService.findByIdAndUsernameRelation(clientId, users.getUsername());
+        }
+
+        if (record.isPresent()) {
+            List<OauthAccessToken> oauthAccessTokens = oauthAccessTokenService.findByClientId(clientId);
+            if (Objects.nonNull(oauthAccessTokens)) {
+                oauthAccessTokens.forEach(oauthAccessToken -> oauthRefreshTokenService.deleteByTokenId(oauthAccessToken.getRefreshToken()));
+            }
+            oauthAccessTokenService.deleteByClientId(clientId);
+            oauthApprovalsService.deleteByClientId(clientId);
+            oauthClientDetailsService.deleteById(clientId);
+
+            OauthClientUsers oauthClientUsers = record.get().into(OauthClientUsers.class);
+            oauthClientUsersService.delete(oauthClientUsers);
+
+            ajaxUtil.success().msg("删除成功");
+        } else {
+            ajaxUtil.fail().msg("根据ID未查询到应用数据");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }

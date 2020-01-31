@@ -107,6 +107,11 @@ public class OauthClientUsersServiceImpl implements OauthClientUsersService, Pag
     }
 
     @Override
+    public void delete(OauthClientUsers oauthClientUsers) {
+        oauthClientUsersDao.delete(oauthClientUsers);
+    }
+
+    @Override
     public Condition searchCondition(DataTablesUtil paginationUtil) {
         Condition a = null;
         JSONObject search = paginationUtil.getSearch();

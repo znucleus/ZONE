@@ -25,4 +25,9 @@ public class OauthClientDetailsServiceImpl implements OauthClientDetailsService 
     public void update(OauthClientDetails oauthClientDetails) {
         oauthClientDetailsDao.update(oauthClientDetails);
     }
+
+    @Override
+    public void deleteById(String id) {
+        oauthClientDetailsDao.deleteById(id);
+    }
 }

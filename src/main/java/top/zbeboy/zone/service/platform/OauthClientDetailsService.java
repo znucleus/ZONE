@@ -17,4 +17,11 @@ public interface OauthClientDetailsService {
      * @param oauthClientDetails 数据
      */
     void update(OauthClientDetails oauthClientDetails);
+
+    /**
+     * 通过主键删除
+     *
+     * @param id 主键
+     */
+    void deleteById(String id);
 }

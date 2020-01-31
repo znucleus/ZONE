@@ -12,7 +12,7 @@ public interface OauthClientUsersService {
     /**
      * 通过id查询
      *
-     * @param id       id
+     * @param id id
      * @return 数据
      */
     Optional<Record> findByIdRelation(String id);
@@ -61,4 +61,11 @@ public interface OauthClientUsersService {
      * @param oauthClientUsers 数据
      */
     void update(OauthClientUsers oauthClientUsers);
+
+    /**
+     * 删除
+     *
+     * @param oauthClientUsers 数据
+     */
+    void delete(OauthClientUsers oauthClientUsers);
 }
