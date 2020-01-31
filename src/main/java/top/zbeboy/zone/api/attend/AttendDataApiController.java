@@ -11,7 +11,6 @@ import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.domain.tables.records.AttendUsersRecord;
 import top.zbeboy.zone.service.attend.AttendDataService;
-import top.zbeboy.zone.service.attend.AttendReleaseService;
 import top.zbeboy.zone.service.attend.AttendReleaseSubService;
 import top.zbeboy.zone.service.attend.AttendUsersService;
 import top.zbeboy.zone.service.data.StudentService;
@@ -39,9 +38,6 @@ public class AttendDataApiController {
 
     @Resource
     private AttendReleaseSubService attendReleaseSubService;
-
-    @Resource
-    private AttendReleaseService attendReleaseService;
 
     @Resource
     private AttendUsersService attendUsersService;
