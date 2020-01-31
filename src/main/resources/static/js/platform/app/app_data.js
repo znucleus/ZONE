@@ -46,7 +46,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
             searching: false,
             "processing": true, // 打开数据加载时的等待效果
             "serverSide": true,// 打开后台分页
-            "aaSorting": [[2, 'asc']],// 排序
+            "aaSorting": [[7, 'desc']],// 排序
             "ajax": {
                 "url": getAjaxUrl().data,
                 "dataSrc": "data",
