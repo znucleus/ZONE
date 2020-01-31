@@ -5,7 +5,26 @@ import org.jooq.Result;
 import top.zbeboy.zone.domain.tables.pojos.OauthClientUsers;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
+import java.util.Optional;
+
 public interface OauthClientUsersService {
+
+    /**
+     * 通过id查询
+     *
+     * @param id       id
+     * @return 数据
+     */
+    Optional<Record> findByIdRelation(String id);
+
+    /**
+     * 通过主键查询
+     *
+     * @param id       id
+     * @param username 账号
+     * @return 数据
+     */
+    Optional<Record> findByIdAndUsernameRelation(String id, String username);
 
     /**
      * 分页查询

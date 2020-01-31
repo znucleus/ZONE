@@ -17,6 +17,7 @@ import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
 import javax.annotation.Resource;
 import java.util.Objects;
+import java.util.Optional;
 
 import static top.zbeboy.zone.domain.Tables.*;
 
@@ -38,6 +39,26 @@ public class OauthClientUsersServiceImpl implements OauthClientUsersService, Pag
     @Autowired
     OauthClientUsersServiceImpl(DSLContext dslContext) {
         create = dslContext;
+    }
+
+    @Override
+    public Optional<Record> findByIdRelation(String id) {
+        return create.select()
+                .from(OAUTH_CLIENT_USERS)
+                .join(OAUTH_CLIENT_DETAILS)
+                .on(OAUTH_CLIENT_USERS.CLIENT_ID.eq(OAUTH_CLIENT_DETAILS.CLIENT_ID))
+                .where(OAUTH_CLIENT_USERS.CLIENT_ID.eq(id))
+                .fetchOptional();
+    }
+
+    @Override
+    public Optional<Record> findByIdAndUsernameRelation(String id, String username) {
+        return create.select()
+                .from(OAUTH_CLIENT_USERS)
+                .join(OAUTH_CLIENT_DETAILS)
+                .on(OAUTH_CLIENT_USERS.CLIENT_ID.eq(OAUTH_CLIENT_DETAILS.CLIENT_ID))
+                .where(OAUTH_CLIENT_USERS.USERNAME.eq(username).and(OAUTH_CLIENT_USERS.CLIENT_ID.eq(id)))
+                .fetchOptional();
     }
 
     @Override

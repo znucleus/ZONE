@@ -8,11 +8,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.OauthClientDetails;
 import top.zbeboy.zone.domain.tables.pojos.OauthClientUsers;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.service.platform.OauthClientDetailsService;
 import top.zbeboy.zone.service.platform.OauthClientUsersService;
+import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.util.BCryptUtil;
 import top.zbeboy.zone.service.util.DateTimeUtil;
@@ -20,14 +22,12 @@ import top.zbeboy.zone.web.bean.platform.app.OauthClientUsersBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.vo.platform.app.AppAddVo;
+import top.zbeboy.zone.web.vo.platform.app.AppEditVo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 public class AppRestController {
@@ -40,6 +40,9 @@ public class AppRestController {
 
     @Resource
     private UsersService usersService;
+
+    @Resource
+    private RoleService roleService;
 
     /**
      * 数据
@@ -109,6 +112,46 @@ public class AppRestController {
 
             oauthClientUsersService.save(oauthClientUsers);
             ajaxUtil.success().msg("保存成功");
+        } else {
+            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 更新
+     *
+     * @param appEditVo     应用
+     * @param bindingResult 检验
+     * @return true 保存成功 false 保存失败
+     */
+    @PostMapping("/web/platform/app/update")
+    public ResponseEntity<Map<String, Object>> update(@Valid AppEditVo appEditVo, BindingResult bindingResult) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (!bindingResult.hasErrors()) {
+            Optional<Record> record;
+            if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+                record = oauthClientUsersService.findByIdRelation(appEditVo.getClientId());
+            } else {
+                Users users = usersService.getUserFromSession();
+                record = oauthClientUsersService.findByIdAndUsernameRelation(appEditVo.getClientId(), users.getUsername());
+            }
+
+            if (record.isPresent()) {
+                OauthClientDetails oauthClientDetails = record.get().into(OauthClientDetails.class);
+                oauthClientDetails.setWebServerRedirectUri(appEditVo.getWebServerRedirectUri());
+                oauthClientDetailsService.update(oauthClientDetails);
+
+                OauthClientUsers oauthClientUsers = record.get().into(OauthClientUsers.class);
+                oauthClientUsers.setAppName(appEditVo.getAppName());
+                oauthClientUsers.setRemark(appEditVo.getRemark());
+
+                oauthClientUsersService.update(oauthClientUsers);
+
+                ajaxUtil.success().msg("更新成功");
+            } else {
+                ajaxUtil.fail().msg("根据ID未查询到应用数据");
+            }
         } else {
             ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }

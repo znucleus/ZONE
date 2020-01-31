@@ -20,4 +20,9 @@ public class OauthClientDetailsServiceImpl implements OauthClientDetailsService 
     public void save(OauthClientDetails oauthClientDetails) {
         oauthClientDetailsDao.insert(oauthClientDetails);
     }
+
+    @Override
+    public void update(OauthClientDetails oauthClientDetails) {
+        oauthClientDetailsDao.update(oauthClientDetails);
+    }
 }

@@ -1,4 +1,4 @@
-//# sourceURL=app_add.js
+//# sourceURL=app_edit.js
 require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", "jquery.address", "bootstrap-maxlength"],
     function ($, _, tools, Swal, navActive) {
 
@@ -6,7 +6,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
          ajax url.
          */
         var ajax_url = {
-            save: web_path + '/web/platform/app/save',
+            update: web_path + '/web/platform/app/update',
             page: '/web/menu/platform/app'
         };
 
@@ -158,7 +158,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             tools.buttonLoading(button_id.save.id, button_id.save.tip);
             $.ajax({
                 type: 'POST',
-                url: ajax_url.save,
+                url: ajax_url.update,
                 data: param,
                 success: function (data) {
                     tools.buttonEndLoading(button_id.save.id, button_id.save.text);

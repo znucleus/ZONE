@@ -10,4 +10,11 @@ public interface OauthClientDetailsService {
      * @param oauthClientDetails 数据
      */
     void save(OauthClientDetails oauthClientDetails);
+
+    /**
+     * 更新
+     *
+     * @param oauthClientDetails 数据
+     */
+    void update(OauthClientDetails oauthClientDetails);
 }
