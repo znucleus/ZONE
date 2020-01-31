@@ -41,6 +41,7 @@ import top.zbeboy.zone.domain.tables.OauthAccessToken;
 import top.zbeboy.zone.domain.tables.OauthApprovals;
 import top.zbeboy.zone.domain.tables.OauthClientDetails;
 import top.zbeboy.zone.domain.tables.OauthClientToken;
+import top.zbeboy.zone.domain.tables.OauthClientUsers;
 import top.zbeboy.zone.domain.tables.OauthCode;
 import top.zbeboy.zone.domain.tables.OauthRefreshToken;
 import top.zbeboy.zone.domain.tables.Organize;
@@ -82,7 +83,7 @@ import top.zbeboy.zone.domain.tables.UsersType;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Zone extends SchemaImpl {
 
-    private static final long serialVersionUID = 932972752;
+    private static final long serialVersionUID = -1795931267;
 
     /**
      * The reference instance of <code>zone</code>
@@ -223,6 +224,11 @@ public class Zone extends SchemaImpl {
      * The table <code>zone.oauth_client_token</code>.
      */
     public final OauthClientToken OAUTH_CLIENT_TOKEN = top.zbeboy.zone.domain.tables.OauthClientToken.OAUTH_CLIENT_TOKEN;
+
+    /**
+     * The table <code>zone.oauth_client_users</code>.
+     */
+    public final OauthClientUsers OAUTH_CLIENT_USERS = top.zbeboy.zone.domain.tables.OauthClientUsers.OAUTH_CLIENT_USERS;
 
     /**
      * The table <code>zone.oauth_code</code>.
@@ -403,6 +409,7 @@ public class Zone extends SchemaImpl {
             OauthApprovals.OAUTH_APPROVALS,
             OauthClientDetails.OAUTH_CLIENT_DETAILS,
             OauthClientToken.OAUTH_CLIENT_TOKEN,
+            OauthClientUsers.OAUTH_CLIENT_USERS,
             OauthCode.OAUTH_CODE,
             OauthRefreshToken.OAUTH_REFRESH_TOKEN,
             Organize.ORGANIZE,

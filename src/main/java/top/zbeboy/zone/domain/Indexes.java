@@ -36,6 +36,7 @@ import top.zbeboy.zone.domain.tables.Nation;
 import top.zbeboy.zone.domain.tables.OauthAccessToken;
 import top.zbeboy.zone.domain.tables.OauthClientDetails;
 import top.zbeboy.zone.domain.tables.OauthClientToken;
+import top.zbeboy.zone.domain.tables.OauthClientUsers;
 import top.zbeboy.zone.domain.tables.Organize;
 import top.zbeboy.zone.domain.tables.PoliticalLandscape;
 import top.zbeboy.zone.domain.tables.Role;
@@ -131,6 +132,7 @@ public class Indexes {
     public static final Index OAUTH_ACCESS_TOKEN_PRIMARY = Indexes0.OAUTH_ACCESS_TOKEN_PRIMARY;
     public static final Index OAUTH_CLIENT_DETAILS_PRIMARY = Indexes0.OAUTH_CLIENT_DETAILS_PRIMARY;
     public static final Index OAUTH_CLIENT_TOKEN_PRIMARY = Indexes0.OAUTH_CLIENT_TOKEN_PRIMARY;
+    public static final Index OAUTH_CLIENT_USERS_PRIMARY = Indexes0.OAUTH_CLIENT_USERS_PRIMARY;
     public static final Index ORGANIZE_GRADE_ID = Indexes0.ORGANIZE_GRADE_ID;
     public static final Index ORGANIZE_PRIMARY = Indexes0.ORGANIZE_PRIMARY;
     public static final Index POLITICAL_LANDSCAPE_PRIMARY = Indexes0.POLITICAL_LANDSCAPE_PRIMARY;
@@ -249,6 +251,7 @@ public class Indexes {
         public static Index OAUTH_ACCESS_TOKEN_PRIMARY = Internal.createIndex("PRIMARY", OauthAccessToken.OAUTH_ACCESS_TOKEN, new OrderField[] { OauthAccessToken.OAUTH_ACCESS_TOKEN.AUTHENTICATION_ID }, true);
         public static Index OAUTH_CLIENT_DETAILS_PRIMARY = Internal.createIndex("PRIMARY", OauthClientDetails.OAUTH_CLIENT_DETAILS, new OrderField[] { OauthClientDetails.OAUTH_CLIENT_DETAILS.CLIENT_ID }, true);
         public static Index OAUTH_CLIENT_TOKEN_PRIMARY = Internal.createIndex("PRIMARY", OauthClientToken.OAUTH_CLIENT_TOKEN, new OrderField[] { OauthClientToken.OAUTH_CLIENT_TOKEN.AUTHENTICATION_ID }, true);
+        public static Index OAUTH_CLIENT_USERS_PRIMARY = Internal.createIndex("PRIMARY", OauthClientUsers.OAUTH_CLIENT_USERS, new OrderField[] { OauthClientUsers.OAUTH_CLIENT_USERS.CLIENT_ID, OauthClientUsers.OAUTH_CLIENT_USERS.USERNAME }, true);
         public static Index ORGANIZE_GRADE_ID = Internal.createIndex("grade_id", Organize.ORGANIZE, new OrderField[] { Organize.ORGANIZE.GRADE_ID }, false);
         public static Index ORGANIZE_PRIMARY = Internal.createIndex("PRIMARY", Organize.ORGANIZE, new OrderField[] { Organize.ORGANIZE.ORGANIZE_ID }, true);
         public static Index POLITICAL_LANDSCAPE_PRIMARY = Internal.createIndex("PRIMARY", PoliticalLandscape.POLITICAL_LANDSCAPE, new OrderField[] { PoliticalLandscape.POLITICAL_LANDSCAPE.POLITICAL_LANDSCAPE_ID }, true);

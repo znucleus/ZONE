@@ -330,6 +330,15 @@ CREATE TABLE oauth_client_details (
   autoapprove VARCHAR(255)
 );
 
+CREATE TABLE oauth_client_users(
+  client_id VARCHAR(255) NOT NULL,
+  username VARCHAR(64) NOT NULL,
+  app_name VARCHAR(100) NOT NULL,
+  remark VARCHAR(300),
+  create_date TIMESTAMP NOT NULL,
+  PRIMARY KEY (client_id,username)
+);
+
 CREATE TABLE oauth_client_token (
   token_id VARCHAR(255),
   token LONGBLOB,

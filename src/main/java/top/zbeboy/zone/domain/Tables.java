@@ -33,6 +33,7 @@ import top.zbeboy.zone.domain.tables.OauthAccessToken;
 import top.zbeboy.zone.domain.tables.OauthApprovals;
 import top.zbeboy.zone.domain.tables.OauthClientDetails;
 import top.zbeboy.zone.domain.tables.OauthClientToken;
+import top.zbeboy.zone.domain.tables.OauthClientUsers;
 import top.zbeboy.zone.domain.tables.OauthCode;
 import top.zbeboy.zone.domain.tables.OauthRefreshToken;
 import top.zbeboy.zone.domain.tables.Organize;
@@ -208,6 +209,11 @@ public class Tables {
      * The table <code>zone.oauth_client_token</code>.
      */
     public static final OauthClientToken OAUTH_CLIENT_TOKEN = OauthClientToken.OAUTH_CLIENT_TOKEN;
+
+    /**
+     * The table <code>zone.oauth_client_users</code>.
+     */
+    public static final OauthClientUsers OAUTH_CLIENT_USERS = OauthClientUsers.OAUTH_CLIENT_USERS;
 
     /**
      * The table <code>zone.oauth_code</code>.
