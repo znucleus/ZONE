@@ -25,11 +25,12 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class OauthClientUsers implements Serializable {
 
-    private static final long serialVersionUID = -47194223;
+    private static final long serialVersionUID = -704388805;
 
     private String    clientId;
     private String    username;
     private String    appName;
+    private String    secret;
     private String    remark;
     private Timestamp createDate;
 
@@ -39,6 +40,7 @@ public class OauthClientUsers implements Serializable {
         this.clientId = value.clientId;
         this.username = value.username;
         this.appName = value.appName;
+        this.secret = value.secret;
         this.remark = value.remark;
         this.createDate = value.createDate;
     }
@@ -47,12 +49,14 @@ public class OauthClientUsers implements Serializable {
         String    clientId,
         String    username,
         String    appName,
+        String    secret,
         String    remark,
         Timestamp createDate
     ) {
         this.clientId = clientId;
         this.username = username;
         this.appName = appName;
+        this.secret = secret;
         this.remark = remark;
         this.createDate = createDate;
     }
@@ -87,6 +91,16 @@ public class OauthClientUsers implements Serializable {
         this.appName = appName;
     }
 
+    @NotNull
+    @Size(max = 300)
+    public String getSecret() {
+        return this.secret;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
+
     @Size(max = 300)
     public String getRemark() {
         return this.remark;
@@ -112,6 +126,7 @@ public class OauthClientUsers implements Serializable {
         sb.append(clientId);
         sb.append(", ").append(username);
         sb.append(", ").append(appName);
+        sb.append(", ").append(secret);
         sb.append(", ").append(remark);
         sb.append(", ").append(createDate);
 

@@ -96,6 +96,20 @@ public class OauthClientUsersDao extends DAOImpl<OauthClientUsersRecord, top.zbe
     }
 
     /**
+     * Fetch records that have <code>secret BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.OauthClientUsers> fetchRangeOfSecret(String lowerInclusive, String upperInclusive) {
+        return fetchRange(OauthClientUsers.OAUTH_CLIENT_USERS.SECRET, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>secret IN (values)</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.OauthClientUsers> fetchBySecret(String... values) {
+        return fetch(OauthClientUsers.OAUTH_CLIENT_USERS.SECRET, values);
+    }
+
+    /**
      * Fetch records that have <code>remark BETWEEN lowerInclusive AND upperInclusive</code>
      */
     public List<top.zbeboy.zone.domain.tables.pojos.OauthClientUsers> fetchRangeOfRemark(String lowerInclusive, String upperInclusive) {

@@ -15,7 +15,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row5;
+import org.jooq.Row6;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -42,7 +42,7 @@ import top.zbeboy.zone.domain.tables.records.OauthClientUsersRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class OauthClientUsers extends TableImpl<OauthClientUsersRecord> {
 
-    private static final long serialVersionUID = -1367694086;
+    private static final long serialVersionUID = -225688367;
 
     /**
      * The reference instance of <code>zone.oauth_client_users</code>
@@ -71,6 +71,11 @@ public class OauthClientUsers extends TableImpl<OauthClientUsersRecord> {
      * The column <code>zone.oauth_client_users.app_name</code>.
      */
     public final TableField<OauthClientUsersRecord, String> APP_NAME = createField(DSL.name("app_name"), org.jooq.impl.SQLDataType.VARCHAR(100).nullable(false), this, "");
+
+    /**
+     * The column <code>zone.oauth_client_users.secret</code>.
+     */
+    public final TableField<OauthClientUsersRecord, String> SECRET = createField(DSL.name("secret"), org.jooq.impl.SQLDataType.VARCHAR(300).nullable(false), this, "");
 
     /**
      * The column <code>zone.oauth_client_users.remark</code>.
@@ -162,11 +167,11 @@ public class OauthClientUsers extends TableImpl<OauthClientUsersRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row5 type methods
+    // Row6 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row5<String, String, String, String, Timestamp> fieldsRow() {
-        return (Row5) super.fieldsRow();
+    public Row6<String, String, String, String, String, Timestamp> fieldsRow() {
+        return (Row6) super.fieldsRow();
     }
 }
