@@ -201,4 +201,34 @@ public class AppRestController {
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
+
+    /**
+     * 备注
+     *
+     * @param clientId id
+     * @param remark   数据
+     * @return 备注
+     */
+    @PostMapping("/web/platform/app/remark")
+    public ResponseEntity<Map<String, Object>> remark(@RequestParam("clientId") String clientId, String remark) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        Optional<Record> record;
+        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+            record = oauthClientUsersService.findByIdRelation(clientId);
+        } else {
+            Users users = usersService.getUserFromSession();
+            record = oauthClientUsersService.findByIdAndUsernameRelation(clientId, users.getUsername());
+        }
+
+        if (record.isPresent()) {
+            OauthClientUsers oauthClientUsers = record.get().into(OauthClientUsers.class);
+            oauthClientUsers.setRemark(remark);
+            oauthClientUsersService.update(oauthClientUsers);
+
+            ajaxUtil.success().msg("备注成功");
+        } else {
+            ajaxUtil.fail().msg("根据ID未查询到应用数据");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
 }

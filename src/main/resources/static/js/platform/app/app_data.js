@@ -1,5 +1,5 @@
 //# sourceURL=app_data.js
-require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "responsive.bootstrap4","jquery.address", "messenger"],
+require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "responsive.bootstrap4", "jquery.address", "messenger"],
     function ($, DP, Handlebars, navActive, Swal) {
 
         /*
@@ -8,7 +8,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
         var param = {
             username: '',
             appName: '',
-            realName:''
+            realName: ''
         };
 
         /*
@@ -27,6 +27,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
             return {
                 data: web_path + '/web/platform/app/data',
                 del: web_path + '/web/platform/app/delete',
+                remark: web_path + '/web/platform/app/remark',
                 add: '/web/platform/app/add',
                 edit: '/web/platform/app/edit',
                 page: '/web/menu/platform/app'
@@ -80,21 +81,24 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
                                     "css": "del",
                                     "type": "danger",
                                     "id": c.clientId,
-                                    "app": c.appName
+                                    "app": c.appName,
+                                    "remark": ''
                                 },
                                 {
                                     "name": "编辑",
                                     "css": "edit",
                                     "type": "primary",
                                     "id": c.clientId,
-                                    "app": c.appName
+                                    "app": c.appName,
+                                    "remark": ''
                                 },
                                 {
                                     "name": "备注",
                                     "css": "remark",
                                     "type": "info",
                                     "id": c.clientId,
-                                    "app": c.appName
+                                    "app": c.appName,
+                                    "remark": c.remark
                                 }
                             ]
                         };
@@ -138,6 +142,10 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
 
                 tableElement.delegate('.del', "click", function () {
                     app_del($(this).attr('data-id'), $(this).attr('data-app'));
+                });
+
+                tableElement.delegate('.remark', "click", function () {
+                    remark($(this).attr('data-id'), $(this).attr('data-remark'));
                 });
 
                 // 初始化搜索框中内容
@@ -332,6 +340,43 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
                     });
 
                     if (data.state) {
+                        myTable.ajax.reload();
+                    }
+                },
+                error: function (XMLHttpRequest) {
+                    Messenger().post({
+                        message: 'Request error : ' + XMLHttpRequest.status + " " + XMLHttpRequest.statusText,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        }
+
+        function remark(clientId, remark) {
+            $('#editClientId').val(clientId);
+            $('#editRemark').val(remark);
+            $('#editModal').modal('show');
+        }
+
+        $('#edit').click(function () {
+            sendRemarkAjax();
+        });
+
+        function sendRemarkAjax() {
+            $.ajax({
+                type: 'POST',
+                url: getAjaxUrl().remark,
+                data: $('#edit_form').serialize(),
+                success: function (data) {
+                    Messenger().post({
+                        message: data.msg,
+                        type: data.state ? 'success' : 'error',
+                        showCloseButton: true
+                    });
+
+                    if (data.state) {
+                        $('#editModal').modal('hide');
                         myTable.ajax.reload();
                     }
                 },

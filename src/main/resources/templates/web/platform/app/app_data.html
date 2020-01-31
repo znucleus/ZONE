@@ -60,12 +60,44 @@
         </div>
     </div>
 
+    <!-- 备注Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">备注</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="mg-t-20" id="edit_form">
+                        <input type="hidden" id="editClientId" name="clientId"/>
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label>备注</label>
+                                <textarea class="form-control" name="remark" id="editRemark" rows="3"></textarea>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                        <div class="form-group text-danger" id="globalEditError"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="edit">保存</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!--定义操作列按钮模板-->
     <script id="operator_button" type="text/x-handlebars-template">
         <div class="btn-group" role="group">
             {{#each func}}
             <button type="button" class="btn btn-{{this.type}} btn-sm {{this.css}}" data-id="{{this.id}}"
-                    data-app="{{this.app}}">{{this.name}}
+                    data-app="{{this.app}}" data-remark="{{this.remark}}">{{this.name}}
             </button>
             {{/each}}
         </div>
