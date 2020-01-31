@@ -7,10 +7,10 @@ import javax.validation.constraints.Size;
 
 public class NationEditVo {
     @NotNull(message = "民族ID不能为空")
-    @Min(value = 1,message = "民族ID不正确")
+    @Min(value = 1, message = "民族ID不正确")
     private int nationId;
     @NotBlank(message = "民族不能为空")
-    @Size(max = 30,message = "民族30个字符以内")
+    @Size(max = 30, message = "民族30个字符以内")
     private String nationName;
 
     public int getNationId() {

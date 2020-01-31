@@ -17,10 +17,8 @@ import top.zbeboy.zone.service.util.SQLQueryUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
 import javax.annotation.Resource;
-
 import java.util.Objects;
 
-import static top.zbeboy.zone.domain.Tables.ACADEMIC_TITLE;
 import static top.zbeboy.zone.domain.Tables.SYSTEM_CONFIGURE;
 
 @Service("systemConfigureService")

@@ -8,8 +8,8 @@ public class AttendReleaseSubBean extends AttendReleaseSub {
     private String attendStartTimeStr;
     private String attendEndTimeStr;
     private String releaseTimeStr;
-    private String  collegeName;
-    private String  schoolName;
+    private String collegeName;
+    private String schoolName;
     private String validDateStr;
     private String expireDateStr;
 

@@ -7,10 +7,10 @@ import javax.validation.constraints.Size;
 
 public class AcademicEditVo {
     @NotNull(message = "职称ID不能为空")
-    @Min(value = 1,message = "职称ID不正确")
+    @Min(value = 1, message = "职称ID不正确")
     private int academicTitleId;
     @NotBlank(message = "职称不能为空")
-    @Size(max = 30,message = "职称30个字符以内")
+    @Size(max = 30, message = "职称30个字符以内")
     private String academicTitleName;
 
     public int getAcademicTitleId() {

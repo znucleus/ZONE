@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zone.config.CacheBook;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.daos.SchoolroomDao;
-import top.zbeboy.zone.domain.tables.pojos.Building;
 import top.zbeboy.zone.domain.tables.pojos.Schoolroom;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
@@ -30,8 +29,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static top.zbeboy.zone.domain.Tables.*;
-import static top.zbeboy.zone.domain.Tables.COLLEGE;
-import static top.zbeboy.zone.domain.Tables.SCHOOL;
 
 @Service("schoolroomService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -153,7 +150,7 @@ public class SchoolroomServiceImpl implements SchoolroomService, PaginationPlugi
     @CacheEvict(cacheNames = {CacheBook.SCHOOLROOM, CacheBook.SCHOOLROOMS}, allEntries = true)
     @Override
     public void update(Schoolroom schoolroom) {
-schoolroomDao.update(schoolroom);
+        schoolroomDao.update(schoolroom);
     }
 
     @CacheEvict(cacheNames = {CacheBook.SCHOOLROOM, CacheBook.SCHOOLROOMS}, allEntries = true)

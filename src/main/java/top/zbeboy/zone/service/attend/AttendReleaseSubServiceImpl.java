@@ -31,7 +31,6 @@ import java.util.Optional;
 
 import static org.jooq.impl.DSL.now;
 import static org.jooq.impl.DSL.select;
-import static org.jooq.impl.DSL.selectFrom;
 import static top.zbeboy.zone.domain.Tables.*;
 
 @Service("attendReleaseSubService")
@@ -140,17 +139,17 @@ public class AttendReleaseSubServiceImpl implements AttendReleaseSubService, Pag
     @Override
     public void copyAttendRelease(String attendReleaseId) {
         create.insertInto(ATTEND_RELEASE_SUB)
-                .columns(ATTEND_RELEASE_SUB.TITLE,ATTEND_RELEASE_SUB.ATTEND_START_TIME,
-                        ATTEND_RELEASE_SUB.ATTEND_END_TIME,ATTEND_RELEASE_SUB.IS_AUTO,
-                        ATTEND_RELEASE_SUB.VALID_DATE,ATTEND_RELEASE_SUB.EXPIRE_DATE,
-                        ATTEND_RELEASE_SUB.ORGANIZE_ID,ATTEND_RELEASE_SUB.USERNAME,
-                        ATTEND_RELEASE_SUB.ATTEND_RELEASE_ID,ATTEND_RELEASE_SUB.RELEASE_TIME)
+                .columns(ATTEND_RELEASE_SUB.TITLE, ATTEND_RELEASE_SUB.ATTEND_START_TIME,
+                        ATTEND_RELEASE_SUB.ATTEND_END_TIME, ATTEND_RELEASE_SUB.IS_AUTO,
+                        ATTEND_RELEASE_SUB.VALID_DATE, ATTEND_RELEASE_SUB.EXPIRE_DATE,
+                        ATTEND_RELEASE_SUB.ORGANIZE_ID, ATTEND_RELEASE_SUB.USERNAME,
+                        ATTEND_RELEASE_SUB.ATTEND_RELEASE_ID, ATTEND_RELEASE_SUB.RELEASE_TIME)
                 .select(select(
-                        ATTEND_RELEASE.TITLE,ATTEND_RELEASE.ATTEND_START_TIME,
-                        ATTEND_RELEASE.ATTEND_END_TIME,ATTEND_RELEASE.IS_AUTO,
-                        ATTEND_RELEASE.VALID_DATE,ATTEND_RELEASE.EXPIRE_DATE,
-                        ATTEND_RELEASE.ORGANIZE_ID,ATTEND_RELEASE.USERNAME,
-                        ATTEND_RELEASE.ATTEND_RELEASE_ID,ATTEND_RELEASE.RELEASE_TIME
+                        ATTEND_RELEASE.TITLE, ATTEND_RELEASE.ATTEND_START_TIME,
+                        ATTEND_RELEASE.ATTEND_END_TIME, ATTEND_RELEASE.IS_AUTO,
+                        ATTEND_RELEASE.VALID_DATE, ATTEND_RELEASE.EXPIRE_DATE,
+                        ATTEND_RELEASE.ORGANIZE_ID, ATTEND_RELEASE.USERNAME,
+                        ATTEND_RELEASE.ATTEND_RELEASE_ID, ATTEND_RELEASE.RELEASE_TIME
                 ).from(ATTEND_RELEASE).where(ATTEND_RELEASE.ATTEND_RELEASE_ID.eq(attendReleaseId)))
                 .execute();
     }

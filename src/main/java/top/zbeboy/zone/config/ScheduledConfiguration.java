@@ -106,12 +106,12 @@ public class ScheduledConfiguration {
     @Scheduled(cron = "0 5 00 * * ?") // 每天 晚间12点05分
     public void generateAttend() {
         Result<AttendReleaseRecord> releaseRecords = attendReleaseService.findIsAuto();
-        if(releaseRecords.isNotEmpty()){
+        if (releaseRecords.isNotEmpty()) {
             List<AttendRelease> attendReleases = releaseRecords.into(AttendRelease.class);
             List<AttendReleaseSub> attendReleaseSubs = new ArrayList<>();
 
-            String timePrefix = DateTimeUtil.formatUtilDate(new Date(),DateTimeUtil.YEAR_MONTH_DAY_FORMAT);
-            for(AttendRelease releaseRecord :attendReleases){
+            String timePrefix = DateTimeUtil.formatUtilDate(new Date(), DateTimeUtil.YEAR_MONTH_DAY_FORMAT);
+            for (AttendRelease releaseRecord : attendReleases) {
                 String attendStartTime = DateTimeUtil.defaultFormatSqlTimestamp(releaseRecord.getAttendStartTime());
                 String attendEndTime = DateTimeUtil.defaultFormatSqlTimestamp(releaseRecord.getAttendEndTime());
                 String attendStartTimeSuffix = attendStartTime.split(" ")[1];

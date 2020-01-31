@@ -5,7 +5,7 @@ import javax.validation.constraints.Size;
 
 public class AcademicAddVo {
     @NotBlank(message = "职称不能为空")
-    @Size(max = 30,message = "职称30个字符以内")
+    @Size(max = 30, message = "职称30个字符以内")
     private String academicTitleName;
 
     public String getAcademicTitleName() {

@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 public class AttendReleaseEditVo {
     @NotNull(message = "签到发布子表ID不能为空")
     @Min(value = 1, message = "签到发布子表ID不正确")
-    private int   attendReleaseSubId;
+    private int attendReleaseSubId;
     @NotBlank(message = "标题不能为空")
     @Size(max = 100, message = "标题100个字符以内")
     private String title;

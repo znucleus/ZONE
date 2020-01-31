@@ -21,7 +21,6 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Objects;
 
-import static top.zbeboy.zone.domain.Tables.NATION;
 import static top.zbeboy.zone.domain.Tables.POLITICAL_LANDSCAPE;
 
 @Service("politicalLandscapeService")

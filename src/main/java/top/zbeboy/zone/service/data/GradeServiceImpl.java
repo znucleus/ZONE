@@ -14,7 +14,6 @@ import top.zbeboy.zone.domain.tables.pojos.Grade;
 import top.zbeboy.zone.domain.tables.records.GradeRecord;
 
 import javax.annotation.Resource;
-
 import java.util.Optional;
 
 import static top.zbeboy.zone.domain.Tables.GRADE;
@@ -56,7 +55,7 @@ public class GradeServiceImpl implements GradeService {
     @Override
     public GradeRecord save(Grade grade) {
         return create.insertInto(GRADE, GRADE.GRADE_, GRADE.GRADE_IS_DEL, GRADE.SCIENCE_ID)
-                .values(grade.getGrade(), grade.getGradeIsDel(),grade.getScienceId())
+                .values(grade.getGrade(), grade.getGradeIsDel(), grade.getScienceId())
                 .returning(GRADE.GRADE_ID)
                 .fetchOne();
     }

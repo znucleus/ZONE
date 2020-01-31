@@ -152,8 +152,8 @@ public class SchoolroomRestController {
     /**
      * 保存教室更改
      *
-     * @param schoolroomEditVo  教室
-     * @param bindingResult 检验
+     * @param schoolroomEditVo 教室
+     * @param bindingResult    检验
      * @return true 更改成功 false 更改失败
      */
     @PostMapping("/web/data/schoolroom/update")

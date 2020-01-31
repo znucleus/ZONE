@@ -7,14 +7,14 @@ import javax.validation.constraints.Size;
 
 public class BuildingEditVo {
     @NotNull(message = "楼不能为空")
-    @Min(value = 1,message = "楼不正确")
+    @Min(value = 1, message = "楼不正确")
     private int buildingId;
     @NotBlank(message = "楼名不能为空")
-    @Size(max = 30,message = "楼名30个字符以内")
+    @Size(max = 30, message = "楼名30个字符以内")
     private String buildingName;
     private Byte buildingIsDel;
     @NotNull(message = "院不能为空")
-    @Min(value = 1,message = "院不正确")
+    @Min(value = 1, message = "院不正确")
     private int collegeId;
 
     public int getBuildingId() {
