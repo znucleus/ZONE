@@ -72,27 +72,33 @@ public class AttendDataApiController {
                         // 根据子表id查询主表id
                         AttendReleaseSub attendReleaseSub = attendReleaseSubService.findById(attendDataAddVo.getAttendReleaseSubId());
                         if (Objects.nonNull(attendReleaseSub)) {
-                            Optional<Record> record = studentService.findByUsernameRelation(users.getUsername());
-                            if (record.isPresent()) {
-                                Student student = record.get().into(Student.class);
-                                Optional<AttendUsersRecord> attendUsersRecord = attendUsersService
-                                        .findByAttendReleaseIdAndStudentId(attendReleaseSub.getAttendReleaseId(), student.getStudentId());
-                                if (attendUsersRecord.isPresent()) {
-                                    AttendUsers attendUsers = attendUsersRecord.get().into(AttendUsers.class);
-                                    AttendData attendData = new AttendData();
-                                    attendData.setAttendUsersId(attendUsers.getAttendUsersId());
-                                    attendData.setAttendReleaseSubId(attendDataAddVo.getAttendReleaseSubId());
-                                    attendData.setLocation(attendDataAddVo.getLocation());
-                                    attendData.setAddress(attendDataAddVo.getAddress());
-                                    attendData.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
-                                    attendDataService.save(attendData);
+                            // 判断签到时间
+                            if (DateTimeUtil.nowBeforeSqlTimestamp(attendReleaseSub.getAttendEndTime()) &&
+                                    DateTimeUtil.nowAfterSqlTimestamp(attendReleaseSub.getAttendStartTime())) {
+                                Optional<Record> record = studentService.findByUsernameRelation(users.getUsername());
+                                if (record.isPresent()) {
+                                    Student student = record.get().into(Student.class);
+                                    Optional<AttendUsersRecord> attendUsersRecord = attendUsersService
+                                            .findByAttendReleaseIdAndStudentId(attendReleaseSub.getAttendReleaseId(), student.getStudentId());
+                                    if (attendUsersRecord.isPresent()) {
+                                        AttendUsers attendUsers = attendUsersRecord.get().into(AttendUsers.class);
+                                        AttendData attendData = new AttendData();
+                                        attendData.setAttendUsersId(attendUsers.getAttendUsersId());
+                                        attendData.setAttendReleaseSubId(attendDataAddVo.getAttendReleaseSubId());
+                                        attendData.setLocation(attendDataAddVo.getLocation());
+                                        attendData.setAddress(attendDataAddVo.getAddress());
+                                        attendData.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                                        attendDataService.save(attendData);
 
-                                    ajaxUtil.success().msg("保存成功");
+                                        ajaxUtil.success().msg("保存成功");
+                                    } else {
+                                        ajaxUtil.fail().msg("名单中未查询到当前学生信息");
+                                    }
                                 } else {
-                                    ajaxUtil.fail().msg("名单中未查询到当前学生信息");
+                                    ajaxUtil.fail().msg("未查询到学生信息");
                                 }
                             } else {
-                                ajaxUtil.fail().msg("未查询到学生信息");
+                                ajaxUtil.fail().msg("当前时间不在签到时间范围内");
                             }
                         } else {
                             ajaxUtil.fail().msg("根据ID未查询到签到发布子表数据");
