@@ -46,6 +46,8 @@ public class AttendUsersServiceImpl implements AttendUsersService {
                 .on(ATTEND_USERS.STUDENT_ID.eq(STUDENT.STUDENT_ID))
                 .leftJoin(USERS)
                 .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                .leftJoin(ATTEND_DATA)
+                .on(ATTEND_USERS.ATTEND_USERS_ID.eq(ATTEND_DATA.ATTEND_USERS_ID))
                 .where(ATTEND_USERS.ATTEND_RELEASE_ID.eq(attendReleaseId)).fetch();
     }
 
@@ -58,15 +60,15 @@ public class AttendUsersServiceImpl implements AttendUsersService {
 
     @Override
     public Result<Record> findHasAttendedStudent(String attendReleaseId, int attendReleaseSubId) {
-        Select<AttendDataRecord> select = create.selectFrom(ATTEND_DATA)
-                .where(ATTEND_DATA.ATTEND_USERS_ID.eq(ATTEND_USERS.ATTEND_USERS_ID).and(ATTEND_DATA.ATTEND_RELEASE_SUB_ID.eq(attendReleaseSubId)));
         return create.select()
                 .from(ATTEND_USERS)
                 .leftJoin(STUDENT)
                 .on(ATTEND_USERS.STUDENT_ID.eq(STUDENT.STUDENT_ID))
                 .leftJoin(USERS)
                 .on(STUDENT.USERNAME.eq(USERS.USERNAME))
-                .where(ATTEND_USERS.ATTEND_RELEASE_ID.eq(attendReleaseId).andExists(select)).fetch();
+                .join(ATTEND_DATA)
+                .on(ATTEND_USERS.ATTEND_USERS_ID.eq(ATTEND_DATA.ATTEND_USERS_ID))
+                .where(ATTEND_USERS.ATTEND_RELEASE_ID.eq(attendReleaseId).and(ATTEND_DATA.ATTEND_RELEASE_SUB_ID.eq(attendReleaseSubId))).fetch();
     }
 
     @Override
