@@ -18,6 +18,13 @@ public interface AttendUsersService {
     List<AttendUsers> findByAttendReleaseId(String attendReleaseId);
 
     /**
+     * 根据发布表id查询名单数据
+     *
+     * @return 数据
+     */
+    Result<Record> findByAttendReleaseIdRelation(String attendReleaseId);
+
+    /**
      * 通过发布表id和学生id查询
      *
      * @param attendReleaseId 发布表id
@@ -33,7 +40,7 @@ public interface AttendUsersService {
      * @param attendReleaseSubId 子表id
      * @return 数据
      */
-    Result<AttendUsersRecord> findHasAttendedStudent(String attendReleaseId, int attendReleaseSubId);
+    Result<Record> findHasAttendedStudent(String attendReleaseId, int attendReleaseSubId);
 
     /**
      * 查询未签到学生数据
@@ -42,7 +49,7 @@ public interface AttendUsersService {
      * @param attendReleaseSubId 子表id
      * @return 数据
      */
-    Result<AttendUsersRecord> findNotAttendedStudent(String attendReleaseId, int attendReleaseSubId);
+    Result<Record> findNotAttendedStudent(String attendReleaseId, int attendReleaseSubId);
 
     /**
      * 保存

@@ -17,8 +17,7 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
 
-import static top.zbeboy.zone.domain.Tables.ATTEND_DATA;
-import static top.zbeboy.zone.domain.Tables.ATTEND_USERS;
+import static top.zbeboy.zone.domain.Tables.*;
 
 @Service("attendUsersService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -40,6 +39,17 @@ public class AttendUsersServiceImpl implements AttendUsersService {
     }
 
     @Override
+    public Result<Record> findByAttendReleaseIdRelation(String attendReleaseId) {
+        return create.select()
+                .from(ATTEND_USERS)
+                .leftJoin(STUDENT)
+                .on(ATTEND_USERS.STUDENT_ID.eq(STUDENT.STUDENT_ID))
+                .leftJoin(USERS)
+                .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                .where(ATTEND_USERS.ATTEND_RELEASE_ID.eq(attendReleaseId)).fetch();
+    }
+
+    @Override
     public Optional<AttendUsersRecord> findByAttendReleaseIdAndStudentId(String attendReleaseId, int studentId) {
         return create.selectFrom(ATTEND_USERS)
                 .where(ATTEND_USERS.ATTEND_RELEASE_ID.eq(attendReleaseId).and(ATTEND_USERS.STUDENT_ID.eq(studentId)))
@@ -47,18 +57,28 @@ public class AttendUsersServiceImpl implements AttendUsersService {
     }
 
     @Override
-    public Result<AttendUsersRecord> findHasAttendedStudent(String attendReleaseId, int attendReleaseSubId) {
+    public Result<Record> findHasAttendedStudent(String attendReleaseId, int attendReleaseSubId) {
         Select<AttendDataRecord> select = create.selectFrom(ATTEND_DATA)
                 .where(ATTEND_DATA.ATTEND_USERS_ID.eq(ATTEND_USERS.ATTEND_USERS_ID).and(ATTEND_DATA.ATTEND_RELEASE_SUB_ID.eq(attendReleaseSubId)));
-        return create.selectFrom(ATTEND_USERS)
+        return create.select()
+                .from(ATTEND_USERS)
+                .leftJoin(STUDENT)
+                .on(ATTEND_USERS.STUDENT_ID.eq(STUDENT.STUDENT_ID))
+                .leftJoin(USERS)
+                .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                 .where(ATTEND_USERS.ATTEND_RELEASE_ID.eq(attendReleaseId).andExists(select)).fetch();
     }
 
     @Override
-    public Result<AttendUsersRecord> findNotAttendedStudent(String attendReleaseId, int attendReleaseSubId) {
+    public Result<Record> findNotAttendedStudent(String attendReleaseId, int attendReleaseSubId) {
         Select<AttendDataRecord> select = create.selectFrom(ATTEND_DATA)
                 .where(ATTEND_DATA.ATTEND_USERS_ID.eq(ATTEND_USERS.ATTEND_USERS_ID).and(ATTEND_DATA.ATTEND_RELEASE_SUB_ID.eq(attendReleaseSubId)));
-        return create.selectFrom(ATTEND_USERS)
+        return create.select()
+                .from(ATTEND_USERS)
+                .leftJoin(STUDENT)
+                .on(ATTEND_USERS.STUDENT_ID.eq(STUDENT.STUDENT_ID))
+                .leftJoin(USERS)
+                .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                 .where(ATTEND_USERS.ATTEND_RELEASE_ID.eq(attendReleaseId).andNotExists(select)).fetch();
     }
 

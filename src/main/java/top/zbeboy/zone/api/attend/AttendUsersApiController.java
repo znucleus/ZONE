@@ -1,5 +1,6 @@
 package top.zbeboy.zone.api.attend;
 
+import org.jooq.Record;
 import org.jooq.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -7,10 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.domain.tables.pojos.AttendReleaseSub;
-import top.zbeboy.zone.domain.tables.pojos.AttendUsers;
-import top.zbeboy.zone.domain.tables.records.AttendUsersRecord;
 import top.zbeboy.zone.service.attend.AttendReleaseSubService;
 import top.zbeboy.zone.service.attend.AttendUsersService;
+import top.zbeboy.zone.web.bean.attend.AttendUsersBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
 
 import javax.annotation.Resource;
@@ -37,25 +37,28 @@ public class AttendUsersApiController {
      */
     @GetMapping("/api/attend/users/data")
     public ResponseEntity<Map<String, Object>> data(@RequestParam("attendReleaseSubId") int attendReleaseSubId, int type) {
-        AjaxUtil<AttendUsers> ajaxUtil = AjaxUtil.of();
+        AjaxUtil<AttendUsersBean> ajaxUtil = AjaxUtil.of();
         // 根据子表id查询主表id
         AttendReleaseSub attendReleaseSub = attendReleaseSubService.findById(attendReleaseSubId);
         if (Objects.nonNull(attendReleaseSub)) {
-            List<AttendUsers> attendUsers = new ArrayList<>();
+            List<AttendUsersBean> attendUsers = new ArrayList<>();
             // 已签到数据
             if (type == 1) {
-                Result<AttendUsersRecord> records = attendUsersService.findHasAttendedStudent(attendReleaseSub.getAttendReleaseId(), attendReleaseSubId);
+                Result<Record> records = attendUsersService.findHasAttendedStudent(attendReleaseSub.getAttendReleaseId(), attendReleaseSubId);
                 if (records.isNotEmpty()) {
-                    attendUsers = records.into(AttendUsers.class);
+                    attendUsers = records.into(AttendUsersBean.class);
                 }
             } else if (type == 2) {
                 // 未签到数据
-                Result<AttendUsersRecord> records = attendUsersService.findNotAttendedStudent(attendReleaseSub.getAttendReleaseId(), attendReleaseSubId);
+                Result<Record> records = attendUsersService.findNotAttendedStudent(attendReleaseSub.getAttendReleaseId(), attendReleaseSubId);
                 if (records.isNotEmpty()) {
-                    attendUsers = records.into(AttendUsers.class);
+                    attendUsers = records.into(AttendUsersBean.class);
                 }
             } else {
-                attendUsers = attendUsersService.findByAttendReleaseId(attendReleaseSub.getAttendReleaseId());
+                Result<Record> records = attendUsersService.findByAttendReleaseIdRelation(attendReleaseSub.getAttendReleaseId());
+                if (records.isNotEmpty()) {
+                    attendUsers = records.into(AttendUsersBean.class);
+                }
             }
 
             ajaxUtil.success().list(attendUsers).msg("获取数据成功");
