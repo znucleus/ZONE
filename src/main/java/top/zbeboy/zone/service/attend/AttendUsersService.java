@@ -4,6 +4,7 @@ import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.zone.domain.tables.pojos.AttendUsers;
 import top.zbeboy.zone.domain.tables.records.AttendUsersRecord;
+import top.zbeboy.zone.domain.tables.records.StudentRecord;
 
 import java.util.List;
 import java.util.Optional;
@@ -52,9 +53,32 @@ public interface AttendUsersService {
     Result<Record> findNotAttendedStudent(String attendReleaseId, int attendReleaseSubId);
 
     /**
+     * 查询未在名单中的学生
+     *
+     * @param attendReleaseId 主表ID
+     * @param organizeId      班级ID
+     * @return 数据
+     */
+    Result<Record> findStudentNotExistsAttendUsers(String attendReleaseId, int organizeId);
+
+    /**
+     * 保存
+     *
+     * @param attendUsers 数据
+     */
+    void save(AttendUsers attendUsers);
+
+    /**
      * 保存
      *
      * @param attendUsers 数据
      */
     void batchSave(List<AttendUsers> attendUsers);
+
+    /**
+     * 通过主键删除
+     *
+     * @param id 主键
+     */
+    void deleteById(String id);
 }

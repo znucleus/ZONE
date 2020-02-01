@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
+import top.zbeboy.zone.domain.tables.records.AttendDataRecord;
 import top.zbeboy.zone.domain.tables.records.AttendUsersRecord;
 import top.zbeboy.zone.service.attend.AttendDataService;
 import top.zbeboy.zone.service.attend.AttendReleaseSubService;
@@ -78,15 +79,22 @@ public class AttendDataApiController {
                                             .findByAttendReleaseIdAndStudentId(attendReleaseSub.getAttendReleaseId(), student.getStudentId());
                                     if (attendUsersRecord.isPresent()) {
                                         AttendUsers attendUsers = attendUsersRecord.get().into(AttendUsers.class);
-                                        AttendData attendData = new AttendData();
-                                        attendData.setAttendUsersId(attendUsers.getAttendUsersId());
-                                        attendData.setAttendReleaseSubId(attendDataAddVo.getAttendReleaseSubId());
-                                        attendData.setLocation(attendDataAddVo.getLocation());
-                                        attendData.setAddress(attendDataAddVo.getAddress());
-                                        attendData.setAttendDate(DateTimeUtil.getNowSqlTimestamp());
-                                        attendDataService.save(attendData);
+                                        Optional<AttendDataRecord> attendDataRecord = attendDataService.findByAttendUsersIdAndAttendReleaseSubId(
+                                                attendUsers.getAttendUsersId(), attendDataAddVo.getAttendReleaseSubId()
+                                        );
+                                        if (!attendDataRecord.isPresent()) {
+                                            AttendData attendData = new AttendData();
+                                            attendData.setAttendUsersId(attendUsers.getAttendUsersId());
+                                            attendData.setAttendReleaseSubId(attendDataAddVo.getAttendReleaseSubId());
+                                            attendData.setLocation(attendDataAddVo.getLocation());
+                                            attendData.setAddress(attendDataAddVo.getAddress());
+                                            attendData.setAttendDate(DateTimeUtil.getNowSqlTimestamp());
+                                            attendDataService.save(attendData);
 
-                                        ajaxUtil.success().msg("保存成功");
+                                            ajaxUtil.success().msg("签到成功");
+                                        } else {
+                                            ajaxUtil.fail().msg("已签到");
+                                        }
                                     } else {
                                         ajaxUtil.fail().msg("名单中未查询到当前学生信息");
                                     }

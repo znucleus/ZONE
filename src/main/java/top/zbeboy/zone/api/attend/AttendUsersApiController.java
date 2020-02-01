@@ -4,20 +4,29 @@ import org.jooq.Record;
 import org.jooq.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import top.zbeboy.zone.domain.tables.pojos.AttendRelease;
 import top.zbeboy.zone.domain.tables.pojos.AttendReleaseSub;
+import top.zbeboy.zone.domain.tables.pojos.AttendUsers;
+import top.zbeboy.zone.domain.tables.pojos.Student;
+import top.zbeboy.zone.domain.tables.records.AttendUsersRecord;
+import top.zbeboy.zone.service.attend.AttendReleaseService;
 import top.zbeboy.zone.service.attend.AttendReleaseSubService;
 import top.zbeboy.zone.service.attend.AttendUsersService;
+import top.zbeboy.zone.service.data.StudentService;
+import top.zbeboy.zone.service.util.DateTimeUtil;
+import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.attend.AttendUsersBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
+import top.zbeboy.zone.web.vo.attend.users.AttendUsersAddVo;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import javax.validation.Valid;
+import java.util.*;
 
 @RestController
 public class AttendUsersApiController {
@@ -27,6 +36,12 @@ public class AttendUsersApiController {
 
     @Resource
     private AttendReleaseSubService attendReleaseSubService;
+
+    @Resource
+    private AttendReleaseService attendReleaseService;
+
+    @Resource
+    private StudentService studentService;
 
     /**
      * 获取签到名单数据
@@ -64,6 +79,99 @@ public class AttendUsersApiController {
             ajaxUtil.success().list(attendUsers).msg("获取数据成功");
         } else {
             ajaxUtil.fail().msg("根据ID未查询到签到发布子表数据");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 保存
+     *
+     * @param attendUsersAddVo 数据
+     * @param bindingResult    校验
+     * @return true or false
+     */
+    @PostMapping("/api/attend/users/save")
+    public ResponseEntity<Map<String, Object>> save(@Valid AttendUsersAddVo attendUsersAddVo, BindingResult bindingResult) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (!bindingResult.hasErrors()) {
+            Student student = studentService.findByStudentNumber(attendUsersAddVo.getStudentNumber());
+            if (Objects.nonNull(student)) {
+                AttendRelease attendRelease = attendReleaseService.findById(attendUsersAddVo.getAttendReleaseId());
+                if (Objects.nonNull(attendRelease)) {
+                    if (Objects.equals(student.getOrganizeId(), attendRelease.getOrganizeId())) {
+                        Optional<AttendUsersRecord> attendUsersRecord = attendUsersService
+                                .findByAttendReleaseIdAndStudentId(attendUsersAddVo.getAttendReleaseId(), student.getStudentId());
+                        if (!attendUsersRecord.isPresent()) {
+                            AttendUsers attendUsers = new AttendUsers();
+                            attendUsers.setAttendUsersId(UUIDUtil.getUUID());
+                            attendUsers.setAttendReleaseId(attendUsersAddVo.getAttendReleaseId());
+                            attendUsers.setStudentId(student.getStudentId());
+                            attendUsers.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+
+                            attendUsersService.save(attendUsers);
+
+                            ajaxUtil.success().msg("保存成功");
+                        } else {
+                            ajaxUtil.fail().msg("学生已在名单中");
+                        }
+                    } else {
+                        ajaxUtil.fail().msg("当前学生不属于发布所属班级");
+                    }
+                } else {
+                    ajaxUtil.fail().msg("根据签到主表ID未查询到发布信息");
+                }
+            } else {
+                ajaxUtil.fail().msg("根据学号未查询到学生信息");
+            }
+        } else {
+            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 删除人员
+     *
+     * @param attendUsersId 名单ID
+     * @return true or false
+     */
+    @PostMapping("/api/attend/users/delete")
+    public ResponseEntity<Map<String, Object>> delete(@RequestParam("attendUsersId") String attendUsersId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        attendUsersService.deleteById(attendUsersId);
+        ajaxUtil.success().msg("删除成功");
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 名单重置
+     *
+     * @param attendReleaseId 发布表ID
+     * @return true or false
+     */
+    @PostMapping("/api/attend/users/reset")
+    public ResponseEntity<Map<String, Object>> reset(@RequestParam("attendReleaseId") String attendReleaseId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        AttendRelease attendRelease = attendReleaseService.findById(attendReleaseId);
+        if (Objects.nonNull(attendRelease)) {
+            Result<Record> records = attendUsersService.findStudentNotExistsAttendUsers(attendRelease.getAttendReleaseId(), attendRelease.getOrganizeId());
+            if (records.isNotEmpty()) {
+                List<Student> students = records.into(Student.class);
+                List<AttendUsers> attendUsers = new ArrayList<>();
+                for (Student student : students) {
+                    AttendUsers au = new AttendUsers();
+                    au.setAttendUsersId(UUIDUtil.getUUID());
+                    au.setAttendReleaseId(attendReleaseId);
+                    au.setStudentId(student.getStudentId());
+                    au.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                    attendUsers.add(au);
+                }
+                attendUsersService.batchSave(attendUsers);
+            }
+
+            ajaxUtil.success().msg("重置成功");
+        } else {
+            ajaxUtil.fail().msg("根据发布表ID未查询到发布数据");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
