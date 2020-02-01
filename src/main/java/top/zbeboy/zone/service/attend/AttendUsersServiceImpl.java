@@ -1,9 +1,6 @@
 package top.zbeboy.zone.service.attend;
 
-import org.jooq.DSLContext;
-import org.jooq.Record;
-import org.jooq.Result;
-import org.jooq.Select;
+import org.jooq.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -12,11 +9,11 @@ import top.zbeboy.zone.domain.tables.daos.AttendUsersDao;
 import top.zbeboy.zone.domain.tables.pojos.AttendUsers;
 import top.zbeboy.zone.domain.tables.records.AttendDataRecord;
 import top.zbeboy.zone.domain.tables.records.AttendUsersRecord;
-import top.zbeboy.zone.domain.tables.records.StudentRecord;
 import top.zbeboy.zone.service.system.AuthoritiesService;
 import top.zbeboy.zone.web.util.BooleanUtil;
 
 import javax.annotation.Resource;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,8 +47,11 @@ public class AttendUsersServiceImpl implements AttendUsersService {
     }
 
     @Override
-    public Result<Record> findByAttendReleaseIdRelation(String attendReleaseId) {
-        return create.select()
+    public Result<Record11<String, String, Timestamp, String, Integer, String, String, String, String, Timestamp, String>> findByAttendReleaseIdRelation(String attendReleaseId) {
+        return create.select(ATTEND_USERS.ATTEND_USERS_ID,ATTEND_USERS.ATTEND_RELEASE_ID,
+                ATTEND_USERS.CREATE_DATE,ATTEND_USERS.REMARK,ATTEND_USERS.STUDENT_ID,
+                STUDENT.STUDENT_NUMBER,USERS.REAL_NAME,ATTEND_DATA.LOCATION,ATTEND_DATA.ADDRESS,
+                ATTEND_DATA.ATTEND_DATE,ATTEND_DATA.ATTEND_REMARK)
                 .from(ATTEND_USERS)
                 .leftJoin(STUDENT)
                 .on(ATTEND_USERS.STUDENT_ID.eq(STUDENT.STUDENT_ID))

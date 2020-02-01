@@ -1,6 +1,7 @@
 package top.zbeboy.zone.api.attend;
 
 import org.jooq.Record;
+import org.jooq.Record11;
 import org.jooq.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,7 @@ import top.zbeboy.zone.web.vo.attend.users.AttendUsersAddVo;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.sql.Timestamp;
 import java.util.*;
 
 @RestController
@@ -70,7 +72,7 @@ public class AttendUsersApiController {
                     attendUsers = records.into(AttendUsersBean.class);
                 }
             } else {
-                Result<Record> records = attendUsersService.findByAttendReleaseIdRelation(attendReleaseSub.getAttendReleaseId());
+                Result<Record11<String, String, Timestamp, String, Integer, String, String, String, String, Timestamp, String>> records = attendUsersService.findByAttendReleaseIdRelation(attendReleaseSub.getAttendReleaseId());
                 if (records.isNotEmpty()) {
                     attendUsers = records.into(AttendUsersBean.class);
                 }
