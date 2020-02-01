@@ -83,7 +83,7 @@ public class AttendDataApiController {
                                         attendData.setAttendReleaseSubId(attendDataAddVo.getAttendReleaseSubId());
                                         attendData.setLocation(attendDataAddVo.getLocation());
                                         attendData.setAddress(attendDataAddVo.getAddress());
-                                        attendData.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                                        attendData.setAttendDate(DateTimeUtil.getNowSqlTimestamp());
                                         attendDataService.save(attendData);
 
                                         ajaxUtil.success().msg("保存成功");

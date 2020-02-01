@@ -25,14 +25,14 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AttendData implements Serializable {
 
-    private static final long serialVersionUID = 2107955869;
+    private static final long serialVersionUID = -206973119;
 
     private String    attendUsersId;
     private Integer   attendReleaseSubId;
     private String    location;
     private String    address;
-    private Timestamp createDate;
-    private String    remark;
+    private Timestamp attendDate;
+    private String    attendRemark;
 
     public AttendData() {}
 
@@ -41,8 +41,8 @@ public class AttendData implements Serializable {
         this.attendReleaseSubId = value.attendReleaseSubId;
         this.location = value.location;
         this.address = value.address;
-        this.createDate = value.createDate;
-        this.remark = value.remark;
+        this.attendDate = value.attendDate;
+        this.attendRemark = value.attendRemark;
     }
 
     public AttendData(
@@ -50,15 +50,15 @@ public class AttendData implements Serializable {
         Integer   attendReleaseSubId,
         String    location,
         String    address,
-        Timestamp createDate,
-        String    remark
+        Timestamp attendDate,
+        String    attendRemark
     ) {
         this.attendUsersId = attendUsersId;
         this.attendReleaseSubId = attendReleaseSubId;
         this.location = location;
         this.address = address;
-        this.createDate = createDate;
-        this.remark = remark;
+        this.attendDate = attendDate;
+        this.attendRemark = attendRemark;
     }
 
     @NotNull
@@ -99,21 +99,21 @@ public class AttendData implements Serializable {
     }
 
     @NotNull
-    public Timestamp getCreateDate() {
-        return this.createDate;
+    public Timestamp getAttendDate() {
+        return this.attendDate;
     }
 
-    public void setCreateDate(Timestamp createDate) {
-        this.createDate = createDate;
+    public void setAttendDate(Timestamp attendDate) {
+        this.attendDate = attendDate;
     }
 
     @Size(max = 200)
-    public String getRemark() {
-        return this.remark;
+    public String getAttendRemark() {
+        return this.attendRemark;
     }
 
-    public void setRemark(String remark) {
-        this.remark = remark;
+    public void setAttendRemark(String attendRemark) {
+        this.attendRemark = attendRemark;
     }
 
     @Override
@@ -124,8 +124,8 @@ public class AttendData implements Serializable {
         sb.append(", ").append(attendReleaseSubId);
         sb.append(", ").append(location);
         sb.append(", ").append(address);
-        sb.append(", ").append(createDate);
-        sb.append(", ").append(remark);
+        sb.append(", ").append(attendDate);
+        sb.append(", ").append(attendRemark);
 
         sb.append(")");
         return sb.toString();

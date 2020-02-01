@@ -2,11 +2,15 @@ package top.zbeboy.zone.web.bean.attend;
 
 import top.zbeboy.zone.domain.tables.pojos.AttendUsers;
 
+import java.sql.Timestamp;
+
 public class AttendUsersBean extends AttendUsers {
     private String realName;
     private String studentNumber;
     private String location;
     private String address;
+    private Timestamp attendDate;
+    private String    attendRemark;
 
     public String getRealName() {
         return realName;
@@ -38,5 +42,21 @@ public class AttendUsersBean extends AttendUsers {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public Timestamp getAttendDate() {
+        return attendDate;
+    }
+
+    public void setAttendDate(Timestamp attendDate) {
+        this.attendDate = attendDate;
+    }
+
+    public String getAttendRemark() {
+        return attendRemark;
+    }
+
+    public void setAttendRemark(String attendRemark) {
+        this.attendRemark = attendRemark;
     }
 }

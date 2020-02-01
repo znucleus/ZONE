@@ -42,7 +42,7 @@ import top.zbeboy.zone.domain.tables.records.AttendDataRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AttendData extends TableImpl<AttendDataRecord> {
 
-    private static final long serialVersionUID = -1110323699;
+    private static final long serialVersionUID = 1249975686;
 
     /**
      * The reference instance of <code>zone.attend_data</code>
@@ -78,14 +78,14 @@ public class AttendData extends TableImpl<AttendDataRecord> {
     public final TableField<AttendDataRecord, String> ADDRESS = createField(DSL.name("address"), org.jooq.impl.SQLDataType.VARCHAR(300), this, "");
 
     /**
-     * The column <code>zone.attend_data.create_date</code>.
+     * The column <code>zone.attend_data.attend_date</code>.
      */
-    public final TableField<AttendDataRecord, Timestamp> CREATE_DATE = createField(DSL.name("create_date"), org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
+    public final TableField<AttendDataRecord, Timestamp> ATTEND_DATE = createField(DSL.name("attend_date"), org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
 
     /**
-     * The column <code>zone.attend_data.remark</code>.
+     * The column <code>zone.attend_data.attend_remark</code>.
      */
-    public final TableField<AttendDataRecord, String> REMARK = createField(DSL.name("remark"), org.jooq.impl.SQLDataType.VARCHAR(200), this, "");
+    public final TableField<AttendDataRecord, String> ATTEND_REMARK = createField(DSL.name("attend_remark"), org.jooq.impl.SQLDataType.VARCHAR(200), this, "");
 
     /**
      * Create a <code>zone.attend_data</code> table reference

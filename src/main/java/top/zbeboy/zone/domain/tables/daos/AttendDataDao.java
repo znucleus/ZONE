@@ -110,30 +110,30 @@ public class AttendDataDao extends DAOImpl<AttendDataRecord, top.zbeboy.zone.dom
     }
 
     /**
-     * Fetch records that have <code>create_date BETWEEN lowerInclusive AND upperInclusive</code>
+     * Fetch records that have <code>attend_date BETWEEN lowerInclusive AND upperInclusive</code>
      */
-    public List<top.zbeboy.zone.domain.tables.pojos.AttendData> fetchRangeOfCreateDate(Timestamp lowerInclusive, Timestamp upperInclusive) {
-        return fetchRange(AttendData.ATTEND_DATA.CREATE_DATE, lowerInclusive, upperInclusive);
+    public List<top.zbeboy.zone.domain.tables.pojos.AttendData> fetchRangeOfAttendDate(Timestamp lowerInclusive, Timestamp upperInclusive) {
+        return fetchRange(AttendData.ATTEND_DATA.ATTEND_DATE, lowerInclusive, upperInclusive);
     }
 
     /**
-     * Fetch records that have <code>create_date IN (values)</code>
+     * Fetch records that have <code>attend_date IN (values)</code>
      */
-    public List<top.zbeboy.zone.domain.tables.pojos.AttendData> fetchByCreateDate(Timestamp... values) {
-        return fetch(AttendData.ATTEND_DATA.CREATE_DATE, values);
+    public List<top.zbeboy.zone.domain.tables.pojos.AttendData> fetchByAttendDate(Timestamp... values) {
+        return fetch(AttendData.ATTEND_DATA.ATTEND_DATE, values);
     }
 
     /**
-     * Fetch records that have <code>remark BETWEEN lowerInclusive AND upperInclusive</code>
+     * Fetch records that have <code>attend_remark BETWEEN lowerInclusive AND upperInclusive</code>
      */
-    public List<top.zbeboy.zone.domain.tables.pojos.AttendData> fetchRangeOfRemark(String lowerInclusive, String upperInclusive) {
-        return fetchRange(AttendData.ATTEND_DATA.REMARK, lowerInclusive, upperInclusive);
+    public List<top.zbeboy.zone.domain.tables.pojos.AttendData> fetchRangeOfAttendRemark(String lowerInclusive, String upperInclusive) {
+        return fetchRange(AttendData.ATTEND_DATA.ATTEND_REMARK, lowerInclusive, upperInclusive);
     }
 
     /**
-     * Fetch records that have <code>remark IN (values)</code>
+     * Fetch records that have <code>attend_remark IN (values)</code>
      */
-    public List<top.zbeboy.zone.domain.tables.pojos.AttendData> fetchByRemark(String... values) {
-        return fetch(AttendData.ATTEND_DATA.REMARK, values);
+    public List<top.zbeboy.zone.domain.tables.pojos.AttendData> fetchByAttendRemark(String... values) {
+        return fetch(AttendData.ATTEND_DATA.ATTEND_REMARK, values);
     }
 }

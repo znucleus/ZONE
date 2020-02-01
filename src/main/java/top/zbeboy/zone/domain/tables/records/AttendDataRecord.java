@@ -32,7 +32,7 @@ import top.zbeboy.zone.domain.tables.AttendData;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AttendDataRecord extends UpdatableRecordImpl<AttendDataRecord> implements Record6<String, Integer, String, String, Timestamp, String> {
 
-    private static final long serialVersionUID = 1271485841;
+    private static final long serialVersionUID = -2018448782;
 
     /**
      * Setter for <code>zone.attend_data.attend_users_id</code>.
@@ -96,32 +96,32 @@ public class AttendDataRecord extends UpdatableRecordImpl<AttendDataRecord> impl
     }
 
     /**
-     * Setter for <code>zone.attend_data.create_date</code>.
+     * Setter for <code>zone.attend_data.attend_date</code>.
      */
-    public void setCreateDate(Timestamp value) {
+    public void setAttendDate(Timestamp value) {
         set(4, value);
     }
 
     /**
-     * Getter for <code>zone.attend_data.create_date</code>.
+     * Getter for <code>zone.attend_data.attend_date</code>.
      */
     @NotNull
-    public Timestamp getCreateDate() {
+    public Timestamp getAttendDate() {
         return (Timestamp) get(4);
     }
 
     /**
-     * Setter for <code>zone.attend_data.remark</code>.
+     * Setter for <code>zone.attend_data.attend_remark</code>.
      */
-    public void setRemark(String value) {
+    public void setAttendRemark(String value) {
         set(5, value);
     }
 
     /**
-     * Getter for <code>zone.attend_data.remark</code>.
+     * Getter for <code>zone.attend_data.attend_remark</code>.
      */
     @Size(max = 200)
-    public String getRemark() {
+    public String getAttendRemark() {
         return (String) get(5);
     }
 
@@ -170,12 +170,12 @@ public class AttendDataRecord extends UpdatableRecordImpl<AttendDataRecord> impl
 
     @Override
     public Field<Timestamp> field5() {
-        return AttendData.ATTEND_DATA.CREATE_DATE;
+        return AttendData.ATTEND_DATA.ATTEND_DATE;
     }
 
     @Override
     public Field<String> field6() {
-        return AttendData.ATTEND_DATA.REMARK;
+        return AttendData.ATTEND_DATA.ATTEND_REMARK;
     }
 
     @Override
@@ -200,12 +200,12 @@ public class AttendDataRecord extends UpdatableRecordImpl<AttendDataRecord> impl
 
     @Override
     public Timestamp component5() {
-        return getCreateDate();
+        return getAttendDate();
     }
 
     @Override
     public String component6() {
-        return getRemark();
+        return getAttendRemark();
     }
 
     @Override
@@ -230,12 +230,12 @@ public class AttendDataRecord extends UpdatableRecordImpl<AttendDataRecord> impl
 
     @Override
     public Timestamp value5() {
-        return getCreateDate();
+        return getAttendDate();
     }
 
     @Override
     public String value6() {
-        return getRemark();
+        return getAttendRemark();
     }
 
     @Override
@@ -264,13 +264,13 @@ public class AttendDataRecord extends UpdatableRecordImpl<AttendDataRecord> impl
 
     @Override
     public AttendDataRecord value5(Timestamp value) {
-        setCreateDate(value);
+        setAttendDate(value);
         return this;
     }
 
     @Override
     public AttendDataRecord value6(String value) {
-        setRemark(value);
+        setAttendRemark(value);
         return this;
     }
 
@@ -299,14 +299,14 @@ public class AttendDataRecord extends UpdatableRecordImpl<AttendDataRecord> impl
     /**
      * Create a detached, initialised AttendDataRecord
      */
-    public AttendDataRecord(String attendUsersId, Integer attendReleaseSubId, String location, String address, Timestamp createDate, String remark) {
+    public AttendDataRecord(String attendUsersId, Integer attendReleaseSubId, String location, String address, Timestamp attendDate, String attendRemark) {
         super(AttendData.ATTEND_DATA);
 
         set(0, attendUsersId);
         set(1, attendReleaseSubId);
         set(2, location);
         set(3, address);
-        set(4, createDate);
-        set(5, remark);
+        set(4, attendDate);
+        set(5, attendRemark);
     }
 }

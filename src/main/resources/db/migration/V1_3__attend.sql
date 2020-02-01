@@ -46,8 +46,8 @@ CREATE TABLE attend_data(
  attend_release_sub_id INT NOT NULL,
  location VARCHAR(30),
  address VARCHAR(300),
- create_date TIMESTAMP NOT NULL,
- remark VARCHAR(200),
+ attend_date TIMESTAMP NOT NULL,
+ attend_remark VARCHAR(200),
  PRIMARY KEY(attend_users_id, attend_release_sub_id),
  FOREIGN KEY(attend_release_sub_id) REFERENCES attend_release_sub(attend_release_sub_id) ON DELETE CASCADE,
  FOREIGN KEY(attend_users_id) REFERENCES attend_users(attend_users_id) ON DELETE CASCADE
