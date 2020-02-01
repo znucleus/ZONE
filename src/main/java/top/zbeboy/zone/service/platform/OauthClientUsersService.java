@@ -3,6 +3,7 @@ package top.zbeboy.zone.service.platform;
 import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.zone.domain.tables.pojos.OauthClientUsers;
+import top.zbeboy.zone.domain.tables.records.OauthClientUsersRecord;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
 import java.util.Optional;
@@ -11,6 +12,14 @@ public interface OauthClientUsersService {
 
     /**
      * 通过id查询
+     *
+     * @param id id
+     * @return 数据
+     */
+    Optional<OauthClientUsersRecord> findById(String id);
+
+    /**
+     * 通过id关联查询
      *
      * @param id id
      * @return 数据

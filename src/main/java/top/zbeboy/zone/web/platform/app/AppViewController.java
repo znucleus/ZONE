@@ -71,4 +71,14 @@ public class AppViewController {
         }
         return page;
     }
+
+    /**
+     * 创建app文章
+     *
+     * @return 页面
+     */
+    @GetMapping("/web/platform/app/articles/create")
+    public String articlesCreate() {
+        return "web/platform/app/articles/create::#page-wrapper";
+    }
 }

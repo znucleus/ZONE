@@ -11,6 +11,7 @@ import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.daos.OauthClientUsersDao;
 import top.zbeboy.zone.domain.tables.pojos.OauthClientUsers;
 import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zone.domain.tables.records.OauthClientUsersRecord;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zone.service.util.SQLQueryUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
@@ -39,6 +40,13 @@ public class OauthClientUsersServiceImpl implements OauthClientUsersService, Pag
     @Autowired
     OauthClientUsersServiceImpl(DSLContext dslContext) {
         create = dslContext;
+    }
+
+    @Override
+    public Optional<OauthClientUsersRecord> findById(String id) {
+        return create.selectFrom(OAUTH_CLIENT_USERS)
+                .where(OAUTH_CLIENT_USERS.CLIENT_ID.eq(id))
+                .fetchOptional();
     }
 
     @Override

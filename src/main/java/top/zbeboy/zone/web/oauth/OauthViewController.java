@@ -11,12 +11,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import top.zbeboy.zone.domain.tables.records.OauthClientUsersRecord;
+import top.zbeboy.zone.service.platform.OauthClientUsersService;
 import top.zbeboy.zone.web.system.tip.SystemTipConfig;
 
+import javax.annotation.Resource;
 import java.security.Principal;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @Controller
 @SessionAttributes("authorizationRequest")
@@ -25,11 +29,14 @@ public class OauthViewController {
     @Autowired
     private ClientDetailsService clientDetailsService;
 
+    @Resource
+    private OauthClientUsersService oauthClientUsersService;
+
     @Autowired
     private ApprovalStore approvalStore;
 
     @RequestMapping("/oauth/confirm_access")
-    public String getAccessConfirmation(ModelMap model, Principal principal) throws Exception {
+    public String getAccessConfirmation(ModelMap model, Principal principal) {
         SystemTipConfig config = new SystemTipConfig();
         String page;
         AuthorizationRequest clientAuth = (AuthorizationRequest) model.remove("authorizationRequest");
@@ -37,7 +44,10 @@ public class OauthViewController {
             ClientDetails client = clientDetailsService.loadClientByClientId(clientAuth.getClientId());
             model.put("auth_request", clientAuth);
             model.put("client", client);
-            Map<String, String> scopes = new LinkedHashMap<String, String>();
+
+            Optional<OauthClientUsersRecord> oauthClientUsersRecord = oauthClientUsersService.findById(clientAuth.getClientId());
+            oauthClientUsersRecord.ifPresent(oauthClientUsersRecord1 -> model.put("appName", oauthClientUsersRecord1.getAppName()));
+            Map<String, String> scopes = new LinkedHashMap<>();
             for (String scope : clientAuth.getScope()) {
                 scopes.put(OAuth2Utils.SCOPE_PREFIX + scope, "false");
             }
@@ -63,7 +73,7 @@ public class OauthViewController {
     }
 
     @RequestMapping("/oauth/error")
-    public String handleError(Map<String, Object> model) throws Exception {
+    public String handleError(Map<String, Object> model) {
         // We can add more stuff to the model here for JSP rendering. If the client was a machine then
         // the JSON will already have been rendered.
         model.put("message", "授权错误");

@@ -17,14 +17,14 @@
     <div class="login-wrapper wd-300 wd-xs-350 pd-25 pd-xs-40 bg-white rounded shadow-base">
         <div class="signin-logo tx-center tx-28 tx-bold tx-inverse"><span class="tx-normal">[</span> <span
                 th:text="#{web.app.name}"></span> <span class="tx-normal">]</span></div>
-        <div class="tx-center mg-b-30">授权App: <span th:text="${client.clientId}"></span></div>
+        <div class="tx-center mg-b-30">授权App: <span th:text="${appName}"></span></div>
         <form th:action="@{/oauth/authorize}" method="post" sec:authorize="isAuthenticated()">
             <input name="user_oauth_approval" value="true" type="hidden"/>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item" th:each="scope : ${scopes}">
                     <div class="form-group">
                         <span th:text="${scope.key}"></span> :
-                        <div th:if="${scope.value}">
+                        <div th:if="${scope.value}" class="mt-2">
                             <label class="rdiobox">
                                 <input type="radio" th:name="${scope.key}" value="true" checked>
                                 <span>同意</span>
@@ -35,7 +35,7 @@
                             </label>
                         </div>
 
-                        <div th:if="${!scope.value}">
+                        <div th:if="${!scope.value}" class="mt-2">
                             <label class="rdiobox">
                                 <input type="radio" th:name="${scope.key}" value="true">
                                 <span>同意</span>

@@ -104,7 +104,7 @@ public class AppRestController {
             oauthClientDetails.setWebServerRedirectUri(appAddVo.getWebServerRedirectUri());
             oauthClientDetails.setAccessTokenValidity(604800);
             oauthClientDetails.setRefreshTokenValidity(1209600);
-            oauthClientDetails.setAutoapprove("true");
+            oauthClientDetails.setAutoapprove("false");
 
             oauthClientDetailsService.save(oauthClientDetails);
 
