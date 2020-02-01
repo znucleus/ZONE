@@ -12,6 +12,14 @@ import java.util.Optional;
 public interface AttendUsersService {
 
     /**
+     * 根据主键查询
+     *
+     * @param id 主键
+     * @return 数据
+     */
+    AttendUsers findById(String id);
+
+    /**
      * 根据发布表id查询名单数据
      *
      * @return 数据
@@ -81,4 +89,11 @@ public interface AttendUsersService {
      * @param id 主键
      */
     void deleteById(String id);
+
+    /**
+     * 更新
+     *
+     * @param attendUsers 数据
+     */
+    void update(AttendUsers attendUsers);
 }

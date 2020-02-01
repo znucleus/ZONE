@@ -1,28 +1,48 @@
 package top.zbeboy.zone.api.attend;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import top.zbeboy.zone.config.Workbook;
+import top.zbeboy.zone.domain.tables.pojos.Student;
+import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zone.domain.tables.pojos.UsersType;
+import top.zbeboy.zone.domain.tables.records.StudentRecord;
+import top.zbeboy.zone.service.attend.AttendDataService;
 import top.zbeboy.zone.service.attend.AttendReleaseSubService;
+import top.zbeboy.zone.service.data.StudentService;
+import top.zbeboy.zone.service.platform.UsersService;
+import top.zbeboy.zone.service.platform.UsersTypeService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.web.bean.attend.AttendReleaseSubBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
+import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
 import javax.annotation.Resource;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 public class AttendReleaseSubApiController {
 
     @Resource
     private AttendReleaseSubService attendReleaseSubService;
+
+    @Resource
+    private AttendDataService attendDataService;
+
+    @Resource
+    private UsersService usersService;
+
+    @Resource
+    private UsersTypeService usersTypeService;
+
+    @Resource
+    private StudentService studentService;
 
     /**
      * 列表数据
@@ -44,6 +64,23 @@ public class AttendReleaseSubApiController {
             beans.forEach(bean -> bean.setAttendEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getAttendEndTime())));
             beans.forEach(bean -> bean.setValidDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getValidDate())));
             beans.forEach(bean -> bean.setExpireDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getExpireDate())));
+
+            Users users = usersService.getUserFromOauth(principal);
+            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
+            if (Objects.nonNull(usersType)) {
+                if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
+                    Optional<StudentRecord> studentRecord = studentService.findByUsername(users.getUsername());
+                    if (studentRecord.isPresent()) {
+                        Student student = studentRecord.get().into(Student.class);
+                        for (AttendReleaseSubBean bean : beans) {
+                            Optional<Record> record = attendDataService
+                                    .findByStudentIdAndAttendReleaseIdAndAttendReleaseSubId(student.getStudentId(), bean.getAttendReleaseId(), bean.getAttendReleaseSubId());
+                            bean.setIsAttend(BooleanUtil.toByte(record.isPresent()));
+                        }
+                    }
+
+                }
+            }
         }
         simplePaginationUtil.setTotalSize(attendReleaseSubService.countAll(simplePaginationUtil));
         ajaxUtil.success().list(beans).page(simplePaginationUtil).msg("获取数据成功");

@@ -18,6 +18,16 @@ public interface AttendDataService {
     Optional<AttendDataRecord> findByAttendUsersIdAndAttendReleaseSubId(String attendUsersId, int attendReleaseSubId);
 
     /**
+     * 根据学生ID和发布表ID查询
+     *
+     * @param studentId          学生ID
+     * @param attendReleaseId    发布表ID
+     * @param attendReleaseSubId 了表ID
+     * @return 数据
+     */
+    Optional<Record> findByStudentIdAndAttendReleaseIdAndAttendReleaseSubId(int studentId, String attendReleaseId, int attendReleaseSubId);
+
+    /**
      * 保存
      *
      * @param attendData 数据

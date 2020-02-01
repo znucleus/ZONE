@@ -40,6 +40,11 @@ public class AttendUsersServiceImpl implements AttendUsersService {
     }
 
     @Override
+    public AttendUsers findById(String id) {
+        return attendUsersDao.findById(id);
+    }
+
+    @Override
     public List<AttendUsers> findByAttendReleaseId(String attendReleaseId) {
         return attendUsersDao.fetchByAttendReleaseId(attendReleaseId);
     }
@@ -120,5 +125,10 @@ public class AttendUsersServiceImpl implements AttendUsersService {
     @Override
     public void deleteById(String id) {
         attendUsersDao.deleteById(id);
+    }
+
+    @Override
+    public void update(AttendUsers attendUsers) {
+        attendUsersDao.update(attendUsers);
     }
 }

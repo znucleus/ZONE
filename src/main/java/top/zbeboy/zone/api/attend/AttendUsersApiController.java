@@ -175,4 +175,25 @@ public class AttendUsersApiController {
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
+
+    /**
+     * 备注
+     *
+     * @param attendUsersId 名单ID
+     * @param remark        备注
+     * @return true or false
+     */
+    @PostMapping("/api/attend/users/remark")
+    public ResponseEntity<Map<String, Object>> remark(@RequestParam("attendUsersId") String attendUsersId, String remark) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        AttendUsers attendUsers = attendUsersService.findById(attendUsersId);
+        if (Objects.nonNull(attendUsers)) {
+            attendUsers.setRemark(remark);
+            attendUsersService.update(attendUsers);
+            ajaxUtil.success().msg("更新成功");
+        } else {
+            ajaxUtil.fail().msg("根据名单ID未查询到名单数据");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
 }
