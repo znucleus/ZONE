@@ -175,6 +175,7 @@ public class AttendReleaseApiController {
                 Users users = usersService.getUserFromOauth(principal);
                 if (roleService.isOauthUserInRole(Workbook.authorities.ROLE_SYSTEM.name(), principal) ||
                         (Objects.nonNull(users) && StringUtils.equals(users.getUsername(), attendReleaseSub.getUsername()))) {
+                    attendReleaseSub.setReleaseTime(DateTimeUtil.getNowSqlTimestamp());
                     attendReleaseSub.setTitle(attendReleaseEditVo.getTitle());
                     attendReleaseSub.setIsAuto(ByteUtil.toByte(1).equals(attendReleaseEditVo.getIsAuto()) ? ByteUtil.toByte(1) : ByteUtil.toByte(0));
 
