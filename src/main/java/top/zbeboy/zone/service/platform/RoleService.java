@@ -6,6 +6,7 @@ import top.zbeboy.zone.domain.tables.pojos.Application;
 import top.zbeboy.zone.domain.tables.pojos.Role;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
+import java.security.Principal;
 import java.util.List;
 
 public interface RoleService {
@@ -71,6 +72,15 @@ public interface RoleService {
      * @return true 有 false 无
      */
     Boolean isCurrentUserInRole(String role);
+
+    /**
+     * 检查当前用户是否有此权限
+     *
+     * @param role      权限
+     * @param principal oauth用户
+     * @return true 有 false 无
+     */
+    Boolean isOauthUserInRole(String role, Principal principal);
 
     /**
      * 分页查询

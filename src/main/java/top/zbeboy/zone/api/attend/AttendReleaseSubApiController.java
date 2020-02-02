@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.config.Workbook;
+import top.zbeboy.zone.domain.tables.pojos.AttendReleaseSub;
 import top.zbeboy.zone.domain.tables.pojos.Student;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
@@ -14,6 +15,7 @@ import top.zbeboy.zone.domain.tables.records.StudentRecord;
 import top.zbeboy.zone.service.attend.AttendDataService;
 import top.zbeboy.zone.service.attend.AttendReleaseSubService;
 import top.zbeboy.zone.service.data.StudentService;
+import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
@@ -43,6 +45,9 @@ public class AttendReleaseSubApiController {
 
     @Resource
     private StudentService studentService;
+
+    @Resource
+    private RoleService roleService;
 
     /**
      * 列表数据
@@ -118,10 +123,21 @@ public class AttendReleaseSubApiController {
      * @return 数据
      */
     @PostMapping("/api/attend/sub/delete")
-    public ResponseEntity<Map<String, Object>> subDelete(@RequestParam("id") int attendReleaseSubId) {
+    public ResponseEntity<Map<String, Object>> subDelete(@RequestParam("id") int attendReleaseSubId, Principal principal) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        attendReleaseSubService.deleteById(attendReleaseSubId);
-        ajaxUtil.success().msg("删除数据成功");
+        AttendReleaseSub attendReleaseSub = attendReleaseSubService.findById(attendReleaseSubId);
+        if (Objects.nonNull(attendReleaseSub)) {
+            Users users = usersService.getUserFromOauth(principal);
+            if (roleService.isOauthUserInRole(Workbook.authorities.ROLE_SYSTEM.name(), principal) ||
+                    (Objects.nonNull(users) && StringUtils.equals(users.getUsername(), attendReleaseSub.getUsername()))) {
+                attendReleaseSubService.deleteById(attendReleaseSubId);
+                ajaxUtil.success().msg("删除数据成功");
+            } else {
+                ajaxUtil.fail().msg("您无权限操作");
+            }
+        } else {
+            ajaxUtil.fail().msg("根据ID未查询到签到发布子表数据");
+        }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

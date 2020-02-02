@@ -1,5 +1,6 @@
 package top.zbeboy.zone.api.attend;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jooq.Record;
 import org.jooq.Record11;
 import org.jooq.Result;
@@ -10,15 +11,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import top.zbeboy.zone.domain.tables.pojos.AttendRelease;
-import top.zbeboy.zone.domain.tables.pojos.AttendReleaseSub;
-import top.zbeboy.zone.domain.tables.pojos.AttendUsers;
-import top.zbeboy.zone.domain.tables.pojos.Student;
+import top.zbeboy.zone.config.Workbook;
+import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.domain.tables.records.AttendUsersRecord;
 import top.zbeboy.zone.service.attend.AttendReleaseService;
 import top.zbeboy.zone.service.attend.AttendReleaseSubService;
 import top.zbeboy.zone.service.attend.AttendUsersService;
 import top.zbeboy.zone.service.data.StudentService;
+import top.zbeboy.zone.service.platform.RoleService;
+import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.attend.AttendUsersBean;
@@ -27,6 +28,7 @@ import top.zbeboy.zone.web.vo.attend.users.AttendUsersAddVo;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.security.Principal;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -44,6 +46,12 @@ public class AttendUsersApiController {
 
     @Resource
     private StudentService studentService;
+
+    @Resource
+    private UsersService usersService;
+
+    @Resource
+    private RoleService roleService;
 
     /**
      * 获取签到名单数据
@@ -93,31 +101,37 @@ public class AttendUsersApiController {
      * @return true or false
      */
     @PostMapping("/api/attend/users/save")
-    public ResponseEntity<Map<String, Object>> save(@Valid AttendUsersAddVo attendUsersAddVo, BindingResult bindingResult) {
+    public ResponseEntity<Map<String, Object>> save(@Valid AttendUsersAddVo attendUsersAddVo, BindingResult bindingResult, Principal principal) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
             Student student = studentService.findByStudentNumber(attendUsersAddVo.getStudentNumber());
             if (Objects.nonNull(student)) {
                 AttendRelease attendRelease = attendReleaseService.findById(attendUsersAddVo.getAttendReleaseId());
                 if (Objects.nonNull(attendRelease)) {
-                    if (Objects.equals(student.getOrganizeId(), attendRelease.getOrganizeId())) {
-                        Optional<AttendUsersRecord> attendUsersRecord = attendUsersService
-                                .findByAttendReleaseIdAndStudentId(attendUsersAddVo.getAttendReleaseId(), student.getStudentId());
-                        if (!attendUsersRecord.isPresent()) {
-                            AttendUsers attendUsers = new AttendUsers();
-                            attendUsers.setAttendUsersId(UUIDUtil.getUUID());
-                            attendUsers.setAttendReleaseId(attendUsersAddVo.getAttendReleaseId());
-                            attendUsers.setStudentId(student.getStudentId());
-                            attendUsers.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                    Users users = usersService.getUserFromOauth(principal);
+                    if (roleService.isOauthUserInRole(Workbook.authorities.ROLE_SYSTEM.name(), principal) ||
+                            (Objects.nonNull(users) && StringUtils.equals(users.getUsername(), attendRelease.getUsername()))) {
+                        if (Objects.equals(student.getOrganizeId(), attendRelease.getOrganizeId())) {
+                            Optional<AttendUsersRecord> attendUsersRecord = attendUsersService
+                                    .findByAttendReleaseIdAndStudentId(attendUsersAddVo.getAttendReleaseId(), student.getStudentId());
+                            if (!attendUsersRecord.isPresent()) {
+                                AttendUsers attendUsers = new AttendUsers();
+                                attendUsers.setAttendUsersId(UUIDUtil.getUUID());
+                                attendUsers.setAttendReleaseId(attendUsersAddVo.getAttendReleaseId());
+                                attendUsers.setStudentId(student.getStudentId());
+                                attendUsers.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
 
-                            attendUsersService.save(attendUsers);
+                                attendUsersService.save(attendUsers);
 
-                            ajaxUtil.success().msg("保存成功");
+                                ajaxUtil.success().msg("保存成功");
+                            } else {
+                                ajaxUtil.fail().msg("学生已在名单中");
+                            }
                         } else {
-                            ajaxUtil.fail().msg("学生已在名单中");
+                            ajaxUtil.fail().msg("当前学生不属于发布所属班级");
                         }
                     } else {
-                        ajaxUtil.fail().msg("当前学生不属于发布所属班级");
+                        ajaxUtil.fail().msg("您无权限操作");
                     }
                 } else {
                     ajaxUtil.fail().msg("根据签到主表ID未查询到发布信息");
@@ -138,10 +152,26 @@ public class AttendUsersApiController {
      * @return true or false
      */
     @PostMapping("/api/attend/users/delete")
-    public ResponseEntity<Map<String, Object>> delete(@RequestParam("attendUsersId") String attendUsersId) {
+    public ResponseEntity<Map<String, Object>> delete(@RequestParam("attendUsersId") String attendUsersId, Principal principal) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        attendUsersService.deleteById(attendUsersId);
-        ajaxUtil.success().msg("删除成功");
+        AttendUsers attendUsers = attendUsersService.findById(attendUsersId);
+        if (Objects.nonNull(attendUsers)) {
+            AttendRelease attendRelease = attendReleaseService.findById(attendUsers.getAttendReleaseId());
+            if (Objects.nonNull(attendRelease)) {
+                Users users = usersService.getUserFromOauth(principal);
+                if (roleService.isOauthUserInRole(Workbook.authorities.ROLE_SYSTEM.name(), principal) ||
+                        (Objects.nonNull(users) && StringUtils.equals(users.getUsername(), attendRelease.getUsername()))) {
+                    attendUsersService.deleteById(attendUsersId);
+                    ajaxUtil.success().msg("删除成功");
+                } else {
+                    ajaxUtil.fail().msg("您无权限操作");
+                }
+            } else {
+                ajaxUtil.fail().msg("根据签到主表ID未查询到发布信息");
+            }
+        } else {
+            ajaxUtil.fail().msg("根据ID未查询到名单数据");
+        }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -152,26 +182,32 @@ public class AttendUsersApiController {
      * @return true or false
      */
     @PostMapping("/api/attend/users/reset")
-    public ResponseEntity<Map<String, Object>> reset(@RequestParam("attendReleaseId") String attendReleaseId) {
+    public ResponseEntity<Map<String, Object>> reset(@RequestParam("attendReleaseId") String attendReleaseId, Principal principal) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         AttendRelease attendRelease = attendReleaseService.findById(attendReleaseId);
         if (Objects.nonNull(attendRelease)) {
-            Result<Record> records = attendUsersService.findStudentNotExistsAttendUsers(attendRelease.getAttendReleaseId(), attendRelease.getOrganizeId());
-            if (records.isNotEmpty()) {
-                List<Student> students = records.into(Student.class);
-                List<AttendUsers> attendUsers = new ArrayList<>();
-                for (Student student : students) {
-                    AttendUsers au = new AttendUsers();
-                    au.setAttendUsersId(UUIDUtil.getUUID());
-                    au.setAttendReleaseId(attendReleaseId);
-                    au.setStudentId(student.getStudentId());
-                    au.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
-                    attendUsers.add(au);
+            Users users = usersService.getUserFromOauth(principal);
+            if (roleService.isOauthUserInRole(Workbook.authorities.ROLE_SYSTEM.name(), principal) ||
+                    (Objects.nonNull(users) && StringUtils.equals(users.getUsername(), attendRelease.getUsername()))) {
+                Result<Record> records = attendUsersService.findStudentNotExistsAttendUsers(attendRelease.getAttendReleaseId(), attendRelease.getOrganizeId());
+                if (records.isNotEmpty()) {
+                    List<Student> students = records.into(Student.class);
+                    List<AttendUsers> attendUsers = new ArrayList<>();
+                    for (Student student : students) {
+                        AttendUsers au = new AttendUsers();
+                        au.setAttendUsersId(UUIDUtil.getUUID());
+                        au.setAttendReleaseId(attendReleaseId);
+                        au.setStudentId(student.getStudentId());
+                        au.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                        attendUsers.add(au);
+                    }
+                    attendUsersService.batchSave(attendUsers);
                 }
-                attendUsersService.batchSave(attendUsers);
-            }
 
-            ajaxUtil.success().msg("重置成功");
+                ajaxUtil.success().msg("重置成功");
+            } else {
+                ajaxUtil.fail().msg("您无权限操作");
+            }
         } else {
             ajaxUtil.fail().msg("根据发布表ID未查询到发布数据");
         }
@@ -186,13 +222,24 @@ public class AttendUsersApiController {
      * @return true or false
      */
     @PostMapping("/api/attend/users/remark")
-    public ResponseEntity<Map<String, Object>> remark(@RequestParam("attendUsersId") String attendUsersId, String remark) {
+    public ResponseEntity<Map<String, Object>> remark(@RequestParam("attendUsersId") String attendUsersId, String remark, Principal principal) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         AttendUsers attendUsers = attendUsersService.findById(attendUsersId);
         if (Objects.nonNull(attendUsers)) {
-            attendUsers.setRemark(remark);
-            attendUsersService.update(attendUsers);
-            ajaxUtil.success().msg("更新成功");
+            AttendRelease attendRelease = attendReleaseService.findById(attendUsers.getAttendReleaseId());
+            if (Objects.nonNull(attendRelease)) {
+                Users users = usersService.getUserFromOauth(principal);
+                if (roleService.isOauthUserInRole(Workbook.authorities.ROLE_SYSTEM.name(), principal) ||
+                        (Objects.nonNull(users) && StringUtils.equals(users.getUsername(), attendRelease.getUsername()))) {
+                    attendUsers.setRemark(remark);
+                    attendUsersService.update(attendUsers);
+                    ajaxUtil.success().msg("更新成功");
+                } else {
+                    ajaxUtil.fail().msg("您无权限操作");
+                }
+            } else {
+                ajaxUtil.fail().msg("根据签到主表ID未查询到发布信息");
+            }
         } else {
             ajaxUtil.fail().msg("根据名单ID未查询到名单数据");
         }

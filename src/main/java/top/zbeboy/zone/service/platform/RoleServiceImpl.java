@@ -11,6 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,7 @@ import top.zbeboy.zone.service.util.SQLQueryUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
 import javax.annotation.Resource;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -131,6 +133,14 @@ public class RoleServiceImpl implements RoleService, PaginationPlugin<DataTables
                 UserDetails springSecurityUser = (UserDetails) authentication.getPrincipal();
                 return springSecurityUser.getAuthorities().contains(new SimpleGrantedAuthority(role));
             }
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean isOauthUserInRole(String role, Principal principal) {
+        if (Objects.nonNull(principal)) {
+            return ((OAuth2Authentication) principal).getUserAuthentication().getAuthorities().contains(new SimpleGrantedAuthority(role));
         }
         return false;
     }

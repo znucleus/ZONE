@@ -1,5 +1,6 @@
 package top.zbeboy.zone.api.attend;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.springframework.http.HttpStatus;
@@ -8,11 +9,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.service.attend.AttendReleaseService;
 import top.zbeboy.zone.service.attend.AttendReleaseSubService;
 import top.zbeboy.zone.service.attend.AttendUsersService;
 import top.zbeboy.zone.service.data.StudentService;
+import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
@@ -49,6 +52,9 @@ public class AttendReleaseApiController {
 
     @Resource
     private StudentService studentService;
+
+    @Resource
+    private RoleService roleService;
 
     /**
      * 保存
@@ -159,53 +165,59 @@ public class AttendReleaseApiController {
      * @return true or false
      */
     @PostMapping("/api/attend/update")
-    public ResponseEntity<Map<String, Object>> update(@Valid AttendReleaseEditVo attendReleaseEditVo, BindingResult bindingResult) {
+    public ResponseEntity<Map<String, Object>> update(@Valid AttendReleaseEditVo attendReleaseEditVo, BindingResult bindingResult, Principal principal) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
 
         if (!bindingResult.hasErrors()) {
             // 更新子表
             AttendReleaseSub attendReleaseSub = attendReleaseSubService.findById(attendReleaseEditVo.getAttendReleaseSubId());
             if (Objects.nonNull(attendReleaseSub)) {
-                attendReleaseSub.setTitle(attendReleaseEditVo.getTitle());
-                attendReleaseSub.setIsAuto(ByteUtil.toByte(1).equals(attendReleaseEditVo.getIsAuto()) ? ByteUtil.toByte(1) : ByteUtil.toByte(0));
+                Users users = usersService.getUserFromOauth(principal);
+                if (roleService.isOauthUserInRole(Workbook.authorities.ROLE_SYSTEM.name(), principal) ||
+                        (Objects.nonNull(users) && StringUtils.equals(users.getUsername(), attendReleaseSub.getUsername()))) {
+                    attendReleaseSub.setTitle(attendReleaseEditVo.getTitle());
+                    attendReleaseSub.setIsAuto(ByteUtil.toByte(1).equals(attendReleaseEditVo.getIsAuto()) ? ByteUtil.toByte(1) : ByteUtil.toByte(0));
 
-                // 选择自动生成
-                if (BooleanUtil.toBoolean(attendReleaseEditVo.getIsAuto())) {
-                    // 如果生效时间是未来，这个签到开始，结束时间，日期必须是生效时间日期
-                    String attendStartTimeSuffix = attendReleaseEditVo.getAttendStartTime().split(" ")[1];
-                    String attendEndTimeSuffix = attendReleaseEditVo.getAttendEndTime().split(" ")[1];
-                    String validDatePrefix = attendReleaseEditVo.getValidDate().split(" ")[0];
+                    // 选择自动生成
+                    if (BooleanUtil.toBoolean(attendReleaseEditVo.getIsAuto())) {
+                        // 如果生效时间是未来，这个签到开始，结束时间，日期必须是生效时间日期
+                        String attendStartTimeSuffix = attendReleaseEditVo.getAttendStartTime().split(" ")[1];
+                        String attendEndTimeSuffix = attendReleaseEditVo.getAttendEndTime().split(" ")[1];
+                        String validDatePrefix = attendReleaseEditVo.getValidDate().split(" ")[0];
 
-                    attendReleaseSub.setAttendStartTime(DateTimeUtil.defaultParseSqlTimestamp(validDatePrefix + " " + attendStartTimeSuffix));
-                    attendReleaseSub.setAttendEndTime(DateTimeUtil.defaultParseSqlTimestamp(validDatePrefix + " " + attendEndTimeSuffix));
+                        attendReleaseSub.setAttendStartTime(DateTimeUtil.defaultParseSqlTimestamp(validDatePrefix + " " + attendStartTimeSuffix));
+                        attendReleaseSub.setAttendEndTime(DateTimeUtil.defaultParseSqlTimestamp(validDatePrefix + " " + attendEndTimeSuffix));
 
-                    attendReleaseSub.setValidDate(DateTimeUtil.defaultParseSqlTimestamp(attendReleaseEditVo.getValidDate()));
-                    attendReleaseSub.setExpireDate(DateTimeUtil.defaultParseSqlTimestamp(attendReleaseEditVo.getExpireDate()));
+                        attendReleaseSub.setValidDate(DateTimeUtil.defaultParseSqlTimestamp(attendReleaseEditVo.getValidDate()));
+                        attendReleaseSub.setExpireDate(DateTimeUtil.defaultParseSqlTimestamp(attendReleaseEditVo.getExpireDate()));
+                    } else {
+                        // 非自动生成，立即生效且失效
+                        attendReleaseSub.setValidDate(DateTimeUtil.getNowSqlTimestamp());
+                        attendReleaseSub.setExpireDate(DateTimeUtil.getNowSqlTimestamp());
+                        attendReleaseSub.setAttendStartTime(DateTimeUtil.defaultParseSqlTimestamp(attendReleaseEditVo.getAttendStartTime()));
+                        attendReleaseSub.setAttendEndTime(DateTimeUtil.defaultParseSqlTimestamp(attendReleaseEditVo.getAttendEndTime()));
+                    }
+
+                    attendReleaseSubService.update(attendReleaseSub);
+
+                    // 更新主表
+                    AttendRelease attendRelease = attendReleaseService.findById(attendReleaseSub.getAttendReleaseId());
+                    if (Objects.nonNull(attendRelease)) {
+                        attendRelease.setTitle(attendReleaseSub.getTitle());
+                        attendRelease.setIsAuto(attendReleaseSub.getIsAuto());
+                        attendRelease.setValidDate(attendReleaseSub.getValidDate());
+                        attendRelease.setExpireDate(attendReleaseSub.getExpireDate());
+                        attendRelease.setAttendStartTime(attendReleaseSub.getAttendStartTime());
+                        attendRelease.setAttendEndTime(attendReleaseSub.getAttendEndTime());
+
+                        attendReleaseService.update(attendRelease);
+
+                        ajaxUtil.success().msg("更新成功");
+                    } else {
+                        ajaxUtil.fail().msg("根据ID未查询到签到发布主表数据");
+                    }
                 } else {
-                    // 非自动生成，立即生效且失效
-                    attendReleaseSub.setValidDate(DateTimeUtil.getNowSqlTimestamp());
-                    attendReleaseSub.setExpireDate(DateTimeUtil.getNowSqlTimestamp());
-                    attendReleaseSub.setAttendStartTime(DateTimeUtil.defaultParseSqlTimestamp(attendReleaseEditVo.getAttendStartTime()));
-                    attendReleaseSub.setAttendEndTime(DateTimeUtil.defaultParseSqlTimestamp(attendReleaseEditVo.getAttendEndTime()));
-                }
-
-                attendReleaseSubService.update(attendReleaseSub);
-
-                // 更新主表
-                AttendRelease attendRelease = attendReleaseService.findById(attendReleaseSub.getAttendReleaseId());
-                if (Objects.nonNull(attendRelease)) {
-                    attendRelease.setTitle(attendReleaseSub.getTitle());
-                    attendRelease.setIsAuto(attendReleaseSub.getIsAuto());
-                    attendRelease.setValidDate(attendReleaseSub.getValidDate());
-                    attendRelease.setExpireDate(attendReleaseSub.getExpireDate());
-                    attendRelease.setAttendStartTime(attendReleaseSub.getAttendStartTime());
-                    attendRelease.setAttendEndTime(attendReleaseSub.getAttendEndTime());
-
-                    attendReleaseService.update(attendRelease);
-
-                    ajaxUtil.success().msg("更新成功");
-                } else {
-                    ajaxUtil.fail().msg("根据ID未查询到签到发布主表数据");
+                    ajaxUtil.fail().msg("您无权限操作");
                 }
             } else {
                 ajaxUtil.fail().msg("根据ID未查询到签到发布子表数据");
