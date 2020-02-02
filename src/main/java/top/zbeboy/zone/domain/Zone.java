@@ -36,6 +36,21 @@ import top.zbeboy.zone.domain.tables.Course;
 import top.zbeboy.zone.domain.tables.Department;
 import top.zbeboy.zone.domain.tables.Files;
 import top.zbeboy.zone.domain.tables.Grade;
+import top.zbeboy.zone.domain.tables.GraduationPracticeCollege;
+import top.zbeboy.zone.domain.tables.GraduationPracticeCompany;
+import top.zbeboy.zone.domain.tables.GraduationPracticeUnify;
+import top.zbeboy.zone.domain.tables.InternshipApply;
+import top.zbeboy.zone.domain.tables.InternshipChangeCompanyHistory;
+import top.zbeboy.zone.domain.tables.InternshipChangeHistory;
+import top.zbeboy.zone.domain.tables.InternshipCollege;
+import top.zbeboy.zone.domain.tables.InternshipCompany;
+import top.zbeboy.zone.domain.tables.InternshipFile;
+import top.zbeboy.zone.domain.tables.InternshipJournal;
+import top.zbeboy.zone.domain.tables.InternshipJournalContent;
+import top.zbeboy.zone.domain.tables.InternshipRegulate;
+import top.zbeboy.zone.domain.tables.InternshipRelease;
+import top.zbeboy.zone.domain.tables.InternshipTeacherDistribution;
+import top.zbeboy.zone.domain.tables.InternshipType;
 import top.zbeboy.zone.domain.tables.Nation;
 import top.zbeboy.zone.domain.tables.OauthAccessToken;
 import top.zbeboy.zone.domain.tables.OauthApprovals;
@@ -83,7 +98,7 @@ import top.zbeboy.zone.domain.tables.UsersType;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Zone extends SchemaImpl {
 
-    private static final long serialVersionUID = -1795931267;
+    private static final long serialVersionUID = -1828715092;
 
     /**
      * The reference instance of <code>zone</code>
@@ -199,6 +214,81 @@ public class Zone extends SchemaImpl {
      * The table <code>zone.grade</code>.
      */
     public final Grade GRADE = top.zbeboy.zone.domain.tables.Grade.GRADE;
+
+    /**
+     * The table <code>zone.graduation_practice_college</code>.
+     */
+    public final GraduationPracticeCollege GRADUATION_PRACTICE_COLLEGE = top.zbeboy.zone.domain.tables.GraduationPracticeCollege.GRADUATION_PRACTICE_COLLEGE;
+
+    /**
+     * The table <code>zone.graduation_practice_company</code>.
+     */
+    public final GraduationPracticeCompany GRADUATION_PRACTICE_COMPANY = top.zbeboy.zone.domain.tables.GraduationPracticeCompany.GRADUATION_PRACTICE_COMPANY;
+
+    /**
+     * The table <code>zone.graduation_practice_unify</code>.
+     */
+    public final GraduationPracticeUnify GRADUATION_PRACTICE_UNIFY = top.zbeboy.zone.domain.tables.GraduationPracticeUnify.GRADUATION_PRACTICE_UNIFY;
+
+    /**
+     * The table <code>zone.internship_apply</code>.
+     */
+    public final InternshipApply INTERNSHIP_APPLY = top.zbeboy.zone.domain.tables.InternshipApply.INTERNSHIP_APPLY;
+
+    /**
+     * The table <code>zone.internship_change_company_history</code>.
+     */
+    public final InternshipChangeCompanyHistory INTERNSHIP_CHANGE_COMPANY_HISTORY = top.zbeboy.zone.domain.tables.InternshipChangeCompanyHistory.INTERNSHIP_CHANGE_COMPANY_HISTORY;
+
+    /**
+     * The table <code>zone.internship_change_history</code>.
+     */
+    public final InternshipChangeHistory INTERNSHIP_CHANGE_HISTORY = top.zbeboy.zone.domain.tables.InternshipChangeHistory.INTERNSHIP_CHANGE_HISTORY;
+
+    /**
+     * The table <code>zone.internship_college</code>.
+     */
+    public final InternshipCollege INTERNSHIP_COLLEGE = top.zbeboy.zone.domain.tables.InternshipCollege.INTERNSHIP_COLLEGE;
+
+    /**
+     * The table <code>zone.internship_company</code>.
+     */
+    public final InternshipCompany INTERNSHIP_COMPANY = top.zbeboy.zone.domain.tables.InternshipCompany.INTERNSHIP_COMPANY;
+
+    /**
+     * The table <code>zone.internship_file</code>.
+     */
+    public final InternshipFile INTERNSHIP_FILE = top.zbeboy.zone.domain.tables.InternshipFile.INTERNSHIP_FILE;
+
+    /**
+     * The table <code>zone.internship_journal</code>.
+     */
+    public final InternshipJournal INTERNSHIP_JOURNAL = top.zbeboy.zone.domain.tables.InternshipJournal.INTERNSHIP_JOURNAL;
+
+    /**
+     * The table <code>zone.internship_journal_content</code>.
+     */
+    public final InternshipJournalContent INTERNSHIP_JOURNAL_CONTENT = top.zbeboy.zone.domain.tables.InternshipJournalContent.INTERNSHIP_JOURNAL_CONTENT;
+
+    /**
+     * The table <code>zone.internship_regulate</code>.
+     */
+    public final InternshipRegulate INTERNSHIP_REGULATE = top.zbeboy.zone.domain.tables.InternshipRegulate.INTERNSHIP_REGULATE;
+
+    /**
+     * The table <code>zone.internship_release</code>.
+     */
+    public final InternshipRelease INTERNSHIP_RELEASE = top.zbeboy.zone.domain.tables.InternshipRelease.INTERNSHIP_RELEASE;
+
+    /**
+     * The table <code>zone.internship_teacher_distribution</code>.
+     */
+    public final InternshipTeacherDistribution INTERNSHIP_TEACHER_DISTRIBUTION = top.zbeboy.zone.domain.tables.InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION;
+
+    /**
+     * The table <code>zone.internship_type</code>.
+     */
+    public final InternshipType INTERNSHIP_TYPE = top.zbeboy.zone.domain.tables.InternshipType.INTERNSHIP_TYPE;
 
     /**
      * The table <code>zone.nation</code>.
@@ -404,6 +494,21 @@ public class Zone extends SchemaImpl {
             Department.DEPARTMENT,
             Files.FILES,
             Grade.GRADE,
+            GraduationPracticeCollege.GRADUATION_PRACTICE_COLLEGE,
+            GraduationPracticeCompany.GRADUATION_PRACTICE_COMPANY,
+            GraduationPracticeUnify.GRADUATION_PRACTICE_UNIFY,
+            InternshipApply.INTERNSHIP_APPLY,
+            InternshipChangeCompanyHistory.INTERNSHIP_CHANGE_COMPANY_HISTORY,
+            InternshipChangeHistory.INTERNSHIP_CHANGE_HISTORY,
+            InternshipCollege.INTERNSHIP_COLLEGE,
+            InternshipCompany.INTERNSHIP_COMPANY,
+            InternshipFile.INTERNSHIP_FILE,
+            InternshipJournal.INTERNSHIP_JOURNAL,
+            InternshipJournalContent.INTERNSHIP_JOURNAL_CONTENT,
+            InternshipRegulate.INTERNSHIP_REGULATE,
+            InternshipRelease.INTERNSHIP_RELEASE,
+            InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION,
+            InternshipType.INTERNSHIP_TYPE,
             Nation.NATION,
             OauthAccessToken.OAUTH_ACCESS_TOKEN,
             OauthApprovals.OAUTH_APPROVALS,

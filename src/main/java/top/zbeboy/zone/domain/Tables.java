@@ -28,6 +28,21 @@ import top.zbeboy.zone.domain.tables.Course;
 import top.zbeboy.zone.domain.tables.Department;
 import top.zbeboy.zone.domain.tables.Files;
 import top.zbeboy.zone.domain.tables.Grade;
+import top.zbeboy.zone.domain.tables.GraduationPracticeCollege;
+import top.zbeboy.zone.domain.tables.GraduationPracticeCompany;
+import top.zbeboy.zone.domain.tables.GraduationPracticeUnify;
+import top.zbeboy.zone.domain.tables.InternshipApply;
+import top.zbeboy.zone.domain.tables.InternshipChangeCompanyHistory;
+import top.zbeboy.zone.domain.tables.InternshipChangeHistory;
+import top.zbeboy.zone.domain.tables.InternshipCollege;
+import top.zbeboy.zone.domain.tables.InternshipCompany;
+import top.zbeboy.zone.domain.tables.InternshipFile;
+import top.zbeboy.zone.domain.tables.InternshipJournal;
+import top.zbeboy.zone.domain.tables.InternshipJournalContent;
+import top.zbeboy.zone.domain.tables.InternshipRegulate;
+import top.zbeboy.zone.domain.tables.InternshipRelease;
+import top.zbeboy.zone.domain.tables.InternshipTeacherDistribution;
+import top.zbeboy.zone.domain.tables.InternshipType;
 import top.zbeboy.zone.domain.tables.Nation;
 import top.zbeboy.zone.domain.tables.OauthAccessToken;
 import top.zbeboy.zone.domain.tables.OauthApprovals;
@@ -184,6 +199,81 @@ public class Tables {
      * The table <code>zone.grade</code>.
      */
     public static final Grade GRADE = Grade.GRADE;
+
+    /**
+     * The table <code>zone.graduation_practice_college</code>.
+     */
+    public static final GraduationPracticeCollege GRADUATION_PRACTICE_COLLEGE = GraduationPracticeCollege.GRADUATION_PRACTICE_COLLEGE;
+
+    /**
+     * The table <code>zone.graduation_practice_company</code>.
+     */
+    public static final GraduationPracticeCompany GRADUATION_PRACTICE_COMPANY = GraduationPracticeCompany.GRADUATION_PRACTICE_COMPANY;
+
+    /**
+     * The table <code>zone.graduation_practice_unify</code>.
+     */
+    public static final GraduationPracticeUnify GRADUATION_PRACTICE_UNIFY = GraduationPracticeUnify.GRADUATION_PRACTICE_UNIFY;
+
+    /**
+     * The table <code>zone.internship_apply</code>.
+     */
+    public static final InternshipApply INTERNSHIP_APPLY = InternshipApply.INTERNSHIP_APPLY;
+
+    /**
+     * The table <code>zone.internship_change_company_history</code>.
+     */
+    public static final InternshipChangeCompanyHistory INTERNSHIP_CHANGE_COMPANY_HISTORY = InternshipChangeCompanyHistory.INTERNSHIP_CHANGE_COMPANY_HISTORY;
+
+    /**
+     * The table <code>zone.internship_change_history</code>.
+     */
+    public static final InternshipChangeHistory INTERNSHIP_CHANGE_HISTORY = InternshipChangeHistory.INTERNSHIP_CHANGE_HISTORY;
+
+    /**
+     * The table <code>zone.internship_college</code>.
+     */
+    public static final InternshipCollege INTERNSHIP_COLLEGE = InternshipCollege.INTERNSHIP_COLLEGE;
+
+    /**
+     * The table <code>zone.internship_company</code>.
+     */
+    public static final InternshipCompany INTERNSHIP_COMPANY = InternshipCompany.INTERNSHIP_COMPANY;
+
+    /**
+     * The table <code>zone.internship_file</code>.
+     */
+    public static final InternshipFile INTERNSHIP_FILE = InternshipFile.INTERNSHIP_FILE;
+
+    /**
+     * The table <code>zone.internship_journal</code>.
+     */
+    public static final InternshipJournal INTERNSHIP_JOURNAL = InternshipJournal.INTERNSHIP_JOURNAL;
+
+    /**
+     * The table <code>zone.internship_journal_content</code>.
+     */
+    public static final InternshipJournalContent INTERNSHIP_JOURNAL_CONTENT = InternshipJournalContent.INTERNSHIP_JOURNAL_CONTENT;
+
+    /**
+     * The table <code>zone.internship_regulate</code>.
+     */
+    public static final InternshipRegulate INTERNSHIP_REGULATE = InternshipRegulate.INTERNSHIP_REGULATE;
+
+    /**
+     * The table <code>zone.internship_release</code>.
+     */
+    public static final InternshipRelease INTERNSHIP_RELEASE = InternshipRelease.INTERNSHIP_RELEASE;
+
+    /**
+     * The table <code>zone.internship_teacher_distribution</code>.
+     */
+    public static final InternshipTeacherDistribution INTERNSHIP_TEACHER_DISTRIBUTION = InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION;
+
+    /**
+     * The table <code>zone.internship_type</code>.
+     */
+    public static final InternshipType INTERNSHIP_TYPE = InternshipType.INTERNSHIP_TYPE;
 
     /**
      * The table <code>zone.nation</code>.
