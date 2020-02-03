@@ -42,12 +42,19 @@ public class AttendUsersServiceImpl implements AttendUsersService {
     }
 
     @Override
-    public List<AttendUsers> findByAttendReleaseId(String attendReleaseId) {
-        return attendUsersDao.fetchByAttendReleaseId(attendReleaseId);
+    public Result<Record> findByAttendReleaseIdRelation(String attendReleaseId) {
+        return create.select()
+                .from(ATTEND_USERS)
+                .leftJoin(STUDENT)
+                .on(ATTEND_USERS.STUDENT_ID.eq(STUDENT.STUDENT_ID))
+                .leftJoin(USERS)
+                .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                .where(ATTEND_USERS.ATTEND_RELEASE_ID.eq(attendReleaseId))
+                .fetch();
     }
 
     @Override
-    public Result<Record11<String, String, Timestamp, String, Integer, String, String, String, String, Timestamp, String>> findByAttendReleaseIdRelation(String attendReleaseId) {
+    public Result<Record11<String, String, Timestamp, String, Integer, String, String, String, String, Timestamp, String>> findByAttendReleaseIdAndAttendReleaseSubId(String attendReleaseId, int attendReleaseSubId) {
         return create.select(ATTEND_USERS.ATTEND_USERS_ID,ATTEND_USERS.ATTEND_RELEASE_ID,
                 ATTEND_USERS.CREATE_DATE,ATTEND_USERS.REMARK,ATTEND_USERS.STUDENT_ID,
                 STUDENT.STUDENT_NUMBER,USERS.REAL_NAME,ATTEND_DATA.LOCATION,ATTEND_DATA.ADDRESS,
@@ -59,7 +66,7 @@ public class AttendUsersServiceImpl implements AttendUsersService {
                 .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                 .leftJoin(ATTEND_DATA)
                 .on(ATTEND_USERS.ATTEND_USERS_ID.eq(ATTEND_DATA.ATTEND_USERS_ID))
-                .where(ATTEND_USERS.ATTEND_RELEASE_ID.eq(attendReleaseId)).fetch();
+                .where(ATTEND_USERS.ATTEND_RELEASE_ID.eq(attendReleaseId).and(ATTEND_DATA.ATTEND_RELEASE_SUB_ID.eq(attendReleaseSubId))).fetch();
     }
 
     @Override

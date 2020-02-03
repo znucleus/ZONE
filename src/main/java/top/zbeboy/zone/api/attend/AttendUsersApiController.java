@@ -79,8 +79,14 @@ public class AttendUsersApiController {
                 if (records.isNotEmpty()) {
                     attendUsers = records.into(AttendUsersBean.class);
                 }
+            } else if(type == 3){
+                // 统计中数据
+                Result<Record11<String, String, Timestamp, String, Integer, String, String, String, String, Timestamp, String>> records = attendUsersService.findByAttendReleaseIdAndAttendReleaseSubId(attendReleaseSub.getAttendReleaseId(), attendReleaseSubId);
+                if (records.isNotEmpty()) {
+                    attendUsers = records.into(AttendUsersBean.class);
+                }
             } else {
-                Result<Record11<String, String, Timestamp, String, Integer, String, String, String, String, Timestamp, String>> records = attendUsersService.findByAttendReleaseIdRelation(attendReleaseSub.getAttendReleaseId());
+                Result<Record> records = attendUsersService.findByAttendReleaseIdRelation(attendReleaseSub.getAttendReleaseId());
                 if (records.isNotEmpty()) {
                     attendUsers = records.into(AttendUsersBean.class);
                 }

@@ -25,14 +25,14 @@ public interface AttendUsersService {
      *
      * @return 数据
      */
-    List<AttendUsers> findByAttendReleaseId(String attendReleaseId);
+    Result<Record> findByAttendReleaseIdRelation(String attendReleaseId);
 
     /**
      * 根据发布表id查询名单数据
      *
      * @return 数据
      */
-    Result<Record11<String, String, Timestamp, String, Integer, String, String, String, String, Timestamp, String>> findByAttendReleaseIdRelation(String attendReleaseId);
+    Result<Record11<String, String, Timestamp, String, Integer, String, String, String, String, Timestamp, String>> findByAttendReleaseIdAndAttendReleaseSubId(String attendReleaseId, int attendReleaseSubId);
 
     /**
      * 通过发布表id和学生id查询
