@@ -65,8 +65,8 @@ public class AttendUsersServiceImpl implements AttendUsersService {
                 .leftJoin(USERS)
                 .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                 .leftJoin(ATTEND_DATA)
-                .on(ATTEND_USERS.ATTEND_USERS_ID.eq(ATTEND_DATA.ATTEND_USERS_ID))
-                .where(ATTEND_USERS.ATTEND_RELEASE_ID.eq(attendReleaseId).and(ATTEND_DATA.ATTEND_RELEASE_SUB_ID.eq(attendReleaseSubId))).fetch();
+                .on(ATTEND_USERS.ATTEND_USERS_ID.eq(ATTEND_DATA.ATTEND_USERS_ID).and(ATTEND_DATA.ATTEND_RELEASE_SUB_ID.eq(attendReleaseSubId)))
+                .where(ATTEND_USERS.ATTEND_RELEASE_ID.eq(attendReleaseId)).fetch();
     }
 
     @Override

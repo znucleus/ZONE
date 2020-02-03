@@ -33,6 +33,7 @@ requirejs.config({
         "jquery.entropizer": web_path + "/plugins/jquery-entropizer/js/jquery-entropizer.min",
         "entropizer": web_path + "/plugins/jquery-entropizer/js/entropizer.min",
         "check.all": web_path + "/plugins/checkall/checkall.min",
+        "jquery-labelauty": web_path + "/plugins/jquery-labelauty/jquery-labelauty.min",
         "responsive.bootstrap4": web_path + "/plugins/datatables/js/responsive.bootstrap4.min",
         "datatables.net-responsive": web_path + "/plugins/datatables/js/dataTables.responsive.min",
         "datatables.net": web_path + "/plugins/datatables/js/jquery.dataTables.min",
@@ -84,6 +85,9 @@ requirejs.config({
         },
         "check.all": {
             deps: ["jquery"]
+        },
+        "jquery-labelauty": {
+            deps: ["jquery", "css!" + web_path + "/plugins/jquery-labelauty/jquery-labelauty.min"]
         },
         "responsive.bootstrap4": {
             deps: ["datatables.net-responsive", "datatables.net-bs4", "datatables.net", "css!" + web_path + "/plugins/datatables/css/dataTables.bootstrap4.min",
