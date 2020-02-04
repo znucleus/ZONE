@@ -1,6 +1,6 @@
 //# sourceURL=internship_release.js
-require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "messenger", "jquery.address", "jquery.simple-pagination", "jquery-labelauty"],
-    function ($, _, tools, Handlebars, Swal) {
+require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2", "messenger", "jquery.address", "jquery.simple-pagination", "jquery-labelauty"],
+    function ($, _, tools, Handlebars, navActive, Swal) {
 
         /*
          ajax url.
@@ -9,8 +9,11 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "messenger", 
             data: web_path + '/web/internship/release/data',
             add: '/web/internship/release/add',
             edit: '/web/internship/release/edit',
-            status: web_path + '/web/internship/release/status'
+            status: web_path + '/web/internship/release/status',
+            page: '/web/menu/internship/release'
         };
+
+        navActive(ajax_url.page);
 
         /*
          参数
