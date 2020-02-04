@@ -44,7 +44,7 @@ CREATE TABLE attend_users(
 CREATE TABLE attend_data(
  attend_users_id VARCHAR(64) NOT NULL,
  attend_release_sub_id INT NOT NULL,
- location VARCHAR(30),
+ location VARCHAR(200),
  address VARCHAR(300),
  attend_date TIMESTAMP NOT NULL,
  attend_remark VARCHAR(200),

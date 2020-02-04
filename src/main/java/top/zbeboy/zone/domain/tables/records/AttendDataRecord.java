@@ -32,7 +32,7 @@ import top.zbeboy.zone.domain.tables.AttendData;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AttendDataRecord extends UpdatableRecordImpl<AttendDataRecord> implements Record6<String, Integer, String, String, Timestamp, String> {
 
-    private static final long serialVersionUID = -2018448782;
+    private static final long serialVersionUID = -1875302925;
 
     /**
      * Setter for <code>zone.attend_data.attend_users_id</code>.
@@ -75,7 +75,7 @@ public class AttendDataRecord extends UpdatableRecordImpl<AttendDataRecord> impl
     /**
      * Getter for <code>zone.attend_data.location</code>.
      */
-    @Size(max = 30)
+    @Size(max = 200)
     public String getLocation() {
         return (String) get(2);
     }

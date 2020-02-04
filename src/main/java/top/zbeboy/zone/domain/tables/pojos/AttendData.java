@@ -25,7 +25,7 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AttendData implements Serializable {
 
-    private static final long serialVersionUID = -206973119;
+    private static final long serialVersionUID = -1387360028;
 
     private String    attendUsersId;
     private Integer   attendReleaseSubId;
@@ -80,7 +80,7 @@ public class AttendData implements Serializable {
         this.attendReleaseSubId = attendReleaseSubId;
     }
 
-    @Size(max = 30)
+    @Size(max = 200)
     public String getLocation() {
         return this.location;
     }

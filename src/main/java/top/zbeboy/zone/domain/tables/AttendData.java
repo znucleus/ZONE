@@ -42,7 +42,7 @@ import top.zbeboy.zone.domain.tables.records.AttendDataRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AttendData extends TableImpl<AttendDataRecord> {
 
-    private static final long serialVersionUID = 1249975686;
+    private static final long serialVersionUID = -418557905;
 
     /**
      * The reference instance of <code>zone.attend_data</code>
@@ -70,7 +70,7 @@ public class AttendData extends TableImpl<AttendDataRecord> {
     /**
      * The column <code>zone.attend_data.location</code>.
      */
-    public final TableField<AttendDataRecord, String> LOCATION = createField(DSL.name("location"), org.jooq.impl.SQLDataType.VARCHAR(30), this, "");
+    public final TableField<AttendDataRecord, String> LOCATION = createField(DSL.name("location"), org.jooq.impl.SQLDataType.VARCHAR(200), this, "");
 
     /**
      * The column <code>zone.attend_data.address</code>.
