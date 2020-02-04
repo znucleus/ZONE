@@ -127,6 +127,7 @@ public class AttendUsersApiController {
                                 attendUsers.setAttendReleaseId(attendUsersAddVo.getAttendReleaseId());
                                 attendUsers.setStudentId(student.getStudentId());
                                 attendUsers.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                                attendUsers.setRemark(attendUsersAddVo.getRemark());
 
                                 attendUsersService.save(attendUsers);
 
