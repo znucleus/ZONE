@@ -79,7 +79,7 @@ public class AttendUsersApiController {
                 if (records.isNotEmpty()) {
                     attendUsers = records.into(AttendUsersBean.class);
                 }
-            } else if(type == 3){
+            } else if (type == 3) {
                 // 统计中数据
                 Result<Record11<String, String, Timestamp, String, Integer, String, String, String, String, Timestamp, String>> records = attendUsersService.findByAttendReleaseIdAndAttendReleaseSubId(attendReleaseSub.getAttendReleaseId(), attendReleaseSubId);
                 if (records.isNotEmpty()) {
@@ -110,8 +110,9 @@ public class AttendUsersApiController {
     public ResponseEntity<Map<String, Object>> save(@Valid AttendUsersAddVo attendUsersAddVo, BindingResult bindingResult, Principal principal) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
-            Student student = studentService.findByStudentNumber(attendUsersAddVo.getStudentNumber());
-            if (Objects.nonNull(student)) {
+            Optional<Record> studentRecord = studentService.findNormalByStudentNumberRelation(attendUsersAddVo.getStudentNumber());
+            if (studentRecord.isPresent()) {
+                Student student = studentRecord.get().into(Student.class);
                 AttendRelease attendRelease = attendReleaseService.findById(attendUsersAddVo.getAttendReleaseId());
                 if (Objects.nonNull(attendRelease)) {
                     Users users = usersService.getUserFromOauth(principal);
@@ -143,7 +144,7 @@ public class AttendUsersApiController {
                     ajaxUtil.fail().msg("根据签到主表ID未查询到发布信息");
                 }
             } else {
-                ajaxUtil.fail().msg("根据学号未查询到学生信息");
+                ajaxUtil.fail().msg("未查询到学生信息或账号状态不正常");
             }
         } else {
             ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
