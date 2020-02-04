@@ -2,6 +2,7 @@ package top.zbeboy.zone.service.internship;
 
 import org.jooq.Record;
 import org.jooq.Result;
+import top.zbeboy.zone.domain.tables.pojos.InternshipRelease;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
 public interface InternshipReleaseService {
@@ -20,4 +21,11 @@ public interface InternshipReleaseService {
      * @return 总数
      */
     int countAll(SimplePaginationUtil paginationUtil);
+
+    /**
+     * 保存
+     *
+     * @param internshipRelease 数据
+     */
+    void save(InternshipRelease internshipRelease);
 }

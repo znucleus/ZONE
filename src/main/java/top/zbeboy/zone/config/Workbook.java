@@ -133,4 +133,13 @@ public final class Workbook {
     public static String avatarPath(Users users) {
         return USERS_PORTFOLIOS + users.getUsername() + DIRECTORY_SPLIT + "avatar" + DIRECTORY_SPLIT;
     }
+
+    /**
+     * 实习文件路径
+     *
+     * @return 路径
+     */
+    public static String internshipFilePath() {
+        return FILES_PORTFOLIOS + "internship" + DIRECTORY_SPLIT;
+    }
 }

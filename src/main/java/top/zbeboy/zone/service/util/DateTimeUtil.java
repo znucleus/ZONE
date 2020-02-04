@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 
 public class DateTimeUtil {
 
@@ -238,5 +239,15 @@ public class DateTimeUtil {
      */
     public static String getLocalDateTime(String format) {
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern(format));
+    }
+
+    /**
+     * 得到当前年份
+     *
+     * @return 年份
+     */
+    public static int getNowYear() {
+        Calendar calendar = Calendar.getInstance();
+        return calendar.get(Calendar.YEAR);
     }
 }

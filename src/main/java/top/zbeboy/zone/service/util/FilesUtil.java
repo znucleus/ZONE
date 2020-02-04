@@ -6,7 +6,6 @@ import org.apache.commons.compress.archivers.zip.ZipMethod;
 import org.springframework.util.ObjectUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,17 +14,14 @@ public class FilesUtil {
      * 删除硬盘上的文件
      *
      * @param path 文件路径
-     * @return true 删除成功，false 删除失败或路径为空，文件不存在
-     * @throws IOException
      */
-    public static boolean deleteFile(String path) throws IOException {
+    public static void deleteFile(String path) {
         if (!Objects.isNull(path) && !Objects.equals("", path.trim())) {
             File file = new File(path);
             if (file.exists()) {
-                return file.delete();
+                file.delete();
             }
         }
-        return false;
     }
 
     /**
@@ -38,9 +34,9 @@ public class FilesUtil {
         String str;
         if (size < 1024) {
             str = size + "B";
-        } else if (size >= 1024 && size < 1024 * 1024) {
+        } else if (size < 1024 * 1024) {
             str = (size / 1024) + "KB";
-        } else if (size >= 1024 * 1024 && size < 1024 * 1024 * 1024) {
+        } else if (size < 1024 * 1024 * 1024) {
             str = (size / (1024 * 1024)) + "MB";
         } else {
             str = (size / (1024 * 1024 * 1024)) + "GB";

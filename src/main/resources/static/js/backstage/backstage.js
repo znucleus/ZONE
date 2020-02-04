@@ -37,7 +37,12 @@ requirejs.config({
         "responsive.bootstrap4": web_path + "/plugins/datatables/js/responsive.bootstrap4.min",
         "datatables.net-responsive": web_path + "/plugins/datatables/js/dataTables.responsive.min",
         "datatables.net": web_path + "/plugins/datatables/js/jquery.dataTables.min",
-        "datatables.net-bs4": web_path + "/plugins/datatables/js/dataTables.bootstrap4.min"
+        "datatables.net-bs4": web_path + "/plugins/datatables/js/dataTables.bootstrap4.min",
+        "jquery-ui/widget": web_path + "/plugins/jquery-file-upload/js/vendor/jquery.ui.widget.min",
+        "jquery.iframe-transport": web_path + "/plugins/jquery-file-upload/js/jquery.iframe-transport.min",
+        "jquery.fileupload-process": web_path + "/plugins/jquery-file-upload/js/jquery.fileupload-process.min",
+        "jquery.fileupload": web_path + "/plugins/jquery-file-upload/js/jquery.fileupload.min",
+        "jquery.fileupload-validate": web_path + "/plugins/jquery-file-upload/js/jquery.fileupload-validate.min"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -95,6 +100,21 @@ requirejs.config({
         },
         "bootstrap-treeview": {
             deps: ["jquery", "css!" + web_path + "/plugins/bootstrap-treeview/css/bootstrap-treeview.min"]
+        },
+        "jquery-ui/widget": {
+            deps: ["jquery"]
+        },
+        "jquery.iframe-transport": {
+            deps: ["jquery"]
+        },
+        "jquery.fileupload": {
+            deps: ["jquery-ui/widget", "jquery.iframe-transport"]
+        },
+        "jquery.fileupload-process": {
+            deps: ["jquery.fileupload"]
+        },
+        "jquery.fileupload-validate": {
+            deps: ["jquery.fileupload-process", "css!" + web_path + "/plugins/jquery-file-upload/css/jquery.fileupload.min"]
         }
     }
 });

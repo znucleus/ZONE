@@ -25,4 +25,11 @@ public interface FilesService {
      * @param files data.
      */
     void delete(Files files);
+
+    /**
+     * 通过主键删除
+     *
+     * @param id 主键
+     */
+    void deleteById(String id);
 }

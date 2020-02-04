@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zone.config.Workbook;
-import top.zbeboy.zone.domain.tables.Science;
-import top.zbeboy.zone.domain.tables.pojos.Department;
+import top.zbeboy.zone.domain.tables.daos.InternshipReleaseDao;
+import top.zbeboy.zone.domain.tables.pojos.InternshipRelease;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.service.data.StaffService;
@@ -26,7 +26,6 @@ import javax.annotation.Resource;
 import java.util.Objects;
 import java.util.Optional;
 
-import static org.jooq.impl.DSL.now;
 import static top.zbeboy.zone.domain.Tables.*;
 
 @Service("internshipReleaseService")
@@ -34,6 +33,9 @@ import static top.zbeboy.zone.domain.Tables.*;
 public class InternshipReleaseServiceImpl implements InternshipReleaseService, PaginationPlugin<SimplePaginationUtil> {
 
     private final DSLContext create;
+
+    @Resource
+    private InternshipReleaseDao internshipReleaseDao;
 
     @Resource
     private RoleService roleService;
@@ -59,15 +61,15 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService, P
     public Result<Record> findAllByPage(SimplePaginationUtil paginationUtil) {
         SelectOnConditionStep<Record> selectOnConditionStep = create.select()
                 .from(INTERNSHIP_RELEASE)
-                .join(SCIENCE)
+                .leftJoin(SCIENCE)
                 .on(INTERNSHIP_RELEASE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
-                .join(INTERNSHIP_TYPE)
+                .leftJoin(INTERNSHIP_TYPE)
                 .on(INTERNSHIP_TYPE.INTERNSHIP_TYPE_ID.eq(INTERNSHIP_RELEASE.INTERNSHIP_TYPE_ID))
-                .join(DEPARTMENT)
+                .leftJoin(DEPARTMENT)
                 .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
-                .join(COLLEGE)
+                .leftJoin(COLLEGE)
                 .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
-                .join(SCHOOL)
+                .leftJoin(SCHOOL)
                 .on(COLLEGE.COLLEGE_ID.eq(SCHOOL.SCHOOL_ID));
         return queryAllByPage(selectOnConditionStep, paginationUtil, false);
     }
@@ -76,17 +78,23 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService, P
     public int countAll(SimplePaginationUtil paginationUtil) {
         SelectOnConditionStep<Record1<Integer>> selectOnConditionStep = create.selectCount()
                 .from(INTERNSHIP_RELEASE)
-                .join(SCIENCE)
+                .leftJoin(SCIENCE)
                 .on(INTERNSHIP_RELEASE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
-                .join(INTERNSHIP_TYPE)
+                .leftJoin(INTERNSHIP_TYPE)
                 .on(INTERNSHIP_TYPE.INTERNSHIP_TYPE_ID.eq(INTERNSHIP_RELEASE.INTERNSHIP_TYPE_ID))
-                .join(DEPARTMENT)
+                .leftJoin(DEPARTMENT)
                 .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
-                .join(COLLEGE)
+                .leftJoin(COLLEGE)
                 .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
-                .join(SCHOOL)
+                .leftJoin(SCHOOL)
                 .on(COLLEGE.COLLEGE_ID.eq(SCHOOL.SCHOOL_ID));
         return countAll(selectOnConditionStep, paginationUtil, false);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void save(InternshipRelease internshipRelease) {
+        internshipReleaseDao.insert(internshipRelease);
     }
 
     @Override
@@ -95,8 +103,6 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService, P
         JSONObject search = paginationUtil.getSearch();
         if (Objects.nonNull(search)) {
             String internshipTitle = StringUtils.trim(search.getString("internshipTitle"));
-            String acceptUser = StringUtils.trim(search.getString("acceptUser"));
-            String isSee = StringUtils.trim(search.getString("isSee"));
             if (StringUtils.isNotBlank(internshipTitle)) {
                 a = INTERNSHIP_RELEASE.INTERNSHIP_TITLE.like(SQLQueryUtil.likeAllParam(internshipTitle));
             }

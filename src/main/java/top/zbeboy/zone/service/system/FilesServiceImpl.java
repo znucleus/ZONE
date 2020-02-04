@@ -30,4 +30,9 @@ public class FilesServiceImpl implements FilesService {
     public void delete(Files files) {
         filesDao.delete(files);
     }
+
+    @Override
+    public void deleteById(String id) {
+        filesDao.deleteById(id);
+    }
 }
