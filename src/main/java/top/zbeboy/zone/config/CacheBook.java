@@ -46,5 +46,6 @@ public final class CacheBook {
     签到业务
      */
     public static final String ATTEND_RELEASE_SUB = "ATTEND_RELEASE_SUB";
+    public static final String ATTEND_MAP_KEYS = "ATTEND_MAP_KEYS";
 
 }

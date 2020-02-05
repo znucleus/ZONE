@@ -1,6 +1,7 @@
 package top.zbeboy.zone.service.util;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.RandomUtils;
 
 public class RandomUtil {
 
@@ -62,5 +63,14 @@ public class RandomUtil {
      */
     public static String generateRoleEnName() {
         return RandomStringUtils.randomAlphabetic(ROLE_EN_NAME_COUNT);
+    }
+
+    /**
+     * Generates a index
+     *
+     * @return the index
+     */
+    public static int generateIndex(int start, int end) {
+        return RandomUtils.nextInt(start, end);
     }
 }
