@@ -250,4 +250,14 @@ public class DateTimeUtil {
         Calendar calendar = Calendar.getInstance();
         return calendar.get(Calendar.YEAR);
     }
+
+    /**
+     * 得到当前秒
+     *
+     * @return 秒
+     */
+    public static int getNowSecond() {
+        Calendar calendar = Calendar.getInstance();
+        return calendar.get(Calendar.SECOND);
+    }
 }
