@@ -52,3 +52,8 @@ CREATE TABLE attend_data(
  FOREIGN KEY(attend_release_sub_id) REFERENCES attend_release_sub(attend_release_sub_id) ON DELETE CASCADE,
  FOREIGN KEY(attend_users_id) REFERENCES attend_users(attend_users_id) ON DELETE CASCADE
 );
+
+CREATE TABLE attend_map_key(
+  id INT PRIMARY KEY,
+  map_key VARCHAR(100) NOT NULL UNIQUE
+);

@@ -15,6 +15,7 @@ import top.zbeboy.zone.domain.tables.AnswerSolving;
 import top.zbeboy.zone.domain.tables.AnswerSubject;
 import top.zbeboy.zone.domain.tables.Application;
 import top.zbeboy.zone.domain.tables.AttendData;
+import top.zbeboy.zone.domain.tables.AttendMapKey;
 import top.zbeboy.zone.domain.tables.AttendRelease;
 import top.zbeboy.zone.domain.tables.AttendReleaseSub;
 import top.zbeboy.zone.domain.tables.AttendUsers;
@@ -134,6 +135,11 @@ public class Tables {
      * The table <code>zone.attend_data</code>.
      */
     public static final AttendData ATTEND_DATA = AttendData.ATTEND_DATA;
+
+    /**
+     * The table <code>zone.attend_map_key</code>.
+     */
+    public static final AttendMapKey ATTEND_MAP_KEY = AttendMapKey.ATTEND_MAP_KEY;
 
     /**
      * The table <code>zone.attend_release</code>.

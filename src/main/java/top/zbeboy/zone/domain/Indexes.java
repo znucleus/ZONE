@@ -19,6 +19,7 @@ import top.zbeboy.zone.domain.tables.AnswerSolving;
 import top.zbeboy.zone.domain.tables.AnswerSubject;
 import top.zbeboy.zone.domain.tables.Application;
 import top.zbeboy.zone.domain.tables.AttendData;
+import top.zbeboy.zone.domain.tables.AttendMapKey;
 import top.zbeboy.zone.domain.tables.AttendRelease;
 import top.zbeboy.zone.domain.tables.AttendReleaseSub;
 import top.zbeboy.zone.domain.tables.AttendUsers;
@@ -114,6 +115,8 @@ public class Indexes {
     public static final Index APPLICATION_PRIMARY = Indexes0.APPLICATION_PRIMARY;
     public static final Index ATTEND_DATA_ATTEND_RELEASE_SUB_ID = Indexes0.ATTEND_DATA_ATTEND_RELEASE_SUB_ID;
     public static final Index ATTEND_DATA_PRIMARY = Indexes0.ATTEND_DATA_PRIMARY;
+    public static final Index ATTEND_MAP_KEY_MAP_KEY = Indexes0.ATTEND_MAP_KEY_MAP_KEY;
+    public static final Index ATTEND_MAP_KEY_PRIMARY = Indexes0.ATTEND_MAP_KEY_PRIMARY;
     public static final Index ATTEND_RELEASE_ORGANIZE_ID = Indexes0.ATTEND_RELEASE_ORGANIZE_ID;
     public static final Index ATTEND_RELEASE_PRIMARY = Indexes0.ATTEND_RELEASE_PRIMARY;
     public static final Index ATTEND_RELEASE_USERNAME = Indexes0.ATTEND_RELEASE_USERNAME;
@@ -282,6 +285,8 @@ public class Indexes {
         public static Index APPLICATION_PRIMARY = Internal.createIndex("PRIMARY", Application.APPLICATION, new OrderField[] { Application.APPLICATION.APPLICATION_ID }, true);
         public static Index ATTEND_DATA_ATTEND_RELEASE_SUB_ID = Internal.createIndex("attend_release_sub_id", AttendData.ATTEND_DATA, new OrderField[] { AttendData.ATTEND_DATA.ATTEND_RELEASE_SUB_ID }, false);
         public static Index ATTEND_DATA_PRIMARY = Internal.createIndex("PRIMARY", AttendData.ATTEND_DATA, new OrderField[] { AttendData.ATTEND_DATA.ATTEND_USERS_ID, AttendData.ATTEND_DATA.ATTEND_RELEASE_SUB_ID }, true);
+        public static Index ATTEND_MAP_KEY_MAP_KEY = Internal.createIndex("map_key", AttendMapKey.ATTEND_MAP_KEY, new OrderField[] { AttendMapKey.ATTEND_MAP_KEY.MAP_KEY }, true);
+        public static Index ATTEND_MAP_KEY_PRIMARY = Internal.createIndex("PRIMARY", AttendMapKey.ATTEND_MAP_KEY, new OrderField[] { AttendMapKey.ATTEND_MAP_KEY.ID }, true);
         public static Index ATTEND_RELEASE_ORGANIZE_ID = Internal.createIndex("organize_id", AttendRelease.ATTEND_RELEASE, new OrderField[] { AttendRelease.ATTEND_RELEASE.ORGANIZE_ID }, false);
         public static Index ATTEND_RELEASE_PRIMARY = Internal.createIndex("PRIMARY", AttendRelease.ATTEND_RELEASE, new OrderField[] { AttendRelease.ATTEND_RELEASE.ATTEND_RELEASE_ID }, true);
         public static Index ATTEND_RELEASE_USERNAME = Internal.createIndex("username", AttendRelease.ATTEND_RELEASE, new OrderField[] { AttendRelease.ATTEND_RELEASE.USERNAME }, false);
