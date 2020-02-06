@@ -8,12 +8,12 @@
     <div class="br-pageheader pd-y-15 pd-l-20">
         <nav class="breadcrumb pd-0 mg-0 tx-12">
             <a class="breadcrumb-item dy_href" href="#/web/menu/internship/release">列表</a>
-            <span class="breadcrumb-item active">添加</span>
+            <span class="breadcrumb-item active">编辑</span>
         </nav>
     </div><!-- br-pageheader -->
     <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
         <h4 class="tx-gray-800 mg-b-5">实习发布</h4>
-        <p class="mg-b-0">添加实习发布。</p>
+        <p class="mg-b-0">编辑实习发布。</p>
     </div>
 
     <div class="br-pagebody">
@@ -22,11 +22,15 @@
                 <div class="col-md-12">
                     <form id="app_form">
                         <div class="form-group">
-                            <select class="form-control select2-show-search" id="internshipType" name="internshipTypeId"
-                                    data-placeholder="请选择实习类型">
-                                <option label="请选择实习类型"></option>
-                            </select>
+                            <label>标题</label>
+                            <input class="form-control" name="internshipTitle" th:value="${internshipRelease.internshipTitle}"
+                                   id="internshipTitle" placeholder="标题" maxlength="100"/>
                             <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>实习类型</label>
+                            <input class="form-control" name="internshipTypeName"
+                                   th:value="${internshipRelease.internshipTypeName}" readonly="readonly"/>
                             <small id="internshipTypeHelp" class="form-text text-muted">注意：此字段保存后不可编辑</small>
                         </div>
                         <div class="form-group">
@@ -42,35 +46,33 @@
                             <small id="timeHelp" class="form-text text-muted">建议：实习申请时间应晚于指导教师分配时间</small>
                         </div>
                         <div class="form-group" sec:authorize="hasRole('ROLE_SYSTEM')">
-                            <select class="form-control select2-show-search" id="school"
-                                    data-placeholder="请选择学校">
-                                <option label="请选择学校"></option>
-                            </select>
-                            <div class="invalid-feedback"></div>
+                            <label>学校</label>
+                            <input class="form-control" name="schoolName" th:value="${internshipRelease.schoolName}"
+                                   readonly="readonly"/>
                         </div>
                         <div class="form-group" sec:authorize="hasRole('ROLE_SYSTEM')">
-                            <select class="form-control select2-show-search" id="college"
-                                    data-placeholder="请选择院">
-                                <option label="请选择院"></option>
-                            </select>
-                            <div class="invalid-feedback"></div>
+                            <label>院</label>
+                            <input class="form-control" name="collegeName" th:value="${internshipRelease.collegeName}"
+                                   readonly="readonly"/>
                         </div>
                         <div class="form-group">
-                            <select class="form-control select2-show-search" id="department" data-placeholder="请选择系">
-                                <option label="请选择系"></option>
-                            </select>
-                            <div class="invalid-feedback"></div>
+                            <label>系</label>
+                            <input class="form-control" name="departmentName"
+                                   th:value="${internshipRelease.departmentName}"
+                                   readonly="readonly"/>
                         </div>
                         <div class="form-group">
-                            <select class="form-control select2-show-search" id="science" data-placeholder="请选择专业">
-                                <option label="请选择专业"></option>
-                            </select>
-                            <div class="invalid-feedback"></div>
+                            <label>专业</label>
+                            <input class="form-control" name="scienceName" th:value="${internshipRelease.scienceName}"
+                                   readonly="readonly"/>
                             <small id="scienceHelp" class="form-text text-muted">注意：此字段保存后不可编辑</small>
                         </div>
                         <div class="form-group">
                             <label class="ckbox">
-                                <input type="checkbox" name="internshipReleaseIsDel" value="1"/>
+                                <input type="checkbox" name="internshipReleaseIsDel" value="1"
+                                       th:if="${internshipRelease.internshipReleaseIsDel == 0 || internshipRelease.internshipReleaseIsDel == null}"/>
+                                <input type="checkbox" name="internshipReleaseIsDel" value="1" checked="checked"
+                                       th:if="${internshipRelease.internshipReleaseIsDel == 1}"/>
                                 <span>注销</span>
                             </label>
                         </div>
@@ -117,19 +119,31 @@
         {{#each listResult}}
         <tr>
             <th scope="row" class="file" data-file-path="{{lastPath}}" data-original-file-name="{{originalFileName}}"
-                data-new-name="{{newName}}" data-ext="{{ext}}" data-size="{{fileSize}}" data-content-type="{{contentType}}">{{originalFileName}}.{{ext}}
+                data-new-name="{{newName}}" data-ext="{{ext}}" data-size="{{fileSize}}" data-content-type="{{contentType}}">
+                {{originalFileName}}.{{ext}}
             </th>
             <td>{{translationSize}}</td>
             <td>
-                <button type="button" class="btn btn-danger btn-sm clearFile" data-file-path="{{lastPath}}">删除</button>
+                <button type="button" class="btn btn-danger btn-sm clearFile" data-file-path="{{lastPath}}"
+                        data-original-file-name="{{originalFileName}}"
+                        data-file-id="{{fileId}}">删除
+                </button>
             </td>
         </tr>
         {{/each}}
     </script>
 
+    <input type="hidden" th:value="${internshipRelease.internshipReleaseId}"
+           id="paramInternshipReleaseId" />
+    <input type="hidden" th:value="${internshipRelease.teacherDistributionStartTimeStr}"
+           id="paramTeacherDistributionStartTime"/>
+    <input type="hidden" th:value="${internshipRelease.teacherDistributionEndTimeStr}"
+           id="paramTeacherDistributionEndTime"/>
+    <input type="hidden" th:value="${internshipRelease.startTimeStr}" id="paramStartTime"/>
+    <input type="hidden" th:value="${internshipRelease.endTimeStr}" id="paramEndTime"/>
     <input type="hidden" id="collegeId" th:value="${collegeId}"/>
     <input type="hidden" class="dy_script"
-           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/internship/release/internship_release_add.js')}"/>
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/internship/release/internship_release_edit.js')}"/>
 </div>
 <!-- /#page-wrapper -->
 </body>

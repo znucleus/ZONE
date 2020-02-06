@@ -85,6 +85,7 @@
             </div>
             <div class="card-footer text-right">
                 <div class="btn-group" role="group">
+                    {{#if canOperator}}
                     <button type="button" class="btn btn-primary edit" data-id="{{internshipReleaseId}}">编辑</button>
                     {{#if internshipReleaseIsDel}}
                     <button type="button" class="btn btn-outline-warning recovery" data-id="{{internshipReleaseId}}"
@@ -94,6 +95,7 @@
                     <button type="button" class="btn btn-outline-danger del" data-id="{{internshipReleaseId}}"
                             data-name="{{internshipTitle}}">注销
                     </button>
+                    {{/if}}
                     {{/if}}
                 </div>
             </div>

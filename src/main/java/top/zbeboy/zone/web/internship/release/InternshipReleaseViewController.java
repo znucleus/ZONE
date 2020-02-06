@@ -5,15 +5,19 @@ import org.jooq.Record;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.College;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
+import top.zbeboy.zone.service.internship.InternshipReleaseService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
+import top.zbeboy.zone.service.util.DateTimeUtil;
+import top.zbeboy.zone.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 
 import javax.annotation.Resource;
@@ -37,6 +41,9 @@ public class InternshipReleaseViewController {
 
     @Resource
     private StudentService studentService;
+
+    @Resource
+    private InternshipReleaseService internshipReleaseService;
 
     /**
      * 实习发布数据
@@ -94,6 +101,41 @@ public class InternshipReleaseViewController {
             modelMap.addAttribute("collegeId", 0);
             page = "web/internship/release/internship_release_add::#page-wrapper";
         }
+        return page;
+    }
+
+    /**
+     * 实习发布编辑
+     *
+     * @param id       实习发布id
+     * @param modelMap 页面对象
+     * @return 编辑页面
+     */
+    @GetMapping("/web/internship/release/edit/{id}")
+    public String edit(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        Optional<Record> record = internshipReleaseService.findByIdRelation(id);
+        if (record.isPresent()) {
+            InternshipReleaseBean bean = record.get().into(InternshipReleaseBean.class);
+            bean.setTeacherDistributionStartTimeStr(DateTimeUtil.formatSqlTimestamp(bean.getTeacherDistributionStartTime(), DateTimeUtil.YEAR_MONTH_DAY_FORMAT));
+            bean.setTeacherDistributionEndTimeStr(DateTimeUtil.formatSqlTimestamp(bean.getTeacherDistributionEndTime(), DateTimeUtil.YEAR_MONTH_DAY_FORMAT));
+            bean.setStartTimeStr(DateTimeUtil.formatSqlTimestamp(bean.getStartTime(), DateTimeUtil.YEAR_MONTH_DAY_FORMAT));
+            bean.setEndTimeStr(DateTimeUtil.formatSqlTimestamp(bean.getEndTime(), DateTimeUtil.YEAR_MONTH_DAY_FORMAT));
+            modelMap.addAttribute("internshipRelease", bean);
+            if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+                modelMap.addAttribute("collegeId", bean.getCollegeId());
+            } else {
+                modelMap.addAttribute("collegeId", 0);
+            }
+
+            page = "web/internship/release/internship_release_edit::#page-wrapper";
+        } else {
+            config.buildDangerTip("查询错误", "未查询到实习发布数据");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+
         return page;
     }
 }

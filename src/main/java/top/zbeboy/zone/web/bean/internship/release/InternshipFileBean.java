@@ -1,21 +1,14 @@
-package top.zbeboy.zone.service.upload;
+package top.zbeboy.zone.web.bean.internship.release;
 
-public class FileBean {
-    private String contentType;// 文件头信息
-    private Long fileSize;// 文件大小
-    private String originalFileName;// 文件原始名字
-    private String newName;// 文件新名字
-    private String lastPath;// 服务器端最后保存路径
-    private String relativePath;// 相对路径
-    private String ext;// 文件扩展名
+import top.zbeboy.zone.domain.tables.pojos.InternshipFile;
 
-    public String getContentType() {
-        return contentType;
-    }
-
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
-    }
+public class InternshipFileBean extends InternshipFile {
+    private Long   fileSize;
+    private String contentType;
+    private String originalFileName;
+    private String newName;
+    private String relativePath;
+    private String ext;
 
     public Long getFileSize() {
         return fileSize;
@@ -23,6 +16,14 @@ public class FileBean {
 
     public void setFileSize(Long fileSize) {
         this.fileSize = fileSize;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
     }
 
     public String getOriginalFileName() {
@@ -39,14 +40,6 @@ public class FileBean {
 
     public void setNewName(String newName) {
         this.newName = newName;
-    }
-
-    public String getLastPath() {
-        return lastPath;
-    }
-
-    public void setLastPath(String lastPath) {
-        this.lastPath = lastPath;
     }
 
     public String getRelativePath() {

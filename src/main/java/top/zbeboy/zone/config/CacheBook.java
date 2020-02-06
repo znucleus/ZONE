@@ -48,4 +48,10 @@ public final class CacheBook {
     public static final String ATTEND_RELEASE_SUB = "ATTEND_RELEASE_SUB";
     public static final String ATTEND_MAP_KEYS = "ATTEND_MAP_KEYS";
 
+    /*
+    实习业务
+     */
+    public static final String INTERNSHIP_TYPES = "INTERNSHIP_TYPES";
+    public static final String INTERNSHIP_FILES = "INTERNSHIP_FILES";
+
 }

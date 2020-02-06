@@ -15,6 +15,7 @@ public class InternshipReleaseBean extends InternshipRelease {
     private String startTimeStr;
     private String endTimeStr;
     private String releaseTimeStr;
+    private Byte canOperator;
 
     public String getScienceName() {
         return scienceName;
@@ -110,5 +111,13 @@ public class InternshipReleaseBean extends InternshipRelease {
 
     public void setReleaseTimeStr(String releaseTimeStr) {
         this.releaseTimeStr = releaseTimeStr;
+    }
+
+    public Byte getCanOperator() {
+        return canOperator;
+    }
+
+    public void setCanOperator(Byte canOperator) {
+        this.canOperator = canOperator;
     }
 }

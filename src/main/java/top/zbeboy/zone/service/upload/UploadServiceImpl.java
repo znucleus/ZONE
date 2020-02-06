@@ -48,7 +48,7 @@ public class UploadServiceImpl implements UploadService {
                 fileBean.setOriginalFileName(multipartFile.getOriginalFilename().substring(0, multipartFile.getOriginalFilename().lastIndexOf('.')));
                 fileBean.setExt(ext);
                 fileBean.setNewName(filename);
-                fileBean.setSize(multipartFile.getSize());
+                fileBean.setFileSize(multipartFile.getSize());
                 //copy file to local disk (make sure the path "e.g. D:/temp/files" exists)
                 buildList(fileBean, list, path, filename, multipartFile);
             } else {
@@ -56,7 +56,7 @@ public class UploadServiceImpl implements UploadService {
                 String filename = ipTimeStamp.getIPTimeRand();
                 fileBean.setOriginalFileName(multipartFile.getOriginalFilename().substring(0, multipartFile.getOriginalFilename().lastIndexOf('.')));
                 fileBean.setNewName(filename);
-                fileBean.setSize(multipartFile.getSize());
+                fileBean.setFileSize(multipartFile.getSize());
                 // copy file to local disk (make sure the path "e.g. D:/temp/files" exists)
                 buildList(fileBean, list, path, filename, multipartFile);
             }
@@ -74,7 +74,7 @@ public class UploadServiceImpl implements UploadService {
             }
             log.info(path);
             FileCopyUtils.copy(multipartFile.getBytes(), new FileOutputStream(path + File.separator + filename));
-            lastPath = path + File.separator + filename;
+            lastPath = path + filename;
             lastPath = lastPath.replaceAll("\\\\", "/");
         } else {
             log.info("Not valiablespace!");
@@ -85,7 +85,7 @@ public class UploadServiceImpl implements UploadService {
     private void buildList(FileBean fileBean, List<FileBean> list, String path, String filename, MultipartFile multipartFile) {
         try {
             if (!StringUtils.isEmpty(path.split(":")[0])) {
-                fileBean.setLastPath(buildPath(path, filename, multipartFile));
+                fileBean.setRelativePath(buildPath(path, filename, multipartFile));
                 list.add(fileBean);
             }
         } catch (IOException e) {

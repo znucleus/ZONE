@@ -1,16 +1,12 @@
 package top.zbeboy.zone.web.internship.type;
 
-import org.jooq.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.domain.tables.pojos.InternshipType;
-import top.zbeboy.zone.domain.tables.records.SchoolroomRecord;
 import top.zbeboy.zone.service.internship.InternshipTypeService;
 import top.zbeboy.zone.web.plugin.select2.Select2Data;
-import top.zbeboy.zone.web.util.BooleanUtil;
-import top.zbeboy.zone.web.vo.data.schoolroom.SchoolroomSearchVo;
 
 import javax.annotation.Resource;
 import java.util.List;

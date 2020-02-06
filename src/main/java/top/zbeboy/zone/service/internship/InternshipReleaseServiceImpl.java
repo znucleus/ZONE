@@ -58,6 +58,29 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService, P
     }
 
     @Override
+    public InternshipRelease findById(String id) {
+        return internshipReleaseDao.findById(id);
+    }
+
+    @Override
+    public Optional<Record> findByIdRelation(String id) {
+        return create.select()
+                .from(INTERNSHIP_RELEASE)
+                .leftJoin(SCIENCE)
+                .on(INTERNSHIP_RELEASE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
+                .leftJoin(INTERNSHIP_TYPE)
+                .on(INTERNSHIP_TYPE.INTERNSHIP_TYPE_ID.eq(INTERNSHIP_RELEASE.INTERNSHIP_TYPE_ID))
+                .leftJoin(DEPARTMENT)
+                .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
+                .leftJoin(COLLEGE)
+                .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
+                .leftJoin(SCHOOL)
+                .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
+                .where(INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_ID.eq(id))
+                .fetchOptional();
+    }
+
+    @Override
     public Result<Record> findAllByPage(SimplePaginationUtil paginationUtil) {
         SelectOnConditionStep<Record> selectOnConditionStep = create.select()
                 .from(INTERNSHIP_RELEASE)
@@ -70,7 +93,7 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService, P
                 .leftJoin(COLLEGE)
                 .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
                 .leftJoin(SCHOOL)
-                .on(COLLEGE.COLLEGE_ID.eq(SCHOOL.SCHOOL_ID));
+                .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID));
         return queryAllByPage(selectOnConditionStep, paginationUtil, false);
     }
 
@@ -87,7 +110,7 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService, P
                 .leftJoin(COLLEGE)
                 .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
                 .leftJoin(SCHOOL)
-                .on(COLLEGE.COLLEGE_ID.eq(SCHOOL.SCHOOL_ID));
+                .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID));
         return countAll(selectOnConditionStep, paginationUtil, false);
     }
 
@@ -95,6 +118,11 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService, P
     @Override
     public void save(InternshipRelease internshipRelease) {
         internshipReleaseDao.insert(internshipRelease);
+    }
+
+    @Override
+    public void update(InternshipRelease internshipRelease) {
+        internshipReleaseDao.update(internshipRelease);
     }
 
     @Override
