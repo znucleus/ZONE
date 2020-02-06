@@ -5,9 +5,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jooq.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import top.zbeboy.zone.config.CacheBook;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.daos.InternshipReleaseDao;
 import top.zbeboy.zone.domain.tables.pojos.InternshipRelease;
@@ -62,6 +65,7 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService, P
         return internshipReleaseDao.findById(id);
     }
 
+    @Cacheable(cacheNames = CacheBook.INTERNSHIP_RELEASE, key = "#id")
     @Override
     public Optional<Record> findByIdRelation(String id) {
         return create.select()
@@ -120,6 +124,7 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService, P
         internshipReleaseDao.insert(internshipRelease);
     }
 
+    @CacheEvict(cacheNames = CacheBook.INTERNSHIP_RELEASE, key = "#internshipRelease.internshipReleaseId")
     @Override
     public void update(InternshipRelease internshipRelease) {
         internshipReleaseDao.update(internshipRelease);
