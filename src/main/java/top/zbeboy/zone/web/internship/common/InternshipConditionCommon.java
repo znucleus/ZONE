@@ -13,7 +13,9 @@ import top.zbeboy.zone.service.internship.InternshipReleaseService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
+import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.web.bean.internship.release.InternshipReleaseBean;
+import top.zbeboy.zone.web.util.BooleanUtil;
 
 import javax.annotation.Resource;
 import java.util.Objects;
@@ -85,6 +87,31 @@ public class InternshipConditionCommon {
             }
         }
 
+        return canOperator;
+    }
+
+    /**
+     * 教师分配条件
+     *
+     * @param internshipReleaseId 实习发布id
+     * @return true or false
+     */
+    public boolean teacherDistributionCondition(String internshipReleaseId) {
+        boolean canOperator = false;
+        if (canOperator(internshipReleaseId)) {
+            Optional<Record> record = internshipReleaseService.findByIdRelation(internshipReleaseId);
+            if (record.isPresent()) {
+                InternshipReleaseBean internshipRelease = record.get().into(InternshipReleaseBean.class);
+                // 检测状态正常
+                if (!BooleanUtil.toBoolean(internshipRelease.getInternshipReleaseIsDel())) {
+                    // 检测教师分配时间
+                    if (DateTimeUtil.nowAfterSqlTimestamp(internshipRelease.getTeacherDistributionStartTime()) &&
+                            DateTimeUtil.nowBeforeSqlTimestamp(internshipRelease.getTeacherDistributionEndTime())) {
+                        canOperator = true;
+                    }
+                }
+            }
+        }
         return canOperator;
     }
 }

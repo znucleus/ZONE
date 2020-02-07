@@ -4,6 +4,7 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.jooq.*;
 import top.zbeboy.zone.web.util.pagination.PaginationUtil;
 
+import java.util.List;
 import java.util.Objects;
 
 public interface PaginationPlugin<S extends PaginationUtil> {
@@ -41,6 +42,7 @@ public interface PaginationPlugin<S extends PaginationUtil> {
      *
      * @param selectOnConditionStep 关联表
      * @param paginationUtil        分页工具
+     * @param useExtraCondition     是否使用额外条件
      * @return 分页数据
      */
     default Result<Record> queryAllByPage(SelectOnConditionStep<Record> selectOnConditionStep, S paginationUtil, boolean useExtraCondition) {
@@ -57,6 +59,17 @@ public interface PaginationPlugin<S extends PaginationUtil> {
             records = selectConditionStep.fetch();
         }
         return records;
+    }
+
+    /**
+     * 多表查询，自定义构建数据
+     *
+     * @param selectOnConditionStep 关联表
+     * @param paginationUtil        分页工具
+     * @param useExtraCondition     是否使用额外条件
+     */
+    default List<?> queryAllByPageAndBuildData(SelectOnConditionStep<Record> selectOnConditionStep, S paginationUtil, boolean useExtraCondition) {
+        return buildData(queryAllByPage(selectOnConditionStep, paginationUtil, useExtraCondition));
     }
 
     /**
@@ -479,5 +492,14 @@ public interface PaginationPlugin<S extends PaginationUtil> {
         int length = paginationUtil.getLength();
 
         step.limit(start, length);
+    }
+
+    /**
+     * 构建自定义数据
+     *
+     * @param records 待转换数据
+     */
+    default List<?> buildData(Result<Record> records) {
+        return null;
     }
 }
