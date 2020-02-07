@@ -63,12 +63,30 @@ public interface StudentService {
     Result<StudentRecord> findByStudentNumberNeUsername(String studentNumber, String username);
 
     /**
+     * 通过账号与系id查询
+     *
+     * @param username     账号
+     * @param departmentId 系id
+     * @return 数据
+     */
+    Optional<Record> findNormalByUsernameAndDepartmentId(String username, int departmentId);
+
+    /**
+     * 通过账号与系id查询
+     *
+     * @param studentNumber 学号
+     * @param departmentId  系id
+     * @return 数据
+     */
+    Optional<Record> findNormalByStudentNumberAndDepartmentId(String studentNumber, int departmentId);
+
+    /**
      * 根据班级id查询学生，查询已验证邮箱且已分配权限的学生
      *
      * @param organizeId 班级id
      * @return 数据
      */
-    Result<Record> findByOrganizeId(int organizeId);
+    Result<Record> findNormalByOrganizeId(int organizeId);
 
     /**
      * 分页查询

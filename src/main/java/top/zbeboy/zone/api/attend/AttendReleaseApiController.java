@@ -106,7 +106,7 @@ public class AttendReleaseApiController {
                 attendReleaseSubService.copyAttendRelease(attendReleaseId);
 
                 // 生成名单
-                Result<Record> studentRecords = studentService.findByOrganizeId(attendReleaseAddVo.getOrganizeId());
+                Result<Record> studentRecords = studentService.findNormalByOrganizeId(attendReleaseAddVo.getOrganizeId());
                 if (studentRecords.isNotEmpty()) {
                     List<Student> students = studentRecords.into(Student.class);
                     List<AttendUsers> attendUsers = new ArrayList<>();

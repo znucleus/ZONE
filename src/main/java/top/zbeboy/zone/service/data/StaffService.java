@@ -65,6 +65,14 @@ public interface StaffService {
     Result<StaffRecord> findByStaffNumberNeUsername(String staffNumber, String username);
 
     /**
+     * 根据系id查询状态正常的教职工
+     *
+     * @param departmentId 系id
+     * @return 数据
+     */
+    Result<Record> findNormalByDepartmentIdRelation(int departmentId);
+
+    /**
      * 分页查询
      *
      * @param dataTablesUtil 工具类

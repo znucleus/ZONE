@@ -127,7 +127,9 @@ public class StudentServiceImpl implements StudentService, PaginationPlugin<Data
                 .from(STUDENT)
                 .join(USERS)
                 .on(STUDENT.USERNAME.eq(USERS.USERNAME))
-                .where(STUDENT.STUDENT_NUMBER.eq(studentNumber).and(USERS.VERIFY_MAILBOX.eq(BooleanUtil.toByte(true))).andExists(authoritiesService.existsAuthoritiesSelect()))
+                .where(STUDENT.STUDENT_NUMBER.eq(studentNumber)
+                        .and(USERS.VERIFY_MAILBOX.eq(BooleanUtil.toByte(true)))
+                        .andExists(authoritiesService.existsAuthoritiesSelect()))
                 .fetchOptional();
     }
 
@@ -138,7 +140,49 @@ public class StudentServiceImpl implements StudentService, PaginationPlugin<Data
     }
 
     @Override
-    public Result<Record> findByOrganizeId(int organizeId) {
+    public Optional<Record> findNormalByUsernameAndDepartmentId(String username, int departmentId) {
+        return create.select()
+                .from(STUDENT)
+                .join(USERS)
+                .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                .join(ORGANIZE)
+                .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
+                .join(GRADE)
+                .on(ORGANIZE.GRADE_ID.eq(GRADE.GRADE_ID))
+                .join(SCIENCE)
+                .on(GRADE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
+                .join(DEPARTMENT)
+                .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
+                .where(STUDENT.USERNAME.eq(username)
+                        .and(DEPARTMENT.DEPARTMENT_ID.eq(departmentId))
+                        .and(USERS.VERIFY_MAILBOX.eq(BooleanUtil.toByte(true)))
+                        .andExists(authoritiesService.existsAuthoritiesSelect()))
+                .fetchOptional();
+    }
+
+    @Override
+    public Optional<Record> findNormalByStudentNumberAndDepartmentId(String studentNumber, int departmentId) {
+        return create.select()
+                .from(STUDENT)
+                .join(USERS)
+                .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                .join(ORGANIZE)
+                .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
+                .join(GRADE)
+                .on(ORGANIZE.GRADE_ID.eq(GRADE.GRADE_ID))
+                .join(SCIENCE)
+                .on(GRADE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
+                .join(DEPARTMENT)
+                .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
+                .where(STUDENT.STUDENT_NUMBER.eq(studentNumber)
+                        .and(DEPARTMENT.DEPARTMENT_ID.eq(departmentId))
+                        .and(USERS.VERIFY_MAILBOX.eq(BooleanUtil.toByte(true)))
+                        .andExists(authoritiesService.existsAuthoritiesSelect()))
+                .fetchOptional();
+    }
+
+    @Override
+    public Result<Record> findNormalByOrganizeId(int organizeId) {
         return create.select()
                 .from(STUDENT)
                 .leftJoin(USERS)

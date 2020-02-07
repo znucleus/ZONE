@@ -1,13 +1,23 @@
 package top.zbeboy.zone.service.internship;
 
 import org.jooq.Record;
-import org.jooq.Result;
+import top.zbeboy.zone.domain.tables.pojos.InternshipTeacherDistribution;
 import top.zbeboy.zone.web.bean.internship.distribution.InternshipTeacherDistributionBean;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface InternshipTeacherDistributionService {
+
+    /**
+     * 通过实习发布id 和学生id查询
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param studentId           学生id
+     * @return 数据
+     */
+    Optional<Record> findByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId);
 
     /**
      * 分页查询
@@ -30,4 +40,11 @@ public interface InternshipTeacherDistributionService {
      * @return 条件查询总数
      */
     int countByCondition(DataTablesUtil dataTablesUtil);
+
+    /**
+     * 保存
+     *
+     * @param internshipTeacherDistribution 数据
+     */
+    void save(InternshipTeacherDistribution internshipTeacherDistribution);
 }

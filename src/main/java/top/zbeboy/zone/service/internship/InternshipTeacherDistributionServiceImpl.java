@@ -7,14 +7,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import top.zbeboy.zone.domain.tables.daos.InternshipTeacherDistributionDao;
+import top.zbeboy.zone.domain.tables.pojos.InternshipTeacherDistribution;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zone.service.util.SQLQueryUtil;
 import top.zbeboy.zone.web.bean.internship.distribution.InternshipTeacherDistributionBean;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static top.zbeboy.zone.domain.Tables.*;
 
@@ -24,11 +28,21 @@ public class InternshipTeacherDistributionServiceImpl implements InternshipTeach
 
     private final DSLContext create;
 
+    @Resource
+    private InternshipTeacherDistributionDao internshipTeacherDistributionDao;
+
     @Autowired
     InternshipTeacherDistributionServiceImpl(DSLContext dslContext) {
         create = dslContext;
     }
 
+    @Override
+    public Optional<Record> findByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId) {
+        return create.select()
+                .from(INTERNSHIP_TEACHER_DISTRIBUTION)
+                .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID.eq(studentId)))
+                .fetchOptional();
+    }
 
     @Override
     public List<InternshipTeacherDistributionBean> findAllByPage(DataTablesUtil dataTablesUtil) {
@@ -69,6 +83,12 @@ public class InternshipTeacherDistributionServiceImpl implements InternshipTeach
                 .join(STUDENT)
                 .on(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID.eq(STUDENT.STUDENT_ID));
         return countAll(selectOnConditionStep, dataTablesUtil, false);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void save(InternshipTeacherDistribution internshipTeacherDistribution) {
+        internshipTeacherDistributionDao.insert(internshipTeacherDistribution);
     }
 
     @Override

@@ -23,6 +23,7 @@ import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
+import top.zbeboy.zone.service.system.AuthoritiesService;
 import top.zbeboy.zone.service.util.BCryptUtil;
 import top.zbeboy.zone.service.util.SQLQueryUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
@@ -59,6 +60,9 @@ public class StaffServiceImpl implements StaffService, PaginationPlugin<DataTabl
 
     @Resource
     private StudentService studentService;
+
+    @Resource
+    private AuthoritiesService authoritiesService;
 
     @Autowired
     StaffServiceImpl(DSLContext dslContext) {
@@ -120,6 +124,18 @@ public class StaffServiceImpl implements StaffService, PaginationPlugin<DataTabl
     public Result<StaffRecord> findByStaffNumberNeUsername(String staffNumber, String username) {
         return create.selectFrom(STAFF)
                 .where(STAFF.STAFF_NUMBER.eq(staffNumber).and(STAFF.USERNAME.ne(username))).fetch();
+    }
+
+    @Override
+    public Result<Record> findNormalByDepartmentIdRelation(int departmentId) {
+        return create.select()
+                .from(STAFF)
+                .join(USERS)
+                .on(STAFF.USERNAME.eq(USERS.USERNAME))
+                .where(STAFF.DEPARTMENT_ID.eq(departmentId)
+                        .and(USERS.VERIFY_MAILBOX.eq(BooleanUtil.toByte(true)))
+                        .andExists(authoritiesService.existsAuthoritiesSelect()))
+                .fetch();
     }
 
     @Override
