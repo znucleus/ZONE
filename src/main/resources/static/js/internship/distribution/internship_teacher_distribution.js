@@ -1,4 +1,4 @@
-//# sourceURL=internship_release.js
+//# sourceURL=internship_teacher_distribution.js
 require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2", "messenger", "jquery.address", "jquery.simple-pagination", "jquery-labelauty"],
     function ($, _, tools, Handlebars, navActive, Swal) {
 
@@ -6,11 +6,11 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
          ajax url.
          */
         var ajax_url = {
-            data: web_path + '/web/internship/release/data',
-            add: '/web/internship/release/add',
-            edit: '/web/internship/release/edit',
-            status: web_path + '/web/internship/release/status',
-            page: '/web/menu/internship/release'
+            data: web_path + '/web/internship/teacher_distribution/internship/data',
+            distribution_url: '/web/internship/teacher_distribution/list',
+            batch_distribution_url: '/web/internship/teacher_distribution/distribution',
+            look_distribution_url: '/web/internship/teacher_distribution/look',
+            page: '/web/menu/internship/teacher_distribution'
         };
 
         navActive(ajax_url.page);
@@ -27,6 +27,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             extraSearch: JSON.stringify({
                 internshipTitle: '',
                 dataRange: 0,
+                internshipReleaseIsDel: 0
             })
         };
 
@@ -34,8 +35,8 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         web storage key.
         */
         var webStorageKey = {
-            INTERNSHIP_TITLE: 'INTERNSHIP_RELEASE_INTERNSHIP_TITLE_SEARCH',
-            DATA_RANGE: 'INTERNSHIP_RELEASE_DATA_RANGE_SEARCH'
+            INTERNSHIP_TITLE: 'INTERNSHIP_DISTRIBUTION_INTERNSHIP_TITLE_SEARCH',
+            DATA_RANGE: 'INTERNSHIP_DISTRIBUTION_DATA_RANGE_SEARCH'
         };
 
         /*
@@ -247,7 +248,8 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             var dataRange = null;
             var params = {
                 internshipTitle: '',
-                dataRange: 0
+                dataRange: 0,
+                internshipReleaseIsDel: 0
             };
             if (typeof(Storage) !== "undefined") {
                 internshipTitle = sessionStorage.getItem(webStorageKey.INTERNSHIP_TITLE);

@@ -23,6 +23,7 @@ import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zone.service.util.SQLQueryUtil;
+import top.zbeboy.zone.web.util.ByteUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
 import javax.annotation.Resource;
@@ -136,8 +137,17 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService, P
         JSONObject search = paginationUtil.getSearch();
         if (Objects.nonNull(search)) {
             String internshipTitle = StringUtils.trim(search.getString("internshipTitle"));
+            String internshipReleaseIsDel = StringUtils.trim(search.getString("internshipReleaseIsDel"));
             if (StringUtils.isNotBlank(internshipTitle)) {
                 a = INTERNSHIP_RELEASE.INTERNSHIP_TITLE.like(SQLQueryUtil.likeAllParam(internshipTitle));
+            }
+
+            if (StringUtils.isNotBlank(internshipReleaseIsDel)) {
+                if (Objects.isNull(a)) {
+                    a = INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_IS_DEL.eq(NumberUtils.toByte(internshipReleaseIsDel));
+                } else {
+                    a = a.and(INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_IS_DEL.eq(NumberUtils.toByte(internshipReleaseIsDel)));
+                }
             }
         }
         return a;

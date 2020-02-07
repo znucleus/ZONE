@@ -17,14 +17,10 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.service.data.ScienceService;
-import top.zbeboy.zone.service.data.StaffService;
-import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.internship.InternshipFileService;
 import top.zbeboy.zone.service.internship.InternshipReleaseService;
 import top.zbeboy.zone.service.internship.InternshipTypeService;
-import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
-import top.zbeboy.zone.service.platform.UsersTypeService;
 import top.zbeboy.zone.service.system.FilesService;
 import top.zbeboy.zone.service.upload.FileBean;
 import top.zbeboy.zone.service.upload.UploadService;
@@ -34,8 +30,9 @@ import top.zbeboy.zone.service.util.RequestUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.data.science.ScienceBean;
 import top.zbeboy.zone.web.bean.internship.release.InternshipReleaseBean;
+import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
+import top.zbeboy.zone.web.internship.common.InternshipControllerCommon;
 import top.zbeboy.zone.web.util.AjaxUtil;
-import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.ByteUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zone.web.vo.internship.release.InternshipReleaseAddVo;
@@ -44,7 +41,10 @@ import top.zbeboy.zone.web.vo.internship.release.InternshipReleaseEditVo;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 public class InternshipReleaseRestController {
@@ -61,6 +61,12 @@ public class InternshipReleaseRestController {
     private InternshipTypeService internshipTypeService;
 
     @Resource
+    private InternshipConditionCommon internshipConditionCommon;
+
+    @Resource
+    private InternshipControllerCommon internshipControllerCommon;
+
+    @Resource
     private UploadService uploadService;
 
     @Resource
@@ -72,18 +78,6 @@ public class InternshipReleaseRestController {
     @Resource
     private UsersService usersService;
 
-    @Resource
-    private RoleService roleService;
-
-    @Resource
-    private UsersTypeService usersTypeService;
-
-    @Resource
-    private StaffService staffService;
-
-    @Resource
-    private StudentService studentService;
-
     /**
      * 数据
      *
@@ -93,19 +87,7 @@ public class InternshipReleaseRestController {
     @GetMapping("/web/internship/release/data")
     public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil) {
         AjaxUtil<InternshipReleaseBean> ajaxUtil = AjaxUtil.of();
-        List<InternshipReleaseBean> beans = new ArrayList<>();
-        Result<Record> records = internshipReleaseService.findAllByPage(simplePaginationUtil);
-        if (records.isNotEmpty()) {
-            beans = records.into(InternshipReleaseBean.class);
-            beans.forEach(bean -> bean.setTeacherDistributionStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionStartTime())));
-            beans.forEach(bean -> bean.setTeacherDistributionEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionEndTime())));
-            beans.forEach(bean -> bean.setStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getStartTime())));
-            beans.forEach(bean -> bean.setEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getEndTime())));
-            beans.forEach(bean -> bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime())));
-            beans.forEach(bean -> bean.setCanOperator(BooleanUtil.toByte(canOperator(bean.getInternshipReleaseId()))));
-        }
-        simplePaginationUtil.setTotalSize(internshipReleaseService.countAll(simplePaginationUtil));
-        ajaxUtil.success().list(beans).page(simplePaginationUtil).msg("获取数据成功");
+        internshipControllerCommon.InternshipReleaseData(ajaxUtil, simplePaginationUtil);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -122,7 +104,7 @@ public class InternshipReleaseRestController {
             String path = Workbook.internshipFilePath();
             List<FileBean> fileBeen = uploadService.upload(request,
                     RequestUtil.getRealPath(request) + path, request.getRemoteAddr());
-            fileBeen.forEach(file->file.setRelativePath(path + file.getNewName()));
+            fileBeen.forEach(file -> file.setRelativePath(path + file.getNewName()));
             ajaxUtil.success().list(fileBeen).msg("上传成功");
         } catch (Exception e) {
             log.error("Upload file exception,is {}", e);
@@ -220,7 +202,7 @@ public class InternshipReleaseRestController {
     public ResponseEntity<Map<String, Object>> update(@Valid InternshipReleaseEditVo internshipReleaseEditVo, BindingResult bindingResult) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
-            if (canOperator(internshipReleaseEditVo.getInternshipReleaseId())) {
+            if (internshipConditionCommon.canOperator(internshipReleaseEditVo.getInternshipReleaseId())) {
                 String internshipReleaseId = internshipReleaseEditVo.getInternshipReleaseId();
                 String teacherDistributionTime = internshipReleaseEditVo.getTeacherDistributionTime();
                 String time = internshipReleaseEditVo.getTime();
@@ -262,7 +244,7 @@ public class InternshipReleaseRestController {
     @PostMapping("/web/internship/release/status")
     public ResponseEntity<Map<String, Object>> status(@RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("isDel") Byte isDel) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        if (canOperator(internshipReleaseId)) {
+        if (internshipConditionCommon.canOperator(internshipReleaseId)) {
             InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
             if (Objects.nonNull(internshipRelease)) {
                 internshipRelease.setInternshipReleaseIsDel(isDel);
@@ -310,53 +292,5 @@ public class InternshipReleaseRestController {
                 internshipFileService.save(internshipFile);
             }
         }
-    }
-
-    /**
-     * 是否可操作
-     *
-     * @param internshipReleaseId 发布id
-     * @return true or false
-     */
-    private boolean canOperator(String internshipReleaseId) {
-        boolean canOperator = false;
-        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
-            canOperator = true;
-        } else if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
-            Optional<Record> internshipReleaseRecord = internshipReleaseService.findByIdRelation(internshipReleaseId);
-            if (internshipReleaseRecord.isPresent()) {
-                InternshipReleaseBean bean = internshipReleaseRecord.get().into(InternshipReleaseBean.class);
-
-                Users users = usersService.getUserFromSession();
-                UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-                if (Objects.nonNull(usersType)) {
-                    int collegeId = 0;
-                    if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                        Optional<Record> record = staffService.findByUsernameRelation(users.getUsername());
-                        if (record.isPresent()) {
-                            College college = record.get().into(College.class);
-                            collegeId = college.getCollegeId();
-                        }
-                    } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                        Optional<Record> record = studentService.findByUsernameRelation(users.getUsername());
-                        if (record.isPresent()) {
-                            College college = record.get().into(College.class);
-                            collegeId = college.getCollegeId();
-                        }
-                    }
-
-                    canOperator = bean.getCollegeId() == collegeId;
-                }
-            }
-        } else {
-            Optional<Record> internshipReleaseRecord = internshipReleaseService.findByIdRelation(internshipReleaseId);
-            if (internshipReleaseRecord.isPresent()) {
-                InternshipReleaseBean bean = internshipReleaseRecord.get().into(InternshipReleaseBean.class);
-                Users users = usersService.getUserFromSession();
-                canOperator = StringUtils.equals(bean.getUsername(), users.getUsername());
-            }
-        }
-
-        return canOperator;
     }
 }
