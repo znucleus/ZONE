@@ -47,4 +47,18 @@ public interface InternshipTeacherDistributionService {
      * @param internshipTeacherDistribution 数据
      */
     void save(InternshipTeacherDistribution internshipTeacherDistribution);
+
+    /**
+     * 批量保存
+     *
+     * @param internshipTeacherDistribution 数据
+     */
+    void batchSave(List<InternshipTeacherDistribution> internshipTeacherDistribution);
+
+    /**
+     * 通过实习发布id删除
+     *
+     * @param internshipReleaseId 实习发布id
+     */
+    void deleteByInternshipReleaseId(String internshipReleaseId);
 }

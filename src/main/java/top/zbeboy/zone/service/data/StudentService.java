@@ -7,6 +7,7 @@ import top.zbeboy.zone.domain.tables.records.StudentRecord;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.vo.data.student.StudentAddVo;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface StudentService {
@@ -87,6 +88,14 @@ public interface StudentService {
      * @return 数据
      */
     Result<Record> findNormalByOrganizeId(int organizeId);
+
+    /**
+     * 根据班级id查询学生，查询已验证邮箱且已分配权限的学生
+     *
+     * @param organizeIds 班级id
+     * @return 数据
+     */
+    Result<Record> findNormalInOrganizeIds(List<Integer> organizeIds);
 
     /**
      * 分页查询

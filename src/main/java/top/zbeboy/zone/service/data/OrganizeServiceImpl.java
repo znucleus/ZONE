@@ -21,6 +21,8 @@ import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zone.service.util.SQLQueryUtil;
+import top.zbeboy.zone.web.util.BooleanUtil;
+import top.zbeboy.zone.web.util.ByteUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
 import javax.annotation.Resource;
@@ -111,6 +113,16 @@ public class OrganizeServiceImpl implements OrganizeService, PaginationPlugin<Da
                 .join(GRADE)
                 .on(ORGANIZE.GRADE_ID.eq(GRADE.GRADE_ID))
                 .where(ORGANIZE.ORGANIZE_NAME.eq(organizeName).and(GRADE.SCIENCE_ID.eq(scienceId)).and(ORGANIZE.ORGANIZE_ID.ne(organizeId)))
+                .fetch();
+    }
+
+    @Override
+    public Result<Record> findNormalByScienceId(int scienceId) {
+        return create.select()
+                .from(ORGANIZE)
+                .join(GRADE)
+                .on(ORGANIZE.GRADE_ID.eq(GRADE.GRADE_ID))
+                .where(GRADE.SCIENCE_ID.eq(scienceId).and(ORGANIZE.ORGANIZE_IS_DEL.eq(ByteUtil.toByte(0))))
                 .fetch();
     }
 

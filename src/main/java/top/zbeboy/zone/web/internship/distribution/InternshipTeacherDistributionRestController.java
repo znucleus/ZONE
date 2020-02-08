@@ -6,15 +6,14 @@ import org.jooq.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import top.zbeboy.zone.domain.tables.pojos.Department;
-import top.zbeboy.zone.domain.tables.pojos.InternshipTeacherDistribution;
-import top.zbeboy.zone.domain.tables.pojos.Student;
-import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zone.domain.tables.pojos.*;
+import top.zbeboy.zone.service.data.OrganizeService;
 import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.internship.InternshipReleaseService;
 import top.zbeboy.zone.service.internship.InternshipTeacherDistributionService;
 import top.zbeboy.zone.service.platform.UsersService;
+import top.zbeboy.zone.web.bean.data.organize.OrganizeBean;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.bean.internship.distribution.InternshipTeacherDistributionBean;
@@ -23,6 +22,7 @@ import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
 import top.zbeboy.zone.web.internship.common.InternshipControllerCommon;
 import top.zbeboy.zone.web.plugin.select2.Select2Data;
 import top.zbeboy.zone.web.util.AjaxUtil;
+import top.zbeboy.zone.web.util.SmallPropsUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
@@ -56,6 +56,9 @@ public class InternshipTeacherDistributionRestController {
 
     @Resource
     private UsersService usersService;
+
+    @Resource
+    private OrganizeService organizeService;
 
     /**
      * 数据
@@ -118,6 +121,28 @@ public class InternshipTeacherDistributionRestController {
             }
         }
         beans.forEach(bean -> select2Data.add(bean.getStaffId().toString(), bean.getRealName() + " " + bean.getStaffNumber()));
+        return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
+    }
+
+    /**
+     * 批量分配 所需班级数据
+     *
+     * @param id 实习id
+     * @return 页面
+     */
+    @GetMapping("/web/internship/teacher_distribution/organizes/{id}")
+    public ResponseEntity<Map<String, Object>> organizes(@PathVariable("id") String id) {
+        Select2Data select2Data = Select2Data.of();
+        List<OrganizeBean> beans = new ArrayList<>();
+        Optional<Record> record = internshipReleaseService.findByIdRelation(id);
+        if (record.isPresent()) {
+            Science science = record.get().into(Science.class);
+            Result<Record> organizeRecord = organizeService.findNormalByScienceId(science.getScienceId());
+            if (organizeRecord.isNotEmpty()) {
+                beans = organizeRecord.into(OrganizeBean.class);
+            }
+        }
+        beans.forEach(bean -> select2Data.add(bean.getOrganizeId().toString(), bean.getOrganizeName()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
 
@@ -199,6 +224,53 @@ public class InternshipTeacherDistributionRestController {
             ajaxUtil.fail().msg("根据实习发布ID未查询到实习发布数据");
         }
 
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 保存教师分配
+     *
+     * @param internshipReleaseId 实习id
+     * @param organizeId          班级ids
+     * @param staffId             教职工ids
+     * @return true or false
+     */
+    @PostMapping("/web/internship/teacher_distribution/distribution/save")
+    public ResponseEntity<Map<String, Object>> batchSave(@RequestParam("internshipReleaseId") String internshipReleaseId, String organizeId, String staffId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        Optional<Record> record = internshipReleaseService.findByIdRelation(internshipReleaseId);
+        if (record.isPresent()) {
+            if (internshipConditionCommon.teacherDistributionCondition(internshipReleaseId)) {
+                List<Integer> organizeIds = SmallPropsUtil.StringIdsToNumberList(organizeId);
+                List<Integer> staffIds = SmallPropsUtil.StringIdsToNumberList(staffId);
+
+                // 删除以前的分配记录
+                internshipTeacherDistributionService.deleteByInternshipReleaseId(internshipReleaseId);
+
+                List<InternshipTeacherDistribution> internshipTeacherDistributions = new ArrayList<>();
+                Result<Record> studentRecords = studentService.findNormalInOrganizeIds(organizeIds);
+                if (studentRecords.isNotEmpty() && staffIds.size() > 0) {
+                    List<StudentBean> students = studentRecords.into(StudentBean.class);
+                    int i = 0;
+                    Users users = usersService.getUserFromSession();
+                    for (StudentBean student : students) {
+                        if (i >= staffIds.size()) {
+                            i = 0;
+                        }
+                        internshipTeacherDistributions.add(new InternshipTeacherDistribution(staffIds.get(i), student.getStudentId(), internshipReleaseId, users.getUsername(),
+                                student.getRealName(), users.getRealName()));
+                        i++;
+
+                    }
+                }
+                internshipTeacherDistributionService.batchSave(internshipTeacherDistributions);
+                ajaxUtil.success().msg("保存成功");
+            } else {
+                ajaxUtil.fail().msg("您无权限或当前实习不允许操作");
+            }
+        } else {
+            ajaxUtil.fail().msg("根据实习发布ID未查询到实习发布数据");
+        }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

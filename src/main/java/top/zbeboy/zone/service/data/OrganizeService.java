@@ -56,6 +56,14 @@ public interface OrganizeService {
      */
     Result<Record> findByOrganizeNameAndScienceIdNeOrganizeId(String organizeName, int scienceId, int organizeId);
 
+    /**
+     * 根据专业id查询正常班级数据
+     *
+     * @param scienceId 专业id
+     * @return 数据
+     */
+    Result<Record> findNormalByScienceId(int scienceId);
+
 
     /**
      * 分页查询

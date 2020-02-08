@@ -62,8 +62,8 @@ public class InternshipTeacherDistributionViewController {
     /**
      * 添加
      *
-     * @param id 实习id
-     * @param modelMap            页面对象
+     * @param id       实习id
+     * @param modelMap 页面对象
      * @return 页面
      */
     @GetMapping("/web/internship/teacher_distribution/add/{id}")
@@ -75,6 +75,35 @@ public class InternshipTeacherDistributionViewController {
             if (internshipConditionCommon.teacherDistributionCondition(id)) {
                 modelMap.addAttribute("internshipReleaseId", id);
                 page = "web/internship/distribution/internship_distribution_add::#page-wrapper";
+            } else {
+                config.buildWarningTip("操作警告", "您无权限或当前实习不允许操作");
+                config.dataMerging(modelMap);
+                page = "inline_tip::#page-wrapper";
+            }
+        } else {
+            config.buildDangerTip("查询错误", "未查询到实习发布数据");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
+
+    /**
+     * 批量分配
+     *
+     * @param id       实习id
+     * @param modelMap 页面对象
+     * @return 页面
+     */
+    @GetMapping("/web/internship/teacher_distribution/distribution/{id}")
+    public String distribution(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        Optional<Record> record = internshipReleaseService.findByIdRelation(id);
+        if (record.isPresent()) {
+            if (internshipConditionCommon.teacherDistributionCondition(id)) {
+                modelMap.addAttribute("internshipReleaseId", id);
+                page = "web/internship/distribution/internship_distribution::#page-wrapper";
             } else {
                 config.buildWarningTip("操作警告", "您无权限或当前实习不允许操作");
                 config.dataMerging(modelMap);

@@ -31,6 +31,7 @@ import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.vo.data.student.StudentAddVo;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -188,6 +189,16 @@ public class StudentServiceImpl implements StudentService, PaginationPlugin<Data
                 .leftJoin(USERS)
                 .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                 .where(STUDENT.ORGANIZE_ID.eq(organizeId).and(USERS.VERIFY_MAILBOX.eq(BooleanUtil.toByte(true))).andExists(authoritiesService.existsAuthoritiesSelect()))
+                .fetch();
+    }
+
+    @Override
+    public Result<Record> findNormalInOrganizeIds(List<Integer> organizeIds) {
+        return create.select()
+                .from(STUDENT)
+                .leftJoin(USERS)
+                .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                .where(STUDENT.ORGANIZE_ID.in(organizeIds).and(USERS.VERIFY_MAILBOX.eq(BooleanUtil.toByte(true))).andExists(authoritiesService.existsAuthoritiesSelect()))
                 .fetch();
     }
 

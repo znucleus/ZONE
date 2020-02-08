@@ -28,6 +28,7 @@ requirejs.config({
         "bootstrap-inputmask": web_path + "/plugins/bootstrap-inputmask/bootstrap-inputmask.min",
         "bootstrap-maxlength": web_path + "/plugins/bootstrap-maxlength/bootstrap-maxlength.min",
         "bootstrap-treeview": web_path + "/plugins/bootstrap-treeview/js/bootstrap-treeview.min",
+        "bootstrap-duallistbox": web_path + "/plugins/bootstrap-duallistbox/jquery.bootstrap-duallistbox.min",
         "flatpickr": web_path + "/plugins/flatpickr/js/flatpickr.min",
         "flatpickr-zh": web_path + "/plugins/flatpickr/l10n/zh.min",
         "jquery.entropizer": web_path + "/plugins/jquery-entropizer/js/jquery-entropizer.min",
@@ -100,6 +101,9 @@ requirejs.config({
         },
         "bootstrap-treeview": {
             deps: ["jquery", "css!" + web_path + "/plugins/bootstrap-treeview/css/bootstrap-treeview.min"]
+        },
+        "bootstrap-duallistbox": {
+            deps: ["jquery", "css!" + web_path + "/plugins/bootstrap-duallistbox/bootstrap-duallistbox.min"]
         },
         "jquery-ui/widget": {
             deps: ["jquery"]

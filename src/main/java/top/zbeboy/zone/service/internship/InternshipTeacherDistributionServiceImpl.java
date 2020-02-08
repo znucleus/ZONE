@@ -91,6 +91,19 @@ public class InternshipTeacherDistributionServiceImpl implements InternshipTeach
         internshipTeacherDistributionDao.insert(internshipTeacherDistribution);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void batchSave(List<InternshipTeacherDistribution> internshipTeacherDistribution) {
+        internshipTeacherDistributionDao.insert(internshipTeacherDistribution);
+    }
+
+    @Override
+    public void deleteByInternshipReleaseId(String internshipReleaseId) {
+        create.deleteFrom(INTERNSHIP_TEACHER_DISTRIBUTION)
+                .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId))
+                .execute();
+    }
+
     @Override
     public Condition searchCondition(DataTablesUtil paginationUtil) {
         Condition a = null;
