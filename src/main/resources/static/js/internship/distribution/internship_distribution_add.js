@@ -35,7 +35,6 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
 
         var page_param = {
             paramInternshipReleaseId: $('#paramInternshipReleaseId').val()
-
         };
 
         /*
