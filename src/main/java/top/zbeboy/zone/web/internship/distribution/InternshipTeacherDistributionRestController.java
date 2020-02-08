@@ -6,13 +6,16 @@ import org.jooq.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.service.data.OrganizeService;
 import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
+import top.zbeboy.zone.service.export.InternshipTeacherDistributionExport;
 import top.zbeboy.zone.service.internship.InternshipReleaseService;
 import top.zbeboy.zone.service.internship.InternshipTeacherDistributionService;
 import top.zbeboy.zone.service.platform.UsersService;
+import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zone.web.bean.data.organize.OrganizeBean;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
@@ -28,6 +31,8 @@ import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +64,9 @@ public class InternshipTeacherDistributionRestController {
 
     @Resource
     private OrganizeService organizeService;
+
+    @Resource
+    private UploadService uploadService;
 
     /**
      * 数据
@@ -315,14 +323,31 @@ public class InternshipTeacherDistributionRestController {
         if (internshipConditionCommon.teacherDistributionCondition(internshipReleaseId)) {
             if (StringUtils.isNotBlank(studentIds)) {
                 List<Integer> ids = SmallPropsUtil.StringIdsToNumberList(studentIds);
-                ids.forEach(id-> internshipTeacherDistributionService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, id));
+                ids.forEach(id -> internshipTeacherDistributionService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, id));
                 ajaxUtil.success().msg("删除成功");
-            }else {
+            } else {
                 ajaxUtil.fail().msg("请选择学生");
             }
         } else {
             ajaxUtil.fail().msg("您无权限或当前实习不允许操作");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 导出 分配列表 数据
+     *
+     * @param request 请求
+     */
+    @GetMapping("/web/internship/teacher_distribution/export")
+    public void export(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        DataTablesUtil dataTablesUtil = new DataTablesUtil(request, "studentNumber", "asc",
+                "实习指导教师分配数据表", Workbook.internshipFilePath());
+        List<InternshipTeacherDistributionBean> internshipTeacherDistributionBeans = internshipTeacherDistributionService.export(dataTablesUtil);
+        InternshipTeacherDistributionExport export = new InternshipTeacherDistributionExport(internshipTeacherDistributionBeans);
+        DataTablesUtil.ExportInfo exportInfo = dataTablesUtil.getExportInfo();
+        if (export.exportExcel(exportInfo.getLastPath(), exportInfo.getFileName(), exportInfo.getExt())) {
+            uploadService.download(exportInfo.getFileName(), exportInfo.getFilePath(), response, request);
+        }
     }
 }

@@ -124,6 +124,13 @@ public final class Workbook {
         JPG, JPEG, BMP, GIF, PNG
     }
 
+    /*
+    file suffix.
+     */
+    public enum fileSuffix {
+        xls, xlsx, doc, docx
+    }
+
     /**
      * 头像路径
      *

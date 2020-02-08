@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.math.NumberUtils;
+import top.zbeboy.zone.config.Workbook;
+import top.zbeboy.zone.service.util.RequestUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -53,6 +55,11 @@ public class DataTablesUtil extends PaginationUtil {
      */
     private JSONObject search;
 
+    /*
+    导出数据信息
+     */
+    private ExportInfo exportInfo;
+
     public DataTablesUtil(HttpServletRequest request, List<String> headers) {
         String startParam = request.getParameter("start");
         String lengthParam = request.getParameter("length");
@@ -100,6 +107,27 @@ public class DataTablesUtil extends PaginationUtil {
         if (NumberUtils.isDigits(dramParam)) {
             this.draw = NumberUtils.toInt(dramParam);
         }
+    }
+
+    public DataTablesUtil(HttpServletRequest request, String orderColumnName, String orderDir, String fileName, String path) {
+        String extraSearchParam = request.getParameter("extra_search");
+        this.setOrderDir(orderDir);
+        this.setOrderColumnName(orderColumnName);
+        this.extraSearch = extraSearchParam;
+        this.search = JSON.parseObject(extraSearchParam);
+
+        this.exportInfo = JSON.parseObject(request.getParameter("export_info"), ExportInfo.class);
+        if (StringUtils.isBlank(exportInfo.fileName)) {
+            exportInfo.fileName = fileName;
+        }
+
+        if (StringUtils.isBlank(exportInfo.ext)) {
+            exportInfo.ext = Workbook.fileSuffix.xlsx.name();
+        }
+
+        exportInfo.path = path;
+        exportInfo.filePath = path + exportInfo.fileName + "." + exportInfo.ext;
+        exportInfo.lastPath = RequestUtil.getRealPath(request) + Workbook.internshipFilePath();
     }
 
     public List<?> getData() {
@@ -174,6 +202,14 @@ public class DataTablesUtil extends PaginationUtil {
         this.search = search;
     }
 
+    public ExportInfo getExportInfo() {
+        return exportInfo;
+    }
+
+    public void setExportInfo(ExportInfo exportInfo) {
+        this.exportInfo = exportInfo;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this)
@@ -187,5 +223,53 @@ public class DataTablesUtil extends PaginationUtil {
                 .append("extraPage", extraPage)
                 .append("search", search)
                 .toString();
+    }
+
+    public static class ExportInfo{
+        private String fileName;
+        private String ext;
+        private String filePath;
+        private String path;
+        private String lastPath;
+
+        public String getFileName() {
+            return fileName;
+        }
+
+        public void setFileName(String fileName) {
+            this.fileName = fileName;
+        }
+
+        public String getExt() {
+            return ext;
+        }
+
+        public void setExt(String ext) {
+            this.ext = ext;
+        }
+
+        public String getFilePath() {
+            return filePath;
+        }
+
+        public void setFilePath(String filePath) {
+            this.filePath = filePath;
+        }
+
+        public String getPath() {
+            return path;
+        }
+
+        public void setPath(String path) {
+            this.path = path;
+        }
+
+        public String getLastPath() {
+            return lastPath;
+        }
+
+        public void setLastPath(String lastPath) {
+            this.lastPath = lastPath;
+        }
     }
 }

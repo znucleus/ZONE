@@ -59,6 +59,20 @@ public class InternshipTeacherDistributionServiceImpl implements InternshipTeach
     }
 
     @Override
+    public List<InternshipTeacherDistributionBean> export(DataTablesUtil dataTablesUtil) {
+        SelectOnConditionStep<Record> selectOnConditionStep =
+                create.select()
+                        .from(INTERNSHIP_TEACHER_DISTRIBUTION)
+                        .join(STAFF)
+                        .on(INTERNSHIP_TEACHER_DISTRIBUTION.STAFF_ID.eq(STAFF.STAFF_ID))
+                        .join(USERS)
+                        .on(STAFF.USERNAME.eq(USERS.USERNAME))
+                        .join(STUDENT)
+                        .on(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID.eq(STUDENT.STUDENT_ID));
+        return (List<InternshipTeacherDistributionBean>) queryAllAndBuildData(selectOnConditionStep, dataTablesUtil, false);
+    }
+
+    @Override
     public int countAll(DataTablesUtil dataTablesUtil) {
         SelectOnConditionStep<Record1<Integer>> selectOnConditionStep =
                 create.selectCount()

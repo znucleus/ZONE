@@ -185,11 +185,12 @@ public interface PaginationPlugin<S extends PaginationUtil> {
      *
      * @param selectOnConditionStep 关联表
      * @param paginationUtil        分页工具
+     * @param useExtraCondition     是否使用额外条件
      * @return 全部数据
      */
-    default Result<Record> queryAll(SelectOnConditionStep<Record> selectOnConditionStep, S paginationUtil) {
+    default Result<Record> queryAll(SelectOnConditionStep<Record> selectOnConditionStep, S paginationUtil, boolean useExtraCondition) {
         Result<Record> records;
-        Condition a = searchCondition(paginationUtil);
+        Condition a = useExtraCondition(paginationUtil, useExtraCondition);
         if (Objects.isNull(a)) {
             sortCondition(selectOnConditionStep, paginationUtil);
             records = selectOnConditionStep.fetch();
@@ -199,6 +200,17 @@ public interface PaginationPlugin<S extends PaginationUtil> {
             records = selectConditionStep.fetch();
         }
         return records;
+    }
+
+    /**
+     * 多表查询，自定义构建数据
+     *
+     * @param selectOnConditionStep 关联表
+     * @param paginationUtil        分页工具
+     * @param useExtraCondition     是否使用额外条件
+     */
+    default List<?> queryAllAndBuildData(SelectOnConditionStep<Record> selectOnConditionStep, S paginationUtil, boolean useExtraCondition) {
+        return buildData(queryAll(selectOnConditionStep, paginationUtil, useExtraCondition));
     }
 
     /**

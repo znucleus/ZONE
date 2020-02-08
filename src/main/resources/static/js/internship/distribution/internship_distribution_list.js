@@ -383,7 +383,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                 fileName: $('#export_file_name').val(),
                 ext: 'xls'
             };
-            window.location.href = encodeURI(getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&exportFile=" + JSON.stringify(exportFile));
+            window.location.href = encodeURI(getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&export_info=" + JSON.stringify(exportFile));
         });
 
         $('#export_xlsx').click(function () {
@@ -393,7 +393,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                 fileName: $('#export_file_name').val(),
                 ext: 'xlsx'
             };
-            window.location.href = encodeURI(getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&exportFile=" + JSON.stringify(exportFile));
+            window.location.href = encodeURI(getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&export_info=" + JSON.stringify(exportFile));
         });
 
         /*
