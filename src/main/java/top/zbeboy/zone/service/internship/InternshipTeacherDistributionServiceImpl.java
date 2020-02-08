@@ -98,6 +98,15 @@ public class InternshipTeacherDistributionServiceImpl implements InternshipTeach
     }
 
     @Override
+    public void updateStaff(InternshipTeacherDistribution internshipTeacherDistribution) {
+        create.update(INTERNSHIP_TEACHER_DISTRIBUTION)
+                .set(INTERNSHIP_TEACHER_DISTRIBUTION.STAFF_ID, internshipTeacherDistribution.getStaffId())
+                .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipTeacherDistribution.getInternshipReleaseId())
+                        .and(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID.eq(internshipTeacherDistribution.getStudentId())))
+                .execute();
+    }
+
+    @Override
     public void deleteByInternshipReleaseId(String internshipReleaseId) {
         create.deleteFrom(INTERNSHIP_TEACHER_DISTRIBUTION)
                 .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId))

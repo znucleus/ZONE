@@ -56,6 +56,13 @@ public interface InternshipTeacherDistributionService {
     void batchSave(List<InternshipTeacherDistribution> internshipTeacherDistribution);
 
     /**
+     * 更新
+     *
+     * @param internshipTeacherDistribution 数据
+     */
+    void updateStaff(InternshipTeacherDistribution internshipTeacherDistribution);
+
+    /**
      * 通过实习发布id删除
      *
      * @param internshipReleaseId 实习发布id

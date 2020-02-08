@@ -273,4 +273,37 @@ public class InternshipTeacherDistributionRestController {
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
+
+    /**
+     * 更新
+     *
+     * @param studentId           学生id
+     * @param staffId             教职工id
+     * @param internshipReleaseId 实习发布id
+     * @return true or false
+     */
+    @PostMapping("/web/internship/teacher_distribution/update")
+    public ResponseEntity<Map<String, Object>> update(@RequestParam("studentId") int studentId, @RequestParam("staffId") int staffId,
+                                                      @RequestParam("id") String internshipReleaseId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        Optional<Record> record = internshipReleaseService.findByIdRelation(internshipReleaseId);
+        if (record.isPresent()) {
+            if (internshipConditionCommon.teacherDistributionCondition(internshipReleaseId)) {
+                Optional<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                if (internshipTeacherDistributionRecord.isPresent()) {
+                    InternshipTeacherDistribution internshipTeacherDistribution = internshipTeacherDistributionRecord.get().into(InternshipTeacherDistribution.class);
+                    internshipTeacherDistribution.setStaffId(staffId);
+                    internshipTeacherDistributionService.updateStaff(internshipTeacherDistribution);
+                    ajaxUtil.success().msg("保存成功");
+                } else {
+                    ajaxUtil.fail().msg("分配数据中未查询到该学生");
+                }
+            } else {
+                ajaxUtil.fail().msg("您无权限或当前实习不允许操作");
+            }
+        } else {
+            ajaxUtil.fail().msg("根据实习发布ID未查询到实习发布数据");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
 }

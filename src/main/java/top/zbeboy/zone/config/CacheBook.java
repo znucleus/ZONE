@@ -35,6 +35,7 @@ public final class CacheBook {
     public static final String SCIENCE = "SCIENCE";
     public static final String STAFF = "STAFF";
     public static final String STUDENT = "STUDENT";
+    public static final String STUDENT_ID = "STUDENT_ID";
     public static final String ROLES_APPLICATION = "ROLES_APPLICATION";
     public static final String ROLES = "ROLES";
     public static final String MENU = "MENU";

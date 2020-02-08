@@ -8,6 +8,7 @@ import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,6 +68,29 @@ public class StudentServiceImpl implements StudentService, PaginationPlugin<Data
     @Autowired
     StudentServiceImpl(DSLContext dslContext) {
         create = dslContext;
+    }
+
+    @Cacheable(cacheNames = CacheBook.STUDENT_ID, key = "#id")
+    @Override
+    public Optional<Record> findByIdRelation(int id) {
+        return create.select()
+                .from(STUDENT)
+                .join(ORGANIZE)
+                .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
+                .join(GRADE)
+                .on(ORGANIZE.GRADE_ID.eq(GRADE.GRADE_ID))
+                .join(SCIENCE)
+                .on(GRADE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
+                .join(DEPARTMENT)
+                .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
+                .join(COLLEGE)
+                .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
+                .join(SCHOOL)
+                .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
+                .join(USERS)
+                .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                .where(STUDENT.STUDENT_ID.eq(id))
+                .fetchOptional();
     }
 
     @Override
@@ -307,7 +331,9 @@ public class StudentServiceImpl implements StudentService, PaginationPlugin<Data
         });
     }
 
-    @CacheEvict(cacheNames = CacheBook.STUDENT, key = "#student.username")
+    @Caching(evict = {
+            @CacheEvict(cacheNames = CacheBook.STUDENT, key = "#student.username"),
+            @CacheEvict(cacheNames = CacheBook.STUDENT_ID, key = "#student.studentId")})
     @Override
     public void update(Student student) {
         studentDao.update(student);
