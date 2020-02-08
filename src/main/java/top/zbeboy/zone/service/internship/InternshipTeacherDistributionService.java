@@ -68,4 +68,12 @@ public interface InternshipTeacherDistributionService {
      * @param internshipReleaseId 实习发布id
      */
     void deleteByInternshipReleaseId(String internshipReleaseId);
+
+    /**
+     * 通过实习发布id 和 学生id删除
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param studentId           学生id
+     */
+    void deleteByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId);
 }

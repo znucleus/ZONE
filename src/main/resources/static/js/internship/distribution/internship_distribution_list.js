@@ -414,24 +414,16 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
             }
 
             if (studentIds.length > 0) {
-                var msg;
-                msg = Messenger().post({
-                    message: "确定删除选中的学生吗?",
-                    actions: {
-                        retry: {
-                            label: '确定',
-                            phrase: 'Retrying TIME',
-                            action: function () {
-                                msg.cancel();
-                                dels(studentIds, init_page_param.internshipReleaseId);
-                            }
-                        },
-                        cancel: {
-                            label: '取消',
-                            action: function () {
-                                return msg.cancel();
-                            }
-                        }
+                Swal.fire({
+                    title: "确定删除选中的学生吗？",
+                    text: "学生删除！",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    preConfirm: function () {
+                        dels(studentIds, page_param.paramInternshipReleaseId);
                     }
                 });
             } else {
@@ -444,24 +436,16 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
          删除
          */
         function student_del(studentId, internshipReleaseId) {
-            var msg;
-            msg = Messenger().post({
-                message: "确定删除该学生吗?",
-                actions: {
-                    retry: {
-                        label: '确定',
-                        phrase: 'Retrying TIME',
-                        action: function () {
-                            msg.cancel();
-                            del(studentId, internshipReleaseId);
-                        }
-                    },
-                    cancel: {
-                        label: '取消',
-                        action: function () {
-                            return msg.cancel();
-                        }
-                    }
+            Swal.fire({
+                title: "确定删除该学生吗？",
+                text: "学生删除！",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                preConfirm: function () {
+                    del(studentId, internshipReleaseId);
                 }
             });
         }
@@ -483,38 +467,40 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
         }
 
         function del(studentId, internshipReleaseId) {
-            sendDelAjax(studentId, internshipReleaseId, '删除');
+            sendDelAjax(studentId, internshipReleaseId);
         }
 
         function dels(studentIds, internshipReleaseId) {
-            sendDelAjax(studentIds.join(","), internshipReleaseId, '批量删除');
+            sendDelAjax(studentIds.join(","), internshipReleaseId);
         }
 
         /**
          * 删除 ajax
          * @param studentId
          * @param internshipReleaseId
-         * @param message
          */
-        function sendDelAjax(studentId, internshipReleaseId, message) {
-            Messenger().run({
-                successMessage: message + '学生成功',
-                errorMessage: message + '学生失败',
-                progressMessage: '正在' + message + '学生....'
-            }, {
-                url: web_path + getAjaxUrl().del,
-                type: 'post',
+        function sendDelAjax(studentId, internshipReleaseId,) {
+            $.ajax({
+                type: 'POST',
+                url: getAjaxUrl().del,
                 data: {studentIds: studentId, id: internshipReleaseId},
                 success: function (data) {
+                    Messenger().post({
+                        message: data.msg,
+                        type: data.state ? 'success' : 'error',
+                        showCloseButton: true
+                    });
+
                     if (data.state) {
                         myTable.ajax.reload();
                     }
                 },
-                error: function (xhr) {
-                    if ((xhr != null ? xhr.status : void 0) === 404) {
-                        return "请求失败";
-                    }
-                    return true;
+                error: function (XMLHttpRequest) {
+                    Messenger().post({
+                        message: 'Request error : ' + XMLHttpRequest.status + " " + XMLHttpRequest.statusText,
+                        type: 'error',
+                        showCloseButton: true
+                    });
                 }
             });
         }

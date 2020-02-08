@@ -286,23 +286,42 @@ public class InternshipTeacherDistributionRestController {
     public ResponseEntity<Map<String, Object>> update(@RequestParam("studentId") int studentId, @RequestParam("staffId") int staffId,
                                                       @RequestParam("id") String internshipReleaseId) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        Optional<Record> record = internshipReleaseService.findByIdRelation(internshipReleaseId);
-        if (record.isPresent()) {
-            if (internshipConditionCommon.teacherDistributionCondition(internshipReleaseId)) {
-                Optional<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
-                if (internshipTeacherDistributionRecord.isPresent()) {
-                    InternshipTeacherDistribution internshipTeacherDistribution = internshipTeacherDistributionRecord.get().into(InternshipTeacherDistribution.class);
-                    internshipTeacherDistribution.setStaffId(staffId);
-                    internshipTeacherDistributionService.updateStaff(internshipTeacherDistribution);
-                    ajaxUtil.success().msg("保存成功");
-                } else {
-                    ajaxUtil.fail().msg("分配数据中未查询到该学生");
-                }
+        if (internshipConditionCommon.teacherDistributionCondition(internshipReleaseId)) {
+            Optional<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+            if (internshipTeacherDistributionRecord.isPresent()) {
+                InternshipTeacherDistribution internshipTeacherDistribution = internshipTeacherDistributionRecord.get().into(InternshipTeacherDistribution.class);
+                internshipTeacherDistribution.setStaffId(staffId);
+                internshipTeacherDistributionService.updateStaff(internshipTeacherDistribution);
+                ajaxUtil.success().msg("保存成功");
             } else {
-                ajaxUtil.fail().msg("您无权限或当前实习不允许操作");
+                ajaxUtil.fail().msg("分配数据中未查询到该学生");
             }
         } else {
-            ajaxUtil.fail().msg("根据实习发布ID未查询到实习发布数据");
+            ajaxUtil.fail().msg("您无权限或当前实习不允许操作");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 批量删除
+     *
+     * @param studentIds          学生ids
+     * @param internshipReleaseId 实习id
+     * @return true or false
+     */
+    @PostMapping("/web/internship/teacher_distribution/delete")
+    public ResponseEntity<Map<String, Object>> delete(String studentIds, @RequestParam("id") String internshipReleaseId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (internshipConditionCommon.teacherDistributionCondition(internshipReleaseId)) {
+            if (StringUtils.isNotBlank(studentIds)) {
+                List<Integer> ids = SmallPropsUtil.StringIdsToNumberList(studentIds);
+                ids.forEach(id-> internshipTeacherDistributionService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, id));
+                ajaxUtil.success().msg("删除成功");
+            }else {
+                ajaxUtil.fail().msg("请选择学生");
+            }
+        } else {
+            ajaxUtil.fail().msg("您无权限或当前实习不允许操作");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }

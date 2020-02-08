@@ -114,6 +114,14 @@ public class InternshipTeacherDistributionServiceImpl implements InternshipTeach
     }
 
     @Override
+    public void deleteByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId) {
+        create.deleteFrom(INTERNSHIP_TEACHER_DISTRIBUTION)
+                .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId)
+                .and(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID.eq(studentId)))
+                .execute();
+    }
+
+    @Override
     public Condition searchCondition(DataTablesUtil paginationUtil) {
         Condition a = null;
         JSONObject search = paginationUtil.getSearch();
