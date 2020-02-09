@@ -91,6 +91,27 @@ public class InternshipConditionCommon {
     }
 
     /**
+     * 基础条件
+     *
+     * @param internshipReleaseId 发布id
+     * @return true or false
+     */
+    public boolean basicCondition(String internshipReleaseId) {
+        boolean canOperator = false;
+        if (canOperator(internshipReleaseId)) {
+            Optional<Record> record = internshipReleaseService.findByIdRelation(internshipReleaseId);
+            if (record.isPresent()) {
+                InternshipReleaseBean internshipRelease = record.get().into(InternshipReleaseBean.class);
+                // 检测状态正常
+                if (!BooleanUtil.toBoolean(internshipRelease.getInternshipReleaseIsDel())) {
+                    canOperator = true;
+                }
+            }
+        }
+        return canOperator;
+    }
+
+    /**
      * 教师分配条件
      *
      * @param internshipReleaseId 实习发布id

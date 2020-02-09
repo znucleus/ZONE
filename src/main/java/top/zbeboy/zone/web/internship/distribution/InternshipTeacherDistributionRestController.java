@@ -246,38 +246,33 @@ public class InternshipTeacherDistributionRestController {
     @PostMapping("/web/internship/teacher_distribution/distribution/save")
     public ResponseEntity<Map<String, Object>> batchSave(@RequestParam("internshipReleaseId") String internshipReleaseId, String organizeId, String staffId) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        Optional<Record> record = internshipReleaseService.findByIdRelation(internshipReleaseId);
-        if (record.isPresent()) {
-            if (internshipConditionCommon.teacherDistributionCondition(internshipReleaseId)) {
-                List<Integer> organizeIds = SmallPropsUtil.StringIdsToNumberList(organizeId);
-                List<Integer> staffIds = SmallPropsUtil.StringIdsToNumberList(staffId);
+        if (internshipConditionCommon.teacherDistributionCondition(internshipReleaseId)) {
+            List<Integer> organizeIds = SmallPropsUtil.StringIdsToNumberList(organizeId);
+            List<Integer> staffIds = SmallPropsUtil.StringIdsToNumberList(staffId);
 
-                // 删除以前的分配记录
-                internshipTeacherDistributionService.deleteByInternshipReleaseId(internshipReleaseId);
+            // 删除以前的分配记录
+            internshipTeacherDistributionService.deleteByInternshipReleaseId(internshipReleaseId);
 
-                List<InternshipTeacherDistribution> internshipTeacherDistributions = new ArrayList<>();
-                Result<Record> studentRecords = studentService.findNormalInOrganizeIds(organizeIds);
-                if (studentRecords.isNotEmpty() && staffIds.size() > 0) {
-                    List<StudentBean> students = studentRecords.into(StudentBean.class);
-                    int i = 0;
-                    Users users = usersService.getUserFromSession();
-                    for (StudentBean student : students) {
-                        if (i >= staffIds.size()) {
-                            i = 0;
-                        }
-                        internshipTeacherDistributions.add(new InternshipTeacherDistribution(staffIds.get(i), student.getStudentId(), internshipReleaseId, users.getUsername(),
-                                student.getRealName(), users.getRealName()));
-                        i++;
-
+            List<InternshipTeacherDistribution> internshipTeacherDistributions = new ArrayList<>();
+            Result<Record> studentRecords = studentService.findNormalInOrganizeIds(organizeIds);
+            if (studentRecords.isNotEmpty() && staffIds.size() > 0) {
+                List<StudentBean> students = studentRecords.into(StudentBean.class);
+                int i = 0;
+                Users users = usersService.getUserFromSession();
+                for (StudentBean student : students) {
+                    if (i >= staffIds.size()) {
+                        i = 0;
                     }
+                    internshipTeacherDistributions.add(new InternshipTeacherDistribution(staffIds.get(i), student.getStudentId(), internshipReleaseId, users.getUsername(),
+                            student.getRealName(), users.getRealName()));
+                    i++;
+
                 }
-                internshipTeacherDistributionService.batchSave(internshipTeacherDistributions);
-                ajaxUtil.success().msg("保存成功");
-            } else {
-                ajaxUtil.fail().msg("您无权限或当前实习不允许操作");
             }
+            internshipTeacherDistributionService.batchSave(internshipTeacherDistributions);
+            ajaxUtil.success().msg("保存成功");
         } else {
-            ajaxUtil.fail().msg("根据实习发布ID未查询到实习发布数据");
+            ajaxUtil.fail().msg("您无权限或当前实习不允许操作");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
@@ -349,5 +344,23 @@ public class InternshipTeacherDistributionRestController {
         if (export.exportExcel(exportInfo.getLastPath(), exportInfo.getFileName(), exportInfo.getExt())) {
             uploadService.download(exportInfo.getFileName(), exportInfo.getFilePath(), response, request);
         }
+    }
+
+    /**
+     * 删除未申请学生的分配
+     *
+     * @param internshipReleaseId 实习发布id
+     * @return true or false
+     */
+    @PostMapping("/web/internship/teacher_distribution/distribution/delete_not_apply")
+    public ResponseEntity<Map<String, Object>> deleteNotApply(@RequestParam("id") String internshipReleaseId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (internshipConditionCommon.basicCondition(internshipReleaseId)) {
+            internshipTeacherDistributionService.deleteNotApply(internshipReleaseId);
+            ajaxUtil.success().msg("删除成功");
+        } else {
+            ajaxUtil.fail().msg("您无权限或当前实习不允许操作");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

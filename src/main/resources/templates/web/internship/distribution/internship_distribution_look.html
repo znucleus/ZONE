@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="br-pageheader pd-y-15 pd-l-20">
+        <nav class="breadcrumb pd-0 mg-0 tx-12">
+            <a class="breadcrumb-item dy_href" href="#/web/menu/internship/teacher_distribution">列表</a>
+            <span class="breadcrumb-item active">教师分配</span>
+        </nav>
+    </div><!-- br-pageheader -->
+    <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
+        <h4 class="tx-gray-800 mg-b-5">教师分配</h4>
+        <p class="mg-b-0">查看教师分配。</p>
+    </div>
+
+    <div class="br-pagebody">
+        <div class="br-section-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-6 mt-2">
+                            <input type="text" id="search_student_username" class="form-control"
+                                   placeholder="学生账号"/>
+                        </div>
+                        <div class="col-md-6 mt-2">
+                            <input type="text" id="search_staff_username" class="form-control"
+                                   placeholder="教职工账号"/>
+                        </div>
+                        <div class="col-md-6 mt-2">
+                            <input type="text" id="search_student_number" class="form-control"
+                                   placeholder="学生学号"/>
+                        </div>
+                        <div class="col-md-6 mt-2">
+                            <input type="text" id="search_staff_number" class="form-control"
+                                   placeholder="教职工工号"/>
+                        </div>
+                        <div class="col-md-6 mt-2">
+                            <input type="text" id="search_username" class="form-control" placeholder="分配人账号"/>
+                        </div>
+                        <div class="col-md-6 mt-2">
+                            <input type="text" id="search_assigner" class="form-control input-sm" placeholder="分配人姓名"/>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button type="button" id="search" class="btn btn-outline-secondary"><i
+                                class="fa fa-search"></i>搜索
+                        </button>
+                        <button type="button" id="reset_search" class="btn btn-outline-secondary"><i
+                                class="fa fa-repeat"></i>重置
+                        </button>
+                    </div>
+                </div>
+
+                <div class="col-md-12 mt-3">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="export_file_name" placeholder="文件名">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">导出</button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="javascript:" id="export_xls">导出Xls</a>
+                                <a class="dropdown-item" href="javascript:" id="export_xlsx">导出Xlsx</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12 mt-2">
+                    <table id="dataTable" class="table table-striped table-bordered dt-responsive nowrap"
+                           cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th data-priority="1">序号</th>
+                            <th data-priority="2">学生姓名</th>
+                            <th>学生账号</th>
+                            <th data-priority="3">学号</th>
+                            <th data-priority="4">指导教师</th>
+                            <th>指导教师账号</th>
+                            <th>工号</th>
+                            <th>分配人</th>
+                            <th>分配人账号</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--定义操作列按钮模板-->
+    <script id="operator_button" type="text/x-handlebars-template">
+        <div class="btn-group" role="group">
+            {{#each func}}
+            <button type="button" class="btn btn-{{this.type}} btn-sm {{this.css}}" data-id="{{this.id}}">{{this.name}}
+            </button>
+            {{/each}}
+        </div>
+    </script>
+
+    <input type="hidden" id="paramInternshipReleaseId" th:value="${internshipReleaseId}"/>
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/internship/distribution/internship_distribution_look.js')}"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>

@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zone.domain.tables.daos.InternshipTeacherDistributionDao;
 import top.zbeboy.zone.domain.tables.pojos.InternshipTeacherDistribution;
+import top.zbeboy.zone.domain.tables.records.InternshipApplyRecord;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zone.service.util.SQLQueryUtil;
 import top.zbeboy.zone.web.bean.internship.distribution.InternshipTeacherDistributionBean;
@@ -132,6 +133,15 @@ public class InternshipTeacherDistributionServiceImpl implements InternshipTeach
         create.deleteFrom(INTERNSHIP_TEACHER_DISTRIBUTION)
                 .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId)
                 .and(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID.eq(studentId)))
+                .execute();
+    }
+
+    @Override
+    public void deleteNotApply(String internshipReleaseId) {
+        SelectConditionStep<InternshipApplyRecord> internshipApplyRecord = create.selectFrom(INTERNSHIP_APPLY)
+                .where(INTERNSHIP_APPLY.STUDENT_ID.eq(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID).and(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID)));
+        create.deleteFrom(INTERNSHIP_TEACHER_DISTRIBUTION)
+                .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).andNotExists(internshipApplyRecord))
                 .execute();
     }
 

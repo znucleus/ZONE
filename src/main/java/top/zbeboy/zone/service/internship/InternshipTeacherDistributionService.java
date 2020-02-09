@@ -84,4 +84,11 @@ public interface InternshipTeacherDistributionService {
      * @param studentId           学生id
      */
     void deleteByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId);
+
+    /**
+     * 删除未申请学生的分配
+     *
+     * @param internshipReleaseId 实习发布Id
+     */
+    void deleteNotApply(String internshipReleaseId);
 }
