@@ -9,6 +9,7 @@ import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
+import top.zbeboy.zone.service.internship.InternshipApplyService;
 import top.zbeboy.zone.service.internship.InternshipReleaseService;
 import top.zbeboy.zone.service.internship.InternshipTeacherDistributionService;
 import top.zbeboy.zone.service.platform.RoleService;
@@ -31,6 +32,9 @@ public class InternshipConditionCommon {
 
     @Resource
     private InternshipTeacherDistributionService internshipTeacherDistributionService;
+
+    @Resource
+    private InternshipApplyService internshipApplyService;
 
     @Resource
     private UsersService usersService;
@@ -168,7 +172,11 @@ public class InternshipConditionCommon {
                                     // 检测是否有指导老师
                                     Optional<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
                                     if(internshipTeacherDistributionRecord.isPresent()){
-                                        canOperator = true;
+                                        // 检测是否申请过
+                                        Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
+                                        if (!internshipApplyRecord.isPresent()) {
+                                            canOperator = true;
+                                        }
                                     }
                                 }
                             }

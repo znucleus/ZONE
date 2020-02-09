@@ -119,15 +119,7 @@ public class InternshipTeacherDistributionRestController {
     @GetMapping("/web/internship/teacher_distribution/staff/{id}")
     public ResponseEntity<Map<String, Object>> staff(@PathVariable("id") String id) {
         Select2Data select2Data = Select2Data.of();
-        List<StaffBean> beans = new ArrayList<>();
-        Optional<Record> record = internshipReleaseService.findByIdRelation(id);
-        if (record.isPresent()) {
-            Department department = record.get().into(Department.class);
-            Result<Record> staffRecord = staffService.findNormalByDepartmentIdRelation(department.getDepartmentId());
-            if (staffRecord.isNotEmpty()) {
-                beans = staffRecord.into(StaffBean.class);
-            }
-        }
+        List<StaffBean> beans = internshipControllerCommon.internshipReleaseStaffData(id);
         beans.forEach(bean -> select2Data.add(bean.getStaffId().toString(), bean.getRealName() + " " + bean.getStaffNumber()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }

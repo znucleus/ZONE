@@ -37,15 +37,11 @@ import top.zbeboy.zone.domain.tables.Course;
 import top.zbeboy.zone.domain.tables.Department;
 import top.zbeboy.zone.domain.tables.Files;
 import top.zbeboy.zone.domain.tables.Grade;
-import top.zbeboy.zone.domain.tables.GraduationPracticeCollege;
-import top.zbeboy.zone.domain.tables.GraduationPracticeCompany;
-import top.zbeboy.zone.domain.tables.GraduationPracticeUnify;
 import top.zbeboy.zone.domain.tables.InternshipApply;
 import top.zbeboy.zone.domain.tables.InternshipChangeCompanyHistory;
 import top.zbeboy.zone.domain.tables.InternshipChangeHistory;
-import top.zbeboy.zone.domain.tables.InternshipCollege;
-import top.zbeboy.zone.domain.tables.InternshipCompany;
 import top.zbeboy.zone.domain.tables.InternshipFile;
+import top.zbeboy.zone.domain.tables.InternshipInfo;
 import top.zbeboy.zone.domain.tables.InternshipJournal;
 import top.zbeboy.zone.domain.tables.InternshipJournalContent;
 import top.zbeboy.zone.domain.tables.InternshipRegulate;
@@ -99,7 +95,7 @@ import top.zbeboy.zone.domain.tables.UsersType;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Zone extends SchemaImpl {
 
-    private static final long serialVersionUID = 971977033;
+    private static final long serialVersionUID = 335478647;
 
     /**
      * The reference instance of <code>zone</code>
@@ -222,21 +218,6 @@ public class Zone extends SchemaImpl {
     public final Grade GRADE = top.zbeboy.zone.domain.tables.Grade.GRADE;
 
     /**
-     * The table <code>zone.graduation_practice_college</code>.
-     */
-    public final GraduationPracticeCollege GRADUATION_PRACTICE_COLLEGE = top.zbeboy.zone.domain.tables.GraduationPracticeCollege.GRADUATION_PRACTICE_COLLEGE;
-
-    /**
-     * The table <code>zone.graduation_practice_company</code>.
-     */
-    public final GraduationPracticeCompany GRADUATION_PRACTICE_COMPANY = top.zbeboy.zone.domain.tables.GraduationPracticeCompany.GRADUATION_PRACTICE_COMPANY;
-
-    /**
-     * The table <code>zone.graduation_practice_unify</code>.
-     */
-    public final GraduationPracticeUnify GRADUATION_PRACTICE_UNIFY = top.zbeboy.zone.domain.tables.GraduationPracticeUnify.GRADUATION_PRACTICE_UNIFY;
-
-    /**
      * The table <code>zone.internship_apply</code>.
      */
     public final InternshipApply INTERNSHIP_APPLY = top.zbeboy.zone.domain.tables.InternshipApply.INTERNSHIP_APPLY;
@@ -252,19 +233,14 @@ public class Zone extends SchemaImpl {
     public final InternshipChangeHistory INTERNSHIP_CHANGE_HISTORY = top.zbeboy.zone.domain.tables.InternshipChangeHistory.INTERNSHIP_CHANGE_HISTORY;
 
     /**
-     * The table <code>zone.internship_college</code>.
-     */
-    public final InternshipCollege INTERNSHIP_COLLEGE = top.zbeboy.zone.domain.tables.InternshipCollege.INTERNSHIP_COLLEGE;
-
-    /**
-     * The table <code>zone.internship_company</code>.
-     */
-    public final InternshipCompany INTERNSHIP_COMPANY = top.zbeboy.zone.domain.tables.InternshipCompany.INTERNSHIP_COMPANY;
-
-    /**
      * The table <code>zone.internship_file</code>.
      */
     public final InternshipFile INTERNSHIP_FILE = top.zbeboy.zone.domain.tables.InternshipFile.INTERNSHIP_FILE;
+
+    /**
+     * The table <code>zone.internship_info</code>.
+     */
+    public final InternshipInfo INTERNSHIP_INFO = top.zbeboy.zone.domain.tables.InternshipInfo.INTERNSHIP_INFO;
 
     /**
      * The table <code>zone.internship_journal</code>.
@@ -501,15 +477,11 @@ public class Zone extends SchemaImpl {
             Department.DEPARTMENT,
             Files.FILES,
             Grade.GRADE,
-            GraduationPracticeCollege.GRADUATION_PRACTICE_COLLEGE,
-            GraduationPracticeCompany.GRADUATION_PRACTICE_COMPANY,
-            GraduationPracticeUnify.GRADUATION_PRACTICE_UNIFY,
             InternshipApply.INTERNSHIP_APPLY,
             InternshipChangeCompanyHistory.INTERNSHIP_CHANGE_COMPANY_HISTORY,
             InternshipChangeHistory.INTERNSHIP_CHANGE_HISTORY,
-            InternshipCollege.INTERNSHIP_COLLEGE,
-            InternshipCompany.INTERNSHIP_COMPANY,
             InternshipFile.INTERNSHIP_FILE,
+            InternshipInfo.INTERNSHIP_INFO,
             InternshipJournal.INTERNSHIP_JOURNAL,
             InternshipJournalContent.INTERNSHIP_JOURNAL_CONTENT,
             InternshipRegulate.INTERNSHIP_REGULATE,

@@ -8,6 +8,7 @@ import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,6 +70,23 @@ public class StaffServiceImpl implements StaffService, PaginationPlugin<DataTabl
         create = dslContext;
     }
 
+    @Cacheable(cacheNames = CacheBook.STAFF_ID, key = "#id")
+    @Override
+    public Optional<Record> findByIdRelation(int id) {
+        return create.select()
+                .from(STAFF)
+                .join(DEPARTMENT)
+                .on(STAFF.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
+                .join(COLLEGE)
+                .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
+                .join(SCHOOL)
+                .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
+                .join(USERS)
+                .on(STAFF.USERNAME.eq(USERS.USERNAME))
+                .where(STAFF.STAFF_ID.eq(id))
+                .fetchOptional();
+    }
+
     @Override
     public Optional<StaffRecord> findByUsername(String username) {
         return create.selectFrom(STAFF)
@@ -87,6 +105,8 @@ public class StaffServiceImpl implements StaffService, PaginationPlugin<DataTabl
                 .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
                 .join(SCHOOL)
                 .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
+                .join(USERS)
+                .on(STAFF.USERNAME.eq(USERS.USERNAME))
                 .where(STAFF.USERNAME.eq(username))
                 .fetchOptional();
     }
@@ -226,7 +246,9 @@ public class StaffServiceImpl implements StaffService, PaginationPlugin<DataTabl
         });
     }
 
-    @CacheEvict(cacheNames = CacheBook.STAFF, key = "#staff.username")
+    @Caching(evict = {
+            @CacheEvict(cacheNames = CacheBook.STAFF, key = "#staff.username"),
+            @CacheEvict(cacheNames = CacheBook.STAFF_ID, key = "#staff.staffId")})
     @Override
     public void update(Staff staff) {
         staffDao.update(staff);

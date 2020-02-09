@@ -62,9 +62,6 @@ public class StudentServiceImpl implements StudentService, PaginationPlugin<Data
     @Resource
     private StaffService staffService;
 
-    @Resource
-    private StudentService studentService;
-
     @Autowired
     StudentServiceImpl(DSLContext dslContext) {
         create = dslContext;
@@ -117,6 +114,8 @@ public class StudentServiceImpl implements StudentService, PaginationPlugin<Data
                 .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
                 .join(SCHOOL)
                 .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
+                .join(USERS)
+                .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                 .where(STUDENT.USERNAME.eq(username))
                 .fetchOptional();
     }
@@ -678,7 +677,7 @@ public class StudentServiceImpl implements StudentService, PaginationPlugin<Data
 
                     }
                 } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                    Optional<Record> record = studentService.findByUsernameRelation(users.getUsername());
+                    Optional<Record> record = findByUsernameRelation(users.getUsername());
                     if (record.isPresent()) {
                         collegeId = record.get().get(COLLEGE.COLLEGE_ID);
                     }

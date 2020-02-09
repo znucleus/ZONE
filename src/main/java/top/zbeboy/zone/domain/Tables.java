@@ -29,15 +29,11 @@ import top.zbeboy.zone.domain.tables.Course;
 import top.zbeboy.zone.domain.tables.Department;
 import top.zbeboy.zone.domain.tables.Files;
 import top.zbeboy.zone.domain.tables.Grade;
-import top.zbeboy.zone.domain.tables.GraduationPracticeCollege;
-import top.zbeboy.zone.domain.tables.GraduationPracticeCompany;
-import top.zbeboy.zone.domain.tables.GraduationPracticeUnify;
 import top.zbeboy.zone.domain.tables.InternshipApply;
 import top.zbeboy.zone.domain.tables.InternshipChangeCompanyHistory;
 import top.zbeboy.zone.domain.tables.InternshipChangeHistory;
-import top.zbeboy.zone.domain.tables.InternshipCollege;
-import top.zbeboy.zone.domain.tables.InternshipCompany;
 import top.zbeboy.zone.domain.tables.InternshipFile;
+import top.zbeboy.zone.domain.tables.InternshipInfo;
 import top.zbeboy.zone.domain.tables.InternshipJournal;
 import top.zbeboy.zone.domain.tables.InternshipJournalContent;
 import top.zbeboy.zone.domain.tables.InternshipRegulate;
@@ -207,21 +203,6 @@ public class Tables {
     public static final Grade GRADE = Grade.GRADE;
 
     /**
-     * The table <code>zone.graduation_practice_college</code>.
-     */
-    public static final GraduationPracticeCollege GRADUATION_PRACTICE_COLLEGE = GraduationPracticeCollege.GRADUATION_PRACTICE_COLLEGE;
-
-    /**
-     * The table <code>zone.graduation_practice_company</code>.
-     */
-    public static final GraduationPracticeCompany GRADUATION_PRACTICE_COMPANY = GraduationPracticeCompany.GRADUATION_PRACTICE_COMPANY;
-
-    /**
-     * The table <code>zone.graduation_practice_unify</code>.
-     */
-    public static final GraduationPracticeUnify GRADUATION_PRACTICE_UNIFY = GraduationPracticeUnify.GRADUATION_PRACTICE_UNIFY;
-
-    /**
      * The table <code>zone.internship_apply</code>.
      */
     public static final InternshipApply INTERNSHIP_APPLY = InternshipApply.INTERNSHIP_APPLY;
@@ -237,19 +218,14 @@ public class Tables {
     public static final InternshipChangeHistory INTERNSHIP_CHANGE_HISTORY = InternshipChangeHistory.INTERNSHIP_CHANGE_HISTORY;
 
     /**
-     * The table <code>zone.internship_college</code>.
-     */
-    public static final InternshipCollege INTERNSHIP_COLLEGE = InternshipCollege.INTERNSHIP_COLLEGE;
-
-    /**
-     * The table <code>zone.internship_company</code>.
-     */
-    public static final InternshipCompany INTERNSHIP_COMPANY = InternshipCompany.INTERNSHIP_COMPANY;
-
-    /**
      * The table <code>zone.internship_file</code>.
      */
     public static final InternshipFile INTERNSHIP_FILE = InternshipFile.INTERNSHIP_FILE;
+
+    /**
+     * The table <code>zone.internship_info</code>.
+     */
+    public static final InternshipInfo INTERNSHIP_INFO = InternshipInfo.INTERNSHIP_INFO;
 
     /**
      * The table <code>zone.internship_journal</code>.
