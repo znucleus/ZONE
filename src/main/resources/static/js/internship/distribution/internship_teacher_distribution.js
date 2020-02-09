@@ -99,13 +99,6 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
             init();
         });
 
-        /*
-         发布
-         */
-        $('#release').click(function () {
-            $.address.value(ajax_url.add);
-        });
-
         /**
          * 列表数据
          * @param data 数据
