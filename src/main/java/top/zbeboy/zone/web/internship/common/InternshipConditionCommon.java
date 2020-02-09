@@ -10,10 +10,12 @@ import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.internship.InternshipReleaseService;
+import top.zbeboy.zone.service.internship.InternshipTeacherDistributionService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
+import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.zone.web.util.BooleanUtil;
 
@@ -26,6 +28,9 @@ public class InternshipConditionCommon {
 
     @Resource
     private InternshipReleaseService internshipReleaseService;
+
+    @Resource
+    private InternshipTeacherDistributionService internshipTeacherDistributionService;
 
     @Resource
     private UsersService usersService;
@@ -98,14 +103,12 @@ public class InternshipConditionCommon {
      */
     public boolean basicCondition(String internshipReleaseId) {
         boolean canOperator = false;
-        if (canOperator(internshipReleaseId)) {
-            Optional<Record> record = internshipReleaseService.findByIdRelation(internshipReleaseId);
-            if (record.isPresent()) {
-                InternshipReleaseBean internshipRelease = record.get().into(InternshipReleaseBean.class);
-                // 检测状态正常
-                if (!BooleanUtil.toBoolean(internshipRelease.getInternshipReleaseIsDel())) {
-                    canOperator = true;
-                }
+        Optional<Record> record = internshipReleaseService.findByIdRelation(internshipReleaseId);
+        if (record.isPresent()) {
+            InternshipReleaseBean internshipRelease = record.get().into(InternshipReleaseBean.class);
+            // 检测状态正常
+            if (!BooleanUtil.toBoolean(internshipRelease.getInternshipReleaseIsDel())) {
+                canOperator = true;
             }
         }
         return canOperator;
@@ -133,6 +136,49 @@ public class InternshipConditionCommon {
                 }
             }
         }
+        return canOperator;
+    }
+
+    /**
+     * 申请条件
+     *
+     * @param internshipReleaseId 实习发布id
+     * @return true or false
+     */
+    public boolean applyCondition(String internshipReleaseId) {
+        boolean canOperator = false;
+        Users users = usersService.getUserFromSession();
+        UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
+        if (Objects.nonNull(usersType)) {
+            // 检测是否学生类型
+            if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
+                Optional<Record> studentRecord = studentService.findByUsernameRelation(users.getUsername());
+                if (studentRecord.isPresent()) {
+                    StudentBean studentBean = studentRecord.get().into(StudentBean.class);
+                    Optional<Record> record = internshipReleaseService.findByIdRelation(internshipReleaseId);
+                    if (record.isPresent()) {
+                        InternshipReleaseBean internshipRelease = record.get().into(InternshipReleaseBean.class);
+                        // 检测是否属于发布的专业
+                        if(Objects.equals(studentBean.getScienceId(), internshipRelease.getScienceId())){
+                            // 检测状态正常
+                            if (!BooleanUtil.toBoolean(internshipRelease.getInternshipReleaseIsDel())) {
+                                // 检测实习申请时间
+                                if (DateTimeUtil.nowAfterSqlTimestamp(internshipRelease.getStartTime()) &&
+                                        DateTimeUtil.nowBeforeSqlTimestamp(internshipRelease.getEndTime())) {
+                                    // 检测是否有指导老师
+                                    Optional<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
+                                    if(internshipTeacherDistributionRecord.isPresent()){
+                                        canOperator = true;
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+
         return canOperator;
     }
 }

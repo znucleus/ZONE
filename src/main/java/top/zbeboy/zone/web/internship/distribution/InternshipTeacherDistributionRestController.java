@@ -355,7 +355,7 @@ public class InternshipTeacherDistributionRestController {
     @PostMapping("/web/internship/teacher_distribution/distribution/delete_not_apply")
     public ResponseEntity<Map<String, Object>> deleteNotApply(@RequestParam("id") String internshipReleaseId) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        if (internshipConditionCommon.basicCondition(internshipReleaseId)) {
+        if (internshipConditionCommon.canOperator(internshipReleaseId)) {
             internshipTeacherDistributionService.deleteNotApply(internshipReleaseId);
             ajaxUtil.success().msg("删除成功");
         } else {

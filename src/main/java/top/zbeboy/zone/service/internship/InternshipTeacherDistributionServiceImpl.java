@@ -4,9 +4,12 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import top.zbeboy.zone.config.CacheBook;
 import top.zbeboy.zone.domain.tables.daos.InternshipTeacherDistributionDao;
 import top.zbeboy.zone.domain.tables.pojos.InternshipTeacherDistribution;
 import top.zbeboy.zone.domain.tables.records.InternshipApplyRecord;
@@ -37,6 +40,7 @@ public class InternshipTeacherDistributionServiceImpl implements InternshipTeach
         create = dslContext;
     }
 
+    @Cacheable(cacheNames = CacheBook.INTERNSHIP_TEACHER_DISTRIBUTION, key = "#internshipReleaseId + '_' + #studentId")
     @Override
     public Optional<Record> findByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId) {
         return create.select()
@@ -112,6 +116,7 @@ public class InternshipTeacherDistributionServiceImpl implements InternshipTeach
         internshipTeacherDistributionDao.insert(internshipTeacherDistribution);
     }
 
+    @CacheEvict(cacheNames = CacheBook.INTERNSHIP_TEACHER_DISTRIBUTION, key = "#internshipTeacherDistribution.internshipReleaseId + '_' + #internshipTeacherDistribution.studentId")
     @Override
     public void updateStaff(InternshipTeacherDistribution internshipTeacherDistribution) {
         create.update(INTERNSHIP_TEACHER_DISTRIBUTION)
@@ -121,6 +126,7 @@ public class InternshipTeacherDistributionServiceImpl implements InternshipTeach
                 .execute();
     }
 
+    @CacheEvict(cacheNames = CacheBook.INTERNSHIP_TEACHER_DISTRIBUTION, allEntries = true)
     @Override
     public void deleteByInternshipReleaseId(String internshipReleaseId) {
         create.deleteFrom(INTERNSHIP_TEACHER_DISTRIBUTION)
@@ -128,14 +134,16 @@ public class InternshipTeacherDistributionServiceImpl implements InternshipTeach
                 .execute();
     }
 
+    @CacheEvict(cacheNames = CacheBook.INTERNSHIP_TEACHER_DISTRIBUTION, key = "#internshipReleaseId + '_' + #studentId")
     @Override
     public void deleteByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId) {
         create.deleteFrom(INTERNSHIP_TEACHER_DISTRIBUTION)
                 .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId)
-                .and(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID.eq(studentId)))
+                        .and(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID.eq(studentId)))
                 .execute();
     }
 
+    @CacheEvict(cacheNames = CacheBook.INTERNSHIP_TEACHER_DISTRIBUTION, allEntries = true)
     @Override
     public void deleteNotApply(String internshipReleaseId) {
         SelectConditionStep<InternshipApplyRecord> internshipApplyRecord = create.selectFrom(INTERNSHIP_APPLY)
