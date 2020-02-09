@@ -41,7 +41,6 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                 add: '/web/internship/teacher_distribution/add',
                 edit: '/web/internship/teacher_distribution/edit',
                 batch_distribution_url: '/web/internship/teacher_distribution/distribution',
-                exclude_internship_release_data_url: web_path + '/web/internship/teacher_distribution/exclude',
                 export_data_url: web_path + '/web/internship/teacher_distribution/export',
                 page: '/web/menu/internship/teacher_distribution'
             };
