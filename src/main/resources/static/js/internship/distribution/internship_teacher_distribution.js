@@ -1,6 +1,6 @@
 //# sourceURL=internship_teacher_distribution.js
-require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2", "messenger", "jquery.address", "jquery.simple-pagination", "jquery-labelauty"],
-    function ($, _, tools, Handlebars, navActive, Swal) {
+require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "jquery.address", "jquery.simple-pagination", "jquery-labelauty"],
+    function ($, _, tools, Handlebars, navActive) {
 
         /*
          ajax url.
