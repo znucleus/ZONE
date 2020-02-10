@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="pd-30">
+        <h4 class="tx-gray-800 mg-b-5">实习申请</h4>
+        <p class="mg-b-0">实习申请。</p>
+    </div><!-- d-flex -->
+
+    <div class="br-pagebody mg-t-5 pd-x-30">
+        <div class="br-section-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <ul class="nav nav-pills nav-fill">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#/web/menu/internship/apply">全部</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#/web/internship/apply/my">我的申请</a>
+                        </li>
+                    </ul>
+                    <hr/>
+                </div>
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12 mt-2">
+                            <input type="text" id="search_internship_title" class="form-control"
+                                   placeholder="标题"/>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button type="button" id="search" class="btn btn-outline-secondary"><i
+                                class="fa fa-search"></i>搜索
+                        </button>
+                        <button type="button" id="reset_search" class="btn btn-outline-secondary"><i
+                                class="fa fa-repeat"></i>重置
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="float-right mg-t-5">
+                        <button type="button" class="btn btn-light" id="refresh"><i class="fa fa-refresh"></i> 刷新
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-12" id="tableData">
+                </div>
+                <div class="col-md-12 mg-t-20">
+                    <div class="ht-80 bd d-flex align-items-center justify-content-center">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination" id="pagination"></ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 状态修改Modal -->
+    <div class="modal fade" id="stateModal" tabindex="-1" role="dialog" aria-labelledby="stateModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                            class="sr-only">关闭</span></button>
+                    <h4 class="modal-title" id="stateModalLabel"></h4>
+                </div>
+                <div class="modal-body">
+                    <form role="form" id="state_form">
+                        <div class="form-group" id="valid_reason">
+                            <label for="reason">原因</label>
+                            <textarea class="form-control" name="reason" id="reason" rows="3"></textarea>
+                            <p id="reason_error_msg" class="hidden"></p>
+                            <input type="hidden" id="applyState" name="internshipApplyState"/>
+                            <input type="hidden" id="applyInternshipReleaseId" name="internshipReleaseId"/>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="stateOk">确定</button>
+                    <button type="button" class="btn btn-default" id="stateCancel">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 添加电子资料上传Modal -->
+    <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                            class="sr-only">关闭</span></button>
+                    <h4 class="modal-title" id="uploadModalLabel">添加电子资料</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <div id="addFile" class="row">
+                            <div class="col-md-6"><span>文件：</span><span id="fileName"></span></div>
+                            <div class="col-md-6"><span>大小：</span><span id="fileSize"></span></div>
+                        </div>
+                        <p>
+                            <span class="btn btn-success fileinput-button">
+                                <span>添加附件</span>
+                                <!-- The file input field used as target for the file upload widget -->
+                                <input id="fileupload" type="file" name="files[]"/>
+                            </span>
+                        </p>
+                        <small>注:建议上传zip,rar等压缩文件。</small>
+                    </div>
+                    <input type="hidden" id="uploadInternshipReleaseId"/>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="confirmUpload">确定上传</button>
+                    <button type="button" class="btn btn-default" id="cancelUpload">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script id="internship-release-template" type="text/x-handlebars-template">
+        {{#each listResult}}
+        <div class="card mg-t-10 text-dark">
+            <div class="card-header">{{internshipTitle}}</div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4"><span>学校：</span><span>{{schoolName}}</span></div>
+                    <div class="col-md-4"><span>院：</span><span>{{collegeName}}</span></div>
+                    <div class="col-md-4"><span>系：</span><span>{{departmentName}}</span></div>
+                    <div class="col-md-4"><span>专业：</span><span class="badge badge-secondary">{{scienceName}}</span></div>
+                    <div class="col-md-4"><span>实习类型：</span><span>{{internshipTypeName}}</span></div>
+                    <div class="col-md-4">
+                        <span>状态：</span>
+                        {{#if internshipReleaseIsDel}}
+                        <span class="badge badge-danger">注销</span>
+                        {{else}}
+                        <span class="badge badge-success">正常</span>
+                        {{/if}}
+                    </div>
+                    <div class="col-md-4"><span>实习指导教师：</span><span>{{schoolGuidanceTeacher}}</span></div>
+                    <div class="col-md-4"><span>联系方式：</span><span>{{schoolGuidanceTeacherTel}}</span></div>
+                    <div class="col-md-4"><span>申请时间：</span><span>{{applyTimeStr}}</span></div>
+                    <div class="col-md-6"><span>教师分配开始时间：</span><span>{{teacherDistributionStartTimeStr}}</span>
+                    </div>
+                    <div class="col-md-6"><span>实习申请开始时间：</span><span>{{startTimeStr}}</span></div>
+                    <div class="col-md-6"><span>教师分配结束时间：</span><span>{{teacherDistributionEndTimeStr}}</span></div>
+                    <div class="col-md-6"><span>实习申请结束时间：</span><span>{{endTimeStr}}</span></div>
+                    <div class="col-md-12"><span>原因：</span>{{reason}}</div>
+                    <div class="col-md-12">
+                        {{#if originalFileName}}
+                        <div>
+                            <span>电子资料:</span>
+                            <span>{{originalFileName}}.{{ext}}</span>
+                            <button type="button" class="btn btn-default btn-sm downloadFile" data-id="{{fileId}}">
+                                下载
+                            </button>
+                            <button type="button" class="btn btn-warning btn-sm deleteFile" data-id="{{internshipReleaseId}}"
+                                    data-student="{{studentId}}">
+                                删除
+                            </button>
+                        </div>
+                        {{/if}}
+                    </div>
+                </div>
+                <p class="text-right font-italic m-t-10">
+                    <small><em><span>发布人：</span><span>{{publisher}}</span> <span>{{releaseTimeStr}}</span></em>
+                    </small>
+                </p>
+            </div>
+            <div class="card-footer">
+                <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
+                    <div class="btn-group mr-2 mt-2" role="group" aria-label="First group">
+                        <button type="button" class="btn btn-primary myApply" data-id="{{internshipReleaseId}}"
+                                data-student="{{studentId}}">
+                            编辑
+                        </button>
+                        <button type="button" class="btn btn-info myApplyLook" data-id="{{internshipReleaseId}}">
+                            查看
+                        </button>
+                        <button type="button" class="btn btn-warning recallApply" data-id="{{internshipReleaseId}}">
+                            撤消申请
+                        </button>
+                    </div>
+                    <div class="btn-group mr-2 mt-2" role="group" aria-label="Second group">
+                        <button type="button" class="btn btn-teal basisApply" data-id="{{internshipReleaseId}}">
+                            基础信息变更申请
+                        </button>
+                    </div>
+                    <div class="btn-group mr-2 mt-2" role="group" aria-label="Third group">
+                        <button type="button" class="btn btn-teal firmApply" data-id="{{internshipReleaseId}}">
+                            单位信息变更申请
+                        </button>
+                    </div>
+                    <div class="btn-group mt-2" role="group" aria-label="Fourth group">
+                        <button type="button" class="btn btn-secondary uploadFile" data-id="{{internshipReleaseId}}">
+                            上传电子资料
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </script>
+
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/internship/apply/internship_apply_my.js')}"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>

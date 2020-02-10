@@ -13,7 +13,7 @@
     <div class="br-pagebody mg-t-5 pd-x-30">
         <div class="br-section-wrapper">
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12" id="dataNav" style="display: none">
                     <ul class="nav nav-pills nav-fill">
                         <li class="nav-item">
                             <a class="nav-link active" href="#/web/menu/internship/apply">全部</a>
@@ -105,6 +105,7 @@
         {{/each}}
     </script>
 
+    <input type="hidden" id="paramUsersType" th:value="${usersType}"/>
     <input type="hidden" class="dy_script"
            th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/internship/apply/internship_apply.js')}"/>
 </div>
