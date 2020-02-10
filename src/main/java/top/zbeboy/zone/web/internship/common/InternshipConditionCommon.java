@@ -5,6 +5,7 @@ import org.jooq.Record;
 import org.springframework.stereotype.Component;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.College;
+import top.zbeboy.zone.domain.tables.pojos.InternshipApply;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.service.data.StaffService;
@@ -175,6 +176,83 @@ public class InternshipConditionCommon {
                                         // 检测是否申请过
                                         Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
                                         if (!internshipApplyRecord.isPresent()) {
+                                            canOperator = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+
+        return canOperator;
+    }
+
+    /**
+     * 申请编辑条件
+     *
+     * @param internshipReleaseId 实习发布id
+     * @return true or false
+     */
+    public boolean applyEditCondition(String internshipReleaseId) {
+        boolean canOperator = false;
+        Users users = usersService.getUserFromSession();
+        UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
+        if (Objects.nonNull(usersType)) {
+            // 检测是否学生类型
+            if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
+                Optional<Record> studentRecord = studentService.findByUsernameRelation(users.getUsername());
+                if (studentRecord.isPresent()) {
+                    StudentBean studentBean = studentRecord.get().into(StudentBean.class);
+                    Optional<Record> record = internshipReleaseService.findByIdRelation(internshipReleaseId);
+                    if (record.isPresent()) {
+                        InternshipReleaseBean internshipRelease = record.get().into(InternshipReleaseBean.class);
+                        // 检测是否属于发布的专业
+                        if(Objects.equals(studentBean.getScienceId(), internshipRelease.getScienceId())){
+                            // 检测状态正常
+                            if (!BooleanUtil.toBoolean(internshipRelease.getInternshipReleaseIsDel())) {
+                                // 检测实习申请时间
+                                if (DateTimeUtil.nowAfterSqlTimestamp(internshipRelease.getStartTime()) &&
+                                        DateTimeUtil.nowBeforeSqlTimestamp(internshipRelease.getEndTime())) {
+
+                                    // 检测是否有指导老师
+                                    Optional<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
+                                    if(internshipTeacherDistributionRecord.isPresent()){
+                                        // 检测是否申请过
+                                        Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId,studentBean.getStudentId());
+                                        if (internshipApplyRecord.isPresent()) {
+                                            InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
+                                            // 时间范围内，以下几种状态都可直接编辑 0:未提交
+                                            if(internshipApply.getInternshipApplyState() == 0){
+                                                canOperator = true;
+                                            } else  if (internshipApply.getInternshipApplyState() == 5 || internshipApply.getInternshipApplyState() == 7) {
+                                                // 状态为 5：基本信息变更填写中 或 7：单位信息变更填写中 位于这两个状态，一定是通过审核后的 无视实习时间条件 但需要判断更改时间条件
+                                                // 检测变更时间
+                                                if (DateTimeUtil.nowAfterSqlTimestamp(internshipApply.getChangeFillStartTime()) &&
+                                                        DateTimeUtil.nowBeforeSqlTimestamp(internshipApply.getChangeFillEndTime())) {
+                                                    canOperator = true;
+                                                }
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    // 不在申请时间范围
+                                    // 检测是否申请过
+                                    Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId,studentBean.getStudentId());
+                                    if (internshipApplyRecord.isPresent()) {
+                                        InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
+                                        // 状态为 5：基本信息变更填写中 或 7：单位信息变更填写中 位于这两个状态，一定是通过审核后的 无视实习时间条件 但需要判断更改时间条件
+                                        if (internshipApply.getInternshipApplyState() == 5 || internshipApply.getInternshipApplyState() == 7) {
+                                            // 判断更改时间条件
+                                            // 检测变更时间
+                                            if (DateTimeUtil.nowAfterSqlTimestamp(internshipApply.getChangeFillStartTime()) &&
+                                                    DateTimeUtil.nowBeforeSqlTimestamp(internshipApply.getChangeFillEndTime())) {
+                                                canOperator = true;
+                                            }
+                                        } else if (internshipApply.getInternshipApplyState() == 3) {
                                             canOperator = true;
                                         }
                                     }

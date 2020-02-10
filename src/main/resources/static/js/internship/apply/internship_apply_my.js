@@ -91,8 +91,47 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
          * @param data 数据
          */
         function listData(data) {
-            var template = Handlebars.compile($("#internship-release-template").html());
+            var template = Handlebars.compile($("#internship-apply-template").html());
+            Handlebars.registerHelper('internship_apply_state', function () {
+                return new Handlebars.SafeString(Handlebars.escapeExpression(internshipApplyStateCode(this.internshipApplyState)));
+            });
             $(tableData).html(template(data));
+        }
+
+        /**
+         * 状态码表
+         * @param state 状态码
+         * @returns {string}
+         */
+        function internshipApplyStateCode(state) {
+            var msg = '';
+            switch (state) {
+                case 0:
+                    msg = '已保存';
+                    break;
+                case 1:
+                    msg = '审核中';
+                    break;
+                case 2:
+                    msg = '已通过';
+                    break;
+                case 3:
+                    msg = '未通过';
+                    break;
+                case 4:
+                    msg = '基本信息变更审核中';
+                    break;
+                case 5:
+                    msg = '基本信息变更填写中';
+                    break;
+                case 6:
+                    msg = '单位信息变更申请中';
+                    break;
+                case 7:
+                    msg = '单位信息变更填写中...';
+                    break;
+            }
+            return msg;
         }
 
         /*

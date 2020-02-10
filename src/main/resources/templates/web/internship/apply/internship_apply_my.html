@@ -122,7 +122,7 @@
         </div>
     </div>
 
-    <script id="internship-release-template" type="text/x-handlebars-template">
+    <script id="internship-apply-template" type="text/x-handlebars-template">
         {{#each listResult}}
         <div class="card mg-t-10 text-dark">
             <div class="card-header">{{internshipTitle}}</div>
@@ -131,15 +131,19 @@
                     <div class="col-md-4"><span>学校：</span><span>{{schoolName}}</span></div>
                     <div class="col-md-4"><span>院：</span><span>{{collegeName}}</span></div>
                     <div class="col-md-4"><span>系：</span><span>{{departmentName}}</span></div>
-                    <div class="col-md-4"><span>专业：</span><span class="badge badge-secondary">{{scienceName}}</span></div>
-                    <div class="col-md-4"><span>实习类型：</span><span>{{internshipTypeName}}</span></div>
-                    <div class="col-md-4">
-                        <span>状态：</span>
+                    <div class="col-md-3"><span>专业：</span><span class="badge badge-secondary">{{scienceName}}</span></div>
+                    <div class="col-md-3"><span>实习类型：</span><span>{{internshipTypeName}}</span></div>
+                    <div class="col-md-3">
+                        <span>发布状态：</span>
                         {{#if internshipReleaseIsDel}}
                         <span class="badge badge-danger">注销</span>
                         {{else}}
                         <span class="badge badge-success">正常</span>
                         {{/if}}
+                    </div>
+                    <div class="col-md-3">
+                        <span>申请状态：</span>
+                        <span class="badge badge-info">{{internship_apply_state}}</span>
                     </div>
                     <div class="col-md-4"><span>实习指导教师：</span><span>{{schoolGuidanceTeacher}}</span></div>
                     <div class="col-md-4"><span>联系方式：</span><span>{{schoolGuidanceTeacherTel}}</span></div>
@@ -174,10 +178,12 @@
             <div class="card-footer">
                 <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
                     <div class="btn-group mr-2 mt-2" role="group" aria-label="First group">
+                        {{#if canEdit}}
                         <button type="button" class="btn btn-primary myApply" data-id="{{internshipReleaseId}}"
                                 data-student="{{studentId}}">
                             编辑
                         </button>
+                        {{/if}}
                         <button type="button" class="btn btn-info myApplyLook" data-id="{{internshipReleaseId}}">
                             查看
                         </button>

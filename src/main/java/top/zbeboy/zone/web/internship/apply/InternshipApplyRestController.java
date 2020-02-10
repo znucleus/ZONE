@@ -102,6 +102,7 @@ public class InternshipApplyRestController {
             beans.forEach(bean -> bean.setEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getEndTime())));
             beans.forEach(bean -> bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime())));
             beans.forEach(bean -> bean.setApplyTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getApplyTime())));
+            beans.forEach(bean -> bean.setCanEdit(BooleanUtil.toByte(internshipConditionCommon.applyEditCondition(bean.getInternshipReleaseId()))));
         }
         simplePaginationUtil.setTotalSize(internshipApplyService.countAll(simplePaginationUtil));
         ajaxUtil.success().list(beans).page(simplePaginationUtil).msg("获取数据成功");
@@ -125,7 +126,7 @@ public class InternshipApplyRestController {
     /**
      * 文件下载
      *
-     * @param id   文件id
+     * @param id       文件id
      * @param request  请求
      * @param response 响应
      */
@@ -156,7 +157,7 @@ public class InternshipApplyRestController {
                     internshipApplyAddVo.setHeadmasterTel(staffBean.getMobile());
 
                     String[] schoolGuidanceTeacherArr = internshipApplyAddVo.getSchoolGuidanceTeacher().split(" ");
-                    if(schoolGuidanceTeacherArr.length > 1){
+                    if (schoolGuidanceTeacherArr.length > 1) {
                         internshipApplyAddVo.setSchoolGuidanceTeacher(schoolGuidanceTeacherArr[0]);
                         internshipApplyAddVo.setSchoolGuidanceTeacherTel(schoolGuidanceTeacherArr[1]);
                     }

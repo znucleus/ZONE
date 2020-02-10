@@ -29,6 +29,7 @@ public class InternshipApplyBean extends InternshipApply {
     private String ext;
     private String schoolGuidanceTeacher;
     private String schoolGuidanceTeacherTel;
+    private Byte canEdit;
 
     public String getInternshipTitle() {
         return internshipTitle;
@@ -220,5 +221,13 @@ public class InternshipApplyBean extends InternshipApply {
 
     public void setSchoolGuidanceTeacherTel(String schoolGuidanceTeacherTel) {
         this.schoolGuidanceTeacherTel = schoolGuidanceTeacherTel;
+    }
+
+    public Byte getCanEdit() {
+        return canEdit;
+    }
+
+    public void setCanEdit(Byte canEdit) {
+        this.canEdit = canEdit;
     }
 }
