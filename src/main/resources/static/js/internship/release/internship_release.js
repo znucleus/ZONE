@@ -319,7 +319,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         function nextPage(pageNumber) {
             param.pageNum = pageNumber;
             tools.dataLoading();
-            $.get(web_path + ajax_url.data, param, function (data) {
+            $.get(ajax_url.data, param, function (data) {
                 tools.dataEndLoading();
                 listData(data);
             });
