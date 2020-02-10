@@ -7,6 +7,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
          */
         var ajax_url = {
             data: web_path + '/web/internship/apply/data',
+            edit: '/web/internship/apply/edit',
             page: '/web/menu/internship/apply'
         };
 
@@ -137,8 +138,8 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
         /*
          进入申请
          */
-        $(tableData).delegate('.apply', "click", function () {
-            $.address.value(ajax_url.add + '/' + $(this).attr('data-id'));
+        $(tableData).delegate('.myApply', "click", function () {
+            $.address.value(ajax_url.edit + '/' + $(this).attr('data-id'));
         });
 
         init();

@@ -7,11 +7,11 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zone.config.Workbook;
-import top.zbeboy.zone.domain.tables.pojos.InternshipTeacherDistribution;
-import top.zbeboy.zone.domain.tables.pojos.Users;
-import top.zbeboy.zone.domain.tables.pojos.UsersType;
+import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
+import top.zbeboy.zone.service.internship.InternshipApplyService;
+import top.zbeboy.zone.service.internship.InternshipInfoService;
 import top.zbeboy.zone.service.internship.InternshipTeacherDistributionService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
@@ -32,6 +32,12 @@ public class InternshipApplyViewController {
 
     @Resource
     private InternshipConditionCommon internshipConditionCommon;
+
+    @Resource
+    private InternshipInfoService internshipInfoService;
+
+    @Resource
+    private InternshipApplyService internshipApplyService;
 
     @Resource
     private UsersService usersService;
@@ -126,6 +132,54 @@ public class InternshipApplyViewController {
             }
         } else {
             config.buildDangerTip("查询错误", "未查询到用户类型");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
+
+    /**
+     * 实习数据编辑
+     *
+     * @param id       实习发布id
+     * @param modelMap 页面对象
+     * @return 页面
+     */
+    @GetMapping("/web/internship/apply/edit/{id}")
+    public String edit(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        if (internshipConditionCommon.applyEditCondition(id)) {
+            Users users = usersService.getUserFromSession();
+            Optional<Record> studentRecord = studentService.findByUsernameRelation(users.getUsername());
+            if (studentRecord.isPresent()) {
+                Student student = studentRecord.get().into(Student.class);
+                Optional<Record> internshipInfoRecord = internshipInfoService.findByInternshipReleaseIdAndStudentId(id, student.getStudentId());
+                if (internshipInfoRecord.isPresent()) {
+                    InternshipInfo internshipInfo = internshipInfoRecord.get().into(InternshipInfo.class);
+                    Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(id, student.getStudentId());
+                    if (internshipApplyRecord.isPresent()) {
+                        InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
+                        modelMap.put("internshipInfo", internshipInfo);
+                        modelMap.put("internshipApply", internshipApply);
+                        page = "web/internship/apply/internship_apply_edit::#page-wrapper";
+                    } else {
+                        config.buildDangerTip("查询错误", "未查询到实习申请信息");
+                        config.dataMerging(modelMap);
+                        page = "inline_tip::#page-wrapper";
+                    }
+                } else {
+                    config.buildDangerTip("查询错误", "未查询到实习数据");
+                    config.dataMerging(modelMap);
+                    page = "inline_tip::#page-wrapper";
+                }
+            } else {
+                config.buildDangerTip("查询错误", "未查询到学生信息");
+                config.dataMerging(modelMap);
+                page = "inline_tip::#page-wrapper";
+            }
+        } else {
+            config.buildWarningTip("操作警告", "您无权限或当前实习不允许操作");
             config.dataMerging(modelMap);
             page = "inline_tip::#page-wrapper";
         }

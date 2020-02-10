@@ -2,15 +2,17 @@ package top.zbeboy.zone.service.internship;
 
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.jooq.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zone.config.Workbook;
+import top.zbeboy.zone.domain.tables.daos.InternshipApplyDao;
+import top.zbeboy.zone.domain.tables.pojos.InternshipApply;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
+import top.zbeboy.zone.domain.tables.records.InternshipReleaseRecord;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
@@ -19,18 +21,21 @@ import top.zbeboy.zone.service.util.SQLQueryUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static org.jooq.impl.DSL.now;
 import static top.zbeboy.zone.domain.Tables.*;
-import static top.zbeboy.zone.domain.Tables.COLLEGE;
-import static top.zbeboy.zone.domain.Tables.SCHOOL;
 
 @Service("internshipApplyService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class InternshipApplyServiceImpl implements InternshipApplyService, PaginationPlugin<SimplePaginationUtil> {
 
     private final DSLContext create;
+
+    @Resource
+    private InternshipApplyDao internshipApplyDao;
 
     @Resource
     private UsersService usersService;
@@ -102,6 +107,29 @@ public class InternshipApplyServiceImpl implements InternshipApplyService, Pagin
                 .leftJoin(INTERNSHIP_INFO)
                 .on(INTERNSHIP_APPLY.STUDENT_ID.eq(INTERNSHIP_INFO.STUDENT_ID).and(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID.eq(INTERNSHIP_INFO.INTERNSHIP_RELEASE_ID)));
         return countAll(selectOnConditionStep, paginationUtil, false);
+    }
+
+    @Override
+    public void update(InternshipApply internshipApply) {
+        internshipApplyDao.update(internshipApply);
+    }
+
+    @Override
+    public void updateState(int curState, int updateState) {
+        Select<InternshipReleaseRecord> select = create.selectFrom(INTERNSHIP_RELEASE)
+                .where(INTERNSHIP_RELEASE.END_TIME.le(now()).and(INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_ID.eq(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID)));
+        create.update(INTERNSHIP_APPLY)
+                .set(INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE, updateState)
+                .where(INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE.eq(curState).andExists(select))
+                .execute();
+    }
+
+    @Override
+    public void updateChangeState(List<Integer> curState, int updateState) {
+        create.update(INTERNSHIP_APPLY)
+                .set(INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE, updateState)
+                .where(INTERNSHIP_APPLY.CHANGE_FILL_END_TIME.le(now()).and(INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE.in(curState)))
+                .execute();
     }
 
     @Override

@@ -19,6 +19,8 @@ public class InternshipApplyBean extends InternshipApply {
     private String endTimeStr;
     private String releaseTimeStr;
     private String applyTimeStr;
+    private String changeFillStartTimeStr;
+    private String changeFillEndTimeStr;
     private String publisher;
     private String scienceName;
     private String departmentName;
@@ -141,6 +143,22 @@ public class InternshipApplyBean extends InternshipApply {
 
     public void setApplyTimeStr(String applyTimeStr) {
         this.applyTimeStr = applyTimeStr;
+    }
+
+    public String getChangeFillStartTimeStr() {
+        return changeFillStartTimeStr;
+    }
+
+    public void setChangeFillStartTimeStr(String changeFillStartTimeStr) {
+        this.changeFillStartTimeStr = changeFillStartTimeStr;
+    }
+
+    public String getChangeFillEndTimeStr() {
+        return changeFillEndTimeStr;
+    }
+
+    public void setChangeFillEndTimeStr(String changeFillEndTimeStr) {
+        this.changeFillEndTimeStr = changeFillEndTimeStr;
     }
 
     public String getPublisher() {

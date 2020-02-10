@@ -2,8 +2,10 @@ package top.zbeboy.zone.service.internship;
 
 import org.jooq.Record;
 import org.jooq.Result;
+import top.zbeboy.zone.domain.tables.pojos.InternshipApply;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface InternshipApplyService {
@@ -31,4 +33,27 @@ public interface InternshipApplyService {
      * @return 总数
      */
     int countAll(SimplePaginationUtil paginationUtil);
+
+    /**
+     * 更新
+     *
+     * @param internshipApply 数据
+     */
+    void update(InternshipApply internshipApply);
+
+    /**
+     * 通过实习发布id与申请状态更新状态 定时任务
+     *
+     * @param curState         当前状态
+     * @param updateState         新状态
+     */
+    void updateState(int curState, int updateState);
+
+    /**
+     * 更改超过信息填写时间的申请状态为申请中
+     *
+     * @param curState       当前状态
+     * @param updateState       新状态
+     */
+    void updateChangeState(List<Integer> curState, int updateState);
 }

@@ -225,13 +225,15 @@ public class InternshipConditionCommon {
                                         Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId,studentBean.getStudentId());
                                         if (internshipApplyRecord.isPresent()) {
                                             InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
-                                            // 时间范围内，以下几种状态都可直接编辑 0:未提交
-                                            if(internshipApply.getInternshipApplyState() == 0){
+                                            // 时间范围内，以下几种状态都可直接编辑 0:未提交，3:未通过
+                                            if(internshipApply.getInternshipApplyState() == 0 || internshipApply.getInternshipApplyState() == 3){
                                                 canOperator = true;
                                             } else  if (internshipApply.getInternshipApplyState() == 5 || internshipApply.getInternshipApplyState() == 7) {
                                                 // 状态为 5：基本信息变更填写中 或 7：单位信息变更填写中 位于这两个状态，一定是通过审核后的 无视实习时间条件 但需要判断更改时间条件
                                                 // 检测变更时间
-                                                if (DateTimeUtil.nowAfterSqlTimestamp(internshipApply.getChangeFillStartTime()) &&
+                                                if (Objects.nonNull(internshipApply.getChangeFillStartTime()) &&
+                                                        Objects.nonNull(internshipApply.getChangeFillEndTime())&&
+                                                        DateTimeUtil.nowAfterSqlTimestamp(internshipApply.getChangeFillStartTime()) &&
                                                         DateTimeUtil.nowBeforeSqlTimestamp(internshipApply.getChangeFillEndTime())) {
                                                     canOperator = true;
                                                 }
@@ -248,7 +250,9 @@ public class InternshipConditionCommon {
                                         if (internshipApply.getInternshipApplyState() == 5 || internshipApply.getInternshipApplyState() == 7) {
                                             // 判断更改时间条件
                                             // 检测变更时间
-                                            if (DateTimeUtil.nowAfterSqlTimestamp(internshipApply.getChangeFillStartTime()) &&
+                                            if (Objects.nonNull(internshipApply.getChangeFillStartTime()) &&
+                                                    Objects.nonNull(internshipApply.getChangeFillEndTime())&&
+                                                    DateTimeUtil.nowAfterSqlTimestamp(internshipApply.getChangeFillStartTime()) &&
                                                     DateTimeUtil.nowBeforeSqlTimestamp(internshipApply.getChangeFillEndTime())) {
                                                 canOperator = true;
                                             }

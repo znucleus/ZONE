@@ -15,6 +15,7 @@ import top.zbeboy.zone.domain.tables.records.AttendReleaseRecord;
 import top.zbeboy.zone.domain.tables.records.UsersRecord;
 import top.zbeboy.zone.service.attend.AttendReleaseService;
 import top.zbeboy.zone.service.attend.AttendReleaseSubService;
+import top.zbeboy.zone.service.internship.InternshipApplyService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.system.SystemOperatorLogService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
@@ -67,6 +68,9 @@ public class ScheduledConfiguration {
 
     @Resource
     private AttendReleaseSubService attendReleaseSubService;
+
+    @Resource
+    private InternshipApplyService internshipApplyService;
 
     /**
      * 清理未验证用户信息
@@ -134,6 +138,19 @@ public class ScheduledConfiguration {
             attendReleaseSubService.batchSave(attendReleaseSubs);
         }
         log.info(">>>>>>>>>>>>> scheduled ... generate attend ");
+    }
+
+    /**
+     * 更改实习状态为申请中
+     */
+    @Scheduled(cron = "0 15 02 * * ?") // 每天 晚间2点15分
+    public void internshipApply() {
+        // 更改实习提交状态
+        internshipApplyService.updateState(0, 1);
+        List<Integer> states = new ArrayList<>();
+        states.add(5);
+        states.add(7);
+        internshipApplyService.updateChangeState(states, 1);
     }
 
 }

@@ -1,14 +1,20 @@
 package top.zbeboy.zone.service.internship;
 
 import org.jooq.DSLContext;
+import org.jooq.Record;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import top.zbeboy.zone.domain.tables.daos.InternshipInfoDao;
+import top.zbeboy.zone.domain.tables.pojos.InternshipInfo;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.vo.internship.apply.InternshipApplyAddVo;
+
+import javax.annotation.Resource;
+import java.util.Optional;
 
 import static top.zbeboy.zone.domain.Tables.INTERNSHIP_APPLY;
 import static top.zbeboy.zone.domain.Tables.INTERNSHIP_CHANGE_HISTORY;
@@ -20,9 +26,20 @@ public class InternshipInfoServiceImpl implements InternshipInfoService {
 
     private final DSLContext create;
 
+    @Resource
+    private InternshipInfoDao internshipInfoDao;
+
     @Autowired
     InternshipInfoServiceImpl(DSLContext dslContext) {
         create = dslContext;
+    }
+
+    @Override
+    public Optional<Record> findByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId) {
+        return create.select()
+                .from(INTERNSHIP_INFO)
+                .where(INTERNSHIP_INFO.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(INTERNSHIP_INFO.STUDENT_ID.eq(studentId)))
+                .fetchOptional();
     }
 
     @Override
@@ -72,5 +89,10 @@ public class InternshipInfoServiceImpl implements InternshipInfoService {
                     .set(INTERNSHIP_CHANGE_HISTORY.APPLY_TIME, DateTimeUtil.getNowSqlTimestamp())
                     .execute();
         });
+    }
+
+    @Override
+    public void update(InternshipInfo internshipInfo) {
+        internshipInfoDao.update(internshipInfo);
     }
 }

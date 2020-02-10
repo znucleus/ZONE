@@ -153,6 +153,8 @@
                     <div class="col-md-6"><span>实习申请开始时间：</span><span>{{startTimeStr}}</span></div>
                     <div class="col-md-6"><span>教师分配结束时间：</span><span>{{teacherDistributionEndTimeStr}}</span></div>
                     <div class="col-md-6"><span>实习申请结束时间：</span><span>{{endTimeStr}}</span></div>
+                    <div class="col-md-6"><span>变更开始时间：</span><span>{{changeFillStartTimeStr}}</span></div>
+                    <div class="col-md-6"><span>变更结束时间：</span><span>{{changeFillEndTimeStr}}</span></div>
                     <div class="col-md-12"><span>原因：</span>{{reason}}</div>
                     <div class="col-md-12">
                         {{#if originalFileName}}
@@ -179,8 +181,7 @@
                 <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
                     <div class="btn-group mr-2 mt-2" role="group" aria-label="First group">
                         {{#if canEdit}}
-                        <button type="button" class="btn btn-primary myApply" data-id="{{internshipReleaseId}}"
-                                data-student="{{studentId}}">
+                        <button type="button" class="btn btn-primary myApply" data-id="{{internshipReleaseId}}">
                             编辑
                         </button>
                         {{/if}}

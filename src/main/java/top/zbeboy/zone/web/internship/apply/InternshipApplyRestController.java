@@ -5,15 +5,23 @@ import org.jooq.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.domain.tables.pojos.Files;
+import top.zbeboy.zone.domain.tables.pojos.InternshipApply;
+import top.zbeboy.zone.domain.tables.pojos.InternshipChangeCompanyHistory;
+import top.zbeboy.zone.domain.tables.pojos.InternshipInfo;
 import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.internship.InternshipApplyService;
+import top.zbeboy.zone.service.internship.InternshipChangeCompanyHistoryService;
 import top.zbeboy.zone.service.internship.InternshipInfoService;
 import top.zbeboy.zone.service.internship.InternshipReleaseService;
 import top.zbeboy.zone.service.system.FilesService;
 import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
+import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.bean.internship.apply.InternshipApplyBean;
 import top.zbeboy.zone.web.bean.internship.release.InternshipReleaseBean;
@@ -24,6 +32,7 @@ import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zone.web.vo.internship.apply.InternshipApplyAddVo;
+import top.zbeboy.zone.web.vo.internship.apply.InternshipApplyEditVo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -48,6 +57,9 @@ public class InternshipApplyRestController {
 
     @Resource
     private InternshipApplyService internshipApplyService;
+
+    @Resource
+    private InternshipChangeCompanyHistoryService internshipChangeCompanyHistoryService;
 
     @Resource
     private FilesService filesService;
@@ -102,6 +114,8 @@ public class InternshipApplyRestController {
             beans.forEach(bean -> bean.setEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getEndTime())));
             beans.forEach(bean -> bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime())));
             beans.forEach(bean -> bean.setApplyTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getApplyTime())));
+            beans.forEach(bean -> bean.setChangeFillStartTimeStr(Objects.nonNull(bean.getChangeFillStartTime()) ? DateTimeUtil.defaultFormatSqlTimestamp(bean.getChangeFillStartTime()) : ""));
+            beans.forEach(bean -> bean.setChangeFillEndTimeStr(Objects.nonNull(bean.getChangeFillEndTime()) ? DateTimeUtil.defaultFormatSqlTimestamp(bean.getChangeFillEndTime()) : ""));
             beans.forEach(bean -> bean.setCanEdit(BooleanUtil.toByte(internshipConditionCommon.applyEditCondition(bean.getInternshipReleaseId()))));
         }
         simplePaginationUtil.setTotalSize(internshipApplyService.countAll(simplePaginationUtil));
@@ -166,6 +180,134 @@ public class InternshipApplyRestController {
                     ajaxUtil.success().msg("保存成功");
                 } else {
                     ajaxUtil.fail().msg("未查询到班级任信息");
+                }
+            } else {
+                ajaxUtil.fail().msg("您无权限或当前实习不允许操作");
+            }
+        } else {
+            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 更新
+     *
+     * @param internshipApplyEditVo 数据
+     * @param bindingResult         检验
+     * @return true 保存成功 false 保存失败
+     */
+    @PostMapping("/web/internship/apply/update")
+    public ResponseEntity<Map<String, Object>> update(@Valid InternshipApplyEditVo internshipApplyEditVo, BindingResult bindingResult) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (!bindingResult.hasErrors()) {
+            if (internshipConditionCommon.applyEditCondition(internshipApplyEditVo.getInternshipReleaseId())) {
+                Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipApplyEditVo.getInternshipReleaseId(), internshipApplyEditVo.getStudentId());
+                if (internshipApplyRecord.isPresent()) {
+                    InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
+
+                    Optional<Record> internshipInfoRecord = internshipInfoService.findByInternshipReleaseIdAndStudentId(internshipApplyEditVo.getInternshipReleaseId(), internshipApplyEditVo.getStudentId());
+                    if (internshipInfoRecord.isPresent()) {
+                        InternshipInfo internshipInfo = internshipInfoRecord.get().into(InternshipInfo.class);
+                        if (internshipApply.getInternshipApplyState() == 5 ||
+                                internshipApply.getInternshipApplyState() == 3 ||
+                                internshipApply.getInternshipApplyState() == 0) {
+                            Optional<Record> staffRecord = staffService.findByIdRelation(internshipApplyEditVo.getStaffId());
+                            if (staffRecord.isPresent()) {
+                                StaffBean staffBean = staffRecord.get().into(StaffBean.class);
+                                internshipApplyEditVo.setHeadmaster(staffBean.getRealName());
+                                internshipApplyEditVo.setHeadmasterTel(staffBean.getMobile());
+
+                                String[] schoolGuidanceTeacherArr = internshipApplyEditVo.getSchoolGuidanceTeacher().split(" ");
+                                if (schoolGuidanceTeacherArr.length > 1) {
+                                    internshipApplyEditVo.setSchoolGuidanceTeacher(schoolGuidanceTeacherArr[0]);
+                                    internshipApplyEditVo.setSchoolGuidanceTeacherTel(schoolGuidanceTeacherArr[1]);
+                                }
+                            }
+                        }
+
+                        if (internshipApply.getInternshipApplyState() == 5) {// 5：基本信息变更填写中
+                            internshipInfo.setStudentName(internshipApplyEditVo.getRealName());
+                            internshipInfo.setOrganizeName(internshipApplyEditVo.getOrganizeName());
+                            internshipInfo.setStudentSex(internshipApplyEditVo.getStudentSex());
+                            internshipInfo.setStudentNumber(internshipApplyEditVo.getStudentNumber());
+                            internshipInfo.setMobile(internshipApplyEditVo.getMobile());
+                            internshipInfo.setQqMailbox(internshipApplyEditVo.getQqMailbox());
+                            internshipInfo.setParentContactPhone(internshipApplyEditVo.getParentContactPhone());
+                            internshipInfo.setHeadmaster(internshipApplyEditVo.getHeadmaster());
+                            internshipInfo.setHeadmasterTel(internshipApplyEditVo.getHeadmasterTel());
+                            internshipInfo.setSchoolGuidanceTeacher(internshipApplyEditVo.getSchoolGuidanceTeacher());
+                            internshipInfo.setSchoolGuidanceTeacherTel(internshipApplyEditVo.getSchoolGuidanceTeacherTel());
+                            internshipInfo.setStartTime(DateTimeUtil.defaultParseSqlDate(internshipApplyEditVo.getStartTime()));
+                            internshipInfo.setEndTime(DateTimeUtil.defaultParseSqlDate(internshipApplyEditVo.getEndTime()));
+
+                            internshipInfoService.update(internshipInfo);
+                            ajaxUtil.success().msg("更新成功");
+                        } else if (internshipApply.getInternshipApplyState() == 7) {// 7：单位信息变更填写中
+                            Result<Record> internshipChangeCompanyHistoryRecord = internshipChangeCompanyHistoryService.findByInternshipReleaseIdAndStudentId(internshipApplyEditVo.getInternshipReleaseId(), internshipApplyEditVo.getStudentId());
+                            if (internshipChangeCompanyHistoryRecord.isEmpty()) {
+                                InternshipChangeCompanyHistory internshipChangeCompanyHistory = new InternshipChangeCompanyHistory();
+                                internshipChangeCompanyHistory.setInternshipChangeCompanyHistoryId(UUIDUtil.getUUID());
+                                internshipChangeCompanyHistory.setInternshipReleaseId(internshipInfo.getInternshipReleaseId());
+                                internshipChangeCompanyHistory.setStudentId(internshipInfo.getStudentId());
+                                internshipChangeCompanyHistory.setChangeTime(DateTimeUtil.getNowSqlTimestamp());
+                                internshipChangeCompanyHistory.setCompanyName(internshipInfo.getCompanyName());
+                                internshipChangeCompanyHistory.setCompanyAddress(internshipInfo.getCompanyAddress());
+                                internshipChangeCompanyHistory.setCompanyContacts(internshipInfo.getCompanyContact());
+                                internshipChangeCompanyHistory.setCompanyTel(internshipInfo.getCompanyMobile());
+                                internshipChangeCompanyHistoryService.save(internshipChangeCompanyHistory);
+                            }
+
+                            internshipInfo.setCompanyName(internshipApplyEditVo.getCompanyName());
+                            internshipInfo.setCompanyAddress(internshipApplyEditVo.getCompanyAddress());
+                            internshipInfo.setCompanyContact(internshipApplyEditVo.getCompanyContact());
+                            internshipInfo.setCompanyMobile(internshipApplyEditVo.getCompanyMobile());
+                            internshipInfoService.update(internshipInfo);
+                            ajaxUtil.success().msg("更新成功");
+
+                            InternshipChangeCompanyHistory internshipChangeCompanyHistory = new InternshipChangeCompanyHistory();
+                            internshipChangeCompanyHistory.setInternshipChangeCompanyHistoryId(UUIDUtil.getUUID());
+                            internshipChangeCompanyHistory.setInternshipReleaseId(internshipInfo.getInternshipReleaseId());
+                            internshipChangeCompanyHistory.setStudentId(internshipInfo.getStudentId());
+                            internshipChangeCompanyHistory.setChangeTime(DateTimeUtil.getNowSqlTimestamp());
+                            internshipChangeCompanyHistory.setCompanyName(internshipInfo.getCompanyName());
+                            internshipChangeCompanyHistory.setCompanyAddress(internshipInfo.getCompanyAddress());
+                            internshipChangeCompanyHistory.setCompanyContacts(internshipInfo.getCompanyContact());
+                            internshipChangeCompanyHistory.setCompanyTel(internshipInfo.getCompanyMobile());
+                            internshipChangeCompanyHistoryService.save(internshipChangeCompanyHistory);
+                        } else if (internshipApply.getInternshipApplyState() == 3 || internshipApply.getInternshipApplyState() == 0) { // 未通过
+                            if (internshipApply.getInternshipApplyState() == 3) { // 未通过
+                                internshipApply.setInternshipApplyState(1); // 更新为申请中
+                                internshipApplyService.update(internshipApply);
+                            }
+
+                            internshipInfo.setStudentName(internshipApplyEditVo.getRealName());
+                            internshipInfo.setOrganizeName(internshipApplyEditVo.getOrganizeName());
+                            internshipInfo.setStudentSex(internshipApplyEditVo.getStudentSex());
+                            internshipInfo.setStudentNumber(internshipApplyEditVo.getStudentNumber());
+                            internshipInfo.setMobile(internshipApplyEditVo.getMobile());
+                            internshipInfo.setQqMailbox(internshipApplyEditVo.getQqMailbox());
+                            internshipInfo.setParentContactPhone(internshipApplyEditVo.getParentContactPhone());
+                            internshipInfo.setHeadmaster(internshipApplyEditVo.getHeadmaster());
+                            internshipInfo.setHeadmasterTel(internshipApplyEditVo.getHeadmasterTel());
+                            internshipInfo.setCompanyName(internshipApplyEditVo.getCompanyName());
+                            internshipInfo.setCompanyAddress(internshipApplyEditVo.getCompanyAddress());
+                            internshipInfo.setCompanyContact(internshipApplyEditVo.getCompanyContact());
+                            internshipInfo.setCompanyMobile(internshipApplyEditVo.getCompanyMobile());
+                            internshipInfo.setSchoolGuidanceTeacher(internshipApplyEditVo.getSchoolGuidanceTeacher());
+                            internshipInfo.setSchoolGuidanceTeacherTel(internshipApplyEditVo.getSchoolGuidanceTeacherTel());
+                            internshipInfo.setStartTime(DateTimeUtil.defaultParseSqlDate(internshipApplyEditVo.getStartTime()));
+                            internshipInfo.setEndTime(DateTimeUtil.defaultParseSqlDate(internshipApplyEditVo.getEndTime()));
+                            internshipInfoService.update(internshipInfo);
+                            ajaxUtil.success().msg("更新成功");
+                        } else {
+                            ajaxUtil.fail().msg("当前状态不允许更新");
+                        }
+                    } else {
+                        ajaxUtil.fail().msg("未查询到实习数据");
+                    }
+                } else {
+                    ajaxUtil.fail().msg("未查询到实习申请信息");
                 }
             } else {
                 ajaxUtil.fail().msg("您无权限或当前实习不允许操作");
