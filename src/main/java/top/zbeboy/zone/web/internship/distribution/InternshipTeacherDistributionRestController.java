@@ -75,7 +75,7 @@ public class InternshipTeacherDistributionRestController {
      * @return 数据
      */
     @GetMapping("/web/internship/teacher_distribution/internship/data")
-    public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil) {
+    public ResponseEntity<Map<String, Object>> internshipData(SimplePaginationUtil simplePaginationUtil) {
         AjaxUtil<InternshipReleaseBean> ajaxUtil = AjaxUtil.of();
         internshipControllerCommon.InternshipReleaseData(ajaxUtil, simplePaginationUtil);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
