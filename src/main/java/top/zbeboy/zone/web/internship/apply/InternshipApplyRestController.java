@@ -1,11 +1,16 @@
 package top.zbeboy.zone.web.internship.apply;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jooq.Record;
 import org.jooq.Result;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.domain.tables.records.StudentRecord;
 import top.zbeboy.zone.service.data.StaffService;
@@ -13,8 +18,11 @@ import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.internship.*;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.system.FilesService;
+import top.zbeboy.zone.service.upload.FileBean;
 import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
+import top.zbeboy.zone.service.util.FilesUtil;
+import top.zbeboy.zone.service.util.RequestUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.bean.internship.apply.InternshipApplyBean;
@@ -37,6 +45,8 @@ import java.util.*;
 
 @RestController
 public class InternshipApplyRestController {
+
+    private final Logger log = LoggerFactory.getLogger(InternshipApplyRestController.class);
 
     @Resource
     private InternshipConditionCommon internshipConditionCommon;
@@ -419,6 +429,96 @@ public class InternshipApplyRestController {
 
                 } else {
                     ajaxUtil.fail().msg("当前状态，无法进行变更申请");
+                }
+            } else {
+                ajaxUtil.fail().msg("未查询到实习申请信息");
+            }
+        } else {
+            ajaxUtil.fail().msg("未查询到学生信息");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 保存实习申请资料
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param request             请求
+     * @return true or false
+     */
+    @PostMapping("/web/internship/apply/upload/file")
+    public ResponseEntity<Map<String, Object>> uploadFile(@RequestParam("internshipReleaseId") String internshipReleaseId,
+                                                          MultipartHttpServletRequest request) {
+        AjaxUtil<FileBean> ajaxUtil = AjaxUtil.of();
+        try {
+            Users users = usersService.getUserFromSession();
+            Optional<StudentRecord> student = studentService.findByUsername(users.getUsername());
+            if (student.isPresent()) {
+                Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, student.get().getStudentId());
+                if (internshipApplyRecord.isPresent()) {
+                    InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
+                    String path = Workbook.internshipFilePath();
+                    List<FileBean> fileBeens = uploadService.upload(request,
+                            RequestUtil.getRealPath(request) + path, request.getRemoteAddr());
+                    for (FileBean fileBean : fileBeens) {
+                        if (StringUtils.isNotBlank(internshipApply.getFileId())) {
+                            Files oldFile = filesService.findById(internshipApply.getFileId());
+                            FilesUtil.deleteFile(RequestUtil.getRealPath(request) + oldFile.getRelativePath());
+                            filesService.deleteById(oldFile.getFileId());
+                        }
+                        String fileId = UUIDUtil.getUUID();
+                        Files files = new Files();
+                        files.setFileId(fileId);
+                        files.setExt(fileBean.getExt());
+                        files.setNewName(fileBean.getNewName());
+                        files.setOriginalFileName(fileBean.getOriginalFileName());
+                        files.setFileSize(fileBean.getFileSize());
+                        files.setRelativePath(path + fileBean.getNewName());
+                        filesService.save(files);
+                        internshipApply.setFileId(fileId);
+                        internshipApplyService.update(internshipApply);
+                    }
+                    ajaxUtil.success().msg("上传成功");
+                } else {
+                    ajaxUtil.fail().msg("未查询到实习申请信息");
+                }
+            } else {
+                ajaxUtil.fail().msg("未查询到学生信息");
+            }
+        } catch (Exception e) {
+            log.error("Upload file error, error is {}", e);
+            ajaxUtil.fail().msg("上传文件失败： " + e.getMessage());
+        }
+
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 删除电子材料
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param request             请求
+     * @return true or false
+     */
+    @PostMapping("/web/internship/apply/delete/file")
+    public ResponseEntity<Map<String, Object>> deleteFile(@RequestParam("id") String internshipReleaseId, HttpServletRequest request) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        Users users = usersService.getUserFromSession();
+        Optional<StudentRecord> student = studentService.findByUsername(users.getUsername());
+        if (student.isPresent()) {
+            Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, student.get().getStudentId());
+            if (internshipApplyRecord.isPresent()) {
+                InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
+                if (StringUtils.isNotBlank(internshipApply.getFileId())) {
+                    String fileId = internshipApply.getFileId();
+                    Files files = filesService.findById(fileId);
+                    internshipApply.setFileId("");
+                    internshipApplyService.update(internshipApply);
+                    FilesUtil.deleteFile(RequestUtil.getRealPath(request) + files.getRelativePath());
+                    filesService.deleteById(fileId);
+                    ajaxUtil.success().msg("删除成功");
+                } else {
+                    ajaxUtil.fail().msg("未查询到实习申请文件信息");
                 }
             } else {
                 ajaxUtil.fail().msg("未查询到实习申请信息");

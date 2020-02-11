@@ -1,5 +1,6 @@
 //# sourceURL=internship_apply_my.js
-require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2", "messenger", "jquery.address", "jquery.simple-pagination", "jquery-labelauty"],
+require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2", "messenger", "jquery.address",
+        "jquery.simple-pagination", "jquery-labelauty", "jquery.fileupload-validate"],
     function ($, _, tools, Handlebars, navActive, Swal) {
 
         /*
@@ -11,6 +12,9 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             look: '/web/internship/apply/look',
             change_state: '/web/internship/apply/state',
             recall_apply: web_path + '/web/internship/apply/recall',
+            file_upload_url: web_path + '/web/internship/apply/upload/file',
+            download: web_path + '/web/internship/apply/download',
+            delete_file_url: '/web/internship/apply/delete/file',
             page: '/web/menu/internship/apply'
         };
 
@@ -176,6 +180,41 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             showStateModal(6, id, '单位信息变更申请');
         });
 
+        /*
+       上传电子资料
+       */
+        $(tableData).delegate('.uploadFile', "click", function () {
+            var id = $(this).attr('data-id');
+            showUploadModal(id);
+        });
+
+        /*
+         下载电子资料
+         */
+        $(tableData).delegate('.downloadFile', "click", function () {
+            var id = $(this).attr('data-id');
+            window.location.href = ajax_url.download + '/' + id;
+        });
+
+        /*
+         删除电子资料
+         */
+        $(tableData).delegate('.deleteFile', "click", function () {
+            var id = $(this).attr('data-id');
+            Swal.fire({
+                title: "确定删除文件吗？",
+                text: "文件删除！",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                preConfirm: function () {
+                    deleteFile(id);
+                }
+            });
+        });
+
         /**
          * 撤消询问
          * @param id
@@ -294,6 +333,134 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 }
             });
         }
+
+        /**
+         * 发送删除ajax
+         * @param id
+         */
+        function deleteFile(id) {
+            $.post(ajax_url.delete_file_url, {id: id}, function (data) {
+                Messenger().post({
+                    message: data.msg,
+                    type: data.state ? 'success' : 'error',
+                    showCloseButton: true
+                });
+                if (data.state) {
+                    init();
+                }
+            });
+        }
+
+        /**
+         * 展开上传文件modal
+         * @param id
+         */
+        function showUploadModal(id) {
+            $('#uploadInternshipReleaseId').val(id);
+            $('#uploadModal').modal('show');
+        }
+
+        /**
+         * 关闭文件上传modal
+         */
+        function closeUploadModal() {
+            $('#uploadInternshipReleaseId').val('');
+            $('#fileName').text('');
+            $('#fileSize').text('');
+            $('#uploadModal').modal('hide');
+        }
+
+        var startUpload = null; // 开始上传
+
+        // 上传组件
+        $('#fileupload').fileupload({
+            url: ajax_url.file_upload_url,
+            dataType: 'json',
+            maxFileSize: 500000000,// 500MB
+            formAcceptCharset: 'utf-8',
+            autoUpload: false,// 关闭自动上传
+            maxNumberOfFiles: 1,
+            messages: {
+                maxNumberOfFiles: '最大支持上传1个文件',
+                maxFileSize: '单文件上传仅允许100MB大小'
+            },
+            add: function (e, data) {
+                $('#fileName').text(data.files[0].name);
+                $('#fileSize').text(data.files[0].size);
+                startUpload = data;
+            },
+            submit: function (e, data) {
+                if (validUpload()) {
+                    var internshipReleaseId = $('#uploadInternshipReleaseId').val();
+                    data.formData = {
+                        'internshipReleaseId': internshipReleaseId
+                    };
+                }
+            },
+            done: function (e, data) {
+                Messenger().post({
+                    message: data.result.msg,
+                    type: data.result.state ? 'success' : 'error',
+                    showCloseButton: true
+                });
+                if (data.result.state) {
+                    init();// 刷新我的申请
+                    closeUploadModal();// 清空信息
+                }
+
+            }
+        }).on('fileuploadsubmit', function (evt, data) {
+            var isOk = true;
+            var $this = $(this);
+            var validation = data.process(function () {
+                return $this.fileupload('process', data);
+            });
+            validation.fail(function (data) {
+                isOk = false;
+                Messenger().post({
+                    message: '上传失败: ' + data.files[0].error,
+                    type: 'error',
+                    showCloseButton: true
+                });
+            });
+            return isOk;
+        });
+
+        function validUpload() {
+            var internshipReleaseId = $('#uploadInternshipReleaseId').val();
+            var fileName = $('#fileName').text();
+            if (internshipReleaseId !== '') {
+                if (fileName !== '') {
+                    return true;
+                } else {
+                    Messenger().post({
+                        message: '请选择文件',
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                    return false;
+                }
+            } else {
+                Messenger().post({
+                    message: '缺失重要参数不能上传',
+                    type: 'error',
+                    showCloseButton: true
+                });
+                return false;
+            }
+        }
+
+        // 确认上传
+        $('#confirmUpload').click(function () {
+            if (validUpload()) {
+                startUpload.submit();
+            }
+        });
+
+        // 取消上传
+        $('#cancelUpload').click(function () {
+            closeUploadModal();// 清空信息
+        });
 
         init();
         initSearchInput();
