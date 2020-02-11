@@ -133,6 +133,12 @@ public class InternshipApplyServiceImpl implements InternshipApplyService, Pagin
     }
 
     @Override
+    public void deleteByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId) {
+        create.deleteFrom(INTERNSHIP_APPLY).where(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId)
+        .and(INTERNSHIP_APPLY.STUDENT_ID.eq(studentId))).execute();
+    }
+
+    @Override
     public Condition searchCondition(SimplePaginationUtil paginationUtil) {
         Condition a = null;
         JSONObject search = paginationUtil.getSearch();

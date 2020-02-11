@@ -30,4 +30,12 @@ public interface InternshipInfoService {
      * @param internshipInfo 数据
      */
     void update(InternshipInfo internshipInfo);
+
+    /**
+     * 通过实习id与学生id删除
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param studentId           学生id
+     */
+    void deleteByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId);
 }

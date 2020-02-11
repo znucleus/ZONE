@@ -1,6 +1,6 @@
 //# sourceURL=internship_apply_my.js
-require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "jquery.address", "jquery.simple-pagination", "jquery-labelauty"],
-    function ($, _, tools, Handlebars, navActive) {
+require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2", "messenger", "jquery.address", "jquery.simple-pagination", "jquery-labelauty"],
+    function ($, _, tools, Handlebars, navActive, Swal) {
 
         /*
          ajax url.
@@ -8,7 +8,8 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
         var ajax_url = {
             data: web_path + '/web/internship/apply/data',
             edit: '/web/internship/apply/edit',
-            look:'/web/internship/apply/look',
+            look: '/web/internship/apply/look',
+            recall_apply: web_path + '/web/internship/apply/recall',
             page: '/web/menu/internship/apply'
         };
 
@@ -149,6 +150,50 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
         $(tableData).delegate('.myApplyLook', "click", function () {
             $.address.value(ajax_url.look + '/' + $(this).attr('data-id'));
         });
+
+        /*
+       撤消申请
+       */
+        $(tableData).delegate('.recallApply', "click", function () {
+            var id = $(this).attr('data-id');
+            recall(id);
+        });
+
+        /**
+         * 撤消询问
+         * @param id
+         */
+        function recall(id) {
+            Swal.fire({
+                title: "确定撤消申请吗？",
+                text: "申请撤消！",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#ddc144',
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                preConfirm: function () {
+                    sendRecallAjax(id);
+                }
+            });
+        }
+
+        /**
+         * 撤消ajax
+         * @param id
+         */
+        function sendRecallAjax(id) {
+            $.post(ajax_url.recall_apply, {id: id}, function (data) {
+                Messenger().post({
+                    message: data.msg,
+                    type: data.state ? 'success' : 'error',
+                    showCloseButton: true
+                });
+                if (data.state) {
+                    init();
+                }
+            });
+        }
 
         init();
         initSearchInput();

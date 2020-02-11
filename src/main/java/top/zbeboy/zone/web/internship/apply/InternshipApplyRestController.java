@@ -5,19 +5,13 @@ import org.jooq.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
-import top.zbeboy.zone.domain.tables.pojos.Files;
-import top.zbeboy.zone.domain.tables.pojos.InternshipApply;
-import top.zbeboy.zone.domain.tables.pojos.InternshipChangeCompanyHistory;
-import top.zbeboy.zone.domain.tables.pojos.InternshipInfo;
+import org.springframework.web.bind.annotation.*;
+import top.zbeboy.zone.domain.tables.pojos.*;
+import top.zbeboy.zone.domain.tables.records.StudentRecord;
 import top.zbeboy.zone.service.data.StaffService;
-import top.zbeboy.zone.service.internship.InternshipApplyService;
-import top.zbeboy.zone.service.internship.InternshipChangeCompanyHistoryService;
-import top.zbeboy.zone.service.internship.InternshipInfoService;
-import top.zbeboy.zone.service.internship.InternshipReleaseService;
+import top.zbeboy.zone.service.data.StudentService;
+import top.zbeboy.zone.service.internship.*;
+import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.system.FilesService;
 import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
@@ -62,6 +56,9 @@ public class InternshipApplyRestController {
     private InternshipChangeCompanyHistoryService internshipChangeCompanyHistoryService;
 
     @Resource
+    private InternshipChangeHistoryService internshipChangeHistoryService;
+
+    @Resource
     private FilesService filesService;
 
     @Resource
@@ -69,6 +66,12 @@ public class InternshipApplyRestController {
 
     @Resource
     private StaffService staffService;
+
+    @Resource
+    private UsersService usersService;
+
+    @Resource
+    private StudentService studentService;
 
     /**
      * 数据
@@ -314,6 +317,64 @@ public class InternshipApplyRestController {
             }
         } else {
             ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 撤消状态
+     *
+     * @param internshipReleaseId 实习发布id
+     * @return true or false
+     */
+    @PostMapping("/web/internship/apply/recall")
+    public ResponseEntity<Map<String, Object>> recall(@RequestParam("id") String internshipReleaseId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        Users users = usersService.getUserFromSession();
+        Optional<StudentRecord> student = studentService.findByUsername(users.getUsername());
+        if (student.isPresent()) {
+            Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, student.get().getStudentId());
+            if (internshipApplyRecord.isPresent()) {
+                InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
+                int internshipApplyState = internshipApply.getInternshipApplyState();
+                // 处于以下状态不允许撤消 2：已通过；5：基本信息变更填写中；7：单位信息变更填写中
+                if (internshipApplyState == 2 || internshipApplyState == 5 ||
+                        internshipApplyState == 7) {
+                    ajaxUtil.fail().msg("当前状态不允许撤消");
+                } else if (internshipApplyState == 1 || internshipApplyState == 0) {
+                    // 处于 0：未提交申请 1：申请中 允许撤消 该状态下的撤消将会删除所有相关实习信息
+                    internshipInfoService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, student.get().getStudentId());
+                    internshipApplyService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, student.get().getStudentId());
+                    internshipChangeHistoryService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, student.get().getStudentId());
+                    internshipChangeCompanyHistoryService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, student.get().getStudentId());
+                    ajaxUtil.success().msg("撤消申请成功");
+                } else if (internshipApplyState == 4 || internshipApplyState == 6) {
+                    // 处于4：基本信息变更申请中 6：单位信息变更申请中 在这两个状态下将返回已通过状态
+                    internshipApply.setInternshipApplyState(2);
+                    internshipApplyService.update(internshipApply);
+                    ajaxUtil.success().msg("撤消申请成功");
+
+                    InternshipChangeHistory internshipChangeHistory = new InternshipChangeHistory();
+                    internshipChangeHistory.setState(-1);
+                    if (internshipApplyState == 4) {
+                        internshipChangeHistory.setReason("撤消基本信息变更申请");
+                    }
+                    if (internshipApplyState == 6) {
+                        internshipChangeHistory.setReason("撤消单位信息变更申请");
+                    }
+                    internshipChangeHistory.setInternshipChangeHistoryId(UUIDUtil.getUUID());
+                    internshipChangeHistory.setInternshipReleaseId(internshipReleaseId);
+                    internshipChangeHistory.setStudentId(student.get().getStudentId());
+                    internshipChangeHistory.setApplyTime(DateTimeUtil.getNowSqlTimestamp());
+                    internshipChangeHistoryService.save(internshipChangeHistory);
+                } else {
+                    ajaxUtil.fail().msg("当前状态异常");
+                }
+            } else {
+                ajaxUtil.fail().msg("未查询到实习申请信息");
+            }
+        } else {
+            ajaxUtil.fail().msg("未查询到学生信息");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }

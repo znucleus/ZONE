@@ -56,4 +56,12 @@ public interface InternshipApplyService {
      * @param updateState       新状态
      */
     void updateChangeState(List<Integer> curState, int updateState);
+
+    /**
+     * 通过实习id与学生id删除
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param studentId           学生id
+     */
+    void deleteByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId);
 }
