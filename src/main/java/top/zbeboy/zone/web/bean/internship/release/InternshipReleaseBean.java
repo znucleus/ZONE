@@ -17,6 +17,17 @@ public class InternshipReleaseBean extends InternshipRelease {
     private String releaseTimeStr;
     private Byte canOperator;
 
+    // 实习审核 是否可进入审核权限页面
+    private Byte canAuthorize;
+    // 实习审核 统计总数
+    private int waitTotalData;
+    private int passTotalData;
+    private int failTotalData;
+    private int basicApplyTotalData;
+    private int companyApplyTotalData;
+    private int basicFillTotalData;
+    private int companyFillTotalData;
+
     public String getScienceName() {
         return scienceName;
     }
@@ -119,5 +130,69 @@ public class InternshipReleaseBean extends InternshipRelease {
 
     public void setCanOperator(Byte canOperator) {
         this.canOperator = canOperator;
+    }
+
+    public Byte getCanAuthorize() {
+        return canAuthorize;
+    }
+
+    public void setCanAuthorize(Byte canAuthorize) {
+        this.canAuthorize = canAuthorize;
+    }
+
+    public int getWaitTotalData() {
+        return waitTotalData;
+    }
+
+    public void setWaitTotalData(int waitTotalData) {
+        this.waitTotalData = waitTotalData;
+    }
+
+    public int getPassTotalData() {
+        return passTotalData;
+    }
+
+    public void setPassTotalData(int passTotalData) {
+        this.passTotalData = passTotalData;
+    }
+
+    public int getFailTotalData() {
+        return failTotalData;
+    }
+
+    public void setFailTotalData(int failTotalData) {
+        this.failTotalData = failTotalData;
+    }
+
+    public int getBasicApplyTotalData() {
+        return basicApplyTotalData;
+    }
+
+    public void setBasicApplyTotalData(int basicApplyTotalData) {
+        this.basicApplyTotalData = basicApplyTotalData;
+    }
+
+    public int getCompanyApplyTotalData() {
+        return companyApplyTotalData;
+    }
+
+    public void setCompanyApplyTotalData(int companyApplyTotalData) {
+        this.companyApplyTotalData = companyApplyTotalData;
+    }
+
+    public int getBasicFillTotalData() {
+        return basicFillTotalData;
+    }
+
+    public void setBasicFillTotalData(int basicFillTotalData) {
+        this.basicFillTotalData = basicFillTotalData;
+    }
+
+    public int getCompanyFillTotalData() {
+        return companyFillTotalData;
+    }
+
+    public void setCompanyFillTotalData(int companyFillTotalData) {
+        this.companyFillTotalData = companyFillTotalData;
     }
 }
