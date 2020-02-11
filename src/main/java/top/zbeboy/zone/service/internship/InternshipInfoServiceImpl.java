@@ -4,9 +4,12 @@ import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import top.zbeboy.zone.config.CacheBook;
 import top.zbeboy.zone.domain.tables.daos.InternshipInfoDao;
 import top.zbeboy.zone.domain.tables.pojos.InternshipInfo;
 import top.zbeboy.zone.service.util.DateTimeUtil;
@@ -34,6 +37,7 @@ public class InternshipInfoServiceImpl implements InternshipInfoService {
         create = dslContext;
     }
 
+    @Cacheable(cacheNames = CacheBook.INTERNSHIP_INFO, key = "#internshipReleaseId + '_' + #studentId")
     @Override
     public Optional<Record> findByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId) {
         return create.select()
@@ -91,11 +95,13 @@ public class InternshipInfoServiceImpl implements InternshipInfoService {
         });
     }
 
+    @CacheEvict(cacheNames = CacheBook.INTERNSHIP_INFO, key = "#internshipInfo.internshipReleaseId + '_' + #internshipInfo.studentId")
     @Override
     public void update(InternshipInfo internshipInfo) {
         internshipInfoDao.update(internshipInfo);
     }
 
+    @CacheEvict(cacheNames = CacheBook.INTERNSHIP_INFO, key = "#internshipReleaseId + '_' + #studentId")
     @Override
     public void deleteByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId) {
         create.deleteFrom(INTERNSHIP_INFO).where(INTERNSHIP_INFO.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId)

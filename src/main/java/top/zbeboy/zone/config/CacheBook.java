@@ -57,5 +57,6 @@ public final class CacheBook {
     public static final String INTERNSHIP_FILES = "INTERNSHIP_FILES";
     public static final String INTERNSHIP_RELEASE = "INTERNSHIP_RELEASE";
     public static final String INTERNSHIP_TEACHER_DISTRIBUTION = "INTERNSHIP_TEACHER_DISTRIBUTION";
+    public static final String INTERNSHIP_INFO= "INTERNSHIP_INFO";
 
 }
