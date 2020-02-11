@@ -13,7 +13,7 @@
     </div><!-- br-pageheader -->
     <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
         <h4 class="tx-gray-800 mg-b-5">实习申请</h4>
-        <p class="mg-b-0">编辑申请。</p>
+        <p class="mg-b-0">查看申请。</p>
     </div>
 
     <div class="br-pagebody">
@@ -21,16 +21,11 @@
             <div class="row">
                 <div class="col-md-12">
                     <form id="app_form">
-                        <input type="hidden" th:value="${internshipInfo.studentId}" name="studentId" id="studentId"/>
-                        <input type="hidden" th:value="${internshipInfo.studentUsername}" name="username"
-                               id="username"/>
-                        <input type="hidden" th:value="${internshipInfo.internshipReleaseId}"
-                               name="internshipReleaseId"/>
                         <div class="form-group">
                             <label>学生姓名</label>
                             <input class="form-control" th:value="${internshipInfo.studentName}" name="realName"
                                    id="realName"
-                                   placeholder="学生姓名"/>
+                                   placeholder="学生姓名" readonly="readonly"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
@@ -41,7 +36,7 @@
                         </div>
                         <div class="form-group">
                             <label>学生性别</label>
-                            <select id="sex" name="studentSex" class="form-control">
+                            <select id="sex" name="studentSex" class="form-control" disabled="disabled">
                                 <option value="">请选择性别</option>
                                 <option value="男" selected="selected">男</option>
                                 <option value="女">女</option>
@@ -61,20 +56,20 @@
                             <label>QQ邮箱</label>
                             <input class="form-control" name="qqMailbox" th:value="${internshipInfo.qqMailbox}"
                                    id="qqMailbox"
-                                   placeholder="QQ邮箱"/>
+                                   placeholder="QQ邮箱" readonly="readonly"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>父母联系电话</label>
                             <input class="form-control" th:value="${internshipInfo.parentContactPhone}"
                                    name="parentContactPhone"
-                                   id="parentContactPhone" placeholder="父母联系电话"/>
+                                   id="parentContactPhone" placeholder="父母联系电话" readonly="readonly"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>班主任</label>
                             <select class="form-control select2-show-search" id="staff" name="staffId"
-                                    data-placeholder="请选择班主任">
+                                    data-placeholder="请选择班主任" disabled="disabled">
                                 <option label="请选择班主任"></option>
                             </select>
                             <div class="invalid-feedback"></div>
@@ -82,25 +77,25 @@
                         <div class="form-group">
                             <label>实习单位名称</label>
                             <input class="form-control" name="companyName" id="companyName"
-                                   placeholder="实习单位名称" th:value="${internshipInfo.companyName}" maxlength="200"/>
+                                   placeholder="实习单位名称" th:value="${internshipInfo.companyName}" readonly="readonly"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>实习单位地址</label>
                             <input class="form-control" name="companyAddress" id="companyAddress"
-                                   placeholder="实习单位地址" th:value="${internshipInfo.companyAddress}" maxlength="500"/>
+                                   placeholder="实习单位地址" th:value="${internshipInfo.companyAddress}" readonly="readonly"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>实习单位联系人</label>
                             <input class="form-control" name="companyContact" id="companyContact"
-                                   placeholder="实习单位联系人" th:value="${internshipInfo.companyContact}"/>
+                                   placeholder="实习单位联系人" th:value="${internshipInfo.companyContact}" readonly="readonly"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>实习单位联系人联系方式</label>
                             <input class="form-control" name="companyMobile" id="companyMobile"
-                                   placeholder="实习单位联系人联系方式" th:value="${internshipInfo.companyMobile}"/>
+                                   placeholder="实习单位联系人联系方式" th:value="${internshipInfo.companyMobile}" readonly="readonly"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
@@ -112,14 +107,63 @@
                         <div class="form-group">
                             <label>实习开始时间</label>
                             <input class="form-control" name="startTime" id="startTime" placeholder="实习开始时间"
-                                   th:value="${internshipInfo.startTime}"/>
+                                   th:value="${internshipInfo.startTime}" readonly="readonly"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>实习结束时间</label>
                             <input class="form-control" name="endTime" id="endTime" placeholder="实习结束时间"
-                                   th:value="${internshipInfo.endTime}"/>
+                                   th:value="${internshipInfo.endTime}" readonly="readonly"/>
                             <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="ckbox">
+                                <input type="checkbox" name="commitmentBook" value="1" disabled="disabled" th:if="${internshipInfo.commitmentBook == 0 || internshipInfo.commitmentBook == null}"/>
+                                <input type="checkbox" name="commitmentBook" value="1" disabled="disabled" checked="checked" th:if="${internshipInfo.commitmentBook == 1}"/>
+                                <span>承诺书</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label class="ckbox">
+                                <input type="checkbox" name="safetyResponsibilityBook" value="1" disabled="disabled" th:if="${internshipInfo.safetyResponsibilityBook == 0 || internshipInfo.safetyResponsibilityBook == null}"/>
+                                <input type="checkbox" name="safetyResponsibilityBook" value="1" disabled="disabled" checked="checked" th:if="${internshipInfo.safetyResponsibilityBook == 1}"/>
+                                <span>安全责任书</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label class="ckbox">
+                                <input type="checkbox" name="practiceAgreement" value="1" disabled="disabled" th:if="${internshipInfo.practiceAgreement == 0 || internshipInfo.practiceAgreement == null}"/>
+                                <input type="checkbox" name="practiceAgreement" value="1" disabled="disabled" checked="checked" th:if="${internshipInfo.practiceAgreement == 1}"/>
+                                <span>实践协议书</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label class="ckbox">
+                                <input type="checkbox" name="internshipApplication" value="1" disabled="disabled" th:if="${internshipInfo.internshipApplication == 0 || internshipInfo.internshipApplication == null}"/>
+                                <input type="checkbox" name="internshipApplication" value="1" disabled="disabled" checked="checked" th:if="${internshipInfo.internshipApplication == 1}"/>
+                                <span>实习申请书</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label class="ckbox">
+                                <input type="checkbox" name="practiceReceiving" value="1" disabled="disabled" th:if="${internshipInfo.practiceReceiving == 0 || internshipInfo.practiceReceiving == null}"/>
+                                <input type="checkbox" name="practiceReceiving" value="1" disabled="disabled" checked="checked" th:if="${internshipInfo.practiceReceiving == 1}"/>
+                                <span>实习接收</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label class="ckbox">
+                                <input type="checkbox" name="securityEducationAgreement" value="1" disabled="disabled" th:if="${internshipInfo.securityEducationAgreement == 0 || internshipInfo.securityEducationAgreement == null}"/>
+                                <input type="checkbox" name="securityEducationAgreement" value="1" disabled="disabled" checked="checked" th:if="${internshipInfo.securityEducationAgreement == 1}"/>
+                                <span>安全教育协议</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label class="ckbox">
+                                <input type="checkbox" name="parentalConsent" value="1" disabled="disabled" th:if="${internshipInfo.parentalConsent == 0 || internshipInfo.parentalConsent == null}"/>
+                                <input type="checkbox" name="parentalConsent" value="1" disabled="disabled" checked="checked" th:if="${internshipInfo.parentalConsent == 1}"/>
+                                <span>父母同意书</span>
+                            </label>
                         </div>
                         <div class="form-group">
                             <label>附件下载</label>
@@ -136,10 +180,6 @@
                                     </tbody>
                                 </table>
                             </div>
-                        </div>
-                        <div class="form-group text-center">
-                            <button type="button" class="btn btn-primary text-center" id="save">保存</button>
-                            <button type="reset" class="btn btn-default">重置</button>
                         </div>
                     </form>
                 </div>
@@ -170,9 +210,8 @@
     <input type="hidden" id="paramInternshipReleaseId" th:value="${internshipInfo.internshipReleaseId}"/>
     <input type="hidden" id="paramHeadmaster" th:value="${internshipInfo.headmaster}"/>
     <input type="hidden" id="paramHeadmasterTel" th:value="${internshipInfo.headmasterTel}"/>
-    <input type="hidden" id="paramInternshipApplyState" th:value="${internshipApply.internshipApplyState}"/>
     <input type="hidden" class="dy_script"
-           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/internship/apply/internship_apply_edit.js')}"/>
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/internship/apply/internship_apply_look.js')}"/>
 </div>
 <!-- /#page-wrapper -->
 </body>

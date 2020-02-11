@@ -8,6 +8,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
         var ajax_url = {
             data: web_path + '/web/internship/apply/data',
             edit: '/web/internship/apply/edit',
+            look:'/web/internship/apply/look',
             page: '/web/menu/internship/apply'
         };
 
@@ -140,6 +141,13 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
          */
         $(tableData).delegate('.myApply', "click", function () {
             $.address.value(ajax_url.edit + '/' + $(this).attr('data-id'));
+        });
+
+        /*
+        查看申请
+        */
+        $(tableData).delegate('.myApplyLook', "click", function () {
+            $.address.value(ajax_url.look + '/' + $(this).attr('data-id'));
         });
 
         init();

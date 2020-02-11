@@ -185,4 +185,37 @@ public class InternshipApplyViewController {
         }
         return page;
     }
+
+    /**
+     * 实习申请查看
+     *
+     * @param id       实习发布id
+     * @param modelMap 页面对象
+     * @return 页面
+     */
+    @GetMapping("/web/internship/apply/look/{id}")
+    public String look(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        Users users = usersService.getUserFromSession();
+        Optional<Record> studentRecord = studentService.findByUsernameRelation(users.getUsername());
+        if (studentRecord.isPresent()) {
+            Student student = studentRecord.get().into(Student.class);
+            Optional<Record> internshipInfoRecord = internshipInfoService.findByInternshipReleaseIdAndStudentId(id, student.getStudentId());
+            if (internshipInfoRecord.isPresent()) {
+                InternshipInfo internshipInfo = internshipInfoRecord.get().into(InternshipInfo.class);
+                modelMap.put("internshipInfo", internshipInfo);
+                page = "web/internship/apply/internship_apply_look::#page-wrapper";
+            } else {
+                config.buildDangerTip("查询错误", "未查询到实习数据");
+                config.dataMerging(modelMap);
+                page = "inline_tip::#page-wrapper";
+            }
+        } else {
+            config.buildDangerTip("查询错误", "未查询到学生信息");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
 }
