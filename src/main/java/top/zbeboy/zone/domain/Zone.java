@@ -46,6 +46,7 @@ import top.zbeboy.zone.domain.tables.InternshipJournal;
 import top.zbeboy.zone.domain.tables.InternshipJournalContent;
 import top.zbeboy.zone.domain.tables.InternshipRegulate;
 import top.zbeboy.zone.domain.tables.InternshipRelease;
+import top.zbeboy.zone.domain.tables.InternshipReviewAuthorize;
 import top.zbeboy.zone.domain.tables.InternshipTeacherDistribution;
 import top.zbeboy.zone.domain.tables.InternshipType;
 import top.zbeboy.zone.domain.tables.Nation;
@@ -95,7 +96,7 @@ import top.zbeboy.zone.domain.tables.UsersType;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Zone extends SchemaImpl {
 
-    private static final long serialVersionUID = 335478647;
+    private static final long serialVersionUID = -77152082;
 
     /**
      * The reference instance of <code>zone</code>
@@ -261,6 +262,11 @@ public class Zone extends SchemaImpl {
      * The table <code>zone.internship_release</code>.
      */
     public final InternshipRelease INTERNSHIP_RELEASE = top.zbeboy.zone.domain.tables.InternshipRelease.INTERNSHIP_RELEASE;
+
+    /**
+     * The table <code>zone.internship_review_authorize</code>.
+     */
+    public final InternshipReviewAuthorize INTERNSHIP_REVIEW_AUTHORIZE = top.zbeboy.zone.domain.tables.InternshipReviewAuthorize.INTERNSHIP_REVIEW_AUTHORIZE;
 
     /**
      * The table <code>zone.internship_teacher_distribution</code>.
@@ -486,6 +492,7 @@ public class Zone extends SchemaImpl {
             InternshipJournalContent.INTERNSHIP_JOURNAL_CONTENT,
             InternshipRegulate.INTERNSHIP_REGULATE,
             InternshipRelease.INTERNSHIP_RELEASE,
+            InternshipReviewAuthorize.INTERNSHIP_REVIEW_AUTHORIZE,
             InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION,
             InternshipType.INTERNSHIP_TYPE,
             Nation.NATION,

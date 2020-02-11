@@ -42,6 +42,7 @@ import top.zbeboy.zone.domain.tables.InternshipJournal;
 import top.zbeboy.zone.domain.tables.InternshipJournalContent;
 import top.zbeboy.zone.domain.tables.InternshipRegulate;
 import top.zbeboy.zone.domain.tables.InternshipRelease;
+import top.zbeboy.zone.domain.tables.InternshipReviewAuthorize;
 import top.zbeboy.zone.domain.tables.InternshipTeacherDistribution;
 import top.zbeboy.zone.domain.tables.InternshipType;
 import top.zbeboy.zone.domain.tables.Nation;
@@ -170,6 +171,8 @@ public class Indexes {
     public static final Index INTERNSHIP_RELEASE_PRIMARY = Indexes0.INTERNSHIP_RELEASE_PRIMARY;
     public static final Index INTERNSHIP_RELEASE_SCIENCE_ID = Indexes0.INTERNSHIP_RELEASE_SCIENCE_ID;
     public static final Index INTERNSHIP_RELEASE_USERNAME = Indexes0.INTERNSHIP_RELEASE_USERNAME;
+    public static final Index INTERNSHIP_REVIEW_AUTHORIZE_PRIMARY = Indexes0.INTERNSHIP_REVIEW_AUTHORIZE_PRIMARY;
+    public static final Index INTERNSHIP_REVIEW_AUTHORIZE_USERNAME = Indexes0.INTERNSHIP_REVIEW_AUTHORIZE_USERNAME;
     public static final Index INTERNSHIP_TEACHER_DISTRIBUTION_INTERNSHIP_RELEASE_ID = Indexes0.INTERNSHIP_TEACHER_DISTRIBUTION_INTERNSHIP_RELEASE_ID;
     public static final Index INTERNSHIP_TEACHER_DISTRIBUTION_PRIMARY = Indexes0.INTERNSHIP_TEACHER_DISTRIBUTION_PRIMARY;
     public static final Index INTERNSHIP_TEACHER_DISTRIBUTION_STUDENT_ID = Indexes0.INTERNSHIP_TEACHER_DISTRIBUTION_STUDENT_ID;
@@ -324,6 +327,8 @@ public class Indexes {
         public static Index INTERNSHIP_RELEASE_PRIMARY = Internal.createIndex("PRIMARY", InternshipRelease.INTERNSHIP_RELEASE, new OrderField[] { InternshipRelease.INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_ID }, true);
         public static Index INTERNSHIP_RELEASE_SCIENCE_ID = Internal.createIndex("science_id", InternshipRelease.INTERNSHIP_RELEASE, new OrderField[] { InternshipRelease.INTERNSHIP_RELEASE.SCIENCE_ID }, false);
         public static Index INTERNSHIP_RELEASE_USERNAME = Internal.createIndex("username", InternshipRelease.INTERNSHIP_RELEASE, new OrderField[] { InternshipRelease.INTERNSHIP_RELEASE.USERNAME }, false);
+        public static Index INTERNSHIP_REVIEW_AUTHORIZE_PRIMARY = Internal.createIndex("PRIMARY", InternshipReviewAuthorize.INTERNSHIP_REVIEW_AUTHORIZE, new OrderField[] { InternshipReviewAuthorize.INTERNSHIP_REVIEW_AUTHORIZE.INTERNSHIP_RELEASE_ID, InternshipReviewAuthorize.INTERNSHIP_REVIEW_AUTHORIZE.USERNAME }, true);
+        public static Index INTERNSHIP_REVIEW_AUTHORIZE_USERNAME = Internal.createIndex("username", InternshipReviewAuthorize.INTERNSHIP_REVIEW_AUTHORIZE, new OrderField[] { InternshipReviewAuthorize.INTERNSHIP_REVIEW_AUTHORIZE.USERNAME }, false);
         public static Index INTERNSHIP_TEACHER_DISTRIBUTION_INTERNSHIP_RELEASE_ID = Internal.createIndex("internship_release_id", InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION, new OrderField[] { InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID }, false);
         public static Index INTERNSHIP_TEACHER_DISTRIBUTION_PRIMARY = Internal.createIndex("PRIMARY", InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION, new OrderField[] { InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION.STAFF_ID, InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID, InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID }, true);
         public static Index INTERNSHIP_TEACHER_DISTRIBUTION_STUDENT_ID = Internal.createIndex("student_id", InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION, new OrderField[] { InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID }, false);

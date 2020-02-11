@@ -38,6 +38,7 @@ import top.zbeboy.zone.domain.tables.InternshipJournal;
 import top.zbeboy.zone.domain.tables.InternshipJournalContent;
 import top.zbeboy.zone.domain.tables.InternshipRegulate;
 import top.zbeboy.zone.domain.tables.InternshipRelease;
+import top.zbeboy.zone.domain.tables.InternshipReviewAuthorize;
 import top.zbeboy.zone.domain.tables.InternshipTeacherDistribution;
 import top.zbeboy.zone.domain.tables.InternshipType;
 import top.zbeboy.zone.domain.tables.Nation;
@@ -246,6 +247,11 @@ public class Tables {
      * The table <code>zone.internship_release</code>.
      */
     public static final InternshipRelease INTERNSHIP_RELEASE = InternshipRelease.INTERNSHIP_RELEASE;
+
+    /**
+     * The table <code>zone.internship_review_authorize</code>.
+     */
+    public static final InternshipReviewAuthorize INTERNSHIP_REVIEW_AUTHORIZE = InternshipReviewAuthorize.INTERNSHIP_REVIEW_AUTHORIZE;
 
     /**
      * The table <code>zone.internship_teacher_distribution</code>.
