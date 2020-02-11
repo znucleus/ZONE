@@ -9,6 +9,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             data: web_path + '/web/internship/apply/data',
             edit: '/web/internship/apply/edit',
             look: '/web/internship/apply/look',
+            change_state: '/web/internship/apply/state',
             recall_apply: web_path + '/web/internship/apply/recall',
             page: '/web/menu/internship/apply'
         };
@@ -159,6 +160,22 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             recall(id);
         });
 
+        /*
+       基础信息变更申请
+       */
+        $(tableData).delegate('.basisApply', "click", function () {
+            var id = $(this).attr('data-id');
+            showStateModal(4, id, '基础信息变更申请');
+        });
+
+        /*
+        单位信息变更申请
+        */
+        $(tableData).delegate('.firmApply', "click", function () {
+            var id = $(this).attr('data-id');
+            showStateModal(6, id, '单位信息变更申请');
+        });
+
         /**
          * 撤消询问
          * @param id
@@ -190,6 +207,89 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                     showCloseButton: true
                 });
                 if (data.state) {
+                    init();
+                }
+            });
+        }
+
+        /**
+         * 展示变更模态框
+         * @param state
+         * @param internshipReleaseId
+         * @param title
+         */
+        function showStateModal(state, internshipReleaseId, title) {
+            $('#applyState').val(state);
+            $('#applyInternshipReleaseId').val(internshipReleaseId);
+            $('#stateModalLabel').text(title);
+            $('#stateModal').modal('show');
+        }
+
+        /**
+         * 隐藏变更模态框
+         */
+        function hideStateModal() {
+            $('#applyState').val('');
+            $('#applyInternshipReleaseId').val('');
+            $('#reason').val('');
+            $('#stateModalLabel').text('');
+            $('#stateModal').modal('hide');
+        }
+
+        /*
+        提交变更申请
+        */
+        $('#stateOk').click(function () {
+            validReason();
+        });
+
+        /*
+        取消变更申请
+        */
+        $('#stateCancel').click(function () {
+            hideStateModal();
+        });
+
+        function validReason() {
+            var reason = $('#reason').val();
+            if (reason.length <= 0 || reason.length > 500) {
+                tools.validErrorDom('#reason', '原因500个字符以内');
+            } else {
+                tools.validSuccessDom('#reason');
+                stateAdd();
+            }
+        }
+
+        /*
+      状态申请提交询问
+      */
+        function stateAdd() {
+            Swal.fire({
+                title: "确定进行申请吗？",
+                text: "实习申请！",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#ddd974',
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                preConfirm: function () {
+                    sendStateAjax();
+                }
+            });
+        }
+
+        /**
+         * 发送状态申请
+         */
+        function sendStateAjax() {
+            $.post(ajax_url.change_state, $('#state_form').serialize(), function (data) {
+                Messenger().post({
+                    message: data.msg,
+                    type: data.state ? 'success' : 'error',
+                    showCloseButton: true
+                });
+                if (data.state) {
+                    hideStateModal();
                     init();
                 }
             });

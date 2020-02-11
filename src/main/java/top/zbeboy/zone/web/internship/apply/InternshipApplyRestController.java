@@ -32,6 +32,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.sql.Timestamp;
 import java.util.*;
 
 @RestController
@@ -369,6 +370,55 @@ public class InternshipApplyRestController {
                     internshipChangeHistoryService.save(internshipChangeHistory);
                 } else {
                     ajaxUtil.fail().msg("当前状态异常");
+                }
+            } else {
+                ajaxUtil.fail().msg("未查询到实习申请信息");
+            }
+        } else {
+            ajaxUtil.fail().msg("未查询到学生信息");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 基础信息变更 单位信息变更申请
+     *
+     * @param reason              原因
+     * @param state               状态
+     * @param internshipReleaseId 实习发布id
+     * @return true or false
+     */
+    @PostMapping("/web/internship/apply/state")
+    public ResponseEntity<Map<String, Object>> state(@RequestParam("reason") String reason, @RequestParam("internshipApplyState") int state,
+                                                     @RequestParam("internshipReleaseId") String internshipReleaseId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        Users users = usersService.getUserFromSession();
+        Optional<StudentRecord> student = studentService.findByUsername(users.getUsername());
+        if (student.isPresent()) {
+            Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, student.get().getStudentId());
+            if (internshipApplyRecord.isPresent()) {
+                InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
+                int internshipApplyState = internshipApply.getInternshipApplyState();
+                // 处于 2：已通过 才可变更申请
+                if (internshipApplyState == 2) {
+                    Timestamp now = DateTimeUtil.getNowSqlTimestamp();
+                    internshipApply.setInternshipApplyState(state);
+                    internshipApply.setReason(reason);
+                    internshipApply.setApplyTime(now);
+                    internshipApplyService.update(internshipApply);
+                    ajaxUtil.success().msg("申请成功");
+
+                    InternshipChangeHistory internshipChangeHistory = new InternshipChangeHistory();
+                    internshipChangeHistory.setInternshipChangeHistoryId(UUIDUtil.getUUID());
+                    internshipChangeHistory.setInternshipReleaseId(internshipReleaseId);
+                    internshipChangeHistory.setStudentId(student.get().getStudentId());
+                    internshipChangeHistory.setState(state);
+                    internshipChangeHistory.setApplyTime(now);
+                    internshipChangeHistory.setReason(reason);
+                    internshipChangeHistoryService.save(internshipChangeHistory);
+
+                } else {
+                    ajaxUtil.fail().msg("当前状态，无法进行变更申请");
                 }
             } else {
                 ajaxUtil.fail().msg("未查询到实习申请信息");
