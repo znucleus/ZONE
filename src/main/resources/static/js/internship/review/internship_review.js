@@ -7,7 +7,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
          */
         var ajax_url = {
             data: web_path + '/web/internship/review/internship/data',
-            add: '/web/internship/review/add',
+            authorize: '/web/internship/review/authorize',
             page: '/web/menu/internship/review'
         };
 
@@ -111,10 +111,10 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
         }
 
         /*
-         进入申请
+         审核权限
          */
-        $(tableData).delegate('.apply', "click", function () {
-            $.address.value(ajax_url.add + '/' + $(this).attr('data-id'));
+        $(tableData).delegate('.authorize', "click", function () {
+            $.address.value(ajax_url.authorize + '/' + $(this).attr('data-id'));
         });
 
         init();

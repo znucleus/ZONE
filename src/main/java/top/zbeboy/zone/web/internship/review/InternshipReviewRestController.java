@@ -7,9 +7,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.service.internship.InternshipReleaseService;
+import top.zbeboy.zone.service.internship.InternshipReviewAuthorizeService;
 import top.zbeboy.zone.service.internship.InternshipReviewService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.web.bean.internship.release.InternshipReleaseBean;
+import top.zbeboy.zone.web.bean.internship.review.InternshipReviewAuthorizeBean;
 import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
@@ -32,6 +34,8 @@ public class InternshipReviewRestController {
     @Resource
     private InternshipReviewService internshipReviewService;
 
+    @Resource
+    private InternshipReviewAuthorizeService internshipReviewAuthorizeService;
 
     /**
      * 数据
@@ -66,6 +70,24 @@ public class InternshipReviewRestController {
             beans.forEach(bean -> bean.setCanAuthorize(BooleanUtil.toByte(internshipConditionCommon.reviewAuthorizeCondition(bean.getInternshipReleaseId()))));
         }
         simplePaginationUtil.setTotalSize(internshipReleaseService.countAll(simplePaginationUtil));
+        ajaxUtil.success().list(beans).page(simplePaginationUtil).msg("获取数据成功");
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 数据
+     *
+     * @return 数据
+     */
+    @GetMapping("/web/internship/review/authorize/data")
+    public ResponseEntity<Map<String, Object>> authorizeData(SimplePaginationUtil simplePaginationUtil) {
+        AjaxUtil<InternshipReviewAuthorizeBean> ajaxUtil = AjaxUtil.of();
+        List<InternshipReviewAuthorizeBean> beans = new ArrayList<>();
+        Result<Record> records = internshipReviewAuthorizeService.findAll(simplePaginationUtil);
+        if (records.isNotEmpty()) {
+            beans = records.into(InternshipReviewAuthorizeBean.class);
+        }
+        simplePaginationUtil.setTotalSize(internshipReviewAuthorizeService.countAll(simplePaginationUtil));
         ajaxUtil.success().list(beans).page(simplePaginationUtil).msg("获取数据成功");
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }

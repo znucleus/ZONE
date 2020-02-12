@@ -39,6 +39,7 @@ requirejs.config({
         "datatables.net-responsive": web_path + "/plugins/datatables/js/dataTables.responsive.min",
         "datatables.net": web_path + "/plugins/datatables/js/jquery.dataTables.min",
         "datatables.net-bs4": web_path + "/plugins/datatables/js/dataTables.bootstrap4.min",
+        "tablesaw": web_path + "/plugins/tablesaw/tablesaw.jquery.min",
         "jquery-ui/widget": web_path + "/plugins/jquery-file-upload/js/vendor/jquery.ui.widget.min",
         "jquery.iframe-transport": web_path + "/plugins/jquery-file-upload/js/jquery.iframe-transport.min",
         "jquery.fileupload-process": web_path + "/plugins/jquery-file-upload/js/jquery.fileupload-process.min",
@@ -98,6 +99,9 @@ requirejs.config({
         "responsive.bootstrap4": {
             deps: ["datatables.net-responsive", "datatables.net-bs4", "datatables.net", "css!" + web_path + "/plugins/datatables/css/dataTables.bootstrap4.min",
                 "css!" + web_path + "/plugins/datatables/css/responsive.bootstrap4.min"]
+        },
+        "tablesaw": {
+            deps: ["jquery", "css!" + web_path + "/plugins/tablesaw/tablesaw.min"]
         },
         "bootstrap-treeview": {
             deps: ["jquery", "css!" + web_path + "/plugins/bootstrap-treeview/css/bootstrap-treeview.min"]

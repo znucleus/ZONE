@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="br-pageheader pd-y-15 pd-l-20">
+        <nav class="breadcrumb pd-0 mg-0 tx-12">
+            <a class="breadcrumb-item dy_href" href="#/web/menu/internship/review">列表</a>
+            <span class="breadcrumb-item active">实习审核</span>
+        </nav>
+    </div><!-- br-pageheader -->
+    <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
+        <h4 class="tx-gray-800 mg-b-5">实习审核</h4>
+        <p class="mg-b-0">添加权限。</p>
+    </div>
+
+    <div class="br-pagebody">
+        <div class="br-section-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <div>
+                        <div class="float-left">
+                            <span>数量: </span><span id="totalSize"></span>
+                        </div>
+                        <div class="float-right">
+                            <button type="button" id="authorize_add" class="btn btn-outline-primary btn-sm mr-2"><i
+                                    class="fa fa-plus"></i>添加
+                            </button>
+                            <button type="button" id="refresh" class="btn btn-light btn-sm"><i class="fa fa-refresh"></i>刷新
+                            </button>
+                        </div>
+                    </div>
+                    <table class="tablesaw tablesaw-stack table table-striped mt-3" data-tablesaw-mode="stack"
+                           id="dataTable">
+                        <thead>
+                        <tr>
+                            <th scope="col" data-tablesaw-priority="persist">姓名</th>
+                            <th scope="col" data-tablesaw-priority="persist">账号</th>
+                            <th scope="col">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--定义数据模板-->
+    <script id="data_template" type="text/x-handlebars-template">
+        {{#each listResult}}
+        <tr>
+            <td>{{realName}}</td>
+            <td>{{username}}</td>
+            <td>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-danger btn-sm del" data-id="{{this.username}}">删除
+                    </button>
+                </div>
+            </td>
+        </tr>
+        {{/each}}
+    </script>
+
+    <input type="hidden" id="paramInternshipReleaseId" th:value="${internshipReleaseId}"/>
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/internship/review/internship_review_authorize.js')}"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>
