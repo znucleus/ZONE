@@ -60,7 +60,7 @@
                     <div class="col-md-4"><span>学校：</span><span>{{schoolName}}</span></div>
                     <div class="col-md-4"><span>院：</span><span>{{collegeName}}</span></div>
                     <div class="col-md-4"><span>系：</span><span>{{departmentName}}</span></div>
-                    <div class="col-md-4"><span>专业：</span><span class="badge badge-secondary">{{scienceName}}</span></div>
+                    <div class="col-md-4"><span>专业：</span><span class="badge badge-light">{{scienceName}}</span></div>
                     <div class="col-md-4"><span>实习类型：</span><span>{{internshipTypeName}}</span></div>
                     <div class="col-md-4">
                         <span>状态：</span>
@@ -94,30 +94,30 @@
                         {{#if canOperator}}
                         <div class="btn-group mr-2 mt-2" role="group" aria-label="Second group">
                             <button type="button" class="btn btn-primary review" data-id="{{internshipReleaseId}}">进行审核
-                                <span class="badge badge-secondary">{{waitTotalData}}</span></button>
+                                <span class="badge badge-light">{{waitTotalData}}</span></button>
                         </div>
                         <div class="btn-group mr-2 mt-2" role="group" aria-label="Third group">
                             <button type="button" class="btn btn-success pass_apply" data-id="{{internshipReleaseId}}">
-                                已通过 <span class="badge badge-secondary">{{passTotalData}}</span></button>
+                                已通过 <span class="badge badge-light">{{passTotalData}}</span></button>
                             <button type="button" class="btn btn-danger fail_apply" data-id="{{internshipReleaseId}}">
-                                未通过 <span class="badge badge-secondary">{{failTotalData}}</span></button>
+                                未通过 <span class="badge badge-light">{{failTotalData}}</span></button>
                         </div>
                         <div class="btn-group mr-2 mt-2" role="group" aria-label="Fourth group">
                             <button type="button" class="btn btn-teal basic_apply" data-id="{{internshipReleaseId}}">
-                                基本信息修改申请 <span class="badge badge-secondary">{{basicApplyTotalData}}</span></button>
+                                基本信息修改申请 <span class="badge badge-light">{{basicApplyTotalData}}</span></button>
                         </div>
                         <div class="btn-group mr-2 mt-2" role="group" aria-label="Five group">
                             <button type="button" class="btn btn-teal company_apply"
-                                    data-id="{{internshipReleaseId}}">单位信息修改申请 <span class="badge badge-secondary">{{companyApplyTotalData}}</span>
+                                    data-id="{{internshipReleaseId}}">单位信息修改申请 <span class="badge badge-light">{{companyApplyTotalData}}</span>
                             </button>
                         </div>
                         <div class="btn-group mr-2 mt-2" role="group" aria-label="Six group">
                             <button type="button" class="btn btn-info basic_fill" data-id="{{internshipReleaseId}}">
-                                基本信息填写中 <span class="badge badge-secondary">{{basicFillTotalData}}</span></button>
+                                基本信息填写中 <span class="badge badge-light">{{basicFillTotalData}}</span></button>
                         </div>
                         <div class="btn-group mt-2" role="group" aria-label="Seven group">
                             <button type="button" class="btn btn-info company_fill"
-                                    data-id="{{internshipReleaseId}}">单位信息填写中 <span class="badge badge-secondary">{{companyFillTotalData}}</span>
+                                    data-id="{{internshipReleaseId}}">单位信息填写中 <span class="badge badge-light">{{companyFillTotalData}}</span>
                             </button>
                         </div>
                         {{/if}}

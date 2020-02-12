@@ -8,6 +8,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
         var ajax_url = {
             data: web_path + '/web/internship/review/internship/data',
             authorize: '/web/internship/review/authorize',
+            audit:'/web/internship/review/audit',
             page: '/web/menu/internship/review'
         };
 
@@ -115,6 +116,13 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
          */
         $(tableData).delegate('.authorize', "click", function () {
             $.address.value(ajax_url.authorize + '/' + $(this).attr('data-id'));
+        });
+
+        /*
+         审核
+        */
+        $(tableData).delegate('.review', "click", function () {
+            $.address.value(ajax_url.audit + '/' + $(this).attr('data-id'));
         });
 
         init();

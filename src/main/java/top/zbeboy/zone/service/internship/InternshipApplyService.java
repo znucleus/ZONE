@@ -20,7 +20,7 @@ public interface InternshipApplyService {
     Optional<Record> findByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId);
 
     /**
-     * 分布查询
+     * 分页查询
      *
      * @param paginationUtil 数据
      * @return 数据

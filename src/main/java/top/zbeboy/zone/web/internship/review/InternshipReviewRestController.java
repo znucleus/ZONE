@@ -2,15 +2,14 @@ package top.zbeboy.zone.web.internship.review;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.Record;
+import org.jooq.Record2;
 import org.jooq.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.InternshipReviewAuthorize;
+import top.zbeboy.zone.domain.tables.pojos.Organize;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.service.internship.InternshipReleaseService;
 import top.zbeboy.zone.service.internship.InternshipReviewAuthorizeService;
@@ -20,16 +19,15 @@ import top.zbeboy.zone.service.system.AuthoritiesService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.zone.web.bean.internship.review.InternshipReviewAuthorizeBean;
+import top.zbeboy.zone.web.bean.internship.review.InternshipReviewBean;
 import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
+import top.zbeboy.zone.web.plugin.select2.Select2Data;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 public class InternshipReviewRestController {
@@ -105,6 +103,46 @@ public class InternshipReviewRestController {
         simplePaginationUtil.setTotalSize(internshipReviewAuthorizeService.countAll(simplePaginationUtil));
         ajaxUtil.success().list(beans).page(simplePaginationUtil).msg("获取数据成功");
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 数据
+     *
+     * @param simplePaginationUtil 请求
+     * @return 数据
+     */
+    @GetMapping("/web/internship/review/data")
+    public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil) {
+        AjaxUtil<InternshipReviewBean> ajaxUtil = AjaxUtil.of();
+        List<InternshipReviewBean> beans = new ArrayList<>();
+        Result<Record> records = internshipReviewService.findAllByPage(simplePaginationUtil);
+        if (records.isNotEmpty()) {
+            beans = records.into(InternshipReviewBean.class);
+            beans.forEach(bean -> bean.setChangeFillStartTimeStr(Objects.nonNull(bean.getChangeFillStartTime()) ? DateTimeUtil.defaultFormatSqlTimestamp(bean.getChangeFillStartTime()) : ""));
+            beans.forEach(bean -> bean.setChangeFillEndTimeStr(Objects.nonNull(bean.getChangeFillEndTime()) ? DateTimeUtil.defaultFormatSqlTimestamp(bean.getChangeFillEndTime()) : ""));
+            beans.forEach(bean -> bean.setApplyTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getApplyTime())));
+        }
+        simplePaginationUtil.setTotalSize(internshipReviewService.countAll(simplePaginationUtil));
+        ajaxUtil.success().list(beans).page(simplePaginationUtil).msg("获取数据成功");
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 获取班级数据
+     *
+     * @param id 实习发布id
+     * @return 班级数据
+     */
+    @GetMapping("/web/internship/review/organize/{id}")
+    public ResponseEntity<Map<String, Object>> organize(@PathVariable("id") String id) {
+        Select2Data select2Data = Select2Data.of();
+        List<Organize> organizes = new ArrayList<>();
+        Result<Record2<Integer, String>> records = internshipReviewService.findDistinctOrganize(id);
+        if (records.isNotEmpty()) {
+            organizes = records.into(Organize.class);
+        }
+        organizes.forEach(organize -> select2Data.add(organize.getOrganizeId().toString(), organize.getOrganizeName()));
+        return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
 
     /**
