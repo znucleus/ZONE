@@ -26,7 +26,7 @@ public interface InternshipReleaseService {
     Optional<Record> findByIdRelation(String id);
 
     /**
-     * 分布查询
+     * 分页查询
      *
      * @param paginationUtil 数据
      * @return 数据
