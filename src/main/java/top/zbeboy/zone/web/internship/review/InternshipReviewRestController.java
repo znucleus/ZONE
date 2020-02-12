@@ -8,9 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.config.Workbook;
+import top.zbeboy.zone.domain.tables.pojos.InternshipInfo;
 import top.zbeboy.zone.domain.tables.pojos.InternshipReviewAuthorize;
 import top.zbeboy.zone.domain.tables.pojos.Organize;
 import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zone.service.internship.InternshipInfoService;
 import top.zbeboy.zone.service.internship.InternshipReleaseService;
 import top.zbeboy.zone.service.internship.InternshipReviewAuthorizeService;
 import top.zbeboy.zone.service.internship.InternshipReviewService;
@@ -43,6 +45,9 @@ public class InternshipReviewRestController {
 
     @Resource
     private InternshipReviewAuthorizeService internshipReviewAuthorizeService;
+
+    @Resource
+    private InternshipInfoService internshipInfoService;
 
     @Resource
     private AuthoritiesService authoritiesService;
@@ -203,6 +208,26 @@ public class InternshipReviewRestController {
             ajaxUtil.success().msg("删除成功");
         } else {
             ajaxUtil.fail().msg("您无权限操作");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 详情数据
+     *
+     * @param id        实习发布id
+     * @param studentId 学生id
+     * @return 数据
+     */
+    @GetMapping("/web/internship/review/detail/{id}/{studentId}")
+    public ResponseEntity<Map<String, Object>> data(@PathVariable("id") String id, @PathVariable("studentId") int studentId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        Optional<Record> internshipInfoRecord = internshipInfoService.findByInternshipReleaseIdAndStudentId(id, studentId);
+        if (internshipInfoRecord.isPresent()) {
+            InternshipInfo internshipInfo = internshipInfoRecord.get().into(InternshipInfo.class);
+            ajaxUtil.success().msg("获取数据成功").put("internshipInfo", internshipInfo);
+        } else {
+            ajaxUtil.fail().msg("获取数据失败");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }

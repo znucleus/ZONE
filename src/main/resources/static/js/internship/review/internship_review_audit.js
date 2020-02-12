@@ -7,7 +7,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
          */
         var ajax_url = {
             data: web_path + '/web/internship/review/data',
-            detail: '/web/internship/review/detail',
+            detail: web_path + '/web/internship/review/detail',
             save: web_path + '/web/internship/review/save',
             pass: web_path + '/web/internship/review/pass',
             fail: web_path + '/web/internship/review/fail',
@@ -139,6 +139,15 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
         }
 
         /**
+         * 详情数据
+         * @param data 数据
+         */
+        function detailData(data) {
+            var template = Handlebars.compile($("#internship-detail-template").html());
+            $(detail).html(template(data.internshipInfo));
+        }
+
+        /**
          * 状态码表
          * @param state 状态码
          * @returns {string}
@@ -182,14 +191,43 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
             window.location.href = ajax_url.download + '/' + id;
         });
 
+        var detail = null;
+        var detailSelect = {};
         /*
          查看详情
          */
         $(tableData).delegate('.detail_apply', "click", function () {
-            var id = $(this).attr('data-id');
+            detail = $(this).parent().prev().find('.detail');
             var studentId = $(this).attr('data-student');
-            $.address.value(ajax_url.detail + '/' + id + '/' + studentId);
+
+            if (!detailSelect[studentId]) {
+                initDetail(studentId);
+                detailSelect[studentId] = true;
+            } else {
+                $(detail).prev().addClass('col-md-12').removeClass('col-md-8');
+                $(detail).removeClass('col-md-4');
+                $(detail).css({'overflow-y': '', 'overflow-x': '', 'height': ''});
+                $(detail).empty();
+                detailSelect[studentId] = false;
+            }
+
         });
+
+        function initDetail(studentId) {
+            $.get(ajax_url.detail + '/' + page_param.paramInternshipReleaseId + '/' + studentId, function (data) {
+                Messenger().post({
+                    message: data.msg,
+                    type: data.state ? 'success' : 'error',
+                    showCloseButton: true
+                });
+                if (data.state) {
+                    $(detail).prev().removeClass('col-md-12').addClass('col-md-8');
+                    $(detail).addClass('col-md-4');
+                    $(detail).css({'overflow-y': 'auto', 'overflow-x': 'auto', 'height': '360px'});
+                    detailData(data);
+                }
+            });
+        }
 
         // 数据form
         var dataForm = null;
@@ -248,17 +286,17 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
             });
         });
 
-        var checkAll = false;
+        var checkAll = {};
         /*
          全选
          */
         $(tableData).delegate('.check_all_apply', "click", function () {
             dataForm = $(this).parent().prev().find('form');
+            var studentId = $(this).attr('data-student');
             $(dataForm[0]).find('.check').each(function (i, data) {
-                data.checked = !checkAll;
+                data.checked = !checkAll[studentId];
             });
-
-            checkAll = !checkAll;
+            checkAll[studentId] = !checkAll[studentId];
         });
 
         /*
@@ -449,6 +487,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
         }
 
         var organizeSelect2 = null;
+
         /**
          * 初始化班级数据
          */

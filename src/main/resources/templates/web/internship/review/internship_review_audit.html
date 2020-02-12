@@ -103,125 +103,134 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-4"><span>专业：</span><span>{{scienceName}}</span></div>
-                    <div class="col-md-4"><span>班级：</span><span>{{organizeName}}</span></div>
-                    <div class="col-md-4"><span>状态：</span><span
-                            class="badge badge-info">{{internship_apply_state}}</span></div>
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-4"><span>专业：</span><span>{{scienceName}}</span></div>
+                            <div class="col-md-4"><span>班级：</span><span>{{organizeName}}</span></div>
+                            <div class="col-md-4"><span>状态：</span><span
+                                    class="badge badge-info">{{internship_apply_state}}</span></div>
 
-                    <div class="col-md-4"><span>实习单位：</span><span>{{companyName}}</span></div>
-                    <div class="col-md-8"><span>单位地址：</span><span>{{companyAddress}}</span></div>
-                    <div class="col-md-4"><span>单位联系人：</span><span>{{companyContact}}</span></div>
-                    <div class="col-md-4"><span>实习开始时间：</span><span>{{startTime}}</span></div>
-                    <div class="col-md-4"><span>实习结束时间：</span><span>{{endTime}}</span></div>
+                            <div class="col-md-4"><span>实习单位：</span><span>{{companyName}}</span></div>
+                            <div class="col-md-8"><span>单位地址：</span><span>{{companyAddress}}</span></div>
+                            <div class="col-md-4"><span>单位联系人：</span><span>{{companyContact}}</span></div>
+                            <div class="col-md-4"><span>实习开始时间：</span><span>{{startTime}}</span></div>
+                            <div class="col-md-4"><span>实习结束时间：</span><span>{{endTime}}</span></div>
 
-                    <div class="col-md-4"><span>填写开始时间：</span><span>{{changeFillStartTimeStr}}</span></div>
-                    <div class="col-md-8"><span>填写结束时间：</span><span>{{changeFillEndTimeStr}}</span></div>
-                    <div class="col-md-12"><span>原因：</span><span>{{reason}}</span></div>
-                </div>
-                <p class="text-right font-italic m-t-10">
-                    <small><em><span>申请时间：</span> <span>{{applyTimeStr}}</span></em>
-                    </small>
-                </p>
-                <form role="form">
-                    <div class="row mt-3">
-
-                        <div class="col-md-3">
-                            <label class="ckbox">
-                                {{#if commitmentBook}}
-                                <input type="checkbox" class="check" name="commitmentBook" value="1" checked="checked"/>
-                                {{else}}
-                                <input type="checkbox" class="check" name="commitmentBook" value="1"/>
-                                {{/if}}
-                                <span>承诺书</span>
-                            </label>
+                            <div class="col-md-4"><span>填写开始时间：</span><span>{{changeFillStartTimeStr}}</span></div>
+                            <div class="col-md-8"><span>填写结束时间：</span><span>{{changeFillEndTimeStr}}</span></div>
+                            <div class="col-md-12"><span>原因：</span><span>{{reason}}</span></div>
                         </div>
+                        <p class="text-right font-italic m-t-10">
+                            <small><em><span>申请时间：</span> <span>{{applyTimeStr}}</span></em>
+                            </small>
+                        </p>
+                        <form role="form">
+                            <div class="row mt-3">
 
-                        <div class="col-md-3">
-                            <label class="ckbox">
-                                {{#if safetyResponsibilityBook}}
-                                <input type="checkbox" class="check" name="safetyResponsibilityBook" value="1"
-                                       checked="checked"/>
-                                {{else}}
-                                <input type="checkbox" class="check" name="safetyResponsibilityBook" value="1"/>
-                                {{/if}}
-                                <span>安全责任书</span>
-                            </label>
-                        </div>
+                                <div class="col-md-3">
+                                    <label class="ckbox">
+                                        {{#if commitmentBook}}
+                                        <input type="checkbox" class="check" name="commitmentBook" value="1"
+                                               checked="checked"/>
+                                        {{else}}
+                                        <input type="checkbox" class="check" name="commitmentBook" value="1"/>
+                                        {{/if}}
+                                        <span>承诺书</span>
+                                    </label>
+                                </div>
 
-                        <div class="col-md-3">
-                            <label class="ckbox">
-                                {{#if practiceAgreement}}
-                                <input type="checkbox" class="check" name="practiceAgreement" value="1"
-                                       checked="checked"/>
-                                {{else}}
-                                <input type="checkbox" class="check" name="practiceAgreement" value="1"/>
-                                {{/if}}
-                                <span>实践协议书</span>
-                            </label>
-                        </div>
+                                <div class="col-md-3">
+                                    <label class="ckbox">
+                                        {{#if safetyResponsibilityBook}}
+                                        <input type="checkbox" class="check" name="safetyResponsibilityBook" value="1"
+                                               checked="checked"/>
+                                        {{else}}
+                                        <input type="checkbox" class="check" name="safetyResponsibilityBook" value="1"/>
+                                        {{/if}}
+                                        <span>安全责任书</span>
+                                    </label>
+                                </div>
 
-                        <div class="col-md-3">
-                            <label class="ckbox">
-                                {{#if internshipApplication}}
-                                <input type="checkbox" class="check" name="internshipApplication" value="1"
-                                       checked="checked"/>
-                                {{else}}
-                                <input type="checkbox" class="check" name="internshipApplication" value="1"/>
-                                {{/if}}
-                                <span>实习申请书</span>
-                            </label>
-                        </div>
+                                <div class="col-md-3">
+                                    <label class="ckbox">
+                                        {{#if practiceAgreement}}
+                                        <input type="checkbox" class="check" name="practiceAgreement" value="1"
+                                               checked="checked"/>
+                                        {{else}}
+                                        <input type="checkbox" class="check" name="practiceAgreement" value="1"/>
+                                        {{/if}}
+                                        <span>实践协议书</span>
+                                    </label>
+                                </div>
 
-                        <div class="col-md-3">
-                            <label class="ckbox">
-                                {{#if practiceReceiving}}
-                                <input type="checkbox" class="check" name="practiceReceiving" value="1"
-                                       checked="checked"/>
-                                {{else}}
-                                <input type="checkbox" class="check" name="practiceReceiving" value="1"/>
-                                {{/if}}
-                                <span>实习接收</span>
-                            </label>
-                        </div>
+                                <div class="col-md-3">
+                                    <label class="ckbox">
+                                        {{#if internshipApplication}}
+                                        <input type="checkbox" class="check" name="internshipApplication" value="1"
+                                               checked="checked"/>
+                                        {{else}}
+                                        <input type="checkbox" class="check" name="internshipApplication" value="1"/>
+                                        {{/if}}
+                                        <span>实习申请书</span>
+                                    </label>
+                                </div>
 
-                        <div class="col-md-3">
-                            <label class="ckbox">
-                                {{#if securityEducationAgreement}}
-                                <input type="checkbox" class="check" name="securityEducationAgreement" value="1"
-                                       checked="checked"/>
-                                {{else}}
-                                <input type="checkbox" class="check" name="securityEducationAgreement" value="1"/>
-                                {{/if}}
-                                <span>安全教育协议</span>
-                            </label>
-                        </div>
+                                <div class="col-md-3">
+                                    <label class="ckbox">
+                                        {{#if practiceReceiving}}
+                                        <input type="checkbox" class="check" name="practiceReceiving" value="1"
+                                               checked="checked"/>
+                                        {{else}}
+                                        <input type="checkbox" class="check" name="practiceReceiving" value="1"/>
+                                        {{/if}}
+                                        <span>实习接收</span>
+                                    </label>
+                                </div>
 
-                        <div class="col-md-3">
-                            <label class="ckbox">
-                                {{#if parentalConsent}}
-                                <input type="checkbox" class="check" name="parentalConsent" value="1"
-                                       checked="checked"/>
-                                {{else}}
-                                <input type="checkbox" class="check" name="parentalConsent" value="1"/>
-                                {{/if}}
-                                <span>父母同意书</span>
-                            </label>
+                                <div class="col-md-3">
+                                    <label class="ckbox">
+                                        {{#if securityEducationAgreement}}
+                                        <input type="checkbox" class="check" name="securityEducationAgreement" value="1"
+                                               checked="checked"/>
+                                        {{else}}
+                                        <input type="checkbox" class="check" name="securityEducationAgreement"
+                                               value="1"/>
+                                        {{/if}}
+                                        <span>安全教育协议</span>
+                                    </label>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label class="ckbox">
+                                        {{#if parentalConsent}}
+                                        <input type="checkbox" class="check" name="parentalConsent" value="1"
+                                               checked="checked"/>
+                                        {{else}}
+                                        <input type="checkbox" class="check" name="parentalConsent" value="1"/>
+                                        {{/if}}
+                                        <span>父母同意书</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <input type="hidden" name="internshipReleaseId" value="{{internshipReleaseId}}"/>
+                            <input type="hidden" name="studentId" value="{{studentId}}"/>
+                            <input type="hidden" value="" name="reason"/>
+                            <input type="hidden" value="2" name="internshipApplyState"/>
+                        </form>
+                        {{#if originalFileName}}
+                        <div>
+                            <span>电子资料:</span>
+                            <span>{{originalFileName}}.{{ext}}</span>
+                            <button type="button" class="btn btn-default downloadFile" data-id="{{fileId}}">
+                                下载
+                            </button>
                         </div>
+                        {{/if}}
                     </div>
-                    <input type="hidden" name="internshipReleaseId" value="{{internshipReleaseId}}"/>
-                    <input type="hidden" name="studentId" value="{{studentId}}"/>
-                    <input type="hidden" value="" name="reason"/>
-                    <input type="hidden" value="2" name="internshipApplyState"/>
-                </form>
-                {{#if originalFileName}}
-                <div>
-                    <span>电子资料:</span>
-                    <span>{{originalFileName}}.{{ext}}</span>
-                    <button type="button" class="btn btn-default downloadFile" data-id="{{fileId}}">
-                        下载
-                    </button>
+                    <div class="detail">
+
+                    </div>
                 </div>
-                {{/if}}
             </div>
             <div class="card-footer">
                 <button type="button" class="btn btn-teal detail_apply" data-id="{{internshipReleaseId}}"
@@ -242,12 +251,81 @@
                         data-student="{{studentId}}" data-name="{{realName}}">
                     删除
                 </button>
-                <button type="button" class="btn btn-light check_all_apply">
+                <button type="button" class="btn btn-light check_all_apply" data-student="{{studentId}}">
                     全选
                 </button>
             </div>
         </div>
         {{/each}}
+    </script>
+
+    <!--定义详情模板-->
+    <script id="internship-detail-template" type="text/x-handlebars-template">
+        <form>
+            <div class="form-group">
+                <label>学生姓名</label>
+                <input class="form-control" value="{{studentName}}" name="realName" readonly="readonly"/>
+            </div>
+            <div class="form-group">
+                <label>专业班级</label>
+                <input class="form-control" value="{{organizeName}}" name="organizeName" readonly="readonly"/>
+            </div>
+            <div class="form-group">
+                <label>学生性别</label>
+                <input class="form-control" value="{{studentSex}}" name="studentSex" readonly="readonly"/>
+            </div>
+            <div class="form-group">
+                <label>学生学号</label>
+                <input class="form-control" value="{{studentNumber}}" name="studentNumber" readonly="readonly"/>
+            </div>
+            <div class="form-group">
+                <label>电话号码</label>
+                <input class="form-control" value="{{mobile}}" name="mobile" readonly="readonly"/>
+            </div>
+            <div class="form-group">
+                <label>QQ邮箱</label>
+                <input class="form-control" name="qqMailbox" value="{{qqMailbox}}" readonly="readonly"/>
+            </div>
+            <div class="form-group">
+                <label>父母联系电话</label>
+                <input class="form-control" value="{{parentContactPhone}}"
+                       name="parentContactPhone" readonly="readonly"/>
+            </div>
+            <div class="form-group">
+                <label>班主任</label>
+                <input class="form-control" value="{{headmaster}}"
+                       name="staff" readonly="readonly"/>
+            </div>
+            <div class="form-group">
+                <label>实习单位名称</label>
+                <input class="form-control" name="companyName" value="{{companyName}}" readonly="readonly"/>
+            </div>
+            <div class="form-group">
+                <label>实习单位地址</label>
+                <input class="form-control" name="companyAddress" value="{{companyAddress}}" readonly="readonly"/>
+            </div>
+            <div class="form-group">
+                <label>实习单位联系人</label>
+                <input class="form-control" name="companyContact" value="{{companyContact}}" readonly="readonly"/>
+            </div>
+            <div class="form-group">
+                <label>实习单位联系人联系方式</label>
+                <input class="form-control" name="companyMobile" value="{{companyMobile}}" readonly="readonly"/>
+            </div>
+            <div class="form-group">
+                <label>校内指导教师</label>
+                <input class="form-control" name="schoolGuidanceTeacher" value="{{schoolGuidanceTeacher}}"
+                       readonly="readonly"/>
+            </div>
+            <div class="form-group">
+                <label>实习开始时间</label>
+                <input class="form-control" name="startTime" value="{{startTime}}" readonly="readonly"/>
+            </div>
+            <div class="form-group">
+                <label>实习结束时间</label>
+                <input class="form-control" name="endTime" value="{{endTime}}" readonly="readonly"/>
+            </div>
+        </form>
     </script>
 
     <input type="hidden" id="paramInternshipReleaseId" th:value="${internshipReleaseId}"/>
