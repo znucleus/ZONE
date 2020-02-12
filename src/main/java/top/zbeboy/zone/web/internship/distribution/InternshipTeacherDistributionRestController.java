@@ -16,6 +16,7 @@ import top.zbeboy.zone.service.internship.InternshipReleaseService;
 import top.zbeboy.zone.service.internship.InternshipTeacherDistributionService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.upload.UploadService;
+import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.web.bean.data.organize.OrganizeBean;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
@@ -25,6 +26,7 @@ import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
 import top.zbeboy.zone.web.internship.common.InternshipControllerCommon;
 import top.zbeboy.zone.web.plugin.select2.Select2Data;
 import top.zbeboy.zone.web.util.AjaxUtil;
+import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.SmallPropsUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
@@ -77,7 +79,19 @@ public class InternshipTeacherDistributionRestController {
     @GetMapping("/web/internship/teacher_distribution/internship/data")
     public ResponseEntity<Map<String, Object>> internshipData(SimplePaginationUtil simplePaginationUtil) {
         AjaxUtil<InternshipReleaseBean> ajaxUtil = AjaxUtil.of();
-        internshipControllerCommon.InternshipReleaseData(ajaxUtil, simplePaginationUtil);
+        List<InternshipReleaseBean> beans = new ArrayList<>();
+        Result<Record> records = internshipReleaseService.findAllByPage(simplePaginationUtil);
+        if (records.isNotEmpty()) {
+            beans = records.into(InternshipReleaseBean.class);
+            beans.forEach(bean -> bean.setTeacherDistributionStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionStartTime())));
+            beans.forEach(bean -> bean.setTeacherDistributionEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionEndTime())));
+            beans.forEach(bean -> bean.setStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getStartTime())));
+            beans.forEach(bean -> bean.setEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getEndTime())));
+            beans.forEach(bean -> bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime())));
+            beans.forEach(bean -> bean.setCanOperator(BooleanUtil.toByte(internshipConditionCommon.teacherDistributionCondition(bean.getInternshipReleaseId()))));
+        }
+        simplePaginationUtil.setTotalSize(internshipReleaseService.countAll(simplePaginationUtil));
+        ajaxUtil.success().list(beans).page(simplePaginationUtil).msg("获取数据成功");
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
