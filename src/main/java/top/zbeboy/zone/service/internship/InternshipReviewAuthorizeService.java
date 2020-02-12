@@ -2,6 +2,7 @@ package top.zbeboy.zone.service.internship;
 
 import org.jooq.Record;
 import org.jooq.Result;
+import top.zbeboy.zone.domain.tables.pojos.InternshipReviewAuthorize;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
 import java.util.Optional;
@@ -31,4 +32,19 @@ public interface InternshipReviewAuthorizeService {
      * @return 总数
      */
     int countAll(SimplePaginationUtil paginationUtil);
+
+    /**
+     * 保存
+     *
+     * @param internshipReviewAuthorize 数据
+     */
+    void save(InternshipReviewAuthorize internshipReviewAuthorize);
+
+    /**
+     * 删除
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param username            账号
+     */
+    void deleteByInternshipReleaseIdAndUsername(String internshipReleaseId, String username);
 }

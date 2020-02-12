@@ -7,9 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import top.zbeboy.zone.domain.tables.daos.InternshipReviewAuthorizeDao;
+import top.zbeboy.zone.domain.tables.pojos.InternshipReviewAuthorize;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
+import javax.annotation.Resource;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -21,6 +24,9 @@ import static top.zbeboy.zone.domain.Tables.USERS;
 public class InternshipReviewAuthorizeServiceImpl implements InternshipReviewAuthorizeService, PaginationPlugin<SimplePaginationUtil> {
 
     private final DSLContext create;
+
+    @Resource
+    private InternshipReviewAuthorizeDao internshipReviewAuthorizeDao;
 
     @Autowired
     InternshipReviewAuthorizeServiceImpl(DSLContext dslContext) {
@@ -52,6 +58,20 @@ public class InternshipReviewAuthorizeServiceImpl implements InternshipReviewAut
                 .leftJoin(USERS)
                 .on(INTERNSHIP_REVIEW_AUTHORIZE.USERNAME.eq(USERS.USERNAME));
         return countAll(selectOnConditionStep, paginationUtil, true);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void save(InternshipReviewAuthorize internshipReviewAuthorize) {
+        internshipReviewAuthorizeDao.insert(internshipReviewAuthorize);
+    }
+
+    @Override
+    public void deleteByInternshipReleaseIdAndUsername(String internshipReleaseId, String username) {
+        create.deleteFrom(INTERNSHIP_REVIEW_AUTHORIZE)
+                .where(INTERNSHIP_REVIEW_AUTHORIZE.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId)
+                .and(INTERNSHIP_REVIEW_AUTHORIZE.USERNAME.eq(username)))
+                .execute();
     }
 
     @Override

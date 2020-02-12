@@ -1,6 +1,8 @@
 package top.zbeboy.zone.service.system;
 
 import org.jooq.DSLContext;
+import org.jooq.Record;
+import org.jooq.Result;
 import org.jooq.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -18,6 +20,7 @@ import top.zbeboy.zone.domain.tables.records.AuthoritiesRecord;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 
 import static top.zbeboy.zone.domain.Tables.AUTHORITIES;
 import static top.zbeboy.zone.domain.Tables.USERS;
@@ -34,6 +37,14 @@ public class AuthoritiesServiceImpl implements AuthoritiesService {
     @Autowired
     AuthoritiesServiceImpl(DSLContext dslContext) {
         create = dslContext;
+    }
+
+    @Override
+    public Result<Record> findByUsernameAndInAuthorities(String username, List<String> authorities) {
+        return create.select()
+                .from(AUTHORITIES)
+                .where(AUTHORITIES.USERNAME.eq(username).and(AUTHORITIES.AUTHORITY.in(authorities)))
+                .fetch();
     }
 
     @Override

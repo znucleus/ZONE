@@ -1,6 +1,6 @@
 //# sourceURL=internship_review_authorize.js
-require(["jquery", "handlebars", "nav.active", "responsive.bootstrap4", "tablesaw", "messenger"],
-    function ($, Handlebars, navActive, Swal) {
+require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active", "tablesaw", "messenger"],
+    function ($, _, tools, Handlebars, Swal, navActive) {
 
         /*
          ajax url
@@ -8,7 +8,7 @@ require(["jquery", "handlebars", "nav.active", "responsive.bootstrap4", "tablesa
         function getAjaxUrl() {
             return {
                 data: web_path + '/web/internship/review/authorize/data',
-                add: web_path + '/web/internship/review/authorize/add',
+                save: web_path + '/web/internship/review/authorize/save',
                 del: web_path + '/web/internship/review/authorize/delete',
                 page: '/web/menu/internship/review'
             };
@@ -71,8 +71,50 @@ require(["jquery", "handlebars", "nav.active", "responsive.bootstrap4", "tablesa
          添加
          */
         $('#authorize_add').click(function () {
-            $.address.value(getAjaxUrl().add);
+            $('#addModal').modal('show');
         });
+
+        $('#save').click(function () {
+            validUsername();
+        });
+
+        function validUsername() {
+            var param_id = '#username';
+            var username = _.trim($(param_id).val());
+            if (username.length <= 0 || username.length > 64) {
+                tools.validErrorDom(param_id, '账号64个字符以内');
+            } else {
+                tools.validSuccessDom(param_id);
+                sendAjax();
+            }
+        }
+
+        function sendAjax() {
+            $.ajax({
+                type: 'POST',
+                url: getAjaxUrl().save,
+                data: $('#app_form').serialize(),
+                success: function (data) {
+                    Messenger().post({
+                        message: data.msg,
+                        type: data.state ? 'success' : 'error',
+                        showCloseButton: true
+                    });
+
+                    if (data.state) {
+                        init();
+                        $('#addModal').modal('hide');
+                    }
+                },
+                error: function (XMLHttpRequest) {
+                    Messenger().post({
+                        message: 'Request error : ' + XMLHttpRequest.status + " " + XMLHttpRequest.statusText,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        }
 
         tableElement.delegate('.del', "click", function () {
             authorize_del($(this).attr('data-id'));
@@ -113,7 +155,7 @@ require(["jquery", "handlebars", "nav.active", "responsive.bootstrap4", "tablesa
                     });
 
                     if (data.state) {
-                       init();
+                        init();
                     }
                 },
                 error: function (XMLHttpRequest) {
