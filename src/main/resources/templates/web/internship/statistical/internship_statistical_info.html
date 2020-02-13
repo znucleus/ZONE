@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="br-pageheader pd-y-15 pd-l-20">
+        <nav class="breadcrumb pd-0 mg-0 tx-12">
+            <a class="breadcrumb-item dy_href" href="#/web/menu/internship/statistical">列表</a>
+            <span class="breadcrumb-item active">实习统计</span>
+        </nav>
+    </div><!-- br-pageheader -->
+    <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
+        <h4 class="tx-gray-800 mg-b-5">实习统计</h4>
+        <p class="mg-b-0">数据列表。</p>
+    </div>
+
+    <div class="br-pagebody">
+        <div class="br-section-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-4 mt-2">
+                            <input type="text" id="search_real_name" class="form-control"
+                                   placeholder="学生姓名"/>
+                        </div>
+                        <div class="col-md-4 mt-2">
+                            <input type="text" id="search_student_number" class="form-control"
+                                   placeholder="学生学号"/>
+                        </div>
+                        <div class="col-md-4 mt-2">
+                            <input type="text" id="search_organize_name" class="form-control"
+                                   placeholder="专业班级"/>
+                        </div>
+                        <div class="col-md-4 mt-2">
+                            <input type="text" id="search_mobile" class="form-control"
+                                   placeholder="学生电话"/>
+                        </div>
+                        <div class="col-md-4 mt-2">
+                            <input type="text" id="search_headmaster" class="form-control" placeholder="班主任"/>
+                        </div>
+                        <div class="col-md-4 mt-2">
+                            <input type="text" id="search_school_guidance_teacher" class="form-control"
+                                   placeholder="指导教师"/>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button type="button" id="search" class="btn btn-outline-secondary"><i
+                                class="fa fa-search"></i>搜索
+                        </button>
+                        <button type="button" id="reset_search" class="btn btn-outline-secondary"><i
+                                class="fa fa-repeat"></i>重置
+                        </button>
+                    </div>
+                </div>
+
+                <div class="col-md-12 mt-3">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="export_file_name" placeholder="文件名">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">导出</button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="javascript:" id="export_xls">导出Xls</a>
+                                <a class="dropdown-item" href="javascript:" id="export_xlsx">导出Xlsx</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12 mt-2">
+                    <table id="dataTable" class="table table-striped table-bordered dt-responsive nowrap"
+                           cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th>姓名</th>
+                            <th>专业班级</th>
+                            <th>性别</th>
+                            <th>学号</th>
+                            <th>电话号码</th>
+                            <th>qq邮箱</th>
+                            <th>父母联系方式</th>
+                            <th>班主任</th>
+                            <th>班主任联系方式</th>
+                            <th>实习单位名称</th>
+                            <th>实习单位地址</th>
+                            <th>实习单位联系人</th>
+                            <th>实习单位联系人联系方式</th>
+                            <th>校内指导教师</th>
+                            <th>校内指导教师联系方式</th>
+                            <th>实习开始时间</th>
+                            <th>实习结束时间</th>
+                            <th>承诺书</th>
+                            <th>安全责任书</th>
+                            <th>实践协议书</th>
+                            <th>实习申请书</th>
+                            <th>实习接收</th>
+                            <th>安全教育协议</th>
+                            <th>父母同意书</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--定义操作列按钮模板-->
+    <script id="operator_button" type="text/x-handlebars-template">
+        <div class="btn-group" role="group">
+            {{#each func}}
+            <button type="button" class="btn btn-{{this.type}} btn-sm {{this.css}}" data-studentId="{{this.studentId}}"
+                    data-internshipReleaseId="{{this.internshipReleaseId}}">{{this.name}}
+            </button>
+            {{/each}}
+        </div>
+    </script>
+
+    <input type="hidden" id="paramInternshipReleaseId" th:value="${internshipReleaseId}"/>
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/internship/statistical/internship_statistical_info.js')}"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>

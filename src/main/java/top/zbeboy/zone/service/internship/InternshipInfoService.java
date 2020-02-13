@@ -1,12 +1,36 @@
 package top.zbeboy.zone.service.internship;
 
 import org.jooq.Record;
+import org.jooq.Result;
 import top.zbeboy.zone.domain.tables.pojos.InternshipInfo;
+import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.vo.internship.apply.InternshipApplyAddVo;
 
 import java.util.Optional;
 
 public interface InternshipInfoService {
+
+    /**
+     * 分页查询
+     *
+     * @param dataTablesUtil 工具类
+     * @return 分页数据
+     */
+    Result<Record> findAllByPage(DataTablesUtil dataTablesUtil);
+
+    /**
+     * 总数
+     *
+     * @return 总数
+     */
+    int countAll(DataTablesUtil dataTablesUtil);
+
+    /**
+     * 根据条件查询总数
+     *
+     * @return 条件查询总数
+     */
+    int countByCondition(DataTablesUtil dataTablesUtil);
 
     /**
      * 通过实习id与学生id查询

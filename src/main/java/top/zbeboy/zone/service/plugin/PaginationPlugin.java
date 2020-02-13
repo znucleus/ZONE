@@ -81,9 +81,9 @@ public interface PaginationPlugin<S extends PaginationUtil> {
      * @param paginationUtil 分页工具类
      * @return 分页数据
      */
-    default Result<Record> queryAllByPage(final DSLContext create, TableLike<?> table, Condition extraCondition, S paginationUtil) {
+    default Result<Record> queryAllByPage(final DSLContext create, TableLike<?> table, Condition extraCondition, S paginationUtil, boolean useExtraCondition) {
         Result<Record> records;
-        Condition a = searchCondition(paginationUtil);
+        Condition a = useExtraCondition(paginationUtil, useExtraCondition);
         if (Objects.isNull(a)) {
             SelectConditionStep<Record> selectConditionStep = create.select()
                     .from(table)

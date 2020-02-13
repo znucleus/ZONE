@@ -7,10 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-import top.zbeboy.zone.service.internship.InternshipChangeCompanyHistoryService;
-import top.zbeboy.zone.service.internship.InternshipChangeHistoryService;
-import top.zbeboy.zone.service.internship.InternshipReleaseService;
-import top.zbeboy.zone.service.internship.InternshipStatisticalService;
+import top.zbeboy.zone.domain.tables.pojos.InternshipInfo;
+import top.zbeboy.zone.service.internship.*;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.zone.web.bean.internship.statistical.InternshipChangeCompanyHistoryBean;
@@ -51,6 +49,9 @@ public class InternshipStatisticalRestController {
 
     @Resource
     private InternshipChangeCompanyHistoryService internshipChangeCompanyHistoryService;
+
+    @Resource
+    private InternshipInfoService internshipInfoService;
 
     /**
      * 数据
@@ -172,5 +173,51 @@ public class InternshipStatisticalRestController {
             ajaxUtil.fail().msg("您无权限操作");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 数据
+     *
+     * @param request 请求
+     * @return 数据
+     */
+    @GetMapping("/web/internship/statistical/info/data")
+    public ResponseEntity<DataTablesUtil> infoData(HttpServletRequest request) {
+        // 前台数据标题 注：要和前台标题顺序一致，获取order用
+        List<String> headers = new ArrayList<>();
+        headers.add("studentName");
+        headers.add("organizeName");
+        headers.add("studentSex");
+        headers.add("studentNumber");
+        headers.add("mobile");
+        headers.add("qqMailbox");
+        headers.add("parentContactPhone");
+        headers.add("headmaster");
+        headers.add("headmasterTel");
+        headers.add("companyName");
+        headers.add("companyAddress");
+        headers.add("companyContact");
+        headers.add("companyMobile");
+        headers.add("schoolGuidanceTeacher");
+        headers.add("schoolGuidanceTeacherTel");
+        headers.add("startTime");
+        headers.add("endTime");
+        headers.add("commitmentBook");
+        headers.add("safetyResponsibilityBook");
+        headers.add("practiceAgreement");
+        headers.add("internshipApplication");
+        headers.add("practiceReceiving");
+        headers.add("securityEducationAgreement");
+        headers.add("parentalConsent");
+        DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
+        Result<Record> records = internshipInfoService.findAllByPage(dataTablesUtil);
+        List<InternshipInfo> beans = new ArrayList<>();
+        if (Objects.nonNull(records) && records.isNotEmpty()) {
+            beans = records.into(InternshipInfo.class);
+        }
+        dataTablesUtil.setData(beans);
+        dataTablesUtil.setiTotalRecords(internshipInfoService.countAll(dataTablesUtil));
+        dataTablesUtil.setiTotalDisplayRecords(internshipInfoService.countByCondition(dataTablesUtil));
+        return new ResponseEntity<>(dataTablesUtil, HttpStatus.OK);
     }
 }
