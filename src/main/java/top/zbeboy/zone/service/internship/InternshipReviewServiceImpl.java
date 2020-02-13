@@ -80,20 +80,6 @@ public class InternshipReviewServiceImpl implements InternshipReviewService, Pag
     }
 
     @Override
-    public Result<Record2<Integer, String>> findDistinctOrganize(String internshipReleaseId) {
-        return create.selectDistinct(ORGANIZE.ORGANIZE_ID, ORGANIZE.ORGANIZE_NAME)
-                .from(INTERNSHIP_APPLY)
-                .leftJoin(STUDENT)
-                .on(INTERNSHIP_APPLY.STUDENT_ID.eq(STUDENT.STUDENT_ID))
-                .leftJoin(USERS)
-                .on(STUDENT.USERNAME.eq(USERS.USERNAME))
-                .leftJoin(ORGANIZE)
-                .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
-                .where(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId))
-                .fetch();
-    }
-
-    @Override
     public Condition searchCondition(SimplePaginationUtil paginationUtil) {
         Condition a = null;
         JSONObject search = paginationUtil.getSearch();

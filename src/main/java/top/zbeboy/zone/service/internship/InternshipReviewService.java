@@ -30,12 +30,4 @@ public interface InternshipReviewService {
      * @return 统计结果
      */
     int countByInternshipReleaseIdAndInternshipApplyState(String internshipReleaseId, int internshipApplyState);
-
-    /**
-     * 查询班级数据
-     *
-     * @param internshipReleaseId 实习发布id
-     * @return 数据
-     */
-    Result<Record2<Integer, String>> findDistinctOrganize(String internshipReleaseId);
 }

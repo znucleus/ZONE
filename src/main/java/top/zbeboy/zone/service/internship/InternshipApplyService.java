@@ -1,6 +1,7 @@
 package top.zbeboy.zone.service.internship;
 
 import org.jooq.Record;
+import org.jooq.Record2;
 import org.jooq.Result;
 import top.zbeboy.zone.domain.tables.pojos.InternshipApply;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
@@ -18,6 +19,14 @@ public interface InternshipApplyService {
      * @return 数据
      */
     Optional<Record> findByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId);
+
+    /**
+     * 查询班级数据
+     *
+     * @param internshipReleaseId 实习发布id
+     * @return 数据
+     */
+    Result<Record2<Integer, String>> findDistinctOrganize(String internshipReleaseId);
 
     /**
      * 分页查询

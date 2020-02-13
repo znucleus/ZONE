@@ -25,6 +25,7 @@ import top.zbeboy.zone.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.zone.web.bean.internship.review.InternshipReviewAuthorizeBean;
 import top.zbeboy.zone.web.bean.internship.review.InternshipReviewBean;
 import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
+import top.zbeboy.zone.web.internship.common.InternshipControllerCommon;
 import top.zbeboy.zone.web.plugin.select2.Select2Data;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
@@ -41,6 +42,9 @@ public class InternshipReviewRestController {
 
     @Resource
     private InternshipConditionCommon internshipConditionCommon;
+
+    @Resource
+    private InternshipControllerCommon internshipControllerCommon;
 
     @Resource
     private InternshipReleaseService internshipReleaseService;
@@ -169,13 +173,7 @@ public class InternshipReviewRestController {
      */
     @GetMapping("/web/internship/review/organize/{id}")
     public ResponseEntity<Map<String, Object>> organize(@PathVariable("id") String id) {
-        Select2Data select2Data = Select2Data.of();
-        List<Organize> organizes = new ArrayList<>();
-        Result<Record2<Integer, String>> records = internshipReviewService.findDistinctOrganize(id);
-        if (records.isNotEmpty()) {
-            organizes = records.into(Organize.class);
-        }
-        organizes.forEach(organize -> select2Data.add(organize.getOrganizeId().toString(), organize.getOrganizeName()));
+        Select2Data select2Data = internshipControllerCommon.internshipApplyOrganizeData(id);
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
 

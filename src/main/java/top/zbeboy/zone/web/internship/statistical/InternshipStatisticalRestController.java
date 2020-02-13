@@ -1,27 +1,35 @@
-package top.zbeboy.zone.web.internship.statistics;
+package top.zbeboy.zone.web.internship.statistical;
 
 import org.jooq.Record;
 import org.jooq.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.service.internship.InternshipReleaseService;
-import top.zbeboy.zone.service.internship.InternshipStatisticsService;
+import top.zbeboy.zone.service.internship.InternshipStatisticalService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
+import top.zbeboy.zone.web.bean.data.department.DepartmentBean;
 import top.zbeboy.zone.web.bean.internship.release.InternshipReleaseBean;
+import top.zbeboy.zone.web.bean.internship.statistical.InternshipStatisticalBean;
 import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
+import top.zbeboy.zone.web.internship.common.InternshipControllerCommon;
+import top.zbeboy.zone.web.plugin.select2.Select2Data;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
+import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
-public class InternshipStatisticsRestController {
+public class InternshipStatisticalRestController {
 
     @Resource
     private InternshipConditionCommon internshipConditionCommon;
@@ -30,7 +38,10 @@ public class InternshipStatisticsRestController {
     private InternshipReleaseService internshipReleaseService;
 
     @Resource
-    private InternshipStatisticsService internshipStatisticsService;
+    private InternshipStatisticalService internshipStatisticalService;
+
+    @Resource
+    private InternshipControllerCommon internshipControllerCommon;
 
     /**
      * 数据
@@ -53,8 +64,8 @@ public class InternshipStatisticsRestController {
             beans.forEach(bean -> {
                 bean.setCanOperator(BooleanUtil.toByte(internshipConditionCommon.reviewCondition(bean.getInternshipReleaseId())));
                 if (BooleanUtil.toBoolean(bean.getCanOperator())) {
-                    bean.setSubmittedTotalData(internshipStatisticsService.countSubmitted(bean.getInternshipReleaseId()));
-                    bean.setUnsubmittedTotalData(internshipStatisticsService.countUnSubmitted(bean.getInternshipReleaseId()));
+                    bean.setSubmittedTotalData(internshipStatisticalService.countSubmitted(bean.getInternshipReleaseId()));
+                    bean.setUnsubmittedTotalData(internshipStatisticalService.countUnSubmitted(bean.getInternshipReleaseId()));
                 }
             });
             beans.forEach(bean -> bean.setCanAuthorize(BooleanUtil.toByte(internshipConditionCommon.reviewAuthorizeCondition(bean.getInternshipReleaseId()))));
@@ -62,5 +73,45 @@ public class InternshipStatisticsRestController {
         simplePaginationUtil.setTotalSize(internshipReleaseService.countAll(simplePaginationUtil));
         ajaxUtil.success().list(beans).page(simplePaginationUtil).msg("获取数据成功");
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 数据
+     *
+     * @param request 请求
+     * @return 数据
+     */
+    @GetMapping("/web/internship/statistical/data")
+    public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
+        // 前台数据标题 注：要和前台标题顺序一致，获取order用
+        List<String> headers = new ArrayList<>();
+        headers.add("realName");
+        headers.add("studentNumber");
+        headers.add("scienceName");
+        headers.add("organizeName");
+        headers.add("internshipApplyState");
+        headers.add("operator");
+        DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
+        Result<Record> records = internshipStatisticalService.findAllByPage(dataTablesUtil);
+        List<InternshipStatisticalBean> beans = new ArrayList<>();
+        if (Objects.nonNull(records) && records.isNotEmpty()) {
+            beans = records.into(InternshipStatisticalBean.class);
+        }
+        dataTablesUtil.setData(beans);
+        dataTablesUtil.setiTotalRecords(internshipStatisticalService.countAll(dataTablesUtil));
+        dataTablesUtil.setiTotalDisplayRecords(internshipStatisticalService.countByCondition(dataTablesUtil));
+        return new ResponseEntity<>(dataTablesUtil, HttpStatus.OK);
+    }
+
+    /**
+     * 获取班级数据
+     *
+     * @param id 实习发布id
+     * @return 班级数据
+     */
+    @GetMapping("/web/internship/statistical/organize/{id}")
+    public ResponseEntity<Map<String, Object>> organize(@PathVariable("id") String id) {
+        Select2Data select2Data = internshipControllerCommon.internshipApplyOrganizeData(id);
+        return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
 }

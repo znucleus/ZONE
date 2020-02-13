@@ -17,14 +17,14 @@ import java.util.Objects;
 
 import static top.zbeboy.zone.domain.Tables.*;
 
-@Service("internshipStatisticsService")
+@Service("internshipStatisticalService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-public class InternshipStatisticsServiceImpl implements InternshipStatisticsService, PaginationPlugin<DataTablesUtil> {
+public class InternshipStatisticalServiceImpl implements InternshipStatisticalService, PaginationPlugin<DataTablesUtil> {
 
     private final DSLContext create;
 
     @Autowired
-    InternshipStatisticsServiceImpl(DSLContext dslContext) {
+    InternshipStatisticalServiceImpl(DSLContext dslContext) {
         create = dslContext;
     }
 

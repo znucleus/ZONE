@@ -4,7 +4,7 @@ import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
-public interface InternshipStatisticsService {
+public interface InternshipStatisticalService {
 
     /**
      * 分页查询

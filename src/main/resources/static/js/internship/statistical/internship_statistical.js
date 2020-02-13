@@ -1,4 +1,4 @@
-//# sourceURL=internship_statistics.js
+//# sourceURL=internship_statistical.js
 require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "jquery.address", "jquery.simple-pagination", "jquery-labelauty"],
     function ($, _, tools, Handlebars, navActive) {
 
