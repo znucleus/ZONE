@@ -290,7 +290,7 @@ require(["jquery", "requirejs-domready", "moment-with-locales", "handlebars", "a
                     type: 'GET',
                     url: ajax_url.user_notify_detail + '/' + id,
                     success: function (data) {
-                        $('#userNotifyModalTitle').text(data.userNotify.notifyTitle).addClass('text-' + data.userNotify.notifyType);
+                        $('#userNotifyModalTitle').text(data.userNotify.notifyTitle).removeClass().addClass('modal-title').addClass('text-' + data.userNotify.notifyType);
                         $('#userNotifyModalSendUserInfo').text(data.userNotify.realName + ' 于(' + data.userNotify.createDateStr + ') 发送：');
                         $('#userNotifyModalContent').text(data.userNotify.notifyContent);
                         $('#userNotifyModal').modal('show');
