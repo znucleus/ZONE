@@ -7,11 +7,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import top.zbeboy.zone.service.internship.InternshipChangeHistoryService;
 import top.zbeboy.zone.service.internship.InternshipReleaseService;
 import top.zbeboy.zone.service.internship.InternshipStatisticalService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
-import top.zbeboy.zone.web.bean.data.department.DepartmentBean;
 import top.zbeboy.zone.web.bean.internship.release.InternshipReleaseBean;
+import top.zbeboy.zone.web.bean.internship.statistical.InternshipChangeHistoryBean;
 import top.zbeboy.zone.web.bean.internship.statistical.InternshipStatisticalBean;
 import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
 import top.zbeboy.zone.web.internship.common.InternshipControllerCommon;
@@ -42,6 +43,9 @@ public class InternshipStatisticalRestController {
 
     @Resource
     private InternshipControllerCommon internshipControllerCommon;
+
+    @Resource
+    private InternshipChangeHistoryService internshipChangeHistoryService;
 
     /**
      * 数据
@@ -113,5 +117,31 @@ public class InternshipStatisticalRestController {
     public ResponseEntity<Map<String, Object>> organize(@PathVariable("id") String id) {
         Select2Data select2Data = internshipControllerCommon.internshipApplyOrganizeData(id);
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
+    }
+
+    /**
+     * 申请变更记录数据
+     *
+     * @param id        实习发布id
+     * @param studentId 学生id
+     * @return 数据
+     */
+    @GetMapping("/web/internship/statistical/record/apply/data/{id}/{studentId}")
+    public ResponseEntity<Map<String, Object>> changeHistoryData(@PathVariable("id") String id, @PathVariable("studentId") int studentId) {
+        AjaxUtil<InternshipChangeHistoryBean> ajaxUtil = AjaxUtil.of();
+        List<InternshipChangeHistoryBean> beans = new ArrayList<>();
+        if (internshipConditionCommon.reviewCondition(id)) {
+            Result<Record> records = internshipChangeHistoryService.findByInternshipReleaseIdAndStudentId(id, studentId);
+            if (records.isNotEmpty()) {
+                beans = records.into(InternshipChangeHistoryBean.class);
+                beans.forEach(bean -> bean.setChangeFillStartTimeStr(Objects.nonNull(bean.getChangeFillStartTime()) ? DateTimeUtil.defaultFormatSqlTimestamp(bean.getChangeFillStartTime()) : ""));
+                beans.forEach(bean -> bean.setChangeFillEndTimeStr(Objects.nonNull(bean.getChangeFillEndTime()) ? DateTimeUtil.defaultFormatSqlTimestamp(bean.getChangeFillEndTime()) : ""));
+                beans.forEach(bean -> bean.setApplyTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getApplyTime())));
+            }
+            ajaxUtil.success().msg("获取数据成功").list(beans);
+        } else {
+            ajaxUtil.fail().msg("您无权限操作");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

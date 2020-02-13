@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="br-pageheader pd-y-15 pd-l-20">
+        <nav class="breadcrumb pd-0 mg-0 tx-12">
+            <a class="breadcrumb-item dy_href" href="#/web/menu/internship/statistical">列表</a>
+            <a class="breadcrumb-item dy_href" href="javascript:" th:href="${'#/web/internship/statistical/submitted/' + internshipReleaseId}">已提交申请数据</a>
+            <span class="breadcrumb-item active">申请记录</span>
+        </nav>
+    </div><!-- br-pageheader -->
+    <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
+        <h4 class="tx-gray-800 mg-b-5">实习统计</h4>
+        <p class="mg-b-0">申请记录。</p>
+    </div>
+
+    <div class="br-pagebody">
+        <div class="br-section-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <ul class="timeline" id="timeData">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script id="timeline-template" type="text/x-handlebars-template">
+        {{#each listResult}}
+        <li class="{{inverted}}">
+            <div class="timeline-badge {{timeline_state_css}}"><i class="{{icon}}"></i>
+            </div>
+            <div class="timeline-panel">
+                <div class="timeline-heading">
+                    <h4 class="timeline-title">{{internshipTitle}}</h4>
+                    <p>
+                        <small class="text-muted"><i class="fa fa-clock-o"></i> {{time}}</small>
+                    </p>
+                </div>
+                <div class="timeline-body">
+                    <span>{{realName}}  {{studentNumber}}</span><br/>
+                    <span>班级: </span><span>{{organizeName}}</span>
+                    <span>状态: </span><span>{{state}}</span><br/>
+                    <span>变更开始时间: </span><span>{{changeFillStartTimeStr}}</span><br/>
+                    <span>变更结束时间: </span><span>{{changeFillEndTimeStr}}</span>
+                    <p><span>原因: </span><span>{{reason}}</span></p>
+                </div>
+            </div>
+        </li>
+        {{/each}}
+    </script>
+
+    <input type="hidden" id="paramInternshipReleaseId" th:value="${internshipReleaseId}"/>
+    <input type="hidden" id="paramStudentId" th:value="${studentId}"/>
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/internship/statistical/internship_change_history.js')}"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>
