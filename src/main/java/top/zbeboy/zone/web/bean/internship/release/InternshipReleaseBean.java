@@ -28,6 +28,10 @@ public class InternshipReleaseBean extends InternshipRelease {
     private int basicFillTotalData;
     private int companyFillTotalData;
 
+    // 实习统计 统计总数
+    private int submittedTotalData;
+    private int unsubmittedTotalData;
+
     public String getScienceName() {
         return scienceName;
     }
@@ -194,5 +198,21 @@ public class InternshipReleaseBean extends InternshipRelease {
 
     public void setCompanyFillTotalData(int companyFillTotalData) {
         this.companyFillTotalData = companyFillTotalData;
+    }
+
+    public int getSubmittedTotalData() {
+        return submittedTotalData;
+    }
+
+    public void setSubmittedTotalData(int submittedTotalData) {
+        this.submittedTotalData = submittedTotalData;
+    }
+
+    public int getUnsubmittedTotalData() {
+        return unsubmittedTotalData;
+    }
+
+    public void setUnsubmittedTotalData(int unsubmittedTotalData) {
+        this.unsubmittedTotalData = unsubmittedTotalData;
     }
 }
