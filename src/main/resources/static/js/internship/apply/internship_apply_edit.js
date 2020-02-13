@@ -313,6 +313,11 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
         function validStudentName() {
             var realName = param.realName;
             if (realName.length <= 0 || realName.length > 15) {
+                Messenger().post({
+                    message: '姓名15个字符以内',
+                    type: 'error',
+                    showCloseButton: true
+                });
                 tools.validErrorDom(param_id.realName, '姓名15个字符以内');
             } else {
                 tools.validSuccessDom(param_id.realName);
@@ -323,12 +328,22 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
         function validQqMailbox() {
             var qqMailbox = param.qqMailbox;
             if (qqMailbox.length <= 0 || qqMailbox.length > 100) {
+                Messenger().post({
+                    message: 'qq邮箱100个字符以内',
+                    type: 'error',
+                    showCloseButton: true
+                });
                 tools.validErrorDom(param_id.qqMailbox, 'qq邮箱100个字符以内');
             } else {
                 if (_.endsWith(qqMailbox, '@qq.com')) {
                     tools.validSuccessDom(param_id.qqMailbox);
                     validParentContactPhone();
                 } else {
+                    Messenger().post({
+                        message: '请填写正确的qq邮箱',
+                        type: 'error',
+                        showCloseButton: true
+                    });
                     tools.validErrorDom(param_id.qqMailbox, '请填写正确的qq邮箱');
                 }
             }
@@ -340,6 +355,11 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             var isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/;
             if (!regex.test(parentContactPhone)) {
                 if (!isPhone.test(parentContactPhone)) {
+                    Messenger().post({
+                        message: '请填写正确的联系方式',
+                        type: 'error',
+                        showCloseButton: true
+                    });
                     tools.validErrorDom(param_id.parentContactPhone, '请填写正确的联系方式');
                 } else {
                     tools.validSuccessDom(param_id.parentContactPhone);
@@ -354,6 +374,11 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
         function validStaff() {
             var staffId = param.staffId;
             if (Number(staffId) <= 0) {
+                Messenger().post({
+                    message: '请选择班主任',
+                    type: 'error',
+                    showCloseButton: true
+                });
                 tools.validSelect2ErrorDom(param_id.staff, '请选择班主任');
             } else {
                 tools.validSelect2SuccessDom(param_id.staff);
@@ -364,6 +389,11 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
         function validCompanyName() {
             var companyName = param.companyName;
             if (companyName.length <= 0 || companyName.length > 200) {
+                Messenger().post({
+                    message: '实习单位200个字符以内',
+                    type: 'error',
+                    showCloseButton: true
+                });
                 tools.validErrorDom(param_id.companyName, '实习单位200个字符以内');
             } else {
                 tools.validSuccessDom(param_id.companyName);
@@ -374,6 +404,11 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
         function validCompanyAddress() {
             var companyAddress = param.companyAddress;
             if (companyAddress.length <= 0 || companyAddress.length > 500) {
+                Messenger().post({
+                    message: '实习单位地址500个字符以内',
+                    type: 'error',
+                    showCloseButton: true
+                });
                 tools.validErrorDom(param_id.companyAddress, '实习单位地址500个字符以内');
             } else {
                 tools.validSuccessDom(param_id.companyAddress);
@@ -384,6 +419,11 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
         function validCompanyContact() {
             var companyContact = param.companyContact;
             if (companyContact.length <= 0 || companyContact.length > 10) {
+                Messenger().post({
+                    message: '实习单位联系人10个字符以内',
+                    type: 'error',
+                    showCloseButton: true
+                });
                 tools.validErrorDom(param_id.companyContact, '实习单位联系人10个字符以内');
             } else {
                 tools.validSuccessDom(param_id.companyContact);
@@ -397,13 +437,48 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             var isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/;
             if (!regex.test(companyMobile)) {
                 if (!isPhone.test(companyMobile)) {
+                    Messenger().post({
+                        message: '请填写正确的联系方式',
+                        type: 'error',
+                        showCloseButton: true
+                    });
                     tools.validErrorDom(param_id.companyMobile, '请填写正确的联系方式');
                 } else {
                     tools.validSuccessDom(param_id.companyMobile);
-                    sendAjax();
+                    validStartTime();
                 }
             } else {
                 tools.validSuccessDom(param_id.companyMobile);
+                validStartTime();
+            }
+        }
+
+        function validStartTime() {
+            var startTime = param.startTime;
+            if (startTime.length <= 0) {
+                Messenger().post({
+                    message: '请选择实习开始时间',
+                    type: 'error',
+                    showCloseButton: true
+                });
+                tools.validErrorDom(param_id.startTime, '请选择实习开始时间');
+            } else {
+                tools.validSuccessDom(param_id.startTime);
+                validEndTime();
+            }
+        }
+
+        function validEndTime() {
+            var endTime = param.endTime;
+            if (endTime.length <= 0) {
+                Messenger().post({
+                    message: '请选择实习结束时间',
+                    type: 'error',
+                    showCloseButton: true
+                });
+                tools.validErrorDom(param_id.endTime, '请选择实习结束时间');
+            } else {
+                tools.validSuccessDom(param_id.endTime);
                 sendAjax();
             }
         }

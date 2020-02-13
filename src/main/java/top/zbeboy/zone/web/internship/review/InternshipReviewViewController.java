@@ -68,4 +68,26 @@ public class InternshipReviewViewController {
         }
         return page;
     }
+
+    /**
+     * 通过数据
+     *
+     * @param id       实习发布id
+     * @param modelMap 页面对象
+     * @return 页面
+     */
+    @GetMapping("/web/internship/review/pass/{id}")
+    public String pass(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        if (internshipConditionCommon.reviewCondition(id)) {
+            modelMap.addAttribute("internshipReleaseId", id);
+            page = "web/internship/review/internship_review_pass::#page-wrapper";
+        } else {
+            config.buildWarningTip("操作警告", "您无权限操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
 }
