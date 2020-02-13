@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.service.data.OrganizeService;
-import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.export.InternshipTeacherDistributionExport;
 import top.zbeboy.zone.service.internship.InternshipReleaseService;
@@ -54,9 +53,6 @@ public class InternshipTeacherDistributionRestController {
 
     @Resource
     private InternshipConditionCommon internshipConditionCommon;
-
-    @Resource
-    private StaffService staffService;
 
     @Resource
     private StudentService studentService;
