@@ -1,4 +1,4 @@
-//# sourceURL=internship_review_audit.js
+//# sourceURL=internship_review_fail.js
 require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active", "messenger", "jquery.address", "jquery.simple-pagination", "select2-zh-CN"],
     function ($, _, tools, Swal, Handlebars, navActive) {
 
