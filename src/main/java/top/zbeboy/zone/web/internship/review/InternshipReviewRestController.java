@@ -14,8 +14,10 @@ import top.zbeboy.zone.service.internship.*;
 import top.zbeboy.zone.service.notify.UserNotifyService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.system.AuthoritiesService;
+import top.zbeboy.zone.service.system.FilesService;
 import top.zbeboy.zone.service.system.SystemConfigureService;
 import top.zbeboy.zone.service.system.SystemMailService;
+import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.RequestUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
@@ -30,6 +32,7 @@ import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 @RestController
@@ -57,12 +60,6 @@ public class InternshipReviewRestController {
     private InternshipChangeHistoryService internshipChangeHistoryService;
 
     @Resource
-    private InternshipTeacherDistributionService internshipTeacherDistributionService;
-
-    @Resource
-    private InternshipChangeCompanyHistoryService internshipChangeCompanyHistoryService;
-
-    @Resource
     private AuthoritiesService authoritiesService;
 
     @Resource
@@ -79,6 +76,12 @@ public class InternshipReviewRestController {
 
     @Resource
     private StudentService studentService;
+
+    @Resource
+    private FilesService filesService;
+
+    @Resource
+    private UploadService uploadService;
 
     /**
      * 数据
@@ -499,5 +502,20 @@ public class InternshipReviewRestController {
         }
 
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 文件下载
+     *
+     * @param id       文件id
+     * @param request  请求
+     * @param response 响应
+     */
+    @GetMapping("/web/internship/review/download/{id}")
+    public void download(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
+        Files files = filesService.findById(id);
+        if (Objects.nonNull(id)) {
+            uploadService.download(files.getOriginalFileName(), files.getRelativePath(), response, request);
+        }
     }
 }
