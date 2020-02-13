@@ -13,7 +13,7 @@
     </div><!-- br-pageheader -->
     <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
         <h4 class="tx-gray-800 mg-b-5">实习审核</h4>
-        <p class="mg-b-0">基本信息修改填写中。</p>
+        <p class="mg-b-0">单位信息修改申请。</p>
     </div>
 
     <div class="br-pagebody">
@@ -96,6 +96,40 @@
         </div>
     </div>
 
+    <!-- 填写时间Modal -->
+    <div class="modal fade" id="fillTimeModal" tabindex="-1" role="dialog" aria-labelledby="fillTimeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="fillTimeModalLabel"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form role="form" id="fill_time_form">
+                        <input type="hidden" id="fillTimeState" name="internshipApplyState"/>
+                        <input type="hidden" id="fillTimeInternshipReleaseId" name="internshipReleaseId"/>
+                        <input type="hidden" id="fillTimeStudentId" name="studentId"/>
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label>填写时间</label>
+                                <input class="form-control" id="fillTime" name="fillTime" placeholder="填写时间"/>
+                                <div class="invalid-feedback"></div>
+                                <small id="fillTimeHelp" class="form-text text-muted">提示：学生将允许在该时间段内多次更改内容，之后系统将自动提交至审核。</small>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="fillTimeOk">确定</button>
+                    <button type="button" class="btn btn-default" id="fillTimeCancel">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!--定义数据模板-->
     <script id="internship-audit-template" type="text/x-handlebars-template">
         {{#each listResult}}
@@ -133,9 +167,9 @@
                                     <label class="ckbox">
                                         {{#if commitmentBook}}
                                         <input type="checkbox" class="check" name="commitmentBook" value="1"
-                                               checked="checked"/>
+                                               checked="checked" disabled="disabled"/>
                                         {{else}}
-                                        <input type="checkbox" class="check" name="commitmentBook" value="1"/>
+                                        <input type="checkbox" class="check" name="commitmentBook" value="1" disabled="disabled"/>
                                         {{/if}}
                                         <span>承诺书</span>
                                     </label>
@@ -145,9 +179,9 @@
                                     <label class="ckbox">
                                         {{#if safetyResponsibilityBook}}
                                         <input type="checkbox" class="check" name="safetyResponsibilityBook" value="1"
-                                               checked="checked"/>
+                                               checked="checked" disabled="disabled"/>
                                         {{else}}
-                                        <input type="checkbox" class="check" name="safetyResponsibilityBook" value="1"/>
+                                        <input type="checkbox" class="check" name="safetyResponsibilityBook" value="1" disabled="disabled"/>
                                         {{/if}}
                                         <span>安全责任书</span>
                                     </label>
@@ -157,9 +191,9 @@
                                     <label class="ckbox">
                                         {{#if practiceAgreement}}
                                         <input type="checkbox" class="check" name="practiceAgreement" value="1"
-                                               checked="checked"/>
+                                               checked="checked" disabled="disabled"/>
                                         {{else}}
-                                        <input type="checkbox" class="check" name="practiceAgreement" value="1"/>
+                                        <input type="checkbox" class="check" name="practiceAgreement" value="1" disabled="disabled"/>
                                         {{/if}}
                                         <span>实践协议书</span>
                                     </label>
@@ -169,9 +203,9 @@
                                     <label class="ckbox">
                                         {{#if internshipApplication}}
                                         <input type="checkbox" class="check" name="internshipApplication" value="1"
-                                               checked="checked"/>
+                                               checked="checked" disabled="disabled"/>
                                         {{else}}
-                                        <input type="checkbox" class="check" name="internshipApplication" value="1"/>
+                                        <input type="checkbox" class="check" name="internshipApplication" value="1" disabled="disabled"/>
                                         {{/if}}
                                         <span>实习申请书</span>
                                     </label>
@@ -181,9 +215,9 @@
                                     <label class="ckbox">
                                         {{#if practiceReceiving}}
                                         <input type="checkbox" class="check" name="practiceReceiving" value="1"
-                                               checked="checked"/>
+                                               checked="checked" disabled="disabled"/>
                                         {{else}}
-                                        <input type="checkbox" class="check" name="practiceReceiving" value="1"/>
+                                        <input type="checkbox" class="check" name="practiceReceiving" value="1" disabled="disabled"/>
                                         {{/if}}
                                         <span>实习接收</span>
                                     </label>
@@ -193,10 +227,10 @@
                                     <label class="ckbox">
                                         {{#if securityEducationAgreement}}
                                         <input type="checkbox" class="check" name="securityEducationAgreement" value="1"
-                                               checked="checked"/>
+                                               checked="checked" disabled="disabled"/>
                                         {{else}}
                                         <input type="checkbox" class="check" name="securityEducationAgreement"
-                                               value="1"/>
+                                               value="1" disabled="disabled"/>
                                         {{/if}}
                                         <span>安全教育协议</span>
                                     </label>
@@ -206,9 +240,9 @@
                                     <label class="ckbox">
                                         {{#if parentalConsent}}
                                         <input type="checkbox" class="check" name="parentalConsent" value="1"
-                                               checked="checked"/>
+                                               checked="checked" disabled="disabled"/>
                                         {{else}}
-                                        <input type="checkbox" class="check" name="parentalConsent" value="1"/>
+                                        <input type="checkbox" class="check" name="parentalConsent" value="1" disabled="disabled"/>
                                         {{/if}}
                                         <span>父母同意书</span>
                                     </label>
@@ -239,22 +273,13 @@
                         data-student="{{studentId}}">
                     详情
                 </button>
-                <button type="button" class="btn btn-primary save_apply">
-                    保存
-                </button>
-                <button type="button" class="btn btn-success pass_apply" data-name="{{realName}}">
-                    通过
-                </button>
-                <button type="button" class="btn btn-warning fail_apply" data-id="{{internshipReleaseId}}"
+                <button type="button" class="btn btn-success agree_apply" data-id="{{internshipReleaseId}}"
                         data-student="{{studentId}}" data-name="{{realName}}">
-                    不通过
+                    同意
                 </button>
-                <button type="button" class="btn btn-danger delete_apply" data-id="{{internshipReleaseId}}"
+                <button type="button" class="btn btn-warning disagree_apply" data-id="{{internshipReleaseId}}"
                         data-student="{{studentId}}" data-name="{{realName}}">
-                    删除
-                </button>
-                <button type="button" class="btn btn-light check_all_apply" data-student="{{studentId}}">
-                    全选
+                    拒绝
                 </button>
             </div>
         </div>
@@ -332,7 +357,7 @@
 
     <input type="hidden" id="paramInternshipReleaseId" th:value="${internshipReleaseId}"/>
     <input type="hidden" class="dy_script"
-           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/internship/review/internship_review_base_info_fill.js')}"/>
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/internship/review/internship_review_company_apply.js')}"/>
 </div>
 <!-- /#page-wrapper -->
 </body>

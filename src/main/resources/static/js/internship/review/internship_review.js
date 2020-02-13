@@ -13,6 +13,8 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
             fail: '/web/internship/review/fail',
             base_info_apply: '/web/internship/review/base_info_apply',
             base_info_fill: '/web/internship/review/base_info_fill',
+            company_apply: '/web/internship/review/company_apply',
+            company_fill: '/web/internship/review/company_fill',
             page: '/web/menu/internship/review'
         };
 
@@ -155,6 +157,20 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
         */
         $(tableData).delegate('.basic_fill', "click", function () {
             $.address.value(ajax_url.base_info_fill + '/' + $(this).attr('data-id'));
+        });
+
+        /*
+        单位信息修改申请
+       */
+        $(tableData).delegate('.company_apply', "click", function () {
+            $.address.value(ajax_url.company_apply + '/' + $(this).attr('data-id'));
+        });
+
+        /*
+        单位信息修改填写中
+       */
+        $(tableData).delegate('.company_fill', "click", function () {
+            $.address.value(ajax_url.company_fill + '/' + $(this).attr('data-id'));
         });
 
         init();
