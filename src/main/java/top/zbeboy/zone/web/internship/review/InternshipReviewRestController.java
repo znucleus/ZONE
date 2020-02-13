@@ -222,12 +222,52 @@ public class InternshipReviewRestController {
     @GetMapping("/web/internship/review/detail/{id}/{studentId}")
     public ResponseEntity<Map<String, Object>> data(@PathVariable("id") String id, @PathVariable("studentId") int studentId) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        Optional<Record> internshipInfoRecord = internshipInfoService.findByInternshipReleaseIdAndStudentId(id, studentId);
-        if (internshipInfoRecord.isPresent()) {
-            InternshipInfo internshipInfo = internshipInfoRecord.get().into(InternshipInfo.class);
-            ajaxUtil.success().msg("获取数据成功").put("internshipInfo", internshipInfo);
+        if (internshipConditionCommon.reviewCondition(id)) {
+            Optional<Record> internshipInfoRecord = internshipInfoService.findByInternshipReleaseIdAndStudentId(id, studentId);
+            if (internshipInfoRecord.isPresent()) {
+                InternshipInfo internshipInfo = internshipInfoRecord.get().into(InternshipInfo.class);
+                ajaxUtil.success().msg("获取数据成功").put("internshipInfo", internshipInfo);
+            } else {
+                ajaxUtil.fail().msg("获取数据失败");
+            }
         } else {
-            ajaxUtil.fail().msg("获取数据失败");
+            ajaxUtil.fail().msg("您无权限操作");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 实习审核 保存
+     *
+     * @param internshipReviewBean 数据
+     * @return true or false
+     */
+    @PostMapping("/web/internship/review/save")
+    public ResponseEntity<Map<String, Object>> save(InternshipReviewBean internshipReviewBean) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (StringUtils.isNotBlank(internshipReviewBean.getInternshipReleaseId()) && Objects.nonNull(internshipReviewBean.getStudentId())) {
+            if (internshipConditionCommon.reviewCondition(internshipReviewBean.getInternshipReleaseId())) {
+                Optional<Record> internshipInfoRecord = internshipInfoService.findByInternshipReleaseIdAndStudentId(internshipReviewBean.getInternshipReleaseId(), internshipReviewBean.getStudentId());
+                if (internshipInfoRecord.isPresent()) {
+                    InternshipInfo internshipInfo = internshipInfoRecord.get().into(InternshipInfo.class);
+                    internshipInfo.setCommitmentBook(internshipReviewBean.getCommitmentBook());
+                    internshipInfo.setSafetyResponsibilityBook(internshipReviewBean.getSafetyResponsibilityBook());
+                    internshipInfo.setPracticeAgreement(internshipReviewBean.getPracticeAgreement());
+                    internshipInfo.setInternshipApplication(internshipReviewBean.getInternshipApplication());
+                    internshipInfo.setPracticeReceiving(internshipReviewBean.getPracticeReceiving());
+                    internshipInfo.setSecurityEducationAgreement(internshipReviewBean.getSecurityEducationAgreement());
+                    internshipInfo.setParentalConsent(internshipReviewBean.getParentalConsent());
+                    internshipInfoService.update(internshipInfo);
+
+                    ajaxUtil.success().msg("保存成功");
+                } else {
+                    ajaxUtil.fail().msg("未查询到实习数据");
+                }
+            } else {
+                ajaxUtil.fail().msg("您无权限操作");
+            }
+        } else {
+            ajaxUtil.fail().msg("必要参数为空");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
