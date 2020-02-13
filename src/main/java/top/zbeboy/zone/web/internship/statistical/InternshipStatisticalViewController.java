@@ -65,4 +65,25 @@ public class InternshipStatisticalViewController {
         }
         return page;
     }
+
+    /**
+     * 申请记录列表
+     *
+     * @return 申请记录列表页面
+     */
+    @GetMapping("/web/internship/statistical/record/company/{id}/{studentId}")
+    public String changeCompanyHistory(@PathVariable("id") String id, @PathVariable("studentId") int studentId, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        if (internshipConditionCommon.reviewCondition(id)) {
+            modelMap.addAttribute("internshipReleaseId", id);
+            modelMap.addAttribute("studentId", studentId);
+            page = "web/internship/statistical/internship_change_company_history::#page-wrapper";
+        } else {
+            config.buildWarningTip("操作警告", "您无权限操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
 }
