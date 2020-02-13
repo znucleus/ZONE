@@ -8,17 +8,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.config.Workbook;
-import top.zbeboy.zone.domain.tables.pojos.InternshipInfo;
-import top.zbeboy.zone.domain.tables.pojos.InternshipReviewAuthorize;
-import top.zbeboy.zone.domain.tables.pojos.Organize;
-import top.zbeboy.zone.domain.tables.pojos.Users;
-import top.zbeboy.zone.service.internship.InternshipInfoService;
-import top.zbeboy.zone.service.internship.InternshipReleaseService;
-import top.zbeboy.zone.service.internship.InternshipReviewAuthorizeService;
-import top.zbeboy.zone.service.internship.InternshipReviewService;
+import top.zbeboy.zone.domain.tables.pojos.*;
+import top.zbeboy.zone.service.data.StudentService;
+import top.zbeboy.zone.service.internship.*;
+import top.zbeboy.zone.service.notify.UserNotifyService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.system.AuthoritiesService;
+import top.zbeboy.zone.service.system.SystemConfigureService;
+import top.zbeboy.zone.service.system.SystemMailService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
+import top.zbeboy.zone.service.util.RequestUtil;
+import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.zone.web.bean.internship.review.InternshipReviewAuthorizeBean;
 import top.zbeboy.zone.web.bean.internship.review.InternshipReviewBean;
@@ -29,6 +29,7 @@ import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @RestController
@@ -50,10 +51,34 @@ public class InternshipReviewRestController {
     private InternshipInfoService internshipInfoService;
 
     @Resource
+    private InternshipApplyService internshipApplyService;
+
+    @Resource
+    private InternshipChangeHistoryService internshipChangeHistoryService;
+
+    @Resource
+    private InternshipTeacherDistributionService internshipTeacherDistributionService;
+
+    @Resource
+    private InternshipChangeCompanyHistoryService internshipChangeCompanyHistoryService;
+
+    @Resource
     private AuthoritiesService authoritiesService;
 
     @Resource
     private UsersService usersService;
+
+    @Resource
+    private SystemMailService systemMailService;
+
+    @Resource
+    private SystemConfigureService systemConfigureService;
+
+    @Resource
+    private UserNotifyService userNotifyService;
+
+    @Resource
+    private StudentService studentService;
 
     /**
      * 数据
@@ -269,6 +294,210 @@ public class InternshipReviewRestController {
         } else {
             ajaxUtil.fail().msg("必要参数为空");
         }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 实习审核 通过
+     *
+     * @param internshipReviewBean 数据
+     * @return true or false
+     */
+    @PostMapping("/web/internship/review/pass")
+    public ResponseEntity<Map<String, Object>> pass(InternshipReviewBean internshipReviewBean, HttpServletRequest request) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (StringUtils.isNotBlank(internshipReviewBean.getInternshipReleaseId()) && Objects.nonNull(internshipReviewBean.getStudentId())) {
+            if (internshipConditionCommon.reviewCondition(internshipReviewBean.getInternshipReleaseId())) {
+                Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReviewBean.getInternshipReleaseId(), internshipReviewBean.getStudentId());
+                if (internshipApplyRecord.isPresent()) {
+                    InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
+                    internshipApply.setReason(internshipReviewBean.getReason());
+                    internshipApply.setInternshipApplyState(internshipReviewBean.getInternshipApplyState());
+                    internshipApplyService.update(internshipApply);
+
+                    Optional<Record> internshipInfoRecord = internshipInfoService.findByInternshipReleaseIdAndStudentId(internshipReviewBean.getInternshipReleaseId(), internshipReviewBean.getStudentId());
+                    if (internshipInfoRecord.isPresent()) {
+                        InternshipInfo internshipInfo = internshipInfoRecord.get().into(InternshipInfo.class);
+                        internshipInfo.setCommitmentBook(internshipReviewBean.getCommitmentBook());
+                        internshipInfo.setSafetyResponsibilityBook(internshipReviewBean.getSafetyResponsibilityBook());
+                        internshipInfo.setPracticeAgreement(internshipReviewBean.getPracticeAgreement());
+                        internshipInfo.setInternshipApplication(internshipReviewBean.getInternshipApplication());
+                        internshipInfo.setPracticeReceiving(internshipReviewBean.getPracticeReceiving());
+                        internshipInfo.setSecurityEducationAgreement(internshipReviewBean.getSecurityEducationAgreement());
+                        internshipInfo.setParentalConsent(internshipReviewBean.getParentalConsent());
+                        internshipInfoService.update(internshipInfo);
+                    }
+
+                    InternshipChangeHistory internshipChangeHistory = new InternshipChangeHistory();
+                    internshipChangeHistory.setInternshipChangeHistoryId(UUIDUtil.getUUID());
+                    internshipChangeHistory.setInternshipReleaseId(internshipReviewBean.getInternshipReleaseId());
+                    internshipChangeHistory.setStudentId(internshipReviewBean.getStudentId());
+                    internshipChangeHistory.setState(internshipReviewBean.getInternshipApplyState());
+                    internshipChangeHistory.setApplyTime(DateTimeUtil.getNowSqlTimestamp());
+                    internshipChangeHistoryService.save(internshipChangeHistory);
+
+                    InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReviewBean.getInternshipReleaseId());
+                    if (Objects.nonNull(internshipRelease)) {
+                        Users sendUser = usersService.getUserFromSession();
+                        Optional<Record> studentRecord = studentService.findByIdRelation(internshipReviewBean.getStudentId());
+                        if (studentRecord.isPresent()) {
+                            Users acceptUsers = studentRecord.get().into(Users.class);
+
+                            String notify = "您的实习 " + internshipRelease.getInternshipTitle() + " 申请已通过。";
+                            // 检查邮件推送是否被关闭
+                            SystemConfigure mailConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
+                            if (StringUtils.equals("1", mailConfigure.getDataValue())) {
+                                systemMailService.sendNotifyMail(acceptUsers, RequestUtil.getBaseUrl(request), notify);
+                            }
+
+                            UserNotify userNotify = new UserNotify();
+                            userNotify.setUserNotifyId(UUIDUtil.getUUID());
+                            userNotify.setSendUser(sendUser.getUsername());
+                            userNotify.setAcceptUser(acceptUsers.getUsername());
+                            userNotify.setIsSee(BooleanUtil.toByte(false));
+                            userNotify.setNotifyType(Workbook.notifyType.success.name());
+                            userNotify.setNotifyTitle("实习审核");
+                            userNotify.setNotifyContent(notify);
+                            userNotify.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                            userNotifyService.save(userNotify);
+                        }
+                    }
+
+                    ajaxUtil.success().msg("保存成功");
+                } else {
+                    ajaxUtil.fail().msg("未查询到实习申请信息");
+                }
+            } else {
+                ajaxUtil.fail().msg("您无权限操作");
+            }
+        } else {
+            ajaxUtil.fail().msg("必要参数为空");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 实习审核 不通过
+     *
+     * @param reason               原因
+     * @param internshipApplyState 实习审核状态
+     * @param internshipReleaseId  实习发布id
+     * @param studentId            学生id
+     * @return true or false
+     */
+    @PostMapping("/web/internship/review/fail")
+    public ResponseEntity<Map<String, Object>> fail(@RequestParam("reason") String reason, @RequestParam("internshipApplyState") int internshipApplyState,
+                                                    @RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("studentId") int studentId, HttpServletRequest request) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (internshipConditionCommon.reviewCondition(internshipReleaseId)) {
+            Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+            if (internshipApplyRecord.isPresent()) {
+                InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
+                internshipApply.setInternshipApplyState(internshipApplyState);
+                internshipApply.setReason(reason);
+                internshipApplyService.update(internshipApply);
+
+                InternshipChangeHistory internshipChangeHistory = new InternshipChangeHistory();
+                internshipChangeHistory.setInternshipChangeHistoryId(UUIDUtil.getUUID());
+                internshipChangeHistory.setInternshipReleaseId(internshipReleaseId);
+                internshipChangeHistory.setStudentId(studentId);
+                internshipChangeHistory.setState(internshipApplyState);
+                internshipChangeHistory.setApplyTime(DateTimeUtil.getNowSqlTimestamp());
+                internshipChangeHistory.setReason(reason);
+                internshipChangeHistoryService.save(internshipChangeHistory);
+
+                InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
+                if (Objects.nonNull(internshipRelease)) {
+                    Users sendUser = usersService.getUserFromSession();
+                    Optional<Record> studentRecord = studentService.findByIdRelation(studentId);
+                    if (studentRecord.isPresent()) {
+                        Users acceptUsers = studentRecord.get().into(Users.class);
+
+                        String notify = "您的实习 " + internshipRelease.getInternshipTitle() + " 申请未通过。原因：" + reason;
+                        // 检查邮件推送是否被关闭
+                        SystemConfigure mailConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
+                        if (StringUtils.equals("1", mailConfigure.getDataValue())) {
+                            systemMailService.sendNotifyMail(acceptUsers, RequestUtil.getBaseUrl(request), notify);
+                        }
+
+                        UserNotify userNotify = new UserNotify();
+                        userNotify.setUserNotifyId(UUIDUtil.getUUID());
+                        userNotify.setSendUser(sendUser.getUsername());
+                        userNotify.setAcceptUser(acceptUsers.getUsername());
+                        userNotify.setIsSee(BooleanUtil.toByte(false));
+                        userNotify.setNotifyType(Workbook.notifyType.danger.name());
+                        userNotify.setNotifyTitle("实习审核");
+                        userNotify.setNotifyContent(notify);
+                        userNotify.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                        userNotifyService.save(userNotify);
+                    }
+                }
+
+                ajaxUtil.success().msg("保存成功");
+            } else {
+                ajaxUtil.fail().msg("未查询到实习申请信息");
+            }
+        } else {
+            ajaxUtil.fail().msg("您无权限操作");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 删除申请记录
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param studentId           学生id
+     * @return true or false
+     */
+    @PostMapping("/web/internship/review/delete")
+    public ResponseEntity<Map<String, Object>> delete(@RequestParam("internshipReleaseId") String internshipReleaseId, @RequestParam("studentId") int studentId, HttpServletRequest request) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (internshipConditionCommon.reviewCondition(internshipReleaseId)) {
+            internshipInfoService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+            internshipApplyService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+
+            InternshipChangeHistory internshipChangeHistory = new InternshipChangeHistory();
+            internshipChangeHistory.setInternshipChangeHistoryId(UUIDUtil.getUUID());
+            internshipChangeHistory.setInternshipReleaseId(internshipReleaseId);
+            internshipChangeHistory.setStudentId(studentId);
+            internshipChangeHistory.setState(-1);
+            internshipChangeHistory.setApplyTime(DateTimeUtil.getNowSqlTimestamp());
+            internshipChangeHistory.setReason("实习申请删除");
+            internshipChangeHistoryService.save(internshipChangeHistory);
+
+            InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
+            if (Objects.nonNull(internshipRelease)) {
+                Users sendUser = usersService.getUserFromSession();
+                Optional<Record> studentRecord = studentService.findByIdRelation(studentId);
+                if (studentRecord.isPresent()) {
+                    Users acceptUsers = studentRecord.get().into(Users.class);
+
+                    String notify = "您的实习 " + internshipRelease.getInternshipTitle() + " 申请已被删除！本次申请将完全废除，若您有任何疑问，请及时联系指导教师";
+                    // 检查邮件推送是否被关闭
+                    SystemConfigure mailConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
+                    if (StringUtils.equals("1", mailConfigure.getDataValue())) {
+                        systemMailService.sendNotifyMail(acceptUsers, RequestUtil.getBaseUrl(request), notify);
+                    }
+
+                    UserNotify userNotify = new UserNotify();
+                    userNotify.setUserNotifyId(UUIDUtil.getUUID());
+                    userNotify.setSendUser(sendUser.getUsername());
+                    userNotify.setAcceptUser(acceptUsers.getUsername());
+                    userNotify.setIsSee(BooleanUtil.toByte(false));
+                    userNotify.setNotifyType(Workbook.notifyType.danger.name());
+                    userNotify.setNotifyTitle("实习审核");
+                    userNotify.setNotifyContent(notify);
+                    userNotify.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                    userNotifyService.save(userNotify);
+                }
+            }
+
+            ajaxUtil.success().msg("删除成功");
+        } else {
+            ajaxUtil.fail().msg("您无权限操作");
+        }
+
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

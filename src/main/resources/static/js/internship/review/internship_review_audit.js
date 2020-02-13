@@ -238,11 +238,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
         $(tableData).delegate('.save_apply', "click", function () {
             dataForm = $(this).parent().prev().find('form');
             $.post(ajax_url.save, dataForm.serialize(), function (data) {
-                Messenger().post({
-                    message: data.msg,
-                    type: data.state ? 'success' : 'error',
-                    showCloseButton: true
-                });
+                Swal.fire(data.state ? '保存成功' : '保存失败', data.msg, data.state ? 'success' : 'error');
             });
         });
 
@@ -410,14 +406,17 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
                 url: ajax_url.pass,
                 data: dataForm.serialize(),
                 success: function (data) {
-                    Messenger().post({
-                        message: data.msg,
-                        type: data.state ? 'success' : 'error',
-                        showCloseButton: true
-                    });
-
                     if (data.state) {
-                        init();
+                        Swal.fire({
+                            title: data.msg,
+                            type: "success",
+                            confirmButtonText: "确定",
+                            preConfirm: function () {
+                                init();
+                            }
+                        });
+                    } else {
+                        Swal.fire('保存失败', data.msg, 'error');
                     }
                 },
                 error: function (XMLHttpRequest) {
@@ -435,14 +434,18 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
          */
         function sendStateAjax() {
             $.post(ajax_url.fail, $('#state_form').serialize(), function (data) {
-                Messenger().post({
-                    message: data.msg,
-                    type: data.state ? 'success' : 'error',
-                    showCloseButton: true
-                });
                 if (data.state) {
-                    hideStateModal();
-                    init();
+                    Swal.fire({
+                        title: data.msg,
+                        type: "success",
+                        confirmButtonText: "确定",
+                        preConfirm: function () {
+                            hideStateModal();
+                            init();
+                        }
+                    });
+                } else {
+                    Swal.fire('保存失败', data.msg, 'error');
                 }
             });
         }
@@ -457,14 +460,19 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
                 internshipReleaseId: internshipReleaseId,
                 studentId: studentId
             }, function (data) {
-                Messenger().post({
-                    message: data.msg,
-                    type: data.state ? 'success' : 'error',
-                    showCloseButton: true
-                });
                 if (data.state) {
-                    init();
+                    Swal.fire({
+                        title: data.msg,
+                        type: "success",
+                        confirmButtonText: "确定",
+                        preConfirm: function () {
+                            init();
+                        }
+                    });
+                } else {
+                    Swal.fire('保存失败', data.msg, 'error');
                 }
+
             });
         }
 
