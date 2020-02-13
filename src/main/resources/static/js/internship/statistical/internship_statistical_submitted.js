@@ -129,7 +129,7 @@ require(["jquery", "handlebars", "nav.active", "responsive.bootstrap4", "jquery.
                                         "internshipReleaseId": c.internshipReleaseId
                                     },
                                     {
-                                        "name": "变更记录",
+                                        "name": "单位变更记录",
                                         "css": "change_record",
                                         "type": "primary",
                                         "studentId": c.studentId,
