@@ -86,4 +86,24 @@ public class InternshipStatisticalViewController {
         }
         return page;
     }
+
+    /**
+     * 未提交列表
+     *
+     * @return 未提交列表 统计页面
+     */
+    @GetMapping("/web/internship/statistical/unsubmitted/{id}")
+    public String unSubmitted(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        if (internshipConditionCommon.reviewCondition(id)) {
+            modelMap.addAttribute("internshipReleaseId", id);
+            page = "web/internship/statistical/internship_statistical_unsubmitted::#page-wrapper";
+        } else {
+            config.buildWarningTip("操作警告", "您无权限操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
 }
