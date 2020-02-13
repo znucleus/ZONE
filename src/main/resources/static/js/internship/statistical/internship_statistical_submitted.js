@@ -14,7 +14,8 @@ require(["jquery", "handlebars", "nav.active", "responsive.bootstrap4", "jquery.
             studentNumber: '',
             organizeId: '',
             internshipApplyState: '',
-            internshipReleaseId: page_param.paramInternshipReleaseId
+            internshipReleaseId: page_param.paramInternshipReleaseId,
+            dataRange: 1
         };
 
         /*
