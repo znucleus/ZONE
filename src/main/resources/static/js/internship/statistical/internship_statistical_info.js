@@ -65,6 +65,7 @@ require(["jquery", "nav.active", "responsive.bootstrap4", "jquery.address", "mes
             searching: false,
             "processing": true, // 打开数据加载时的等待效果
             "serverSide": true,// 打开后台分页
+            "aaSorting": [[3, 'asc']],// 排序
             "ajax": {
                 "url": getAjaxUrl().data,
                 "dataSrc": "data",
@@ -384,7 +385,7 @@ require(["jquery", "nav.active", "responsive.bootstrap4", "jquery.address", "mes
                 fileName: $('#export_file_name').val(),
                 ext: 'xls'
             };
-            window.location.href = encodeURI(getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&export_info=" + JSON.stringify(exportFile));
+            window.location.href = encodeURI(getAjaxUrl().export + "?extra_search=" + searchParam + "&export_info=" + JSON.stringify(exportFile));
         });
 
         $('#export_xlsx').click(function () {
@@ -394,6 +395,6 @@ require(["jquery", "nav.active", "responsive.bootstrap4", "jquery.address", "mes
                 fileName: $('#export_file_name').val(),
                 ext: 'xlsx'
             };
-            window.location.href = encodeURI(getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&export_info=" + JSON.stringify(exportFile));
+            window.location.href = encodeURI(getAjaxUrl().export + "?extra_search=" + searchParam + "&export_info=" + JSON.stringify(exportFile));
         });
     });

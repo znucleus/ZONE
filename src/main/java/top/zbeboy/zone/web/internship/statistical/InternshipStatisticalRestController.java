@@ -7,8 +7,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.InternshipInfo;
+import top.zbeboy.zone.service.export.InternshipInfoExport;
 import top.zbeboy.zone.service.internship.*;
+import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.zone.web.bean.internship.statistical.InternshipChangeCompanyHistoryBean;
@@ -24,6 +27,8 @@ import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +57,9 @@ public class InternshipStatisticalRestController {
 
     @Resource
     private InternshipInfoService internshipInfoService;
+
+    @Resource
+    private UploadService uploadService;
 
     /**
      * 数据
@@ -219,5 +227,26 @@ public class InternshipStatisticalRestController {
         dataTablesUtil.setiTotalRecords(internshipInfoService.countAll(dataTablesUtil));
         dataTablesUtil.setiTotalDisplayRecords(internshipInfoService.countByCondition(dataTablesUtil));
         return new ResponseEntity<>(dataTablesUtil, HttpStatus.OK);
+    }
+
+    /**
+     * 导出 分配列表 数据
+     *
+     * @param request 请求
+     */
+    @GetMapping("/web/internship/statistical/info/export")
+    public void export(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        DataTablesUtil dataTablesUtil = new DataTablesUtil(request, "studentNumber", "asc",
+                "数据列表", Workbook.internshipFilePath());
+        Result<Record> records = internshipInfoService.export(dataTablesUtil);
+        List<InternshipInfo> beans = new ArrayList<>();
+        if (Objects.nonNull(records) && records.isNotEmpty()) {
+            beans = records.into(InternshipInfo.class);
+        }
+        InternshipInfoExport export = new InternshipInfoExport(beans);
+        DataTablesUtil.ExportInfo exportInfo = dataTablesUtil.getExportInfo();
+        if (export.exportExcel(exportInfo.getLastPath(), exportInfo.getFileName(), exportInfo.getExt())) {
+            uploadService.download(exportInfo.getFileName(), exportInfo.getFilePath(), response, request);
+        }
     }
 }

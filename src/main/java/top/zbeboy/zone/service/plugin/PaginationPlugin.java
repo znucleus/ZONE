@@ -157,14 +157,15 @@ public interface PaginationPlugin<S extends PaginationUtil> {
     /**
      * 查询全部数据
      *
-     * @param create         当前查询器
-     * @param table          表
-     * @param paginationUtil 工具类
+     * @param create            当前查询器
+     * @param table             表
+     * @param paginationUtil    工具类
+     * @param useExtraCondition 额外条件
      * @return 全部数据
      */
-    default Result<Record> queryAll(final DSLContext create, TableLike<?> table, S paginationUtil) {
+    default Result<Record> queryAll(final DSLContext create, TableLike<?> table, S paginationUtil, boolean useExtraCondition) {
         Result<Record> records;
-        Condition a = searchCondition(paginationUtil);
+        Condition a = useExtraCondition(paginationUtil, useExtraCondition);
         if (Objects.isNull(a)) {
             SelectJoinStep<Record> selectJoinStep = create.select()
                     .from(table);

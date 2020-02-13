@@ -17,10 +17,12 @@ import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.SQLQueryUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
+import top.zbeboy.zone.web.bean.internship.distribution.InternshipTeacherDistributionBean;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.vo.internship.apply.InternshipApplyAddVo;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -43,6 +45,11 @@ public class InternshipInfoServiceImpl implements InternshipInfoService, Paginat
     @Override
     public Result<Record> findAllByPage(DataTablesUtil dataTablesUtil) {
         return queryAllByPage(create, INTERNSHIP_INFO, dataTablesUtil, false);
+    }
+
+    @Override
+    public Result<Record> export(DataTablesUtil dataTablesUtil) {
+        return queryAll(create, INTERNSHIP_INFO, dataTablesUtil, false);
     }
 
     @Override

@@ -97,6 +97,16 @@ public class DateTimeUtil {
     }
 
     /**
+     * 格式化date
+     *
+     * @param date 日期
+     * @return 格式化后的时间
+     */
+    public static String defaultFormatSqlDate(java.sql.Date date) {
+        return date.toLocalDate().format(DateTimeFormatter.ofPattern(YEAR_MONTH_DAY_FORMAT));
+    }
+
+    /**
      * 格式化Timestamp
      *
      * @param timestamp 日期
