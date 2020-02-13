@@ -112,4 +112,48 @@ public class InternshipReviewViewController {
         }
         return page;
     }
+
+    /**
+     * 基本信息填写申请
+     *
+     * @param id       实习发布id
+     * @param modelMap 页面对象
+     * @return 页面
+     */
+    @GetMapping("/web/internship/review/base_info_apply/{id}")
+    public String baseInfoApply(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        if (internshipConditionCommon.reviewCondition(id)) {
+            modelMap.addAttribute("internshipReleaseId", id);
+            page = "web/internship/review/internship_review_base_info_apply::#page-wrapper";
+        } else {
+            config.buildWarningTip("操作警告", "您无权限操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
+
+    /**
+     * 基本信息填写中
+     *
+     * @param id       实习发布id
+     * @param modelMap 页面对象
+     * @return 页面
+     */
+    @GetMapping("/web/internship/review/base_info_fill/{id}")
+    public String baseInfoFill(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        if (internshipConditionCommon.reviewCondition(id)) {
+            modelMap.addAttribute("internshipReleaseId", id);
+            page = "web/internship/review/internship_review_base_info_fill::#page-wrapper";
+        } else {
+            config.buildWarningTip("操作警告", "您无权限操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
 }

@@ -34,6 +34,9 @@ public class InternshipReviewBean {
     private String originalFileName;
     private String ext;
 
+    // 实习审核填写时间段
+    private String fillTime;
+
     public int getStudentId() {
         return studentId;
     }
@@ -264,5 +267,13 @@ public class InternshipReviewBean {
 
     public void setExt(String ext) {
         this.ext = ext;
+    }
+
+    public String getFillTime() {
+        return fillTime;
+    }
+
+    public void setFillTime(String fillTime) {
+        this.fillTime = fillTime;
     }
 }

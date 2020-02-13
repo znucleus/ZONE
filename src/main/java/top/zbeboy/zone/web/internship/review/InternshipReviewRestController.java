@@ -28,6 +28,7 @@ import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
 import top.zbeboy.zone.web.plugin.select2.Select2Data;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
+import top.zbeboy.zone.web.util.ByteUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
 import javax.annotation.Resource;
@@ -476,7 +477,7 @@ public class InternshipReviewRestController {
                 if (studentRecord.isPresent()) {
                     Users acceptUsers = studentRecord.get().into(Users.class);
 
-                    String notify = "您的实习 " + internshipRelease.getInternshipTitle() + " 申请已被删除！本次申请将完全废除，若您有任何疑问，请及时联系指导教师";
+                    String notify = "您的实习 " + internshipRelease.getInternshipTitle() + " 申请已被删除！本次申请将完全废除，若您有任何疑问，请及时联系指导教师。";
                     // 检查邮件推送是否被关闭
                     SystemConfigure mailConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
                     if (StringUtils.equals("1", mailConfigure.getDataValue())) {
@@ -517,5 +518,166 @@ public class InternshipReviewRestController {
         if (Objects.nonNull(id)) {
             uploadService.download(files.getOriginalFileName(), files.getRelativePath(), response, request);
         }
+    }
+
+    /**
+     * 实习审核 同意  基本信息修改申请 单位信息修改申请
+     *
+     * @param internshipReviewBean 数据
+     * @return true or false
+     */
+    @PostMapping("/web/internship/review/agree")
+    public ResponseEntity<Map<String, Object>> agree(InternshipReviewBean internshipReviewBean, HttpServletRequest request) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        String internshipReleaseId = internshipReviewBean.getInternshipReleaseId();
+        int studentId = internshipReviewBean.getStudentId();
+        if (StringUtils.isNotBlank(internshipReleaseId) && Objects.nonNull(studentId)) {
+            if (internshipConditionCommon.reviewCondition(internshipReleaseId)) {
+                Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                if (internshipApplyRecord.isPresent()) {
+                    InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
+                    internshipApply.setReason(internshipReviewBean.getReason());
+                    internshipApply.setInternshipApplyState(internshipReviewBean.getInternshipApplyState());
+                    if (StringUtils.isNotBlank(internshipReviewBean.getFillTime())) {
+                        String[] timeArr = internshipReviewBean.getFillTime().split(" 至 ");
+                        internshipApply.setChangeFillStartTime(DateTimeUtil.defaultParseSqlTimestamp(timeArr[0] + " 00:00:00"));
+                        internshipApply.setChangeFillEndTime(DateTimeUtil.defaultParseSqlTimestamp(timeArr[1] + " 23:59:59"));
+                    }
+                    internshipApplyService.update(internshipApply);
+
+                    // 若同意进入 7：单位信息变更填写中 需要删除提交材料的状态
+                    if (internshipReviewBean.getInternshipApplyState() == 7) {
+                        Optional<Record> internshipInfoRecord = internshipInfoService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                        if (internshipInfoRecord.isPresent()) {
+                            InternshipInfo internshipInfo = internshipInfoRecord.get().into(InternshipInfo.class);
+                            Byte b = ByteUtil.toByte(0);
+                            internshipInfo.setCommitmentBook(b);
+                            internshipInfo.setSafetyResponsibilityBook(b);
+                            internshipInfo.setPracticeAgreement(b);
+                            internshipInfo.setInternshipApplication(b);
+                            internshipInfo.setPracticeReceiving(b);
+                            internshipInfo.setSecurityEducationAgreement(b);
+                            internshipInfo.setParentalConsent(b);
+                            internshipInfoService.update(internshipInfo);
+                        }
+                    }
+
+                    InternshipChangeHistory internshipChangeHistory = new InternshipChangeHistory();
+                    internshipChangeHistory.setInternshipChangeHistoryId(UUIDUtil.getUUID());
+                    internshipChangeHistory.setInternshipReleaseId(internshipReleaseId);
+                    internshipChangeHistory.setStudentId(studentId);
+                    internshipChangeHistory.setState(internshipReviewBean.getInternshipApplyState());
+                    internshipChangeHistory.setApplyTime(DateTimeUtil.getNowSqlTimestamp());
+                    internshipChangeHistory.setReason(internshipReviewBean.getReason());
+                    internshipChangeHistory.setChangeFillStartTime(internshipApply.getChangeFillStartTime());
+                    internshipChangeHistory.setChangeFillEndTime(internshipApply.getChangeFillEndTime());
+                    internshipChangeHistoryService.save(internshipChangeHistory);
+
+                    InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
+                    if (Objects.nonNull(internshipRelease)) {
+                        Users sendUser = usersService.getUserFromSession();
+                        Optional<Record> studentRecord = studentService.findByIdRelation(studentId);
+                        if (studentRecord.isPresent()) {
+                            Users acceptUsers = studentRecord.get().into(Users.class);
+
+                            String notify = "您的实习 " + internshipRelease.getInternshipTitle() + " 变更申请已通过。请尽快登录系统在填写时间范围内变更您的内容。";
+                            // 检查邮件推送是否被关闭
+                            SystemConfigure mailConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
+                            if (StringUtils.equals("1", mailConfigure.getDataValue())) {
+                                systemMailService.sendNotifyMail(acceptUsers, RequestUtil.getBaseUrl(request), notify);
+                            }
+
+                            UserNotify userNotify = new UserNotify();
+                            userNotify.setUserNotifyId(UUIDUtil.getUUID());
+                            userNotify.setSendUser(sendUser.getUsername());
+                            userNotify.setAcceptUser(acceptUsers.getUsername());
+                            userNotify.setIsSee(BooleanUtil.toByte(false));
+                            userNotify.setNotifyType(Workbook.notifyType.success.name());
+                            userNotify.setNotifyTitle("实习审核");
+                            userNotify.setNotifyContent(notify);
+                            userNotify.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                            userNotifyService.save(userNotify);
+                        }
+                    }
+
+                    ajaxUtil.success().msg("保存成功");
+                } else {
+                    ajaxUtil.fail().msg("未查询到实习申请信息");
+                }
+            } else {
+                ajaxUtil.fail().msg("您无权限操作");
+            }
+        } else {
+            ajaxUtil.fail().msg("必要参数为空");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 实习审核 拒绝  基本信息修改申请 单位信息修改申请
+     *
+     * @param internshipReviewBean 数据
+     * @return true or false
+     */
+    @PostMapping("/web/internship/review/disagree")
+    public ResponseEntity<Map<String, Object>> disagree(InternshipReviewBean internshipReviewBean, HttpServletRequest request) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        String internshipReleaseId = internshipReviewBean.getInternshipReleaseId();
+        int studentId = internshipReviewBean.getStudentId();
+        if (StringUtils.isNotBlank(internshipReleaseId) && Objects.nonNull(studentId)) {
+            if (internshipConditionCommon.reviewCondition(internshipReleaseId)) {
+                Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
+                if (internshipApplyRecord.isPresent()) {
+                    InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
+                    internshipApply.setReason(internshipReviewBean.getReason());
+                    internshipApply.setInternshipApplyState(internshipReviewBean.getInternshipApplyState());
+                    internshipApplyService.update(internshipApply);
+                    InternshipChangeHistory internshipChangeHistory = new InternshipChangeHistory();
+                    internshipChangeHistory.setInternshipChangeHistoryId(UUIDUtil.getUUID());
+                    internshipChangeHistory.setInternshipReleaseId(internshipReleaseId);
+                    internshipChangeHistory.setStudentId(studentId);
+                    internshipChangeHistory.setState(internshipReviewBean.getInternshipApplyState());
+                    internshipChangeHistory.setApplyTime(DateTimeUtil.getNowSqlTimestamp());
+                    internshipChangeHistory.setReason(internshipReviewBean.getReason());
+                    internshipChangeHistoryService.save(internshipChangeHistory);
+
+                    InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
+                    if (Objects.nonNull(internshipRelease)) {
+                        Users sendUser = usersService.getUserFromSession();
+                        Optional<Record> studentRecord = studentService.findByIdRelation(studentId);
+                        if (studentRecord.isPresent()) {
+                            Users acceptUsers = studentRecord.get().into(Users.class);
+
+                            String notify = "您的实习 " + internshipRelease.getInternshipTitle() + " 变更申请被拒绝！若您有任何疑问，请及时联系指导教师。";
+                            // 检查邮件推送是否被关闭
+                            SystemConfigure mailConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
+                            if (StringUtils.equals("1", mailConfigure.getDataValue())) {
+                                systemMailService.sendNotifyMail(acceptUsers, RequestUtil.getBaseUrl(request), notify);
+                            }
+
+                            UserNotify userNotify = new UserNotify();
+                            userNotify.setUserNotifyId(UUIDUtil.getUUID());
+                            userNotify.setSendUser(sendUser.getUsername());
+                            userNotify.setAcceptUser(acceptUsers.getUsername());
+                            userNotify.setIsSee(BooleanUtil.toByte(false));
+                            userNotify.setNotifyType(Workbook.notifyType.danger.name());
+                            userNotify.setNotifyTitle("实习审核");
+                            userNotify.setNotifyContent(notify);
+                            userNotify.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                            userNotifyService.save(userNotify);
+                        }
+                    }
+
+                    ajaxUtil.success().msg("保存成功");
+                } else {
+                    ajaxUtil.fail().msg("未查询到实习申请信息");
+                }
+            } else {
+                ajaxUtil.fail().msg("您无权限操作");
+            }
+        } else {
+            ajaxUtil.fail().msg("必要参数为空");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

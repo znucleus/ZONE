@@ -11,6 +11,8 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
             audit: '/web/internship/review/audit',
             pass: '/web/internship/review/pass',
             fail: '/web/internship/review/fail',
+            base_info_apply: '/web/internship/review/base_info_apply',
+            base_info_fill: '/web/internship/review/base_info_fill',
             page: '/web/menu/internship/review'
         };
 
@@ -139,6 +141,20 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
         */
         $(tableData).delegate('.fail_apply', "click", function () {
             $.address.value(ajax_url.fail + '/' + $(this).attr('data-id'));
+        });
+
+        /*
+       基本信息修改申请
+       */
+        $(tableData).delegate('.basic_apply', "click", function () {
+            $.address.value(ajax_url.base_info_apply + '/' + $(this).attr('data-id'));
+        });
+
+        /*
+        基本信息修改填写中
+        */
+        $(tableData).delegate('.basic_fill', "click", function () {
+            $.address.value(ajax_url.base_info_fill + '/' + $(this).attr('data-id'));
         });
 
         init();
