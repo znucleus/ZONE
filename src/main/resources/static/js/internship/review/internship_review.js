@@ -10,6 +10,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
             authorize: '/web/internship/review/authorize',
             audit: '/web/internship/review/audit',
             pass: '/web/internship/review/pass',
+            fail: '/web/internship/review/fail',
             page: '/web/menu/internship/review'
         };
 
@@ -131,6 +132,13 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
         */
         $(tableData).delegate('.pass_apply', "click", function () {
             $.address.value(ajax_url.pass + '/' + $(this).attr('data-id'));
+        });
+
+        /*
+        未通过
+        */
+        $(tableData).delegate('.fail_apply', "click", function () {
+            $.address.value(ajax_url.fail + '/' + $(this).attr('data-id'));
         });
 
         init();
