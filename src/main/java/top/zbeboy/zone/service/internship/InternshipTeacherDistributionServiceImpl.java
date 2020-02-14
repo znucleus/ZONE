@@ -50,6 +50,19 @@ public class InternshipTeacherDistributionServiceImpl implements InternshipTeach
     }
 
     @Override
+    public Result<Record2<Integer, String>> findByInternshipReleaseIdAndDistinctStaffId(String internshipReleaseId) {
+        return create.selectDistinct(INTERNSHIP_TEACHER_DISTRIBUTION.STAFF_ID,
+                USERS.REAL_NAME)
+                .from(INTERNSHIP_TEACHER_DISTRIBUTION)
+                .join(STAFF)
+                .on(INTERNSHIP_TEACHER_DISTRIBUTION.STAFF_ID.eq(STAFF.STAFF_ID))
+                .join(USERS)
+                .on(STAFF.USERNAME.eq(USERS.USERNAME))
+                .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId))
+                .fetch();
+    }
+
+    @Override
     public List<InternshipTeacherDistributionBean> findAllByPage(DataTablesUtil dataTablesUtil) {
         SelectOnConditionStep<Record> selectOnConditionStep =
                 create.select()

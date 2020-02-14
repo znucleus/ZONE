@@ -1,6 +1,8 @@
 package top.zbeboy.zone.service.internship;
 
 import org.jooq.Record;
+import org.jooq.Record2;
+import org.jooq.Result;
 import top.zbeboy.zone.domain.tables.pojos.InternshipTeacherDistribution;
 import top.zbeboy.zone.web.bean.internship.distribution.InternshipTeacherDistributionBean;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
@@ -18,6 +20,14 @@ public interface InternshipTeacherDistributionService {
      * @return 数据
      */
     Optional<Record> findByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId);
+
+    /**
+     * 根据发布id查询所有指导教师
+     *
+     * @param internshipReleaseId 发布id
+     * @return 教师们
+     */
+    Result<Record2<Integer, String>> findByInternshipReleaseIdAndDistinctStaffId(String internshipReleaseId);
 
     /**
      * 分页查询

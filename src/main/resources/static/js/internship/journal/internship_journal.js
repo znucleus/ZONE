@@ -7,6 +7,10 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
          */
         var ajax_url = {
             data: web_path + '/web/internship/journal/internship/data',
+            journal: '/web/internship/journal/list',
+            team_journal: '/web/internship/journal/team',
+            my_journal: '/web/internship/journal/my/list',
+            add: '/web/internship/journal/list/add',
             page: '/web/menu/internship/journal'
         };
 
@@ -106,12 +110,20 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
         }
 
         /*
-         教师分配
-         */
-        $(tableData).delegate('.distribution', "click", function () {
-            $.address.value(ajax_url.distribution_url + '/' + $(this).attr('data-id'));
+          日志列表
+          */
+        $(tableData).delegate('.journal_list', "click", function () {
+            var id = $(this).attr('data-id');
+            $.address.value(ajax_url.journal + "/" + id);
         });
 
+        /*
+         小组日志
+         */
+        $(tableData).delegate('.team_journal', "click", function () {
+            var id = $(this).attr('data-id');
+            $.address.value(ajax_url.team_journal + "/" + id);
+        });
 
         init();
         initSearchInput();
