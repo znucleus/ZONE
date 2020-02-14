@@ -32,6 +32,9 @@ public class InternshipReleaseBean extends InternshipRelease {
     private int submittedTotalData;
     private int unsubmittedTotalData;
 
+    // 实习日志 查看我的日志
+    private int canLook;
+
     public String getScienceName() {
         return scienceName;
     }
@@ -214,5 +217,13 @@ public class InternshipReleaseBean extends InternshipRelease {
 
     public void setUnsubmittedTotalData(int unsubmittedTotalData) {
         this.unsubmittedTotalData = unsubmittedTotalData;
+    }
+
+    public int getCanLook() {
+        return canLook;
+    }
+
+    public void setCanLook(int canLook) {
+        this.canLook = canLook;
     }
 }

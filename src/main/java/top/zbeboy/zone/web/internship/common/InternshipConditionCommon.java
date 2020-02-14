@@ -282,7 +282,7 @@ public class InternshipConditionCommon {
     public boolean reviewCondition(String internshipReleaseId) {
         boolean canOperator = false;
         if (basicCondition(internshipReleaseId)) {
-            if(canOperator(internshipReleaseId)){
+            if (canOperator(internshipReleaseId)) {
                 canOperator = true;
             } else {
                 // 查询审核表
@@ -302,5 +302,70 @@ public class InternshipConditionCommon {
      */
     public boolean reviewAuthorizeCondition(String internshipReleaseId) {
         return basicCondition(internshipReleaseId) && canOperator(internshipReleaseId);
+    }
+
+    /**
+     * 查看我的日志条件
+     *
+     * @param internshipReleaseId 实习发布id
+     * @return true or false
+     */
+    public boolean journalLookMyCondition(String internshipReleaseId) {
+        boolean canOperator = false;
+        if (basicCondition(internshipReleaseId)) {
+            Users users = usersService.getUserFromSession();
+            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
+            if (Objects.nonNull(usersType)) {
+                if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
+                    Optional<Record> studentRecord = studentService.findByUsernameRelation(users.getUsername());
+                    if (studentRecord.isPresent()) {
+                        StudentBean studentBean = studentRecord.get().into(StudentBean.class);
+                        Optional<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
+                        if (internshipTeacherDistributionRecord.isPresent()) {
+                            canOperator = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return canOperator;
+    }
+
+    /**
+     * 写日志条件
+     *
+     * @param internshipReleaseId 实习发布id
+     * @return true or false
+     */
+    public boolean journalCondition(String internshipReleaseId) {
+        boolean canOperator = false;
+        if (basicCondition(internshipReleaseId)) {
+            Users users = usersService.getUserFromSession();
+            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
+            if (Objects.nonNull(usersType)) {
+                if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
+                    Optional<Record> studentRecord = studentService.findByUsernameRelation(users.getUsername());
+                    if (studentRecord.isPresent()) {
+                        StudentBean studentBean = studentRecord.get().into(StudentBean.class);
+                        Optional<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
+                        if (internshipTeacherDistributionRecord.isPresent()) {
+                            // 检测是否申请过
+                            Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
+                            if (internshipApplyRecord.isPresent()) {
+                                InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
+                                // 状态为 2：已通过；4：基本信息变更申请中；5：基本信息变更填写中；6：单位信息变更申请中；7：单位信息变更填写中 允许进行填写
+                                if (internshipApply.getInternshipApplyState() == 2 || internshipApply.getInternshipApplyState() == 4 ||
+                                        internshipApply.getInternshipApplyState() == 5 || internshipApply.getInternshipApplyState() == 6 || internshipApply.getInternshipApplyState() == 7) {
+                                    canOperator = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return canOperator;
     }
 }
