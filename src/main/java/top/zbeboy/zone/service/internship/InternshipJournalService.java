@@ -64,4 +64,11 @@ public interface InternshipJournalService {
      * @param internshipJournal 数据
      */
     void update(InternshipJournal internshipJournal);
+
+    /**
+     * 通过主键删除
+     *
+     * @param id 主键
+     */
+    void deleteById(String id);
 }

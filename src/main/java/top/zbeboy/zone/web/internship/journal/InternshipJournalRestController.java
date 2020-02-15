@@ -28,6 +28,7 @@ import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.ByteUtil;
+import top.zbeboy.zone.web.util.SmallPropsUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zone.web.vo.internship.journal.InternshipJournalAddVo;
@@ -235,7 +236,7 @@ public class InternshipJournalRestController {
 
                         internshipJournalContentService.update(internshipJournalContent);
 
-                        if(StringUtils.isNotBlank(internshipJournal.getInternshipJournalWord())){
+                        if (StringUtils.isNotBlank(internshipJournal.getInternshipJournalWord())) {
                             FilesUtil.deleteFile(RequestUtil.getRealPath(request) + internshipJournal.getInternshipJournalWord());
                         }
 
@@ -259,6 +260,36 @@ public class InternshipJournalRestController {
             }
         } else {
             ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 批量删除日志
+     *
+     * @param journalIds ids
+     * @param request    请求
+     * @return true 删除成功
+     */
+    @PostMapping("/web/internship/journal/del")
+    public ResponseEntity<Map<String, Object>> delete(String journalIds, HttpServletRequest request) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (StringUtils.isNotBlank(journalIds)) {
+            List<String> ids = SmallPropsUtil.StringIdsToStringList(journalIds);
+            for (String id : ids) {
+                if (internshipConditionCommon.journalEditCondition(id)) {
+                    InternshipJournal internshipJournal = internshipJournalService.findById(id);
+                    if (Objects.nonNull(internshipJournal)) {
+                        if (StringUtils.isNotBlank(internshipJournal.getInternshipJournalWord())) {
+                            FilesUtil.deleteFile(RequestUtil.getRealPath(request) + internshipJournal.getInternshipJournalWord());
+                        }
+                        internshipJournalService.deleteById(id);
+                    }
+                }
+            }
+            ajaxUtil.success().msg("删除成功");
+        } else {
+            ajaxUtil.fail().msg("请选择日志");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }

@@ -8,6 +8,7 @@ require(["jquery", "tools", "handlebars", "sweetalert2", "nav.active", "quill", 
          ajax url.
          */
         var ajax_url = {
+            journal: '/web/internship/journal/list',
             save: web_path + '/web/internship/journal/save',
             page: '/web/menu/internship/journal'
         };
@@ -120,7 +121,7 @@ require(["jquery", "tools", "handlebars", "sweetalert2", "nav.active", "quill", 
                             type: "success",
                             confirmButtonText: "确定",
                             preConfirm: function () {
-                                $.address.value(ajax_url.page);
+                                $.address.value(ajax_url.journal + '/' + $('#internshipReleaseId').val());
                             }
                         });
                     } else {

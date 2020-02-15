@@ -103,6 +103,11 @@ public class InternshipJournalServiceImpl implements InternshipJournalService, P
     }
 
     @Override
+    public void deleteById(String id) {
+        internshipJournalDao.deleteById(id);
+    }
+
+    @Override
     public Condition searchCondition(DataTablesUtil paginationUtil) {
         Condition a = null;
         JSONObject search = paginationUtil.getSearch();

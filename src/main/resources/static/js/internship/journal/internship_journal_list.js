@@ -393,7 +393,7 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
          添加
         */
         $('#journal_add').click(function () {
-            $.address.value(getAjaxUrl().add + '/' + page_param.paramInternshipReleaseId + '/' + page_param.studentId);
+            $.address.value(getAjaxUrl().add + '/' + page_param.paramInternshipReleaseId);
         });
 
         /*
