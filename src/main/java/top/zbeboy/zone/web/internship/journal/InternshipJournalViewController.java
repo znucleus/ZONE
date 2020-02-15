@@ -16,6 +16,8 @@ import top.zbeboy.zone.service.internship.InternshipJournalService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
+import top.zbeboy.zone.service.util.DateTimeUtil;
+import top.zbeboy.zone.web.bean.internship.journal.InternshipJournalContentBean;
 import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 
@@ -138,6 +140,46 @@ public class InternshipJournalViewController {
                     InternshipJournalContent internshipJournalContent = record.get().into(InternshipJournalContent.class);
                     modelMap.addAttribute("internshipJournalContent", internshipJournalContent);
                     page = "web/internship/journal/internship_journal_edit::#page-wrapper";
+                } else {
+                    config.buildDangerTip("查询错误", "未查询到实习日志数据");
+                    config.dataMerging(modelMap);
+                    page = "inline_tip::#page-wrapper";
+                }
+            } else {
+                config.buildDangerTip("查询错误", "未查询到实习日志信息");
+                config.dataMerging(modelMap);
+                page = "inline_tip::#page-wrapper";
+            }
+
+        } else {
+            config.buildWarningTip("操作警告", "您无权限操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
+
+    /**
+     * 查看
+     *
+     * @param id       实习日志id
+     * @param modelMap 页面对象
+     * @return 页面
+     */
+    @GetMapping("/web/internship/journal/look/{id}")
+    public String look(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        if (internshipConditionCommon.journalLookCondition(id)) {
+            InternshipJournal internshipJournal = internshipJournalService.findById(id);
+            if(Objects.nonNull(internshipJournal)){
+                modelMap.addAttribute("internshipJournal", internshipJournal);
+                Optional<InternshipJournalContentRecord> record = internshipJournalContentService.findByInternshipJournalId(internshipJournal.getInternshipJournalId());
+                if(record.isPresent()){
+                    InternshipJournalContentBean internshipJournalContent = record.get().into(InternshipJournalContentBean.class);
+                    internshipJournalContent.setInternshipJournalDateStr(DateTimeUtil.formatSqlDate(internshipJournalContent.getInternshipJournalDate(), "yyyy年MM月dd日"));
+                    modelMap.addAttribute("internshipJournalContent", internshipJournalContent);
+                    page = "web/internship/journal/internship_journal_look::#page-wrapper";
                 } else {
                     config.buildDangerTip("查询错误", "未查询到实习日志数据");
                     config.dataMerging(modelMap);

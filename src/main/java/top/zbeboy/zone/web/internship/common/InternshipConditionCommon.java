@@ -12,6 +12,7 @@ import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
+import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.zone.web.util.BooleanUtil;
@@ -374,7 +375,6 @@ public class InternshipConditionCommon {
      */
     public boolean journalEditCondition(String internshipJournalId) {
         boolean canOperator = false;
-
         if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
             canOperator = true;
         } else if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
@@ -429,6 +429,35 @@ public class InternshipConditionCommon {
                             canOperator = Objects.equals(student.getStudentId(), internshipJournal.getStudentId());
                         }
                     }
+                }
+            }
+        }
+
+        return canOperator;
+    }
+
+    /**
+     * 查看下载日志条件
+     *
+     * @param internshipJournalId 日志id
+     * @return true or false
+     */
+    public boolean journalLookCondition(String internshipJournalId) {
+        boolean canOperator = false;
+        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
+                roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+            canOperator = true;
+        } else {
+            InternshipJournal internshipJournal = internshipJournalService.findById(internshipJournalId);
+            if (Objects.nonNull(internshipJournal)) {
+                if (internshipJournal.getIsSeeStaff() == 1) {
+                    Users users = usersService.getUserFromSession();
+                    UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
+                    if (Objects.nonNull(usersType)) {
+                        canOperator = StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName());
+                    }
+                } else {
+                    canOperator = true;
                 }
             }
         }

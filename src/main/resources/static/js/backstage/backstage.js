@@ -47,7 +47,8 @@ requirejs.config({
         "jquery.fileupload-validate": web_path + "/plugins/jquery-file-upload/js/jquery.fileupload-validate.min",
         "KaTeX": web_path + "/plugins/KaTeX/katex.min",
         "highlight": web_path + "/plugins/highlight/highlight.min",
-        "quill": web_path + "/plugins/quill/quill"
+        "quill": web_path + "/plugins/quill/quill",
+        "jquery.print": web_path + "/plugins/jquery-print/jquery.print.min"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -135,6 +136,9 @@ requirejs.config({
         },
         "quill": {
             deps: ["highlight", "css!" + web_path + "/plugins/quill/quill.bubble.min", "css!" + web_path + "/plugins/quill/quill.snow.min"]
+        },
+        "jquery.print": {
+            deps: ["jquery"]
         }
     }
 });
