@@ -17,6 +17,7 @@ import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
+import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.bean.internship.journal.InternshipJournalContentBean;
 import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
@@ -133,10 +134,10 @@ public class InternshipJournalViewController {
         String page;
         if (internshipConditionCommon.journalEditCondition(id)) {
             InternshipJournal internshipJournal = internshipJournalService.findById(id);
-            if(Objects.nonNull(internshipJournal)){
+            if (Objects.nonNull(internshipJournal)) {
                 modelMap.addAttribute("internshipJournal", internshipJournal);
                 Optional<InternshipJournalContentRecord> record = internshipJournalContentService.findByInternshipJournalId(internshipJournal.getInternshipJournalId());
-                if(record.isPresent()){
+                if (record.isPresent()) {
                     InternshipJournalContent internshipJournalContent = record.get().into(InternshipJournalContent.class);
                     modelMap.addAttribute("internshipJournalContent", internshipJournalContent);
                     page = "web/internship/journal/internship_journal_edit::#page-wrapper";
@@ -172,10 +173,10 @@ public class InternshipJournalViewController {
         String page;
         if (internshipConditionCommon.journalLookCondition(id)) {
             InternshipJournal internshipJournal = internshipJournalService.findById(id);
-            if(Objects.nonNull(internshipJournal)){
+            if (Objects.nonNull(internshipJournal)) {
                 modelMap.addAttribute("internshipJournal", internshipJournal);
                 Optional<InternshipJournalContentRecord> record = internshipJournalContentService.findByInternshipJournalId(internshipJournal.getInternshipJournalId());
-                if(record.isPresent()){
+                if (record.isPresent()) {
                     InternshipJournalContentBean internshipJournalContent = record.get().into(InternshipJournalContentBean.class);
                     internshipJournalContent.setInternshipJournalDateStr(DateTimeUtil.formatSqlDate(internshipJournalContent.getInternshipJournalDate(), "yyyy年MM月dd日"));
                     modelMap.addAttribute("internshipJournalContent", internshipJournalContent);
@@ -197,5 +198,25 @@ public class InternshipJournalViewController {
             page = "inline_tip::#page-wrapper";
         }
         return page;
+    }
+
+    /**
+     * 小组统计数据
+     *
+     * @param id       实习发布id
+     * @param staffId  教职工id
+     * @param modelMap 页面对象
+     * @return 页面
+     */
+    @GetMapping("/web/internship/journal/statistical/{id}/{staffId}")
+    public String statistical(@PathVariable("id") String id, @PathVariable("staffId") int staffId, ModelMap modelMap) {
+        modelMap.addAttribute("internshipReleaseId", id);
+        modelMap.addAttribute("staffId", staffId);
+        Optional<Record> record = staffService.findByIdRelation(staffId);
+        if (record.isPresent()) {
+            Users users = record.get().into(Users.class);
+            modelMap.addAttribute("realName", users.getRealName());
+        }
+        return "web/internship/journal/internship_journal_statistical::#page-wrapper";
     }
 }

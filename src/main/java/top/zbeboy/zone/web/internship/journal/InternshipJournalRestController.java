@@ -4,6 +4,7 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.Record;
 import org.jooq.Record2;
+import org.jooq.Record3;
 import org.jooq.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -337,7 +338,7 @@ public class InternshipJournalRestController {
             String staffName = "";
             boolean isSetStaffName = false;
             for (InternshipJournalRecord r : records) {
-                if(internshipConditionCommon.journalLookCondition(r.getInternshipJournalId())){
+                if (internshipConditionCommon.journalLookCondition(r.getInternshipJournalId())) {
                     if (StringUtils.isNotBlank(r.getInternshipJournalWord())) {
                         filePath.add(RequestUtil.getRealPath(request) + r.getInternshipJournalWord());
                         fileName.add(r.getInternshipJournalWord().substring(r.getInternshipJournalWord().lastIndexOf(Workbook.DIRECTORY_SPLIT) + 1));
@@ -357,5 +358,24 @@ public class InternshipJournalRestController {
             FilesUtil.compressZipMulti(fileName, zipPath, filePath);
             uploadService.download(downloadFileName, downloadFilePath, response, request);
         }
+    }
+
+    /**
+     * 小组内个人日志数量统计
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param staffId             教职工id
+     * @return 数据
+     */
+    @GetMapping("/web/internship/journal/statistical/data/{id}/{staffId}")
+    public ResponseEntity<Map<String, Object>> statistical(@PathVariable("id") String internshipReleaseId, @PathVariable("staffId") int staffId) {
+        AjaxUtil<InternshipJournalBean> ajaxUtil = AjaxUtil.of();
+        Result<? extends Record3<String, String, ?>> record3s = internshipJournalService.countByInternshipReleaseIdAndStaffId(internshipReleaseId, staffId);
+        List<InternshipJournalBean> internshipJournalBean = new ArrayList<>();
+        if (record3s.isNotEmpty()) {
+            internshipJournalBean = record3s.into(InternshipJournalBean.class);
+        }
+        ajaxUtil.success().msg("获取数据成功").list(internshipJournalBean);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

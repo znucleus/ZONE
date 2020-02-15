@@ -1,6 +1,7 @@
 package top.zbeboy.zone.service.internship;
 
 import org.jooq.Record;
+import org.jooq.Record3;
 import org.jooq.Result;
 import top.zbeboy.zone.domain.tables.pojos.InternshipJournal;
 import top.zbeboy.zone.domain.tables.pojos.InternshipJournalContent;
@@ -59,6 +60,13 @@ public interface InternshipJournalService {
      * @return 条件查询总数
      */
     int countByCondition(DataTablesUtil dataTablesUtil);
+
+    /**
+     * 统计组内个人日志数据
+     *  @param internshipReleaseId 实习发布id
+     * @param staffId 教职工id
+     */
+    Result<? extends Record3<String, String, ?>> countByInternshipReleaseIdAndStaffId(String internshipReleaseId, int staffId);
 
     /**
      * 保存

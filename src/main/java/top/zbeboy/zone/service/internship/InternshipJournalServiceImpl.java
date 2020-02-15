@@ -26,6 +26,7 @@ import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.RequestUtil;
 import top.zbeboy.zone.service.util.SQLQueryUtil;
+import top.zbeboy.zone.web.bean.internship.journal.InternshipJournalBean;
 import top.zbeboy.zone.web.util.SmallPropsUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
@@ -36,7 +37,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static org.jooq.impl.DSL.count;
 import static top.zbeboy.zone.domain.Tables.INTERNSHIP_JOURNAL;
+import static top.zbeboy.zone.domain.Tables.INTERNSHIP_TEACHER_DISTRIBUTION;
 import static top.zbeboy.zone.domain.Tables.STUDENT;
 
 @Service("internshipJournalService")
@@ -96,6 +99,28 @@ public class InternshipJournalServiceImpl implements InternshipJournalService, P
     @Override
     public int countByCondition(DataTablesUtil dataTablesUtil) {
         return countAll(create, INTERNSHIP_JOURNAL, dataTablesUtil, false);
+    }
+
+    @Override
+    public Result<? extends Record3<String, String, ?>> countByInternshipReleaseIdAndStaffId(String internshipReleaseId, int staffId) {
+        String countAlias = InternshipJournalBean.JOURNAL_NUM;
+        SelectHavingStep<Record3<String, Integer, Integer>> journalTable =
+                create.select(INTERNSHIP_JOURNAL.STUDENT_NUMBER,
+                        INTERNSHIP_JOURNAL.STUDENT_ID,
+                        count(INTERNSHIP_JOURNAL.INTERNSHIP_JOURNAL_ID).as(countAlias))
+                        .from(INTERNSHIP_JOURNAL)
+                .where(INTERNSHIP_JOURNAL.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId)
+                        .and(INTERNSHIP_JOURNAL.STAFF_ID.eq(staffId)))
+                .groupBy(INTERNSHIP_JOURNAL.STUDENT_ID);
+        return create.select(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_REAL_NAME,
+                journalTable.field(INTERNSHIP_JOURNAL.STUDENT_NUMBER),
+                journalTable.field(countAlias))
+                .from(INTERNSHIP_TEACHER_DISTRIBUTION)
+                .leftJoin(journalTable)
+                .on(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_ID.eq(journalTable.field(INTERNSHIP_JOURNAL.STUDENT_ID)))
+                .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId)
+                        .and(INTERNSHIP_TEACHER_DISTRIBUTION.STAFF_ID.eq(staffId)))
+                .fetch();
     }
 
     @Transactional(propagation = Propagation.REQUIRED)

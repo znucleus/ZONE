@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="br-pageheader pd-y-15 pd-l-20">
+        <nav class="breadcrumb pd-0 mg-0 tx-12">
+            <a class="breadcrumb-item dy_href" href="#/web/menu/internship/journal">列表</a>
+            <a class="breadcrumb-item dy_href" href="javascript:" id="journalList">实习日志</a>
+            <span class="breadcrumb-item active">统计</span>
+        </nav>
+    </div><!-- br-pageheader -->
+    <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
+        <h4 class="tx-gray-800 mg-b-5">实习日志</h4>
+        <p class="mg-b-0">统计实习日志。</p>
+    </div>
+
+    <div class="br-pagebody">
+        <div class="br-section-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <h6 class="tx-gray-800 tx-uppercase tx-bold tx-14 mg-b-10" th:text="${realName}"></h6>
+                    <div>
+                        <div class="float-right">
+                            <button type="button" id="refresh" class="btn btn-light btn-sm"><i class="fa fa-refresh"></i>刷新
+                            </button>
+                        </div>
+                    </div>
+                    <table class="tablesaw tablesaw-stack table table-striped mt-3" data-tablesaw-mode="stack"
+                           id="dataTable">
+                        <thead>
+                        <tr>
+                            <th scope="col" data-tablesaw-priority="persist">序号</th>
+                            <th scope="col" data-tablesaw-priority="persist">姓名</th>
+                            <th scope="col" data-tablesaw-priority="persist">学号</th>
+                            <th scope="col">数量(篇)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 个人日志数量统计模板-->
+    <script id="journal-template" type="text/x-handlebars-template">
+        {{#each listResult}}
+        <tr>
+            <td>{{sequence}}</td>
+            <td>{{studentRealName}}</td>
+            <td>{{student_number}}</td>
+            <td>
+                {{journal_num}}
+            </td>
+        </tr>
+        {{/each}}
+    </script>
+
+    <input type="hidden" id="staffId" th:value="${staffId}"/>
+    <input type="hidden" id="internshipReleaseId" th:value="${internshipReleaseId}"/>
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/internship/journal/internship_journal_statistical.js')}"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>

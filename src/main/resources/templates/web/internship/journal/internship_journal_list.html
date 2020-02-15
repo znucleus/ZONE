@@ -96,10 +96,10 @@
                 <input type="checkbox" class="check staff" name="staff" value="{{staffId}}"/>
                 <span>{{realName}}</span>
             </label>
-            {{#if canOperator}}
             <button type="button" class="btn btn-default btn-sm count" data-id="{{staffId}}">
                 统计
             </button>
+            {{#if canOperator}}
             <button type="button" class="btn btn-primary btn-sm download" data-id="{{staffId}}">
                 下载
             </button>
