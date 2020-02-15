@@ -33,6 +33,7 @@ import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -155,6 +156,7 @@ public class InternshipJournalServiceImpl implements InternshipJournalService, P
             String studentName = StringUtils.trim(search.getString("studentName"));
             String studentNumber = StringUtils.trim(search.getString("studentNumber"));
             String organize = StringUtils.trim(search.getString("organize"));
+            String createDate = StringUtils.trim(search.getString("createDate"));
             if (StringUtils.isNotBlank(studentName)) {
                 a = INTERNSHIP_JOURNAL.STUDENT_NAME.like(SQLQueryUtil.likeAllParam(studentName));
             }
@@ -172,6 +174,17 @@ public class InternshipJournalServiceImpl implements InternshipJournalService, P
                     a = INTERNSHIP_JOURNAL.ORGANIZE.like(SQLQueryUtil.likeAllParam(organize));
                 } else {
                     a = a.and(INTERNSHIP_JOURNAL.ORGANIZE.like(SQLQueryUtil.likeAllParam(organize)));
+                }
+            }
+
+            if(StringUtils.isNotBlank(createDate)){
+                String[] arr = createDate.split(" 至 ");
+                Timestamp startTime = DateTimeUtil.defaultParseSqlTimestamp(arr[0] + " 00:00:00");
+                Timestamp endTime = DateTimeUtil.defaultParseSqlTimestamp(arr[1] + " 23:59:59");
+                if (Objects.isNull(a)) {
+                    a = INTERNSHIP_JOURNAL.CREATE_DATE.gt(startTime).and(INTERNSHIP_JOURNAL.CREATE_DATE.le(endTime));
+                } else {
+                    a = a.and(INTERNSHIP_JOURNAL.CREATE_DATE.gt(startTime).and(INTERNSHIP_JOURNAL.CREATE_DATE.le(endTime)));
                 }
             }
         }

@@ -17,7 +17,7 @@ import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
-import top.zbeboy.zone.web.bean.data.staff.StaffBean;
+import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.bean.internship.journal.InternshipJournalContentBean;
 import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
@@ -218,5 +218,35 @@ public class InternshipJournalViewController {
             modelMap.addAttribute("realName", users.getRealName());
         }
         return "web/internship/journal/internship_journal_statistical::#page-wrapper";
+    }
+
+    /**
+     * 日志列表
+     *
+     * @return 实习日志页面
+     */
+    @GetMapping("/web/internship/journal/my/list/{id}")
+    public String myList(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        if (internshipConditionCommon.journalLookMyCondition(id)) {
+            Users users = usersService.getUserFromSession();
+            Optional<Record> studentRecord = studentService.findByUsernameRelation(users.getUsername());
+            if (studentRecord.isPresent()) {
+                StudentBean studentBean = studentRecord.get().into(StudentBean.class);
+                modelMap.addAttribute("internshipReleaseId", id);
+                modelMap.addAttribute("studentId", studentBean.getStudentId());
+                page = "web/internship/journal/internship_journal_my::#page-wrapper";
+            } else {
+                config.buildDangerTip("查询错误", "未查询到学生信息");
+                config.dataMerging(modelMap);
+                page = "inline_tip::#page-wrapper";
+            }
+        } else {
+            config.buildWarningTip("操作警告", "您无权限操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
     }
 }

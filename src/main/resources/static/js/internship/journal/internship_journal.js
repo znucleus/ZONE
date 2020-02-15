@@ -109,11 +109,19 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
         }
 
         /*
-          日志列表
-          */
+        日志列表
+        */
         $(tableData).delegate('.journal_list', "click", function () {
             var id = $(this).attr('data-id');
             $.address.value(ajax_url.journal + "/" + id);
+        });
+
+        /*
+        我的日志
+        */
+        $(tableData).delegate('.my_journal', "click", function () {
+            var id = $(this).attr('data-id');
+            $.address.value(ajax_url.my_journal + "/" + id);
         });
 
         /*

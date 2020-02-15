@@ -362,6 +362,46 @@ public class InternshipJournalRestController {
     }
 
     /**
+     * 下载小组我的实习日志
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param request             请求
+     * @param response            响应
+     */
+    @GetMapping("/web/internship/journal/my/downloads/{id}")
+    public void myDownloads(@PathVariable("id") String internshipReleaseId, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        if (internshipConditionCommon.journalLookMyCondition(internshipReleaseId)) {
+            Users users = usersService.getUserFromSession();
+            Optional<Record> studentRecord = studentService.findByUsernameRelation(users.getUsername());
+            if (studentRecord.isPresent()) {
+                StudentBean studentBean = studentRecord.get().into(StudentBean.class);
+                Result<InternshipJournalRecord> records = internshipJournalService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
+                if (records.isNotEmpty()) {
+                    List<String> fileName = new ArrayList<>();
+                    List<String> filePath = new ArrayList<>();
+                    for (InternshipJournalRecord r : records) {
+                        if (internshipConditionCommon.journalLookCondition(r.getInternshipJournalId())) {
+                            if (StringUtils.isNotBlank(r.getInternshipJournalWord())) {
+                                filePath.add(RequestUtil.getRealPath(request) + r.getInternshipJournalWord());
+                                fileName.add(r.getInternshipJournalWord().substring(r.getInternshipJournalWord().lastIndexOf(Workbook.DIRECTORY_SPLIT) + 1));
+                            }
+                        }
+                    }
+
+                    String downloadFileName = users.getUsername() + "实习日志";
+                    String zipName = downloadFileName + ".zip";
+                    String downloadFilePath = Workbook.TEMP_FILES_PORTFOLIOS + File.separator + zipName;
+                    String zipPath = RequestUtil.getRealPath(request) + downloadFilePath;
+                    FilesUtil.compressZipMulti(fileName, zipPath, filePath);
+                    uploadService.download(downloadFileName, downloadFilePath, response, request);
+                }
+            }
+        }
+
+
+    }
+
+    /**
      * 小组内个人日志数量统计
      *
      * @param internshipReleaseId 实习发布id

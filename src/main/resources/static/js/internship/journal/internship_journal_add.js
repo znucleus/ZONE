@@ -1,20 +1,27 @@
 //# sourceURL=internship_journal_add.js
-require(["jquery", "tools", "handlebars", "sweetalert2", "nav.active", "quill", "KaTeX", "messenger", "jquery.address", "flatpickr-zh"],
-    function ($, tools, Handlebars, Swal, navActive, Quill, KaTeX) {
+require(["jquery", "tools", "handlebars", "sweetalert2", "nav.active", "moment-with-locales", "quill", "KaTeX", "messenger", "jquery.address", "flatpickr-zh"],
+    function ($, tools, Handlebars, Swal, navActive, moment, Quill, KaTeX) {
 
         window.katex = KaTeX;
+        moment.locale('zh-cn');
 
         /*
          ajax url.
          */
         var ajax_url = {
-            journal: '/web/internship/journal/list',
             save: web_path + '/web/internship/journal/save',
             page: '/web/menu/internship/journal'
         };
 
         // 刷新时选中菜单
         navActive(ajax_url.page);
+
+        /*
+       返回
+       */
+        $('#journalList').click(function () {
+            window.history.go(-1);
+        });
 
         /*
          参数id
@@ -64,7 +71,8 @@ require(["jquery", "tools", "handlebars", "sweetalert2", "nav.active", "quill", 
         }
 
         $(param_id.internshipJournalDate).flatpickr({
-            "locale": "zh"
+            "locale": "zh",
+            defaultDate: moment().format("YYYY-MM-DD")
         });
 
         /*
@@ -121,7 +129,7 @@ require(["jquery", "tools", "handlebars", "sweetalert2", "nav.active", "quill", 
                             type: "success",
                             confirmButtonText: "确定",
                             preConfirm: function () {
-                                $.address.value(ajax_url.journal + '/' + $('#internshipReleaseId').val());
+                                window.history.go(-1);
                             }
                         });
                     } else {
