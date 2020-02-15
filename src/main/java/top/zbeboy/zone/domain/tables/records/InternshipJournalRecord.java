@@ -32,7 +32,7 @@ import top.zbeboy.zone.domain.tables.InternshipJournal;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipJournalRecord extends UpdatableRecordImpl<InternshipJournalRecord> implements Record12<String, String, String, String, String, String, Timestamp, Integer, String, Integer, String, Byte> {
 
-    private static final long serialVersionUID = -158055132;
+    private static final long serialVersionUID = -236566526;
 
     /**
      * Setter for <code>zone.internship_journal.internship_journal_id</code>.
@@ -201,7 +201,6 @@ public class InternshipJournalRecord extends UpdatableRecordImpl<InternshipJourn
     /**
      * Getter for <code>zone.internship_journal.internship_journal_word</code>.
      */
-    @NotNull
     @Size(max = 500)
     public String getInternshipJournalWord() {
         return (String) get(10);

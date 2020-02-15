@@ -7,12 +7,17 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zone.config.Workbook;
-import top.zbeboy.zone.domain.tables.pojos.*;
+import top.zbeboy.zone.domain.tables.pojos.Staff;
+import top.zbeboy.zone.domain.tables.pojos.Student;
+import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
+import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
+import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 
 import javax.annotation.Resource;
 import java.util.Objects;
@@ -36,6 +41,9 @@ public class InternshipJournalViewController {
     @Resource
     private RoleService roleService;
 
+    @Resource
+    private InternshipConditionCommon internshipConditionCommon;
+
     /**
      * 实习日志
      *
@@ -53,7 +61,7 @@ public class InternshipJournalViewController {
      */
     @GetMapping("/web/internship/journal/list/{id}")
     public String list(@PathVariable("id") String id, ModelMap modelMap) {
-        modelMap.addAttribute("internshipReleaseId",id);
+        modelMap.addAttribute("internshipReleaseId", id);
         if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
             modelMap.addAttribute("authorities", Workbook.authorities.ROLE_SYSTEM.name());
         } else if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
@@ -80,5 +88,27 @@ public class InternshipJournalViewController {
             }
         }
         return "web/internship/journal/internship_journal_list::#page-wrapper";
+    }
+
+    /**
+     * 添加
+     *
+     * @param id       实习发布id
+     * @param modelMap 页面对象
+     * @return 页面
+     */
+    @GetMapping("/web/internship/journal/add/{id}")
+    public String add(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        if (internshipConditionCommon.journalCondition(id)) {
+            modelMap.addAttribute("internshipReleaseId", id);
+            page = "web/internship/journal/internship_journal_add::#page-wrapper";
+        } else {
+            config.buildWarningTip("操作警告", "您无权限操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
     }
 }

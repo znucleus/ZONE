@@ -2,7 +2,12 @@ package top.zbeboy.zone.service.internship;
 
 import org.jooq.Record;
 import org.jooq.Result;
+import top.zbeboy.zone.domain.tables.pojos.InternshipJournal;
+import top.zbeboy.zone.domain.tables.pojos.InternshipJournalContent;
+import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
+
+import javax.servlet.http.HttpServletRequest;
 
 public interface InternshipJournalService {
 
@@ -27,4 +32,28 @@ public interface InternshipJournalService {
      * @return 条件查询总数
      */
     int countByCondition(DataTablesUtil dataTablesUtil);
+
+    /**
+     * 保存
+     *
+     * @param internshipJournal 数据
+     */
+    void save(InternshipJournal internshipJournal);
+
+    /**
+     * 保存word文件
+     *
+     * @param internshipJournal        数据
+     * @param internshipJournalContent 内容
+     * @param users                    用户
+     * @param request                  请求
+     */
+    void saveWord(InternshipJournal internshipJournal, InternshipJournalContent internshipJournalContent, Users users, HttpServletRequest request);
+
+    /**
+     * 更新
+     *
+     * @param internshipJournal 数据
+     */
+    void update(InternshipJournal internshipJournal);
 }

@@ -44,7 +44,10 @@ requirejs.config({
         "jquery.iframe-transport": web_path + "/plugins/jquery-file-upload/js/jquery.iframe-transport.min",
         "jquery.fileupload-process": web_path + "/plugins/jquery-file-upload/js/jquery.fileupload-process.min",
         "jquery.fileupload": web_path + "/plugins/jquery-file-upload/js/jquery.fileupload.min",
-        "jquery.fileupload-validate": web_path + "/plugins/jquery-file-upload/js/jquery.fileupload-validate.min"
+        "jquery.fileupload-validate": web_path + "/plugins/jquery-file-upload/js/jquery.fileupload-validate.min",
+        "KaTeX": web_path + "/plugins/KaTeX/katex.min",
+        "highlight": web_path + "/plugins/highlight/highlight.min",
+        "quill": web_path + "/plugins/quill/quill"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -123,6 +126,15 @@ requirejs.config({
         },
         "jquery.fileupload-validate": {
             deps: ["jquery.fileupload-process", "css!" + web_path + "/plugins/jquery-file-upload/css/jquery.fileupload.min"]
+        },
+        "KaTeX": {
+            deps: ["css!" + web_path + "/plugins/KaTeX/katex.min"]
+        },
+        "highlight": {
+            deps: ["css!" + web_path + "/plugins/highlight/monokai-sublime.min"]
+        },
+        "quill": {
+            deps: ["highlight", "css!" + web_path + "/plugins/quill/quill.bubble.min", "css!" + web_path + "/plugins/quill/quill.snow.min"]
         }
     }
 });

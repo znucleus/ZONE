@@ -149,4 +149,14 @@ public final class Workbook {
     public static String internshipFilePath() {
         return FILES_PORTFOLIOS + "internship" + DIRECTORY_SPLIT;
     }
+
+    /**
+     * 保存实习日志路径
+     *
+     * @param users 用户
+     * @return 路径
+     */
+    public static String  internshipJournalPath(Users users) {
+        return USERS_PORTFOLIOS + users.getUsername() + DIRECTORY_SPLIT + "internship" + DIRECTORY_SPLIT + "journal" + DIRECTORY_SPLIT;
+    }
 }

@@ -3,35 +3,51 @@ package top.zbeboy.zone.service.internship;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.poi.xwpf.usermodel.*;
 import org.jooq.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zone.config.Workbook;
+import top.zbeboy.zone.domain.tables.daos.InternshipJournalDao;
+import top.zbeboy.zone.domain.tables.pojos.InternshipJournal;
+import top.zbeboy.zone.domain.tables.pojos.InternshipJournalContent;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
-import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
+import top.zbeboy.zone.service.util.DateTimeUtil;
+import top.zbeboy.zone.service.util.RequestUtil;
 import top.zbeboy.zone.service.util.SQLQueryUtil;
 import top.zbeboy.zone.web.util.SmallPropsUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
+import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
-import static top.zbeboy.zone.domain.Tables.*;
+import static top.zbeboy.zone.domain.Tables.INTERNSHIP_JOURNAL;
+import static top.zbeboy.zone.domain.Tables.STUDENT;
 
 @Service("internshipJournalService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class InternshipJournalServiceImpl implements InternshipJournalService, PaginationPlugin<DataTablesUtil> {
 
+    private final Logger log = LoggerFactory.getLogger(InternshipJournalServiceImpl.class);
+
     private final DSLContext create;
+
+    @Resource
+    private InternshipJournalDao internshipJournalDao;
 
     @Resource
     private UsersService usersService;
@@ -62,6 +78,25 @@ public class InternshipJournalServiceImpl implements InternshipJournalService, P
         return countAll(create, INTERNSHIP_JOURNAL, dataTablesUtil, false);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void save(InternshipJournal internshipJournal) {
+        internshipJournalDao.insert(internshipJournal);
+    }
+
+    @Async
+    @Override
+    public void saveWord(InternshipJournal internshipJournal, InternshipJournalContent internshipJournalContent, Users users, HttpServletRequest request) {
+        String outputPath = saveInternshipJournal(internshipJournal, internshipJournalContent, users, request);
+        internshipJournal.setInternshipJournalWord(outputPath);
+        update(internshipJournal);
+    }
+
+    @Override
+    public void update(InternshipJournal internshipJournal) {
+        internshipJournalDao.update(internshipJournal);
+    }
+
     @Override
     public Condition searchCondition(DataTablesUtil paginationUtil) {
         Condition a = null;
@@ -70,7 +105,6 @@ public class InternshipJournalServiceImpl implements InternshipJournalService, P
             String studentName = StringUtils.trim(search.getString("studentName"));
             String studentNumber = StringUtils.trim(search.getString("studentNumber"));
             String organize = StringUtils.trim(search.getString("organize"));
-            String guidanceTeacher = StringUtils.trim(search.getString("guidanceTeacher"));
             if (StringUtils.isNotBlank(studentName)) {
                 a = INTERNSHIP_JOURNAL.STUDENT_NAME.like(SQLQueryUtil.likeAllParam(studentName));
             }
@@ -87,15 +121,7 @@ public class InternshipJournalServiceImpl implements InternshipJournalService, P
                 if (Objects.isNull(a)) {
                     a = INTERNSHIP_JOURNAL.ORGANIZE.like(SQLQueryUtil.likeAllParam(organize));
                 } else {
-                    a = a.and(INTERNSHIP_JOURNAL.ORGANIZE.eq(SQLQueryUtil.likeAllParam(organize)));
-                }
-            }
-
-            if (StringUtils.isNotBlank(guidanceTeacher)) {
-                if (Objects.isNull(a)) {
-                    a = INTERNSHIP_JOURNAL.SCHOOL_GUIDANCE_TEACHER.like(SQLQueryUtil.likeAllParam(guidanceTeacher));
-                } else {
-                    a = a.and(INTERNSHIP_JOURNAL.SCHOOL_GUIDANCE_TEACHER.eq(SQLQueryUtil.likeAllParam(guidanceTeacher)));
+                    a = a.and(INTERNSHIP_JOURNAL.ORGANIZE.like(SQLQueryUtil.likeAllParam(organize)));
                 }
             }
         }
@@ -201,5 +227,125 @@ public class InternshipJournalServiceImpl implements InternshipJournalService, P
             }
         }
         sortToFinish(step, sortField);
+    }
+
+    /**
+     * 保存数据
+     *
+     * @param internshipJournal        数据
+     * @param internshipJournalContent 内容
+     * @param users                    用户
+     * @param request                  请求
+     * @return 路径
+     */
+    private String saveInternshipJournal(InternshipJournal internshipJournal, InternshipJournalContent internshipJournalContent, Users users, HttpServletRequest request) {
+        String outputPath = "";
+        try {
+            String templatePath = Workbook.INTERNSHIP_JOURNAL_FILE_PATH;
+            InputStream is = new FileInputStream(templatePath);
+            Map<String, String> cellMap = new HashMap<>();
+            cellMap.put("${studentName}", internshipJournal.getStudentName());
+            cellMap.put("${studentNumber}", internshipJournal.getStudentNumber());
+            cellMap.put("${organize}", internshipJournal.getOrganize());
+            cellMap.put("${schoolGuidanceTeacher}", internshipJournal.getSchoolGuidanceTeacher());
+            cellMap.put("${graduationPracticeCompanyName}", internshipJournal.getGraduationPracticeCompanyName());
+
+            Map<String, String> paraMap = new HashMap<>();
+            paraMap.put("${internshipJournalContent}", internshipJournalContent.getInternshipJournalContent());
+            paraMap.put("${date}", DateTimeUtil.formatSqlDate(internshipJournalContent.getInternshipJournalDate(), "yyyy年MM月dd日"));
+
+            XWPFDocument doc = new XWPFDocument(is);
+
+            Iterator<XWPFTable> itTable = doc.getTablesIterator();
+            while (itTable.hasNext()) {
+                XWPFTable table = itTable.next();
+                int rcount = table.getNumberOfRows();
+                for (int i = 0; i < rcount; i++) {
+                    XWPFTableRow row = table.getRow(i);
+                    List<XWPFTableCell> cells = row.getTableCells();
+                    for (XWPFTableCell cell : cells) {
+                        List<XWPFParagraph> itParas = cell.getParagraphs();
+                        for (XWPFParagraph itPara : itParas) {
+
+                            List<XWPFRun> runs = itPara.getRuns();
+                            for (XWPFRun run : runs) {
+                                String oneparaString = run.getText(
+                                        run.getTextPosition());
+
+                                for (Map.Entry<String, String> entry : paraMap
+                                        .entrySet()) {
+                                    oneparaString = oneparaString.replace(
+                                            entry.getKey(), entry.getValue());
+                                }
+
+                                run.setText(oneparaString, 0);
+                            }
+                        }
+
+                        String cellTextString = cell.getText();
+                        for (Map.Entry<String, String> e : cellMap.entrySet()) {
+                            if (cellTextString.contains(e.getKey())) {
+
+                                cellTextString = cellTextString.replace(e.getKey(),
+                                        e.getValue());
+                                cell.removeParagraph(0);
+                                cell.setText(cellTextString);
+                            }
+
+                        }
+
+                    }
+                }
+            }
+
+            String path = RequestUtil.getRealPath(request) + Workbook.internshipJournalPath(users);
+            String filename = internshipJournal.getStudentName() + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS")) + ".docx";
+            File saveFile = new File(path);
+            if (!saveFile.exists()) {
+                saveFile.mkdirs();
+            }
+            OutputStream os = new FileOutputStream(path + filename);
+            //把doc输出到输出流中
+            doc.write(os);
+            log.info("Save journal path {}", path);
+            outputPath = Workbook.internshipJournalPath(users) + filename;
+            this.closeStream(os);
+            this.closeStream(is);
+            log.info("Save internship journal finish, the path is {}", outputPath);
+        } catch (IOException e) {
+            log.error("Save internship journal error,error is {}", e);
+            return outputPath;
+        }
+        return outputPath;
+    }
+
+    /**
+     * 关闭输入流
+     *
+     * @param is 流
+     */
+    private void closeStream(InputStream is) {
+        if (is != null) {
+            try {
+                is.close();
+            } catch (IOException e) {
+                log.error("Close file is error, error {}", e);
+            }
+        }
+    }
+
+    /**
+     * 关闭输出流
+     *
+     * @param os 流
+     */
+    private void closeStream(OutputStream os) {
+        if (os != null) {
+            try {
+                os.close();
+            } catch (IOException e) {
+                log.error("Close file is error, error {}", e);
+            }
+        }
     }
 }

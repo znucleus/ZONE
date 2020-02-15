@@ -42,7 +42,7 @@ import top.zbeboy.zone.domain.tables.records.InternshipJournalRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipJournal extends TableImpl<InternshipJournalRecord> {
 
-    private static final long serialVersionUID = -1611521301;
+    private static final long serialVersionUID = -1454328086;
 
     /**
      * The reference instance of <code>zone.internship_journal</code>
@@ -110,7 +110,7 @@ public class InternshipJournal extends TableImpl<InternshipJournalRecord> {
     /**
      * The column <code>zone.internship_journal.internship_journal_word</code>.
      */
-    public final TableField<InternshipJournalRecord, String> INTERNSHIP_JOURNAL_WORD = createField(DSL.name("internship_journal_word"), org.jooq.impl.SQLDataType.VARCHAR(500).nullable(false), this, "");
+    public final TableField<InternshipJournalRecord, String> INTERNSHIP_JOURNAL_WORD = createField(DSL.name("internship_journal_word"), org.jooq.impl.SQLDataType.VARCHAR(500), this, "");
 
     /**
      * The column <code>zone.internship_journal.is_see_staff</code>.

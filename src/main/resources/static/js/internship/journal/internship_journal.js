@@ -8,9 +8,8 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
         var ajax_url = {
             data: web_path + '/web/internship/journal/internship/data',
             journal: '/web/internship/journal/list',
-            team_journal: '/web/internship/journal/team',
             my_journal: '/web/internship/journal/my/list',
-            add: '/web/internship/journal/list/add',
+            add: '/web/internship/journal/add',
             page: '/web/menu/internship/journal'
         };
 
@@ -118,11 +117,11 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
         });
 
         /*
-         小组日志
-         */
-        $(tableData).delegate('.team_journal', "click", function () {
+        写日志
+        */
+        $(tableData).delegate('.write_journal', "click", function () {
             var id = $(this).attr('data-id');
-            $.address.value(ajax_url.team_journal + "/" + id);
+            $.address.value(ajax_url.add + '/' + id);
         });
 
         init();

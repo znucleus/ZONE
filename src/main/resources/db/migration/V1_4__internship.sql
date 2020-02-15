@@ -138,7 +138,7 @@ CREATE TABLE internship_journal (
   student_id                       INT          NOT NULL,
   internship_release_id            VARCHAR(64)  NOT NULL,
   staff_id                         INT          NOT NULL,
-  internship_journal_word          VARCHAR(500) NOT NULL,
+  internship_journal_word          VARCHAR(500),
   is_see_staff                     BOOLEAN      NOT NULL DEFAULT 0,
   FOREIGN KEY (student_id) REFERENCES student (student_id) ON DELETE CASCADE,
   FOREIGN KEY (internship_release_id) REFERENCES internship_release (internship_release_id),
@@ -150,7 +150,7 @@ CREATE TABLE internship_journal_content (
   internship_journal_content       LONGTEXT         NOT NULL,
   internship_journal_html          LONGTEXT         NOT NULL,
   internship_journal_date          DATE         NOT NULL,
-  FOREIGN KEY (internship_journal_id) REFERENCES internship_journal (internship_journal_id)
+  FOREIGN KEY (internship_journal_id) REFERENCES internship_journal (internship_journal_id) ON DELETE CASCADE
 );
 
 CREATE TABLE internship_regulate (
