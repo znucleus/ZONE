@@ -12,6 +12,14 @@ import javax.servlet.http.HttpServletRequest;
 public interface InternshipJournalService {
 
     /**
+     * 根据主键查询
+     *
+     * @param id 主键
+     * @return 数据
+     */
+    InternshipJournal findById(String id);
+
+    /**
      * 分页查询
      *
      * @param dataTablesUtil 工具类

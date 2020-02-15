@@ -64,6 +64,11 @@ public class InternshipJournalServiceImpl implements InternshipJournalService, P
     }
 
     @Override
+    public InternshipJournal findById(String id) {
+        return internshipJournalDao.findById(id);
+    }
+
+    @Override
     public Result<Record> findAllByPage(DataTablesUtil dataTablesUtil) {
         return queryAllByPage(create, INTERNSHIP_JOURNAL, dataTablesUtil, false);
     }

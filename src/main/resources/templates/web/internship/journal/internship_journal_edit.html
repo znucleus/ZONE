@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8"/>
 </head>
@@ -8,12 +8,13 @@
     <div class="br-pageheader pd-y-15 pd-l-20">
         <nav class="breadcrumb pd-0 mg-0 tx-12">
             <a class="breadcrumb-item dy_href" href="#/web/menu/internship/journal">列表</a>
-            <span class="breadcrumb-item active">添加</span>
+            <a class="breadcrumb-item dy_href" href="javascript:" id="journalList">日志列表</a>
+            <span class="breadcrumb-item active">编辑</span>
         </nav>
     </div><!-- br-pageheader -->
     <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
         <h4 class="tx-gray-800 mg-b-5">实习日志</h4>
-        <p class="mg-b-0">添加实习日志。</p>
+        <p class="mg-b-0">编辑实习日志。</p>
     </div>
 
     <div class="br-pagebody">
@@ -21,8 +22,8 @@
             <div class="row">
                 <div class="col-md-12">
                     <form id="app_form">
-                        <input type="hidden" name="internshipReleaseId" id="internshipReleaseId"
-                               th:value="${internshipReleaseId}"/>
+                        <input type="hidden" name="internshipJournalId" id="internshipJournalId"
+                               th:value="${internshipJournalContent.internshipJournalId}"/>
                         <div class="form-group">
                             <div id="toolbar-container">
                             <span class="ql-formats">
@@ -70,18 +71,19 @@
                             </span>
                             </div>
                             <div id="internshipJournalContent" style="height:450px;"></div>
-                            <input type="hidden" id="internshipJournalContentText" name="internshipJournalContent"/>
-                            <input type="hidden" id="internshipJournalHtml" name="internshipJournalHtml"/>
+                            <input type="hidden" id="internshipJournalContentText" name="internshipJournalContent" th:value="${internshipJournalContent.internshipJournalContent}"/>
+                            <input type="hidden" id="internshipJournalHtml" name="internshipJournalHtml" th:value="${internshipJournalContent.internshipJournalHtml}" />
                             <small id="internshipTypeHelp" class="form-text text-muted">提示：word中不保留任何格式</small>
                         </div>
                         <div class="form-group">
                             <label>日志日期</label>
-                            <input class="form-control" name="internshipJournalDate" id="internshipJournalDate"
+                            <input class="form-control" name="internshipJournalDate" id="internshipJournalDate" th:value="${internshipJournalContent.internshipJournalDate}"
                                    placeholder="日志日期"/>
                         </div>
                         <div class="form-group">
                             <label class="ckbox">
-                                <input type="checkbox" name="isSeeStaff" value="1"/>
+                                <input type="checkbox" name="isSeeStaff" value="1" th:if="${internshipJournal.isSeeStaff == 0 || internshipJournal.isSeeStaff == null}"/>
+                                <input type="checkbox" name="isSeeStaff" value="1" checked="checked" th:if="${internshipJournal.isSeeStaff == 1}"/>
                                 <span>仅允许教职工查阅</span>
                             </label>
                         </div>
@@ -96,7 +98,7 @@
     </div>
 
     <input type="hidden" class="dy_script"
-           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/internship/journal/internship_journal_add.js')}"/>
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/internship/journal/internship_journal_edit.js')}"/>
 </div>
 <!-- /#page-wrapper -->
 </body>

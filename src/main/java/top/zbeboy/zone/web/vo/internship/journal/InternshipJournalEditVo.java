@@ -3,10 +3,10 @@ package top.zbeboy.zone.web.vo.internship.journal;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-public class InternshipJournalAddVo {
-    @NotBlank(message = "实习发布ID不能为空")
-    @Size(max = 64, message = "实习发布ID不正确")
-    private String internshipReleaseId;
+public class InternshipJournalEditVo {
+    @NotBlank(message = "实习日志ID不能为空")
+    @Size(max = 64, message = "实习日志ID不正确")
+    private String internshipJournalId;
     @NotBlank(message = "内容与感想不能为空")
     private String internshipJournalContent;
     @NotBlank(message = "内容与感想HTML不能为空")
@@ -15,12 +15,12 @@ public class InternshipJournalAddVo {
     private String internshipJournalDate;
     private Byte isSeeStaff;
 
-    public String getInternshipReleaseId() {
-        return internshipReleaseId;
+    public String getInternshipJournalId() {
+        return internshipJournalId;
     }
 
-    public void setInternshipReleaseId(String internshipReleaseId) {
-        this.internshipReleaseId = internshipReleaseId;
+    public void setInternshipJournalId(String internshipJournalId) {
+        this.internshipJournalId = internshipJournalId;
     }
 
     public String getInternshipJournalContent() {

@@ -1,5 +1,6 @@
 package top.zbeboy.zone.web.internship.journal;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jooq.Record;
 import org.jooq.Record2;
 import org.jooq.Result;
@@ -11,10 +12,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.domain.tables.pojos.*;
+import top.zbeboy.zone.domain.tables.records.InternshipJournalContentRecord;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.internship.*;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
+import top.zbeboy.zone.service.util.FilesUtil;
+import top.zbeboy.zone.service.util.RequestUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
@@ -23,9 +27,11 @@ import top.zbeboy.zone.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
+import top.zbeboy.zone.web.util.ByteUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zone.web.vo.internship.journal.InternshipJournalAddVo;
+import top.zbeboy.zone.web.vo.internship.journal.InternshipJournalEditVo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -169,7 +175,7 @@ public class InternshipJournalRestController {
                             internshipJournal.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
                             internshipJournal.setStudentId(internshipTeacherDistribution.getStudentId());
                             internshipJournal.setStaffId(internshipTeacherDistribution.getStaffId());
-                            internshipJournal.setIsSeeStaff(internshipJournalAddVo.getIsSeeStaff());
+                            internshipJournal.setIsSeeStaff(ByteUtil.toByte(1).equals(internshipJournalAddVo.getIsSeeStaff()) ? ByteUtil.toByte(1) : ByteUtil.toByte(0));
 
                             internshipJournalService.save(internshipJournal);
 
@@ -192,6 +198,61 @@ public class InternshipJournalRestController {
                     }
                 } else {
                     ajaxUtil.fail().msg("未查询到学生信息");
+                }
+            } else {
+                ajaxUtil.fail().msg("您无权限或当前状态不允许操作");
+            }
+        } else {
+            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 更新实习日志
+     *
+     * @param internshipJournalEditVo 实习日志
+     * @param bindingResult           检验
+     * @param request                 请求
+     * @return true or false
+     */
+    @PostMapping("/web/internship/journal/update")
+    public ResponseEntity<Map<String, Object>> update(@Valid InternshipJournalEditVo internshipJournalEditVo, BindingResult bindingResult, HttpServletRequest request) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (!bindingResult.hasErrors()) {
+            if (internshipConditionCommon.journalEditCondition(internshipJournalEditVo.getInternshipJournalId())) {
+                InternshipJournal internshipJournal = internshipJournalService.findById(internshipJournalEditVo.getInternshipJournalId());
+                if (Objects.nonNull(internshipJournal)) {
+                    internshipJournal.setIsSeeStaff(ByteUtil.toByte(1).equals(internshipJournalEditVo.getIsSeeStaff()) ? ByteUtil.toByte(1) : ByteUtil.toByte(0));
+                    internshipJournalService.update(internshipJournal);
+
+                    Optional<InternshipJournalContentRecord> record = internshipJournalContentService.findByInternshipJournalId(internshipJournal.getInternshipJournalId());
+                    if (record.isPresent()) {
+                        InternshipJournalContent internshipJournalContent = record.get().into(InternshipJournalContent.class);
+                        internshipJournalContent.setInternshipJournalContent(internshipJournalEditVo.getInternshipJournalContent());
+                        internshipJournalContent.setInternshipJournalHtml(internshipJournalEditVo.getInternshipJournalHtml());
+                        internshipJournalContent.setInternshipJournalDate(DateTimeUtil.defaultParseSqlDate(internshipJournalEditVo.getInternshipJournalDate()));
+
+                        internshipJournalContentService.update(internshipJournalContent);
+
+                        if(StringUtils.isNotBlank(internshipJournal.getInternshipJournalWord())){
+                            FilesUtil.deleteFile(RequestUtil.getRealPath(request) + internshipJournal.getInternshipJournalWord());
+                        }
+
+                        // 异步保存word
+                        Optional<Record> studentRecord = studentService.findByIdRelation(internshipJournal.getStudentId());
+                        if (studentRecord.isPresent()) {
+                            Users users = studentRecord.get().into(Users.class);
+                            internshipJournalService.saveWord(internshipJournal, internshipJournalContent, users, request);
+                            ajaxUtil.success().msg("保存成功");
+                        } else {
+                            ajaxUtil.fail().msg("未查询到学生信息");
+                        }
+                    } else {
+                        ajaxUtil.fail().msg("未查询到实习日志数据");
+                    }
+                } else {
+                    ajaxUtil.fail().msg("未查询到实习日志信息");
                 }
             } else {
                 ajaxUtil.fail().msg("您无权限或当前状态不允许操作");
