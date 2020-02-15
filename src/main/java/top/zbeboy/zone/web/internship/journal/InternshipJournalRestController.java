@@ -18,6 +18,7 @@ import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.domain.tables.records.InternshipJournalContentRecord;
 import top.zbeboy.zone.domain.tables.records.InternshipJournalRecord;
 import top.zbeboy.zone.service.data.StudentService;
+import top.zbeboy.zone.service.export.InternshipJournalExport;
 import top.zbeboy.zone.service.internship.*;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.upload.UploadService;
@@ -377,5 +378,46 @@ public class InternshipJournalRestController {
         }
         ajaxUtil.success().msg("获取数据成功").list(internshipJournalBean);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 导出小组全部实习日志
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param request             请求
+     * @param response            响应
+     */
+    @GetMapping("/web/internship/journal/exports/{id}/{staffId}")
+    public void exports(@PathVariable("id") String internshipReleaseId, @PathVariable("staffId") int staffId, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Result<InternshipJournalRecord> records = internshipJournalService.findByInternshipReleaseIdAndStaffId(internshipReleaseId, staffId);
+        if (records.isNotEmpty()) {
+            List<InternshipJournalBean> beans = records.into(InternshipJournalBean.class);
+            String staffName = "";
+            boolean isSetStaffName = false;
+            for (InternshipJournalBean r : beans) {
+                if (internshipConditionCommon.journalLookCondition(r.getInternshipJournalId())) {
+                    Optional<InternshipJournalContentRecord> contentRecord = internshipJournalContentService.findByInternshipJournalId(r.getInternshipJournalId());
+                    contentRecord.ifPresent(internshipJournalContentRecord -> {
+                        r.setInternshipJournalContent(internshipJournalContentRecord.getInternshipJournalContent());
+                        r.setInternshipJournalDateStr(DateTimeUtil.defaultFormatSqlDate(internshipJournalContentRecord.getInternshipJournalDate()));
+                    });
+                }
+
+                if (BooleanUtils.isFalse(isSetStaffName)) {
+                    staffName = r.getSchoolGuidanceTeacher();
+                    isSetStaffName = true;
+                }
+            }
+
+            InternshipJournalExport export = new InternshipJournalExport(beans);
+            String path = Workbook.TEMP_FILES_PORTFOLIOS + File.separator;
+            String fileName = staffName + "小组实习日志";
+            String ext = Workbook.fileSuffix.xlsx.name();
+            String filePath = path + fileName + "." + ext;
+            if (export.exportExcel(RequestUtil.getRealPath(request) + path, fileName, ext)) {
+                uploadService.download(fileName, filePath, response, request);
+            }
+
+        }
     }
 }

@@ -2,8 +2,12 @@ package top.zbeboy.zone.web.bean.internship.journal;
 
 import top.zbeboy.zone.domain.tables.pojos.InternshipJournal;
 
+import java.sql.Date;
+
 public class InternshipJournalBean extends InternshipJournal {
     private String createDateStr;
+    private String internshipJournalContent;
+    private String internshipJournalDateStr;
 
     // 小组内统计个人日志数量
     private int journalNum;
@@ -32,5 +36,21 @@ public class InternshipJournalBean extends InternshipJournal {
 
     public void setStudentRealName(String studentRealName) {
         this.studentRealName = studentRealName;
+    }
+
+    public String getInternshipJournalContent() {
+        return internshipJournalContent;
+    }
+
+    public void setInternshipJournalContent(String internshipJournalContent) {
+        this.internshipJournalContent = internshipJournalContent;
+    }
+
+    public String getInternshipJournalDateStr() {
+        return internshipJournalDateStr;
+    }
+
+    public void setInternshipJournalDateStr(String internshipJournalDateStr) {
+        this.internshipJournalDateStr = internshipJournalDateStr;
     }
 }
