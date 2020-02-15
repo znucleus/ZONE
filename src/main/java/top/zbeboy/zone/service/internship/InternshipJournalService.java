@@ -5,6 +5,7 @@ import org.jooq.Result;
 import top.zbeboy.zone.domain.tables.pojos.InternshipJournal;
 import top.zbeboy.zone.domain.tables.pojos.InternshipJournalContent;
 import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zone.domain.tables.records.InternshipJournalRecord;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +19,24 @@ public interface InternshipJournalService {
      * @return 数据
      */
     InternshipJournal findById(String id);
+
+    /**
+     * 通过实习发布id与学生id查询
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param studentId           学生id
+     * @return 数据
+     */
+    Result<InternshipJournalRecord> findByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId);
+
+    /**
+     * 通过实习发布id与教职工id查询
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param staffId             教职工id
+     * @return 数据
+     */
+    Result<InternshipJournalRecord> findByInternshipReleaseIdAndStaffId(String internshipReleaseId, int staffId);
 
     /**
      * 分页查询

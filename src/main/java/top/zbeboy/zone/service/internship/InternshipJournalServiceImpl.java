@@ -18,6 +18,7 @@ import top.zbeboy.zone.domain.tables.pojos.InternshipJournal;
 import top.zbeboy.zone.domain.tables.pojos.InternshipJournalContent;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
+import top.zbeboy.zone.domain.tables.records.InternshipJournalRecord;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
@@ -66,6 +67,20 @@ public class InternshipJournalServiceImpl implements InternshipJournalService, P
     @Override
     public InternshipJournal findById(String id) {
         return internshipJournalDao.findById(id);
+    }
+
+    @Override
+    public Result<InternshipJournalRecord> findByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId) {
+        return create.selectFrom(INTERNSHIP_JOURNAL)
+                .where(INTERNSHIP_JOURNAL.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(INTERNSHIP_JOURNAL.STUDENT_ID.eq(studentId)))
+                .fetch();
+    }
+
+    @Override
+    public Result<InternshipJournalRecord> findByInternshipReleaseIdAndStaffId(String internshipReleaseId, int staffId) {
+        return create.selectFrom(INTERNSHIP_JOURNAL)
+                .where(INTERNSHIP_JOURNAL.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(INTERNSHIP_JOURNAL.STAFF_ID.eq(staffId)))
+                .fetch();
     }
 
     @Override

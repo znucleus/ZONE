@@ -1,5 +1,6 @@
 package top.zbeboy.zone.web.internship.journal;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.Record;
 import org.jooq.Record2;
@@ -11,8 +12,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.domain.tables.records.InternshipJournalContentRecord;
+import top.zbeboy.zone.domain.tables.records.InternshipJournalRecord;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.internship.*;
 import top.zbeboy.zone.service.platform.UsersService;
@@ -39,6 +42,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.File;
 import java.util.*;
 
 @RestController
@@ -308,12 +312,50 @@ public class InternshipJournalRestController {
      */
 
     @GetMapping("/web/internship/journal/download/{id}")
-    public void download(@PathVariable("id") String id,  HttpServletRequest request, HttpServletResponse response) {
-        if(internshipConditionCommon.journalLookCondition(id)){
+    public void download(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
+        if (internshipConditionCommon.journalLookCondition(id)) {
             InternshipJournal internshipJournal = internshipJournalService.findById(id);
             if (Objects.nonNull(internshipJournal) && StringUtils.isNotBlank(internshipJournal.getInternshipJournalWord())) {
                 uploadService.download(internshipJournal.getStudentName() + " " + internshipJournal.getStudentNumber(), internshipJournal.getInternshipJournalWord(), response, request);
             }
+        }
+    }
+
+    /**
+     * 下载小组全部实习日志
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param request             请求
+     * @param response            响应
+     */
+    @GetMapping("/web/internship/journal/downloads/{id}/{staffId}")
+    public void downloads(@PathVariable("id") String internshipReleaseId, @PathVariable("staffId") int staffId, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Result<InternshipJournalRecord> records = internshipJournalService.findByInternshipReleaseIdAndStaffId(internshipReleaseId, staffId);
+        if (records.isNotEmpty()) {
+            List<String> fileName = new ArrayList<>();
+            List<String> filePath = new ArrayList<>();
+            String staffName = "";
+            boolean isSetStaffName = false;
+            for (InternshipJournalRecord r : records) {
+                if(internshipConditionCommon.journalLookCondition(r.getInternshipJournalId())){
+                    if (StringUtils.isNotBlank(r.getInternshipJournalWord())) {
+                        filePath.add(RequestUtil.getRealPath(request) + r.getInternshipJournalWord());
+                        fileName.add(r.getInternshipJournalWord().substring(r.getInternshipJournalWord().lastIndexOf(Workbook.DIRECTORY_SPLIT) + 1));
+                    }
+                }
+
+                if (BooleanUtils.isFalse(isSetStaffName)) {
+                    staffName = r.getSchoolGuidanceTeacher();
+                    isSetStaffName = true;
+                }
+            }
+
+            String downloadFileName = staffName + "小组实习日志";
+            String zipName = downloadFileName + ".zip";
+            String downloadFilePath = Workbook.TEMP_FILES_PORTFOLIOS + File.separator + zipName;
+            String zipPath = RequestUtil.getRealPath(request) + downloadFilePath;
+            FilesUtil.compressZipMulti(fileName, zipPath, filePath);
+            uploadService.download(downloadFileName, downloadFilePath, response, request);
         }
     }
 }

@@ -43,6 +43,7 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
                 edit: '/web/internship/journal/edit',
                 look: '/web/internship/journal/look',
                 download: web_path + '/web/internship/journal/download',
+                downloads: web_path + '/web/internship/journal/downloads',
                 add: '/web/internship/journal/add',
                 page: '/web/menu/internship/journal'
             };
@@ -147,7 +148,7 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
                             }
                         } else {
                             if (c.isSeeStaff === 1) {
-                                if(page_param.usersTypeName === workbook.users_type.STAFF_USERS_TYPE){
+                                if (page_param.usersTypeName === workbook.users_type.STAFF_USERS_TYPE) {
                                     context =
                                         {
                                             func: [
@@ -552,5 +553,10 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
             initParam();
             myTable.ajax.reload();
 
+        });
+
+        teamElement.delegate('.download', "click", function () {
+            var staffId = $(this).attr("data-id");
+            window.location.href = getAjaxUrl().downloads + "/" + page_param.paramInternshipReleaseId + "/" + staffId;
         });
     });
