@@ -127,7 +127,7 @@ public class DataTablesUtil extends PaginationUtil {
 
         exportInfo.path = path;
         exportInfo.filePath = path + exportInfo.fileName + "." + exportInfo.ext;
-        exportInfo.lastPath = RequestUtil.getRealPath(request) + Workbook.internshipFilePath();
+        exportInfo.lastPath = RequestUtil.getRealPath(request) + path;
     }
 
     public List<?> getData() {
