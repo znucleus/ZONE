@@ -60,7 +60,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             var template = Handlebars.compile($("#data_template").html());
             $('#dataTable > tbody').html(template(data));
             $('#totalSize').text(data.page.totalSize);
-            $(tableElement).tablesaw().data("tablesaw").refresh();
+            tableElement.tablesaw().data("tablesaw").refresh();
         }
 
         $('#refresh').click(function () {
