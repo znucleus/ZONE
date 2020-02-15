@@ -16,6 +16,7 @@ import top.zbeboy.zone.domain.tables.records.InternshipJournalContentRecord;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.internship.*;
 import top.zbeboy.zone.service.platform.UsersService;
+import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.FilesUtil;
 import top.zbeboy.zone.service.util.RequestUtil;
@@ -36,6 +37,7 @@ import top.zbeboy.zone.web.vo.internship.journal.InternshipJournalEditVo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.*;
 
@@ -65,6 +67,9 @@ public class InternshipJournalRestController {
 
     @Resource
     private StudentService studentService;
+
+    @Resource
+    private UploadService uploadService;
 
     /**
      * 数据
@@ -292,5 +297,23 @@ public class InternshipJournalRestController {
             ajaxUtil.fail().msg("请选择日志");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 下载实习日志
+     *
+     * @param id       实习日志id
+     * @param request  请求
+     * @param response 响应
+     */
+
+    @GetMapping("/web/internship/journal/download/{id}")
+    public void download(@PathVariable("id") String id,  HttpServletRequest request, HttpServletResponse response) {
+        if(internshipConditionCommon.journalLookCondition(id)){
+            InternshipJournal internshipJournal = internshipJournalService.findById(id);
+            if (Objects.nonNull(internshipJournal) && StringUtils.isNotBlank(internshipJournal.getInternshipJournalWord())) {
+                uploadService.download(internshipJournal.getStudentName() + " " + internshipJournal.getStudentNumber(), internshipJournal.getInternshipJournalWord(), response, request);
+            }
+        }
     }
 }
