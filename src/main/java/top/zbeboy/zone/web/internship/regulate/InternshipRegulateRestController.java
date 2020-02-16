@@ -28,6 +28,7 @@ import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zone.web.vo.internship.regulate.InternshipRegulateAddVo;
+import top.zbeboy.zone.web.vo.internship.regulate.InternshipRegulateEditVo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -174,11 +175,11 @@ public class InternshipRegulateRestController {
      * 保存实习监管
      *
      * @param internshipRegulateAddVo 数据
-     * @param bindingResult        检验
+     * @param bindingResult           检验
      * @return true or false
      */
     @PostMapping("/web/internship/regulate/save")
-    public ResponseEntity<Map<String, Object>> save(@Valid InternshipRegulateAddVo internshipRegulateAddVo, BindingResult bindingResult){
+    public ResponseEntity<Map<String, Object>> save(@Valid InternshipRegulateAddVo internshipRegulateAddVo, BindingResult bindingResult) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
             if (internshipConditionCommon.regulateCondition(internshipRegulateAddVo.getInternshipReleaseId())) {
@@ -216,6 +217,35 @@ public class InternshipRegulateRestController {
                 } else {
                     ajaxUtil.fail().msg("未查询到用户类型");
                 }
+            } else {
+                ajaxUtil.fail().msg("您无权限操作");
+            }
+        } else {
+            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 更新监管记录
+     *
+     * @param internshipRegulateEditVo 数据
+     * @param bindingResult            检验
+     * @return true or false
+     */
+    @PostMapping("/web/internship/regulate/update")
+    public ResponseEntity<Map<String, Object>> update(@Valid InternshipRegulateEditVo internshipRegulateEditVo, BindingResult bindingResult) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (!bindingResult.hasErrors()) {
+            if (internshipConditionCommon.regulateEditCondition(internshipRegulateEditVo.getInternshipRegulateId())) {
+                InternshipRegulate internshipRegulate = internshipRegulateService.findById(internshipRegulateEditVo.getInternshipRegulateId());
+                internshipRegulate.setInternshipContent(internshipRegulateEditVo.getInternshipContent());
+                internshipRegulate.setInternshipProgress(internshipRegulateEditVo.getInternshipProgress());
+                internshipRegulate.setReportWay(internshipRegulateEditVo.getReportWay());
+                internshipRegulate.setReportDate(DateTimeUtil.defaultParseSqlDate(internshipRegulateEditVo.getReportDate()));
+                internshipRegulate.setTliy(internshipRegulateEditVo.getTliy());
+                internshipRegulateService.update(internshipRegulate);
+                ajaxUtil.success().msg("更新成功");
             } else {
                 ajaxUtil.fail().msg("您无权限操作");
             }

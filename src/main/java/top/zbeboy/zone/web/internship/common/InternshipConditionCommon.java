@@ -41,6 +41,9 @@ public class InternshipConditionCommon {
     private InternshipJournalService internshipJournalService;
 
     @Resource
+    private InternshipRegulateService internshipRegulateService;
+
+    @Resource
     private UsersService usersService;
 
     @Resource
@@ -485,6 +488,65 @@ public class InternshipConditionCommon {
                         Result<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStaffId(internshipReleaseId, staffBean.getStaffId());
                         if (internshipTeacherDistributionRecord.isNotEmpty()) {
                             canOperator = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return canOperator;
+    }
+
+    /**
+     * 编辑删除记录条件
+     *
+     * @param internshipRegulateId 日志id
+     * @return true or false
+     */
+    public boolean regulateEditCondition(String internshipRegulateId) {
+        boolean canOperator = false;
+        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+            canOperator = true;
+        } else if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+            // 本院管理员可操作
+            int collegeId = 0;
+            Users users = usersService.getUserFromSession();
+            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
+            if (Objects.nonNull(usersType)) {
+                if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
+                    Optional<Record> record = staffService.findByUsernameRelation(users.getUsername());
+                    if (record.isPresent()) {
+                        College college = record.get().into(College.class);
+                        collegeId = college.getCollegeId();
+                    }
+                } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
+                    Optional<Record> record = studentService.findByUsernameRelation(users.getUsername());
+                    if (record.isPresent()) {
+                        College college = record.get().into(College.class);
+                        collegeId = college.getCollegeId();
+                    }
+                }
+            }
+            InternshipRegulate internshipRegulate = internshipRegulateService.findById(internshipRegulateId);
+            if (Objects.nonNull(internshipRegulate)) {
+                Optional<Record> record = internshipReleaseService.findByIdRelation(internshipRegulate.getInternshipReleaseId());
+                if (record.isPresent()) {
+                    InternshipReleaseBean internshipRelease = record.get().into(InternshipReleaseBean.class);
+                    canOperator = internshipRelease.getCollegeId() == collegeId;
+                }
+            }
+        } else {
+            Users users = usersService.getUserFromSession();
+            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
+            if (Objects.nonNull(usersType)) {
+                if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
+                    Optional<Record> record = staffService.findByUsernameRelation(users.getUsername());
+                    if (record.isPresent()) {
+                        // 是否是指导教师本人
+                        Staff staff = record.get().into(Staff.class);
+                        InternshipRegulate internshipRegulate = internshipRegulateService.findById(internshipRegulateId);
+                        if (Objects.nonNull(internshipRegulate)) {
+                            canOperator = Objects.equals(staff.getStaffId(), internshipRegulate.getStaffId());
                         }
                     }
                 }

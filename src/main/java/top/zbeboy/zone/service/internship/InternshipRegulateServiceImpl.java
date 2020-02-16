@@ -53,6 +53,11 @@ public class InternshipRegulateServiceImpl implements InternshipRegulateService,
     }
 
     @Override
+    public InternshipRegulate findById(String id) {
+        return internshipRegulateDao.findById(id);
+    }
+
+    @Override
     public Result<Record> findAllByPage(DataTablesUtil dataTablesUtil) {
         return queryAllByPage(create, INTERNSHIP_REGULATE, dataTablesUtil, false);
     }

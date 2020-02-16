@@ -8,6 +8,14 @@ import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 public interface InternshipRegulateService {
 
     /**
+     * 通过主键查询
+     *
+     * @param id 主键
+     * @return 数据
+     */
+    InternshipRegulate findById(String id);
+
+    /**
      * 分页查询
      *
      * @param dataTablesUtil 工具类
@@ -31,12 +39,14 @@ public interface InternshipRegulateService {
 
     /**
      * 保存
+     *
      * @param internshipRegulate 数据
      */
     void save(InternshipRegulate internshipRegulate);
 
     /**
      * 更新
+     *
      * @param internshipRegulate 数据
      */
     void update(InternshipRegulate internshipRegulate);

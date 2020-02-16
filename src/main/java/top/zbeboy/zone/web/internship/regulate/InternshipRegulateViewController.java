@@ -7,11 +7,10 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zone.config.Workbook;
-import top.zbeboy.zone.domain.tables.pojos.Staff;
-import top.zbeboy.zone.domain.tables.pojos.Student;
-import top.zbeboy.zone.domain.tables.pojos.Users;
-import top.zbeboy.zone.domain.tables.pojos.UsersType;
+import top.zbeboy.zone.domain.tables.pojos.*;
+import top.zbeboy.zone.domain.tables.records.InternshipJournalContentRecord;
 import top.zbeboy.zone.service.data.StaffService;
+import top.zbeboy.zone.service.internship.InternshipRegulateService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
@@ -39,6 +38,9 @@ public class InternshipRegulateViewController {
 
     @Resource
     private InternshipConditionCommon internshipConditionCommon;
+
+    @Resource
+    private InternshipRegulateService internshipRegulateService;
 
     /**
      * 实习监管
@@ -94,6 +96,35 @@ public class InternshipRegulateViewController {
         if (internshipConditionCommon.regulateCondition(id)) {
             modelMap.addAttribute("internshipReleaseId", id);
             page = "web/internship/regulate/internship_regulate_add::#page-wrapper";
+        } else {
+            config.buildWarningTip("操作警告", "您无权限操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
+
+    /**
+     * 编辑
+     *
+     * @param id       实习监管id
+     * @param modelMap 页面对象
+     * @return 页面
+     */
+    @GetMapping("/web/internship/regulate/edit/{id}")
+    public String edit(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        if (internshipConditionCommon.regulateEditCondition(id)) {
+            InternshipRegulate internshipRegulate = internshipRegulateService.findById(id);
+            if (Objects.nonNull(internshipRegulate)) {
+                modelMap.addAttribute("internshipRegulate", internshipRegulate);
+                page = "web/internship/regulate/internship_regulate_edit::#page-wrapper";
+            } else {
+                config.buildDangerTip("查询错误", "未查询到实习监管信息");
+                config.dataMerging(modelMap);
+                page = "inline_tip::#page-wrapper";
+            }
         } else {
             config.buildWarningTip("操作警告", "您无权限操作");
             config.dataMerging(modelMap);
