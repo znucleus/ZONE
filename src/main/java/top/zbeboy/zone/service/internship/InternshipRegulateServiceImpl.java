@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zone.config.Workbook;
+import top.zbeboy.zone.domain.tables.daos.InternshipRegulateDao;
+import top.zbeboy.zone.domain.tables.pojos.InternshipRegulate;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.service.data.StaffService;
@@ -32,6 +34,9 @@ import static top.zbeboy.zone.domain.Tables.STAFF;
 public class InternshipRegulateServiceImpl implements InternshipRegulateService, PaginationPlugin<DataTablesUtil> {
 
     private final DSLContext create;
+
+    @Resource
+    private InternshipRegulateDao internshipRegulateDao;
 
     @Resource
     private UsersService usersService;
@@ -60,6 +65,17 @@ public class InternshipRegulateServiceImpl implements InternshipRegulateService,
     @Override
     public int countByCondition(DataTablesUtil dataTablesUtil) {
         return countAll(create, INTERNSHIP_REGULATE, dataTablesUtil, false);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void save(InternshipRegulate internshipRegulate) {
+        internshipRegulateDao.insert(internshipRegulate);
+    }
+
+    @Override
+    public void update(InternshipRegulate internshipRegulate) {
+        internshipRegulateDao.update(internshipRegulate);
     }
 
     @Override

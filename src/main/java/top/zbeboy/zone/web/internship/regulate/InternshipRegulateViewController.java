@@ -16,6 +16,7 @@ import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
 import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
+import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 
 import javax.annotation.Resource;
 import java.util.Objects;
@@ -79,5 +80,25 @@ public class InternshipRegulateViewController {
             modelMap.addAttribute("canAdd", 1);
         }
         return "web/internship/regulate/internship_regulate_list::#page-wrapper";
+    }
+
+    /**
+     * 添加列表
+     *
+     * @return 页面
+     */
+    @GetMapping("/web/internship/regulate/add/{id}")
+    public String add(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        if (internshipConditionCommon.regulateCondition(id)) {
+            modelMap.addAttribute("internshipReleaseId", id);
+            page = "web/internship/regulate/internship_regulate_add::#page-wrapper";
+        } else {
+            config.buildWarningTip("操作警告", "您无权限操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
     }
 }

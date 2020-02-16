@@ -2,6 +2,7 @@ package top.zbeboy.zone.service.internship;
 
 import org.jooq.Record;
 import org.jooq.Result;
+import top.zbeboy.zone.domain.tables.pojos.InternshipRegulate;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
 public interface InternshipRegulateService {
@@ -27,4 +28,16 @@ public interface InternshipRegulateService {
      * @return 条件查询总数
      */
     int countByCondition(DataTablesUtil dataTablesUtil);
+
+    /**
+     * 保存
+     * @param internshipRegulate 数据
+     */
+    void save(InternshipRegulate internshipRegulate);
+
+    /**
+     * 更新
+     * @param internshipRegulate 数据
+     */
+    void update(InternshipRegulate internshipRegulate);
 }

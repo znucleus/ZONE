@@ -39,9 +39,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static org.jooq.impl.DSL.count;
-import static top.zbeboy.zone.domain.Tables.INTERNSHIP_JOURNAL;
-import static top.zbeboy.zone.domain.Tables.INTERNSHIP_TEACHER_DISTRIBUTION;
-import static top.zbeboy.zone.domain.Tables.STUDENT;
+import static top.zbeboy.zone.domain.Tables.*;
 
 @Service("internshipJournalService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -81,6 +79,16 @@ public class InternshipJournalServiceImpl implements InternshipJournalService, P
     }
 
     @Override
+    public Result<Record> findByInternshipReleaseIdAndStudentIdWithContent(String internshipReleaseId, int studentId) {
+        return create.select()
+                .from(INTERNSHIP_JOURNAL)
+                .leftJoin(INTERNSHIP_JOURNAL_CONTENT)
+                .on(INTERNSHIP_JOURNAL.INTERNSHIP_JOURNAL_ID.eq(INTERNSHIP_JOURNAL_CONTENT.INTERNSHIP_JOURNAL_ID))
+                .where(INTERNSHIP_JOURNAL.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(INTERNSHIP_JOURNAL.STUDENT_ID.eq(studentId)))
+                .fetch();
+    }
+
+    @Override
     public Result<InternshipJournalRecord> findByInternshipReleaseIdAndStaffId(String internshipReleaseId, int staffId) {
         return create.selectFrom(INTERNSHIP_JOURNAL)
                 .where(INTERNSHIP_JOURNAL.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(INTERNSHIP_JOURNAL.STAFF_ID.eq(staffId)))
@@ -110,9 +118,9 @@ public class InternshipJournalServiceImpl implements InternshipJournalService, P
                         INTERNSHIP_JOURNAL.STUDENT_ID,
                         count(INTERNSHIP_JOURNAL.INTERNSHIP_JOURNAL_ID).as(countAlias))
                         .from(INTERNSHIP_JOURNAL)
-                .where(INTERNSHIP_JOURNAL.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId)
-                        .and(INTERNSHIP_JOURNAL.STAFF_ID.eq(staffId)))
-                .groupBy(INTERNSHIP_JOURNAL.STUDENT_ID);
+                        .where(INTERNSHIP_JOURNAL.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId)
+                                .and(INTERNSHIP_JOURNAL.STAFF_ID.eq(staffId)))
+                        .groupBy(INTERNSHIP_JOURNAL.STUDENT_ID);
         return create.select(INTERNSHIP_TEACHER_DISTRIBUTION.STUDENT_REAL_NAME,
                 journalTable.field(INTERNSHIP_JOURNAL.STUDENT_NUMBER),
                 journalTable.field(countAlias))
@@ -177,7 +185,7 @@ public class InternshipJournalServiceImpl implements InternshipJournalService, P
                 }
             }
 
-            if(StringUtils.isNotBlank(createDate)){
+            if (StringUtils.isNotBlank(createDate)) {
                 String[] arr = createDate.split(" 至 ");
                 Timestamp startTime = DateTimeUtil.defaultParseSqlTimestamp(arr[0] + " 00:00:00");
                 Timestamp endTime = DateTimeUtil.defaultParseSqlTimestamp(arr[1] + " 23:59:59");

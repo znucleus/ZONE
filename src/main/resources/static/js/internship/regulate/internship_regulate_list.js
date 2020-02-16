@@ -25,7 +25,7 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
          */
         function getParamId() {
             return {
-                studentName: '#search_student_name',
+                studentName: '#search_real_name',
                 studentNumber: '#search_student_number',
                 schoolGuidanceTeacher: '#search_school_guidance_teacher',
                 createDate: '#search_create_date'
@@ -125,7 +125,8 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
                     render: function (a, b, c, d) {
                         var context = [];
                         if (page_param.authorities === workbook.authorities.ROLE_SYSTEM ||
-                            page_param.authorities === workbook.authorities.ROLE_ADMIN) {
+                            page_param.authorities === workbook.authorities.ROLE_ADMIN ||
+                            c.staffId === page_param.staffId) {
                             context =
                                 {
                                     func: [
@@ -150,43 +151,17 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
                                     ]
                                 };
                         } else {
-                            if (c.staffId === page_param.staffId) {
-                                context =
-                                    {
-                                        func: [
-                                            {
-                                                "name": "查看",
-                                                "css": "look",
-                                                "type": "info",
-                                                "id": c.internshipRegulateId
-                                            },
-                                            {
-                                                "name": "编辑",
-                                                "css": "edit",
-                                                "type": "primary",
-                                                "id": c.internshipRegulateId
-                                            },
-                                            {
-                                                "name": "删除",
-                                                "css": "del",
-                                                "type": "danger",
-                                                "id": c.internshipRegulateId
-                                            }
-                                        ]
-                                    };
-                            } else {
-                                context =
-                                    {
-                                        func: [
-                                            {
-                                                "name": "查看",
-                                                "css": "look",
-                                                "type": "info",
-                                                "id": c.internshipRegulateId
-                                            }
-                                        ]
-                                    };
-                            }
+                            context =
+                                {
+                                    func: [
+                                        {
+                                            "name": "查看",
+                                            "css": "look",
+                                            "type": "info",
+                                            "id": c.internshipRegulateId
+                                        }
+                                    ]
+                                };
                         }
                         return template(context);
                     }
