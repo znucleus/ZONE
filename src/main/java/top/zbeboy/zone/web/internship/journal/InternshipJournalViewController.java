@@ -181,7 +181,7 @@ public class InternshipJournalViewController {
                 Optional<InternshipJournalContentRecord> record = internshipJournalContentService.findByInternshipJournalId(internshipJournal.getInternshipJournalId());
                 if (record.isPresent()) {
                     InternshipJournalContentBean internshipJournalContent = record.get().into(InternshipJournalContentBean.class);
-                    internshipJournalContent.setInternshipJournalDateStr(DateTimeUtil.formatSqlDate(internshipJournalContent.getInternshipJournalDate(), "yyyy年MM月dd日"));
+                    internshipJournalContent.setInternshipJournalDateStr(DateTimeUtil.formatSqlDate(internshipJournalContent.getInternshipJournalDate(),  DateTimeUtil.YEAR_MONTH_DAY_CN_FORMAT));
                     modelMap.addAttribute("internshipJournalContent", internshipJournalContent);
                     page = "web/internship/journal/internship_journal_look::#page-wrapper";
                 } else {

@@ -14,6 +14,7 @@ import top.zbeboy.zone.service.internship.InternshipRegulateService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
+import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 
@@ -127,6 +128,30 @@ public class InternshipRegulateViewController {
             }
         } else {
             config.buildWarningTip("操作警告", "您无权限操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
+
+    /**
+     * 查看
+     *
+     * @param id       实习监管id
+     * @param modelMap 页面对象
+     * @return 页面
+     */
+    @GetMapping("/web/internship/regulate/look/{id}")
+    public String look(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        InternshipRegulate internshipRegulate = internshipRegulateService.findById(id);
+        if (Objects.nonNull(internshipRegulate)) {
+            modelMap.addAttribute("internshipRegulate", internshipRegulate);
+            modelMap.addAttribute("reportDate", DateTimeUtil.formatSqlDate(internshipRegulate.getReportDate(), DateTimeUtil.YEAR_MONTH_DAY_CN_FORMAT));
+            page = "web/internship/regulate/internship_regulate_look::#page-wrapper";
+        } else {
+            config.buildDangerTip("查询错误", "未查询到实习监管信息");
             config.dataMerging(modelMap);
             page = "inline_tip::#page-wrapper";
         }
