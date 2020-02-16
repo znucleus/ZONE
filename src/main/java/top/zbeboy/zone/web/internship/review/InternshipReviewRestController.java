@@ -2,7 +2,6 @@ package top.zbeboy.zone.web.internship.review;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.Record;
-import org.jooq.Record2;
 import org.jooq.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

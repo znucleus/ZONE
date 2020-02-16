@@ -1,7 +1,6 @@
 package top.zbeboy.zone.service.internship;
 
 import org.jooq.Record;
-import org.jooq.Record2;
 import org.jooq.Result;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 

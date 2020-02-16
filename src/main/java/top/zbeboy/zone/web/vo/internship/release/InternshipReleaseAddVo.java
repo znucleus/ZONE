@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 
 public class InternshipReleaseAddVo {
     @NotNull(message = "实习类型不能为空")
-    @Min(value = 1,message = "实习类型不正确")
+    @Min(value = 1, message = "实习类型不正确")
     private int internshipTypeId;
     @NotBlank(message = "指导教师分配时间不能为空")
     private String teacherDistributionTime;
@@ -16,7 +16,7 @@ public class InternshipReleaseAddVo {
     private int collegeId;
     private int departmentId;
     @NotNull(message = "专业ID不能为空")
-    @Min(value = 1,message = "专业ID不正确")
+    @Min(value = 1, message = "专业ID不正确")
     private int scienceId;
     private Byte internshipReleaseIsDel;
     private String files;

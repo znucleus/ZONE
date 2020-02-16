@@ -53,16 +53,16 @@ public interface InternshipApplyService {
     /**
      * 通过实习发布id与申请状态更新状态 定时任务
      *
-     * @param curState         当前状态
-     * @param updateState         新状态
+     * @param curState    当前状态
+     * @param updateState 新状态
      */
     void updateState(int curState, int updateState);
 
     /**
      * 更改超过信息填写时间的申请状态为申请中
      *
-     * @param curState       当前状态
-     * @param updateState       新状态
+     * @param curState    当前状态
+     * @param updateState 新状态
      */
     void updateChangeState(List<Integer> curState, int updateState);
 

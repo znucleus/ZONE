@@ -62,7 +62,7 @@ public class InternshipControllerCommon {
     /**
      * 实习教职工数据
      *
-     * @param id          实习发布id
+     * @param id 实习发布id
      */
     public List<StaffBean> internshipReleaseStaffData(String id) {
         List<StaffBean> beans = new ArrayList<>();
@@ -81,7 +81,7 @@ public class InternshipControllerCommon {
     /**
      * 实习申请班级数据
      *
-     * @param id          实习发布id
+     * @param id 实习发布id
      */
     public Select2Data internshipApplyOrganizeData(String id) {
         Select2Data select2Data = Select2Data.of();

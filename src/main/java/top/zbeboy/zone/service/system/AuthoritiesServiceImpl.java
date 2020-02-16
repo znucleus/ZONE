@@ -20,7 +20,6 @@ import top.zbeboy.zone.domain.tables.records.AuthoritiesRecord;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Optional;
 
 import static top.zbeboy.zone.domain.Tables.AUTHORITIES;
 import static top.zbeboy.zone.domain.Tables.USERS;

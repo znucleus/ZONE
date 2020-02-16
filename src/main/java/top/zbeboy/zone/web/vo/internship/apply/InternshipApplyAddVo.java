@@ -9,50 +9,50 @@ import javax.validation.constraints.Size;
 
 public class InternshipApplyAddVo {
     @NotNull(message = "学生ID不能为空")
-    @Min(value = 1,message = "学生ID不正确")
+    @Min(value = 1, message = "学生ID不正确")
     private int studentId;
     @NotNull(message = "学生账号不能为空")
-    @Size(max = 64,message = "学生账号不正确")
+    @Size(max = 64, message = "学生账号不正确")
     private String username;
     @NotBlank(message = "实习发布ID不能为空")
-    @Size(max = 64,message = "实习发布ID不正确")
+    @Size(max = 64, message = "实习发布ID不正确")
     private String internshipReleaseId;
     @NotBlank(message = "学生姓名不能为空")
-    @Size(max = 15,message = "学生姓名15个字符以内")
+    @Size(max = 15, message = "学生姓名15个字符以内")
     private String realName;
     @NotBlank(message = "专业班级不能为空")
-    @Size(max = 50,message = "专业班级50个字符以内")
+    @Size(max = 50, message = "专业班级50个字符以内")
     private String organizeName;
     @NotBlank(message = "学生性别不能为空")
-    @Size(max = 2,message = "学生性别不正确")
+    @Size(max = 2, message = "学生性别不正确")
     private String studentSex;
     @NotBlank(message = "学号不能为空")
-    @Size(max = 20,message = "学号20个字符以内")
+    @Size(max = 20, message = "学号20个字符以内")
     private String studentNumber;
     @NotBlank(message = "电话号码不能为空")
-    @Size(max = 15,message = "电话号码15个字符以内")
+    @Size(max = 15, message = "电话号码15个字符以内")
     private String mobile;
     @NotBlank(message = "qq邮箱不能为空")
-    @Size(max = 100,message = "qq邮箱100个字符以内")
+    @Size(max = 100, message = "qq邮箱100个字符以内")
     private String qqMailbox;
     @NotBlank(message = "父母联系电话不能为空")
-    @Size(max = 20,message = "父母联系电话20个字符以内")
+    @Size(max = 20, message = "父母联系电话20个字符以内")
     private String parentContactPhone;
     @NotNull(message = "班主任不能为空")
     private int staffId;
     private String headmaster;
     private String headmasterTel;
     @NotBlank(message = "实习单位名称不能为空")
-    @Size(max = 200,message = "实习单位名称200个字符以内")
+    @Size(max = 200, message = "实习单位名称200个字符以内")
     private String companyName;
     @NotBlank(message = "实习单位地址不能为空")
-    @Size(max = 500,message = "实习单位地址500个字符以内")
+    @Size(max = 500, message = "实习单位地址500个字符以内")
     private String companyAddress;
     @NotBlank(message = "实习单位联系人不能为空")
-    @Size(max = 10,message = "实习单位联系人10个字符以内")
+    @Size(max = 10, message = "实习单位联系人10个字符以内")
     private String companyContact;
     @NotBlank(message = "实习单位联系人联系方式不能为空")
-    @Size(max = 20,message = "实习单位联系人联系方式20个字符以内")
+    @Size(max = 20, message = "实习单位联系人联系方式20个字符以内")
     private String companyMobile;
     @NotBlank(message = "校内指导教师不能为空")
     private String schoolGuidanceTeacher;

@@ -7,37 +7,37 @@ import javax.validation.constraints.Size;
 
 public class InternshipApplyEditVo {
     @NotNull(message = "学生ID不能为空")
-    @Min(value = 1,message = "学生ID不正确")
+    @Min(value = 1, message = "学生ID不正确")
     private int studentId;
-    @Size(max = 64,message = "学生账号不正确")
+    @Size(max = 64, message = "学生账号不正确")
     private String username;
     @NotBlank(message = "实习发布ID不能为空")
-    @Size(max = 64,message = "实习发布ID不正确")
+    @Size(max = 64, message = "实习发布ID不正确")
     private String internshipReleaseId;
-    @Size(max = 15,message = "学生姓名15个字符以内")
+    @Size(max = 15, message = "学生姓名15个字符以内")
     private String realName;
-    @Size(max = 50,message = "专业班级50个字符以内")
+    @Size(max = 50, message = "专业班级50个字符以内")
     private String organizeName;
-    @Size(max = 2,message = "学生性别不正确")
+    @Size(max = 2, message = "学生性别不正确")
     private String studentSex;
-    @Size(max = 20,message = "学号20个字符以内")
+    @Size(max = 20, message = "学号20个字符以内")
     private String studentNumber;
-    @Size(max = 15,message = "电话号码15个字符以内")
+    @Size(max = 15, message = "电话号码15个字符以内")
     private String mobile;
-    @Size(max = 100,message = "qq邮箱100个字符以内")
+    @Size(max = 100, message = "qq邮箱100个字符以内")
     private String qqMailbox;
-    @Size(max = 20,message = "父母联系电话20个字符以内")
+    @Size(max = 20, message = "父母联系电话20个字符以内")
     private String parentContactPhone;
     private int staffId;
     private String headmaster;
     private String headmasterTel;
-    @Size(max = 200,message = "实习单位名称200个字符以内")
+    @Size(max = 200, message = "实习单位名称200个字符以内")
     private String companyName;
-    @Size(max = 500,message = "实习单位地址500个字符以内")
+    @Size(max = 500, message = "实习单位地址500个字符以内")
     private String companyAddress;
-    @Size(max = 10,message = "实习单位联系人10个字符以内")
+    @Size(max = 10, message = "实习单位联系人10个字符以内")
     private String companyContact;
-    @Size(max = 20,message = "实习单位联系人联系方式20个字符以内")
+    @Size(max = 20, message = "实习单位联系人联系方式20个字符以内")
     private String companyMobile;
     private String schoolGuidanceTeacher;
     private String schoolGuidanceTeacherTel;

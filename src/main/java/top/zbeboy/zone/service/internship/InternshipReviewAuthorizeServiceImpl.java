@@ -70,7 +70,7 @@ public class InternshipReviewAuthorizeServiceImpl implements InternshipReviewAut
     public void deleteByInternshipReleaseIdAndUsername(String internshipReleaseId, String username) {
         create.deleteFrom(INTERNSHIP_REVIEW_AUTHORIZE)
                 .where(INTERNSHIP_REVIEW_AUTHORIZE.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId)
-                .and(INTERNSHIP_REVIEW_AUTHORIZE.USERNAME.eq(username)))
+                        .and(INTERNSHIP_REVIEW_AUTHORIZE.USERNAME.eq(username)))
                 .execute();
     }
 

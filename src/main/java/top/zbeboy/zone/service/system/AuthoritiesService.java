@@ -7,14 +7,13 @@ import top.zbeboy.zone.domain.tables.pojos.Authorities;
 import top.zbeboy.zone.domain.tables.records.AuthoritiesRecord;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface AuthoritiesService {
 
     /**
      * 通过账号和权限查询
      *
-     * @param username  账号
+     * @param username    账号
      * @param authorities 权限
      * @return 数据
      */

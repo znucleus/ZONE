@@ -225,7 +225,7 @@ public class DataTablesUtil extends PaginationUtil {
                 .toString();
     }
 
-    public static class ExportInfo{
+    public static class ExportInfo {
         private String fileName;
         private String ext;
         private String filePath;

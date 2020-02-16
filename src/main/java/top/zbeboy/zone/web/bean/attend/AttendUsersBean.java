@@ -10,7 +10,7 @@ public class AttendUsersBean extends AttendUsers {
     private String location;
     private String address;
     private Timestamp attendDate;
-    private String    attendRemark;
+    private String attendRemark;
 
     public String getRealName() {
         return realName;

@@ -45,8 +45,8 @@ public class AttendDataServiceImpl implements AttendDataService {
                 .join(ATTEND_USERS)
                 .on(ATTEND_DATA.ATTEND_USERS_ID.eq(ATTEND_USERS.ATTEND_USERS_ID))
                 .where(ATTEND_DATA.ATTEND_RELEASE_SUB_ID.eq(attendReleaseSubId)
-                .and(ATTEND_USERS.STUDENT_ID.eq(studentId))
-                .and(ATTEND_USERS.ATTEND_RELEASE_ID.eq(attendReleaseId)))
+                        .and(ATTEND_USERS.STUDENT_ID.eq(studentId))
+                        .and(ATTEND_USERS.ATTEND_RELEASE_ID.eq(attendReleaseId)))
                 .fetchOptional();
     }
 

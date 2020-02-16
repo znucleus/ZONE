@@ -11,7 +11,6 @@ import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.export.InternshipRegulateExport;
-import top.zbeboy.zone.service.export.InternshipTeacherDistributionExport;
 import top.zbeboy.zone.service.internship.InternshipInfoService;
 import top.zbeboy.zone.service.internship.InternshipRegulateService;
 import top.zbeboy.zone.service.internship.InternshipReleaseService;
@@ -22,7 +21,6 @@ import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
-import top.zbeboy.zone.web.bean.internship.distribution.InternshipTeacherDistributionBean;
 import top.zbeboy.zone.web.bean.internship.regulate.InternshipRegulateBean;
 import top.zbeboy.zone.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
@@ -139,9 +137,9 @@ public class InternshipRegulateRestController {
                 "实习监管数据表", Workbook.internshipFilePath());
         List<InternshipRegulateBean> beans = new ArrayList<>();
         Result<Record> records = internshipRegulateService.export(dataTablesUtil);
-       if(records.isNotEmpty()){
-           beans = records.into(InternshipRegulateBean.class);
-       }
+        if (records.isNotEmpty()) {
+            beans = records.into(InternshipRegulateBean.class);
+        }
         InternshipRegulateExport export = new InternshipRegulateExport(beans);
         DataTablesUtil.ExportInfo exportInfo = dataTablesUtil.getExportInfo();
         if (export.exportExcel(exportInfo.getLastPath(), exportInfo.getFileName(), exportInfo.getExt())) {

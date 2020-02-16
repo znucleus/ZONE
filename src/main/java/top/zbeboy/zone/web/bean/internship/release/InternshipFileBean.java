@@ -3,7 +3,7 @@ package top.zbeboy.zone.web.bean.internship.release;
 import top.zbeboy.zone.domain.tables.pojos.InternshipFile;
 
 public class InternshipFileBean extends InternshipFile {
-    private Long   fileSize;
+    private Long fileSize;
     private String contentType;
     private String originalFileName;
     private String newName;
