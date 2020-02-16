@@ -25,6 +25,7 @@ import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
 import top.zbeboy.zone.web.plugin.select2.Select2Data;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
+import top.zbeboy.zone.web.util.SmallPropsUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zone.web.vo.internship.regulate.InternshipRegulateAddVo;
@@ -251,6 +252,29 @@ public class InternshipRegulateRestController {
             }
         } else {
             ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 批量删除监管记录
+     *
+     * @param regulateIds ids
+     * @return true 删除成功
+     */
+    @PostMapping("/web/internship/regulate/delete")
+    public ResponseEntity<Map<String, Object>> delete(String regulateIds) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (StringUtils.isNotBlank(regulateIds)) {
+            List<String> ids = SmallPropsUtil.StringIdsToStringList(regulateIds);
+            for (String id : ids) {
+                if (internshipConditionCommon.regulateEditCondition(id)) {
+                    internshipRegulateService.deleteById(id);
+                }
+            }
+            ajaxUtil.success().msg("删除成功");
+        } else {
+            ajaxUtil.fail().msg("请选择记录");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }

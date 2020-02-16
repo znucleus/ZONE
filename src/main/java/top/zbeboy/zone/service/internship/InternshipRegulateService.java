@@ -50,4 +50,11 @@ public interface InternshipRegulateService {
      * @param internshipRegulate 数据
      */
     void update(InternshipRegulate internshipRegulate);
+
+    /**
+     * 通过主键查询
+     *
+     * @param id 主键
+     */
+    void deleteById(String id);
 }

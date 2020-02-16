@@ -9,7 +9,7 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
             return {
                 data: web_path + '/web/internship/regulate/data',
                 export: web_path + '/web/internship/regulate/export',
-                del: web_path + '/web/internship/regulate/del',
+                del: web_path + '/web/internship/regulate/delete',
                 edit: '/web/internship/regulate/edit',
                 add: '/web/internship/regulate/add',
                 look: '/web/internship/regulate/look',
@@ -212,7 +212,7 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
             }
         });
 
-        var global_button = '  <button type="button" id="refresh" class="btn btn-lightbtn-sm"><i class="fa fa-refresh"></i>刷新</button>';
+        var global_button = '  <button type="button" id="refresh" class="btn btn-light btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
         if (page_param.authorities === workbook.authorities.ROLE_SYSTEM ||
             page_param.authorities === workbook.authorities.ROLE_ADMIN) {
             var temp = '  <button type="button" id="regulate_dels" class="btn btn-outline-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>';

@@ -84,6 +84,11 @@ public class InternshipRegulateServiceImpl implements InternshipRegulateService,
     }
 
     @Override
+    public void deleteById(String id) {
+        internshipRegulateDao.deleteById(id);
+    }
+
+    @Override
     public Condition searchCondition(DataTablesUtil paginationUtil) {
         Condition a = null;
         JSONObject search = paginationUtil.getSearch();
