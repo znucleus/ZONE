@@ -22,6 +22,15 @@ public interface InternshipTeacherDistributionService {
     Optional<Record> findByInternshipReleaseIdAndStudentId(String internshipReleaseId, int studentId);
 
     /**
+     * 通过实习发布id 和学生id查询
+     *
+     * @param internshipReleaseId 实习发布id
+     * @param staffId             教职工id
+     * @return 数据
+     */
+    Result<Record> findByInternshipReleaseIdAndStaffId(String internshipReleaseId, int staffId);
+
+    /**
      * 根据发布id查询所有指导教师
      *
      * @param internshipReleaseId 发布id

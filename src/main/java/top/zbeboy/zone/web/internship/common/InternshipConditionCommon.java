@@ -2,6 +2,7 @@ package top.zbeboy.zone.web.internship.common;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.Record;
+import org.jooq.Result;
 import org.springframework.stereotype.Component;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
@@ -458,6 +459,34 @@ public class InternshipConditionCommon {
                     }
                 } else {
                     canOperator = true;
+                }
+            }
+        }
+
+        return canOperator;
+    }
+
+    /**
+     * 写监管条件
+     *
+     * @param internshipReleaseId 实习发布id
+     * @return true or false
+     */
+    public boolean regulateCondition(String internshipReleaseId) {
+        boolean canOperator = false;
+        if (basicCondition(internshipReleaseId)) {
+            Users users = usersService.getUserFromSession();
+            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
+            if (Objects.nonNull(usersType)) {
+                if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
+                    Optional<Record> staffRecord = staffService.findByUsernameRelation(users.getUsername());
+                    if (staffRecord.isPresent()) {
+                        StaffBean staffBean = staffRecord.get().into(StaffBean.class);
+                        Result<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStaffId(internshipReleaseId, staffBean.getStaffId());
+                        if (internshipTeacherDistributionRecord.isNotEmpty()) {
+                            canOperator = true;
+                        }
+                    }
                 }
             }
         }

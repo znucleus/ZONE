@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="pd-30">
+        <h4 class="tx-gray-800 mg-b-5">实习监管</h4>
+        <p class="mg-b-0">实习监管。</p>
+    </div><!-- d-flex -->
+
+    <div class="br-pagebody mg-t-5 pd-x-30">
+        <div class="br-section-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12 mt-2">
+                            <input type="text" id="search_internship_title" class="form-control"
+                                   placeholder="标题"/>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button type="button" id="search" class="btn btn-outline-secondary"><i
+                                class="fa fa-search"></i>搜索
+                        </button>
+                        <button type="button" id="reset_search" class="btn btn-outline-secondary"><i
+                                class="fa fa-repeat"></i>重置
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="float-left mg-t-7">
+                        <input  class="labelauty" id="dataRange" name="dataRange" value="1" type="checkbox" data-labelauty="查看全部|与我相关"/>
+                    </div>
+                    <div class="float-right mg-t-5">
+                        <button type="button" class="btn btn-light" id="refresh"><i class="fa fa-refresh"></i> 刷新
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-12" id="tableData">
+                </div>
+                <div class="col-md-12 mg-t-20">
+                    <div class="ht-80 bd d-flex align-items-center justify-content-center">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination" id="pagination"></ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script id="internship-release-template" type="text/x-handlebars-template">
+        {{#each listResult}}
+        <div class="card mg-t-10 text-dark">
+            <div class="card-header">{{internshipTitle}}</div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4"><span>学校：</span><span>{{schoolName}}</span></div>
+                    <div class="col-md-4"><span>院：</span><span>{{collegeName}}</span></div>
+                    <div class="col-md-4"><span>系：</span><span>{{departmentName}}</span></div>
+                    <div class="col-md-4"><span>专业：</span><span class="badge badge-secondary">{{scienceName}}</span></div>
+                    <div class="col-md-4"><span>实习类型：</span><span>{{internshipTypeName}}</span></div>
+                    <div class="col-md-4">
+                        <span>状态：</span>
+                        {{#if internshipReleaseIsDel}}
+                        <span class="badge badge-danger">注销</span>
+                        {{else}}
+                        <span class="badge badge-success">正常</span>
+                        {{/if}}
+                    </div>
+                    <div class="col-md-6"><span>教师分配开始时间：</span><span>{{teacherDistributionStartTimeStr}}</span>
+                    </div>
+                    <div class="col-md-6"><span>实习申请开始时间：</span><span>{{startTimeStr}}</span></div>
+                    <div class="col-md-6"><span>教师分配结束时间：</span><span>{{teacherDistributionEndTimeStr}}</span></div>
+                    <div class="col-md-6"><span>实习申请结束时间：</span><span>{{endTimeStr}}</span></div>
+                </div>
+                <p class="text-right font-italic m-t-10">
+                    <small><em><span>发布人：</span><span>{{publisher}}</span> <span>{{releaseTimeStr}}</span></em>
+                    </small>
+                </p>
+            </div>
+            <div class="card-footer text-right">
+                <div class="btn-group" role="group">
+                    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                        <div class="btn-group mr-2 mt-2" role="group" aria-label="First group">
+                            <button type="button" class="btn btn-teal regulate_list" data-id="{{internshipReleaseId}}">
+                                监管列表
+                            </button>
+                        </div>
+                        {{#if canOperator}}
+                        <div class="btn-group mr-2 mt-2" role="group" aria-label="Second group">
+                            <button type="button" class="btn btn-teal my_regulate" data-id="{{internshipReleaseId}}">
+                                我的监管
+                            </button>
+                        </div>
+                        <div class="btn-group mt-2" role="group" aria-label="Third group">
+                            <button type="button" class="btn btn-primary write_regulate" data-id="{{internshipReleaseId}}">
+                                写监管记录
+                            </button>
+                        </div>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </script>
+
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/internship/regulate/internship_regulate.js')}"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>

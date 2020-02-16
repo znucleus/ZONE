@@ -35,8 +35,8 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
         web storage key.
         */
         var webStorageKey = {
-            INTERNSHIP_TITLE: 'INTERNSHIP_DISTRIBUTION_INTERNSHIP_TITLE_SEARCH',
-            DATA_RANGE: 'INTERNSHIP_DISTRIBUTION_DATA_RANGE_SEARCH'
+            INTERNSHIP_TITLE: 'INTERNSHIP_JOURNAL_INTERNSHIP_TITLE_SEARCH',
+            DATA_RANGE: 'INTERNSHIP_JOURNAL_DATA_RANGE_SEARCH'
         };
 
         /*

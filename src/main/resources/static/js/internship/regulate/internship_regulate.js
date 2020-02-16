@@ -1,4 +1,4 @@
-//# sourceURL=internship_review.js
+//# sourceURL=internship_journal.js
 require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "jquery.address", "jquery.simple-pagination", "jquery-labelauty"],
     function ($, _, tools, Handlebars, navActive) {
 
@@ -6,16 +6,11 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
          ajax url.
          */
         var ajax_url = {
-            data: web_path + '/web/internship/review/internship/data',
-            authorize: '/web/internship/review/authorize',
-            audit: '/web/internship/review/audit',
-            pass: '/web/internship/review/pass',
-            fail: '/web/internship/review/fail',
-            base_info_apply: '/web/internship/review/base_info_apply',
-            base_info_fill: '/web/internship/review/base_info_fill',
-            company_apply: '/web/internship/review/company_apply',
-            company_fill: '/web/internship/review/company_fill',
-            page: '/web/menu/internship/review'
+            data: web_path + '/web/internship/regulate/internship/data',
+            regulate: '/web/internship/regulate/list',
+            my_regulate: '/web/internship/regulate/my/list',
+            add: '/web/internship/regulate/add',
+            page: '/web/menu/internship/regulate'
         };
 
         navActive(ajax_url.page);
@@ -36,16 +31,12 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
             })
         };
 
-        var page_param = {
-            paramUsersType: $('#paramUsersType').val()
-        };
-
         /*
         web storage key.
         */
         var webStorageKey = {
-            INTERNSHIP_TITLE: 'INTERNSHIP_REVIEW_INTERNSHIP_TITLE_SEARCH',
-            DATA_RANGE: 'INTERNSHIP_REVIEW_DATA_RANGE_SEARCH'
+            INTERNSHIP_TITLE: 'INTERNSHIP_REGULATE_INTERNSHIP_TITLE_SEARCH',
+            DATA_RANGE: 'INTERNSHIP_REGULATE_DATA_RANGE_SEARCH'
         };
 
         /*
@@ -118,59 +109,27 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
         }
 
         /*
-         审核权限
-         */
-        $(tableData).delegate('.authorize', "click", function () {
-            $.address.value(ajax_url.authorize + '/' + $(this).attr('data-id'));
-        });
-
-        /*
-         审核
+        监管列表
         */
-        $(tableData).delegate('.review', "click", function () {
-            $.address.value(ajax_url.audit + '/' + $(this).attr('data-id'));
+        $(tableData).delegate('.regulate_list', "click", function () {
+            var id = $(this).attr('data-id');
+            $.address.value(ajax_url.regulate + "/" + id);
         });
 
         /*
-         通过
+        我的监管
         */
-        $(tableData).delegate('.pass_apply', "click", function () {
-            $.address.value(ajax_url.pass + '/' + $(this).attr('data-id'));
+        $(tableData).delegate('.my_regulate', "click", function () {
+            var id = $(this).attr('data-id');
+            $.address.value(ajax_url.my_regulate + "/" + id);
         });
 
         /*
-        未通过
+        写监管
         */
-        $(tableData).delegate('.fail_apply', "click", function () {
-            $.address.value(ajax_url.fail + '/' + $(this).attr('data-id'));
-        });
-
-        /*
-       基本信息修改申请
-       */
-        $(tableData).delegate('.basic_apply', "click", function () {
-            $.address.value(ajax_url.base_info_apply + '/' + $(this).attr('data-id'));
-        });
-
-        /*
-        基本信息修改填写中
-        */
-        $(tableData).delegate('.basic_fill', "click", function () {
-            $.address.value(ajax_url.base_info_fill + '/' + $(this).attr('data-id'));
-        });
-
-        /*
-        单位信息修改申请
-       */
-        $(tableData).delegate('.company_apply', "click", function () {
-            $.address.value(ajax_url.company_apply + '/' + $(this).attr('data-id'));
-        });
-
-        /*
-        单位信息修改填写中
-       */
-        $(tableData).delegate('.company_fill', "click", function () {
-            $.address.value(ajax_url.company_fill + '/' + $(this).attr('data-id'));
+        $(tableData).delegate('.write_regulate', "click", function () {
+            var id = $(this).attr('data-id');
+            $.address.value(ajax_url.add + '/' + id);
         });
 
         init();

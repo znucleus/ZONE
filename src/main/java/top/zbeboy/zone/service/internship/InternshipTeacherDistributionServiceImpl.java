@@ -50,6 +50,14 @@ public class InternshipTeacherDistributionServiceImpl implements InternshipTeach
     }
 
     @Override
+    public Result<Record> findByInternshipReleaseIdAndStaffId(String internshipReleaseId, int staffId) {
+        return create.select()
+                .from(INTERNSHIP_TEACHER_DISTRIBUTION)
+                .where(INTERNSHIP_TEACHER_DISTRIBUTION.INTERNSHIP_RELEASE_ID.eq(internshipReleaseId).and(INTERNSHIP_TEACHER_DISTRIBUTION.STAFF_ID.eq(staffId)))
+                .fetch();
+    }
+
+    @Override
     public Result<Record2<Integer, String>> findByInternshipReleaseIdAndDistinctStaffId(String internshipReleaseId) {
         return create.selectDistinct(INTERNSHIP_TEACHER_DISTRIBUTION.STAFF_ID,
                 USERS.REAL_NAME)
