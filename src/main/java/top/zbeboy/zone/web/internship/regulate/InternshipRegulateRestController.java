@@ -10,15 +10,19 @@ import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.service.data.StaffService;
+import top.zbeboy.zone.service.export.InternshipRegulateExport;
+import top.zbeboy.zone.service.export.InternshipTeacherDistributionExport;
 import top.zbeboy.zone.service.internship.InternshipInfoService;
 import top.zbeboy.zone.service.internship.InternshipRegulateService;
 import top.zbeboy.zone.service.internship.InternshipReleaseService;
 import top.zbeboy.zone.service.internship.InternshipTeacherDistributionService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
+import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
+import top.zbeboy.zone.web.bean.internship.distribution.InternshipTeacherDistributionBean;
 import top.zbeboy.zone.web.bean.internship.regulate.InternshipRegulateBean;
 import top.zbeboy.zone.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
@@ -33,7 +37,9 @@ import top.zbeboy.zone.web.vo.internship.regulate.InternshipRegulateEditVo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.*;
 
 @RestController
@@ -62,6 +68,9 @@ public class InternshipRegulateRestController {
 
     @Resource
     private StaffService staffService;
+
+    @Resource
+    private UploadService uploadService;
 
     /**
      * 数据
@@ -117,6 +126,27 @@ public class InternshipRegulateRestController {
         dataTablesUtil.setiTotalRecords(internshipRegulateService.countAll(dataTablesUtil));
         dataTablesUtil.setiTotalDisplayRecords(internshipRegulateService.countByCondition(dataTablesUtil));
         return new ResponseEntity<>(dataTablesUtil, HttpStatus.OK);
+    }
+
+    /**
+     * 导出 分配列表 数据
+     *
+     * @param request 请求
+     */
+    @GetMapping("/web/internship/regulate/export")
+    public void export(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        DataTablesUtil dataTablesUtil = new DataTablesUtil(request, "studentNumber", "asc",
+                "实习监管数据表", Workbook.internshipFilePath());
+        List<InternshipRegulateBean> beans = new ArrayList<>();
+        Result<Record> records = internshipRegulateService.export(dataTablesUtil);
+       if(records.isNotEmpty()){
+           beans = records.into(InternshipRegulateBean.class);
+       }
+        InternshipRegulateExport export = new InternshipRegulateExport(beans);
+        DataTablesUtil.ExportInfo exportInfo = dataTablesUtil.getExportInfo();
+        if (export.exportExcel(exportInfo.getLastPath(), exportInfo.getFileName(), exportInfo.getExt())) {
+            uploadService.download(exportInfo.getFileName(), exportInfo.getFilePath(), response, request);
+        }
     }
 
     /**

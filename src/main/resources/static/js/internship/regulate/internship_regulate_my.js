@@ -331,7 +331,7 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
                 fileName: $('#export_file_name').val(),
                 ext: 'xlsx'
             };
-            window.location.href = encodeURI(getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&export_info=" + JSON.stringify(exportFile));
+            window.location.href = encodeURI(getAjaxUrl().export + "?extra_search=" + searchParam + "&export_info=" + JSON.stringify(exportFile));
         });
 
         /*

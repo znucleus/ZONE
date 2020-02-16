@@ -63,6 +63,11 @@ public class InternshipRegulateServiceImpl implements InternshipRegulateService,
     }
 
     @Override
+    public Result<Record> export(DataTablesUtil dataTablesUtil) {
+        return queryAll(create, INTERNSHIP_REGULATE, dataTablesUtil, false);
+    }
+
+    @Override
     public int countAll(DataTablesUtil dataTablesUtil) {
         return countAll(create, INTERNSHIP_REGULATE, dataTablesUtil, true);
     }
