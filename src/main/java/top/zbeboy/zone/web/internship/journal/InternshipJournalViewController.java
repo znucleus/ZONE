@@ -96,6 +96,9 @@ public class InternshipJournalViewController {
                 }
             }
         }
+        if (internshipConditionCommon.journalCondition(id)) {
+            modelMap.addAttribute("canAdd", 1);
+        }
         return "web/internship/journal/internship_journal_list::#page-wrapper";
     }
 

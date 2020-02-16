@@ -1,59 +1,72 @@
-//# sourceURL=internship_journal_list.js
-require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "responsive.bootstrap4", "check.all", "jquery.address", "messenger"],
+//# sourceURL=internship_regulate_list.js
+require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "responsive.bootstrap4", "check.all", "jquery.address", "messenger", "flatpickr-zh"],
     function ($, Swal, Handlebars, workbook, navActive) {
-
-        var page_param = {
-            paramInternshipReleaseId: $('#paramInternshipReleaseId').val(),
-            authorities: $('#authorities').val(),
-            usersTypeName: $('#usersTypeName').val(),
-            studentId: Number($('#studentId').val()),
-            staffId: Number($('#staffId').val()),
-            canAdd: Number($('#canAdd').val())
-        };
-
-        /*
-        参数
-        */
-        var param = {
-            studentName: '',
-            studentNumber: '',
-            organize: '',
-            guidanceTeacher: '',
-            internshipReleaseId: page_param.paramInternshipReleaseId,
-            dataRange: 0,
-            staffId: ''
-        };
-
-        /*
-        web storage key.
-        */
-        var webStorageKey = {
-            STUDENT_NAME: 'INTERNSHIP_JOURNAL_LIST_STUDENT_NAME_SEARCH_' + page_param.paramInternshipReleaseId,
-            STUDENT_NUMBER: 'INTERNSHIP_JOURNAL_LIST_STUDENT_NUMBER_SEARCH_' + page_param.paramInternshipReleaseId,
-            ORGANIZE: 'INTERNSHIP_JOURNAL_LIST_ORGANIZE_SEARCH_' + page_param.paramInternshipReleaseId
-        };
 
         /*
          ajax url
          */
         function getAjaxUrl() {
             return {
-                data: web_path + '/web/internship/journal/data',
-                obtain_staff_data: web_path + '/web/internship/journal/team/staff',
-                del: web_path + '/web/internship/journal/del',
-                edit: '/web/internship/journal/edit',
-                look: '/web/internship/journal/look',
-                download: web_path + '/web/internship/journal/download',
-                downloads: web_path + '/web/internship/journal/downloads',
-                statistical: web_path + '/web/internship/journal/statistical',
-                exports: web_path + '/web/internship/journal/exports',
-                add: '/web/internship/journal/add',
-                page: '/web/menu/internship/journal'
+                data: web_path + '/web/internship/regulate/data',
+                export: web_path + '/web/internship/regulate/export',
+                del: web_path + '/web/internship/regulate/del',
+                edit: '/web/internship/regulate/edit',
+                add: '/web/internship/regulate/add',
+                look: '/web/internship/regulate/look',
+                page: '/web/menu/internship/regulate'
             };
         }
 
         // 刷新时选中菜单
         navActive(getAjaxUrl().page);
+
+        /*
+         参数id
+         */
+        function getParamId() {
+            return {
+                studentName: '#search_student_name',
+                studentNumber: '#search_student_number',
+                schoolGuidanceTeacher: '#search_school_guidance_teacher',
+                createDate: '#search_create_date'
+            };
+        }
+
+        var page_param = {
+            paramInternshipReleaseId: $('#paramInternshipReleaseId').val(),
+            authorities: $('#authorities').val(),
+            staffId: Number($('#staffId').val()),
+            canAdd: Number($('#canAdd').val())
+        };
+
+        /*
+         参数
+         */
+        var param = {
+            studentName: '',
+            studentNumber: '',
+            schoolGuidanceTeacher: '',
+            createDate: '',
+            internshipReleaseId: page_param.paramInternshipReleaseId,
+            dataRange: 0
+        };
+
+        /*
+        web storage key.
+        */
+        var webStorageKey = {
+            STUDENT_NAME: 'INTERNSHIP_REGULATE_LIST_STUDENT_NAME_SEARCH_' + page_param.paramInternshipReleaseId,
+            STUDENT_NUMBER: 'INTERNSHIP_REGULATE_LIST_STUDENT_NUMBER_SEARCH_' + page_param.paramInternshipReleaseId,
+            SCHOOL_GUIDANCE_TEACHER: 'INTERNSHIP_REGULATE_LIST_SCHOOL_GUIDANCE_TEACHER_SEARCH_' + page_param.paramInternshipReleaseId,
+            CREATE_DATE: 'INTERNSHIP_REGULATE_LIST_CREATE_DATE_SEARCH_' + page_param.paramInternshipReleaseId
+        };
+
+        /*
+         得到参数
+         */
+        function getParam() {
+            return param;
+        }
 
         // 预编译模板
         var template = Handlebars.compile($("#operator_button").html());
@@ -86,7 +99,7 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
                 {"data": null},
                 {"data": "studentName"},
                 {"data": "studentNumber"},
-                {"data": "organize"},
+                {"data": "studentTel"},
                 {"data": "schoolGuidanceTeacher"},
                 {"data": "createDateStr"},
                 {"data": null}
@@ -103,20 +116,16 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
                     targets: 1,
                     orderable: false,
                     render: function (a, b, c, d) {
-                        return '<input type="checkbox" value="' + c.internshipJournalId + '" name="check"/>';
+                        return '<input type="checkbox" value="' + c.internshipRegulateId + '" name="check"/>';
                     }
                 },
                 {
                     targets: 7,
                     orderable: false,
                     render: function (a, b, c, d) {
-                        var context = null;
-                        var html = '<i class="fa fa-lock"></i>';
-                        // 当前用户查看自己的实习日志，指导教师查看 或系统，管理员 或发布人
-                        if (c.studentId === page_param.studentId ||
-                            page_param.authorities === workbook.authorities.ROLE_SYSTEM ||
-                            page_param.authorities === workbook.authorities.ROLE_ADMIN ||
-                            c.staffId === page_param.staffId) {
+                        var context = [];
+                        if (page_param.authorities === workbook.authorities.ROLE_SYSTEM ||
+                            page_param.authorities === workbook.authorities.ROLE_ADMIN) {
                             context =
                                 {
                                     func: [
@@ -124,55 +133,47 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
                                             "name": "查看",
                                             "css": "look",
                                             "type": "info",
-                                            "id": c.internshipJournalId
+                                            "id": c.internshipRegulateId
                                         },
                                         {
                                             "name": "编辑",
                                             "css": "edit",
                                             "type": "primary",
-                                            "id": c.internshipJournalId
+                                            "id": c.internshipRegulateId
                                         },
                                         {
                                             "name": "删除",
                                             "css": "del",
                                             "type": "danger",
-                                            "id": c.internshipJournalId
+                                            "id": c.internshipRegulateId
                                         }
                                     ]
                                 };
-
-                            if (c.internshipJournalWord && c.internshipJournalWord !== '') {
-                                context.func.push({
-                                    "name": "下载",
-                                    "css": "download",
-                                    "type": "primary",
-                                    "id": c.internshipJournalId
-                                });
-                            }
                         } else {
-                            if (c.isSeeStaff === 1) {
-                                if (page_param.usersTypeName === workbook.users_type.STAFF_USERS_TYPE) {
-                                    context =
-                                        {
-                                            func: [
-                                                {
-                                                    "name": "查看",
-                                                    "css": "look",
-                                                    "type": "info",
-                                                    "id": c.internshipJournalId
-                                                }
-                                            ]
-                                        };
-
-                                    if (c.internshipJournalWord && c.internshipJournalWord !== '') {
-                                        context.func.push({
-                                            "name": "下载",
-                                            "css": "download",
-                                            "type": "primary",
-                                            "id": c.internshipJournalId
-                                        });
-                                    }
-                                }
+                            if (c.staffId === page_param.staffId) {
+                                context =
+                                    {
+                                        func: [
+                                            {
+                                                "name": "查看",
+                                                "css": "look",
+                                                "type": "info",
+                                                "id": c.internshipRegulateId
+                                            },
+                                            {
+                                                "name": "编辑",
+                                                "css": "edit",
+                                                "type": "primary",
+                                                "id": c.internshipRegulateId
+                                            },
+                                            {
+                                                "name": "删除",
+                                                "css": "del",
+                                                "type": "danger",
+                                                "id": c.internshipRegulateId
+                                            }
+                                        ]
+                                    };
                             } else {
                                 context =
                                     {
@@ -181,27 +182,13 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
                                                 "name": "查看",
                                                 "css": "look",
                                                 "type": "info",
-                                                "id": c.internshipJournalId
+                                                "id": c.internshipRegulateId
                                             }
                                         ]
                                     };
-
-                                if (c.internshipJournalWord && c.internshipJournalWord !== '') {
-                                    context.func.push({
-                                        "name": "下载",
-                                        "css": "download",
-                                        "type": "primary",
-                                        "id": c.internshipJournalId
-                                    });
-                                }
                             }
-
                         }
-
-                        if (context != null) {
-                            html = template(context);
-                        }
-                        return html;
+                        return template(context);
                     }
                 }
 
@@ -243,46 +230,25 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
                 });
 
                 tableElement.delegate('.del', "click", function () {
-                    journal_del($(this).attr('data-id'));
-                });
-
-                tableElement.delegate('.download', "click", function () {
-                    download($(this).attr('data-id'));
+                    regulate_del($(this).attr('data-id'));
                 });
                 // 初始化搜索框中内容
                 initSearchInput();
             }
         });
 
-        var global_button = '  <button type="button" id="refresh" class="btn btn-light btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
+        var global_button = '  <button type="button" id="refresh" class="btn btn-lightbtn-sm"><i class="fa fa-refresh"></i>刷新</button>';
         if (page_param.authorities === workbook.authorities.ROLE_SYSTEM ||
             page_param.authorities === workbook.authorities.ROLE_ADMIN) {
-            var temp = '  <button type="button" id="journal_dels" class="btn btn-outline-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>';
+            var temp = '  <button type="button" id="regulate_dels" class="btn btn-outline-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>';
             global_button = temp + global_button;
         }
         if (page_param.canAdd > 0) {
-            global_button = '<button type="button" id="journal_add" class="btn btn-outline-primary btn-sm"><i class="fa fa-plus"></i>添加</button>' +
+            global_button = '<button type="button" id="regulate_add" class="btn btn-outline-primary btn-sm"><i class="fa fa-plus"></i>添加</button>' +
                 global_button;
         }
+
         $('#global_button').append(global_button);
-
-        /*
-         参数id
-         */
-        function getParamId() {
-            return {
-                studentName: '#search_real_name',
-                studentNumber: '#search_student_number',
-                organize: '#search_organize'
-            };
-        }
-
-        /*
-         得到参数
-         */
-        function getParam() {
-            return param;
-        }
 
         /*
          初始化参数
@@ -290,25 +256,38 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
         function initParam() {
             param.studentName = $(getParamId().studentName).val();
             param.studentNumber = $(getParamId().studentNumber).val();
-            param.organize = $(getParamId().organize).val();
+            param.schoolGuidanceTeacher = $(getParamId().schoolGuidanceTeacher).val();
+            param.createDate = $(getParamId().createDate).val();
             if (typeof(Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.STUDENT_NAME, param.studentName);
                 sessionStorage.setItem(webStorageKey.STUDENT_NUMBER, param.studentNumber);
-                sessionStorage.setItem(webStorageKey.ORGANIZE, param.organize);
+                sessionStorage.setItem(webStorageKey.SCHOOL_GUIDANCE_TEACHER, param.schoolGuidanceTeacher);
+                sessionStorage.setItem(webStorageKey.CREATE_DATE, param.createDate);
             }
         }
 
+        $(getParamId().createDate).flatpickr({
+            "locale": "zh",
+            "mode": "range",
+            onClose: function () {
+                initParam();
+                myTable.ajax.reload();
+            }
+        });
+
         /*
         初始化搜索内容
-       */
+        */
         function initSearchContent() {
             var studentName = null;
             var studentNumber = null;
-            var organize = null;
+            var schoolGuidanceTeacher = null;
+            var createDate = null;
             if (typeof(Storage) !== "undefined") {
                 studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
                 studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
-                organize = sessionStorage.getItem(webStorageKey.ORGANIZE);
+                schoolGuidanceTeacher = sessionStorage.getItem(webStorageKey.SCHOOL_GUIDANCE_TEACHER);
+                createDate = sessionStorage.getItem(webStorageKey.CREATE_DATE);
             }
             if (studentName !== null) {
                 param.studentName = studentName;
@@ -318,8 +297,12 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
                 param.studentNumber = studentNumber;
             }
 
-            if (organize !== null) {
-                param.organize = organize;
+            if (schoolGuidanceTeacher !== null) {
+                param.schoolGuidanceTeacher = schoolGuidanceTeacher;
+            }
+
+            if (createDate !== null) {
+                param.createDate = createDate;
             }
         }
 
@@ -329,11 +312,13 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
         function initSearchInput() {
             var studentName = null;
             var studentNumber = null;
-            var organize = null;
+            var schoolGuidanceTeacher = null;
+            var createDate = null;
             if (typeof(Storage) !== "undefined") {
                 studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
                 studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
-                organize = sessionStorage.getItem(webStorageKey.ORGANIZE);
+                schoolGuidanceTeacher = sessionStorage.getItem(webStorageKey.SCHOOL_GUIDANCE_TEACHER);
+                createDate = sessionStorage.getItem(webStorageKey.CREATE_DATE);
             }
             if (studentName !== null) {
                 $(getParamId().studentName).val(studentName);
@@ -343,8 +328,12 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
                 $(getParamId().studentNumber).val(studentNumber);
             }
 
-            if (organize !== null) {
-                $(getParamId().organize).val(organize);
+            if (schoolGuidanceTeacher !== null) {
+                $(getParamId().schoolGuidanceTeacher).val(schoolGuidanceTeacher);
+            }
+
+            if (createDate !== null) {
+                $(getParamId().createDate).val(createDate);
             }
         }
 
@@ -354,29 +343,9 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
         function cleanParam() {
             $(getParamId().studentName).val('');
             $(getParamId().studentNumber).val('');
-            $(getParamId().organize).val('');
+            $(getParamId().schoolGuidanceTeacher).val('');
+            $(getParamId().createDate).val('');
         }
-
-        $(getParamId().studentName).keyup(function (event) {
-            if (event.keyCode === 13) {
-                initParam();
-                myTable.ajax.reload();
-            }
-        });
-
-        $(getParamId().studentNumber).keyup(function (event) {
-            if (event.keyCode === 13) {
-                initParam();
-                myTable.ajax.reload();
-            }
-        });
-
-        $(getParamId().organize).keyup(function (event) {
-            if (event.keyCode === 13) {
-                initParam();
-                myTable.ajax.reload();
-            }
-        });
 
         $('#search').click(function () {
             initParam();
@@ -393,64 +362,98 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
             myTable.ajax.reload();
         });
 
+        $(getParamId().studentName).keyup(function (event) {
+            if (event.keyCode === 13) {
+                initParam();
+                myTable.ajax.reload();
+            }
+        });
+
+        $(getParamId().studentNumber).keyup(function (event) {
+            if (event.keyCode === 13) {
+                initParam();
+                myTable.ajax.reload();
+            }
+        });
+
+        $(getParamId().schoolGuidanceTeacher).keyup(function (event) {
+            if (event.keyCode === 13) {
+                initParam();
+                myTable.ajax.reload();
+            }
+        });
+
+        $('#export_xls').click(function () {
+            initParam();
+            var searchParam = JSON.stringify(getParam());
+            var exportFile = {
+                fileName: $('#export_file_name').val(),
+                ext: 'xls'
+            };
+            window.location.href = encodeURI(getAjaxUrl().export + "?extra_search=" + searchParam + "&export_info=" + JSON.stringify(exportFile));
+        });
+
+        $('#export_xlsx').click(function () {
+            initParam();
+            var searchParam = JSON.stringify(getParam());
+            var exportFile = {
+                fileName: $('#export_file_name').val(),
+                ext: 'xlsx'
+            };
+            window.location.href = encodeURI(getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&export_info=" + JSON.stringify(exportFile));
+        });
+
         /*
          添加
-        */
-        $('#journal_add').click(function () {
+         */
+        $('#regulate_add').click(function () {
             $.address.value(getAjaxUrl().add + '/' + page_param.paramInternshipReleaseId);
         });
 
         /*
          批量删除
          */
-        $('#journal_dels').click(function () {
-            var journalIds = [];
+        $('#regulate_dels').click(function () {
+            var regulateIds = [];
             var ids = $('input[name="check"]:checked');
             for (var i = 0; i < ids.length; i++) {
-                journalIds.push($(ids[i]).val());
+                regulateIds.push($(ids[i]).val());
             }
-            if (journalIds.length > 0) {
-                journal_dels(journalIds);
+            if (regulateIds.length > 0) {
+                regulate_dels(regulateIds);
             } else {
-                Messenger().post("未发现有选中的日志!");
+                Messenger().post("未发现有选中的记录!");
             }
         });
 
         /*
          查看页面
          */
-        function look(journalId) {
-            $.address.value(getAjaxUrl().look + '/' + journalId);
+        function look(regulateId) {
+            $.address.value(getAjaxUrl().look + '/' + regulateId);
         }
 
         /*
          编辑页面
          */
-        function edit(journalId) {
-            $.address.value(getAjaxUrl().edit + '/' + journalId);
-        }
-
-        /*
-         下载
-         */
-        function download(journalId) {
-            window.location.href = getAjaxUrl().download + '/' + journalId;
+        function edit(regulateId) {
+            $.address.value(getAjaxUrl().edit + '/' + regulateId);
         }
 
         /*
          删除
          */
-        function journal_del(journalId) {
+        function regulate_del(regulateId) {
             Swal.fire({
-                title: "确定删除日志吗？",
-                text: "日志删除！",
+                title: "确定删除监管记录吗？",
+                text: "记录删除！",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
                 preConfirm: function () {
-                    del(journalId);
+                    del(regulateId);
                 }
             });
         }
@@ -458,38 +461,38 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
         /*
          批量删除
          */
-        function journal_dels(journalIds) {
+        function regulate_dels(regulateIds) {
             Swal.fire({
-                title: "确定删除选中日志吗？",
-                text: "日志批量删除！",
+                title: "确定删除选中的监管记录吗？",
+                text: "记录批量删除！",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
                 preConfirm: function () {
-                    dels(journalIds);
+                    dels(regulateIds);
                 }
             });
         }
 
-        function del(journalId) {
-            sendDelAjax(journalId);
+        function del(regulateId) {
+            sendDelAjax(regulateId);
         }
 
-        function dels(journalIds) {
-            sendDelAjax(journalIds.join(','));
+        function dels(regulateIds) {
+            sendDelAjax(regulateIds.join(','));
         }
 
         /**
          * 删除ajax
-         * @param journalId
+         * @param regulateId
          */
-        function sendDelAjax(journalId) {
+        function sendDelAjax(regulateId) {
             $.ajax({
                 type: 'POST',
                 url: getAjaxUrl().del,
-                data: {journalIds: journalId},
+                data: {regulateIds: regulateId},
                 success: function (data) {
                     Messenger().post({
                         message: data.msg,
@@ -510,66 +513,4 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
                 }
             });
         }
-
-        init();
-
-        function init() {
-            initTeamStaff();
-        }
-
-        function initTeamStaff() {
-            $.get(getAjaxUrl().obtain_staff_data + "/" + page_param.paramInternshipReleaseId, function (data) {
-                teamData(data);
-            });
-        }
-
-        var teamElement = $('#team');
-
-        function teamData(data) {
-            data.listResult.forEach(function (e, v) {
-                if (page_param.usersTypeName === workbook.users_type.STAFF_USERS_TYPE ||
-                    page_param.authorities === workbook.authorities.ROLE_SYSTEM ||
-                    page_param.authorities === workbook.authorities.ROLE_ADMIN) {
-                    e.canOperator = 1;
-                } else {
-                    e.canOperator = 0;
-                }
-
-            });
-            var template = Handlebars.compile($("#team_template").html());
-            teamElement.html(template(data));
-        }
-
-        teamElement.delegate('.staff', "click", function () {
-            var staffIds = [];
-            var ids = $('input[name="staff"]:checked');
-            for (var i = 0; i < ids.length; i++) {
-                staffIds.push($(ids[i]).val());
-            }
-            if (staffIds.length > 0) {
-                param.staffId = staffIds.join(',');
-                param.dataRange = 2;
-            } else {
-                param.staffId = '';
-                param.dataRange = 0;
-            }
-            initParam();
-            myTable.ajax.reload();
-
-        });
-
-        teamElement.delegate('.download', "click", function () {
-            var staffId = $(this).attr("data-id");
-            window.location.href = getAjaxUrl().downloads + "/" + page_param.paramInternshipReleaseId + "/" + staffId;
-        });
-
-        teamElement.delegate('.count', "click", function () {
-            var staffId = $(this).attr("data-id");
-            $.address.value(getAjaxUrl().statistical + "/" + page_param.paramInternshipReleaseId + "/" + staffId);
-        });
-
-        teamElement.delegate('.export', "click", function () {
-            var staffId = $(this).attr("data-id");
-            window.location.href = getAjaxUrl().exports + "/" + page_param.paramInternshipReleaseId + "/" + staffId;
-        });
     });
