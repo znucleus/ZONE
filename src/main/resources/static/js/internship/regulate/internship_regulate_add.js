@@ -270,7 +270,18 @@ require(["jquery", "tools", "handlebars", "sweetalert2", "nav.active", "moment-w
                 data: $('#app_form').serialize(),
                 success: function (data) {
                     tools.buttonEndLoading(button_id.save.id, button_id.save.text);
-                    Swal.fire(data.state ? '保存成功' : '保存失败', data.msg, data.state ? 'success' : 'error');
+                    if (data.state) {
+                        Swal.fire({
+                            title: data.msg,
+                            type: "success",
+                            confirmButtonText: "确定",
+                            preConfirm: function () {
+                                window.history.go(-1);
+                            }
+                        });
+                    } else {
+                        Swal.fire('保存失败', data.msg, 'error');
+                    }
                 },
                 error: function (XMLHttpRequest) {
                     tools.buttonEndLoading(button_id.save.id, button_id.save.text);
