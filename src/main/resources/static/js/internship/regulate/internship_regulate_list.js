@@ -8,7 +8,7 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
         function getAjaxUrl() {
             return {
                 data: web_path + '/web/internship/regulate/data',
-                export: web_path + '/web/internship/regulate/export',
+                export_url: web_path + '/web/internship/regulate/export',
                 del: web_path + '/web/internship/regulate/delete',
                 edit: '/web/internship/regulate/edit',
                 add: '/web/internship/regulate/add',
@@ -365,7 +365,7 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
                 fileName: $('#export_file_name').val(),
                 ext: 'xls'
             };
-            window.location.href = encodeURI(getAjaxUrl().export + "?extra_search=" + searchParam + "&export_info=" + JSON.stringify(exportFile));
+            window.location.href = encodeURI(getAjaxUrl().export_url + "?extra_search=" + searchParam + "&export_info=" + JSON.stringify(exportFile));
         });
 
         $('#export_xlsx').click(function () {
@@ -375,7 +375,7 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
                 fileName: $('#export_file_name').val(),
                 ext: 'xlsx'
             };
-            window.location.href = encodeURI(getAjaxUrl().export + "?extra_search=" + searchParam + "&export_info=" + JSON.stringify(exportFile));
+            window.location.href = encodeURI(getAjaxUrl().export_url + "?extra_search=" + searchParam + "&export_info=" + JSON.stringify(exportFile));
         });
 
         /*

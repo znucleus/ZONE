@@ -478,7 +478,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
          * @param studentId
          * @param internshipReleaseId
          */
-        function sendDelAjax(studentId, internshipReleaseId,) {
+        function sendDelAjax(studentId, internshipReleaseId) {
             $.ajax({
                 type: 'POST',
                 url: getAjaxUrl().del,

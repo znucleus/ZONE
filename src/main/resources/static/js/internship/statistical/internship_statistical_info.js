@@ -40,7 +40,7 @@ require(["jquery", "nav.active", "responsive.bootstrap4", "jquery.address", "mes
         function getAjaxUrl() {
             return {
                 data: web_path + '/web/internship/statistical/info/data',
-                export: web_path + '/web/internship/statistical/info/export',
+                export_url: web_path + '/web/internship/statistical/info/export',
                 page: '/web/menu/internship/statistical'
             };
         }
@@ -385,7 +385,7 @@ require(["jquery", "nav.active", "responsive.bootstrap4", "jquery.address", "mes
                 fileName: $('#export_file_name').val(),
                 ext: 'xls'
             };
-            window.location.href = encodeURI(getAjaxUrl().export + "?extra_search=" + searchParam + "&export_info=" + JSON.stringify(exportFile));
+            window.location.href = encodeURI(getAjaxUrl().export_url + "?extra_search=" + searchParam + "&export_info=" + JSON.stringify(exportFile));
         });
 
         $('#export_xlsx').click(function () {
@@ -395,6 +395,6 @@ require(["jquery", "nav.active", "responsive.bootstrap4", "jquery.address", "mes
                 fileName: $('#export_file_name').val(),
                 ext: 'xlsx'
             };
-            window.location.href = encodeURI(getAjaxUrl().export + "?extra_search=" + searchParam + "&export_info=" + JSON.stringify(exportFile));
+            window.location.href = encodeURI(getAjaxUrl().export_url + "?extra_search=" + searchParam + "&export_info=" + JSON.stringify(exportFile));
         });
     });
