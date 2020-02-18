@@ -1,15 +1,15 @@
-package top.zbeboy.zone.web.vo.data.weixin;
+package top.zbeboy.zone.web.vo.attend.weixin;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-public class WeiXinSubscribeAddVo {
+public class AttendWxStudentSubscribeAddVo {
     @NotBlank(message = "模板ID不能为空")
     @Size(max = 64, message = "模板ID64个字符以内")
     private String templateId;
-    @NotBlank(message = "类型不能为空")
-    @Size(max = 10, message = "类型10个字符以内")
-    private String type;
+    @NotBlank(message = "签到发布主表ID不能为空")
+    @Size(max = 64, message = "签到发布主表ID不正确")
+    private String attendReleaseId;
     private String page;
     private String data;
     private String miniProgramState;
@@ -23,12 +23,12 @@ public class WeiXinSubscribeAddVo {
         this.templateId = templateId;
     }
 
-    public String getType() {
-        return type;
+    public String getAttendReleaseId() {
+        return attendReleaseId;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setAttendReleaseId(String attendReleaseId) {
+        this.attendReleaseId = attendReleaseId;
     }
 
     public String getPage() {

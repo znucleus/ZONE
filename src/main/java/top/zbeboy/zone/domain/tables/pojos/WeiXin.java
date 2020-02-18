@@ -24,12 +24,13 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class WeiXin implements Serializable {
 
-    private static final long serialVersionUID = -990482103;
+    private static final long serialVersionUID = 1519106550;
 
     private Integer weiXinId;
     private String  openId;
     private String  sessionKey;
     private String  unionId;
+    private String  appId;
     private String  username;
 
     public WeiXin() {}
@@ -39,6 +40,7 @@ public class WeiXin implements Serializable {
         this.openId = value.openId;
         this.sessionKey = value.sessionKey;
         this.unionId = value.unionId;
+        this.appId = value.appId;
         this.username = value.username;
     }
 
@@ -47,12 +49,14 @@ public class WeiXin implements Serializable {
         String  openId,
         String  sessionKey,
         String  unionId,
+        String  appId,
         String  username
     ) {
         this.weiXinId = weiXinId;
         this.openId = openId;
         this.sessionKey = sessionKey;
         this.unionId = unionId;
+        this.appId = appId;
         this.username = username;
     }
 
@@ -64,6 +68,7 @@ public class WeiXin implements Serializable {
         this.weiXinId = weiXinId;
     }
 
+    @NotNull
     @Size(max = 200)
     public String getOpenId() {
         return this.openId;
@@ -93,6 +98,16 @@ public class WeiXin implements Serializable {
 
     @NotNull
     @Size(max = 64)
+    public String getAppId() {
+        return this.appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
+    }
+
+    @NotNull
+    @Size(max = 64)
     public String getUsername() {
         return this.username;
     }
@@ -109,6 +124,7 @@ public class WeiXin implements Serializable {
         sb.append(", ").append(openId);
         sb.append(", ").append(sessionKey);
         sb.append(", ").append(unionId);
+        sb.append(", ").append(appId);
         sb.append(", ").append(username);
 
         sb.append(")");

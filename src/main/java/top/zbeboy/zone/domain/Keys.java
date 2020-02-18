@@ -24,6 +24,7 @@ import top.zbeboy.zone.domain.tables.AttendMapKey;
 import top.zbeboy.zone.domain.tables.AttendRelease;
 import top.zbeboy.zone.domain.tables.AttendReleaseSub;
 import top.zbeboy.zone.domain.tables.AttendUsers;
+import top.zbeboy.zone.domain.tables.AttendWxStudentSubscribe;
 import top.zbeboy.zone.domain.tables.Authorities;
 import top.zbeboy.zone.domain.tables.AuthorizeType;
 import top.zbeboy.zone.domain.tables.Building;
@@ -76,7 +77,6 @@ import top.zbeboy.zone.domain.tables.UserNotify;
 import top.zbeboy.zone.domain.tables.Users;
 import top.zbeboy.zone.domain.tables.UsersType;
 import top.zbeboy.zone.domain.tables.WeiXin;
-import top.zbeboy.zone.domain.tables.WeiXinSubscribe;
 import top.zbeboy.zone.domain.tables.records.AcademicTitleRecord;
 import top.zbeboy.zone.domain.tables.records.AnswerBankRecord;
 import top.zbeboy.zone.domain.tables.records.AnswerOptionRecord;
@@ -90,6 +90,7 @@ import top.zbeboy.zone.domain.tables.records.AttendMapKeyRecord;
 import top.zbeboy.zone.domain.tables.records.AttendReleaseRecord;
 import top.zbeboy.zone.domain.tables.records.AttendReleaseSubRecord;
 import top.zbeboy.zone.domain.tables.records.AttendUsersRecord;
+import top.zbeboy.zone.domain.tables.records.AttendWxStudentSubscribeRecord;
 import top.zbeboy.zone.domain.tables.records.AuthoritiesRecord;
 import top.zbeboy.zone.domain.tables.records.AuthorizeTypeRecord;
 import top.zbeboy.zone.domain.tables.records.BuildingRecord;
@@ -142,7 +143,6 @@ import top.zbeboy.zone.domain.tables.records.UserNotifyRecord;
 import top.zbeboy.zone.domain.tables.records.UsersRecord;
 import top.zbeboy.zone.domain.tables.records.UsersTypeRecord;
 import top.zbeboy.zone.domain.tables.records.WeiXinRecord;
-import top.zbeboy.zone.domain.tables.records.WeiXinSubscribeRecord;
 
 
 /**
@@ -165,6 +165,7 @@ public class Keys {
 
     public static final Identity<AcademicTitleRecord, Integer> IDENTITY_ACADEMIC_TITLE = Identities0.IDENTITY_ACADEMIC_TITLE;
     public static final Identity<AttendReleaseSubRecord, Integer> IDENTITY_ATTEND_RELEASE_SUB = Identities0.IDENTITY_ATTEND_RELEASE_SUB;
+    public static final Identity<AttendWxStudentSubscribeRecord, Integer> IDENTITY_ATTEND_WX_STUDENT_SUBSCRIBE = Identities0.IDENTITY_ATTEND_WX_STUDENT_SUBSCRIBE;
     public static final Identity<AuthorizeTypeRecord, Integer> IDENTITY_AUTHORIZE_TYPE = Identities0.IDENTITY_AUTHORIZE_TYPE;
     public static final Identity<BuildingRecord, Integer> IDENTITY_BUILDING = Identities0.IDENTITY_BUILDING;
     public static final Identity<CollegeRecord, Integer> IDENTITY_COLLEGE = Identities0.IDENTITY_COLLEGE;
@@ -182,7 +183,6 @@ public class Keys {
     public static final Identity<StudentRecord, Integer> IDENTITY_STUDENT = Identities0.IDENTITY_STUDENT;
     public static final Identity<UsersTypeRecord, Integer> IDENTITY_USERS_TYPE = Identities0.IDENTITY_USERS_TYPE;
     public static final Identity<WeiXinRecord, Integer> IDENTITY_WEI_XIN = Identities0.IDENTITY_WEI_XIN;
-    public static final Identity<WeiXinSubscribeRecord, Integer> IDENTITY_WEI_XIN_SUBSCRIBE = Identities0.IDENTITY_WEI_XIN_SUBSCRIBE;
 
     // -------------------------------------------------------------------------
     // UNIQUE and PRIMARY KEY definitions
@@ -203,6 +203,8 @@ public class Keys {
     public static final UniqueKey<AttendReleaseSubRecord> KEY_ATTEND_RELEASE_SUB_PRIMARY = UniqueKeys0.KEY_ATTEND_RELEASE_SUB_PRIMARY;
     public static final UniqueKey<AttendUsersRecord> KEY_ATTEND_USERS_PRIMARY = UniqueKeys0.KEY_ATTEND_USERS_PRIMARY;
     public static final UniqueKey<AttendUsersRecord> KEY_ATTEND_USERS_STUDENT_ID = UniqueKeys0.KEY_ATTEND_USERS_STUDENT_ID;
+    public static final UniqueKey<AttendWxStudentSubscribeRecord> KEY_ATTEND_WX_STUDENT_SUBSCRIBE_PRIMARY = UniqueKeys0.KEY_ATTEND_WX_STUDENT_SUBSCRIBE_PRIMARY;
+    public static final UniqueKey<AttendWxStudentSubscribeRecord> KEY_ATTEND_WX_STUDENT_SUBSCRIBE_STUDENT_ID = UniqueKeys0.KEY_ATTEND_WX_STUDENT_SUBSCRIBE_STUDENT_ID;
     public static final UniqueKey<AuthoritiesRecord> KEY_AUTHORITIES_PRIMARY = UniqueKeys0.KEY_AUTHORITIES_PRIMARY;
     public static final UniqueKey<AuthorizeTypeRecord> KEY_AUTHORIZE_TYPE_PRIMARY = UniqueKeys0.KEY_AUTHORIZE_TYPE_PRIMARY;
     public static final UniqueKey<AuthorizeTypeRecord> KEY_AUTHORIZE_TYPE_AUTHORIZE_TYPE_NAME = UniqueKeys0.KEY_AUTHORIZE_TYPE_AUTHORIZE_TYPE_NAME;
@@ -269,7 +271,6 @@ public class Keys {
     public static final UniqueKey<UsersTypeRecord> KEY_USERS_TYPE_PRIMARY = UniqueKeys0.KEY_USERS_TYPE_PRIMARY;
     public static final UniqueKey<UsersTypeRecord> KEY_USERS_TYPE_USERS_TYPE_NAME = UniqueKeys0.KEY_USERS_TYPE_USERS_TYPE_NAME;
     public static final UniqueKey<WeiXinRecord> KEY_WEI_XIN_PRIMARY = UniqueKeys0.KEY_WEI_XIN_PRIMARY;
-    public static final UniqueKey<WeiXinSubscribeRecord> KEY_WEI_XIN_SUBSCRIBE_PRIMARY = UniqueKeys0.KEY_WEI_XIN_SUBSCRIBE_PRIMARY;
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions
@@ -293,6 +294,8 @@ public class Keys {
     public static final ForeignKey<AttendReleaseSubRecord, AttendReleaseRecord> ATTEND_RELEASE_SUB_IBFK_1 = ForeignKeys0.ATTEND_RELEASE_SUB_IBFK_1;
     public static final ForeignKey<AttendUsersRecord, StudentRecord> ATTEND_USERS_IBFK_2 = ForeignKeys0.ATTEND_USERS_IBFK_2;
     public static final ForeignKey<AttendUsersRecord, AttendReleaseRecord> ATTEND_USERS_IBFK_1 = ForeignKeys0.ATTEND_USERS_IBFK_1;
+    public static final ForeignKey<AttendWxStudentSubscribeRecord, StudentRecord> ATTEND_WX_STUDENT_SUBSCRIBE_IBFK_2 = ForeignKeys0.ATTEND_WX_STUDENT_SUBSCRIBE_IBFK_2;
+    public static final ForeignKey<AttendWxStudentSubscribeRecord, AttendReleaseRecord> ATTEND_WX_STUDENT_SUBSCRIBE_IBFK_1 = ForeignKeys0.ATTEND_WX_STUDENT_SUBSCRIBE_IBFK_1;
     public static final ForeignKey<AuthoritiesRecord, UsersRecord> AUTHORITIES_IBFK_1 = ForeignKeys0.AUTHORITIES_IBFK_1;
     public static final ForeignKey<BuildingRecord, CollegeRecord> BUILDING_IBFK_1 = ForeignKeys0.BUILDING_IBFK_1;
     public static final ForeignKey<CollegeRecord, SchoolRecord> COLLEGE_IBFK_1 = ForeignKeys0.COLLEGE_IBFK_1;
@@ -360,7 +363,6 @@ public class Keys {
     public static final ForeignKey<UsersRecord, UsersTypeRecord> USERS_IBFK_1 = ForeignKeys0.USERS_IBFK_1;
     public static final ForeignKey<UsersRecord, FilesRecord> USERS_IBFK_2 = ForeignKeys0.USERS_IBFK_2;
     public static final ForeignKey<WeiXinRecord, UsersRecord> WEI_XIN_IBFK_1 = ForeignKeys0.WEI_XIN_IBFK_1;
-    public static final ForeignKey<WeiXinSubscribeRecord, UsersRecord> WEI_XIN_SUBSCRIBE_IBFK_1 = ForeignKeys0.WEI_XIN_SUBSCRIBE_IBFK_1;
 
     // -------------------------------------------------------------------------
     // [#1459] distribute members to avoid static initialisers > 64kb
@@ -369,6 +371,7 @@ public class Keys {
     private static class Identities0 {
         public static Identity<AcademicTitleRecord, Integer> IDENTITY_ACADEMIC_TITLE = Internal.createIdentity(AcademicTitle.ACADEMIC_TITLE, AcademicTitle.ACADEMIC_TITLE.ACADEMIC_TITLE_ID);
         public static Identity<AttendReleaseSubRecord, Integer> IDENTITY_ATTEND_RELEASE_SUB = Internal.createIdentity(AttendReleaseSub.ATTEND_RELEASE_SUB, AttendReleaseSub.ATTEND_RELEASE_SUB.ATTEND_RELEASE_SUB_ID);
+        public static Identity<AttendWxStudentSubscribeRecord, Integer> IDENTITY_ATTEND_WX_STUDENT_SUBSCRIBE = Internal.createIdentity(AttendWxStudentSubscribe.ATTEND_WX_STUDENT_SUBSCRIBE, AttendWxStudentSubscribe.ATTEND_WX_STUDENT_SUBSCRIBE.SUBSCRIBE_ID);
         public static Identity<AuthorizeTypeRecord, Integer> IDENTITY_AUTHORIZE_TYPE = Internal.createIdentity(AuthorizeType.AUTHORIZE_TYPE, AuthorizeType.AUTHORIZE_TYPE.AUTHORIZE_TYPE_ID);
         public static Identity<BuildingRecord, Integer> IDENTITY_BUILDING = Internal.createIdentity(Building.BUILDING, Building.BUILDING.BUILDING_ID);
         public static Identity<CollegeRecord, Integer> IDENTITY_COLLEGE = Internal.createIdentity(College.COLLEGE, College.COLLEGE.COLLEGE_ID);
@@ -386,7 +389,6 @@ public class Keys {
         public static Identity<StudentRecord, Integer> IDENTITY_STUDENT = Internal.createIdentity(Student.STUDENT, Student.STUDENT.STUDENT_ID);
         public static Identity<UsersTypeRecord, Integer> IDENTITY_USERS_TYPE = Internal.createIdentity(UsersType.USERS_TYPE, UsersType.USERS_TYPE.USERS_TYPE_ID);
         public static Identity<WeiXinRecord, Integer> IDENTITY_WEI_XIN = Internal.createIdentity(WeiXin.WEI_XIN, WeiXin.WEI_XIN.WEI_XIN_ID);
-        public static Identity<WeiXinSubscribeRecord, Integer> IDENTITY_WEI_XIN_SUBSCRIBE = Internal.createIdentity(WeiXinSubscribe.WEI_XIN_SUBSCRIBE, WeiXinSubscribe.WEI_XIN_SUBSCRIBE.SUBSCRIBE_ID);
     }
 
     private static class UniqueKeys0 {
@@ -405,6 +407,8 @@ public class Keys {
         public static final UniqueKey<AttendReleaseSubRecord> KEY_ATTEND_RELEASE_SUB_PRIMARY = Internal.createUniqueKey(AttendReleaseSub.ATTEND_RELEASE_SUB, "KEY_attend_release_sub_PRIMARY", AttendReleaseSub.ATTEND_RELEASE_SUB.ATTEND_RELEASE_SUB_ID);
         public static final UniqueKey<AttendUsersRecord> KEY_ATTEND_USERS_PRIMARY = Internal.createUniqueKey(AttendUsers.ATTEND_USERS, "KEY_attend_users_PRIMARY", AttendUsers.ATTEND_USERS.ATTEND_USERS_ID);
         public static final UniqueKey<AttendUsersRecord> KEY_ATTEND_USERS_STUDENT_ID = Internal.createUniqueKey(AttendUsers.ATTEND_USERS, "KEY_attend_users_student_id", AttendUsers.ATTEND_USERS.STUDENT_ID, AttendUsers.ATTEND_USERS.ATTEND_RELEASE_ID);
+        public static final UniqueKey<AttendWxStudentSubscribeRecord> KEY_ATTEND_WX_STUDENT_SUBSCRIBE_PRIMARY = Internal.createUniqueKey(AttendWxStudentSubscribe.ATTEND_WX_STUDENT_SUBSCRIBE, "KEY_attend_wx_student_subscribe_PRIMARY", AttendWxStudentSubscribe.ATTEND_WX_STUDENT_SUBSCRIBE.SUBSCRIBE_ID);
+        public static final UniqueKey<AttendWxStudentSubscribeRecord> KEY_ATTEND_WX_STUDENT_SUBSCRIBE_STUDENT_ID = Internal.createUniqueKey(AttendWxStudentSubscribe.ATTEND_WX_STUDENT_SUBSCRIBE, "KEY_attend_wx_student_subscribe_student_id", AttendWxStudentSubscribe.ATTEND_WX_STUDENT_SUBSCRIBE.STUDENT_ID, AttendWxStudentSubscribe.ATTEND_WX_STUDENT_SUBSCRIBE.ATTEND_RELEASE_ID);
         public static final UniqueKey<AuthoritiesRecord> KEY_AUTHORITIES_PRIMARY = Internal.createUniqueKey(Authorities.AUTHORITIES, "KEY_authorities_PRIMARY", Authorities.AUTHORITIES.USERNAME, Authorities.AUTHORITIES.AUTHORITY);
         public static final UniqueKey<AuthorizeTypeRecord> KEY_AUTHORIZE_TYPE_PRIMARY = Internal.createUniqueKey(AuthorizeType.AUTHORIZE_TYPE, "KEY_authorize_type_PRIMARY", AuthorizeType.AUTHORIZE_TYPE.AUTHORIZE_TYPE_ID);
         public static final UniqueKey<AuthorizeTypeRecord> KEY_AUTHORIZE_TYPE_AUTHORIZE_TYPE_NAME = Internal.createUniqueKey(AuthorizeType.AUTHORIZE_TYPE, "KEY_authorize_type_authorize_type_name", AuthorizeType.AUTHORIZE_TYPE.AUTHORIZE_TYPE_NAME);
@@ -471,7 +475,6 @@ public class Keys {
         public static final UniqueKey<UsersTypeRecord> KEY_USERS_TYPE_PRIMARY = Internal.createUniqueKey(UsersType.USERS_TYPE, "KEY_users_type_PRIMARY", UsersType.USERS_TYPE.USERS_TYPE_ID);
         public static final UniqueKey<UsersTypeRecord> KEY_USERS_TYPE_USERS_TYPE_NAME = Internal.createUniqueKey(UsersType.USERS_TYPE, "KEY_users_type_users_type_name", UsersType.USERS_TYPE.USERS_TYPE_NAME);
         public static final UniqueKey<WeiXinRecord> KEY_WEI_XIN_PRIMARY = Internal.createUniqueKey(WeiXin.WEI_XIN, "KEY_wei_xin_PRIMARY", WeiXin.WEI_XIN.WEI_XIN_ID);
-        public static final UniqueKey<WeiXinSubscribeRecord> KEY_WEI_XIN_SUBSCRIBE_PRIMARY = Internal.createUniqueKey(WeiXinSubscribe.WEI_XIN_SUBSCRIBE, "KEY_wei_xin_subscribe_PRIMARY", WeiXinSubscribe.WEI_XIN_SUBSCRIBE.SUBSCRIBE_ID);
     }
 
     private static class ForeignKeys0 {
@@ -493,6 +496,8 @@ public class Keys {
         public static final ForeignKey<AttendReleaseSubRecord, AttendReleaseRecord> ATTEND_RELEASE_SUB_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_ATTEND_RELEASE_PRIMARY, AttendReleaseSub.ATTEND_RELEASE_SUB, "attend_release_sub_ibfk_1", AttendReleaseSub.ATTEND_RELEASE_SUB.ATTEND_RELEASE_ID);
         public static final ForeignKey<AttendUsersRecord, StudentRecord> ATTEND_USERS_IBFK_2 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_STUDENT_PRIMARY, AttendUsers.ATTEND_USERS, "attend_users_ibfk_2", AttendUsers.ATTEND_USERS.STUDENT_ID);
         public static final ForeignKey<AttendUsersRecord, AttendReleaseRecord> ATTEND_USERS_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_ATTEND_RELEASE_PRIMARY, AttendUsers.ATTEND_USERS, "attend_users_ibfk_1", AttendUsers.ATTEND_USERS.ATTEND_RELEASE_ID);
+        public static final ForeignKey<AttendWxStudentSubscribeRecord, StudentRecord> ATTEND_WX_STUDENT_SUBSCRIBE_IBFK_2 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_STUDENT_PRIMARY, AttendWxStudentSubscribe.ATTEND_WX_STUDENT_SUBSCRIBE, "attend_wx_student_subscribe_ibfk_2", AttendWxStudentSubscribe.ATTEND_WX_STUDENT_SUBSCRIBE.STUDENT_ID);
+        public static final ForeignKey<AttendWxStudentSubscribeRecord, AttendReleaseRecord> ATTEND_WX_STUDENT_SUBSCRIBE_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_ATTEND_RELEASE_PRIMARY, AttendWxStudentSubscribe.ATTEND_WX_STUDENT_SUBSCRIBE, "attend_wx_student_subscribe_ibfk_1", AttendWxStudentSubscribe.ATTEND_WX_STUDENT_SUBSCRIBE.ATTEND_RELEASE_ID);
         public static final ForeignKey<AuthoritiesRecord, UsersRecord> AUTHORITIES_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_USERS_PRIMARY, Authorities.AUTHORITIES, "authorities_ibfk_1", Authorities.AUTHORITIES.USERNAME);
         public static final ForeignKey<BuildingRecord, CollegeRecord> BUILDING_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_COLLEGE_PRIMARY, Building.BUILDING, "building_ibfk_1", Building.BUILDING.COLLEGE_ID);
         public static final ForeignKey<CollegeRecord, SchoolRecord> COLLEGE_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_SCHOOL_PRIMARY, College.COLLEGE, "college_ibfk_1", College.COLLEGE.SCHOOL_ID);
@@ -560,6 +565,5 @@ public class Keys {
         public static final ForeignKey<UsersRecord, UsersTypeRecord> USERS_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_USERS_TYPE_PRIMARY, Users.USERS, "users_ibfk_1", Users.USERS.USERS_TYPE_ID);
         public static final ForeignKey<UsersRecord, FilesRecord> USERS_IBFK_2 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_FILES_PRIMARY, Users.USERS, "users_ibfk_2", Users.USERS.AVATAR);
         public static final ForeignKey<WeiXinRecord, UsersRecord> WEI_XIN_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_USERS_PRIMARY, WeiXin.WEI_XIN, "wei_xin_ibfk_1", WeiXin.WEI_XIN.USERNAME);
-        public static final ForeignKey<WeiXinSubscribeRecord, UsersRecord> WEI_XIN_SUBSCRIBE_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_USERS_PRIMARY, WeiXinSubscribe.WEI_XIN_SUBSCRIBE, "wei_xin_subscribe_ibfk_1", WeiXinSubscribe.WEI_XIN_SUBSCRIBE.USERNAME);
     }
 }

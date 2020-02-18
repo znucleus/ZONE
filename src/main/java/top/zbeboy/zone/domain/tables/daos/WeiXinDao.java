@@ -115,6 +115,20 @@ public class WeiXinDao extends DAOImpl<WeiXinRecord, top.zbeboy.zone.domain.tabl
     }
 
     /**
+     * Fetch records that have <code>app_id BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.WeiXin> fetchRangeOfAppId(String lowerInclusive, String upperInclusive) {
+        return fetchRange(WeiXin.WEI_XIN.APP_ID, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>app_id IN (values)</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.WeiXin> fetchByAppId(String... values) {
+        return fetch(WeiXin.WEI_XIN.APP_ID, values);
+    }
+
+    /**
      * Fetch records that have <code>username BETWEEN lowerInclusive AND upperInclusive</code>
      */
     public List<top.zbeboy.zone.domain.tables.pojos.WeiXin> fetchRangeOfUsername(String lowerInclusive, String upperInclusive) {

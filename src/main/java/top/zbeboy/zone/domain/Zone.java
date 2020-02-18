@@ -27,6 +27,7 @@ import top.zbeboy.zone.domain.tables.AttendMapKey;
 import top.zbeboy.zone.domain.tables.AttendRelease;
 import top.zbeboy.zone.domain.tables.AttendReleaseSub;
 import top.zbeboy.zone.domain.tables.AttendUsers;
+import top.zbeboy.zone.domain.tables.AttendWxStudentSubscribe;
 import top.zbeboy.zone.domain.tables.Authorities;
 import top.zbeboy.zone.domain.tables.AuthorizeType;
 import top.zbeboy.zone.domain.tables.Building;
@@ -82,7 +83,6 @@ import top.zbeboy.zone.domain.tables.UserNotify;
 import top.zbeboy.zone.domain.tables.Users;
 import top.zbeboy.zone.domain.tables.UsersType;
 import top.zbeboy.zone.domain.tables.WeiXin;
-import top.zbeboy.zone.domain.tables.WeiXinSubscribe;
 
 
 /**
@@ -98,7 +98,7 @@ import top.zbeboy.zone.domain.tables.WeiXinSubscribe;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Zone extends SchemaImpl {
 
-    private static final long serialVersionUID = -1839512164;
+    private static final long serialVersionUID = 9427960;
 
     /**
      * The reference instance of <code>zone</code>
@@ -169,6 +169,11 @@ public class Zone extends SchemaImpl {
      * The table <code>zone.attend_users</code>.
      */
     public final AttendUsers ATTEND_USERS = top.zbeboy.zone.domain.tables.AttendUsers.ATTEND_USERS;
+
+    /**
+     * The table <code>zone.attend_wx_student_subscribe</code>.
+     */
+    public final AttendWxStudentSubscribe ATTEND_WX_STUDENT_SUBSCRIBE = top.zbeboy.zone.domain.tables.AttendWxStudentSubscribe.ATTEND_WX_STUDENT_SUBSCRIBE;
 
     /**
      * The table <code>zone.authorities</code>.
@@ -446,11 +451,6 @@ public class Zone extends SchemaImpl {
     public final WeiXin WEI_XIN = top.zbeboy.zone.domain.tables.WeiXin.WEI_XIN;
 
     /**
-     * The table <code>zone.wei_xin_subscribe</code>.
-     */
-    public final WeiXinSubscribe WEI_XIN_SUBSCRIBE = top.zbeboy.zone.domain.tables.WeiXinSubscribe.WEI_XIN_SUBSCRIBE;
-
-    /**
      * No further instances allowed
      */
     private Zone() {
@@ -485,6 +485,7 @@ public class Zone extends SchemaImpl {
             AttendRelease.ATTEND_RELEASE,
             AttendReleaseSub.ATTEND_RELEASE_SUB,
             AttendUsers.ATTEND_USERS,
+            AttendWxStudentSubscribe.ATTEND_WX_STUDENT_SUBSCRIBE,
             Authorities.AUTHORITIES,
             AuthorizeType.AUTHORIZE_TYPE,
             Building.BUILDING,
@@ -539,7 +540,6 @@ public class Zone extends SchemaImpl {
             UserNotify.USER_NOTIFY,
             Users.USERS,
             UsersType.USERS_TYPE,
-            WeiXin.WEI_XIN,
-            WeiXinSubscribe.WEI_XIN_SUBSCRIBE);
+            WeiXin.WEI_XIN);
     }
 }

@@ -60,21 +60,24 @@ CREATE TABLE attend_map_key(
 
 CREATE TABLE wei_xin(
   wei_xin_id INT AUTO_INCREMENT PRIMARY KEY,
-  open_id VARCHAR(200),
+  open_id VARCHAR(200) NOT NULL,
   session_key VARCHAR(300),
   union_id VARCHAR(200),
+  app_id VARCHAR(64) NOT NULL,
   username VARCHAR(64) NOT NULL,
   FOREIGN KEY (username) REFERENCES users (username) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE wei_xin_subscribe(
+CREATE TABLE attend_wx_student_subscribe(
   subscribe_id INT AUTO_INCREMENT PRIMARY KEY,
-  template_id VARCHAR(64),
-  type VARCHAR(10) NOT NULL,
+  template_id VARCHAR(64) NOT NULL,
   page VARCHAR(200),
   data VARCHAR(500),
   mini_program_state VARCHAR(20),
   lang VARCHAR(10),
-  username VARCHAR(64) NOT NULL,
-  FOREIGN KEY (username) REFERENCES users (username) ON UPDATE CASCADE ON DELETE CASCADE
+  student_id INT NOT NULL,
+  attend_release_id VARCHAR(64) NOT NULL,
+  UNIQUE (student_id,attend_release_id),
+  FOREIGN KEY(attend_release_id) REFERENCES attend_release(attend_release_id) ON DELETE CASCADE,
+  FOREIGN KEY(student_id) REFERENCES student(student_id) ON DELETE CASCADE
 );

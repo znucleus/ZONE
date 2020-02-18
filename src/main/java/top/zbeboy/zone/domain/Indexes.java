@@ -23,6 +23,7 @@ import top.zbeboy.zone.domain.tables.AttendMapKey;
 import top.zbeboy.zone.domain.tables.AttendRelease;
 import top.zbeboy.zone.domain.tables.AttendReleaseSub;
 import top.zbeboy.zone.domain.tables.AttendUsers;
+import top.zbeboy.zone.domain.tables.AttendWxStudentSubscribe;
 import top.zbeboy.zone.domain.tables.Authorities;
 import top.zbeboy.zone.domain.tables.AuthorizeType;
 import top.zbeboy.zone.domain.tables.Building;
@@ -75,7 +76,6 @@ import top.zbeboy.zone.domain.tables.UserNotify;
 import top.zbeboy.zone.domain.tables.Users;
 import top.zbeboy.zone.domain.tables.UsersType;
 import top.zbeboy.zone.domain.tables.WeiXin;
-import top.zbeboy.zone.domain.tables.WeiXinSubscribe;
 
 
 /**
@@ -126,6 +126,9 @@ public class Indexes {
     public static final Index ATTEND_USERS_ATTEND_RELEASE_ID = Indexes0.ATTEND_USERS_ATTEND_RELEASE_ID;
     public static final Index ATTEND_USERS_PRIMARY = Indexes0.ATTEND_USERS_PRIMARY;
     public static final Index ATTEND_USERS_STUDENT_ID = Indexes0.ATTEND_USERS_STUDENT_ID;
+    public static final Index ATTEND_WX_STUDENT_SUBSCRIBE_ATTEND_RELEASE_ID = Indexes0.ATTEND_WX_STUDENT_SUBSCRIBE_ATTEND_RELEASE_ID;
+    public static final Index ATTEND_WX_STUDENT_SUBSCRIBE_PRIMARY = Indexes0.ATTEND_WX_STUDENT_SUBSCRIBE_PRIMARY;
+    public static final Index ATTEND_WX_STUDENT_SUBSCRIBE_STUDENT_ID = Indexes0.ATTEND_WX_STUDENT_SUBSCRIBE_STUDENT_ID;
     public static final Index AUTHORITIES_PRIMARY = Indexes0.AUTHORITIES_PRIMARY;
     public static final Index AUTHORIZE_TYPE_AUTHORIZE_TYPE_NAME = Indexes0.AUTHORIZE_TYPE_AUTHORIZE_TYPE_NAME;
     public static final Index AUTHORIZE_TYPE_PRIMARY = Indexes0.AUTHORIZE_TYPE_PRIMARY;
@@ -247,8 +250,6 @@ public class Indexes {
     public static final Index USERS_TYPE_USERS_TYPE_NAME = Indexes0.USERS_TYPE_USERS_TYPE_NAME;
     public static final Index WEI_XIN_PRIMARY = Indexes0.WEI_XIN_PRIMARY;
     public static final Index WEI_XIN_USERNAME = Indexes0.WEI_XIN_USERNAME;
-    public static final Index WEI_XIN_SUBSCRIBE_PRIMARY = Indexes0.WEI_XIN_SUBSCRIBE_PRIMARY;
-    public static final Index WEI_XIN_SUBSCRIBE_USERNAME = Indexes0.WEI_XIN_SUBSCRIBE_USERNAME;
 
     // -------------------------------------------------------------------------
     // [#1459] distribute members to avoid static initialisers > 64kb
@@ -286,6 +287,9 @@ public class Indexes {
         public static Index ATTEND_USERS_ATTEND_RELEASE_ID = Internal.createIndex("attend_release_id", AttendUsers.ATTEND_USERS, new OrderField[] { AttendUsers.ATTEND_USERS.ATTEND_RELEASE_ID }, false);
         public static Index ATTEND_USERS_PRIMARY = Internal.createIndex("PRIMARY", AttendUsers.ATTEND_USERS, new OrderField[] { AttendUsers.ATTEND_USERS.ATTEND_USERS_ID }, true);
         public static Index ATTEND_USERS_STUDENT_ID = Internal.createIndex("student_id", AttendUsers.ATTEND_USERS, new OrderField[] { AttendUsers.ATTEND_USERS.STUDENT_ID, AttendUsers.ATTEND_USERS.ATTEND_RELEASE_ID }, true);
+        public static Index ATTEND_WX_STUDENT_SUBSCRIBE_ATTEND_RELEASE_ID = Internal.createIndex("attend_release_id", AttendWxStudentSubscribe.ATTEND_WX_STUDENT_SUBSCRIBE, new OrderField[] { AttendWxStudentSubscribe.ATTEND_WX_STUDENT_SUBSCRIBE.ATTEND_RELEASE_ID }, false);
+        public static Index ATTEND_WX_STUDENT_SUBSCRIBE_PRIMARY = Internal.createIndex("PRIMARY", AttendWxStudentSubscribe.ATTEND_WX_STUDENT_SUBSCRIBE, new OrderField[] { AttendWxStudentSubscribe.ATTEND_WX_STUDENT_SUBSCRIBE.SUBSCRIBE_ID }, true);
+        public static Index ATTEND_WX_STUDENT_SUBSCRIBE_STUDENT_ID = Internal.createIndex("student_id", AttendWxStudentSubscribe.ATTEND_WX_STUDENT_SUBSCRIBE, new OrderField[] { AttendWxStudentSubscribe.ATTEND_WX_STUDENT_SUBSCRIBE.STUDENT_ID, AttendWxStudentSubscribe.ATTEND_WX_STUDENT_SUBSCRIBE.ATTEND_RELEASE_ID }, true);
         public static Index AUTHORITIES_PRIMARY = Internal.createIndex("PRIMARY", Authorities.AUTHORITIES, new OrderField[] { Authorities.AUTHORITIES.USERNAME, Authorities.AUTHORITIES.AUTHORITY }, true);
         public static Index AUTHORIZE_TYPE_AUTHORIZE_TYPE_NAME = Internal.createIndex("authorize_type_name", AuthorizeType.AUTHORIZE_TYPE, new OrderField[] { AuthorizeType.AUTHORIZE_TYPE.AUTHORIZE_TYPE_NAME }, true);
         public static Index AUTHORIZE_TYPE_PRIMARY = Internal.createIndex("PRIMARY", AuthorizeType.AUTHORIZE_TYPE, new OrderField[] { AuthorizeType.AUTHORIZE_TYPE.AUTHORIZE_TYPE_ID }, true);
@@ -407,7 +411,5 @@ public class Indexes {
         public static Index USERS_TYPE_USERS_TYPE_NAME = Internal.createIndex("users_type_name", UsersType.USERS_TYPE, new OrderField[] { UsersType.USERS_TYPE.USERS_TYPE_NAME }, true);
         public static Index WEI_XIN_PRIMARY = Internal.createIndex("PRIMARY", WeiXin.WEI_XIN, new OrderField[] { WeiXin.WEI_XIN.WEI_XIN_ID }, true);
         public static Index WEI_XIN_USERNAME = Internal.createIndex("username", WeiXin.WEI_XIN, new OrderField[] { WeiXin.WEI_XIN.USERNAME }, false);
-        public static Index WEI_XIN_SUBSCRIBE_PRIMARY = Internal.createIndex("PRIMARY", WeiXinSubscribe.WEI_XIN_SUBSCRIBE, new OrderField[] { WeiXinSubscribe.WEI_XIN_SUBSCRIBE.SUBSCRIBE_ID }, true);
-        public static Index WEI_XIN_SUBSCRIBE_USERNAME = Internal.createIndex("username", WeiXinSubscribe.WEI_XIN_SUBSCRIBE, new OrderField[] { WeiXinSubscribe.WEI_XIN_SUBSCRIBE.USERNAME }, false);
     }
 }

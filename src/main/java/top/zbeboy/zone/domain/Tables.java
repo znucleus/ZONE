@@ -19,6 +19,7 @@ import top.zbeboy.zone.domain.tables.AttendMapKey;
 import top.zbeboy.zone.domain.tables.AttendRelease;
 import top.zbeboy.zone.domain.tables.AttendReleaseSub;
 import top.zbeboy.zone.domain.tables.AttendUsers;
+import top.zbeboy.zone.domain.tables.AttendWxStudentSubscribe;
 import top.zbeboy.zone.domain.tables.Authorities;
 import top.zbeboy.zone.domain.tables.AuthorizeType;
 import top.zbeboy.zone.domain.tables.Building;
@@ -74,7 +75,6 @@ import top.zbeboy.zone.domain.tables.UserNotify;
 import top.zbeboy.zone.domain.tables.Users;
 import top.zbeboy.zone.domain.tables.UsersType;
 import top.zbeboy.zone.domain.tables.WeiXin;
-import top.zbeboy.zone.domain.tables.WeiXinSubscribe;
 
 
 /**
@@ -154,6 +154,11 @@ public class Tables {
      * The table <code>zone.attend_users</code>.
      */
     public static final AttendUsers ATTEND_USERS = AttendUsers.ATTEND_USERS;
+
+    /**
+     * The table <code>zone.attend_wx_student_subscribe</code>.
+     */
+    public static final AttendWxStudentSubscribe ATTEND_WX_STUDENT_SUBSCRIBE = AttendWxStudentSubscribe.ATTEND_WX_STUDENT_SUBSCRIBE;
 
     /**
      * The table <code>zone.authorities</code>.
@@ -429,9 +434,4 @@ public class Tables {
      * The table <code>zone.wei_xin</code>.
      */
     public static final WeiXin WEI_XIN = WeiXin.WEI_XIN;
-
-    /**
-     * The table <code>zone.wei_xin_subscribe</code>.
-     */
-    public static final WeiXinSubscribe WEI_XIN_SUBSCRIBE = WeiXinSubscribe.WEI_XIN_SUBSCRIBE;
 }

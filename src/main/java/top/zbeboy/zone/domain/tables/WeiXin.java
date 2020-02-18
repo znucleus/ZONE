@@ -15,7 +15,7 @@ import org.jooq.Identity;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row5;
+import org.jooq.Row6;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -42,7 +42,7 @@ import top.zbeboy.zone.domain.tables.records.WeiXinRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class WeiXin extends TableImpl<WeiXinRecord> {
 
-    private static final long serialVersionUID = -621735147;
+    private static final long serialVersionUID = 364378806;
 
     /**
      * The reference instance of <code>zone.wei_xin</code>
@@ -65,7 +65,7 @@ public class WeiXin extends TableImpl<WeiXinRecord> {
     /**
      * The column <code>zone.wei_xin.open_id</code>.
      */
-    public final TableField<WeiXinRecord, String> OPEN_ID = createField(DSL.name("open_id"), org.jooq.impl.SQLDataType.VARCHAR(200), this, "");
+    public final TableField<WeiXinRecord, String> OPEN_ID = createField(DSL.name("open_id"), org.jooq.impl.SQLDataType.VARCHAR(200).nullable(false), this, "");
 
     /**
      * The column <code>zone.wei_xin.session_key</code>.
@@ -76,6 +76,11 @@ public class WeiXin extends TableImpl<WeiXinRecord> {
      * The column <code>zone.wei_xin.union_id</code>.
      */
     public final TableField<WeiXinRecord, String> UNION_ID = createField(DSL.name("union_id"), org.jooq.impl.SQLDataType.VARCHAR(200), this, "");
+
+    /**
+     * The column <code>zone.wei_xin.app_id</code>.
+     */
+    public final TableField<WeiXinRecord, String> APP_ID = createField(DSL.name("app_id"), org.jooq.impl.SQLDataType.VARCHAR(64).nullable(false), this, "");
 
     /**
      * The column <code>zone.wei_xin.username</code>.
@@ -176,11 +181,11 @@ public class WeiXin extends TableImpl<WeiXinRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row5 type methods
+    // Row6 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row5<Integer, String, String, String, String> fieldsRow() {
-        return (Row5) super.fieldsRow();
+    public Row6<Integer, String, String, String, String, String> fieldsRow() {
+        return (Row6) super.fieldsRow();
     }
 }

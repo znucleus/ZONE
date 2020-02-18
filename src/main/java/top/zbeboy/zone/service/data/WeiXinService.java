@@ -11,9 +11,10 @@ public interface WeiXinService {
      * 通过账号查询
      *
      * @param username 账号
+     * @param appId    应该id
      * @return 信息
      */
-    Optional<WeiXinRecord> findByUsername(String username);
+    Optional<WeiXinRecord> findByUsernameAndAppId(String username, String appId);
 
     /**
      * 保存

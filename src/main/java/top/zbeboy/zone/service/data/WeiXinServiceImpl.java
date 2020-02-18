@@ -30,8 +30,8 @@ public class WeiXinServiceImpl implements WeiXinService {
     }
 
     @Override
-    public Optional<WeiXinRecord> findByUsername(String username) {
-        return create.selectFrom(WEI_XIN).where(WEI_XIN.USERNAME.eq(username)).fetchOptional();
+    public Optional<WeiXinRecord> findByUsernameAndAppId(String username, String appId) {
+        return create.selectFrom(WEI_XIN).where(WEI_XIN.USERNAME.eq(username).and(WEI_XIN.APP_ID.eq(appId))).fetchOptional();
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
