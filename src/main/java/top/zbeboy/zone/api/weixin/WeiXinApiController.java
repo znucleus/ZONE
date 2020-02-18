@@ -85,37 +85,33 @@ public class WeiXinApiController {
             String result = HttpClientUtil.sendGet("https://api.weixin.qq.com/sns/jscode2session", map);
             if (StringUtils.isNotBlank(result)) {
                 JSONObject params = JSON.parseObject(result);
-                String errcode = params.getString("errcode");
-                if (StringUtils.equals("0", errcode)) {
-                    Users users = usersService.getUserFromOauth(principal);
-                    if (Objects.nonNull(users)) {
-                        Optional<WeiXinRecord> record = weiXinService.findByUsername(users.getUsername());
-                        if (record.isPresent()) {
-                            WeiXin weiXin = record.get().into(WeiXin.class);
-                            weiXin.setUsername(users.getUsername());
-                            weiXin.setOpenId(params.getString("openid"));
-                            weiXin.setSessionKey(params.getString("session_key"));
-                            weiXin.setUnionId(params.getString("unionid"));
+                Users users = usersService.getUserFromOauth(principal);
+                if (Objects.nonNull(users)) {
+                    Optional<WeiXinRecord> record = weiXinService.findByUsername(users.getUsername());
+                    if (record.isPresent()) {
+                        WeiXin weiXin = record.get().into(WeiXin.class);
+                        weiXin.setUsername(users.getUsername());
+                        weiXin.setOpenId(params.getString("openid"));
+                        weiXin.setSessionKey(params.getString("session_key"));
+                        weiXin.setUnionId(params.getString("unionid"));
 
-                            weiXinService.update(weiXin);
-                        } else {
-                            WeiXin weiXin = new WeiXin();
-                            weiXin.setUsername(users.getUsername());
-                            weiXin.setOpenId(params.getString("openid"));
-                            weiXin.setSessionKey(params.getString("session_key"));
-                            weiXin.setUnionId(params.getString("unionid"));
-
-                            weiXinService.save(weiXin);
-                        }
-
-                        ajaxUtil.success().msg("保存成功");
-
+                        weiXinService.update(weiXin);
                     } else {
-                        ajaxUtil.fail().msg("查询用户信息失败");
+                        WeiXin weiXin = new WeiXin();
+                        weiXin.setUsername(users.getUsername());
+                        weiXin.setOpenId(params.getString("openid"));
+                        weiXin.setSessionKey(params.getString("session_key"));
+                        weiXin.setUnionId(params.getString("unionid"));
+
+                        weiXinService.save(weiXin);
                     }
+
+                    ajaxUtil.success().msg("保存成功");
+
                 } else {
-                    ajaxUtil.fail().msg("获取失败，code：" + errcode + " msg：" + params.getString("errmsg"));
+                    ajaxUtil.fail().msg("查询用户信息失败");
                 }
+
             } else {
                 ajaxUtil.fail().msg("获取信息失败，响应内容为空");
             }
@@ -186,45 +182,51 @@ public class WeiXinApiController {
                     Optional<WeiXinSubscribeRecord> subRecord = weiXinSubscribeService.findByUsernameAndTemplateId(users.getUsername(), templateId);
                     if (subRecord.isPresent()) {
                         WeiXinSubscribe weiXinSubscribe = subRecord.get().into(WeiXinSubscribe.class);
-                        Map<String, String> map = new HashMap<>();
-                        map.put("access_token", accessToken);
+                        Map<String, Object> map = new HashMap<>();
                         map.put("touser", weiXin.getOpenId());
                         map.put("template_id", weiXinSubscribe.getTemplateId());
                         map.put("page", weiXinSubscribe.getPage());
                         map.put("miniprogram_state", weiXinSubscribe.getMiniProgramState());
                         map.put("lang", weiXinSubscribe.getLang());
-                        if (StringUtils.isNotBlank(weiXinSubscribe.getData())) {
-                            map.put("data", weiXinSubscribe.getData());
-                            HttpClientUtil.sendPost("https://api.weixin.qq.com/cgi-bin/message/subscribe/send", map);
-                            ajaxUtil.success().msg("发送成功");
-                        } else {
-                            if (StringUtils.equals(weiXinSubscribe.getType(), Workbook.weiXinTemplateType.ATTEND.name())) {
-                                Optional<StudentRecord> studentRecord = studentService.findByUsername(users.getUsername());
-                                if (studentRecord.isPresent()) {
-                                    Result<Record> attendRecords = attendUsersService.findFutureAttendByStudentId(studentRecord.get().getStudentId());
-                                    if (attendRecords.isNotEmpty()) {
-                                        String mes = "{\"phrase1\":{\"value\":\"[phrase1]\"},\"name2\":{\"value\":\"[name2]\"},\"date3\":{\"value\":\"[date3]\"},\"thing5\":{\"value\":\"[thing5]\"}}";
-                                        List<AttendReleaseSubBean> beans = attendRecords.into(AttendReleaseSubBean.class);
-                                        for (AttendReleaseSubBean bean : beans) {
-                                            mes = mes.replaceAll("[phrase1]", "待签到");
-                                            mes = mes.replaceAll("[name2]", bean.getRealName());
-                                            mes = mes.replaceAll("[date3]", DateTimeUtil.formatSqlTimestamp(bean.getAttendStartTime(), DateTimeUtil.YEAR_MONTH_DAY_HOUR_MINUTE_FORMAT));
-                                            mes = mes.replaceAll("[thing5]", "校内");
+                        if (StringUtils.equals(weiXinSubscribe.getType(), Workbook.weiXinTemplateType.ATTEND.name())) {
+                            Optional<StudentRecord> studentRecord = studentService.findByUsername(users.getUsername());
+                            if (studentRecord.isPresent()) {
+                                Result<Record> attendRecords = attendUsersService.findFutureAttendByStudentId(studentRecord.get().getStudentId());
+                                if (attendRecords.isNotEmpty()) {
+                                    List<AttendReleaseSubBean> beans = attendRecords.into(AttendReleaseSubBean.class);
+                                    for (AttendReleaseSubBean bean : beans) {
+                                        Map<String, Object> data = new HashMap<>();
 
-                                            map.put("data", mes);
+                                        Map<String, Object> phrase1 = new HashMap<>();
+                                        phrase1.put("value", "待签到");
+                                        data.put("phrase1", phrase1);
 
-                                            HttpClientUtil.sendPost("https://api.weixin.qq.com/cgi-bin/message/subscribe/send", map);
-                                        }
-                                        ajaxUtil.success().msg("发送成功");
-                                    } else {
-                                        ajaxUtil.fail().msg("无签到数据");
+                                        Map<String, Object> name2 = new HashMap<>();
+                                        name2.put("value", bean.getRealName());
+                                        data.put("name2", name2);
+
+                                        Map<String, Object> date3 = new HashMap<>();
+                                        date3.put("value", DateTimeUtil.formatSqlTimestamp(DateTimeUtil.getNowSqlTimestamp(), DateTimeUtil.YEAR_MONTH_DAY_HOUR_MINUTE_FORMAT));
+                                        data.put("date3", date3);
+
+                                        Map<String, Object> thing5 = new HashMap<>();
+                                        thing5.put("value", bean.getSchoolName() + "-" + bean.getCollegeName());
+                                        data.put("thing5", thing5);
+
+                                        map.put("data", data);
+                                        String json = JSON.toJSONString(map);
+
+                                        HttpClientUtil.sendJsonPost("https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=" + accessToken, json);
                                     }
+                                    ajaxUtil.success().msg("发送成功");
                                 } else {
-                                    ajaxUtil.fail().msg("未查询到学生数据");
+                                    ajaxUtil.fail().msg("无签到数据");
                                 }
                             } else {
-                                ajaxUtil.fail().msg("不支持的模板类型");
+                                ajaxUtil.fail().msg("未查询到学生数据");
                             }
+                        } else {
+                            ajaxUtil.fail().msg("不支持的模板类型");
                         }
                     } else {
                         ajaxUtil.fail().msg("未查询到模板信息");
@@ -241,6 +243,26 @@ public class WeiXinApiController {
             ajaxUtil.fail().msg("发送微信订阅异常：" + e.getMessage());
         }
 
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 取消订阅
+     *
+     * @param templateId 模板id
+     * @param principal  当前用户信息
+     * @return true or false
+     */
+    @PostMapping("/api/weixin/subscribe/delete")
+    public ResponseEntity<Map<String, Object>> subscribeDelete(@RequestParam("templateId") String templateId, Principal principal) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        Users users = usersService.getUserFromOauth(principal);
+        if (Objects.nonNull(users)) {
+            weiXinSubscribeService.deleteByByUsernameAndTemplateId(users.getUsername(), templateId);
+            ajaxUtil.success().msg("取消订阅成功");
+        } else {
+            ajaxUtil.fail().msg("获取用户信息失败");
+        }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

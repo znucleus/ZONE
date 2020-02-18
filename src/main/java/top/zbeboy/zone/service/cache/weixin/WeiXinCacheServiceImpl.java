@@ -43,14 +43,11 @@ public class WeiXinCacheServiceImpl implements WeiXinCacheService {
             map.put("grant_type", "client_credential");
             map.put("appid", zoneProperties.getWeiXin().getAppId());
             map.put("secret", zoneProperties.getWeiXin().getSecret());
-            String result = HttpClientUtil.sendPost("https://api.weixin.qq.com/cgi-bin/token", map);
+            String result = HttpClientUtil.sendGet("https://api.weixin.qq.com/cgi-bin/token", map);
             if (StringUtils.isNotBlank(result)) {
                 JSONObject params = JSON.parseObject(result);
-                String errcode = params.getString("errcode");
-                if (StringUtils.equals("0", errcode)) {
-                    ops.set(cacheKey, params.getString("access_token"), params.getInteger("expires_in"), TimeUnit.SECONDS);
-                    accessToken = params.getString("access_token");
-                }
+                ops.set(cacheKey, params.getString("access_token"), params.getInteger("expires_in"), TimeUnit.SECONDS);
+                accessToken = params.getString("access_token");
             }
         }
 

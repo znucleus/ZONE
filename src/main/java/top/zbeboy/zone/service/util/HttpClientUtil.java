@@ -7,6 +7,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
@@ -66,6 +67,31 @@ public class HttpClientUtil {
         }
         HttpPost httpPost = new HttpPost(uri);
         httpPost.setEntity(new UrlEncodedFormEntity(list, Consts.UTF_8));
+        CloseableHttpResponse response = client.execute(httpPost);
+
+        // 5、获取实体
+        HttpEntity entity = response.getEntity();
+        // 将实体装成字符串
+        String string = EntityUtils.toString(entity);
+        response.close();
+        return string;
+    }
+
+    /**
+     * 发送post请求
+     * @param uri 网址
+     * @param json 参数
+     * @return 返回结果
+     * @throws IOException
+     */
+    public static String sendJsonPost(String uri, String json) throws IOException {
+        // 1、创建httpClient
+        CloseableHttpClient client = HttpClients.createDefault();
+
+        StringEntity requestEntity = new StringEntity(json,Consts.UTF_8);
+        requestEntity.setContentEncoding("UTF-8");
+        HttpPost httpPost = new HttpPost(uri);
+        httpPost.setEntity(requestEntity);
         CloseableHttpResponse response = client.execute(httpPost);
 
         // 5、获取实体
