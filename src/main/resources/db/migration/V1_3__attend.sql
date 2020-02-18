@@ -57,3 +57,24 @@ CREATE TABLE attend_map_key(
   id INT PRIMARY KEY,
   map_key VARCHAR(100) NOT NULL UNIQUE
 );
+
+CREATE TABLE wei_xin(
+  wei_xin_id INT AUTO_INCREMENT PRIMARY KEY,
+  open_id VARCHAR(200),
+  session_key VARCHAR(300),
+  union_id VARCHAR(200),
+  username VARCHAR(64) NOT NULL,
+  FOREIGN KEY (username) REFERENCES users (username) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE wei_xin_subscribe(
+  subscribe_id INT AUTO_INCREMENT PRIMARY KEY,
+  template_id VARCHAR(64),
+  type VARCHAR(10) NOT NULL,
+  page VARCHAR(200),
+  data VARCHAR(500),
+  mini_program_state VARCHAR(20),
+  lang VARCHAR(10),
+  username VARCHAR(64) NOT NULL,
+  FOREIGN KEY (username) REFERENCES users (username) ON UPDATE CASCADE ON DELETE CASCADE
+);

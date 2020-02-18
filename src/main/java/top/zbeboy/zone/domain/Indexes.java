@@ -74,6 +74,8 @@ import top.zbeboy.zone.domain.tables.TrainingUsers;
 import top.zbeboy.zone.domain.tables.UserNotify;
 import top.zbeboy.zone.domain.tables.Users;
 import top.zbeboy.zone.domain.tables.UsersType;
+import top.zbeboy.zone.domain.tables.WeiXin;
+import top.zbeboy.zone.domain.tables.WeiXinSubscribe;
 
 
 /**
@@ -243,6 +245,10 @@ public class Indexes {
     public static final Index USERS_USERS_TYPE_ID = Indexes0.USERS_USERS_TYPE_ID;
     public static final Index USERS_TYPE_PRIMARY = Indexes0.USERS_TYPE_PRIMARY;
     public static final Index USERS_TYPE_USERS_TYPE_NAME = Indexes0.USERS_TYPE_USERS_TYPE_NAME;
+    public static final Index WEI_XIN_PRIMARY = Indexes0.WEI_XIN_PRIMARY;
+    public static final Index WEI_XIN_USERNAME = Indexes0.WEI_XIN_USERNAME;
+    public static final Index WEI_XIN_SUBSCRIBE_PRIMARY = Indexes0.WEI_XIN_SUBSCRIBE_PRIMARY;
+    public static final Index WEI_XIN_SUBSCRIBE_USERNAME = Indexes0.WEI_XIN_SUBSCRIBE_USERNAME;
 
     // -------------------------------------------------------------------------
     // [#1459] distribute members to avoid static initialisers > 64kb
@@ -399,5 +405,9 @@ public class Indexes {
         public static Index USERS_USERS_TYPE_ID = Internal.createIndex("users_type_id", Users.USERS, new OrderField[] { Users.USERS.USERS_TYPE_ID }, false);
         public static Index USERS_TYPE_PRIMARY = Internal.createIndex("PRIMARY", UsersType.USERS_TYPE, new OrderField[] { UsersType.USERS_TYPE.USERS_TYPE_ID }, true);
         public static Index USERS_TYPE_USERS_TYPE_NAME = Internal.createIndex("users_type_name", UsersType.USERS_TYPE, new OrderField[] { UsersType.USERS_TYPE.USERS_TYPE_NAME }, true);
+        public static Index WEI_XIN_PRIMARY = Internal.createIndex("PRIMARY", WeiXin.WEI_XIN, new OrderField[] { WeiXin.WEI_XIN.WEI_XIN_ID }, true);
+        public static Index WEI_XIN_USERNAME = Internal.createIndex("username", WeiXin.WEI_XIN, new OrderField[] { WeiXin.WEI_XIN.USERNAME }, false);
+        public static Index WEI_XIN_SUBSCRIBE_PRIMARY = Internal.createIndex("PRIMARY", WeiXinSubscribe.WEI_XIN_SUBSCRIBE, new OrderField[] { WeiXinSubscribe.WEI_XIN_SUBSCRIBE.SUBSCRIBE_ID }, true);
+        public static Index WEI_XIN_SUBSCRIBE_USERNAME = Internal.createIndex("username", WeiXinSubscribe.WEI_XIN_SUBSCRIBE, new OrderField[] { WeiXinSubscribe.WEI_XIN_SUBSCRIBE.USERNAME }, false);
     }
 }

@@ -81,6 +81,8 @@ import top.zbeboy.zone.domain.tables.TrainingUsers;
 import top.zbeboy.zone.domain.tables.UserNotify;
 import top.zbeboy.zone.domain.tables.Users;
 import top.zbeboy.zone.domain.tables.UsersType;
+import top.zbeboy.zone.domain.tables.WeiXin;
+import top.zbeboy.zone.domain.tables.WeiXinSubscribe;
 
 
 /**
@@ -96,7 +98,7 @@ import top.zbeboy.zone.domain.tables.UsersType;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Zone extends SchemaImpl {
 
-    private static final long serialVersionUID = -77152082;
+    private static final long serialVersionUID = -1839512164;
 
     /**
      * The reference instance of <code>zone</code>
@@ -439,6 +441,16 @@ public class Zone extends SchemaImpl {
     public final UsersType USERS_TYPE = top.zbeboy.zone.domain.tables.UsersType.USERS_TYPE;
 
     /**
+     * The table <code>zone.wei_xin</code>.
+     */
+    public final WeiXin WEI_XIN = top.zbeboy.zone.domain.tables.WeiXin.WEI_XIN;
+
+    /**
+     * The table <code>zone.wei_xin_subscribe</code>.
+     */
+    public final WeiXinSubscribe WEI_XIN_SUBSCRIBE = top.zbeboy.zone.domain.tables.WeiXinSubscribe.WEI_XIN_SUBSCRIBE;
+
+    /**
      * No further instances allowed
      */
     private Zone() {
@@ -526,6 +538,8 @@ public class Zone extends SchemaImpl {
             TrainingUsers.TRAINING_USERS,
             UserNotify.USER_NOTIFY,
             Users.USERS,
-            UsersType.USERS_TYPE);
+            UsersType.USERS_TYPE,
+            WeiXin.WEI_XIN,
+            WeiXinSubscribe.WEI_XIN_SUBSCRIBE);
     }
 }

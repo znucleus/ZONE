@@ -49,6 +49,7 @@ public final class CacheBook {
      */
     public static final String ATTEND_RELEASE_SUB = "ATTEND_RELEASE_SUB";
     public static final String ATTEND_MAP_KEYS = "ATTEND_MAP_KEYS";
+    public static final String WEI_XIN_ACCESS_TOKEN = "WEI_XIN_ACCESS_TOKEN_";
 
     /*
     实习业务

@@ -20,6 +20,8 @@ public class ZoneProperties {
 
     private Mail mail = new Mail();
 
+    private WeiXin weiXin = new WeiXin();
+
     public Async getAsync() {
         return async;
     }
@@ -34,6 +36,10 @@ public class ZoneProperties {
 
     public Mail getMail() {
         return mail;
+    }
+
+    public WeiXin getWeiXin() {
+        return weiXin;
     }
 
     /**
@@ -247,6 +253,30 @@ public class ZoneProperties {
 
         public void setPasswordResetTime(int passwordResetTime) {
             this.passwordResetTime = passwordResetTime;
+        }
+    }
+
+    /**
+     * 微信参数
+     */
+    public class WeiXin {
+        private String appId;
+        private String secret;
+
+        public String getAppId() {
+            return appId;
+        }
+
+        public void setAppId(String appId) {
+            this.appId = appId;
+        }
+
+        public String getSecret() {
+            return secret;
+        }
+
+        public void setSecret(String secret) {
+            this.secret = secret;
         }
     }
 }

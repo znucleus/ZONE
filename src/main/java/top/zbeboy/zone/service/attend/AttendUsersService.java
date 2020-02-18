@@ -71,6 +71,14 @@ public interface AttendUsersService {
     Result<Record> findStudentNotExistsAttendUsers(String attendReleaseId, int organizeId);
 
     /**
+     * 查询未来要签到的数据
+     *
+     * @param studentId 学生id
+     * @return 数据
+     */
+    Result<Record> findFutureAttendByStudentId(int studentId);
+
+    /**
      * 保存
      *
      * @param attendUsers 数据

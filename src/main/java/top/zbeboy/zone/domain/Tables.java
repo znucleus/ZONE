@@ -73,6 +73,8 @@ import top.zbeboy.zone.domain.tables.TrainingUsers;
 import top.zbeboy.zone.domain.tables.UserNotify;
 import top.zbeboy.zone.domain.tables.Users;
 import top.zbeboy.zone.domain.tables.UsersType;
+import top.zbeboy.zone.domain.tables.WeiXin;
+import top.zbeboy.zone.domain.tables.WeiXinSubscribe;
 
 
 /**
@@ -422,4 +424,14 @@ public class Tables {
      * The table <code>zone.users_type</code>.
      */
     public static final UsersType USERS_TYPE = UsersType.USERS_TYPE;
+
+    /**
+     * The table <code>zone.wei_xin</code>.
+     */
+    public static final WeiXin WEI_XIN = WeiXin.WEI_XIN;
+
+    /**
+     * The table <code>zone.wei_xin_subscribe</code>.
+     */
+    public static final WeiXinSubscribe WEI_XIN_SUBSCRIBE = WeiXinSubscribe.WEI_XIN_SUBSCRIBE;
 }

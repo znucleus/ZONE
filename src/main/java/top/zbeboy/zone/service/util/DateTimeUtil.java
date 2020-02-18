@@ -12,6 +12,7 @@ public class DateTimeUtil {
     public static final String YEAR_MONTH_DAY_FORMAT = "yyyy-MM-dd";
     public static final String HOUR_MINUTE_FORMAT = "HH:mm";
     public static final String YEAR_MONTH_DAY_CN_FORMAT = "yyyy年MM月dd日";
+    public static final String YEAR_MONTH_DAY_HOUR_MINUTE_FORMAT = YEAR_MONTH_DAY_FORMAT + " " + HOUR_MINUTE_FORMAT;
 
     /**
      * timestamp

@@ -17,6 +17,7 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
+import static org.jooq.impl.DSL.now;
 import static top.zbeboy.zone.domain.Tables.*;
 
 @Service("attendUsersService")
@@ -119,6 +120,22 @@ public class AttendUsersServiceImpl implements AttendUsersService {
                 .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                 .where(STUDENT.ORGANIZE_ID.eq(organizeId).andNotExists(select)
                         .and(USERS.VERIFY_MAILBOX.eq(BooleanUtil.toByte(true))).andExists(authoritiesService.existsAuthoritiesSelect()))
+                .fetch();
+    }
+
+    @Override
+    public Result<Record> findFutureAttendByStudentId(int studentId) {
+        return create.select()
+                .from(ATTEND_USERS)
+                .leftJoin(STUDENT)
+                .on(ATTEND_USERS.STUDENT_ID.eq(STUDENT.STUDENT_ID))
+                .leftJoin(USERS)
+                .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                .leftJoin(ATTEND_RELEASE_SUB)
+                .on(ATTEND_USERS.ATTEND_RELEASE_ID.eq(ATTEND_RELEASE_SUB.ATTEND_RELEASE_ID))
+                .where(ATTEND_USERS.STUDENT_ID.eq(studentId)
+                        .and(ATTEND_RELEASE_SUB.ATTEND_END_TIME.gt(ATTEND_RELEASE_SUB.ATTEND_START_TIME))
+                        .and(ATTEND_RELEASE_SUB.ATTEND_START_TIME.ge(now())))
                 .fetch();
     }
 

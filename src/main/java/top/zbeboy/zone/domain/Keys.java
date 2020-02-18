@@ -75,6 +75,8 @@ import top.zbeboy.zone.domain.tables.TrainingUsers;
 import top.zbeboy.zone.domain.tables.UserNotify;
 import top.zbeboy.zone.domain.tables.Users;
 import top.zbeboy.zone.domain.tables.UsersType;
+import top.zbeboy.zone.domain.tables.WeiXin;
+import top.zbeboy.zone.domain.tables.WeiXinSubscribe;
 import top.zbeboy.zone.domain.tables.records.AcademicTitleRecord;
 import top.zbeboy.zone.domain.tables.records.AnswerBankRecord;
 import top.zbeboy.zone.domain.tables.records.AnswerOptionRecord;
@@ -139,6 +141,8 @@ import top.zbeboy.zone.domain.tables.records.TrainingUsersRecord;
 import top.zbeboy.zone.domain.tables.records.UserNotifyRecord;
 import top.zbeboy.zone.domain.tables.records.UsersRecord;
 import top.zbeboy.zone.domain.tables.records.UsersTypeRecord;
+import top.zbeboy.zone.domain.tables.records.WeiXinRecord;
+import top.zbeboy.zone.domain.tables.records.WeiXinSubscribeRecord;
 
 
 /**
@@ -177,6 +181,8 @@ public class Keys {
     public static final Identity<StaffRecord, Integer> IDENTITY_STAFF = Identities0.IDENTITY_STAFF;
     public static final Identity<StudentRecord, Integer> IDENTITY_STUDENT = Identities0.IDENTITY_STUDENT;
     public static final Identity<UsersTypeRecord, Integer> IDENTITY_USERS_TYPE = Identities0.IDENTITY_USERS_TYPE;
+    public static final Identity<WeiXinRecord, Integer> IDENTITY_WEI_XIN = Identities0.IDENTITY_WEI_XIN;
+    public static final Identity<WeiXinSubscribeRecord, Integer> IDENTITY_WEI_XIN_SUBSCRIBE = Identities0.IDENTITY_WEI_XIN_SUBSCRIBE;
 
     // -------------------------------------------------------------------------
     // UNIQUE and PRIMARY KEY definitions
@@ -262,6 +268,8 @@ public class Keys {
     public static final UniqueKey<UsersRecord> KEY_USERS_MOBILE = UniqueKeys0.KEY_USERS_MOBILE;
     public static final UniqueKey<UsersTypeRecord> KEY_USERS_TYPE_PRIMARY = UniqueKeys0.KEY_USERS_TYPE_PRIMARY;
     public static final UniqueKey<UsersTypeRecord> KEY_USERS_TYPE_USERS_TYPE_NAME = UniqueKeys0.KEY_USERS_TYPE_USERS_TYPE_NAME;
+    public static final UniqueKey<WeiXinRecord> KEY_WEI_XIN_PRIMARY = UniqueKeys0.KEY_WEI_XIN_PRIMARY;
+    public static final UniqueKey<WeiXinSubscribeRecord> KEY_WEI_XIN_SUBSCRIBE_PRIMARY = UniqueKeys0.KEY_WEI_XIN_SUBSCRIBE_PRIMARY;
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions
@@ -351,6 +359,8 @@ public class Keys {
     public static final ForeignKey<UserNotifyRecord, UsersRecord> USER_NOTIFY_IBFK_2 = ForeignKeys0.USER_NOTIFY_IBFK_2;
     public static final ForeignKey<UsersRecord, UsersTypeRecord> USERS_IBFK_1 = ForeignKeys0.USERS_IBFK_1;
     public static final ForeignKey<UsersRecord, FilesRecord> USERS_IBFK_2 = ForeignKeys0.USERS_IBFK_2;
+    public static final ForeignKey<WeiXinRecord, UsersRecord> WEI_XIN_IBFK_1 = ForeignKeys0.WEI_XIN_IBFK_1;
+    public static final ForeignKey<WeiXinSubscribeRecord, UsersRecord> WEI_XIN_SUBSCRIBE_IBFK_1 = ForeignKeys0.WEI_XIN_SUBSCRIBE_IBFK_1;
 
     // -------------------------------------------------------------------------
     // [#1459] distribute members to avoid static initialisers > 64kb
@@ -375,6 +385,8 @@ public class Keys {
         public static Identity<StaffRecord, Integer> IDENTITY_STAFF = Internal.createIdentity(Staff.STAFF, Staff.STAFF.STAFF_ID);
         public static Identity<StudentRecord, Integer> IDENTITY_STUDENT = Internal.createIdentity(Student.STUDENT, Student.STUDENT.STUDENT_ID);
         public static Identity<UsersTypeRecord, Integer> IDENTITY_USERS_TYPE = Internal.createIdentity(UsersType.USERS_TYPE, UsersType.USERS_TYPE.USERS_TYPE_ID);
+        public static Identity<WeiXinRecord, Integer> IDENTITY_WEI_XIN = Internal.createIdentity(WeiXin.WEI_XIN, WeiXin.WEI_XIN.WEI_XIN_ID);
+        public static Identity<WeiXinSubscribeRecord, Integer> IDENTITY_WEI_XIN_SUBSCRIBE = Internal.createIdentity(WeiXinSubscribe.WEI_XIN_SUBSCRIBE, WeiXinSubscribe.WEI_XIN_SUBSCRIBE.SUBSCRIBE_ID);
     }
 
     private static class UniqueKeys0 {
@@ -458,6 +470,8 @@ public class Keys {
         public static final UniqueKey<UsersRecord> KEY_USERS_MOBILE = Internal.createUniqueKey(Users.USERS, "KEY_users_mobile", Users.USERS.MOBILE);
         public static final UniqueKey<UsersTypeRecord> KEY_USERS_TYPE_PRIMARY = Internal.createUniqueKey(UsersType.USERS_TYPE, "KEY_users_type_PRIMARY", UsersType.USERS_TYPE.USERS_TYPE_ID);
         public static final UniqueKey<UsersTypeRecord> KEY_USERS_TYPE_USERS_TYPE_NAME = Internal.createUniqueKey(UsersType.USERS_TYPE, "KEY_users_type_users_type_name", UsersType.USERS_TYPE.USERS_TYPE_NAME);
+        public static final UniqueKey<WeiXinRecord> KEY_WEI_XIN_PRIMARY = Internal.createUniqueKey(WeiXin.WEI_XIN, "KEY_wei_xin_PRIMARY", WeiXin.WEI_XIN.WEI_XIN_ID);
+        public static final UniqueKey<WeiXinSubscribeRecord> KEY_WEI_XIN_SUBSCRIBE_PRIMARY = Internal.createUniqueKey(WeiXinSubscribe.WEI_XIN_SUBSCRIBE, "KEY_wei_xin_subscribe_PRIMARY", WeiXinSubscribe.WEI_XIN_SUBSCRIBE.SUBSCRIBE_ID);
     }
 
     private static class ForeignKeys0 {
@@ -545,5 +559,7 @@ public class Keys {
         public static final ForeignKey<UserNotifyRecord, UsersRecord> USER_NOTIFY_IBFK_2 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_USERS_PRIMARY, UserNotify.USER_NOTIFY, "user_notify_ibfk_2", UserNotify.USER_NOTIFY.ACCEPT_USER);
         public static final ForeignKey<UsersRecord, UsersTypeRecord> USERS_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_USERS_TYPE_PRIMARY, Users.USERS, "users_ibfk_1", Users.USERS.USERS_TYPE_ID);
         public static final ForeignKey<UsersRecord, FilesRecord> USERS_IBFK_2 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_FILES_PRIMARY, Users.USERS, "users_ibfk_2", Users.USERS.AVATAR);
+        public static final ForeignKey<WeiXinRecord, UsersRecord> WEI_XIN_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_USERS_PRIMARY, WeiXin.WEI_XIN, "wei_xin_ibfk_1", WeiXin.WEI_XIN.USERNAME);
+        public static final ForeignKey<WeiXinSubscribeRecord, UsersRecord> WEI_XIN_SUBSCRIBE_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_USERS_PRIMARY, WeiXinSubscribe.WEI_XIN_SUBSCRIBE, "wei_xin_subscribe_ibfk_1", WeiXinSubscribe.WEI_XIN_SUBSCRIBE.USERNAME);
     }
 }

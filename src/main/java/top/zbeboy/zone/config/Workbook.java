@@ -131,6 +131,13 @@ public final class Workbook {
         xls, xlsx, doc, docx
     }
 
+    /*
+    微信订阅模板类型
+     */
+    public enum weiXinTemplateType {
+        ATTEND
+    }
+
     /**
      * 头像路径
      *
