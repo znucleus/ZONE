@@ -224,7 +224,7 @@ public class AttendWxStudentSubscribeApiController {
                                     data.put("date3", date3);
 
                                     Map<String, Object> thing5 = new HashMap<>();
-                                    thing5.put("value", bean.getSchoolName() + "-" + bean.getCollegeName());
+                                    thing5.put("value", "校内");
                                     data.put("thing5", thing5);
 
                                     map.put("data", data);
