@@ -207,6 +207,7 @@ public class AttendWxStudentSubscribeApiController {
                             Result<Record> attendRecords = attendUsersService.findFutureAttendByStudentId(studentRecord.get().getStudentId());
                             if (attendRecords.isNotEmpty()) {
                                 List<AttendReleaseSubBean> beans = attendRecords.into(AttendReleaseSubBean.class);
+                                StringBuilder sb = new StringBuilder();
                                 for (AttendReleaseSubBean bean : beans) {
                                     Map<String, Object> data = new HashMap<>();
 
@@ -229,9 +230,10 @@ public class AttendWxStudentSubscribeApiController {
                                     map.put("data", data);
                                     String json = JSON.toJSONString(map);
 
-                                    HttpClientUtil.sendJsonPost("https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=" + accessToken, json);
+                                    String result = HttpClientUtil.sendJsonPost("https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=" + accessToken, json);
+                                    sb.append(result);
                                 }
-                                ajaxUtil.success().msg("发送成功");
+                                ajaxUtil.success().msg("发送成功 " + sb.toString());
                             } else {
                                 ajaxUtil.fail().msg("无签到数据");
                             }

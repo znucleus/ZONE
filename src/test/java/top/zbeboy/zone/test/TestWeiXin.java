@@ -36,12 +36,12 @@ public class TestWeiXin {
         System.out.println(result);
         JSONObject params = JSON.parseObject(result);
         System.out.println(params);
-        //{"access_token":"30_vL1oAefgv4nWLn9DWWi5xaNK-5GPQCaJpxIn3wNA7OKEDtb0aNcbou-q2jB9yFIuAGjNPn_DPlxxEQgZzQUOLNkduvu2X1VTVWrma38SBQlcdXuE0HRQLMgP4FI9QrSBXbs2EXfCwBLQh_yFWJWaABAANA","expires_in":7200}
+        //{"access_token":"30_Yy9oac_04VMBIdj4BBKpisP3DzNKXbAd02eKVMRb7Z2Q5rdOtwtGUqYdGOXgAFJlokvBaqwVUlfaIrMqV7GEcOjdT5PbRnW8ndxpTLu8m-ejf1eGqLAsBFzFgRXsY2-Qi91pxWPdLZKO-ox9EAKeACALHR","expires_in":7200}
     }
 
     @Test
     public void testSubscribe() throws IOException {
-        String accessToken = "30_vL1oAefgv4nWLn9DWWi5xaNK-5GPQCaJpxIn3wNA7OKEDtb0aNcbou-q2jB9yFIuAGjNPn_DPlxxEQgZzQUOLNkduvu2X1VTVWrma38SBQlcdXuE0HRQLMgP4FI9QrSBXbs2EXfCwBLQh_yFWJWaABAANA";
+        String accessToken = "30_Yy9oac_04VMBIdj4BBKpisP3DzNKXbAd02eKVMRb7Z2Q5rdOtwtGUqYdGOXgAFJlokvBaqwVUlfaIrMqV7GEcOjdT5PbRnW8ndxpTLu8m-ejf1eGqLAsBFzFgRXsY2-Qi91pxWPdLZKO-ox9EAKeACALHR";
         Map<String, Object> map = new HashMap<>();
         map.put("touser", "oSOTs0Nzjzm0YBQrmVS2pz2i8iQw");
         map.put("template_id", "_7l7dMHGzjCC00ggF4to7CoIgWZJLqkAhCZBWKZf4nc");
@@ -56,7 +56,7 @@ public class TestWeiXin {
         data.put("phrase1",phrase1);
 
         Map<String, Object> name2 = new HashMap<>();
-        name2.put("value","赵银");
+        name2.put("value","");
         data.put("name2",name2);
 
         Map<String, Object> date3 = new HashMap<>();
