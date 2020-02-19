@@ -65,7 +65,7 @@ public class AttendWxCacheServiceImpl implements AttendWxCacheService {
 
     @Override
     public void sendAttendWxSubscribe(String cacheKey) throws IOException {
-        String id = cacheKey.replace(CacheBook.WEI_XIN_SUBSCRIBE, cacheKey);
+        String id = cacheKey.replace(CacheBook.WEI_XIN_SUBSCRIBE, "");
         final String accessToken = weiXinCacheService.getAccessToken();
 
         Result<Record> subRecord = attendWxStudentSubscribeService.findByAttendReleaseId(id);
