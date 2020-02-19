@@ -33,10 +33,11 @@ public class RedisExpiredListener implements MessageListener {
         byte[] body = message.getBody();// 建议使用: valueSerializer
         byte[] channel = message.getChannel();
         String key = new String(body);
-        log.info("onMessage >> channel: {}, body: {}, bytes: {}", new String(channel), key, new String(bytes));
+        log.debug("onMessage >> channel: {}, body: {}, bytes: {}", new String(channel), key, new String(bytes));
         try {
             // 签到业务
             if (StringUtils.startsWith(key, CacheBook.WEI_XIN_SUBSCRIBE)) {
+                log.debug("onMessage 签到：{}", key);
                 AttendWxCacheServiceImpl attendWxCacheService = SpringBootUtil.getBean(AttendWxCacheServiceImpl.class);
                 attendWxCacheService.sendAttendWxSubscribe(key);
             }

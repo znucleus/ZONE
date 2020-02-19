@@ -44,7 +44,7 @@ public class AttendWxStudentSubscribeServiceImpl implements AttendWxStudentSubsc
                 .from(ATTEND_WX_STUDENT_SUBSCRIBE)
                 .join(ATTEND_RELEASE_SUB)
                 .on(ATTEND_WX_STUDENT_SUBSCRIBE.ATTEND_RELEASE_ID.eq(ATTEND_RELEASE_SUB.ATTEND_RELEASE_ID))
-                .where(ATTEND_WX_STUDENT_SUBSCRIBE.ATTEND_RELEASE_ID.gt(attendReleaseId))
+                .where(ATTEND_WX_STUDENT_SUBSCRIBE.ATTEND_RELEASE_ID.eq(attendReleaseId))
                 .fetch();
     }
 

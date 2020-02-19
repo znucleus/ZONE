@@ -6,6 +6,8 @@ import org.joda.time.DateTime;
 import org.joda.time.Minutes;
 import org.jooq.Record;
 import org.jooq.Result;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
@@ -35,6 +37,8 @@ import static top.zbeboy.zone.domain.Tables.ATTEND_RELEASE_SUB;
 @Service("attendWxCacheService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class AttendWxCacheServiceImpl implements AttendWxCacheService {
+
+    private final Logger log = LoggerFactory.getLogger(AttendWxCacheServiceImpl.class);
 
     @Resource
     private StringRedisTemplate stringRedisTemplate;
@@ -85,7 +89,7 @@ public class AttendWxCacheServiceImpl implements AttendWxCacheService {
                     Map<String, Object> data = new HashMap<>();
 
                     Map<String, Object> phrase1 = new HashMap<>();
-                    phrase1.put("value", "待签到-" + bean.getTitle());
+                    phrase1.put("value", "待签到");
                     data.put("phrase1", phrase1);
 
                     Map<String, Object> name2 = new HashMap<>();
@@ -103,7 +107,8 @@ public class AttendWxCacheServiceImpl implements AttendWxCacheService {
                     map.put("data", data);
                     String json = JSON.toJSONString(map);
 
-                    HttpClientUtil.sendJsonPost("https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=" + accessToken, json);
+                    String result = HttpClientUtil.sendJsonPost("https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=" + accessToken, json);
+                    log.debug("Send attend weixin subscriber username:{}, release_id:{}, result:{}", weiXinBean.getUsername(), id, result);
                 }
             }
         }
