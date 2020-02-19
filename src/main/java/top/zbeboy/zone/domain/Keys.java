@@ -271,6 +271,7 @@ public class Keys {
     public static final UniqueKey<UsersTypeRecord> KEY_USERS_TYPE_PRIMARY = UniqueKeys0.KEY_USERS_TYPE_PRIMARY;
     public static final UniqueKey<UsersTypeRecord> KEY_USERS_TYPE_USERS_TYPE_NAME = UniqueKeys0.KEY_USERS_TYPE_USERS_TYPE_NAME;
     public static final UniqueKey<WeiXinRecord> KEY_WEI_XIN_PRIMARY = UniqueKeys0.KEY_WEI_XIN_PRIMARY;
+    public static final UniqueKey<WeiXinRecord> KEY_WEI_XIN_OPEN_ID = UniqueKeys0.KEY_WEI_XIN_OPEN_ID;
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions
@@ -475,6 +476,7 @@ public class Keys {
         public static final UniqueKey<UsersTypeRecord> KEY_USERS_TYPE_PRIMARY = Internal.createUniqueKey(UsersType.USERS_TYPE, "KEY_users_type_PRIMARY", UsersType.USERS_TYPE.USERS_TYPE_ID);
         public static final UniqueKey<UsersTypeRecord> KEY_USERS_TYPE_USERS_TYPE_NAME = Internal.createUniqueKey(UsersType.USERS_TYPE, "KEY_users_type_users_type_name", UsersType.USERS_TYPE.USERS_TYPE_NAME);
         public static final UniqueKey<WeiXinRecord> KEY_WEI_XIN_PRIMARY = Internal.createUniqueKey(WeiXin.WEI_XIN, "KEY_wei_xin_PRIMARY", WeiXin.WEI_XIN.WEI_XIN_ID);
+        public static final UniqueKey<WeiXinRecord> KEY_WEI_XIN_OPEN_ID = Internal.createUniqueKey(WeiXin.WEI_XIN, "KEY_wei_xin_open_id", WeiXin.WEI_XIN.OPEN_ID, WeiXin.WEI_XIN.APP_ID, WeiXin.WEI_XIN.USERNAME);
     }
 
     private static class ForeignKeys0 {

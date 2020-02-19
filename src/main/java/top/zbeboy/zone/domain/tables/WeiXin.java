@@ -42,7 +42,7 @@ import top.zbeboy.zone.domain.tables.records.WeiXinRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class WeiXin extends TableImpl<WeiXinRecord> {
 
-    private static final long serialVersionUID = 364378806;
+    private static final long serialVersionUID = 278447294;
 
     /**
      * The reference instance of <code>zone.wei_xin</code>
@@ -127,7 +127,7 @@ public class WeiXin extends TableImpl<WeiXinRecord> {
 
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.WEI_XIN_PRIMARY, Indexes.WEI_XIN_USERNAME);
+        return Arrays.<Index>asList(Indexes.WEI_XIN_OPEN_ID, Indexes.WEI_XIN_PRIMARY, Indexes.WEI_XIN_USERNAME);
     }
 
     @Override
@@ -142,7 +142,7 @@ public class WeiXin extends TableImpl<WeiXinRecord> {
 
     @Override
     public List<UniqueKey<WeiXinRecord>> getKeys() {
-        return Arrays.<UniqueKey<WeiXinRecord>>asList(Keys.KEY_WEI_XIN_PRIMARY);
+        return Arrays.<UniqueKey<WeiXinRecord>>asList(Keys.KEY_WEI_XIN_PRIMARY, Keys.KEY_WEI_XIN_OPEN_ID);
     }
 
     @Override
