@@ -13,6 +13,7 @@ public class AttendReleaseSubBean extends AttendReleaseSub {
     private String validDateStr;
     private String expireDateStr;
     private Byte isAttend;
+    private Byte isSubscribe;
 
     public String getRealName() {
         return realName;
@@ -92,5 +93,13 @@ public class AttendReleaseSubBean extends AttendReleaseSub {
 
     public void setIsAttend(Byte isAttend) {
         this.isAttend = isAttend;
+    }
+
+    public Byte getIsSubscribe() {
+        return isSubscribe;
+    }
+
+    public void setIsSubscribe(Byte isSubscribe) {
+        this.isSubscribe = isSubscribe;
     }
 }

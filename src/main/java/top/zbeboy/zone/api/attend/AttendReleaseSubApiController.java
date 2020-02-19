@@ -11,9 +11,11 @@ import top.zbeboy.zone.domain.tables.pojos.AttendReleaseSub;
 import top.zbeboy.zone.domain.tables.pojos.Student;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
+import top.zbeboy.zone.domain.tables.records.AttendWxStudentSubscribeRecord;
 import top.zbeboy.zone.domain.tables.records.StudentRecord;
 import top.zbeboy.zone.service.attend.AttendDataService;
 import top.zbeboy.zone.service.attend.AttendReleaseSubService;
+import top.zbeboy.zone.service.attend.AttendWxStudentSubscribeService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
@@ -36,6 +38,9 @@ public class AttendReleaseSubApiController {
 
     @Resource
     private AttendDataService attendDataService;
+
+    @Resource
+    private AttendWxStudentSubscribeService attendWxStudentSubscribeService;
 
     @Resource
     private UsersService usersService;
@@ -81,6 +86,10 @@ public class AttendReleaseSubApiController {
                             Optional<Record> record = attendDataService
                                     .findByStudentIdAndAttendReleaseIdAndAttendReleaseSubId(student.getStudentId(), bean.getAttendReleaseId(), bean.getAttendReleaseSubId());
                             bean.setIsAttend(BooleanUtil.toByte(record.isPresent()));
+
+                            Optional<AttendWxStudentSubscribeRecord> subRecord = attendWxStudentSubscribeService.findByAttendReleaseIdAndStudentId(
+                                    bean.getAttendReleaseId(), studentRecord.get().getStudentId());
+                            bean.setIsSubscribe(BooleanUtil.toByte(subRecord.isPresent()));
                         }
                     }
 

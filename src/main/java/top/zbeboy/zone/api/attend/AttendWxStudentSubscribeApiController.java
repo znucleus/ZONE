@@ -284,4 +284,35 @@ public class AttendWxStudentSubscribeApiController {
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
+
+    /**
+     * 订阅查询
+     *
+     * @param principal 当前用户信息
+     * @return true or false
+     */
+    @PostMapping("/api/attend/weixin/subscribe/query")
+    public ResponseEntity<Map<String, Object>> subscribeQuery(@RequestParam("attendReleaseId") String attendReleaseId,
+                                                              Principal principal) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        Users users = usersService.getUserFromOauth(principal);
+        if (Objects.nonNull(users)) {
+            Optional<StudentRecord> studentRecord = studentService.findByUsername(users.getUsername());
+            if (studentRecord.isPresent()) {
+                Optional<AttendWxStudentSubscribeRecord> subRecord = attendWxStudentSubscribeService.findByAttendReleaseIdAndStudentId(
+                        attendReleaseId, studentRecord.get().getStudentId());
+                if (subRecord.isPresent()) {
+                    ajaxUtil.success().msg("已订阅");
+                } else {
+                    ajaxUtil.fail().msg("未订阅");
+                }
+            } else {
+                ajaxUtil.fail().msg("未查询到学生信息");
+            }
+
+        } else {
+            ajaxUtil.fail().msg("获取用户信息失败");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
 }
