@@ -1,5 +1,7 @@
 package top.zbeboy.zone.service.attend;
 
+import org.jooq.Record;
+import org.jooq.Result;
 import top.zbeboy.zone.domain.tables.pojos.AttendWxStudentSubscribe;
 import top.zbeboy.zone.domain.tables.records.AttendWxStudentSubscribeRecord;
 
@@ -16,6 +18,13 @@ public interface AttendWxStudentSubscribeService {
     Optional<AttendWxStudentSubscribeRecord> findByAttendReleaseIdAndStudentId(String attendReleaseId, int studentId);
 
     /**
+     * 查询订阅数据
+     *
+     * @return 数据
+     */
+    Result<Record> findSubscribe();
+
+    /**
      * 保存
      *
      * @param attendWxStudentSubscribe 数据
@@ -29,4 +38,16 @@ public interface AttendWxStudentSubscribeService {
      * @param studentId       学生id
      */
     void deleteByAttendReleaseIdAndStudentId(String attendReleaseId, int studentId);
+
+    /**
+     * 通过发布表id删除
+     *
+     * @param attendReleaseId 发布表id
+     */
+    void deleteByAttendReleaseId(String attendReleaseId);
+
+    /**
+     * 删除过期记录
+     */
+    void deleteOverdueRecord();
 }

@@ -14,6 +14,7 @@ import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.service.attend.AttendReleaseService;
 import top.zbeboy.zone.service.attend.AttendReleaseSubService;
 import top.zbeboy.zone.service.attend.AttendUsersService;
+import top.zbeboy.zone.service.cache.weixin.WeiXinCacheService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
@@ -55,6 +56,9 @@ public class AttendReleaseApiController {
 
     @Resource
     private RoleService roleService;
+
+    @Resource
+    private WeiXinCacheService weiXinCacheService;
 
     /**
      * 保存
@@ -212,6 +216,9 @@ public class AttendReleaseApiController {
                         attendRelease.setAttendEndTime(attendReleaseSub.getAttendEndTime());
 
                         attendReleaseService.update(attendRelease);
+
+                        // 更新订阅下发
+                        weiXinCacheService.updateAttendWxSubscribe(attendRelease);
 
                         ajaxUtil.success().msg("更新成功");
                     } else {

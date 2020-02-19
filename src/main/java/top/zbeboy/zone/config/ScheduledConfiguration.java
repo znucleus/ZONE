@@ -1,6 +1,7 @@
 package top.zbeboy.zone.config;
 
 import org.joda.time.DateTime;
+import org.jooq.Record;
 import org.jooq.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,8 @@ import top.zbeboy.zone.domain.tables.records.AttendReleaseRecord;
 import top.zbeboy.zone.domain.tables.records.UsersRecord;
 import top.zbeboy.zone.service.attend.AttendReleaseService;
 import top.zbeboy.zone.service.attend.AttendReleaseSubService;
+import top.zbeboy.zone.service.attend.AttendWxStudentSubscribeService;
+import top.zbeboy.zone.service.cache.weixin.WeiXinCacheService;
 import top.zbeboy.zone.service.internship.InternshipApplyService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.system.SystemOperatorLogService;
@@ -68,6 +71,12 @@ public class ScheduledConfiguration {
 
     @Resource
     private AttendReleaseSubService attendReleaseSubService;
+
+    @Resource
+    private AttendWxStudentSubscribeService attendWxStudentSubscribeService;
+
+    @Resource
+    private WeiXinCacheService weiXinCacheService;
 
     @Resource
     private InternshipApplyService internshipApplyService;
@@ -138,6 +147,26 @@ public class ScheduledConfiguration {
             attendReleaseSubService.batchSave(attendReleaseSubs);
         }
         log.info(">>>>>>>>>>>>> scheduled ... generate attend ");
+    }
+
+    /**
+     * 删除过期订阅记录
+     */
+    @Scheduled(cron = "0 5 05 * * ?") // 每天 晚间05点05分
+    public void deleteAttendWxSubscribe() {
+        attendWxStudentSubscribeService.deleteOverdueRecord();
+    }
+
+    /**
+     * 下发订阅记录
+     */
+    @Scheduled(cron = "0 5 07 * * ?") // 每天 晚间07点05分
+    public void sendAttendWxSubscribe() {
+        // 思路将要下发的订阅存入redis，等redis过期时触发数据下发
+        // 1.查询要下发的子表数据
+        Result<Record> records = attendWxStudentSubscribeService.findSubscribe();
+        // 2.存入缓存
+        weiXinCacheService.sendAttendWxSubscribe(records);
     }
 
     /**

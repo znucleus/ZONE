@@ -16,6 +16,7 @@ import top.zbeboy.zone.domain.tables.records.StudentRecord;
 import top.zbeboy.zone.service.attend.AttendDataService;
 import top.zbeboy.zone.service.attend.AttendReleaseSubService;
 import top.zbeboy.zone.service.attend.AttendWxStudentSubscribeService;
+import top.zbeboy.zone.service.cache.weixin.WeiXinCacheService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
@@ -53,6 +54,9 @@ public class AttendReleaseSubApiController {
 
     @Resource
     private RoleService roleService;
+
+    @Resource
+    private WeiXinCacheService weiXinCacheService;
 
     /**
      * 列表数据
@@ -140,6 +144,9 @@ public class AttendReleaseSubApiController {
             if (roleService.isOauthUserInRole(Workbook.authorities.ROLE_SYSTEM.name(), principal) ||
                     (Objects.nonNull(users) && StringUtils.equals(users.getUsername(), attendReleaseSub.getUsername()))) {
                 attendReleaseSubService.deleteById(attendReleaseSubId);
+
+                // 删除当天订阅下发
+                weiXinCacheService.deleteAttendWxSubscribe(attendReleaseSub.getAttendReleaseId());
                 ajaxUtil.success().msg("删除数据成功");
             } else {
                 ajaxUtil.fail().msg("您无权限操作");
