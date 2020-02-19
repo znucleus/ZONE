@@ -62,7 +62,8 @@ public class AttendWxCacheServiceImpl implements AttendWxCacheService {
                 String id = r.get(ATTEND_RELEASE_SUB.ATTEND_RELEASE_ID);
                 DateTime now = DateTime.now();
                 DateTime startTime = new DateTime(r.get(ATTEND_RELEASE_SUB.ATTEND_START_TIME));
-                ops.set(cacheKey + id, id, Minutes.minutesBetween(now, startTime).getMinutes(), TimeUnit.MINUTES);
+                int minutes = Minutes.minutesBetween(now, startTime).getMinutes();
+                ops.set(cacheKey + id, id, minutes > 0 ? minutes : 1, TimeUnit.MINUTES);
             }
         }
     }
