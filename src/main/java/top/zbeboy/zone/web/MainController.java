@@ -1,11 +1,6 @@
 package top.zbeboy.zone.web;
 
-import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.joda.time.DateTime;
-import org.joda.time.Minutes;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
@@ -27,7 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 @Controller
 public class MainController {
@@ -44,9 +38,6 @@ public class MainController {
     @Resource
     private FilesService filesService;
 
-    @Resource
-    private StringRedisTemplate stringRedisTemplate;
-
     private RequestCache requestCache = new HttpSessionRequestCache();
 
     /**
@@ -56,10 +47,6 @@ public class MainController {
      */
     @GetMapping("/login")
     public String login(ModelMap modelMap, HttpServletRequest request, HttpServletResponse response) {
-
-        ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();
-        ops.set("test_key", "test_value",30L, TimeUnit.SECONDS);
-
         String page;
         boolean needSkip = false;
         SavedRequest savedRequest = requestCache.getRequest(request, response);
