@@ -65,6 +65,7 @@ CREATE TABLE wei_xin(
   union_id VARCHAR(200),
   app_id VARCHAR(64) NOT NULL,
   username VARCHAR(64) NOT NULL,
+  UNIQUE (open_id,app_id,username),
   FOREIGN KEY (username) REFERENCES users (username) ON UPDATE CASCADE ON DELETE CASCADE
 );
 

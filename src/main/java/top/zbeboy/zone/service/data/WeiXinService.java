@@ -1,5 +1,7 @@
 package top.zbeboy.zone.service.data;
 
+import org.jooq.Record;
+import org.jooq.Result;
 import top.zbeboy.zone.domain.tables.pojos.WeiXin;
 import top.zbeboy.zone.domain.tables.records.WeiXinRecord;
 
@@ -15,6 +17,15 @@ public interface WeiXinService {
      * @return 信息
      */
     Optional<WeiXinRecord> findByUsernameAndAppId(String username, String appId);
+
+    /**
+     * 通过appId查询
+     *
+     * @param studentId 学生id
+     * @param appId     appId
+     * @return 数据
+     */
+    Optional<Record> findByStudentIdAndAppId(int studentId, String appId);
 
     /**
      * 保存

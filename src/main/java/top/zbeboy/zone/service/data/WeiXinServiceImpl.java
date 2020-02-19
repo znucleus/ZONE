@@ -1,6 +1,8 @@
 package top.zbeboy.zone.service.data;
 
 import org.jooq.DSLContext;
+import org.jooq.Record;
+import org.jooq.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -11,8 +13,11 @@ import top.zbeboy.zone.domain.tables.records.WeiXinRecord;
 
 import javax.annotation.Resource;
 
+import java.util.List;
 import java.util.Optional;
 
+import static top.zbeboy.zone.domain.Tables.STUDENT;
+import static top.zbeboy.zone.domain.Tables.USERS;
 import static top.zbeboy.zone.domain.Tables.WEI_XIN;
 
 @Service("weiXinService")
@@ -33,6 +38,19 @@ public class WeiXinServiceImpl implements WeiXinService {
     public Optional<WeiXinRecord> findByUsernameAndAppId(String username, String appId) {
         return create.selectFrom(WEI_XIN).where(WEI_XIN.USERNAME.eq(username).and(WEI_XIN.APP_ID.eq(appId))).fetchOptional();
     }
+
+    @Override
+    public Optional<Record> findByStudentIdAndAppId(int studentId, String appId) {
+        return create.select()
+                .from(WEI_XIN)
+                .leftJoin(STUDENT)
+                .on(WEI_XIN.USERNAME.eq(STUDENT.USERNAME))
+                .leftJoin(USERS)
+                .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                .where(WEI_XIN.APP_ID.eq(appId).and(STUDENT.STUDENT_ID.eq(studentId)))
+                .fetchOptional();
+    }
+
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override

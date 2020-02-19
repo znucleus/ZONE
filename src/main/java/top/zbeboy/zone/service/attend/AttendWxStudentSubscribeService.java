@@ -18,6 +18,14 @@ public interface AttendWxStudentSubscribeService {
     Optional<AttendWxStudentSubscribeRecord> findByAttendReleaseIdAndStudentId(String attendReleaseId, int studentId);
 
     /**
+     * 通过发布id查询
+     *
+     * @param attendReleaseId 发布表id
+     * @return 数据
+     */
+    Result<Record> findByAttendReleaseId(String attendReleaseId);
+
+    /**
      * 查询订阅数据
      *
      * @return 数据

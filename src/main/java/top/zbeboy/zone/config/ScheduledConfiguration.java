@@ -17,7 +17,7 @@ import top.zbeboy.zone.domain.tables.records.UsersRecord;
 import top.zbeboy.zone.service.attend.AttendReleaseService;
 import top.zbeboy.zone.service.attend.AttendReleaseSubService;
 import top.zbeboy.zone.service.attend.AttendWxStudentSubscribeService;
-import top.zbeboy.zone.service.cache.weixin.WeiXinCacheService;
+import top.zbeboy.zone.service.cache.attend.AttendWxCacheService;
 import top.zbeboy.zone.service.internship.InternshipApplyService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.system.SystemOperatorLogService;
@@ -76,7 +76,7 @@ public class ScheduledConfiguration {
     private AttendWxStudentSubscribeService attendWxStudentSubscribeService;
 
     @Resource
-    private WeiXinCacheService weiXinCacheService;
+    private AttendWxCacheService attendWxCacheService;
 
     @Resource
     private InternshipApplyService internshipApplyService;
@@ -166,7 +166,7 @@ public class ScheduledConfiguration {
         // 1.查询要下发的子表数据
         Result<Record> records = attendWxStudentSubscribeService.findSubscribe();
         // 2.存入缓存
-        weiXinCacheService.sendAttendWxSubscribe(records);
+        attendWxCacheService.saveAttendWxSubscribe(records);
     }
 
     /**

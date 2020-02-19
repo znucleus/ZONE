@@ -16,7 +16,7 @@ import top.zbeboy.zone.domain.tables.records.StudentRecord;
 import top.zbeboy.zone.service.attend.AttendDataService;
 import top.zbeboy.zone.service.attend.AttendReleaseSubService;
 import top.zbeboy.zone.service.attend.AttendWxStudentSubscribeService;
-import top.zbeboy.zone.service.cache.weixin.WeiXinCacheService;
+import top.zbeboy.zone.service.cache.attend.AttendWxCacheService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
@@ -56,7 +56,7 @@ public class AttendReleaseSubApiController {
     private RoleService roleService;
 
     @Resource
-    private WeiXinCacheService weiXinCacheService;
+    private AttendWxCacheService attendWxCacheService;
 
     /**
      * 列表数据
@@ -146,7 +146,7 @@ public class AttendReleaseSubApiController {
                 attendReleaseSubService.deleteById(attendReleaseSubId);
 
                 // 删除当天订阅下发
-                weiXinCacheService.deleteAttendWxSubscribe(attendReleaseSub.getAttendReleaseId());
+                attendWxCacheService.deleteAttendWxSubscribe(attendReleaseSub.getAttendReleaseId());
                 ajaxUtil.success().msg("删除数据成功");
             } else {
                 ajaxUtil.fail().msg("您无权限操作");

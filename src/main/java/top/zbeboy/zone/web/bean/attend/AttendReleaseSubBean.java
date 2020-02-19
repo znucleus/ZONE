@@ -15,6 +15,14 @@ public class AttendReleaseSubBean extends AttendReleaseSub {
     private Byte isAttend;
     private Byte isSubscribe;
 
+    // 微信模板数据
+    private String  templateId;
+    private String  page;
+    private String  data;
+    private String  miniProgramState;
+    private String  lang;
+    private int studentId;
+
     public String getRealName() {
         return realName;
     }
@@ -101,5 +109,53 @@ public class AttendReleaseSubBean extends AttendReleaseSub {
 
     public void setIsSubscribe(Byte isSubscribe) {
         this.isSubscribe = isSubscribe;
+    }
+
+    public String getTemplateId() {
+        return templateId;
+    }
+
+    public void setTemplateId(String templateId) {
+        this.templateId = templateId;
+    }
+
+    public String getPage() {
+        return page;
+    }
+
+    public void setPage(String page) {
+        this.page = page;
+    }
+
+    public String getData() {
+        return data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
+    }
+
+    public String getMiniProgramState() {
+        return miniProgramState;
+    }
+
+    public void setMiniProgramState(String miniProgramState) {
+        this.miniProgramState = miniProgramState;
+    }
+
+    public String getLang() {
+        return lang;
+    }
+
+    public void setLang(String lang) {
+        this.lang = lang;
+    }
+
+    public int getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(int studentId) {
+        this.studentId = studentId;
     }
 }
