@@ -109,6 +109,8 @@ public class AttendWxCacheServiceImpl implements AttendWxCacheService {
 
                     String result = HttpClientUtil.sendJsonPost("https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=" + accessToken, json);
                     log.debug("Send attend weixin subscriber username:{}, release_id:{}, result:{}", weiXinBean.getUsername(), id, result);
+                    // 下发后得删除记录
+                    attendWxStudentSubscribeService.deleteByAttendReleaseIdAndStudentId(id, bean.getStudentId());
                 }
             }
         }
