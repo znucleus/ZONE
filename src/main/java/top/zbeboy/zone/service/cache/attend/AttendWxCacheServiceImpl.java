@@ -85,7 +85,7 @@ public class AttendWxCacheServiceImpl implements AttendWxCacheService {
                     Map<String, Object> data = new HashMap<>();
 
                     Map<String, Object> phrase1 = new HashMap<>();
-                    phrase1.put("value", "待签到");
+                    phrase1.put("value", "待签到-" + bean.getTitle());
                     data.put("phrase1", phrase1);
 
                     Map<String, Object> name2 = new HashMap<>();
