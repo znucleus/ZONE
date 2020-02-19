@@ -21,15 +21,12 @@ import top.zbeboy.zone.domain.tables.pojos.WeiXin;
 import top.zbeboy.zone.domain.tables.records.AttendWxStudentSubscribeRecord;
 import top.zbeboy.zone.domain.tables.records.StudentRecord;
 import top.zbeboy.zone.domain.tables.records.WeiXinRecord;
-import top.zbeboy.zone.service.attend.AttendUsersService;
 import top.zbeboy.zone.service.attend.AttendWxStudentSubscribeService;
-import top.zbeboy.zone.service.cache.weixin.WeiXinCacheService;
+import top.zbeboy.zone.service.cache.attend.AttendWxCacheService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.data.WeiXinService;
 import top.zbeboy.zone.service.platform.UsersService;
-import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.HttpClientUtil;
-import top.zbeboy.zone.web.bean.attend.AttendReleaseSubBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.vo.attend.weixin.AttendWxStudentSubscribeAddVo;
 
@@ -37,7 +34,10 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 public class AttendWxStudentSubscribeApiController {
@@ -57,10 +57,7 @@ public class AttendWxStudentSubscribeApiController {
     private AttendWxStudentSubscribeService attendWxStudentSubscribeService;
 
     @Resource
-    private WeiXinCacheService weiXinCacheService;
-
-    @Resource
-    private AttendUsersService attendUsersService;
+    private AttendWxCacheService attendWxCacheService;
 
     @Resource
     private StudentService studentService;
@@ -177,92 +174,23 @@ public class AttendWxStudentSubscribeApiController {
     /**
      * 发送
      *
-     * @param principal  当前用户信息
      * @return true or false
      */
     @PostMapping("/api/attend/weixin/subscribe/send")
-    public ResponseEntity<Map<String, Object>> subscribeSend(@RequestParam("appId") String appId,
-                                                             @RequestParam("attendReleaseId") String attendReleaseId,
-                                                             Principal principal) {
+    public ResponseEntity<Map<String, Object>> subscribeSend() {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        try {
-            Users users = usersService.getUserFromOauth(principal);
-            if (Objects.nonNull(users)) {
-                Optional<StudentRecord> studentRecord = studentService.findByUsername(users.getUsername());
-                if (studentRecord.isPresent()) {
-                    final String accessToken = weiXinCacheService.getAccessToken();
-                    Optional<WeiXinRecord> record = weiXinService.findByUsernameAndAppId(users.getUsername(), appId);
-                    if (record.isPresent()) {
-                        WeiXin weiXin = record.get().into(WeiXin.class);
-                        Optional<AttendWxStudentSubscribeRecord> subRecord = attendWxStudentSubscribeService.findByAttendReleaseIdAndStudentId(
-                                attendReleaseId, studentRecord.get().getStudentId());
-                        if (subRecord.isPresent()) {
-                            AttendWxStudentSubscribe attendWxStudentSubscribe = subRecord.get().into(AttendWxStudentSubscribe.class);
-                            Map<String, Object> map = new HashMap<>();
-                            map.put("touser", weiXin.getOpenId());
-                            map.put("template_id", attendWxStudentSubscribe.getTemplateId());
-                            map.put("page", attendWxStudentSubscribe.getPage());
-                            map.put("miniprogram_state", attendWxStudentSubscribe.getMiniProgramState());
-                            map.put("lang", attendWxStudentSubscribe.getLang());
-                            Result<Record> attendRecords = attendUsersService.findFutureAttendByStudentId(studentRecord.get().getStudentId());
-                            if (attendRecords.isNotEmpty()) {
-                                List<AttendReleaseSubBean> beans = attendRecords.into(AttendReleaseSubBean.class);
-                                StringBuilder sb = new StringBuilder();
-                                for (AttendReleaseSubBean bean : beans) {
-                                    Map<String, Object> data = new HashMap<>();
-
-                                    Map<String, Object> phrase1 = new HashMap<>();
-                                    phrase1.put("value", "待签到");
-                                    data.put("phrase1", phrase1);
-
-                                    Map<String, Object> name2 = new HashMap<>();
-                                    name2.put("value", bean.getRealName());
-                                    data.put("name2", name2);
-
-                                    Map<String, Object> date3 = new HashMap<>();
-                                    date3.put("value", DateTimeUtil.formatSqlTimestamp(DateTimeUtil.getNowSqlTimestamp(), DateTimeUtil.YEAR_MONTH_DAY_HOUR_MINUTE_FORMAT));
-                                    data.put("date3", date3);
-
-                                    Map<String, Object> thing5 = new HashMap<>();
-                                    thing5.put("value", "校内");
-                                    data.put("thing5", thing5);
-
-                                    map.put("data", data);
-                                    String json = JSON.toJSONString(map);
-
-                                    String result = HttpClientUtil.sendJsonPost("https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=" + accessToken, json);
-                                    sb.append(result);
-                                }
-                                ajaxUtil.success().msg("发送成功 " + sb.toString());
-                            } else {
-                                ajaxUtil.fail().msg("无签到数据");
-                            }
-                        } else {
-                            ajaxUtil.fail().msg("未查询到模板信息");
-                        }
-                    } else {
-                        ajaxUtil.fail().msg("未查询到微信用户信息");
-                    }
-                } else {
-                    ajaxUtil.fail().msg("未查询到学生信息");
-                }
-
-            } else {
-                ajaxUtil.fail().msg("获取用户信息失败");
-            }
-
-        } catch (Exception e) {
-            log.error("发送微信订阅异常：{}", e);
-            ajaxUtil.fail().msg("发送微信订阅异常：" + e.getMessage());
-        }
-
+        // 1.查询要下发的子表数据
+        Result<Record> records = attendWxStudentSubscribeService.findSubscribe();
+        // 2.存入缓存
+        attendWxCacheService.saveAttendWxSubscribe(records);
+        ajaxUtil.success().msg("下发成功");
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
     /**
      * 取消订阅
      *
-     * @param principal  当前用户信息
+     * @param principal 当前用户信息
      * @return true or false
      */
     @PostMapping("/api/attend/weixin/subscribe/delete")
