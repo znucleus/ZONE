@@ -209,7 +209,6 @@ public class AttendReleaseSubServiceImpl implements AttendReleaseSubService, Pag
                             if (record.isPresent()) {
                                 int organizeId = record.get().get(ORGANIZE.ORGANIZE_ID);
                                 a = ATTEND_RELEASE_SUB.ORGANIZE_ID.eq(organizeId)
-                                        .and(ATTEND_RELEASE_SUB.ATTEND_START_TIME.le(now()))
                                         .and(ATTEND_RELEASE_SUB.ATTEND_END_TIME.gt(now()))
                                         .and(ATTEND_RELEASE_SUB.ATTEND_END_TIME.gt(ATTEND_RELEASE_SUB.ATTEND_START_TIME));
                             }
