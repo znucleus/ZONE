@@ -262,13 +262,11 @@ public class AttendWxStudentSubscribeApiController {
     /**
      * 取消订阅
      *
-     * @param templateId 模板id
      * @param principal  当前用户信息
      * @return true or false
      */
     @PostMapping("/api/attend/weixin/subscribe/delete")
-    public ResponseEntity<Map<String, Object>> subscribeDelete(@RequestParam("templateId") String templateId,
-                                                               @RequestParam("attendReleaseId") String attendReleaseId,
+    public ResponseEntity<Map<String, Object>> subscribeDelete(@RequestParam("attendReleaseId") String attendReleaseId,
                                                                Principal principal) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         Users users = usersService.getUserFromOauth(principal);
