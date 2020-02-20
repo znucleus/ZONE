@@ -4,6 +4,7 @@
 package top.zbeboy.zone.domain.tables.daos;
 
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.annotation.Generated;
@@ -140,5 +141,47 @@ public class WeiXinDao extends DAOImpl<WeiXinRecord, top.zbeboy.zone.domain.tabl
      */
     public List<top.zbeboy.zone.domain.tables.pojos.WeiXin> fetchByUsername(String... values) {
         return fetch(WeiXin.WEI_XIN.USERNAME, values);
+    }
+
+    /**
+     * Fetch records that have <code>res_code BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.WeiXin> fetchRangeOfResCode(String lowerInclusive, String upperInclusive) {
+        return fetchRange(WeiXin.WEI_XIN.RES_CODE, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>res_code IN (values)</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.WeiXin> fetchByResCode(String... values) {
+        return fetch(WeiXin.WEI_XIN.RES_CODE, values);
+    }
+
+    /**
+     * Fetch records that have <code>result BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.WeiXin> fetchRangeOfResult(String lowerInclusive, String upperInclusive) {
+        return fetchRange(WeiXin.WEI_XIN.RESULT, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>result IN (values)</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.WeiXin> fetchByResult(String... values) {
+        return fetch(WeiXin.WEI_XIN.RESULT, values);
+    }
+
+    /**
+     * Fetch records that have <code>create_date BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.WeiXin> fetchRangeOfCreateDate(Timestamp lowerInclusive, Timestamp upperInclusive) {
+        return fetchRange(WeiXin.WEI_XIN.CREATE_DATE, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>create_date IN (values)</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.WeiXin> fetchByCreateDate(Timestamp... values) {
+        return fetch(WeiXin.WEI_XIN.CREATE_DATE, values);
     }
 }

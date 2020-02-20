@@ -17,11 +17,14 @@ import top.zbeboy.zone.config.CacheBook;
 import top.zbeboy.zone.config.WeiXinAppBook;
 import top.zbeboy.zone.domain.tables.pojos.AttendRelease;
 import top.zbeboy.zone.domain.tables.pojos.AttendReleaseSub;
+import top.zbeboy.zone.domain.tables.pojos.AttendSubscribeLog;
+import top.zbeboy.zone.service.attend.AttendSubscribeLogService;
 import top.zbeboy.zone.service.attend.AttendWxStudentSubscribeService;
 import top.zbeboy.zone.service.cache.weixin.WeiXinCacheService;
 import top.zbeboy.zone.service.data.WeiXinService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.HttpClientUtil;
+import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.attend.AttendReleaseSubBean;
 import top.zbeboy.zone.web.bean.data.weixin.WeiXinBean;
 
@@ -49,6 +52,9 @@ public class AttendWxCacheServiceImpl implements AttendWxCacheService {
 
     @Resource
     private AttendWxStudentSubscribeService attendWxStudentSubscribeService;
+
+    @Resource
+    private AttendSubscribeLogService attendSubscribeLogService;
 
     @Override
     public void saveAttendWxSubscribe(Result<Record> records) {
@@ -119,6 +125,17 @@ public class AttendWxCacheServiceImpl implements AttendWxCacheService {
 
                     String result = HttpClientUtil.sendJsonPost("https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=" + accessToken, json);
                     log.debug("Send attend weixin subscriber username:{}, release_id:{}, result:{}", weiXinBean.getUsername(), id, result);
+                    AttendSubscribeLog log = new AttendSubscribeLog();
+                    log.setLogId(UUIDUtil.getUUID());
+                    log.setAttendReleaseId(id);
+                    log.setUsername(weiXinBean.getUsername());
+                    log.setOpenId(weiXinBean.getOpenId());
+                    log.setTemplateId(bean.getTemplateId());
+                    log.setRealName(weiXinBean.getRealName());
+                    log.setRequest(json);
+                    log.setResult(result);
+                    log.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                    attendSubscribeLogService.save(log);
                     // 下发后得删除记录
                     attendWxStudentSubscribeService.deleteByAttendReleaseIdAndStudentId(id, bean.getStudentId());
                 }

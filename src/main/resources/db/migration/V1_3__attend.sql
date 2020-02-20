@@ -65,6 +65,9 @@ CREATE TABLE wei_xin(
   union_id VARCHAR(200),
   app_id VARCHAR(64) NOT NULL,
   username VARCHAR(64) NOT NULL,
+  res_code VARCHAR(200),
+  result VARCHAR(500),
+  create_date TIMESTAMP NOT NULL,
   UNIQUE (open_id,app_id,username),
   FOREIGN KEY (username) REFERENCES users (username) ON UPDATE CASCADE ON DELETE CASCADE
 );
@@ -78,7 +81,20 @@ CREATE TABLE attend_wx_student_subscribe(
   lang VARCHAR(10),
   student_id INT NOT NULL,
   attend_release_id VARCHAR(64) NOT NULL,
+  create_date TIMESTAMP NOT NULL,
   UNIQUE (student_id,attend_release_id),
   FOREIGN KEY(attend_release_id) REFERENCES attend_release(attend_release_id) ON DELETE CASCADE,
   FOREIGN KEY(student_id) REFERENCES student(student_id) ON DELETE CASCADE
+);
+
+CREATE TABLE attend_subscribe_log(
+  log_id VARCHAR(64) PRIMARY KEY ,
+  username VARCHAR(64),
+  attend_release_id VARCHAR(64),
+  real_name VARCHAR(15),
+  open_id VARCHAR(200),
+  template_id VARCHAR(64),
+  request VARCHAR(500),
+  result VARCHAR(500),
+  create_date TIMESTAMP NOT NULL
 );

@@ -5,6 +5,7 @@ package top.zbeboy.zone.domain.tables.pojos;
 
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import javax.annotation.Generated;
 import javax.validation.constraints.NotNull;
@@ -24,14 +25,17 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class WeiXin implements Serializable {
 
-    private static final long serialVersionUID = 1519106550;
+    private static final long serialVersionUID = -1568972125;
 
-    private Integer weiXinId;
-    private String  openId;
-    private String  sessionKey;
-    private String  unionId;
-    private String  appId;
-    private String  username;
+    private Integer   weiXinId;
+    private String    openId;
+    private String    sessionKey;
+    private String    unionId;
+    private String    appId;
+    private String    username;
+    private String    resCode;
+    private String    result;
+    private Timestamp createDate;
 
     public WeiXin() {}
 
@@ -42,15 +46,21 @@ public class WeiXin implements Serializable {
         this.unionId = value.unionId;
         this.appId = value.appId;
         this.username = value.username;
+        this.resCode = value.resCode;
+        this.result = value.result;
+        this.createDate = value.createDate;
     }
 
     public WeiXin(
-        Integer weiXinId,
-        String  openId,
-        String  sessionKey,
-        String  unionId,
-        String  appId,
-        String  username
+        Integer   weiXinId,
+        String    openId,
+        String    sessionKey,
+        String    unionId,
+        String    appId,
+        String    username,
+        String    resCode,
+        String    result,
+        Timestamp createDate
     ) {
         this.weiXinId = weiXinId;
         this.openId = openId;
@@ -58,6 +68,9 @@ public class WeiXin implements Serializable {
         this.unionId = unionId;
         this.appId = appId;
         this.username = username;
+        this.resCode = resCode;
+        this.result = result;
+        this.createDate = createDate;
     }
 
     public Integer getWeiXinId() {
@@ -116,6 +129,33 @@ public class WeiXin implements Serializable {
         this.username = username;
     }
 
+    @Size(max = 200)
+    public String getResCode() {
+        return this.resCode;
+    }
+
+    public void setResCode(String resCode) {
+        this.resCode = resCode;
+    }
+
+    @Size(max = 500)
+    public String getResult() {
+        return this.result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
+    }
+
+    @NotNull
+    public Timestamp getCreateDate() {
+        return this.createDate;
+    }
+
+    public void setCreateDate(Timestamp createDate) {
+        this.createDate = createDate;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("WeiXin (");
@@ -126,6 +166,9 @@ public class WeiXin implements Serializable {
         sb.append(", ").append(unionId);
         sb.append(", ").append(appId);
         sb.append(", ").append(username);
+        sb.append(", ").append(resCode);
+        sb.append(", ").append(result);
+        sb.append(", ").append(createDate);
 
         sb.append(")");
         return sb.toString();

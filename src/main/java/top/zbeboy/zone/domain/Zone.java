@@ -26,6 +26,7 @@ import top.zbeboy.zone.domain.tables.AttendData;
 import top.zbeboy.zone.domain.tables.AttendMapKey;
 import top.zbeboy.zone.domain.tables.AttendRelease;
 import top.zbeboy.zone.domain.tables.AttendReleaseSub;
+import top.zbeboy.zone.domain.tables.AttendSubscribeLog;
 import top.zbeboy.zone.domain.tables.AttendUsers;
 import top.zbeboy.zone.domain.tables.AttendWxStudentSubscribe;
 import top.zbeboy.zone.domain.tables.Authorities;
@@ -98,7 +99,7 @@ import top.zbeboy.zone.domain.tables.WeiXin;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Zone extends SchemaImpl {
 
-    private static final long serialVersionUID = 9427960;
+    private static final long serialVersionUID = -740134303;
 
     /**
      * The reference instance of <code>zone</code>
@@ -164,6 +165,11 @@ public class Zone extends SchemaImpl {
      * The table <code>zone.attend_release_sub</code>.
      */
     public final AttendReleaseSub ATTEND_RELEASE_SUB = top.zbeboy.zone.domain.tables.AttendReleaseSub.ATTEND_RELEASE_SUB;
+
+    /**
+     * The table <code>zone.attend_subscribe_log</code>.
+     */
+    public final AttendSubscribeLog ATTEND_SUBSCRIBE_LOG = top.zbeboy.zone.domain.tables.AttendSubscribeLog.ATTEND_SUBSCRIBE_LOG;
 
     /**
      * The table <code>zone.attend_users</code>.
@@ -484,6 +490,7 @@ public class Zone extends SchemaImpl {
             AttendMapKey.ATTEND_MAP_KEY,
             AttendRelease.ATTEND_RELEASE,
             AttendReleaseSub.ATTEND_RELEASE_SUB,
+            AttendSubscribeLog.ATTEND_SUBSCRIBE_LOG,
             AttendUsers.ATTEND_USERS,
             AttendWxStudentSubscribe.ATTEND_WX_STUDENT_SUBSCRIBE,
             Authorities.AUTHORITIES,

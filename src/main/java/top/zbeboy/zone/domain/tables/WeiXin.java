@@ -4,6 +4,7 @@
 package top.zbeboy.zone.domain.tables;
 
 
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,7 +16,7 @@ import org.jooq.Identity;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row6;
+import org.jooq.Row9;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -42,7 +43,7 @@ import top.zbeboy.zone.domain.tables.records.WeiXinRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class WeiXin extends TableImpl<WeiXinRecord> {
 
-    private static final long serialVersionUID = 278447294;
+    private static final long serialVersionUID = 2031772150;
 
     /**
      * The reference instance of <code>zone.wei_xin</code>
@@ -86,6 +87,21 @@ public class WeiXin extends TableImpl<WeiXinRecord> {
      * The column <code>zone.wei_xin.username</code>.
      */
     public final TableField<WeiXinRecord, String> USERNAME = createField(DSL.name("username"), org.jooq.impl.SQLDataType.VARCHAR(64).nullable(false), this, "");
+
+    /**
+     * The column <code>zone.wei_xin.res_code</code>.
+     */
+    public final TableField<WeiXinRecord, String> RES_CODE = createField(DSL.name("res_code"), org.jooq.impl.SQLDataType.VARCHAR(200), this, "");
+
+    /**
+     * The column <code>zone.wei_xin.result</code>.
+     */
+    public final TableField<WeiXinRecord, String> RESULT = createField(DSL.name("result"), org.jooq.impl.SQLDataType.VARCHAR(500), this, "");
+
+    /**
+     * The column <code>zone.wei_xin.create_date</code>.
+     */
+    public final TableField<WeiXinRecord, Timestamp> CREATE_DATE = createField(DSL.name("create_date"), org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
 
     /**
      * Create a <code>zone.wei_xin</code> table reference
@@ -181,11 +197,11 @@ public class WeiXin extends TableImpl<WeiXinRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row6 type methods
+    // Row9 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row6<Integer, String, String, String, String, String> fieldsRow() {
-        return (Row6) super.fieldsRow();
+    public Row9<Integer, String, String, String, String, String, String, String, Timestamp> fieldsRow() {
+        return (Row9) super.fieldsRow();
     }
 }

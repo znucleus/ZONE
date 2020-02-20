@@ -4,6 +4,7 @@
 package top.zbeboy.zone.domain.tables.daos;
 
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.annotation.Generated;
@@ -168,5 +169,19 @@ public class AttendWxStudentSubscribeDao extends DAOImpl<AttendWxStudentSubscrib
      */
     public List<top.zbeboy.zone.domain.tables.pojos.AttendWxStudentSubscribe> fetchByAttendReleaseId(String... values) {
         return fetch(AttendWxStudentSubscribe.ATTEND_WX_STUDENT_SUBSCRIBE.ATTEND_RELEASE_ID, values);
+    }
+
+    /**
+     * Fetch records that have <code>create_date BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.AttendWxStudentSubscribe> fetchRangeOfCreateDate(Timestamp lowerInclusive, Timestamp upperInclusive) {
+        return fetchRange(AttendWxStudentSubscribe.ATTEND_WX_STUDENT_SUBSCRIBE.CREATE_DATE, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>create_date IN (values)</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.AttendWxStudentSubscribe> fetchByCreateDate(Timestamp... values) {
+        return fetch(AttendWxStudentSubscribe.ATTEND_WX_STUDENT_SUBSCRIBE.CREATE_DATE, values);
     }
 }

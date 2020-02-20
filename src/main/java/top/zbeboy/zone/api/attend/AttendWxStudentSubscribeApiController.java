@@ -26,6 +26,7 @@ import top.zbeboy.zone.service.cache.attend.AttendWxCacheService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.data.WeiXinService;
 import top.zbeboy.zone.service.platform.UsersService;
+import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.HttpClientUtil;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.vo.attend.weixin.AttendWxStudentSubscribeAddVo;
@@ -93,6 +94,9 @@ public class AttendWxStudentSubscribeApiController {
                             weiXin.setOpenId(params.getString("openid"));
                             weiXin.setSessionKey(params.getString("session_key"));
                             weiXin.setUnionId(params.getString("unionid"));
+                            weiXin.setResult(result);
+                            weiXin.setResCode(resCode);
+                            weiXin.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
 
                             weiXinService.update(weiXin);
                         } else {
@@ -102,6 +106,9 @@ public class AttendWxStudentSubscribeApiController {
                             weiXin.setSessionKey(params.getString("session_key"));
                             weiXin.setUnionId(params.getString("unionid"));
                             weiXin.setAppId(appId);
+                            weiXin.setResult(result);
+                            weiXin.setResCode(resCode);
+                            weiXin.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
 
                             weiXinService.save(weiXin);
                         }
@@ -152,6 +159,7 @@ public class AttendWxStudentSubscribeApiController {
                         attendWxStudentSubscribe.setPage(attendWxStudentSubscribeAddVo.getPage());
                         attendWxStudentSubscribe.setAttendReleaseId(attendWxStudentSubscribeAddVo.getAttendReleaseId());
                         attendWxStudentSubscribe.setStudentId(studentRecord.get().getStudentId());
+                        attendWxStudentSubscribe.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
 
                         attendWxStudentSubscribeService.save(attendWxStudentSubscribe);
                         ajaxUtil.success().msg("保存成功");

@@ -18,6 +18,7 @@ import top.zbeboy.zone.domain.tables.AttendData;
 import top.zbeboy.zone.domain.tables.AttendMapKey;
 import top.zbeboy.zone.domain.tables.AttendRelease;
 import top.zbeboy.zone.domain.tables.AttendReleaseSub;
+import top.zbeboy.zone.domain.tables.AttendSubscribeLog;
 import top.zbeboy.zone.domain.tables.AttendUsers;
 import top.zbeboy.zone.domain.tables.AttendWxStudentSubscribe;
 import top.zbeboy.zone.domain.tables.Authorities;
@@ -149,6 +150,11 @@ public class Tables {
      * The table <code>zone.attend_release_sub</code>.
      */
     public static final AttendReleaseSub ATTEND_RELEASE_SUB = AttendReleaseSub.ATTEND_RELEASE_SUB;
+
+    /**
+     * The table <code>zone.attend_subscribe_log</code>.
+     */
+    public static final AttendSubscribeLog ATTEND_SUBSCRIBE_LOG = AttendSubscribeLog.ATTEND_SUBSCRIBE_LOG;
 
     /**
      * The table <code>zone.attend_users</code>.

@@ -5,6 +5,7 @@ package top.zbeboy.zone.domain.tables.pojos;
 
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import javax.annotation.Generated;
 import javax.validation.constraints.NotNull;
@@ -24,16 +25,17 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AttendWxStudentSubscribe implements Serializable {
 
-    private static final long serialVersionUID = -83647618;
+    private static final long serialVersionUID = 638418970;
 
-    private Integer subscribeId;
-    private String  templateId;
-    private String  page;
-    private String  data;
-    private String  miniProgramState;
-    private String  lang;
-    private Integer studentId;
-    private String  attendReleaseId;
+    private Integer   subscribeId;
+    private String    templateId;
+    private String    page;
+    private String    data;
+    private String    miniProgramState;
+    private String    lang;
+    private Integer   studentId;
+    private String    attendReleaseId;
+    private Timestamp createDate;
 
     public AttendWxStudentSubscribe() {}
 
@@ -46,17 +48,19 @@ public class AttendWxStudentSubscribe implements Serializable {
         this.lang = value.lang;
         this.studentId = value.studentId;
         this.attendReleaseId = value.attendReleaseId;
+        this.createDate = value.createDate;
     }
 
     public AttendWxStudentSubscribe(
-        Integer subscribeId,
-        String  templateId,
-        String  page,
-        String  data,
-        String  miniProgramState,
-        String  lang,
-        Integer studentId,
-        String  attendReleaseId
+        Integer   subscribeId,
+        String    templateId,
+        String    page,
+        String    data,
+        String    miniProgramState,
+        String    lang,
+        Integer   studentId,
+        String    attendReleaseId,
+        Timestamp createDate
     ) {
         this.subscribeId = subscribeId;
         this.templateId = templateId;
@@ -66,6 +70,7 @@ public class AttendWxStudentSubscribe implements Serializable {
         this.lang = lang;
         this.studentId = studentId;
         this.attendReleaseId = attendReleaseId;
+        this.createDate = createDate;
     }
 
     public Integer getSubscribeId() {
@@ -141,6 +146,15 @@ public class AttendWxStudentSubscribe implements Serializable {
         this.attendReleaseId = attendReleaseId;
     }
 
+    @NotNull
+    public Timestamp getCreateDate() {
+        return this.createDate;
+    }
+
+    public void setCreateDate(Timestamp createDate) {
+        this.createDate = createDate;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("AttendWxStudentSubscribe (");
@@ -153,6 +167,7 @@ public class AttendWxStudentSubscribe implements Serializable {
         sb.append(", ").append(lang);
         sb.append(", ").append(studentId);
         sb.append(", ").append(attendReleaseId);
+        sb.append(", ").append(createDate);
 
         sb.append(")");
         return sb.toString();
