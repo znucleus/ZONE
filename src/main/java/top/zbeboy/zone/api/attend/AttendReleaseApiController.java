@@ -106,6 +106,9 @@ public class AttendReleaseApiController {
 
                 attendReleaseService.save(attendRelease);
 
+                // 存在缓存，待订阅
+                attendWxCacheService.saveAttendWxSubscribe(attendRelease);
+
                 // 操作子表，直接复制主表
                 attendReleaseSubService.copyAttendRelease(attendReleaseId);
 

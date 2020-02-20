@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zone.config.CacheBook;
 import top.zbeboy.zone.config.WeiXinAppBook;
 import top.zbeboy.zone.domain.tables.pojos.AttendRelease;
+import top.zbeboy.zone.domain.tables.pojos.AttendReleaseSub;
 import top.zbeboy.zone.service.attend.AttendWxStudentSubscribeService;
 import top.zbeboy.zone.service.cache.weixin.WeiXinCacheService;
 import top.zbeboy.zone.service.data.WeiXinService;
@@ -26,10 +27,7 @@ import top.zbeboy.zone.web.bean.data.weixin.WeiXinBean;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static top.zbeboy.zone.domain.Tables.ATTEND_RELEASE_SUB;
@@ -52,7 +50,6 @@ public class AttendWxCacheServiceImpl implements AttendWxCacheService {
     @Resource
     private AttendWxStudentSubscribeService attendWxStudentSubscribeService;
 
-
     @Override
     public void saveAttendWxSubscribe(Result<Record> records) {
         if (records.isNotEmpty()) {
@@ -65,6 +62,18 @@ public class AttendWxCacheServiceImpl implements AttendWxCacheService {
                 int minutes = Minutes.minutesBetween(now, startTime).getMinutes();
                 ops.set(cacheKey + id, id, minutes > 0 ? minutes : 1, TimeUnit.MINUTES);
             }
+        }
+    }
+
+    @Override
+    public void saveAttendWxSubscribe(AttendRelease attendRelease) {
+        if (Objects.nonNull(attendRelease)) {
+            final String cacheKey = CacheBook.WEI_XIN_SUBSCRIBE;
+            ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();
+            DateTime now = DateTime.now();
+            DateTime startTime = new DateTime(attendRelease.getAttendStartTime());
+            int minutes = Minutes.minutesBetween(now, startTime).getMinutes();
+            ops.set(cacheKey + attendRelease.getAttendReleaseId(), attendRelease.getAttendReleaseId(), minutes > 0 ? minutes : 1, TimeUnit.MINUTES);
         }
     }
 
@@ -124,7 +133,8 @@ public class AttendWxCacheServiceImpl implements AttendWxCacheService {
         if (BooleanUtils.isTrue(stringRedisTemplate.hasKey(cacheKey))) {
             DateTime now = DateTime.now();
             DateTime startTime = new DateTime(attendRelease.getAttendStartTime());
-            ops.getOperations().expire(cacheKey, Minutes.minutesBetween(now, startTime).getMinutes(), TimeUnit.MINUTES);
+            int minutes = Minutes.minutesBetween(now, startTime).getMinutes();
+            ops.getOperations().expire(cacheKey, minutes > 0 ? minutes : 1, TimeUnit.MINUTES);
         }
     }
 

@@ -3,6 +3,7 @@ package top.zbeboy.zone.service.cache.attend;
 import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.zone.domain.tables.pojos.AttendRelease;
+import top.zbeboy.zone.domain.tables.pojos.AttendReleaseSub;
 
 import java.io.IOException;
 
@@ -14,6 +15,13 @@ public interface AttendWxCacheService {
      * @param records 发布数据
      */
     void saveAttendWxSubscribe(Result<Record> records);
+
+    /**
+     * 保存签到订阅
+     *
+     * @param attendRelease 发布数据
+     */
+    void saveAttendWxSubscribe(AttendRelease attendRelease);
 
     /**
      * 下发签到订阅
