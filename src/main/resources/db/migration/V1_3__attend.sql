@@ -73,7 +73,7 @@ CREATE TABLE wei_xin(
 );
 
 CREATE TABLE attend_wx_student_subscribe(
-  subscribe_id INT AUTO_INCREMENT PRIMARY KEY,
+  subscribe_id VARCHAR(64) PRIMARY KEY ,
   template_id VARCHAR(64) NOT NULL,
   page VARCHAR(200),
   data VARCHAR(500),

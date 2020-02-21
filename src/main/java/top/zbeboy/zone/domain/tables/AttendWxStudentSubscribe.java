@@ -12,7 +12,6 @@ import javax.annotation.Generated;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Identity;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
@@ -43,7 +42,7 @@ import top.zbeboy.zone.domain.tables.records.AttendWxStudentSubscribeRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AttendWxStudentSubscribe extends TableImpl<AttendWxStudentSubscribeRecord> {
 
-    private static final long serialVersionUID = -1779309690;
+    private static final long serialVersionUID = -168990670;
 
     /**
      * The reference instance of <code>zone.attend_wx_student_subscribe</code>
@@ -61,7 +60,7 @@ public class AttendWxStudentSubscribe extends TableImpl<AttendWxStudentSubscribe
     /**
      * The column <code>zone.attend_wx_student_subscribe.subscribe_id</code>.
      */
-    public final TableField<AttendWxStudentSubscribeRecord, Integer> SUBSCRIBE_ID = createField(DSL.name("subscribe_id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false).identity(true), this, "");
+    public final TableField<AttendWxStudentSubscribeRecord, String> SUBSCRIBE_ID = createField(DSL.name("subscribe_id"), org.jooq.impl.SQLDataType.VARCHAR(64).nullable(false), this, "");
 
     /**
      * The column <code>zone.attend_wx_student_subscribe.template_id</code>.
@@ -147,11 +146,6 @@ public class AttendWxStudentSubscribe extends TableImpl<AttendWxStudentSubscribe
     }
 
     @Override
-    public Identity<AttendWxStudentSubscribeRecord, Integer> getIdentity() {
-        return Keys.IDENTITY_ATTEND_WX_STUDENT_SUBSCRIBE;
-    }
-
-    @Override
     public UniqueKey<AttendWxStudentSubscribeRecord> getPrimaryKey() {
         return Keys.KEY_ATTEND_WX_STUDENT_SUBSCRIBE_PRIMARY;
     }
@@ -205,7 +199,7 @@ public class AttendWxStudentSubscribe extends TableImpl<AttendWxStudentSubscribe
     // -------------------------------------------------------------------------
 
     @Override
-    public Row9<Integer, String, String, String, String, String, Integer, String, Timestamp> fieldsRow() {
+    public Row9<String, String, String, String, String, String, Integer, String, Timestamp> fieldsRow() {
         return (Row9) super.fieldsRow();
     }
 }

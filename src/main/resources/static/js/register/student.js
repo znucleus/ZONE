@@ -484,7 +484,7 @@ require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf",
                 if (password !== '') {
                     var regex = tools.regex.password;
                     if (!regex.test(password)) {
-                        tools.validErrorDom(param_id.password, '密码为6-16位任意字母或数字，以及下划线');
+                        tools.validErrorDom(param_id.password, '密码为6-16位任意字母、数字或下划线');
                     } else {
                         if (global_param.password_strong < 55) {
                             tools.validErrorDom(param_id.password, '密码过于简单');
@@ -504,7 +504,7 @@ require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf",
                     var password = param.password;
                     var regex = tools.regex.password;
                     if (!regex.test(password)) {
-                        tools.validErrorDom(param_id.password, '密码为6-16位任意字母或数字，以及下划线');
+                        tools.validErrorDom(param_id.password, '密码为6-16位任意字母、数字或下划线');
                     } else {
                         if (global_param.password_strong < 55) {
                             tools.validErrorDom(param_id.password, '密码过于简单');
@@ -726,7 +726,7 @@ require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf",
                 if (password !== '') {
                     var regex = tools.regex.password;
                     if (!regex.test(password)) {
-                        tools.validErrorDom(param_id.password, '密码为6-16位任意字母或数字，以及下划线');
+                        tools.validErrorDom(param_id.password, '密码为6-16位任意字母、数字或下划线');
                     } else {
                         if (global_param.password_strong < 55) {
                             tools.validErrorDom(param_id.password, '密码过于简单');
@@ -746,7 +746,7 @@ require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf",
                     var password = param.password;
                     var regex = tools.regex.password;
                     if (!regex.test(password)) {
-                        tools.validErrorDom(param_id.password, '密码为6-16位任意字母或数字，以及下划线');
+                        tools.validErrorDom(param_id.password, '密码为6-16位任意字母、数字或下划线');
                     } else {
                         if (global_param.password_strong < 55) {
                             tools.validErrorDom(param_id.password, '密码过于简单');

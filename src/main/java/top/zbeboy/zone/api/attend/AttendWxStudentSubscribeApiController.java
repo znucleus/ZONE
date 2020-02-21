@@ -28,6 +28,7 @@ import top.zbeboy.zone.service.data.WeiXinService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.HttpClientUtil;
+import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.vo.attend.weixin.AttendWxStudentSubscribeAddVo;
 
@@ -152,6 +153,7 @@ public class AttendWxStudentSubscribeApiController {
                             attendWxStudentSubscribeAddVo.getAttendReleaseId(), studentRecord.get().getStudentId());
                     if (!record.isPresent()) {
                         AttendWxStudentSubscribe attendWxStudentSubscribe = new AttendWxStudentSubscribe();
+                        attendWxStudentSubscribe.setSubscribeId(UUIDUtil.getUUID());
                         attendWxStudentSubscribe.setTemplateId(attendWxStudentSubscribeAddVo.getTemplateId());
                         attendWxStudentSubscribe.setData(attendWxStudentSubscribeAddVo.getData());
                         attendWxStudentSubscribe.setLang(attendWxStudentSubscribeAddVo.getLang());

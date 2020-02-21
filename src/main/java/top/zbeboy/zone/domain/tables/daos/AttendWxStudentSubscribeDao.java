@@ -30,7 +30,7 @@ import top.zbeboy.zone.domain.tables.records.AttendWxStudentSubscribeRecord;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 @Repository
-public class AttendWxStudentSubscribeDao extends DAOImpl<AttendWxStudentSubscribeRecord, top.zbeboy.zone.domain.tables.pojos.AttendWxStudentSubscribe, Integer> {
+public class AttendWxStudentSubscribeDao extends DAOImpl<AttendWxStudentSubscribeRecord, top.zbeboy.zone.domain.tables.pojos.AttendWxStudentSubscribe, String> {
 
     /**
      * Create a new AttendWxStudentSubscribeDao without any configuration
@@ -48,28 +48,28 @@ public class AttendWxStudentSubscribeDao extends DAOImpl<AttendWxStudentSubscrib
     }
 
     @Override
-    public Integer getId(top.zbeboy.zone.domain.tables.pojos.AttendWxStudentSubscribe object) {
+    public String getId(top.zbeboy.zone.domain.tables.pojos.AttendWxStudentSubscribe object) {
         return object.getSubscribeId();
     }
 
     /**
      * Fetch records that have <code>subscribe_id BETWEEN lowerInclusive AND upperInclusive</code>
      */
-    public List<top.zbeboy.zone.domain.tables.pojos.AttendWxStudentSubscribe> fetchRangeOfSubscribeId(Integer lowerInclusive, Integer upperInclusive) {
+    public List<top.zbeboy.zone.domain.tables.pojos.AttendWxStudentSubscribe> fetchRangeOfSubscribeId(String lowerInclusive, String upperInclusive) {
         return fetchRange(AttendWxStudentSubscribe.ATTEND_WX_STUDENT_SUBSCRIBE.SUBSCRIBE_ID, lowerInclusive, upperInclusive);
     }
 
     /**
      * Fetch records that have <code>subscribe_id IN (values)</code>
      */
-    public List<top.zbeboy.zone.domain.tables.pojos.AttendWxStudentSubscribe> fetchBySubscribeId(Integer... values) {
+    public List<top.zbeboy.zone.domain.tables.pojos.AttendWxStudentSubscribe> fetchBySubscribeId(String... values) {
         return fetch(AttendWxStudentSubscribe.ATTEND_WX_STUDENT_SUBSCRIBE.SUBSCRIBE_ID, values);
     }
 
     /**
      * Fetch a unique record that has <code>subscribe_id = value</code>
      */
-    public top.zbeboy.zone.domain.tables.pojos.AttendWxStudentSubscribe fetchOneBySubscribeId(Integer value) {
+    public top.zbeboy.zone.domain.tables.pojos.AttendWxStudentSubscribe fetchOneBySubscribeId(String value) {
         return fetchOne(AttendWxStudentSubscribe.ATTEND_WX_STUDENT_SUBSCRIBE.SUBSCRIBE_ID, value);
     }
 

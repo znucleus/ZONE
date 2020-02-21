@@ -609,7 +609,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
                             validConfirmPassword();
                         }
                     } else {
-                        tools.validErrorDom(param_id.newPassword, '密码为6-16位任意字母或数字，以及下划线');
+                        tools.validErrorDom(param_id.newPassword, '密码为6-16位任意字母、数字或下划线');
                     }
                 } else {
                     tools.validErrorDom(param_id.newPassword, '不能与旧密码一致');
@@ -628,7 +628,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
                         tools.validSuccessDom(param_id.confirmPassword);
                         updatePassword();
                     } else {
-                        tools.validErrorDom(param_id.confirmPassword, '密码为6-16位任意字母或数字，以及下划线');
+                        tools.validErrorDom(param_id.confirmPassword, '密码为6-16位任意字母、数字或下划线');
                     }
                 } else {
                     tools.validErrorDom(param_id.confirmPassword, '密码不一致');

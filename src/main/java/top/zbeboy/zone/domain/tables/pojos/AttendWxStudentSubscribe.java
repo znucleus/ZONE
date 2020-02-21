@@ -25,9 +25,9 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AttendWxStudentSubscribe implements Serializable {
 
-    private static final long serialVersionUID = 638418970;
+    private static final long serialVersionUID = -623457015;
 
-    private Integer   subscribeId;
+    private String    subscribeId;
     private String    templateId;
     private String    page;
     private String    data;
@@ -52,7 +52,7 @@ public class AttendWxStudentSubscribe implements Serializable {
     }
 
     public AttendWxStudentSubscribe(
-        Integer   subscribeId,
+        String    subscribeId,
         String    templateId,
         String    page,
         String    data,
@@ -73,11 +73,13 @@ public class AttendWxStudentSubscribe implements Serializable {
         this.createDate = createDate;
     }
 
-    public Integer getSubscribeId() {
+    @NotNull
+    @Size(max = 64)
+    public String getSubscribeId() {
         return this.subscribeId;
     }
 
-    public void setSubscribeId(Integer subscribeId) {
+    public void setSubscribeId(String subscribeId) {
         this.subscribeId = subscribeId;
     }
 

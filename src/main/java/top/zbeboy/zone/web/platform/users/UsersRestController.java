@@ -469,7 +469,7 @@ public class UsersRestController {
                     ajaxUtil.fail().msg("密码不一致");
                 }
             } else {
-                ajaxUtil.fail().msg("密码为6-16位任意字母或数字，以及下划线");
+                ajaxUtil.fail().msg("密码为6-16位任意字母、数字或下划线");
             }
         } else {
             ajaxUtil.fail().msg("原密码错误");

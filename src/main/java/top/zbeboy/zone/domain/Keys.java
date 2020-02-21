@@ -167,7 +167,6 @@ public class Keys {
 
     public static final Identity<AcademicTitleRecord, Integer> IDENTITY_ACADEMIC_TITLE = Identities0.IDENTITY_ACADEMIC_TITLE;
     public static final Identity<AttendReleaseSubRecord, Integer> IDENTITY_ATTEND_RELEASE_SUB = Identities0.IDENTITY_ATTEND_RELEASE_SUB;
-    public static final Identity<AttendWxStudentSubscribeRecord, Integer> IDENTITY_ATTEND_WX_STUDENT_SUBSCRIBE = Identities0.IDENTITY_ATTEND_WX_STUDENT_SUBSCRIBE;
     public static final Identity<AuthorizeTypeRecord, Integer> IDENTITY_AUTHORIZE_TYPE = Identities0.IDENTITY_AUTHORIZE_TYPE;
     public static final Identity<BuildingRecord, Integer> IDENTITY_BUILDING = Identities0.IDENTITY_BUILDING;
     public static final Identity<CollegeRecord, Integer> IDENTITY_COLLEGE = Identities0.IDENTITY_COLLEGE;
@@ -375,7 +374,6 @@ public class Keys {
     private static class Identities0 {
         public static Identity<AcademicTitleRecord, Integer> IDENTITY_ACADEMIC_TITLE = Internal.createIdentity(AcademicTitle.ACADEMIC_TITLE, AcademicTitle.ACADEMIC_TITLE.ACADEMIC_TITLE_ID);
         public static Identity<AttendReleaseSubRecord, Integer> IDENTITY_ATTEND_RELEASE_SUB = Internal.createIdentity(AttendReleaseSub.ATTEND_RELEASE_SUB, AttendReleaseSub.ATTEND_RELEASE_SUB.ATTEND_RELEASE_SUB_ID);
-        public static Identity<AttendWxStudentSubscribeRecord, Integer> IDENTITY_ATTEND_WX_STUDENT_SUBSCRIBE = Internal.createIdentity(AttendWxStudentSubscribe.ATTEND_WX_STUDENT_SUBSCRIBE, AttendWxStudentSubscribe.ATTEND_WX_STUDENT_SUBSCRIBE.SUBSCRIBE_ID);
         public static Identity<AuthorizeTypeRecord, Integer> IDENTITY_AUTHORIZE_TYPE = Internal.createIdentity(AuthorizeType.AUTHORIZE_TYPE, AuthorizeType.AUTHORIZE_TYPE.AUTHORIZE_TYPE_ID);
         public static Identity<BuildingRecord, Integer> IDENTITY_BUILDING = Internal.createIdentity(Building.BUILDING, Building.BUILDING.BUILDING_ID);
         public static Identity<CollegeRecord, Integer> IDENTITY_COLLEGE = Internal.createIdentity(College.COLLEGE, College.COLLEGE.COLLEGE_ID);
