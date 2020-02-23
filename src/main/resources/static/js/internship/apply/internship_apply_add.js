@@ -64,7 +64,13 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
 
         var page_param = {
             paramSex: $('#paramSex').val(),
-            paramInternshipReleaseId: $('#paramInternshipReleaseId').val()
+            paramInternshipReleaseId: $('#paramInternshipReleaseId').val(),
+            paramHeadmaster: $('#paramHeadmaster').val(),
+            paramHeadmasterTel: $('#paramHeadmasterTel').val()
+        };
+
+        var init_configure = {
+            init_staff: false
         };
 
         /**
@@ -107,9 +113,22 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
 
         function initStaff() {
             $.get(ajax_url.obtain_staff_data + '/' + page_param.paramInternshipReleaseId, function (data) {
-                $(param_id.staff).select2({
+                var sl =  $(param_id.staff).select2({
                     data: data.results
                 });
+
+                if (!init_configure.init_staff) {
+                    var staffId = '';
+                    var realHeadmaster = page_param.paramHeadmaster + ' ' + page_param.paramHeadmasterTel;
+                    for (var i = 0; i < data.results.length; i++) {
+                        if (data.results[i].text === realHeadmaster) {
+                            staffId = data.results[i].id;
+                            break;
+                        }
+                    }
+                    sl.val(staffId).trigger("change");
+                    init_configure.init_staff = true;
+                }
             });
         }
 

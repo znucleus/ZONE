@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
+import top.zbeboy.zone.service.data.OrganizeService;
 import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.internship.InternshipApplyService;
@@ -51,6 +52,9 @@ public class InternshipApplyViewController {
     @Resource
     private UsersTypeService usersTypeService;
 
+    @Resource
+    private OrganizeService organizeService;
+
     /**
      * 实习申请
      *
@@ -88,6 +92,17 @@ public class InternshipApplyViewController {
                 }
                 modelMap.addAttribute("qqMail", qqMail);
                 modelMap.addAttribute("student", studentBean);
+
+                Organize organize = organizeService.findById(studentBean.getOrganizeId());
+                if (Objects.nonNull(organize)) {
+                    Optional<Record> staffRecord = staffService.findByIdRelation(organize.getStaffId());
+                    if (staffRecord.isPresent()) {
+                        StaffBean staffBean = staffRecord.get().into(StaffBean.class);
+                        modelMap.addAttribute("headmaster", staffBean.getRealName());
+                        modelMap.addAttribute("headmasterTel", staffBean.getMobile());
+                    }
+
+                }
 
                 Optional<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(id, studentBean.getStudentId());
                 if (internshipTeacherDistributionRecord.isPresent()) {
