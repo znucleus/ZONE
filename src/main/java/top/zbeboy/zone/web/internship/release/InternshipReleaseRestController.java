@@ -267,13 +267,24 @@ public class InternshipReleaseRestController {
      * @param time                    申请时间
      */
     private void saveOrUpdateTime(InternshipRelease internshipRelease, String teacherDistributionTime, String time) {
-        String[] teacherDistributionArr = teacherDistributionTime.split(" 至 ");
-        internshipRelease.setTeacherDistributionStartTime(DateTimeUtil.defaultParseSqlTimestamp(teacherDistributionArr[0] + " 00:00:00"));
-        internshipRelease.setTeacherDistributionEndTime(DateTimeUtil.defaultParseSqlTimestamp(teacherDistributionArr[1] + " 23:59:59"));
+        if(teacherDistributionTime.contains("至")){
+            String[] teacherDistributionArr = teacherDistributionTime.split(" 至 ");
+            internshipRelease.setTeacherDistributionStartTime(DateTimeUtil.defaultParseSqlTimestamp(teacherDistributionArr[0] + " 00:00:00"));
+            internshipRelease.setTeacherDistributionEndTime(DateTimeUtil.defaultParseSqlTimestamp(teacherDistributionArr[1] + " 23:59:59"));
+        } else {
+            internshipRelease.setTeacherDistributionStartTime(DateTimeUtil.defaultParseSqlTimestamp(teacherDistributionTime + " 00:00:00"));
+            internshipRelease.setTeacherDistributionEndTime(DateTimeUtil.defaultParseSqlTimestamp(teacherDistributionTime + " 23:59:59"));
+        }
 
-        String[] timeArr = time.split(" 至 ");
-        internshipRelease.setStartTime(DateTimeUtil.defaultParseSqlTimestamp(timeArr[0] + " 00:00:00"));
-        internshipRelease.setEndTime(DateTimeUtil.defaultParseSqlTimestamp(timeArr[1] + " 23:59:59"));
+        if(time.contains("至")){
+            String[] timeArr = time.split(" 至 ");
+            internshipRelease.setStartTime(DateTimeUtil.defaultParseSqlTimestamp(timeArr[0] + " 00:00:00"));
+            internshipRelease.setEndTime(DateTimeUtil.defaultParseSqlTimestamp(timeArr[1] + " 23:59:59"));
+        } else {
+            internshipRelease.setStartTime(DateTimeUtil.defaultParseSqlTimestamp(time + " 00:00:00"));
+            internshipRelease.setEndTime(DateTimeUtil.defaultParseSqlTimestamp(time + " 23:59:59"));
+        }
+
     }
 
     /**

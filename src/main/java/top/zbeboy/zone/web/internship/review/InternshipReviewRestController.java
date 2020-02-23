@@ -34,6 +34,7 @@ import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.sql.Timestamp;
 import java.util.*;
 
 @RestController
@@ -536,9 +537,15 @@ public class InternshipReviewRestController {
                     internshipApply.setReason(internshipReviewBean.getReason());
                     internshipApply.setInternshipApplyState(internshipReviewBean.getInternshipApplyState());
                     if (StringUtils.isNotBlank(internshipReviewBean.getFillTime())) {
-                        String[] timeArr = internshipReviewBean.getFillTime().split(" 至 ");
-                        internshipApply.setChangeFillStartTime(DateTimeUtil.defaultParseSqlTimestamp(timeArr[0] + " 00:00:00"));
-                        internshipApply.setChangeFillEndTime(DateTimeUtil.defaultParseSqlTimestamp(timeArr[1] + " 23:59:59"));
+                        if (internshipReviewBean.getFillTime().contains("至")) {
+                            String[] timeArr = internshipReviewBean.getFillTime().split(" 至 ");
+                            internshipApply.setChangeFillStartTime(DateTimeUtil.defaultParseSqlTimestamp(timeArr[0] + " 00:00:00"));
+                            internshipApply.setChangeFillEndTime(DateTimeUtil.defaultParseSqlTimestamp(timeArr[1] + " 23:59:59"));
+                        } else {
+                            internshipApply.setChangeFillStartTime(DateTimeUtil.defaultParseSqlTimestamp(internshipReviewBean.getFillTime() + " 00:00:00"));
+                            internshipApply.setChangeFillEndTime(DateTimeUtil.defaultParseSqlTimestamp(internshipReviewBean.getFillTime() + " 23:59:59"));
+                        }
+
                     }
                     internshipApplyService.update(internshipApply);
 
