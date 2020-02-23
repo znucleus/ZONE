@@ -23,7 +23,7 @@ public interface AttendWxStudentSubscribeService {
      * @param attendReleaseId 发布表id
      * @return 数据
      */
-    Result<Record> findByAttendReleaseId(String attendReleaseId);
+    Result<Record> findByAttendReleaseIdWithSubscribe(String attendReleaseId);
 
     /**
      * 查询订阅数据

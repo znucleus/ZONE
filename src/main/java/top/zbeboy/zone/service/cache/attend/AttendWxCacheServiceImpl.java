@@ -88,7 +88,7 @@ public class AttendWxCacheServiceImpl implements AttendWxCacheService {
         String id = cacheKey.replace(CacheBook.WEI_XIN_SUBSCRIBE, "");
         final String accessToken = weiXinCacheService.getAccessToken();
 
-        Result<Record> subRecord = attendWxStudentSubscribeService.findByAttendReleaseId(id);
+        Result<Record> subRecord = attendWxStudentSubscribeService.findByAttendReleaseIdWithSubscribe(id);
         if (subRecord.isNotEmpty()) {
             List<AttendReleaseSubBean> beans = subRecord.into(AttendReleaseSubBean.class);
             for (AttendReleaseSubBean bean : beans) {

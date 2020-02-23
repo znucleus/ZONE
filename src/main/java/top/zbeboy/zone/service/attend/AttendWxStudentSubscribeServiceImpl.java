@@ -39,12 +39,14 @@ public class AttendWxStudentSubscribeServiceImpl implements AttendWxStudentSubsc
     }
 
     @Override
-    public Result<Record> findByAttendReleaseId(String attendReleaseId) {
+    public Result<Record> findByAttendReleaseIdWithSubscribe(String attendReleaseId) {
         return create.select()
                 .from(ATTEND_WX_STUDENT_SUBSCRIBE)
                 .join(ATTEND_RELEASE_SUB)
                 .on(ATTEND_WX_STUDENT_SUBSCRIBE.ATTEND_RELEASE_ID.eq(ATTEND_RELEASE_SUB.ATTEND_RELEASE_ID))
-                .where(ATTEND_WX_STUDENT_SUBSCRIBE.ATTEND_RELEASE_ID.eq(attendReleaseId))
+                .where(ATTEND_WX_STUDENT_SUBSCRIBE.ATTEND_RELEASE_ID.eq(attendReleaseId)
+                        .and(ATTEND_RELEASE_SUB.ATTEND_END_TIME.gt(now()))
+                        .and(ATTEND_RELEASE_SUB.ATTEND_END_TIME.gt(ATTEND_RELEASE_SUB.ATTEND_START_TIME)))
                 .fetch();
     }
 
@@ -52,7 +54,7 @@ public class AttendWxStudentSubscribeServiceImpl implements AttendWxStudentSubsc
     public Result<Record> findSubscribe() {
         return create.select()
                 .from(ATTEND_WX_STUDENT_SUBSCRIBE)
-                .leftJoin(ATTEND_RELEASE_SUB)
+                .join(ATTEND_RELEASE_SUB)
                 .on(ATTEND_WX_STUDENT_SUBSCRIBE.ATTEND_RELEASE_ID.eq(ATTEND_RELEASE_SUB.ATTEND_RELEASE_ID))
                 .where(ATTEND_RELEASE_SUB.ATTEND_END_TIME.gt(now())
                         .and(ATTEND_RELEASE_SUB.ATTEND_END_TIME.gt(ATTEND_RELEASE_SUB.ATTEND_START_TIME)))
