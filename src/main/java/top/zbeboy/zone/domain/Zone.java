@@ -84,6 +84,7 @@ import top.zbeboy.zone.domain.tables.UserNotify;
 import top.zbeboy.zone.domain.tables.Users;
 import top.zbeboy.zone.domain.tables.UsersType;
 import top.zbeboy.zone.domain.tables.WeiXin;
+import top.zbeboy.zone.domain.tables.WeiXinDevice;
 
 
 /**
@@ -99,7 +100,7 @@ import top.zbeboy.zone.domain.tables.WeiXin;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Zone extends SchemaImpl {
 
-    private static final long serialVersionUID = -740134303;
+    private static final long serialVersionUID = -1876416380;
 
     /**
      * The reference instance of <code>zone</code>
@@ -457,6 +458,11 @@ public class Zone extends SchemaImpl {
     public final WeiXin WEI_XIN = top.zbeboy.zone.domain.tables.WeiXin.WEI_XIN;
 
     /**
+     * The table <code>zone.wei_xin_device</code>.
+     */
+    public final WeiXinDevice WEI_XIN_DEVICE = top.zbeboy.zone.domain.tables.WeiXinDevice.WEI_XIN_DEVICE;
+
+    /**
      * No further instances allowed
      */
     private Zone() {
@@ -547,6 +553,7 @@ public class Zone extends SchemaImpl {
             UserNotify.USER_NOTIFY,
             Users.USERS,
             UsersType.USERS_TYPE,
-            WeiXin.WEI_XIN);
+            WeiXin.WEI_XIN,
+            WeiXinDevice.WEI_XIN_DEVICE);
     }
 }

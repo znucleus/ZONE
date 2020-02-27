@@ -76,6 +76,7 @@ import top.zbeboy.zone.domain.tables.UserNotify;
 import top.zbeboy.zone.domain.tables.Users;
 import top.zbeboy.zone.domain.tables.UsersType;
 import top.zbeboy.zone.domain.tables.WeiXin;
+import top.zbeboy.zone.domain.tables.WeiXinDevice;
 
 
 /**
@@ -440,4 +441,9 @@ public class Tables {
      * The table <code>zone.wei_xin</code>.
      */
     public static final WeiXin WEI_XIN = WeiXin.WEI_XIN;
+
+    /**
+     * The table <code>zone.wei_xin_device</code>.
+     */
+    public static final WeiXinDevice WEI_XIN_DEVICE = WeiXinDevice.WEI_XIN_DEVICE;
 }

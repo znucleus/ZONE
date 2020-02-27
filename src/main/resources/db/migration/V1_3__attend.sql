@@ -98,3 +98,12 @@ CREATE TABLE attend_subscribe_log(
   result VARCHAR(500),
   create_date TIMESTAMP NOT NULL
 );
+
+CREATE TABLE wei_xin_device(
+  device_id VARCHAR(64) PRIMARY KEY ,
+  model VARCHAR(100),
+  version VARCHAR(30),
+  username VARCHAR(64) NOT NULL,
+  create_date TIMESTAMP NOT NULL,
+  FOREIGN KEY (username) REFERENCES users (username) ON UPDATE CASCADE ON DELETE CASCADE
+);

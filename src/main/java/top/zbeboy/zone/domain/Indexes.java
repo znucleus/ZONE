@@ -77,6 +77,7 @@ import top.zbeboy.zone.domain.tables.UserNotify;
 import top.zbeboy.zone.domain.tables.Users;
 import top.zbeboy.zone.domain.tables.UsersType;
 import top.zbeboy.zone.domain.tables.WeiXin;
+import top.zbeboy.zone.domain.tables.WeiXinDevice;
 
 
 /**
@@ -253,6 +254,8 @@ public class Indexes {
     public static final Index WEI_XIN_OPEN_ID = Indexes0.WEI_XIN_OPEN_ID;
     public static final Index WEI_XIN_PRIMARY = Indexes0.WEI_XIN_PRIMARY;
     public static final Index WEI_XIN_USERNAME = Indexes0.WEI_XIN_USERNAME;
+    public static final Index WEI_XIN_DEVICE_PRIMARY = Indexes0.WEI_XIN_DEVICE_PRIMARY;
+    public static final Index WEI_XIN_DEVICE_USERNAME = Indexes0.WEI_XIN_DEVICE_USERNAME;
 
     // -------------------------------------------------------------------------
     // [#1459] distribute members to avoid static initialisers > 64kb
@@ -416,5 +419,7 @@ public class Indexes {
         public static Index WEI_XIN_OPEN_ID = Internal.createIndex("open_id", WeiXin.WEI_XIN, new OrderField[] { WeiXin.WEI_XIN.OPEN_ID, WeiXin.WEI_XIN.APP_ID, WeiXin.WEI_XIN.USERNAME }, true);
         public static Index WEI_XIN_PRIMARY = Internal.createIndex("PRIMARY", WeiXin.WEI_XIN, new OrderField[] { WeiXin.WEI_XIN.WEI_XIN_ID }, true);
         public static Index WEI_XIN_USERNAME = Internal.createIndex("username", WeiXin.WEI_XIN, new OrderField[] { WeiXin.WEI_XIN.USERNAME }, false);
+        public static Index WEI_XIN_DEVICE_PRIMARY = Internal.createIndex("PRIMARY", WeiXinDevice.WEI_XIN_DEVICE, new OrderField[] { WeiXinDevice.WEI_XIN_DEVICE.DEVICE_ID }, true);
+        public static Index WEI_XIN_DEVICE_USERNAME = Internal.createIndex("username", WeiXinDevice.WEI_XIN_DEVICE, new OrderField[] { WeiXinDevice.WEI_XIN_DEVICE.USERNAME }, false);
     }
 }

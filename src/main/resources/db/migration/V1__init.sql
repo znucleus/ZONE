@@ -627,6 +627,13 @@ VALUES
   ('31e0dbc3ed844f0e8ba5cb54f775725e', '平台应用', 6040, '0eb2165a08824c1cac232d975af392b3', '/web/menu/platform/app',
    'platform_app', 'platform_app', '',
    '/web/platform/app');
+INSERT INTO application (application_id, application_name, application_sort,
+                         application_pid, application_url,
+                         application_code, application_en_name, icon, application_data_url_start_with)
+VALUES
+  ('f129b23f0738437abaa0c6b4991c01f0', '平台通知', 6050, '0eb2165a08824c1cac232d975af392b3', '/web/menu/platform/notify',
+   'platform_notify', 'platform_notify', '',
+   '/web/platform/notify');
 
 INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
@@ -674,6 +681,14 @@ VALUES
   ('82b1a7e5bd6c46a3a6a9957f63717d01', '系统状况', 7070, 'e3d45ba55e48462cb47595ce01bba60c', '/web/menu/system/health',
    'system_health', 'system_health',
    '', '/web/system/health');
+
+INSERT INTO application (application_id, application_name, application_sort,
+                         application_pid, application_url,
+                         application_code, application_en_name, icon, application_data_url_start_with)
+VALUES
+  ('7e73aa34c68f4c21a582ec7ece8cfc67', '系统通知', 7080, 'e3d45ba55e48462cb47595ce01bba60c', '/web/menu/system/notify',
+   'system_notify', 'system_notify',
+   '', '/web/system/notify');
 
 INSERT INTO role_application (role_id, application_id)
 VALUES ('220f8f10263c4a38bc1f6b7c42759594', 'b5939e89e8794c4e8b2d333a1386fb2a');
@@ -730,6 +745,8 @@ VALUES ('220f8f10263c4a38bc1f6b7c42759594', '308c9005d7e543ebbf49b430ea1add9c');
 INSERT INTO role_application (role_id, application_id)
 VALUES ('220f8f10263c4a38bc1f6b7c42759594', '31e0dbc3ed844f0e8ba5cb54f775725e');
 INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', 'f129b23f0738437abaa0c6b4991c01f0');
+INSERT INTO role_application (role_id, application_id)
 VALUES ('220f8f10263c4a38bc1f6b7c42759594', '753e7add7a25452f949abb9b9a5519bb');
 INSERT INTO role_application (role_id, application_id)
 VALUES ('220f8f10263c4a38bc1f6b7c42759594', '056b34f340544930b19716455a0ea3d2');
@@ -753,6 +770,8 @@ INSERT INTO role_application (role_id, application_id)
 VALUES ('220f8f10263c4a38bc1f6b7c42759594', 'dd534f15c5174f13a9b4a07eb37f6cb7');
 INSERT INTO role_application (role_id, application_id)
 VALUES ('220f8f10263c4a38bc1f6b7c42759594', 'c274e184988846a08218cc537ea67c4e');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('220f8f10263c4a38bc1f6b7c42759594', '7e73aa34c68f4c21a582ec7ece8cfc67');
 
 INSERT INTO role_application (role_id, application_id)
 VALUES ('e813c71358fc4691afeafb438ea53919', 'b5939e89e8794c4e8b2d333a1386fb2a');
@@ -800,6 +819,8 @@ INSERT INTO role_application (role_id, application_id)
 VALUES ('e813c71358fc4691afeafb438ea53919', '308c9005d7e543ebbf49b430ea1add9c');
 INSERT INTO role_application (role_id, application_id)
 VALUES ('e813c71358fc4691afeafb438ea53919', '31e0dbc3ed844f0e8ba5cb54f775725e');
+INSERT INTO role_application (role_id, application_id)
+VALUES ('e813c71358fc4691afeafb438ea53919', '7e73aa34c68f4c21a582ec7ece8cfc67');
 
 INSERT INTO role_application (role_id, application_id)
 VALUES ('cd5012abe87246f3ae21c86600c6e12a', 'e3d45ba55e48462cb47595ce01bba60c');

@@ -78,6 +78,7 @@ import top.zbeboy.zone.domain.tables.UserNotify;
 import top.zbeboy.zone.domain.tables.Users;
 import top.zbeboy.zone.domain.tables.UsersType;
 import top.zbeboy.zone.domain.tables.WeiXin;
+import top.zbeboy.zone.domain.tables.WeiXinDevice;
 import top.zbeboy.zone.domain.tables.records.AcademicTitleRecord;
 import top.zbeboy.zone.domain.tables.records.AnswerBankRecord;
 import top.zbeboy.zone.domain.tables.records.AnswerOptionRecord;
@@ -144,6 +145,7 @@ import top.zbeboy.zone.domain.tables.records.TrainingUsersRecord;
 import top.zbeboy.zone.domain.tables.records.UserNotifyRecord;
 import top.zbeboy.zone.domain.tables.records.UsersRecord;
 import top.zbeboy.zone.domain.tables.records.UsersTypeRecord;
+import top.zbeboy.zone.domain.tables.records.WeiXinDeviceRecord;
 import top.zbeboy.zone.domain.tables.records.WeiXinRecord;
 
 
@@ -274,6 +276,7 @@ public class Keys {
     public static final UniqueKey<UsersTypeRecord> KEY_USERS_TYPE_USERS_TYPE_NAME = UniqueKeys0.KEY_USERS_TYPE_USERS_TYPE_NAME;
     public static final UniqueKey<WeiXinRecord> KEY_WEI_XIN_PRIMARY = UniqueKeys0.KEY_WEI_XIN_PRIMARY;
     public static final UniqueKey<WeiXinRecord> KEY_WEI_XIN_OPEN_ID = UniqueKeys0.KEY_WEI_XIN_OPEN_ID;
+    public static final UniqueKey<WeiXinDeviceRecord> KEY_WEI_XIN_DEVICE_PRIMARY = UniqueKeys0.KEY_WEI_XIN_DEVICE_PRIMARY;
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions
@@ -366,6 +369,7 @@ public class Keys {
     public static final ForeignKey<UsersRecord, UsersTypeRecord> USERS_IBFK_1 = ForeignKeys0.USERS_IBFK_1;
     public static final ForeignKey<UsersRecord, FilesRecord> USERS_IBFK_2 = ForeignKeys0.USERS_IBFK_2;
     public static final ForeignKey<WeiXinRecord, UsersRecord> WEI_XIN_IBFK_1 = ForeignKeys0.WEI_XIN_IBFK_1;
+    public static final ForeignKey<WeiXinDeviceRecord, UsersRecord> WEI_XIN_DEVICE_IBFK_1 = ForeignKeys0.WEI_XIN_DEVICE_IBFK_1;
 
     // -------------------------------------------------------------------------
     // [#1459] distribute members to avoid static initialisers > 64kb
@@ -479,6 +483,7 @@ public class Keys {
         public static final UniqueKey<UsersTypeRecord> KEY_USERS_TYPE_USERS_TYPE_NAME = Internal.createUniqueKey(UsersType.USERS_TYPE, "KEY_users_type_users_type_name", UsersType.USERS_TYPE.USERS_TYPE_NAME);
         public static final UniqueKey<WeiXinRecord> KEY_WEI_XIN_PRIMARY = Internal.createUniqueKey(WeiXin.WEI_XIN, "KEY_wei_xin_PRIMARY", WeiXin.WEI_XIN.WEI_XIN_ID);
         public static final UniqueKey<WeiXinRecord> KEY_WEI_XIN_OPEN_ID = Internal.createUniqueKey(WeiXin.WEI_XIN, "KEY_wei_xin_open_id", WeiXin.WEI_XIN.OPEN_ID, WeiXin.WEI_XIN.APP_ID, WeiXin.WEI_XIN.USERNAME);
+        public static final UniqueKey<WeiXinDeviceRecord> KEY_WEI_XIN_DEVICE_PRIMARY = Internal.createUniqueKey(WeiXinDevice.WEI_XIN_DEVICE, "KEY_wei_xin_device_PRIMARY", WeiXinDevice.WEI_XIN_DEVICE.DEVICE_ID);
     }
 
     private static class ForeignKeys0 {
@@ -569,5 +574,6 @@ public class Keys {
         public static final ForeignKey<UsersRecord, UsersTypeRecord> USERS_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_USERS_TYPE_PRIMARY, Users.USERS, "users_ibfk_1", Users.USERS.USERS_TYPE_ID);
         public static final ForeignKey<UsersRecord, FilesRecord> USERS_IBFK_2 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_FILES_PRIMARY, Users.USERS, "users_ibfk_2", Users.USERS.AVATAR);
         public static final ForeignKey<WeiXinRecord, UsersRecord> WEI_XIN_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_USERS_PRIMARY, WeiXin.WEI_XIN, "wei_xin_ibfk_1", WeiXin.WEI_XIN.USERNAME);
+        public static final ForeignKey<WeiXinDeviceRecord, UsersRecord> WEI_XIN_DEVICE_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_USERS_PRIMARY, WeiXinDevice.WEI_XIN_DEVICE, "wei_xin_device_ibfk_1", WeiXinDevice.WEI_XIN_DEVICE.USERNAME);
     }
 }
