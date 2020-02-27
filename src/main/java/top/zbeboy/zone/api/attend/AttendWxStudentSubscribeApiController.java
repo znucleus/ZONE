@@ -91,7 +91,6 @@ public class AttendWxStudentSubscribeApiController {
                         Optional<WeiXinRecord> record = weiXinService.findByUsernameAndAppId(users.getUsername(), appId);
                         if (record.isPresent()) {
                             WeiXin weiXin = record.get().into(WeiXin.class);
-                            weiXin.setUsername(users.getUsername());
                             weiXin.setOpenId(params.getString("openid"));
                             weiXin.setSessionKey(params.getString("session_key"));
                             weiXin.setUnionId(params.getString("unionid"));
