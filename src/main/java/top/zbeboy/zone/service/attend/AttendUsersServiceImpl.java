@@ -56,10 +56,10 @@ public class AttendUsersServiceImpl implements AttendUsersService {
     }
 
     @Override
-    public Result<Record11<String, String, Timestamp, String, Integer, String, String, String, String, Timestamp, String>> findByAttendReleaseIdAndAttendReleaseSubId(String attendReleaseId, int attendReleaseSubId) {
+    public Result<Record12<String, String, Timestamp, String, Integer, String, String, String, String, Byte, Timestamp, String>> findByAttendReleaseIdAndAttendReleaseSubId(String attendReleaseId, int attendReleaseSubId) {
         return create.select(ATTEND_USERS.ATTEND_USERS_ID, ATTEND_USERS.ATTEND_RELEASE_ID,
                 ATTEND_USERS.CREATE_DATE, ATTEND_USERS.REMARK, ATTEND_USERS.STUDENT_ID,
-                STUDENT.STUDENT_NUMBER, USERS.REAL_NAME, ATTEND_DATA.LOCATION, ATTEND_DATA.ADDRESS,
+                STUDENT.STUDENT_NUMBER, USERS.REAL_NAME, ATTEND_DATA.LOCATION, ATTEND_DATA.ADDRESS, ATTEND_DATA.DEVICE_SAME,
                 ATTEND_DATA.ATTEND_DATE, ATTEND_DATA.ATTEND_REMARK)
                 .from(ATTEND_USERS)
                 .leftJoin(STUDENT)

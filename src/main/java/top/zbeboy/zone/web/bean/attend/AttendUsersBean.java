@@ -11,6 +11,7 @@ public class AttendUsersBean extends AttendUsers {
     private String address;
     private Timestamp attendDate;
     private String attendRemark;
+    private Byte deviceSame;
 
     public String getRealName() {
         return realName;
@@ -58,5 +59,13 @@ public class AttendUsersBean extends AttendUsers {
 
     public void setAttendRemark(String attendRemark) {
         this.attendRemark = attendRemark;
+    }
+
+    public Byte getDeviceSame() {
+        return deviceSame;
+    }
+
+    public void setDeviceSame(Byte deviceSame) {
+        this.deviceSame = deviceSame;
     }
 }

@@ -15,7 +15,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row6;
+import org.jooq.Row7;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -42,7 +42,7 @@ import top.zbeboy.zone.domain.tables.records.AttendDataRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AttendData extends TableImpl<AttendDataRecord> {
 
-    private static final long serialVersionUID = -418557905;
+    private static final long serialVersionUID = -1668467161;
 
     /**
      * The reference instance of <code>zone.attend_data</code>
@@ -76,6 +76,11 @@ public class AttendData extends TableImpl<AttendDataRecord> {
      * The column <code>zone.attend_data.address</code>.
      */
     public final TableField<AttendDataRecord, String> ADDRESS = createField(DSL.name("address"), org.jooq.impl.SQLDataType.VARCHAR(300), this, "");
+
+    /**
+     * The column <code>zone.attend_data.device_same</code>.
+     */
+    public final TableField<AttendDataRecord, Byte> DEVICE_SAME = createField(DSL.name("device_same"), org.jooq.impl.SQLDataType.TINYINT, this, "");
 
     /**
      * The column <code>zone.attend_data.attend_date</code>.
@@ -180,11 +185,11 @@ public class AttendData extends TableImpl<AttendDataRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row6 type methods
+    // Row7 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row6<String, Integer, String, String, Timestamp, String> fieldsRow() {
-        return (Row6) super.fieldsRow();
+    public Row7<String, Integer, String, String, Byte, Timestamp, String> fieldsRow() {
+        return (Row7) super.fieldsRow();
     }
 }

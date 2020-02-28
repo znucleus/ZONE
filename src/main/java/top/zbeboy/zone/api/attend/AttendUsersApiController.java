@@ -3,6 +3,7 @@ package top.zbeboy.zone.api.attend;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.Record;
 import org.jooq.Record11;
+import org.jooq.Record12;
 import org.jooq.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -81,7 +82,7 @@ public class AttendUsersApiController {
                 }
             } else if (type == 3) {
                 // 统计中数据
-                Result<Record11<String, String, Timestamp, String, Integer, String, String, String, String, Timestamp, String>> records = attendUsersService.findByAttendReleaseIdAndAttendReleaseSubId(attendReleaseSub.getAttendReleaseId(), attendReleaseSubId);
+                Result<Record12<String, String, Timestamp, String, Integer, String, String, String, String, Byte, Timestamp, String>>  records = attendUsersService.findByAttendReleaseIdAndAttendReleaseSubId(attendReleaseSub.getAttendReleaseId(), attendReleaseSubId);
                 if (records.isNotEmpty()) {
                     attendUsers = records.into(AttendUsersBean.class);
                 }

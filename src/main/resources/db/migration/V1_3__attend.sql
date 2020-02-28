@@ -46,6 +46,7 @@ CREATE TABLE attend_data(
  attend_release_sub_id INT NOT NULL,
  location VARCHAR(200),
  address VARCHAR(300),
+ device_same BOOLEAN,
  attend_date TIMESTAMP NOT NULL,
  attend_remark VARCHAR(200),
  PRIMARY KEY(attend_users_id, attend_release_sub_id),
@@ -101,8 +102,15 @@ CREATE TABLE attend_subscribe_log(
 
 CREATE TABLE wei_xin_device(
   device_id VARCHAR(64) PRIMARY KEY ,
+  brand VARCHAR(100),
   model VARCHAR(100),
   version VARCHAR(30),
+  screen_width DOUBLE,
+  screen_height DOUBLE,
+  system_info VARCHAR(100),
+  platform VARCHAR(30),
+  location_authorized BOOLEAN,
+  notification_authorized BOOLEAN,
   username VARCHAR(64) NOT NULL,
   create_date TIMESTAMP NOT NULL,
   FOREIGN KEY (username) REFERENCES users (username) ON UPDATE CASCADE ON DELETE CASCADE

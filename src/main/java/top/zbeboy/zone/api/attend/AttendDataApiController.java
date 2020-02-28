@@ -11,14 +11,18 @@ import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.domain.tables.records.AttendDataRecord;
 import top.zbeboy.zone.domain.tables.records.AttendUsersRecord;
+import top.zbeboy.zone.domain.tables.records.WeiXinDeviceRecord;
 import top.zbeboy.zone.service.attend.AttendDataService;
 import top.zbeboy.zone.service.attend.AttendReleaseSubService;
 import top.zbeboy.zone.service.attend.AttendUsersService;
 import top.zbeboy.zone.service.data.StudentService;
+import top.zbeboy.zone.service.data.WeiXinDeviceService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
+import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.util.AjaxUtil;
+import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.vo.attend.data.AttendDataAddVo;
 
 import javax.annotation.Resource;
@@ -45,6 +49,9 @@ public class AttendDataApiController {
 
     @Resource
     private AttendDataService attendDataService;
+
+    @Resource
+    private WeiXinDeviceService weiXinDeviceService;
 
     @Resource
     private StudentService studentService;
@@ -89,6 +96,54 @@ public class AttendDataApiController {
                                             attendData.setLocation(attendDataAddVo.getLocation());
                                             attendData.setAddress(attendDataAddVo.getAddress());
                                             attendData.setAttendDate(DateTimeUtil.getNowSqlTimestamp());
+
+                                            // 机型处理
+                                            Optional<WeiXinDeviceRecord> weiXinDeviceRecord = weiXinDeviceService.findByUsername(users.getUsername());
+                                            if (weiXinDeviceRecord.isPresent()) {
+                                                WeiXinDevice weiXinDevice = record.get().into(WeiXinDevice.class);
+                                                if (!StringUtils.equals(weiXinDevice.getModel(), attendDataAddVo.getModel()) ||
+                                                        Objects.isNull(weiXinDevice.getScreenWidth()) ||
+                                                        Objects.isNull(attendDataAddVo.getScreenWidth()) ||
+                                                        Math.abs(weiXinDevice.getScreenWidth() - attendDataAddVo.getScreenWidth()) > 30 ||
+                                                        Objects.isNull(weiXinDevice.getScreenHeight()) ||
+                                                        Objects.isNull(attendDataAddVo.getScreenHeight()) ||
+                                                        Math.abs(weiXinDevice.getScreenHeight() - attendDataAddVo.getScreenHeight()) > 30){
+                                                    attendData.setDeviceSame(BooleanUtil.toByte(false));
+                                                } else {
+                                                    attendData.setDeviceSame(BooleanUtil.toByte(true));
+                                                }
+
+                                                weiXinDevice.setBrand(attendDataAddVo.getBrand());
+                                                weiXinDevice.setModel(attendDataAddVo.getModel());
+                                                weiXinDevice.setVersion(attendDataAddVo.getVersion());
+                                                weiXinDevice.setScreenWidth(attendDataAddVo.getScreenWidth());
+                                                weiXinDevice.setScreenHeight(attendDataAddVo.getScreenHeight());
+                                                weiXinDevice.setSystemInfo(attendDataAddVo.getSystemInfo());
+                                                weiXinDevice.setPlatform(attendDataAddVo.getPlatform());
+                                                weiXinDevice.setLocationAuthorized(attendDataAddVo.getLocationAuthorized());
+                                                weiXinDevice.setNotificationAuthorized(attendDataAddVo.getNotificationAuthorized());
+                                                weiXinDevice.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+
+                                                weiXinDeviceService.update(weiXinDevice);
+                                            } else {
+                                                WeiXinDevice weiXinDevice = new WeiXinDevice();
+                                                weiXinDevice.setDeviceId(UUIDUtil.getUUID());
+                                                weiXinDevice.setBrand(attendDataAddVo.getBrand());
+                                                weiXinDevice.setModel(attendDataAddVo.getModel());
+                                                weiXinDevice.setVersion(attendDataAddVo.getVersion());
+                                                weiXinDevice.setScreenWidth(attendDataAddVo.getScreenWidth());
+                                                weiXinDevice.setScreenHeight(attendDataAddVo.getScreenHeight());
+                                                weiXinDevice.setSystemInfo(attendDataAddVo.getSystemInfo());
+                                                weiXinDevice.setPlatform(attendDataAddVo.getPlatform());
+                                                weiXinDevice.setLocationAuthorized(attendDataAddVo.getLocationAuthorized());
+                                                weiXinDevice.setNotificationAuthorized(attendDataAddVo.getNotificationAuthorized());
+                                                weiXinDevice.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+
+                                                weiXinDeviceService.save(weiXinDevice);
+
+                                                attendData.setDeviceSame(BooleanUtil.toByte(true));
+                                            }
+
                                             attendDataService.save(attendData);
 
                                             ajaxUtil.success().msg("签到成功");

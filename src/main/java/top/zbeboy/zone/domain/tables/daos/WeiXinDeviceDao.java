@@ -74,6 +74,20 @@ public class WeiXinDeviceDao extends DAOImpl<WeiXinDeviceRecord, top.zbeboy.zone
     }
 
     /**
+     * Fetch records that have <code>brand BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.WeiXinDevice> fetchRangeOfBrand(String lowerInclusive, String upperInclusive) {
+        return fetchRange(WeiXinDevice.WEI_XIN_DEVICE.BRAND, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>brand IN (values)</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.WeiXinDevice> fetchByBrand(String... values) {
+        return fetch(WeiXinDevice.WEI_XIN_DEVICE.BRAND, values);
+    }
+
+    /**
      * Fetch records that have <code>model BETWEEN lowerInclusive AND upperInclusive</code>
      */
     public List<top.zbeboy.zone.domain.tables.pojos.WeiXinDevice> fetchRangeOfModel(String lowerInclusive, String upperInclusive) {
@@ -99,6 +113,90 @@ public class WeiXinDeviceDao extends DAOImpl<WeiXinDeviceRecord, top.zbeboy.zone
      */
     public List<top.zbeboy.zone.domain.tables.pojos.WeiXinDevice> fetchByVersion(String... values) {
         return fetch(WeiXinDevice.WEI_XIN_DEVICE.VERSION, values);
+    }
+
+    /**
+     * Fetch records that have <code>screen_width BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.WeiXinDevice> fetchRangeOfScreenWidth(Double lowerInclusive, Double upperInclusive) {
+        return fetchRange(WeiXinDevice.WEI_XIN_DEVICE.SCREEN_WIDTH, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>screen_width IN (values)</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.WeiXinDevice> fetchByScreenWidth(Double... values) {
+        return fetch(WeiXinDevice.WEI_XIN_DEVICE.SCREEN_WIDTH, values);
+    }
+
+    /**
+     * Fetch records that have <code>screen_height BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.WeiXinDevice> fetchRangeOfScreenHeight(Double lowerInclusive, Double upperInclusive) {
+        return fetchRange(WeiXinDevice.WEI_XIN_DEVICE.SCREEN_HEIGHT, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>screen_height IN (values)</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.WeiXinDevice> fetchByScreenHeight(Double... values) {
+        return fetch(WeiXinDevice.WEI_XIN_DEVICE.SCREEN_HEIGHT, values);
+    }
+
+    /**
+     * Fetch records that have <code>system_info BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.WeiXinDevice> fetchRangeOfSystemInfo(String lowerInclusive, String upperInclusive) {
+        return fetchRange(WeiXinDevice.WEI_XIN_DEVICE.SYSTEM_INFO, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>system_info IN (values)</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.WeiXinDevice> fetchBySystemInfo(String... values) {
+        return fetch(WeiXinDevice.WEI_XIN_DEVICE.SYSTEM_INFO, values);
+    }
+
+    /**
+     * Fetch records that have <code>platform BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.WeiXinDevice> fetchRangeOfPlatform(String lowerInclusive, String upperInclusive) {
+        return fetchRange(WeiXinDevice.WEI_XIN_DEVICE.PLATFORM, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>platform IN (values)</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.WeiXinDevice> fetchByPlatform(String... values) {
+        return fetch(WeiXinDevice.WEI_XIN_DEVICE.PLATFORM, values);
+    }
+
+    /**
+     * Fetch records that have <code>location_authorized BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.WeiXinDevice> fetchRangeOfLocationAuthorized(Byte lowerInclusive, Byte upperInclusive) {
+        return fetchRange(WeiXinDevice.WEI_XIN_DEVICE.LOCATION_AUTHORIZED, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>location_authorized IN (values)</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.WeiXinDevice> fetchByLocationAuthorized(Byte... values) {
+        return fetch(WeiXinDevice.WEI_XIN_DEVICE.LOCATION_AUTHORIZED, values);
+    }
+
+    /**
+     * Fetch records that have <code>notification_authorized BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.WeiXinDevice> fetchRangeOfNotificationAuthorized(Byte lowerInclusive, Byte upperInclusive) {
+        return fetchRange(WeiXinDevice.WEI_XIN_DEVICE.NOTIFICATION_AUTHORIZED, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>notification_authorized IN (values)</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.WeiXinDevice> fetchByNotificationAuthorized(Byte... values) {
+        return fetch(WeiXinDevice.WEI_XIN_DEVICE.NOTIFICATION_AUTHORIZED, values);
     }
 
     /**

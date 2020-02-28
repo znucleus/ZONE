@@ -1,7 +1,7 @@
 package top.zbeboy.zone.service.attend;
 
 import org.jooq.Record;
-import org.jooq.Record11;
+import org.jooq.Record12;
 import org.jooq.Result;
 import top.zbeboy.zone.domain.tables.pojos.AttendUsers;
 import top.zbeboy.zone.domain.tables.records.AttendUsersRecord;
@@ -32,7 +32,7 @@ public interface AttendUsersService {
      *
      * @return 数据
      */
-    Result<Record11<String, String, Timestamp, String, Integer, String, String, String, String, Timestamp, String>> findByAttendReleaseIdAndAttendReleaseSubId(String attendReleaseId, int attendReleaseSubId);
+    Result<Record12<String, String, Timestamp, String, Integer, String, String, String, String, Byte, Timestamp, String>> findByAttendReleaseIdAndAttendReleaseSubId(String attendReleaseId, int attendReleaseSubId);
 
     /**
      * 通过发布表id和学生id查询

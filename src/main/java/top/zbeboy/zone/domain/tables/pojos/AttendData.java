@@ -25,12 +25,13 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AttendData implements Serializable {
 
-    private static final long serialVersionUID = -1387360028;
+    private static final long serialVersionUID = 280902270;
 
     private String    attendUsersId;
     private Integer   attendReleaseSubId;
     private String    location;
     private String    address;
+    private Byte      deviceSame;
     private Timestamp attendDate;
     private String    attendRemark;
 
@@ -41,6 +42,7 @@ public class AttendData implements Serializable {
         this.attendReleaseSubId = value.attendReleaseSubId;
         this.location = value.location;
         this.address = value.address;
+        this.deviceSame = value.deviceSame;
         this.attendDate = value.attendDate;
         this.attendRemark = value.attendRemark;
     }
@@ -50,6 +52,7 @@ public class AttendData implements Serializable {
         Integer   attendReleaseSubId,
         String    location,
         String    address,
+        Byte      deviceSame,
         Timestamp attendDate,
         String    attendRemark
     ) {
@@ -57,6 +60,7 @@ public class AttendData implements Serializable {
         this.attendReleaseSubId = attendReleaseSubId;
         this.location = location;
         this.address = address;
+        this.deviceSame = deviceSame;
         this.attendDate = attendDate;
         this.attendRemark = attendRemark;
     }
@@ -98,6 +102,14 @@ public class AttendData implements Serializable {
         this.address = address;
     }
 
+    public Byte getDeviceSame() {
+        return this.deviceSame;
+    }
+
+    public void setDeviceSame(Byte deviceSame) {
+        this.deviceSame = deviceSame;
+    }
+
     @NotNull
     public Timestamp getAttendDate() {
         return this.attendDate;
@@ -124,6 +136,7 @@ public class AttendData implements Serializable {
         sb.append(", ").append(attendReleaseSubId);
         sb.append(", ").append(location);
         sb.append(", ").append(address);
+        sb.append(", ").append(deviceSame);
         sb.append(", ").append(attendDate);
         sb.append(", ").append(attendRemark);
 

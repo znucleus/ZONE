@@ -15,7 +15,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row5;
+import org.jooq.Row12;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -42,7 +42,7 @@ import top.zbeboy.zone.domain.tables.records.WeiXinDeviceRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class WeiXinDevice extends TableImpl<WeiXinDeviceRecord> {
 
-    private static final long serialVersionUID = -1438151909;
+    private static final long serialVersionUID = 1504213564;
 
     /**
      * The reference instance of <code>zone.wei_xin_device</code>
@@ -63,6 +63,11 @@ public class WeiXinDevice extends TableImpl<WeiXinDeviceRecord> {
     public final TableField<WeiXinDeviceRecord, String> DEVICE_ID = createField(DSL.name("device_id"), org.jooq.impl.SQLDataType.VARCHAR(64).nullable(false), this, "");
 
     /**
+     * The column <code>zone.wei_xin_device.brand</code>.
+     */
+    public final TableField<WeiXinDeviceRecord, String> BRAND = createField(DSL.name("brand"), org.jooq.impl.SQLDataType.VARCHAR(100), this, "");
+
+    /**
      * The column <code>zone.wei_xin_device.model</code>.
      */
     public final TableField<WeiXinDeviceRecord, String> MODEL = createField(DSL.name("model"), org.jooq.impl.SQLDataType.VARCHAR(100), this, "");
@@ -71,6 +76,36 @@ public class WeiXinDevice extends TableImpl<WeiXinDeviceRecord> {
      * The column <code>zone.wei_xin_device.version</code>.
      */
     public final TableField<WeiXinDeviceRecord, String> VERSION = createField(DSL.name("version"), org.jooq.impl.SQLDataType.VARCHAR(30), this, "");
+
+    /**
+     * The column <code>zone.wei_xin_device.screen_width</code>.
+     */
+    public final TableField<WeiXinDeviceRecord, Double> SCREEN_WIDTH = createField(DSL.name("screen_width"), org.jooq.impl.SQLDataType.DOUBLE, this, "");
+
+    /**
+     * The column <code>zone.wei_xin_device.screen_height</code>.
+     */
+    public final TableField<WeiXinDeviceRecord, Double> SCREEN_HEIGHT = createField(DSL.name("screen_height"), org.jooq.impl.SQLDataType.DOUBLE, this, "");
+
+    /**
+     * The column <code>zone.wei_xin_device.system_info</code>.
+     */
+    public final TableField<WeiXinDeviceRecord, String> SYSTEM_INFO = createField(DSL.name("system_info"), org.jooq.impl.SQLDataType.VARCHAR(100), this, "");
+
+    /**
+     * The column <code>zone.wei_xin_device.platform</code>.
+     */
+    public final TableField<WeiXinDeviceRecord, String> PLATFORM = createField(DSL.name("platform"), org.jooq.impl.SQLDataType.VARCHAR(30), this, "");
+
+    /**
+     * The column <code>zone.wei_xin_device.location_authorized</code>.
+     */
+    public final TableField<WeiXinDeviceRecord, Byte> LOCATION_AUTHORIZED = createField(DSL.name("location_authorized"), org.jooq.impl.SQLDataType.TINYINT, this, "");
+
+    /**
+     * The column <code>zone.wei_xin_device.notification_authorized</code>.
+     */
+    public final TableField<WeiXinDeviceRecord, Byte> NOTIFICATION_AUTHORIZED = createField(DSL.name("notification_authorized"), org.jooq.impl.SQLDataType.TINYINT, this, "");
 
     /**
      * The column <code>zone.wei_xin_device.username</code>.
@@ -171,11 +206,11 @@ public class WeiXinDevice extends TableImpl<WeiXinDeviceRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row5 type methods
+    // Row12 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row5<String, String, String, String, Timestamp> fieldsRow() {
-        return (Row5) super.fieldsRow();
+    public Row12<String, String, String, String, Double, Double, String, String, Byte, Byte, String, Timestamp> fieldsRow() {
+        return (Row12) super.fieldsRow();
     }
 }

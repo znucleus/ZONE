@@ -110,6 +110,20 @@ public class AttendDataDao extends DAOImpl<AttendDataRecord, top.zbeboy.zone.dom
     }
 
     /**
+     * Fetch records that have <code>device_same BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.AttendData> fetchRangeOfDeviceSame(Byte lowerInclusive, Byte upperInclusive) {
+        return fetchRange(AttendData.ATTEND_DATA.DEVICE_SAME, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>device_same IN (values)</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.AttendData> fetchByDeviceSame(Byte... values) {
+        return fetch(AttendData.ATTEND_DATA.DEVICE_SAME, values);
+    }
+
+    /**
      * Fetch records that have <code>attend_date BETWEEN lowerInclusive AND upperInclusive</code>
      */
     public List<top.zbeboy.zone.domain.tables.pojos.AttendData> fetchRangeOfAttendDate(Timestamp lowerInclusive, Timestamp upperInclusive) {

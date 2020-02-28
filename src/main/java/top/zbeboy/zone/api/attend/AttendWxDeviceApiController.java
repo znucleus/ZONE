@@ -29,42 +29,6 @@ public class AttendWxDeviceApiController {
     private WeiXinDeviceService weiXinDeviceService;
 
     /**
-     * 保存
-     *
-     * @param principal 当前用户信息
-     * @return true or false
-     */
-    @PostMapping("/api/attend/weixin/device/save")
-    public ResponseEntity<Map<String, Object>> save(String model, String version, Principal principal) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        Users users = usersService.getUserFromOauth(principal);
-        if (Objects.nonNull(users)) {
-            Optional<WeiXinDeviceRecord> record = weiXinDeviceService.findByUsername(users.getUsername());
-            if (record.isPresent()) {
-                WeiXinDevice weiXinDevice = record.get().into(WeiXinDevice.class);
-                weiXinDevice.setModel(model);
-                weiXinDevice.setVersion(version);
-                weiXinDevice.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
-
-                weiXinDeviceService.update(weiXinDevice);
-            } else {
-                WeiXinDevice weiXinDevice = new WeiXinDevice();
-                weiXinDevice.setDeviceId(UUIDUtil.getUUID());
-                weiXinDevice.setUsername(users.getUsername());
-                weiXinDevice.setModel(model);
-                weiXinDevice.setVersion(version);
-                weiXinDevice.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
-
-                weiXinDeviceService.save(weiXinDevice);
-            }
-            ajaxUtil.success().msg("保存成功");
-        } else {
-            ajaxUtil.fail().msg("查询用户信息失败");
-        }
-        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
-    }
-
-    /**
      * 查询
      *
      * @param principal 当前用户信息
