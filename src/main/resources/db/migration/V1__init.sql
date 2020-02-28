@@ -820,7 +820,7 @@ VALUES ('e813c71358fc4691afeafb438ea53919', '308c9005d7e543ebbf49b430ea1add9c');
 INSERT INTO role_application (role_id, application_id)
 VALUES ('e813c71358fc4691afeafb438ea53919', '31e0dbc3ed844f0e8ba5cb54f775725e');
 INSERT INTO role_application (role_id, application_id)
-VALUES ('e813c71358fc4691afeafb438ea53919', '7e73aa34c68f4c21a582ec7ece8cfc67');
+VALUES ('e813c71358fc4691afeafb438ea53919', 'f129b23f0738437abaa0c6b4991c01f0');
 
 INSERT INTO role_application (role_id, application_id)
 VALUES ('cd5012abe87246f3ae21c86600c6e12a', 'e3d45ba55e48462cb47595ce01bba60c');
