@@ -2,6 +2,8 @@ package top.zbeboy.zone.service.data;
 
 import top.zbeboy.zone.domain.tables.pojos.Channel;
 
+import java.util.List;
+
 public interface ChannelService {
 
     /**
@@ -19,4 +21,11 @@ public interface ChannelService {
      * @return 用户类型
      */
     Channel findByChannelName(String channelName);
+
+    /**
+     * 查询全部
+     *
+     * @return 数据
+     */
+    List<Channel> findAll();
 }

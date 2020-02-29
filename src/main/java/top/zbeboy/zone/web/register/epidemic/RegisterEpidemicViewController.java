@@ -92,4 +92,26 @@ public class RegisterEpidemicViewController {
         modelMap.addAttribute("epidemicRegisterReleaseId", id);
         return "web/register/epidemic/epidemic_data_add::#page-wrapper";
     }
+
+    /**
+     * 统计
+     *
+     * @param id       发布id
+     * @param modelMap 页面对象
+     * @return 登记页面
+     */
+    @GetMapping("/web/register/epidemic/review/{id}")
+    public String dataReview(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        if (registerConditionCommon.epidemicReview()) {
+            modelMap.addAttribute("epidemicRegisterReleaseId", id);
+            page = "web/register/epidemic/epidemic_data_review::#page-wrapper";
+        } else {
+            config.buildWarningTip("操作警告", "您无权限操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
 }

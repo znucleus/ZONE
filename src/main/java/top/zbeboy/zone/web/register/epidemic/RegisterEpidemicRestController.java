@@ -21,18 +21,22 @@ import top.zbeboy.zone.service.register.EpidemicRegisterDataService;
 import top.zbeboy.zone.service.register.EpidemicRegisterReleaseService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
+import top.zbeboy.zone.web.bean.data.school.SchoolBean;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
+import top.zbeboy.zone.web.bean.register.epidemic.EpidemicRegisterDataBean;
 import top.zbeboy.zone.web.bean.register.epidemic.EpidemicRegisterReleaseBean;
 import top.zbeboy.zone.web.register.common.RegisterConditionCommon;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
+import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zone.web.vo.register.epidemic.EpidemicRegisterDataAddVo;
 import top.zbeboy.zone.web.vo.register.epidemic.EpidemicRegisterReleaseAddVo;
 import top.zbeboy.zone.web.vo.register.epidemic.EpidemicRegisterReleaseEditVo;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.*;
 
@@ -222,5 +226,37 @@ public class RegisterEpidemicRestController {
             ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 数据
+     *
+     * @param request 请求
+     * @return 数据
+     */
+    @GetMapping("/web/register/epidemic/data/list")
+    public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
+        // 前台数据标题 注：要和前台标题顺序一致，获取order用
+        List<String> headers = new ArrayList<>();
+        headers.add("registerRealName");
+        headers.add("registerUsername");
+        headers.add("registerType");
+        headers.add("epidemicStatus");
+        headers.add("address");
+        headers.add("institute");
+        headers.add("channelName");
+        headers.add("remark");
+        headers.add("registerDateStr");
+        DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
+        Result<Record> records = epidemicRegisterDataService.findAllByPage(dataTablesUtil);
+        List<EpidemicRegisterDataBean> beans = new ArrayList<>();
+        if (Objects.nonNull(records) && records.isNotEmpty()) {
+            beans = records.into(EpidemicRegisterDataBean.class);
+            beans.forEach(bean -> bean.setRegisterDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getRegisterDate())));
+        }
+        dataTablesUtil.setData(beans);
+        dataTablesUtil.setiTotalRecords(epidemicRegisterDataService.countAll(dataTablesUtil));
+        dataTablesUtil.setiTotalDisplayRecords(epidemicRegisterDataService.countByCondition(dataTablesUtil));
+        return new ResponseEntity<>(dataTablesUtil, HttpStatus.OK);
     }
 }

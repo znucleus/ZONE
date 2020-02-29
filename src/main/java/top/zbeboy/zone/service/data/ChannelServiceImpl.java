@@ -9,6 +9,7 @@ import top.zbeboy.zone.domain.tables.daos.ChannelDao;
 import top.zbeboy.zone.domain.tables.pojos.Channel;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service("channelService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -27,5 +28,10 @@ public class ChannelServiceImpl implements ChannelService {
     @Override
     public Channel findByChannelName(String channelName) {
         return channelDao.fetchOneByChannelName(channelName);
+    }
+
+    @Override
+    public List<Channel> findAll() {
+        return channelDao.findAll();
     }
 }
