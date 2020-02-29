@@ -43,7 +43,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                 data: web_path + '/web/register/epidemic/data/list',
                 obtain_channel_data: web_path + "/users/data/channel",
                 export_data_url: web_path + '/web/register/epidemic/data/export',
-                del:web_path + '/web/register/epidemic/data/delete',
+                del: web_path + '/web/register/epidemic/data/delete',
                 page: '/web/menu/register/epidemic'
             };
         }
@@ -188,7 +188,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                 sessionStorage.setItem(webStorageKey.REGISTER_REAL_NAME, param.registerRealName);
                 sessionStorage.setItem(webStorageKey.REGISTER_USERNAME, param.registerUsername);
                 sessionStorage.setItem(webStorageKey.REGISTER_TYPE, param.registerType);
-                sessionStorage.setItem(webStorageKey.CHANNEL_ID, param.channelId);
+                sessionStorage.setItem(webStorageKey.CHANNEL_ID, param.channelId != null ? param.channelId : '');
                 sessionStorage.setItem(webStorageKey.EPIDEMIC_STATUS, param.epidemicStatus);
                 sessionStorage.setItem(webStorageKey.ADDRESS, param.address);
                 sessionStorage.setItem(webStorageKey.INSTITUTE, param.institute);
