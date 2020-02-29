@@ -115,3 +115,42 @@ CREATE TABLE wei_xin_device(
   create_date TIMESTAMP NOT NULL,
   FOREIGN KEY (username) REFERENCES users (username) ON UPDATE CASCADE ON DELETE CASCADE
 );
+
+CREATE TABLE channel(
+  channel_id INT AUTO_INCREMENT PRIMARY KEY,
+  channel_name VARCHAR(100) UNIQUE NOT NULL
+);
+
+CREATE TABLE epidemic_register_release(
+  epidemic_register_release_id VARCHAR(64) PRIMARY KEY ,
+  title VARCHAR(100) NOT NULL,
+  username VARCHAR(64) NOT NULL,
+  publisher VARCHAR(30) NOT NULL,
+  release_time TIMESTAMP NOT NULL,
+  FOREIGN KEY(username) REFERENCES
+  users(username) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE epidemic_register_data(
+  epidemic_register_data_id VARCHAR(64) PRIMARY KEY ,
+  location VARCHAR(200),
+  address VARCHAR(300),
+  epidemic_status VARCHAR(500) NOT NULL,
+  register_real_name VARCHAR(30) NOT NULL,
+  register_type VARCHAR(50) NOT NULL,
+  institute VARCHAR(500) NOT NULL,
+  register_date TIMESTAMP NOT NULL,
+  epidemic_register_release_id VARCHAR(64) NOT NULL,
+  register_username VARCHAR(64) NOT NULL,
+  channel_id INT NOT NULL,
+  remark VARCHAR(200),
+  FOREIGN KEY(epidemic_register_release_id) REFERENCES
+  epidemic_register_release(epidemic_register_release_id) ON DELETE CASCADE,
+  FOREIGN KEY(register_username) REFERENCES
+  users(username) ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (channel_id)REFERENCES
+  channel(channel_id)
+);
+
+INSERT INTO channel (channel_name) VALUES ('WEB');
+INSERT INTO channel (channel_name) VALUES ('API');

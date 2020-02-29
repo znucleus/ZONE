@@ -32,11 +32,14 @@ import top.zbeboy.zone.domain.tables.AttendWxStudentSubscribe;
 import top.zbeboy.zone.domain.tables.Authorities;
 import top.zbeboy.zone.domain.tables.AuthorizeType;
 import top.zbeboy.zone.domain.tables.Building;
+import top.zbeboy.zone.domain.tables.Channel;
 import top.zbeboy.zone.domain.tables.College;
 import top.zbeboy.zone.domain.tables.CollegeApplication;
 import top.zbeboy.zone.domain.tables.CollegeRole;
 import top.zbeboy.zone.domain.tables.Course;
 import top.zbeboy.zone.domain.tables.Department;
+import top.zbeboy.zone.domain.tables.EpidemicRegisterData;
+import top.zbeboy.zone.domain.tables.EpidemicRegisterRelease;
 import top.zbeboy.zone.domain.tables.Files;
 import top.zbeboy.zone.domain.tables.Grade;
 import top.zbeboy.zone.domain.tables.InternshipApply;
@@ -100,7 +103,7 @@ import top.zbeboy.zone.domain.tables.WeiXinDevice;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Zone extends SchemaImpl {
 
-    private static final long serialVersionUID = -1876416380;
+    private static final long serialVersionUID = -205859511;
 
     /**
      * The reference instance of <code>zone</code>
@@ -198,6 +201,11 @@ public class Zone extends SchemaImpl {
     public final Building BUILDING = top.zbeboy.zone.domain.tables.Building.BUILDING;
 
     /**
+     * The table <code>zone.channel</code>.
+     */
+    public final Channel CHANNEL = top.zbeboy.zone.domain.tables.Channel.CHANNEL;
+
+    /**
      * The table <code>zone.college</code>.
      */
     public final College COLLEGE = top.zbeboy.zone.domain.tables.College.COLLEGE;
@@ -221,6 +229,16 @@ public class Zone extends SchemaImpl {
      * The table <code>zone.department</code>.
      */
     public final Department DEPARTMENT = top.zbeboy.zone.domain.tables.Department.DEPARTMENT;
+
+    /**
+     * The table <code>zone.epidemic_register_data</code>.
+     */
+    public final EpidemicRegisterData EPIDEMIC_REGISTER_DATA = top.zbeboy.zone.domain.tables.EpidemicRegisterData.EPIDEMIC_REGISTER_DATA;
+
+    /**
+     * The table <code>zone.epidemic_register_release</code>.
+     */
+    public final EpidemicRegisterRelease EPIDEMIC_REGISTER_RELEASE = top.zbeboy.zone.domain.tables.EpidemicRegisterRelease.EPIDEMIC_REGISTER_RELEASE;
 
     /**
      * The table <code>zone.files</code>.
@@ -502,11 +520,14 @@ public class Zone extends SchemaImpl {
             Authorities.AUTHORITIES,
             AuthorizeType.AUTHORIZE_TYPE,
             Building.BUILDING,
+            Channel.CHANNEL,
             College.COLLEGE,
             CollegeApplication.COLLEGE_APPLICATION,
             CollegeRole.COLLEGE_ROLE,
             Course.COURSE,
             Department.DEPARTMENT,
+            EpidemicRegisterData.EPIDEMIC_REGISTER_DATA,
+            EpidemicRegisterRelease.EPIDEMIC_REGISTER_RELEASE,
             Files.FILES,
             Grade.GRADE,
             InternshipApply.INTERNSHIP_APPLY,

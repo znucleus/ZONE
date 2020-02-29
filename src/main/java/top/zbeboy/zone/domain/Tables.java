@@ -24,11 +24,14 @@ import top.zbeboy.zone.domain.tables.AttendWxStudentSubscribe;
 import top.zbeboy.zone.domain.tables.Authorities;
 import top.zbeboy.zone.domain.tables.AuthorizeType;
 import top.zbeboy.zone.domain.tables.Building;
+import top.zbeboy.zone.domain.tables.Channel;
 import top.zbeboy.zone.domain.tables.College;
 import top.zbeboy.zone.domain.tables.CollegeApplication;
 import top.zbeboy.zone.domain.tables.CollegeRole;
 import top.zbeboy.zone.domain.tables.Course;
 import top.zbeboy.zone.domain.tables.Department;
+import top.zbeboy.zone.domain.tables.EpidemicRegisterData;
+import top.zbeboy.zone.domain.tables.EpidemicRegisterRelease;
 import top.zbeboy.zone.domain.tables.Files;
 import top.zbeboy.zone.domain.tables.Grade;
 import top.zbeboy.zone.domain.tables.InternshipApply;
@@ -183,6 +186,11 @@ public class Tables {
     public static final Building BUILDING = Building.BUILDING;
 
     /**
+     * The table <code>zone.channel</code>.
+     */
+    public static final Channel CHANNEL = Channel.CHANNEL;
+
+    /**
      * The table <code>zone.college</code>.
      */
     public static final College COLLEGE = College.COLLEGE;
@@ -206,6 +214,16 @@ public class Tables {
      * The table <code>zone.department</code>.
      */
     public static final Department DEPARTMENT = Department.DEPARTMENT;
+
+    /**
+     * The table <code>zone.epidemic_register_data</code>.
+     */
+    public static final EpidemicRegisterData EPIDEMIC_REGISTER_DATA = EpidemicRegisterData.EPIDEMIC_REGISTER_DATA;
+
+    /**
+     * The table <code>zone.epidemic_register_release</code>.
+     */
+    public static final EpidemicRegisterRelease EPIDEMIC_REGISTER_RELEASE = EpidemicRegisterRelease.EPIDEMIC_REGISTER_RELEASE;
 
     /**
      * The table <code>zone.files</code>.
