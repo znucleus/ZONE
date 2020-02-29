@@ -116,7 +116,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
         }
 
         // 检验实习标题
-        $(param_id.releaseTitle).blur(function () {
+        $(param_id.internshipTitle).blur(function () {
             initParam();
             var internshipTitle = param.internshipTitle;
             if (internshipTitle.length <= 0 || internshipTitle.length > 100) {
