@@ -15,10 +15,12 @@ import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.service.data.ChannelService;
 import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
+import top.zbeboy.zone.service.export.EpidemicRegisterDataExport;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
 import top.zbeboy.zone.service.register.EpidemicRegisterDataService;
 import top.zbeboy.zone.service.register.EpidemicRegisterReleaseService;
+import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
@@ -36,7 +38,9 @@ import top.zbeboy.zone.web.vo.register.epidemic.EpidemicRegisterReleaseEditVo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.*;
 
 @RestController
@@ -65,6 +69,9 @@ public class RegisterEpidemicRestController {
 
     @Resource
     private ChannelService channelService;
+
+    @Resource
+    private UploadService uploadService;
 
     /**
      * 数据
@@ -294,5 +301,29 @@ public class RegisterEpidemicRestController {
             ajaxUtil.fail().msg("您无权限操作");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 导出 列表 数据
+     *
+     * @param request 请求
+     */
+    @GetMapping("/web/register/epidemic/data/export")
+    public void export(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        DataTablesUtil dataTablesUtil = new DataTablesUtil(request, "registerDateStr", "desc",
+                "疫情登记数据表", Workbook.internshipFilePath());
+        Result<Record> records = epidemicRegisterDataService.export(dataTablesUtil);
+        List<EpidemicRegisterDataBean> beans = new ArrayList<>();
+        if (Objects.nonNull(records) && records.isNotEmpty()) {
+            beans = records.into(EpidemicRegisterDataBean.class);
+            beans.forEach(bean -> bean.setRegisterDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getRegisterDate())));
+        }
+
+        EpidemicRegisterDataExport export = new EpidemicRegisterDataExport(beans);
+        DataTablesUtil.ExportInfo exportInfo = dataTablesUtil.getExportInfo();
+        if (export.exportExcel(exportInfo.getLastPath(), exportInfo.getFileName(), exportInfo.getExt())) {
+            uploadService.download(exportInfo.getFileName(), exportInfo.getFilePath(), response, request);
+        }
+
     }
 }

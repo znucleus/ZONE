@@ -65,6 +65,16 @@ public class EpidemicRegisterDataServiceImpl implements EpidemicRegisterDataServ
     }
 
     @Override
+    public Result<Record> export(DataTablesUtil dataTablesUtil) {
+        SelectOnConditionStep<Record> selectOnConditionStep =
+                create.select()
+                        .from(EPIDEMIC_REGISTER_DATA)
+                        .leftJoin(CHANNEL)
+                        .on(EPIDEMIC_REGISTER_DATA.CHANNEL_ID.eq(CHANNEL.CHANNEL_ID));
+        return queryAll(selectOnConditionStep, dataTablesUtil, false);
+    }
+
+    @Override
     public int countAll(DataTablesUtil dataTablesUtil) {
         SelectOnConditionStep<Record1<Integer>> selectOnConditionStep = create.selectCount()
                 .from(EPIDEMIC_REGISTER_DATA)

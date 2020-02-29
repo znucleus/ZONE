@@ -36,6 +36,14 @@ public interface EpidemicRegisterDataService {
     Result<Record> findAllByPage(DataTablesUtil dataTablesUtil);
 
     /**
+     * 数据导出
+     *
+     * @param dataTablesUtil 工具类
+     * @return 数据
+     */
+    Result<Record> export(DataTablesUtil dataTablesUtil);
+
+    /**
      * 应用 总数
      *
      * @return 总数
