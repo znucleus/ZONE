@@ -138,6 +138,7 @@ public class AttendDataApiController {
                                                 weiXinDevice.setLocationAuthorized(attendDataAddVo.getLocationAuthorized());
                                                 weiXinDevice.setNotificationAuthorized(attendDataAddVo.getNotificationAuthorized());
                                                 weiXinDevice.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                                                weiXinDevice.setUsername(users.getUsername());
 
                                                 weiXinDeviceService.save(weiXinDevice);
 
