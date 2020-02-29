@@ -7,9 +7,9 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
          */
         var ajax_url = {
             data: web_path + '/web/register/epidemic/data',
-            add: '/web/register/epidemic/add',
-            edit: '/web/register/epidemic/edit',
-            del: web_path + '/web/register/epidemic/delete',
+            add: '/web/register/epidemic/release/add',
+            edit: '/web/register/epidemic/release/edit',
+            del: web_path + '/web/register/epidemic/release/delete',
             page: '/web/menu/register/epidemic'
         };
 

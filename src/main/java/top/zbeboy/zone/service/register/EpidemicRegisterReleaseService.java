@@ -2,6 +2,7 @@ package top.zbeboy.zone.service.register;
 
 import org.jooq.Record;
 import org.jooq.Result;
+import top.zbeboy.zone.domain.tables.pojos.EpidemicRegisterRelease;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
 public interface EpidemicRegisterReleaseService {
@@ -20,4 +21,11 @@ public interface EpidemicRegisterReleaseService {
      * @return 总数
      */
     int countAll(SimplePaginationUtil paginationUtil);
+
+    /**
+     * 保存
+     *
+     * @param epidemicRegisterRelease 数据
+     */
+    void save(EpidemicRegisterRelease epidemicRegisterRelease);
 }
