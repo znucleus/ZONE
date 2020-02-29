@@ -1,6 +1,6 @@
 //# sourceURL=epidemic_data_review.js
-require(["jquery", "nav.active", "responsive.bootstrap4", "jquery.address", "messenger", "select2-zh-CN", "flatpickr-zh"],
-    function ($, navActive) {
+require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootstrap4", "jquery.address", "messenger", "select2-zh-CN", "flatpickr-zh"],
+    function ($, Handlebars, navActive, Swal) {
 
         var page_param = {
             paramEpidemicRegisterReleaseId: $('#paramEpidemicRegisterReleaseId').val()
@@ -41,14 +41,18 @@ require(["jquery", "nav.active", "responsive.bootstrap4", "jquery.address", "mes
         function getAjaxUrl() {
             return {
                 data: web_path + '/web/register/epidemic/data/list',
-                obtain_channel_data:web_path + "/users/data/channel",
+                obtain_channel_data: web_path + "/users/data/channel",
                 export_data_url: web_path + '/web/register/epidemic/data/export',
+                del:web_path + '/web/register/epidemic/data/delete',
                 page: '/web/menu/register/epidemic'
             };
         }
 
         // 刷新时选中菜单
         navActive(getAjaxUrl().page);
+
+        // 预编译模板
+        var template = Handlebars.compile($("#operator_button").html());
 
         var tableElement = $('#dataTable');
 
@@ -77,7 +81,29 @@ require(["jquery", "nav.active", "responsive.bootstrap4", "jquery.address", "mes
                 {"data": "institute"},
                 {"data": "channelName"},
                 {"data": "remark"},
-                {"data": "registerDateStr"}
+                {"data": "registerDateStr"},
+                {"data": null}
+            ],
+            columnDefs: [
+                {
+                    targets: 9,
+                    orderable: false,
+                    render: function (a, b, c, d) {
+
+                        var context = {
+                            func: [
+                                {
+                                    "name": "删除",
+                                    "css": "del",
+                                    "type": "danger",
+                                    "id": c.epidemicRegisterDataId
+                                }
+                            ]
+                        };
+
+                        return template(context);
+                    }
+                }
             ],
             "language": {
                 "sProcessing": "处理中...",
@@ -107,6 +133,10 @@ require(["jquery", "nav.active", "responsive.bootstrap4", "jquery.address", "mes
                 "t" +
                 "<'row'<'col-sm-5'i><'col-sm-7'p>>",
             initComplete: function () {
+                tableElement.delegate('.del', "click", function () {
+                    data_del($(this).attr('data-id'));
+                });
+
                 // 初始化搜索框中内容
                 initSearchInput();
             }
@@ -428,4 +458,52 @@ require(["jquery", "nav.active", "responsive.bootstrap4", "jquery.address", "mes
             };
             window.location.href = encodeURI(getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&export_info=" + JSON.stringify(exportFile));
         });
+
+        /*
+       删除
+       */
+        function data_del(epidemicRegisterDataId) {
+            Swal.fire({
+                title: "确定删除登记吗？",
+                text: "登记删除！",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                preConfirm: function () {
+                    sendDelAjax(epidemicRegisterDataId);
+                }
+            });
+        }
+
+        /**
+         * 删除ajax
+         * @param epidemicRegisterDataId
+         */
+        function sendDelAjax(epidemicRegisterDataId) {
+            $.ajax({
+                type: 'POST',
+                url: getAjaxUrl().del,
+                data: {epidemicRegisterDataId: epidemicRegisterDataId},
+                success: function (data) {
+                    Messenger().post({
+                        message: data.msg,
+                        type: data.state ? 'success' : 'error',
+                        showCloseButton: true
+                    });
+
+                    if (data.state) {
+                        myTable.ajax.reload();
+                    }
+                },
+                error: function (XMLHttpRequest) {
+                    Messenger().post({
+                        message: 'Request error : ' + XMLHttpRequest.status + " " + XMLHttpRequest.statusText,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        }
     });

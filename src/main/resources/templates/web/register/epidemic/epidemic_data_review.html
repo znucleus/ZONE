@@ -92,7 +92,8 @@
                             <th data-priority="6">所属单位</th>
                             <th>渠道</th>
                             <th>备注</th>
-                            <th data-priority="3">日期</th>
+                            <th data-priority="4">日期</th>
+                            <th data-priority="3">操作</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -102,6 +103,16 @@
             </div>
         </div>
     </div>
+
+    <!--定义操作列按钮模板-->
+    <script id="operator_button" type="text/x-handlebars-template">
+        <div class="btn-group" role="group">
+            {{#each func}}
+            <button type="button" class="btn btn-{{this.type}} btn-sm {{this.css}}" data-id="{{this.id}}">{{this.name}}
+            </button>
+            {{/each}}
+        </div>
+    </script>
 
     <input type="hidden" th:value="${epidemicRegisterReleaseId}"
            id="paramEpidemicRegisterReleaseId"/>

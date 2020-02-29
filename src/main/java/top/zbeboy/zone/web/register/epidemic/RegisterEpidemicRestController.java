@@ -264,6 +264,7 @@ public class RegisterEpidemicRestController {
         headers.add("channelName");
         headers.add("remark");
         headers.add("registerDateStr");
+        headers.add("operator");
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
         Result<Record> records = epidemicRegisterDataService.findAllByPage(dataTablesUtil);
         List<EpidemicRegisterDataBean> beans = new ArrayList<>();
@@ -275,5 +276,23 @@ public class RegisterEpidemicRestController {
         dataTablesUtil.setiTotalRecords(epidemicRegisterDataService.countAll(dataTablesUtil));
         dataTablesUtil.setiTotalDisplayRecords(epidemicRegisterDataService.countByCondition(dataTablesUtil));
         return new ResponseEntity<>(dataTablesUtil, HttpStatus.OK);
+    }
+
+    /**
+     * 登记删除
+     *
+     * @param epidemicRegisterDataId 发布id
+     * @return true or false
+     */
+    @PostMapping("/web/register/epidemic/data/delete")
+    public ResponseEntity<Map<String, Object>> dataDelete(@RequestParam("epidemicRegisterDataId") String epidemicRegisterDataId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (registerConditionCommon.epidemicDelete(epidemicRegisterDataId)) {
+            epidemicRegisterDataService.deleteById(epidemicRegisterDataId);
+            ajaxUtil.success().msg("删除成功");
+        } else {
+            ajaxUtil.fail().msg("您无权限操作");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

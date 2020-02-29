@@ -62,4 +62,11 @@ public interface EpidemicRegisterDataService {
      * @param epidemicRegisterData 数据
      */
     void update(EpidemicRegisterData epidemicRegisterData);
+
+    /**
+     * 通过主键删除
+     *
+     * @param id 主键
+     */
+    void deleteById(String id);
 }

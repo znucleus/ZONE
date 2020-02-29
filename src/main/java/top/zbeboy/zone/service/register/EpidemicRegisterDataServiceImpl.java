@@ -94,6 +94,11 @@ public class EpidemicRegisterDataServiceImpl implements EpidemicRegisterDataServ
     }
 
     @Override
+    public void deleteById(String id) {
+        epidemicRegisterDataDao.deleteById(id);
+    }
+
+    @Override
     public Condition searchCondition(DataTablesUtil paginationUtil) {
         Condition a = null;
         JSONObject search = paginationUtil.getSearch();
