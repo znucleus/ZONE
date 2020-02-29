@@ -9,8 +9,6 @@ import top.zbeboy.zone.domain.tables.pojos.WeiXinDevice;
 import top.zbeboy.zone.domain.tables.records.WeiXinDeviceRecord;
 import top.zbeboy.zone.service.data.WeiXinDeviceService;
 import top.zbeboy.zone.service.platform.UsersService;
-import top.zbeboy.zone.service.util.DateTimeUtil;
-import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.util.AjaxUtil;
 
 import javax.annotation.Resource;
