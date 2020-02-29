@@ -425,7 +425,7 @@ VALUES ('b5939e89e8794c4e8b2d333a1386fb2a', '实习', 3000, '0', '#', 'internshi
 INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
                          application_code, application_en_name, icon)
-VALUES ('b544de40e0bb414bb1196eec639474f4', '登记', 4000, '0', '#', 'register', 'register', 'fa fa-thermometer-ful');
+VALUES ('b544de40e0bb414bb1196eec639474f4', '登记', 4000, '0', '#', 'register', 'register', 'fa fa-thermometer-full');
 INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
                          application_code, application_en_name, icon)
@@ -522,7 +522,7 @@ VALUES
   ('f9db1dbd63fc4ccd9af1d6dd42335f3d', '疫情登记', 4005, 'b544de40e0bb414bb1196eec639474f4', '/web/menu/register/epidemic',
    'register_epidemic',
    'register_epidemic', '',
-   '/web/register/regulate');
+   '/web/register/epidemic');
 
 INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
