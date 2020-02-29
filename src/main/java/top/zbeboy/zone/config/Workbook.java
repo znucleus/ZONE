@@ -93,6 +93,13 @@ public final class Workbook {
     }
 
     /*
+    渠道类型参数
+     */
+    public enum channel {
+        WEB, API
+    }
+
+    /*
     系统setting目录
     */
     public static final String SETTINGS_PATH = "." + DIRECTORY_SPLIT + "settings" + DIRECTORY_SPLIT;
