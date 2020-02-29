@@ -79,4 +79,17 @@ public class RegisterEpidemicViewController {
         }
         return page;
     }
+
+    /**
+     * 登记
+     *
+     * @param id       发布id
+     * @param modelMap 页面对象
+     * @return 登记页面
+     */
+    @GetMapping("/web/register/epidemic/data/add/{id}")
+    public String dataAdd(@PathVariable("id") String id, ModelMap modelMap) {
+        modelMap.addAttribute("epidemicRegisterReleaseId", id);
+        return "web/register/epidemic/epidemic_data_add::#page-wrapper";
+    }
 }

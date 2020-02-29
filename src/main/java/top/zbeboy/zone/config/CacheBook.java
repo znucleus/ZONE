@@ -42,6 +42,8 @@ public final class CacheBook {
     public static final String MENU = "MENU";
     public static final String USERS_TYPE_BY_NAME = "USERS_TYPE_BY_NAME";
     public static final String USERS_TYPE_BY_ID = "USERS_TYPE_BY_ID";
+    public static final String CHANNEL_BY_NAME = "CHANNEL_BY_NAME";
+    public static final String CHANNEL_BY_ID = "CHANNEL_BY_ID";
     public static final String SYSTEM_CONFIGURE = "SYSTEM_CONFIGURE";
 
     /*

@@ -10,6 +10,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             add: '/web/register/epidemic/release/add',
             edit: '/web/register/epidemic/release/edit',
             del: web_path + '/web/register/epidemic/release/delete',
+            register:'/web/register/epidemic/data/add',
             page: '/web/menu/register/epidemic'
         };
 
@@ -110,6 +111,13 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
          */
         $(tableData).delegate('.edit', "click", function () {
             $.address.value(ajax_url.edit + '/' + $(this).attr('data-id'));
+        });
+
+        /*
+         登记
+        */
+        $(tableData).delegate('.register', "click", function () {
+            $.address.value(ajax_url.register + '/' + $(this).attr('data-id'));
         });
 
         /*
