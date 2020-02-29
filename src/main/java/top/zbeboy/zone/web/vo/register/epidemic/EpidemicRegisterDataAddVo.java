@@ -6,14 +6,15 @@ import javax.validation.constraints.Size;
 public class EpidemicRegisterDataAddVo {
     @NotBlank(message = "发布ID不能为空")
     @Size(max = 64, message = "发布ID不正确")
-    private String    epidemicRegisterReleaseId;
-    private String    location;
+    private String epidemicRegisterReleaseId;
+    private String location;
     @NotBlank(message = "当前位置不能为空")
     @Size(max = 300, message = "当前位置300个字符以内")
-    private String    address;
+    private String address;
     @NotBlank(message = "身体状况不能为空")
-    private String    epidemicStatus;
-    private String    remark;
+    private String epidemicStatus;
+    private String remark;
+    private String epidemicRegisterDataId;
 
     public String getEpidemicRegisterReleaseId() {
         return epidemicRegisterReleaseId;
@@ -53,5 +54,13 @@ public class EpidemicRegisterDataAddVo {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getEpidemicRegisterDataId() {
+        return epidemicRegisterDataId;
+    }
+
+    public void setEpidemicRegisterDataId(String epidemicRegisterDataId) {
+        this.epidemicRegisterDataId = epidemicRegisterDataId;
     }
 }

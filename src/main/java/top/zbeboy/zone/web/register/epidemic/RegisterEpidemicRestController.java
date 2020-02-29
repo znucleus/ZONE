@@ -21,7 +21,6 @@ import top.zbeboy.zone.service.register.EpidemicRegisterDataService;
 import top.zbeboy.zone.service.register.EpidemicRegisterReleaseService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
-import top.zbeboy.zone.web.bean.data.school.SchoolBean;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.bean.register.epidemic.EpidemicRegisterDataBean;
@@ -178,8 +177,7 @@ public class RegisterEpidemicRestController {
     public ResponseEntity<Map<String, Object>> dataSave(@Valid EpidemicRegisterDataAddVo epidemicRegisterDataAddVo, BindingResult bindingResult) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
-            EpidemicRegisterRelease epidemicRegisterRelease = epidemicRegisterReleaseService.findById(epidemicRegisterDataAddVo.getEpidemicRegisterReleaseId());
-            if (Objects.nonNull(epidemicRegisterRelease)) {
+            if (StringUtils.isBlank(epidemicRegisterDataAddVo.getEpidemicRegisterDataId())) {
                 Users users = usersService.getUserFromSession();
                 EpidemicRegisterData epidemicRegisterData = new EpidemicRegisterData();
                 epidemicRegisterData.setEpidemicRegisterDataId(UUIDUtil.getUUID());
@@ -217,10 +215,29 @@ public class RegisterEpidemicRestController {
                 }
 
                 epidemicRegisterDataService.save(epidemicRegisterData);
-
                 ajaxUtil.success().msg("保存成功");
             } else {
-                ajaxUtil.fail().msg("未查询到疫情发布数据");
+                EpidemicRegisterData epidemicRegisterData = epidemicRegisterDataService.findById(epidemicRegisterDataAddVo.getEpidemicRegisterDataId());
+                if (Objects.nonNull(epidemicRegisterData)) {
+                    Users users = usersService.getUserFromSession();
+                    if (StringUtils.equals(users.getUsername(), epidemicRegisterData.getRegisterUsername())) {
+                        epidemicRegisterData.setLocation(epidemicRegisterDataAddVo.getLocation());
+                        epidemicRegisterData.setAddress(epidemicRegisterDataAddVo.getAddress());
+                        epidemicRegisterData.setEpidemicStatus(epidemicRegisterDataAddVo.getEpidemicStatus());
+                        epidemicRegisterData.setRegisterDate(DateTimeUtil.getNowSqlTimestamp());
+                        epidemicRegisterData.setRemark(epidemicRegisterDataAddVo.getRemark());
+
+                        Channel channel = channelService.findByChannelName(Workbook.channel.WEB.name());
+                        epidemicRegisterData.setChannelId(channel.getChannelId());
+
+                        epidemicRegisterDataService.update(epidemicRegisterData);
+                        ajaxUtil.success().msg("更新成功");
+                    } else {
+                        ajaxUtil.fail().msg("非本人，不允许操作");
+                    }
+                } else {
+                    ajaxUtil.fail().msg("未查询到登记数据");
+                }
             }
         } else {
             ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());

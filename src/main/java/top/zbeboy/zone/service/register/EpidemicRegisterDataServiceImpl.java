@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zone.domain.tables.daos.EpidemicRegisterDataDao;
 import top.zbeboy.zone.domain.tables.pojos.EpidemicRegisterData;
+import top.zbeboy.zone.domain.tables.records.EpidemicRegisterDataRecord;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.SQLQueryUtil;
@@ -18,6 +19,7 @@ import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import javax.annotation.Resource;
 import java.sql.Timestamp;
 import java.util.Objects;
+import java.util.Optional;
 
 import static top.zbeboy.zone.domain.Tables.CHANNEL;
 import static top.zbeboy.zone.domain.Tables.EPIDEMIC_REGISTER_DATA;
@@ -34,6 +36,22 @@ public class EpidemicRegisterDataServiceImpl implements EpidemicRegisterDataServ
     @Autowired
     EpidemicRegisterDataServiceImpl(DSLContext dslContext) {
         create = dslContext;
+    }
+
+    @Override
+    public EpidemicRegisterData findById(String id) {
+        return epidemicRegisterDataDao.findById(id);
+    }
+
+    @Override
+    public Optional<EpidemicRegisterDataRecord> findTodayByUsernameAndEpidemicRegisterReleaseId(String username, String epidemicRegisterReleaseId) {
+        Timestamp startTime = DateTimeUtil.defaultParseSqlTimestamp(DateTimeUtil.getLocalDateTime(DateTimeUtil.YEAR_MONTH_DAY_FORMAT) + " 00:00:00");
+        Timestamp endTime = DateTimeUtil.defaultParseSqlTimestamp(DateTimeUtil.getLocalDateTime(DateTimeUtil.YEAR_MONTH_DAY_FORMAT) + " 23:59:59");
+        return create.selectFrom(EPIDEMIC_REGISTER_DATA)
+                .where(EPIDEMIC_REGISTER_DATA.REGISTER_DATE.gt(startTime).and(EPIDEMIC_REGISTER_DATA.REGISTER_DATE.le(endTime))
+                        .and(EPIDEMIC_REGISTER_DATA.REGISTER_USERNAME.eq(username))
+                        .and(EPIDEMIC_REGISTER_DATA.EPIDEMIC_REGISTER_RELEASE_ID.eq(epidemicRegisterReleaseId)))
+                .fetchOptional();
     }
 
     @Override
@@ -68,6 +86,11 @@ public class EpidemicRegisterDataServiceImpl implements EpidemicRegisterDataServ
     @Override
     public void save(EpidemicRegisterData epidemicRegisterData) {
         epidemicRegisterDataDao.insert(epidemicRegisterData);
+    }
+
+    @Override
+    public void update(EpidemicRegisterData epidemicRegisterData) {
+        epidemicRegisterDataDao.update(epidemicRegisterData);
     }
 
     @Override

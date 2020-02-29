@@ -38,11 +38,14 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             epidemicStatus: '',
             location: '',
             address: '',
-            remark:''
+            remark:'',
+            epidemicRegisterDataId:''
         };
 
         var page_param = {
-            paramEpidemicRegisterReleaseId: $('#paramEpidemicRegisterReleaseId').val()
+            paramEpidemicRegisterReleaseId: $('#paramEpidemicRegisterReleaseId').val(),
+            paramEpidemicStatus: $('#paramEpidemicStatus').val(),
+            paramEpidemicRegisterDataId: $('#paramEpidemicRegisterDataId').val(),
         };
 
         /**
@@ -53,6 +56,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             param.epidemicStatus = $(param_id.epidemicStatus).val();
             param.address = _.trim($(param_id.address).val());
             param.remark = $(param_id.remark).val();
+            param.epidemicRegisterDataId = page_param.paramEpidemicRegisterDataId;
 
             //判断是否支持 获取本地位置
             if (navigator.geolocation) {
@@ -71,7 +75,14 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
          * 初始化界面
          */
         function init() {
+            if(page_param.paramEpidemicRegisterDataId !== ''){
+                initEpidemicStatus();
+            }
             initMaxLength();
+        }
+
+        function initEpidemicStatus() {
+            $(param_id.epidemicStatus).val(page_param.paramEpidemicStatus);
         }
 
         /**

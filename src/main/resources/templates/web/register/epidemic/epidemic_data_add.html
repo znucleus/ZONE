@@ -37,13 +37,13 @@
                         <div class="form-group">
                             <label>当前位置</label>
                             <input class="form-control" name="address" id="address"
-                                   placeholder="当前位置" maxlength="300"/>
+                                   placeholder="当前位置" maxlength="300" th:value="${epidemicRegisterData.address}"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>备注</label>
                             <textarea class="form-control" name="remark" id="remark" rows="3" placeholder="备注"
-                                      maxlength="200"></textarea>
+                                      maxlength="200" th:text="${epidemicRegisterData.remark}"></textarea>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group text-center">
@@ -58,6 +58,10 @@
 
     <input type="hidden" th:value="${epidemicRegisterReleaseId}"
            id="paramEpidemicRegisterReleaseId"/>
+    <input type="hidden" th:value="${epidemicRegisterData.epidemicStatus}"
+           id="paramEpidemicStatus"/>
+    <input type="hidden" th:value="${epidemicRegisterData.epidemicRegisterDataId}"
+           id="paramEpidemicRegisterDataId"/>
     <input type="hidden" class="dy_script"
            th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/register/epidemic/epidemic_data_add.js')}"/>
 </div>

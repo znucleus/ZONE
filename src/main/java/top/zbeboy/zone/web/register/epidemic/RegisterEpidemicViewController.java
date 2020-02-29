@@ -4,13 +4,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import top.zbeboy.zone.domain.tables.pojos.EpidemicRegisterData;
 import top.zbeboy.zone.domain.tables.pojos.EpidemicRegisterRelease;
+import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zone.domain.tables.records.EpidemicRegisterDataRecord;
+import top.zbeboy.zone.service.platform.UsersService;
+import top.zbeboy.zone.service.register.EpidemicRegisterDataService;
 import top.zbeboy.zone.service.register.EpidemicRegisterReleaseService;
 import top.zbeboy.zone.web.register.common.RegisterConditionCommon;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 
 import javax.annotation.Resource;
 import java.util.Objects;
+import java.util.Optional;
 
 @Controller
 public class RegisterEpidemicViewController {
@@ -19,7 +25,13 @@ public class RegisterEpidemicViewController {
     private EpidemicRegisterReleaseService epidemicRegisterReleaseService;
 
     @Resource
+    private EpidemicRegisterDataService epidemicRegisterDataService;
+
+    @Resource
     private RegisterConditionCommon registerConditionCommon;
+
+    @Resource
+    private UsersService usersService;
 
     /**
      * 疫情登记
@@ -89,6 +101,14 @@ public class RegisterEpidemicViewController {
      */
     @GetMapping("/web/register/epidemic/data/add/{id}")
     public String dataAdd(@PathVariable("id") String id, ModelMap modelMap) {
+        Users users = usersService.getUserFromSession();
+        Optional<EpidemicRegisterDataRecord> registerDataRecord =
+                epidemicRegisterDataService.findTodayByUsernameAndEpidemicRegisterReleaseId(users.getUsername(), id);
+        EpidemicRegisterData epidemicRegisterData = new EpidemicRegisterData();
+        if (registerDataRecord.isPresent()) {
+            epidemicRegisterData = registerDataRecord.get().into(EpidemicRegisterData.class);
+        }
+        modelMap.addAttribute("epidemicRegisterData", epidemicRegisterData);
         modelMap.addAttribute("epidemicRegisterReleaseId", id);
         return "web/register/epidemic/epidemic_data_add::#page-wrapper";
     }
