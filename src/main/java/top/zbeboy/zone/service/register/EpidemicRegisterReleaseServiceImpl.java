@@ -33,6 +33,11 @@ public class EpidemicRegisterReleaseServiceImpl implements EpidemicRegisterRelea
     }
 
     @Override
+    public EpidemicRegisterRelease findById(String id) {
+        return epidemicRegisterReleaseDao.findById(id);
+    }
+
+    @Override
     public Result<Record> findAllByPage(SimplePaginationUtil paginationUtil) {
         return queryAllByPage(create, EPIDEMIC_REGISTER_RELEASE, paginationUtil, false);
     }
@@ -46,6 +51,16 @@ public class EpidemicRegisterReleaseServiceImpl implements EpidemicRegisterRelea
     @Override
     public void save(EpidemicRegisterRelease epidemicRegisterRelease) {
         epidemicRegisterReleaseDao.insert(epidemicRegisterRelease);
+    }
+
+    @Override
+    public void update(EpidemicRegisterRelease epidemicRegisterRelease) {
+        epidemicRegisterReleaseDao.update(epidemicRegisterRelease);
+    }
+
+    @Override
+    public void deleteById(String id) {
+        epidemicRegisterReleaseDao.deleteById(id);
     }
 
     @Override

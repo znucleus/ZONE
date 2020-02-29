@@ -8,6 +8,14 @@ import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 public interface EpidemicRegisterReleaseService {
 
     /**
+     * 通过主键查询
+     *
+     * @param id 主键
+     * @return 数据
+     */
+    EpidemicRegisterRelease findById(String id);
+
+    /**
      * 分页查询
      *
      * @param paginationUtil 数据
@@ -28,4 +36,18 @@ public interface EpidemicRegisterReleaseService {
      * @param epidemicRegisterRelease 数据
      */
     void save(EpidemicRegisterRelease epidemicRegisterRelease);
+
+    /**
+     * 更新
+     *
+     * @param epidemicRegisterRelease 数据
+     */
+    void update(EpidemicRegisterRelease epidemicRegisterRelease);
+
+    /**
+     * 根据主键删除
+     *
+     * @param id 主键
+     */
+    void deleteById(String id);
 }

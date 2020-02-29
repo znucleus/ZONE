@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.domain.tables.pojos.EpidemicRegisterRelease;
 import top.zbeboy.zone.domain.tables.pojos.Users;
@@ -20,6 +21,7 @@ import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zone.web.vo.register.epidemic.EpidemicRegisterReleaseAddVo;
+import top.zbeboy.zone.web.vo.register.epidemic.EpidemicRegisterReleaseEditVo;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -89,6 +91,53 @@ public class RegisterEpidemicRestController {
             }
         } else {
             ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 更新
+     *
+     * @param epidemicRegisterReleaseEditVo 数据
+     * @param bindingResult                 检验
+     * @return true or false
+     */
+    @PostMapping("/web/register/epidemic/release/update")
+    public ResponseEntity<Map<String, Object>> update(@Valid EpidemicRegisterReleaseEditVo epidemicRegisterReleaseEditVo, BindingResult bindingResult) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (!bindingResult.hasErrors()) {
+            if (registerConditionCommon.epidemicOperator()) {
+                EpidemicRegisterRelease epidemicRegisterRelease = epidemicRegisterReleaseService.findById(epidemicRegisterReleaseEditVo.getEpidemicRegisterReleaseId());
+                if (Objects.nonNull(epidemicRegisterRelease)) {
+                    epidemicRegisterRelease.setTitle(epidemicRegisterReleaseEditVo.getTitle());
+                    epidemicRegisterReleaseService.update(epidemicRegisterRelease);
+                    ajaxUtil.success().msg("更新成功");
+                } else {
+                    ajaxUtil.fail().msg("未查询到疫情发布数据");
+                }
+            } else {
+                ajaxUtil.fail().msg("您无权限操作");
+            }
+        } else {
+            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 删除
+     *
+     * @param epidemicRegisterReleaseId id
+     * @return true or false
+     */
+    @PostMapping("/web/register/epidemic/release/delete")
+    public ResponseEntity<Map<String, Object>> delete(@RequestParam("epidemicRegisterReleaseId") String epidemicRegisterReleaseId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (registerConditionCommon.epidemicOperator()) {
+            epidemicRegisterReleaseService.deleteById(epidemicRegisterReleaseId);
+            ajaxUtil.success().msg("删除成功");
+        } else {
+            ajaxUtil.fail().msg("您无权限操作");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
