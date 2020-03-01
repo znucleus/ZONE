@@ -100,7 +100,7 @@ public class AttendDataApiController {
                                             // 机型处理
                                             Optional<WeiXinDeviceRecord> weiXinDeviceRecord = weiXinDeviceService.findByUsername(users.getUsername());
                                             if (weiXinDeviceRecord.isPresent()) {
-                                                WeiXinDevice weiXinDevice = record.get().into(WeiXinDevice.class);
+                                                WeiXinDevice weiXinDevice = weiXinDeviceRecord.get().into(WeiXinDevice.class);
                                                 if (!StringUtils.equals(weiXinDevice.getModel(), attendDataAddVo.getModel()) ||
                                                         Objects.isNull(weiXinDevice.getScreenWidth()) ||
                                                         Objects.isNull(attendDataAddVo.getScreenWidth()) ||
