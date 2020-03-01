@@ -96,6 +96,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                         } else {
                             v = "<span class='text-danger'>" + v + "</span>";
                         }
+                        return v;
                     }
                 },
                 {
