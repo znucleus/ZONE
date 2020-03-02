@@ -86,6 +86,20 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
             ],
             columnDefs: [
                 {
+                    targets: 3,
+                    render: function (a, b, c, d) {
+                        var v = c.epidemicStatus;
+                        if (v === '无下列情况，身体健康') {
+                            v = "<span class='text-info'>" + v + "</span>";
+                        } else if (v === '近15日内到过湖北' || v === '近15日内接触过新型肺炎感染者') {
+                            v = "<span class='text-warning'>" + v + "</span>";
+                        } else {
+                            v = "<span class='text-danger'>" + v + "</span>";
+                        }
+                        return v;
+                    }
+                },
+                {
                     targets: 9,
                     orderable: false,
                     render: function (a, b, c, d) {
