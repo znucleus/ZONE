@@ -104,7 +104,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                                     "id": c.systemNotifyId
                                 },
                                 {
-                                    "name": "注销",
+                                    "name": "删除",
                                     "css": "del",
                                     "type": "danger",
                                     "id": c.systemNotifyId
