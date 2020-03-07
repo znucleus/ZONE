@@ -17,6 +17,7 @@ import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
 import javax.annotation.Resource;
 import java.util.Objects;
+import java.util.Optional;
 
 import static org.jooq.impl.DSL.now;
 import static top.zbeboy.zone.domain.Tables.SYSTEM_NOTIFY;
@@ -34,6 +35,21 @@ public class SystemNotifyServiceImpl implements SystemNotifyService, PaginationP
     @Autowired
     SystemNotifyServiceImpl(DSLContext dslContext) {
         create = dslContext;
+    }
+
+    @Override
+    public SystemNotify findById(String id) {
+        return systemNotifyDao.findById(id);
+    }
+
+    @Override
+    public Optional<Record> findByIdRelation(String id) {
+        return create.select()
+                .from(SYSTEM_NOTIFY)
+                .leftJoin(USERS)
+                .on(SYSTEM_NOTIFY.SEND_USER.eq(USERS.USERNAME))
+                .where(SYSTEM_NOTIFY.SYSTEM_NOTIFY_ID.eq(id))
+                .fetchOptional();
     }
 
     @Override

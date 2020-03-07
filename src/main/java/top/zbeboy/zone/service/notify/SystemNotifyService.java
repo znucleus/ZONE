@@ -6,7 +6,25 @@ import top.zbeboy.zone.domain.tables.pojos.SystemNotify;
 import top.zbeboy.zone.domain.tables.records.SystemNotifyRecord;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
+import java.util.Optional;
+
 public interface SystemNotifyService {
+
+    /**
+     * 通过主键查询
+     *
+     * @param id 主键
+     * @return 数据
+     */
+    SystemNotify findById(String id);
+
+    /**
+     * 通过主键关联查询
+     *
+     * @param id 主键
+     * @return 数据
+     */
+    Optional<Record> findByIdRelation(String id);
 
     /**
      * 查询有效数据

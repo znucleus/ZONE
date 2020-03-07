@@ -1,4 +1,4 @@
-//# sourceURL=system_notify_add.js
+//# sourceURL=system_notify_edit.js
 require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", "jquery.address", "bootstrap-maxlength", "flatpickr-zh"],
     function ($, _, tools, Swal, navActive) {
 
@@ -6,7 +6,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
          ajax url.
          */
         var ajax_url = {
-            save: web_path + '/web/system/notify/save',
+            update: web_path + '/web/system/notify/update',
             page: '/web/menu/system/notify'
         };
 
@@ -36,6 +36,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
          参数
          */
         var param = {
+            systemNotifyId: '',
             notifyTitle: '',
             notifyContent: '',
             notifyType: '',
@@ -43,11 +44,16 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             expireDate: ''
         };
 
+        var page_param = {
+            paramSystemNotifyId: $('#paramSystemNotifyId').val(),
+            paramNotifyType: $('#paramNotifyType').val()
+        };
 
         /**
          * 初始化参数
          */
         function initParam() {
+            param.systemNotifyId = page_param.paramSystemNotifyId;
             param.notifyTitle = _.trim($(param_id.notifyTitle).val());
             param.notifyContent = _.trim($(param_id.notifyContent).val());
             param.notifyType = $(param_id.notifyType).val();
@@ -58,7 +64,12 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
         init();
 
         function init() {
+            initNotifyType();
             initMaxLength();
+        }
+
+        function initNotifyType() {
+            $(param_id.notifyType).val(page_param.paramNotifyType);
         }
 
         /**
@@ -168,7 +179,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             tools.buttonLoading(button_id.save.id, button_id.save.tip);
             $.ajax({
                 type: 'POST',
-                url: ajax_url.save,
+                url: ajax_url.update,
                 data: param,
                 success: function (data) {
                     tools.buttonEndLoading(button_id.save.id, button_id.save.text);

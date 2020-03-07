@@ -1,5 +1,6 @@
 package top.zbeboy.zone.web.notify;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.springframework.http.HttpStatus;
@@ -17,8 +18,10 @@ import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.notify.SystemNotifyBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
+import top.zbeboy.zone.web.util.SmallPropsUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.vo.system.notify.SystemNotifyAddVo;
+import top.zbeboy.zone.web.vo.system.notify.SystemNotifyEditVo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -117,6 +120,55 @@ public class SystemNotifyRestController {
             ajaxUtil.success().msg("保存成功");
         } else {
             ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 更新
+     *
+     * @param systemNotifyEditVo 数据
+     * @param bindingResult      检验
+     * @return true 保存成功 false 保存失败
+     */
+    @PostMapping("/web/system/notify/update")
+    public ResponseEntity<Map<String, Object>> update(@Valid SystemNotifyEditVo systemNotifyEditVo, BindingResult bindingResult) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (!bindingResult.hasErrors()) {
+            SystemNotify systemNotify = systemNotifyService.findById(systemNotifyEditVo.getSystemNotifyId());
+            if (Objects.nonNull(systemNotify)) {
+                systemNotify.setNotifyTitle(systemNotifyEditVo.getNotifyTitle());
+                systemNotify.setNotifyContent(systemNotifyEditVo.getNotifyContent());
+                systemNotify.setValidDate(DateTimeUtil.defaultParseSqlTimestamp(systemNotifyEditVo.getValidDate()));
+                systemNotify.setExpireDate(DateTimeUtil.defaultParseSqlTimestamp(systemNotifyEditVo.getExpireDate()));
+                systemNotify.setNotifyType(systemNotifyEditVo.getNotifyType());
+
+                systemNotifyService.update(systemNotify);
+                ajaxUtil.success().msg("更新成功");
+            } else {
+                ajaxUtil.fail().msg("未查询到通知数据");
+            }
+        } else {
+            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 批量删除
+     *
+     * @param systemNotifyIds ids
+     * @return true
+     */
+    @PostMapping("/web/system/notify/delete")
+    public ResponseEntity<Map<String, Object>> delete(String systemNotifyIds) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (StringUtils.isNotBlank(systemNotifyIds)) {
+            List<String> ids = SmallPropsUtil.StringIdsToStringList(systemNotifyIds);
+            ids.forEach(id -> systemNotifyService.deleteById(id));
+            ajaxUtil.success().msg("删除成功");
+        } else {
+            ajaxUtil.fail().msg("请选择通知");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
