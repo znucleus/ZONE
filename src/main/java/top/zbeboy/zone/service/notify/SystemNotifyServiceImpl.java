@@ -8,11 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import top.zbeboy.zone.domain.tables.daos.SystemNotifyDao;
+import top.zbeboy.zone.domain.tables.pojos.SystemNotify;
 import top.zbeboy.zone.domain.tables.records.SystemNotifyRecord;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zone.service.util.SQLQueryUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
+import javax.annotation.Resource;
 import java.util.Objects;
 
 import static org.jooq.impl.DSL.now;
@@ -24,6 +27,9 @@ import static top.zbeboy.zone.domain.Tables.USERS;
 public class SystemNotifyServiceImpl implements SystemNotifyService, PaginationPlugin<DataTablesUtil> {
 
     private final DSLContext create;
+
+    @Resource
+    private SystemNotifyDao systemNotifyDao;
 
     @Autowired
     SystemNotifyServiceImpl(DSLContext dslContext) {
@@ -64,6 +70,22 @@ public class SystemNotifyServiceImpl implements SystemNotifyService, PaginationP
                 .leftJoin(USERS)
                 .on(SYSTEM_NOTIFY.SEND_USER.eq(USERS.USERNAME));
         return countAll(selectOnConditionStep, dataTablesUtil, false);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void save(SystemNotify systemNotify) {
+        systemNotifyDao.insert(systemNotify);
+    }
+
+    @Override
+    public void update(SystemNotify systemNotify) {
+        systemNotifyDao.update(systemNotify);
+    }
+
+    @Override
+    public void deleteById(String id) {
+        systemNotifyDao.deleteById(id);
     }
 
     @Override

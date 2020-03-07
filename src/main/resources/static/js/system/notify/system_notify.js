@@ -52,7 +52,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
             searching: false,
             "processing": true, // 打开数据加载时的等待效果
             "serverSide": true,// 打开后台分页
-            "aaSorting": [[8, 'asc']],// 排序
+            "aaSorting": [[8, 'desc']],// 排序
             "ajax": {
                 "url": getAjaxUrl().data,
                 "dataSrc": "data",

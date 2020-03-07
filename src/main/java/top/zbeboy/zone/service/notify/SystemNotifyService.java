@@ -2,6 +2,7 @@ package top.zbeboy.zone.service.notify;
 
 import org.jooq.Record;
 import org.jooq.Result;
+import top.zbeboy.zone.domain.tables.pojos.SystemNotify;
 import top.zbeboy.zone.domain.tables.records.SystemNotifyRecord;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
@@ -35,4 +36,25 @@ public interface SystemNotifyService {
      * @return 条件查询总数
      */
     int countByCondition(DataTablesUtil dataTablesUtil);
+
+    /**
+     * 保存
+     *
+     * @param systemNotify 数据
+     */
+    void save(SystemNotify systemNotify);
+
+    /**
+     * 更新
+     *
+     * @param systemNotify 数据
+     */
+    void update(SystemNotify systemNotify);
+
+    /**
+     * 通过主键删除
+     *
+     * @param id 主键
+     */
+    void deleteById(String id);
 }

@@ -10,4 +10,14 @@ public class SystemNotifyViewController {
     public String index() {
         return "web/system/notify/system_notify::#page-wrapper";
     }
+
+    /**
+     * 通知添加
+     *
+     * @return 添加页面
+     */
+    @GetMapping("/web/system/notify/add")
+    public String add() {
+        return "web/system/notify/system_notify_add::#page-wrapper";
+    }
 }
