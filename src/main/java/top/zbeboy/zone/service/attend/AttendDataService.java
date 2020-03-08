@@ -33,4 +33,12 @@ public interface AttendDataService {
      * @param attendData 数据
      */
     void save(AttendData attendData);
+
+    /**
+     * 通过名单ID及子表ID删除
+     *
+     * @param attendUsersId      名单ID
+     * @param attendReleaseSubId 子表ID
+     */
+    void deleteByAttendUsersIdAndAttendReleaseSubId(String attendUsersId, int attendReleaseSubId);
 }
