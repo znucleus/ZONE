@@ -69,6 +69,7 @@ public class InternshipInfoServiceImpl implements InternshipInfoService, Paginat
                 .fetchOptional();
     }
 
+    @CacheEvict(cacheNames = CacheBook.INTERNSHIP_INFO, key = "#internshipApplyAddVo.internshipReleaseId + '_' + #internshipApplyAddVo.studentId")
     @Override
     public void saveWithTransaction(InternshipApplyAddVo internshipApplyAddVo) {
         create.transaction(configuration -> {

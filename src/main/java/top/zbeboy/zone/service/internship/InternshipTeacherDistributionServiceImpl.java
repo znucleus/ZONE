@@ -125,12 +125,14 @@ public class InternshipTeacherDistributionServiceImpl implements InternshipTeach
         return countAll(selectOnConditionStep, dataTablesUtil, false);
     }
 
+    @CacheEvict(cacheNames = CacheBook.INTERNSHIP_TEACHER_DISTRIBUTION, key = "#internshipTeacherDistribution.internshipReleaseId + '_' + #internshipTeacherDistribution.studentId")
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public void save(InternshipTeacherDistribution internshipTeacherDistribution) {
         internshipTeacherDistributionDao.insert(internshipTeacherDistribution);
     }
 
+    @CacheEvict(cacheNames = CacheBook.INTERNSHIP_TEACHER_DISTRIBUTION, allEntries = true)
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public void batchSave(List<InternshipTeacherDistribution> internshipTeacherDistribution) {
