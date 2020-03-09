@@ -94,7 +94,7 @@ public class InternshipApplyViewController {
                 modelMap.addAttribute("student", studentBean);
 
                 Organize organize = organizeService.findById(studentBean.getOrganizeId());
-                if (Objects.nonNull(organize)) {
+                if (Objects.nonNull(organize) && Objects.nonNull(organize.getStaffId())) {
                     Optional<Record> staffRecord = staffService.findByIdRelation(organize.getStaffId());
                     if (staffRecord.isPresent()) {
                         StaffBean staffBean = staffRecord.get().into(StaffBean.class);
