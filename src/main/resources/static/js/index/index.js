@@ -64,6 +64,15 @@ require(["jquery", "bootstrap", "wow", "vegas"], function ($) {
         placement: 'top'
     });
 
+    // weixin small social
+    $('.fa-scribd').popover({
+        trigger: 'focus',
+        html: true,
+        animation: true,
+        content: '<img src="' + web_path + '/images/social-weixins.jpg" style="height: 150px;width: 150px;" alt="微信小程序" />',
+        placement: 'top'
+    });
+
     // pic
     body.vegas({
         slides: [

@@ -378,6 +378,15 @@ create table oauth_approvals (
     lastModifiedAt DATETIME
 );
 
+create table google_oauth(
+  username VARCHAR(64) NOT NULL,
+  google_oauth_key VARCHAR(64) NOT NULL ,
+  create_date TIMESTAMP NOT NULL,
+  last_modifier TIMESTAMP,
+  FOREIGN KEY (username) REFERENCES users (username) ON UPDATE CASCADE ON DELETE CASCADE,
+  PRIMARY KEY (username , google_oauth_key)
+);
+
 INSERT INTO files(file_id, file_size, content_type, original_file_name, new_name, relative_path, ext) VALUES (
 '1000',4213,'image/jpg','avatar','avatar','images/avatar.jpg','jpg'
 );
