@@ -82,8 +82,8 @@ require(["jquery", "nav.active", "responsive.bootstrap4", "jquery.address", "mes
                 "sInfoThousands": ",",
                 "oPaginate": {
                     "sFirst": "首页",
-                    "sPrevious": "上页",
-                    "sNext": "下页",
+                    "sPrevious": "<",
+                    "sNext": ">",
                     "sLast": "末页"
                 },
                 "oAria": {
