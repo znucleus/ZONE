@@ -73,6 +73,7 @@ public class AttendUsersApiController {
                 Result<Record> records = attendUsersService.findHasAttendedStudent(attendReleaseSub.getAttendReleaseId(), attendReleaseSubId);
                 if (records.isNotEmpty()) {
                     attendUsers = records.into(AttendUsersBean.class);
+                    attendUsers.forEach(bean -> bean.setAttendDateStr(Objects.nonNull(bean.getAttendDate()) ? DateTimeUtil.defaultFormatSqlTimestamp(bean.getAttendDate()) : ""));
                 }
             } else if (type == 2) {
                 // 未签到数据
@@ -82,9 +83,10 @@ public class AttendUsersApiController {
                 }
             } else if (type == 3) {
                 // 统计中数据
-                Result<Record12<String, String, Timestamp, String, Integer, String, String, String, String, Byte, Timestamp, String>>  records = attendUsersService.findByAttendReleaseIdAndAttendReleaseSubId(attendReleaseSub.getAttendReleaseId(), attendReleaseSubId);
+                Result<Record12<String, String, Timestamp, String, Integer, String, String, String, String, Byte, Timestamp, String>> records = attendUsersService.findByAttendReleaseIdAndAttendReleaseSubId(attendReleaseSub.getAttendReleaseId(), attendReleaseSubId);
                 if (records.isNotEmpty()) {
                     attendUsers = records.into(AttendUsersBean.class);
+                    attendUsers.forEach(bean -> bean.setAttendDateStr(Objects.nonNull(bean.getAttendDate()) ? DateTimeUtil.defaultFormatSqlTimestamp(bean.getAttendDate()) : ""));
                 }
             } else {
                 Result<Record> records = attendUsersService.findByAttendReleaseIdRelation(attendReleaseSub.getAttendReleaseId());
