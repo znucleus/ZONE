@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
@@ -17,6 +18,7 @@ import top.zbeboy.zone.service.attend.AttendReleaseSubService;
 import top.zbeboy.zone.service.attend.AttendUsersService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.data.WeiXinDeviceService;
+import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
@@ -55,6 +57,9 @@ public class AttendDataApiController {
 
     @Resource
     private StudentService studentService;
+
+    @Resource
+    private RoleService roleService;
 
     /**
      * 保存
@@ -107,7 +112,7 @@ public class AttendDataApiController {
                                                         Math.abs(weiXinDevice.getScreenWidth() - attendDataAddVo.getScreenWidth()) > 30 ||
                                                         Objects.isNull(weiXinDevice.getScreenHeight()) ||
                                                         Objects.isNull(attendDataAddVo.getScreenHeight()) ||
-                                                        Math.abs(weiXinDevice.getScreenHeight() - attendDataAddVo.getScreenHeight()) > 30){
+                                                        Math.abs(weiXinDevice.getScreenHeight() - attendDataAddVo.getScreenHeight()) > 30) {
                                                     attendData.setDeviceSame(BooleanUtil.toByte(false));
                                                 } else {
                                                     attendData.setDeviceSame(BooleanUtil.toByte(true));
@@ -174,6 +179,34 @@ public class AttendDataApiController {
             }
         } else {
             ajaxUtil.fail().msg("获取用户信息失败");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 删除签到记录
+     *
+     * @param attendReleaseSubId 子表ID
+     * @param attendUsersId      名单ID
+     * @param principal          当前用户信息
+     * @return true or false
+     */
+    @PostMapping("/api/attend/data/delete")
+    public ResponseEntity<Map<String, Object>> delete(@RequestParam("attendReleaseSubId") int attendReleaseSubId,
+                                                      @RequestParam("attendUsersId") String attendUsersId, Principal principal) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        AttendReleaseSub attendReleaseSub = attendReleaseSubService.findById(attendReleaseSubId);
+        if (Objects.nonNull(attendReleaseSub)) {
+            Users users = usersService.getUserFromOauth(principal);
+            if (roleService.isOauthUserInRole(Workbook.authorities.ROLE_SYSTEM.name(), principal) ||
+                    (Objects.nonNull(users) && StringUtils.equals(users.getUsername(), attendReleaseSub.getUsername()))) {
+                attendDataService.deleteByAttendUsersIdAndAttendReleaseSubId(attendUsersId, attendReleaseSubId);
+                ajaxUtil.success().msg("删除成功");
+            } else {
+                ajaxUtil.fail().msg("您无权限操作");
+            }
+        } else {
+            ajaxUtil.fail().msg("根据签到子表ID未查询到发布信息");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }

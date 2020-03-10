@@ -55,4 +55,11 @@ public class AttendDataServiceImpl implements AttendDataService {
     public void save(AttendData attendData) {
         attendDataDao.insert(attendData);
     }
+
+    @Override
+    public void deleteByAttendUsersIdAndAttendReleaseSubId(String attendUsersId, int attendReleaseSubId) {
+        create.deleteFrom(ATTEND_DATA).where(ATTEND_DATA.ATTEND_RELEASE_SUB_ID.eq(attendReleaseSubId)
+                .and(ATTEND_DATA.ATTEND_USERS_ID.eq(attendUsersId)))
+                .execute();
+    }
 }
