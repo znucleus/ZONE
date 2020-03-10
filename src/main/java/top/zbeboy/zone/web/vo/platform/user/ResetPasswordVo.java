@@ -10,7 +10,6 @@ import javax.validation.constraints.Size;
 public class ResetPasswordVo {
     @NotBlank(message = "账号不能为空")
     @Size(max = 64, message = "账号64位字符")
-    @Pattern(regexp = Workbook.USERNAME_REGEX, message = "账号不正确")
     private String username;
     @NotBlank(message = "密码不能为空")
     @Size(max = 20, message = "密码20位字符")

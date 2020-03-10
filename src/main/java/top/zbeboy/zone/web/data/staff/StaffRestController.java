@@ -548,19 +548,12 @@ public class StaffRestController {
     @PostMapping("/web/data/staff/update/password")
     public ResponseEntity<Map<String, Object>> updatePassword(@RequestParam("username") String username) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        boolean canOperator = true;
-        if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) &&
-                !roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
-            List<String> ids = new ArrayList<>();
-            ids.add(username);
-            if (checkRoleApply(ids)) {
-                String password = RandomUtil.generatePassword();
-                usersService.updatePassword(username, BCryptUtil.bCryptPassword(password));
-                ajaxUtil.success().msg("更改用户密码成功，新密码为：" + password + "，请牢记或及时更改！");
-            } else {
-                ajaxUtil.fail().msg("更改用户密码失败");
-            }
-
+        List<String> ids = new ArrayList<>();
+        ids.add(username);
+        if (checkRoleApply(ids)) {
+            String password = RandomUtil.generatePassword();
+            usersService.updatePassword(username, BCryptUtil.bCryptPassword(password));
+            ajaxUtil.success().msg("更改用户密码成功，新密码为：" + password + "，请牢记或及时更改！");
         } else {
             ajaxUtil.fail().msg("更改用户密码失败");
         }
