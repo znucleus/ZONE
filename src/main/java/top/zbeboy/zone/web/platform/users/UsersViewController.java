@@ -10,8 +10,10 @@ import top.zbeboy.zone.domain.tables.pojos.Files;
 import top.zbeboy.zone.domain.tables.pojos.Role;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
+import top.zbeboy.zone.domain.tables.records.GoogleOauthRecord;
 import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
+import top.zbeboy.zone.service.platform.GoogleOauthService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
@@ -46,6 +48,9 @@ public class UsersViewController {
 
     @Resource
     private RoleService roleService;
+
+    @Resource
+    private GoogleOauthService googleOauthService;
 
     /**
      * 用户设置页面
@@ -142,6 +147,14 @@ public class UsersViewController {
         modelMap.addAttribute("email", users.getEmail());
         modelMap.addAttribute("mobile", users.getMobile());
         modelMap.addAttribute("idCard", users.getIdCard());
+
+        Optional<GoogleOauthRecord> googleOauthRecord = googleOauthService.findByUsername(users.getUsername());
+        if(googleOauthRecord.isPresent()){
+            modelMap.addAttribute("isOpenGoogleOauth",1);
+        } else {
+            modelMap.addAttribute("isOpenGoogleOauth",0);
+        }
+
         return "web/platform/users/users_setting::#page-wrapper";
     }
 

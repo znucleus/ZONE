@@ -1,9 +1,11 @@
 //# sourceURL=users_setting.js
 require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "bootstrap",
-        "csrf", "select2-zh-CN", "jquery.entropizer"],
+        "csrf", "select2-zh-CN", "jquery.entropizer", "jquery-toggles"],
     function ($, _, tools, Swal, moment) {
 
         moment.locale('zh-cn');
+
+        $('[data-toggle="tooltip"]').tooltip();
 
         var ajax_url = {
             users_update: web_path + '/users/update',
@@ -102,6 +104,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
         function init() {
             initSystemConfigure();
             initPassword();
+            initGoogleOauthSwitch();
         }
 
         function initSystemConfigure() {
@@ -123,6 +126,29 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
                 }
             });
         }
+
+        function initGoogleOauthSwitch() {
+            var googleOauthSwitch = $('#googleOauth').text();
+            if(googleOauthSwitch === '未开启'){
+                $('.toggle').toggles({
+                    on: false,
+                    height: 26
+                });
+            } else {
+                $('.toggle').toggles({
+                    on: true,
+                    height: 26
+                });
+            }
+        }
+
+        $('.toggle').on('toggle', function(e, active) {
+            if (active) {
+                console.log('Toggle is now ON!');
+            } else {
+                console.log('Toggle is now OFF!');
+            }
+        });
 
         function initParam() {
             param.username = _.trim($(param_id.username).val());
