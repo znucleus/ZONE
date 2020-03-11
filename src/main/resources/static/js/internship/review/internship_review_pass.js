@@ -58,9 +58,9 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
         web storage key.
         */
         var webStorageKey = {
-            REAL_NAME: 'INTERNSHIP_REVIEW_AUDIT_REAL_NAME_SEARCH_' + page_param.paramInternshipReleaseId,
-            STUDENT_NUMBER: 'INTERNSHIP_REVIEW_AUDIT_STUDENT_NUMBER_SEARCH_' + page_param.paramInternshipReleaseId,
-            ORGANIZE_ID: 'INTERNSHIP_REVIEW_AUDIT_ORGANIZE_ID_SEARCH_' + page_param.paramInternshipReleaseId
+            REAL_NAME: 'INTERNSHIP_REVIEW_PASS_REAL_NAME_SEARCH_' + page_param.paramInternshipReleaseId,
+            STUDENT_NUMBER: 'INTERNSHIP_REVIEW_PASS_STUDENT_NUMBER_SEARCH_' + page_param.paramInternshipReleaseId,
+            ORGANIZE_ID: 'INTERNSHIP_REVIEW_PASS_ORGANIZE_ID_SEARCH_' + page_param.paramInternshipReleaseId
         };
 
         var tableData = '#tableData';
