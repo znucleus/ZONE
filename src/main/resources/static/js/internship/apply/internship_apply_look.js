@@ -1,4 +1,4 @@
-//# sourceURL=internship_apply_edit.js
+//# sourceURL=internship_apply_look.js
 require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active", "messenger", "jquery.address", "select2-zh-CN"],
     function ($, _, tools, Handlebars, Swal, navActive) {
         /*

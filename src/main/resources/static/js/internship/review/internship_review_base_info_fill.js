@@ -82,7 +82,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
             if (typeof(Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.REAL_NAME, $(param_id.realName).val());
                 sessionStorage.setItem(webStorageKey.STUDENT_NUMBER, $(param_id.studentNumber).val());
-                sessionStorage.setItem(webStorageKey.ORGANIZE_ID, $(param_id.organize).val());
+                sessionStorage.setItem(webStorageKey.ORGANIZE_ID, $(param_id.organize).val() != null ? $(param_id.organize).val() : '');
             }
         }
 

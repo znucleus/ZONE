@@ -251,7 +251,7 @@ require(["jquery", "handlebars", "nav.active", "responsive.bootstrap4", "jquery.
             if (typeof(Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.REAL_NAME, param.realName);
                 sessionStorage.setItem(webStorageKey.STUDENT_NUMBER, param.studentNumber);
-                sessionStorage.setItem(webStorageKey.ORGANIZE_ID, param.organizeId);
+                sessionStorage.setItem(webStorageKey.ORGANIZE_ID, param.organizeId != null ? param.organizeId : '');
                 sessionStorage.setItem(webStorageKey.INTERNSHIP_APPLY_STATE, param.internshipApplyState);
             }
         }
