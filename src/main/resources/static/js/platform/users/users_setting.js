@@ -130,19 +130,19 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
         function initGoogleOauthSwitch() {
             var googleOauthSwitch = $('#googleOauth').text();
             if(googleOauthSwitch === '未开启'){
-                $('.toggle').toggles({
+                $('#googleOauthSwitch').toggles({
                     on: false,
                     height: 26
                 });
             } else {
-                $('.toggle').toggles({
+                $('#googleOauthSwitch').toggles({
                     on: true,
                     height: 26
                 });
             }
         }
 
-        $('.toggle').on('toggle', function(e, active) {
+        $('#googleOauthSwitch').on('toggle', function(e, active) {
             if (active) {
                 console.log('Toggle is now ON!');
             } else {
