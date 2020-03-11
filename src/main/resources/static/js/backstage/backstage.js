@@ -257,7 +257,7 @@ require(["jquery", "requirejs-domready", "moment-with-locales", "handlebars", "a
             }
 
             // 轮询扫描通知
-            setInterval(initUserNotify, 30000);
+            setInterval(initUserNotify, 60000);
 
             function initUserNotify() {
                 $.ajax({
