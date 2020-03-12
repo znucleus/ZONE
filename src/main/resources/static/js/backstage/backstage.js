@@ -49,7 +49,8 @@ requirejs.config({
         "highlight": web_path + "/plugins/highlight/highlight.min",
         "quill": web_path + "/plugins/quill/quill",
         "jquery.print": web_path + "/plugins/jquery-print/jquery.print.min",
-        "jquery-toggles": web_path + "/plugins/jquery-toggles/toggles.min"
+        "jquery-toggles": web_path + "/plugins/jquery-toggles/toggles.min",
+        "clipboard": web_path + "/plugins/clipboard/clipboard.min"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {

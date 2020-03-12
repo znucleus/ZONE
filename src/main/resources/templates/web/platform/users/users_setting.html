@@ -244,6 +244,107 @@
         </div>
     </div>
 
+    <!-- 双因素认证开启Modal -->
+    <div class="modal fade" id="openGoogleOauthModal" tabindex="-1" role="dialog"
+         aria-labelledby="openGoogleOauthModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="openGoogleOauthModalLabel">双因素认证开启</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="mg-t-20">
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <input id="googleOauthPassword" type="password" placeholder="输入登录密码"
+                                       class="form-control">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row" style="display: none">
+                            <div class="col-12">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" readonly placeholder="双因素认证密钥"
+                                           id="googleOauthKey"/>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="button" id="copyGoogleOauthKey"
+                                                data-clipboard-target="#googleOauthKey">复制
+                                        </button>
+                                    </div>
+                                </div>
+                                <small id="googleOauthKeyHelp" class="form-text text-muted">
+                                    提示：请复制以上密钥留存后，下载谷哥身份认证登录工具，在新建密钥框中填入以上密钥。
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="form-group text-danger" id="globalGoogleOauthError"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="openGoogleOauth">确定</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 密码验证Modal -->
+    <div class="modal fade" id="checkPasswordModal" tabindex="-1" role="dialog"
+         aria-labelledby="checkPasswordModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="checkPasswordModalLabel">密码验证</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="mg-t-20">
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <select class="form-control" id="checkMode">
+                                    <option value="0">密码验证</option>
+                                    <option value="1">动态密码验证</option>
+                                </select>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <input id="checkPassword" type="password" placeholder="输入登录密码"
+                                       class="form-control">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row" style="display: none">
+                            <div class="col-12">
+                                <input id="checkGoogleOauthPassword" type="password" placeholder="输入动态密码"
+                                       class="form-control">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group text-danger" id="globalCheckPasswordError"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="toCheck">确定</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <input type="hidden" class="dy_script"
            th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/platform/users/users_setting.js')}"/>
 </div>

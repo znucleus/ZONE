@@ -5,8 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import top.zbeboy.zone.domain.tables.daos.GoogleOauthDao;
+import top.zbeboy.zone.domain.tables.pojos.GoogleOauth;
 import top.zbeboy.zone.domain.tables.records.GoogleOauthRecord;
 
+import javax.annotation.Resource;
 import java.util.Optional;
 
 import static top.zbeboy.zone.domain.Tables.GOOGLE_OAUTH;
@@ -16,6 +19,9 @@ import static top.zbeboy.zone.domain.Tables.GOOGLE_OAUTH;
 public class GoogleOauthServiceImpl implements GoogleOauthService {
 
     private final DSLContext create;
+
+    @Resource
+    private GoogleOauthDao googleOauthDao;
 
     @Autowired
     GoogleOauthServiceImpl(DSLContext dslContext) {
@@ -27,5 +33,11 @@ public class GoogleOauthServiceImpl implements GoogleOauthService {
         return create.selectFrom(GOOGLE_OAUTH)
                 .where(GOOGLE_OAUTH.USERNAME.eq(username))
                 .fetchOptional();
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void save(GoogleOauth googleOauth) {
+        googleOauthDao.insert(googleOauth);
     }
 }

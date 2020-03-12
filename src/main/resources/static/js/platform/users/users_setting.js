@@ -1,9 +1,7 @@
 //# sourceURL=users_setting.js
-require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "bootstrap",
-        "csrf", "select2-zh-CN", "jquery.entropizer", "jquery-toggles"],
-    function ($, _, tools, Swal, moment) {
-
-        moment.locale('zh-cn');
+require(["jquery", "lodash", "tools", "sweetalert2", "clipboard", "bootstrap",
+        "csrf", "select2-zh-CN", "jquery.entropizer", "jquery-toggles", "bootstrap"],
+    function ($, _, tools, Swal, ClipboardJS) {
 
         $('[data-toggle="tooltip"]').tooltip();
 
@@ -16,7 +14,8 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
             send_mobile: web_path + '/anyone/send/mobile',
             check_mobile_verification_code: web_path + '/anyone/check/mobile/code',
             obtain_mobile_code_valid: web_path + '/anyone/data/mobile/code',
-            users_password_update: web_path + '/users/password/update'
+            users_password_update: web_path + '/users/password/update',
+            open_google_oauth: web_path + "/users/open/google_oauth"
         };
 
         var param_id = {
@@ -29,6 +28,8 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
             idCard: '#idCard',
             defaultIdCard: '#defaultIdCard',
             verificationCode: '#verificationCode',
+            googleOauthPassword: '#googleOauthPassword',
+            googleOauthKey: '#googleOauthKey',
             oldPassword: '#oldPassword',
             newPassword: '#newPassword',
             confirmPassword: '#confirmPassword'
@@ -75,6 +76,14 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
                 tip: '更新中...',
                 text: '保存',
                 id: '#updatePassword'
+            },
+            googleOauthSwitch: {
+                id: '#googleOauthSwitch'
+            },
+            openGoogleOauth: {
+                tip: '开启中...',
+                text: '确定',
+                id: '#openGoogleOauth'
             }
         };
 
@@ -85,6 +94,8 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
             mobilePassword: '',
             mobile: '',
             idCard: '',
+            googleOauthPassword: '',
+            googleOauthKey: '',
             verificationCode: '',
             oldPassword: '',
             newPassword: '',
@@ -128,27 +139,13 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
         }
 
         function initGoogleOauthSwitch() {
-            var googleOauthSwitch = $('#googleOauth').text();
-            if(googleOauthSwitch === '未开启'){
-                $('#googleOauthSwitch').toggles({
-                    on: false,
-                    height: 26
-                });
-            } else {
-                $('#googleOauthSwitch').toggles({
-                    on: true,
-                    height: 26
-                });
-            }
-        }
+            $(button_id.googleOauthSwitch.id).toggles({
+                on: $('#googleOauth').text() !== '未开启',
+                height: 26
+            });
 
-        $('#googleOauthSwitch').on('toggle', function(e, active) {
-            if (active) {
-                console.log('Toggle is now ON!');
-            } else {
-                console.log('Toggle is now OFF!');
-            }
-        });
+            new ClipboardJS('#copyGoogleOauthKey');
+        }
 
         function initParam() {
             param.username = _.trim($(param_id.username).val());
@@ -158,6 +155,8 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
             param.mobile = _.trim($(param_id.mobile).val());
             param.verificationCode = _.trim($(param_id.verificationCode).val());
             param.idCard = _.trim($(param_id.idCard).val());
+            param.googleOauthPassword = _.trim($(param_id.googleOauthPassword).val());
+            param.googleOauthKey = _.trim($(param_id.googleOauthKey).val());
             param.oldPassword = _.trim($(param_id.oldPassword).val());
             param.newPassword = _.trim($(param_id.newPassword).val());
             param.confirmPassword = _.trim($(param_id.confirmPassword).val());
@@ -595,6 +594,76 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
                             $('#logout').submit();
                         }
                     });
+                } else {
+                    globalError.text(data.msg);
+                }
+            });
+        }
+
+        $(button_id.googleOauthSwitch.id).on('toggle', function (e, active) {
+            if (active) {
+                $(button_id.googleOauthSwitch.id).toggles({on: false});
+                $('#openGoogleOauthModal').modal('show');
+            } else {
+                console.log('Toggle is now OFF!');
+            }
+        });
+
+        $(param_id.googleOauthPassword).blur(function () {
+            initParam();
+            var googleOauthPassword = param.googleOauthPassword;
+            if (googleOauthPassword !== '') {
+                $.post(ajax_url.check_password, {password: googleOauthPassword}, function (data) {
+                    if (data.state) {
+                        tools.validSuccessDom(param_id.googleOauthPassword);
+                    } else {
+                        tools.validErrorDom(param_id.googleOauthPassword, '密码错误');
+                    }
+                });
+            } else {
+                tools.validSuccessDom(param_id.googleOauthPassword);
+            }
+        });
+
+        $(button_id.openGoogleOauth.id).click(function () {
+            initParam();
+            validGoogleOauthPassword();
+        });
+
+        function validGoogleOauthPassword() {
+            var googleOauthPassword = param.googleOauthPassword;
+            if (googleOauthPassword !== '') {
+                $.post(ajax_url.check_password, {password: googleOauthPassword}, function (data) {
+                    if (data.state) {
+                        tools.validSuccessDom(param_id.googleOauthPassword);
+                        openGoogleOauth();
+                    } else {
+                        tools.validErrorDom(param_id.googleOauthPassword, '密码错误');
+                    }
+                });
+            } else {
+                tools.validErrorDom(param_id.googleOauthPassword, '请填写密码');
+            }
+        }
+
+        function openGoogleOauth() {
+            // 显示遮罩
+            tools.buttonLoading(button_id.openGoogleOauth.id, button_id.openGoogleOauth.tip);
+            $.post(ajax_url.open_google_oauth, {
+                password: param.googleOauthPassword
+            }, function (data) {
+                // 去除遮罩
+                tools.buttonEndLoading(button_id.openGoogleOauth.id, button_id.openGoogleOauth.text);
+                var globalError = $('#globalGoogleOauthError');
+                if (data.state) {
+                    globalError.text('');
+                    $(button_id.googleOauthSwitch.id).toggles({on: true});
+                    $('#googleOauth').text('已开启');
+                    $(button_id.openGoogleOauth.id).css('display', 'none');
+                    $(button_id.openGoogleOauth.id).next().text('关闭');
+                    $(param_id.googleOauthPassword).parent().parent().css('display', 'none');
+                    $(param_id.googleOauthKey).parent().parent().parent().css('display', '');
+                    $(param_id.googleOauthKey).val(data.googleOauthKey);
                 } else {
                     globalError.text(data.msg);
                 }

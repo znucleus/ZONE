@@ -20,14 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.config.ZoneProperties;
 import top.zbeboy.zone.domain.tables.pojos.*;
+import top.zbeboy.zone.domain.tables.records.GoogleOauthRecord;
 import top.zbeboy.zone.domain.tables.records.UsersRecord;
 import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.notify.UserNotifyService;
-import top.zbeboy.zone.service.platform.CollegeRoleService;
-import top.zbeboy.zone.service.platform.RoleService;
-import top.zbeboy.zone.service.platform.UsersService;
-import top.zbeboy.zone.service.platform.UsersTypeService;
+import top.zbeboy.zone.service.platform.*;
 import top.zbeboy.zone.service.system.AuthoritiesService;
 import top.zbeboy.zone.service.system.FilesService;
 import top.zbeboy.zone.service.system.SystemConfigureService;
@@ -36,10 +34,7 @@ import top.zbeboy.zone.service.util.*;
 import top.zbeboy.zone.web.bean.platform.users.UsersBean;
 import top.zbeboy.zone.web.system.mail.SystemMailConfig;
 import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
-import top.zbeboy.zone.web.util.AjaxUtil;
-import top.zbeboy.zone.web.util.BaseImgUtil;
-import top.zbeboy.zone.web.util.BooleanUtil;
-import top.zbeboy.zone.web.util.SmallPropsUtil;
+import top.zbeboy.zone.web.util.*;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.vo.platform.user.ResetPasswordVo;
 import top.zbeboy.zone.web.vo.platform.user.UsersProfileVo;
@@ -93,6 +88,9 @@ public class UsersRestController {
 
     @Resource
     private AuthoritiesService authoritiesService;
+
+    @Resource
+    private GoogleOauthService googleOauthService;
 
     /**
      * 检验账号是否被注册
@@ -442,6 +440,36 @@ public class UsersRestController {
             ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
 
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 双因素认证开启
+     *
+     * @param password 当前密码
+     * @return true or false
+     */
+    @PostMapping("/users/open/google_oauth")
+    public ResponseEntity<Map<String, Object>> userOpenGoogleOauth(@RequestParam("password") String password) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        Users users = usersService.getUserFromSession();
+        if (BCryptUtil.bCryptPasswordMatches(password, users.getPassword())) {
+            Optional<GoogleOauthRecord> googleOauthRecord = googleOauthService.findByUsername(users.getUsername());
+            if(!googleOauthRecord.isPresent()){
+                String key = GoogleOauthUtil.createKey();
+                GoogleOauth googleOauth = new GoogleOauth();
+                googleOauth.setUsername(users.getUsername());
+                googleOauth.setGoogleOauthKey(key);
+                googleOauth.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+
+                googleOauthService.save(googleOauth);
+                ajaxUtil.success().msg("开启成功").put("googleOauthKey", key);
+            } else {
+                ajaxUtil.fail().msg("您已开启双因素认证");
+            }
+        } else {
+            ajaxUtil.fail().msg("登录密码错误");
+        }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
