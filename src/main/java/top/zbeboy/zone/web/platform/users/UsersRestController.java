@@ -3,6 +3,7 @@ package top.zbeboy.zone.web.platform.users;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.joda.time.DateTime;
 import org.jooq.Record;
 import org.jooq.Record12;
@@ -455,7 +456,7 @@ public class UsersRestController {
         Users users = usersService.getUserFromSession();
         if (BCryptUtil.bCryptPasswordMatches(password, users.getPassword())) {
             Optional<GoogleOauthRecord> googleOauthRecord = googleOauthService.findByUsername(users.getUsername());
-            if(!googleOauthRecord.isPresent()){
+            if (!googleOauthRecord.isPresent()) {
                 String key = GoogleOauthUtil.createKey();
                 GoogleOauth googleOauth = new GoogleOauth();
                 googleOauth.setUsername(users.getUsername());
@@ -469,6 +470,48 @@ public class UsersRestController {
             }
         } else {
             ajaxUtil.fail().msg("登录密码错误");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    @PostMapping("/users/close/google_oauth")
+    public ResponseEntity<Map<String, Object>> userCloseGoogleOauth(@RequestParam("mode") int mode, String password, String dynamicPassword) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (mode == 0) {
+            if (StringUtils.isNotBlank(password)) {
+                Users users = usersService.getUserFromSession();
+                if (BCryptUtil.bCryptPasswordMatches(password, users.getPassword())) {
+                    googleOauthService.deleteByUsername(users.getUsername());
+                    ajaxUtil.success().msg("关闭成功");
+                } else {
+                    ajaxUtil.fail().msg("登录密码错误");
+                }
+            } else {
+                ajaxUtil.fail().msg("请填写密码");
+            }
+        } else if (mode == 1) {
+            if (StringUtils.isNotBlank(dynamicPassword)) {
+                if (NumberUtils.isDigits(dynamicPassword)) {
+                    Users users = usersService.getUserFromSession();
+                    Optional<GoogleOauthRecord> googleOauthRecord = googleOauthService.findByUsername(users.getUsername());
+                    if (googleOauthRecord.isPresent()) {
+                        if (GoogleOauthUtil.validCode(googleOauthRecord.get().getGoogleOauthKey(), NumberUtils.toInt(dynamicPassword))) {
+                            googleOauthService.deleteByUsername(users.getUsername());
+                            ajaxUtil.success().msg("关闭成功");
+                        } else {
+                            ajaxUtil.fail().msg("动态密码错误");
+                        }
+                    } else {
+                        ajaxUtil.fail().msg("您未开启双因素认证");
+                    }
+                } else {
+                    ajaxUtil.fail().msg("动态密码错误，非数字");
+                }
+            } else {
+                ajaxUtil.fail().msg("请填写动态密码");
+            }
+        } else {
+            ajaxUtil.fail().msg("不支持的验证模式");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }

@@ -294,14 +294,14 @@
         </div>
     </div>
 
-    <!-- 密码验证Modal -->
-    <div class="modal fade" id="checkPasswordModal" tabindex="-1" role="dialog"
-         aria-labelledby="checkPasswordModalLabel"
+    <!-- 双因素认证关闭Modal -->
+    <div class="modal fade" id="closeGoogleOauthModal" tabindex="-1" role="dialog"
+         aria-labelledby="closeGoogleOauthModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="checkPasswordModalLabel">密码验证</h5>
+                    <h5 class="modal-title" id="closeGoogleOauthModalLabel">密码验证</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -310,7 +310,7 @@
                     <form class="mg-t-20">
                         <div class="form-group row">
                             <div class="col-12">
-                                <select class="form-control" id="checkMode">
+                                <select class="form-control" id="closeGoogleOauthMode">
                                     <option value="0">密码验证</option>
                                     <option value="1">动态密码验证</option>
                                 </select>
@@ -320,7 +320,7 @@
 
                         <div class="form-group row">
                             <div class="col-12">
-                                <input id="checkPassword" type="password" placeholder="输入登录密码"
+                                <input id="closeGoogleOauthPassword" type="password" placeholder="输入登录密码"
                                        class="form-control">
                                 <div class="invalid-feedback"></div>
                             </div>
@@ -328,17 +328,17 @@
 
                         <div class="form-group row" style="display: none">
                             <div class="col-12">
-                                <input id="checkGoogleOauthPassword" type="password" placeholder="输入动态密码"
+                                <input id="closeGoogleOauthDynamicPassword" type="password" placeholder="输入动态密码"
                                        class="form-control">
                                 <div class="invalid-feedback"></div>
                             </div>
                         </div>
 
-                        <div class="form-group text-danger" id="globalCheckPasswordError"></div>
+                        <div class="form-group text-danger" id="globalCloseGoogleOauthError"></div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="toCheck">确定</button>
+                    <button type="button" class="btn btn-primary" id="closeGoogleOauth">确定</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
                 </div>
             </div>

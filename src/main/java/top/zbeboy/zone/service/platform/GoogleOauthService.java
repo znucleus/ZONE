@@ -21,4 +21,11 @@ public interface GoogleOauthService {
      * @param googleOauth 数据
      */
     void save(GoogleOauth googleOauth);
+
+    /**
+     * 通过账号删除
+     *
+     * @param username 账号
+     */
+    void deleteByUsername(String username);
 }

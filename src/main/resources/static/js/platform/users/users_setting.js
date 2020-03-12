@@ -15,7 +15,8 @@ require(["jquery", "lodash", "tools", "sweetalert2", "clipboard", "bootstrap",
             check_mobile_verification_code: web_path + '/anyone/check/mobile/code',
             obtain_mobile_code_valid: web_path + '/anyone/data/mobile/code',
             users_password_update: web_path + '/users/password/update',
-            open_google_oauth: web_path + "/users/open/google_oauth"
+            open_google_oauth: web_path + "/users/open/google_oauth",
+            close_google_oauth: web_path + "/users/close/google_oauth"
         };
 
         var param_id = {
@@ -30,6 +31,9 @@ require(["jquery", "lodash", "tools", "sweetalert2", "clipboard", "bootstrap",
             verificationCode: '#verificationCode',
             googleOauthPassword: '#googleOauthPassword',
             googleOauthKey: '#googleOauthKey',
+            closeGoogleOauthMode: '#closeGoogleOauthMode',
+            closeGoogleOauthPassword: '#closeGoogleOauthPassword',
+            closeGoogleOauthDynamicPassword: '#closeGoogleOauthDynamicPassword',
             oldPassword: '#oldPassword',
             newPassword: '#newPassword',
             confirmPassword: '#confirmPassword'
@@ -84,6 +88,11 @@ require(["jquery", "lodash", "tools", "sweetalert2", "clipboard", "bootstrap",
                 tip: '开启中...',
                 text: '确定',
                 id: '#openGoogleOauth'
+            },
+            closeGoogleOauth: {
+                tip: '关闭中...',
+                text: '确定',
+                id: '#closeGoogleOauth'
             }
         };
 
@@ -96,6 +105,9 @@ require(["jquery", "lodash", "tools", "sweetalert2", "clipboard", "bootstrap",
             idCard: '',
             googleOauthPassword: '',
             googleOauthKey: '',
+            closeGoogleOauthMode: '',
+            closeGoogleOauthPassword: '',
+            closeGoogleOauthDynamicPassword: '',
             verificationCode: '',
             oldPassword: '',
             newPassword: '',
@@ -141,7 +153,11 @@ require(["jquery", "lodash", "tools", "sweetalert2", "clipboard", "bootstrap",
         function initGoogleOauthSwitch() {
             $(button_id.googleOauthSwitch.id).toggles({
                 on: $('#googleOauth').text() !== '未开启',
-                height: 26
+                height: 26,
+                text: {
+                    on: '开', // text for the ON position
+                    off: '关' // and off
+                }
             });
 
             new ClipboardJS('#copyGoogleOauthKey');
@@ -157,6 +173,9 @@ require(["jquery", "lodash", "tools", "sweetalert2", "clipboard", "bootstrap",
             param.idCard = _.trim($(param_id.idCard).val());
             param.googleOauthPassword = _.trim($(param_id.googleOauthPassword).val());
             param.googleOauthKey = _.trim($(param_id.googleOauthKey).val());
+            param.closeGoogleOauthMode = Number($(param_id.closeGoogleOauthMode).val());
+            param.closeGoogleOauthPassword = _.trim($(param_id.closeGoogleOauthPassword).val());
+            param.closeGoogleOauthDynamicPassword = _.trim($(param_id.closeGoogleOauthDynamicPassword).val());
             param.oldPassword = _.trim($(param_id.oldPassword).val());
             param.newPassword = _.trim($(param_id.newPassword).val());
             param.confirmPassword = _.trim($(param_id.confirmPassword).val());
@@ -600,12 +619,19 @@ require(["jquery", "lodash", "tools", "sweetalert2", "clipboard", "bootstrap",
             });
         }
 
+        var googleOauthSwitch = true;
         $(button_id.googleOauthSwitch.id).on('toggle', function (e, active) {
-            if (active) {
-                $(button_id.googleOauthSwitch.id).toggles({on: false});
-                $('#openGoogleOauthModal').modal('show');
-            } else {
-                console.log('Toggle is now OFF!');
+            if (googleOauthSwitch) {
+                var myToggle = $(button_id.googleOauthSwitch.id).data('toggles');
+                if (active) {
+                    $('#openGoogleOauthModal').modal('show');
+                    googleOauthSwitch = false;
+                    myToggle.toggle(false);
+                } else {
+                    $('#closeGoogleOauthModal').modal('show');
+                    googleOauthSwitch = false;
+                    myToggle.toggle(true);
+                }
             }
         });
 
@@ -657,18 +683,130 @@ require(["jquery", "lodash", "tools", "sweetalert2", "clipboard", "bootstrap",
                 var globalError = $('#globalGoogleOauthError');
                 if (data.state) {
                     globalError.text('');
-                    $(button_id.googleOauthSwitch.id).toggles({on: true});
+                    var myToggle = $(button_id.googleOauthSwitch.id).data('toggles');
+                    myToggle.toggle(true);
                     $('#googleOauth').text('已开启');
                     $(button_id.openGoogleOauth.id).css('display', 'none');
                     $(button_id.openGoogleOauth.id).next().text('关闭');
                     $(param_id.googleOauthPassword).parent().parent().css('display', 'none');
                     $(param_id.googleOauthKey).parent().parent().parent().css('display', '');
                     $(param_id.googleOauthKey).val(data.googleOauthKey);
+
                 } else {
                     globalError.text(data.msg);
                 }
             });
         }
+
+        $('#openGoogleOauthModal').on('show.bs.modal', function (e) {
+            googleOauthSwitch = false;
+        }).on('hidden.bs.modal', function (e) {
+            googleOauthSwitch = true;
+        });
+
+        $(param_id.closeGoogleOauthMode).change(function () {
+            var v = Number($(this).val());
+            if (v === 0) {
+                $(param_id.closeGoogleOauthPassword).parent().parent().css('display', '');
+                $(param_id.closeGoogleOauthDynamicPassword).parent().parent().css('display', 'none');
+            } else {
+                $(param_id.closeGoogleOauthPassword).parent().parent().css('display', 'none');
+                $(param_id.closeGoogleOauthDynamicPassword).parent().parent().css('display', '');
+            }
+        });
+
+        $(param_id.closeGoogleOauthPassword).blur(function () {
+            initParam();
+            var closeGoogleOauthPassword = param.closeGoogleOauthPassword;
+            if (closeGoogleOauthPassword !== '') {
+                $.post(ajax_url.check_password, {password: closeGoogleOauthPassword}, function (data) {
+                    if (data.state) {
+                        tools.validSuccessDom(param_id.closeGoogleOauthPassword);
+                    } else {
+                        tools.validErrorDom(param_id.closeGoogleOauthPassword, '密码错误');
+                    }
+                });
+            } else {
+                tools.validSuccessDom(param_id.closeGoogleOauthPassword);
+            }
+        });
+
+        $(param_id.closeGoogleOauthDynamicPassword).blur(function () {
+            initParam();
+            var closeGoogleOauthDynamicPassword = param.closeGoogleOauthDynamicPassword;
+            if (closeGoogleOauthDynamicPassword !== '') {
+                tools.validSuccessDom(param_id.closeGoogleOauthDynamicPassword);
+            } else {
+                tools.validSuccessDom(param_id.closeGoogleOauthDynamicPassword);
+            }
+        });
+
+        $(button_id.closeGoogleOauth.id).click(function () {
+            initParam();
+            validCloseGoogleOauthPassword();
+        });
+
+        function validCloseGoogleOauthPassword() {
+            var closeGoogleOauthMode = param.closeGoogleOauthMode;
+            if (closeGoogleOauthMode === 0) {
+                var closeGoogleOauthPassword = param.closeGoogleOauthPassword;
+                if (closeGoogleOauthPassword !== '') {
+                    $.post(ajax_url.check_password, {password: closeGoogleOauthPassword}, function (data) {
+                        if (data.state) {
+                            closeGoogleOauth();
+                        } else {
+                            tools.validErrorDom(param_id.closeGoogleOauthPassword, '密码错误');
+                        }
+                    });
+                } else {
+                    tools.validErrorDom(param_id.closeGoogleOauthPassword, "请填写密码");
+                }
+            } else {
+                var closeGoogleOauthDynamicPassword = param.closeGoogleOauthDynamicPassword;
+                if (closeGoogleOauthDynamicPassword !== '') {
+                    closeGoogleOauth();
+                } else {
+                    tools.validErrorDom(param_id.closeGoogleOauthDynamicPassword, "请填写动态密码");
+                }
+            }
+        }
+
+        function closeGoogleOauth() {
+            // 显示遮罩
+            tools.buttonLoading(button_id.closeGoogleOauth.id, button_id.closeGoogleOauth.tip);
+            $.post(ajax_url.close_google_oauth, {
+                mode: param.closeGoogleOauthMode,
+                password: param.closeGoogleOauthPassword,
+                dynamicPassword: param.closeGoogleOauthDynamicPassword
+            }, function (data) {
+                // 去除遮罩
+                tools.buttonEndLoading(button_id.closeGoogleOauth.id, button_id.closeGoogleOauth.text);
+                var globalError = $('#globalCloseGoogleOauthError');
+                if (data.state) {
+                    globalError.text('');
+                    var myToggle = $(button_id.googleOauthSwitch.id).data('toggles');
+                    myToggle.toggle(false);
+                    $('#googleOauth').text('未开启');
+                    $(button_id.openGoogleOauth.id).css('display', '');
+                    $(button_id.openGoogleOauth.id).next().text('取消');
+                    $(param_id.googleOauthPassword).parent().parent().css('display', '');
+                    $(param_id.googleOauthKey).parent().parent().parent().css('display', 'none');
+                    $(param_id.googleOauthKey).val('');
+
+                    $('#closeGoogleOauthModal').modal('hide');
+                    Swal.fire('关闭双因素认证', data.msg, 'success');
+
+                } else {
+                    globalError.text(data.msg);
+                }
+            });
+        }
+
+        $('#closeGoogleOauthModal').on('show.bs.modal', function (e) {
+            googleOauthSwitch = false;
+        }).on('hidden.bs.modal', function (e) {
+            googleOauthSwitch = true;
+        });
 
         $(button_id.password.id).click(function () {
             initParam();

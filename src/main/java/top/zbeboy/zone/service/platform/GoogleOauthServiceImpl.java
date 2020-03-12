@@ -40,4 +40,9 @@ public class GoogleOauthServiceImpl implements GoogleOauthService {
     public void save(GoogleOauth googleOauth) {
         googleOauthDao.insert(googleOauth);
     }
+
+    @Override
+    public void deleteByUsername(String username) {
+        create.deleteFrom(GOOGLE_OAUTH).where(GOOGLE_OAUTH.USERNAME.eq(username)).execute();
+    }
 }
