@@ -377,7 +377,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
                     }, function (data) {
                         tools.buttonEndLoading(button_id.updateIdCard.id, button_id.updateIdCard.text);
                         if (data.state) {
-                            cancelUpdateEmail();
+                            cancelUpdateIdCard();
                             Swal.fire({
                                 title: data.msg,
                                 type: "success",
