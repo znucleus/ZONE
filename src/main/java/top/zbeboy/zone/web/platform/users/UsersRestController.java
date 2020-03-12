@@ -12,12 +12,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import top.zbeboy.zone.config.SessionBook;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.config.ZoneProperties;
 import top.zbeboy.zone.domain.tables.pojos.*;
@@ -105,11 +105,30 @@ public class UsersRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = checkUsername(username);
         if (BooleanUtils.isTrue(ajaxUtil.getState())) {
             UsersRecord users = usersService.findByUsernameUpper(param);
-            if (!ObjectUtils.isEmpty(users)) {
+            if (Objects.nonNull(users)) {
                 ajaxUtil.fail().msg("账号已被注册");
             } else {
                 ajaxUtil.success().msg("账号未被注册");
             }
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 检验账号是否存在
+     *
+     * @param username 账号
+     * @return 是否被注册
+     */
+    @PostMapping("/anyone/check/exist/username")
+    public ResponseEntity<Map<String, Object>> anyoneCheckExistUsername(@RequestParam("username") String username) {
+        String param = StringUtils.deleteWhitespace(username);
+        AjaxUtil<Map<String, Object>> ajaxUtil = checkUsername(username);
+        Users users = usersService.findByUsername(param);
+        if (Objects.isNull(users)) {
+            ajaxUtil.fail().msg("账号不存在");
+        } else {
+            ajaxUtil.success().msg("账号存在");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
@@ -129,7 +148,7 @@ public class UsersRestController {
             ajaxUtil.fail().msg("邮箱格式不正确");
         } else {
             Users users = usersService.findByEmail(param);
-            if (!ObjectUtils.isEmpty(users)) {
+            if (Objects.nonNull(users)) {
                 ajaxUtil.fail().msg("邮箱已被注册");
             } else {
                 ajaxUtil.success().msg("邮箱未被注册");
@@ -153,7 +172,7 @@ public class UsersRestController {
             ajaxUtil.fail().msg("手机号不正确");
         } else {
             Users users = usersService.findByMobile(param);
-            if (!ObjectUtils.isEmpty(users)) {
+            if (Objects.nonNull(users)) {
                 ajaxUtil.fail().msg("手机号已被注册");
             } else {
                 ajaxUtil.success().msg("手机号未被注册");
@@ -269,10 +288,16 @@ public class UsersRestController {
                         Timestamp passwordResetKeyValid = users.getPasswordResetKeyValid();
                         Timestamp now = DateTimeUtil.getNowSqlTimestamp();
                         isValid = now.before(passwordResetKeyValid) && resetPasswordVo.getPasswordResetKey().equals(users.getPasswordResetKey());
-                    } else {
+                    } else if(resetPasswordVo.getVerificationMode() == 1){
                         String mobile = users.getMobile();
-                        isValid = !ObjectUtils.isEmpty(session.getAttribute(mobile + SystemMobileConfig.MOBILE_VALID)) &&
-                                (boolean) session.getAttribute(mobile + SystemMobileConfig.MOBILE_VALID);
+                        String validKey = mobile + SystemMobileConfig.MOBILE_VALID;
+                        isValid = Objects.nonNull(session.getAttribute(validKey)) &&
+                                (boolean) session.getAttribute(validKey);
+                    } else {
+                        String username = users.getUsername();
+                        String validKey = username + SessionBook.DYNAMIC_PASSWORD_VALID;
+                        isValid = Objects.nonNull(session.getAttribute(validKey)) &&
+                                (boolean) session.getAttribute(validKey);
                     }
                     if (isValid) {
                         users.setPassword(BCryptUtil.bCryptPassword(resetPasswordVo.getPassword()));
@@ -414,7 +439,7 @@ public class UsersRestController {
                             Result<UsersRecord> usersRecords = usersService.findByEmailNeOwn(value, own.getMobile());
                             if (usersRecords.isEmpty()) {
                                 // step 2.手机号是否已验证
-                                if (!ObjectUtils.isEmpty(session.getAttribute(value + SystemMobileConfig.MOBILE_VALID))) {
+                                if (Objects.nonNull(session.getAttribute(value + SystemMobileConfig.MOBILE_VALID))) {
                                     boolean isValid = (boolean) session.getAttribute(value + SystemMobileConfig.MOBILE_VALID);
                                     if (isValid) {
                                         Users users = usersService.getUserFromSession();
@@ -849,6 +874,36 @@ public class UsersRestController {
             ajaxUtil.success().msg("删除用户成功");
         } else {
             ajaxUtil.fail().msg("用户账号不能为空");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 忘记密码动态密码验证
+     *
+     * @param username        账号
+     * @param dynamicPassword 动态密码
+     * @return true or false
+     */
+    @PostMapping("/forget_password/dynamic_password")
+    public ResponseEntity<Map<String, Object>> forgetPassword(@RequestParam("username") String username,
+                                                              @RequestParam("dynamicPassword") String dynamicPassword, HttpSession session) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (NumberUtils.isDigits(dynamicPassword)) {
+            Optional<GoogleOauthRecord> googleOauthRecord = googleOauthService.findByUsername(username);
+            if (googleOauthRecord.isPresent()) {
+                if (GoogleOauthUtil.validCode(googleOauthRecord.get().getGoogleOauthKey(), NumberUtils.toInt(dynamicPassword))) {
+                    session.setAttribute(username + SessionBook.DYNAMIC_PASSWORD_VALID, true);
+                    session.setAttribute(SessionBook.DYNAMIC_PASSWORD_USERNAME, username);
+                    ajaxUtil.success().msg("验证通过");
+                } else {
+                    ajaxUtil.fail().msg("动态密码错误");
+                }
+            } else {
+                ajaxUtil.fail().msg("您未开启双因素认证");
+            }
+        } else {
+            ajaxUtil.fail().msg("动态密码错误，非数字");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }

@@ -30,7 +30,7 @@ requirejs.onError = function (err) {
 };
 
 // require(["module/name", ...], function(params){ ... });
-require(["jquery", "requirejs-domready", "lodash","tools", "bootstrap", "csrf"],
+require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf"],
     function ($, domready, _, tools) {
         domready(function () {
             //This function is called once the DOM is ready.
@@ -40,17 +40,21 @@ require(["jquery", "requirejs-domready", "lodash","tools", "bootstrap", "csrf"],
             var ajax_url = {
                 forget_password_mail: web_path + '/forget_password/mail',
                 forget_password_mobile: web_path + '/forget_password/mobile',
+                forget_password_dynamic_password: web_path + '/forget_password/dynamic_password',
                 forget_password_success: web_path + '/tip/forget_password/success',
                 reset_password_mobile: web_path + '/anyone/reset_password/mobile',
                 send_mobile: web_path + '/anyone/send/mobile',
-                check_mobile_verification_code: web_path + '/anyone/check/mobile/code'
+                check_mobile_verification_code: web_path + '/anyone/check/mobile/code',
+                check_exist_username: web_path + '/anyone/check/exist/username'
             };
 
             var param_id = {
                 verificationMode: '#verificationMode',
                 email: '#email',
                 mobile: '#mobile',
-                verificationCode: '#verificationCode'
+                verificationCode: '#verificationCode',
+                username: '#username',
+                dynamicPassword: '#dynamicPassword'
             };
 
             var button_id = {
@@ -65,26 +69,40 @@ require(["jquery", "requirejs-domready", "lodash","tools", "bootstrap", "csrf"],
                 verificationMode: '',
                 email: '',
                 mobile: '',
-                verificationCode: ''
+                verificationCode: '',
+                username: '',
+                dynamicPassword: ''
             };
 
             function initParam() {
-                param.verificationMode = $(param_id.verificationMode).val();
+                param.verificationMode = Number($(param_id.verificationMode).val());
                 param.email = _.trim($(param_id.email).val());
                 param.mobile = _.trim($(param_id.mobile).val());
                 param.verificationCode = _.trim($(param_id.verificationCode).val());
+                param.username = _.trim($(param_id.username).val());
+                param.dynamicPassword = _.trim($(param_id.dynamicPassword).val());
             }
 
             $(param_id.verificationMode).change(function () {
-                var v = $(this).val();
-                if (Number(v) === 0) {
+                var v = Number($(this).val());
+                if (v === 0) {
                     $(param_id.email).parent().css('display', 'block');
                     $(param_id.mobile).parent().css('display', 'none');
                     $(param_id.verificationCode).parent().parent().css('display', 'none');
-                } else {
+                    $(param_id.username).parent().css('display', 'none');
+                    $(param_id.dynamicPassword).parent().css('display', 'none');
+                } else if (v === 1) {
                     $(param_id.email).parent().css('display', 'none');
                     $(param_id.mobile).parent().css('display', 'block');
                     $(param_id.verificationCode).parent().parent().css('display', 'block');
+                    $(param_id.username).parent().css('display', 'none');
+                    $(param_id.dynamicPassword).parent().css('display', 'none');
+                } else {
+                    $(param_id.email).parent().css('display', 'none');
+                    $(param_id.mobile).parent().css('display', 'none');
+                    $(param_id.verificationCode).parent().parent().css('display', 'none');
+                    $(param_id.username).parent().css('display', 'block');
+                    $(param_id.dynamicPassword).parent().css('display', 'block');
                 }
             });
 
@@ -103,6 +121,18 @@ require(["jquery", "requirejs-domready", "lodash","tools", "bootstrap", "csrf"],
             $(param_id.verificationCode).keyup(function (event) {
                 if (event.keyCode === 13) {
                     validMobile();
+                }
+            });
+
+            $(param_id.username).keyup(function (event) {
+                if (event.keyCode === 13) {
+                    validUsername();
+                }
+            });
+
+            $(param_id.dynamicPassword).keyup(function (event) {
+                if (event.keyCode === 13) {
+                    validUsername();
                 }
             });
 
@@ -153,10 +183,12 @@ require(["jquery", "requirejs-domready", "lodash","tools", "bootstrap", "csrf"],
             $(button_id.sure.id).click(function () {
                 initParam();
                 var verificationMode = param.verificationMode;
-                if (Number(verificationMode) === 0) {
+                if (verificationMode === 0) {
                     validEmail();
-                } else {
+                } else if (verificationMode === 1) {
                     validMobile()
+                } else {
+                    validUsername();
                 }
 
             });
@@ -216,6 +248,36 @@ require(["jquery", "requirejs-domready", "lodash","tools", "bootstrap", "csrf"],
                 }
             }
 
+            function validUsername() {
+                initParam();
+                var username = param.username;
+                if (username !== '') {
+                    $.post(ajax_url.check_exist_username, {
+                        username: param.username
+                    }, function (data) {
+                        if (data.state) {
+                            tools.validSuccessDom(param_id.username);
+                            validDynamicPassword();
+                        } else {
+                            tools.validErrorDom(param_id.username, data.msg);
+                        }
+                    });
+                } else {
+                    tools.validErrorDom(param_id.username, "请填写账号");
+                }
+            }
+
+            function validDynamicPassword() {
+                initParam();
+                var dynamicPassword = param.dynamicPassword;
+                if (dynamicPassword !== '') {
+                    tools.validSuccessDom(param_id.dynamicPassword);
+                    sendDynamicPassword();
+                } else {
+                    tools.validErrorDom(param_id.dynamicPassword, "请填写动态密码");
+                }
+            }
+
             function sendMailAjax() {
                 // 显示遮罩
                 tools.buttonLoading(button_id.sure.id, button_id.sure.tip);
@@ -236,6 +298,22 @@ require(["jquery", "requirejs-domready", "lodash","tools", "bootstrap", "csrf"],
                 // 显示遮罩
                 tools.buttonLoading(button_id.sure.id, button_id.sure.tip);
                 $.post(ajax_url.forget_password_mobile, param, function (data) {
+                    // 去除遮罩
+                    tools.buttonEndLoading(button_id.sure.id, button_id.sure.text);
+                    var globalError = $('#globalError');
+                    if (data.state) {
+                        globalError.text('');
+                        window.location.href = ajax_url.reset_password_mobile;
+                    } else {
+                        globalError.text(data.msg);
+                    }
+                });
+            }
+
+            function sendDynamicPassword() {
+                // 显示遮罩
+                tools.buttonLoading(button_id.sure.id, button_id.sure.tip);
+                $.post(ajax_url.forget_password_dynamic_password, param, function (data) {
                     // 去除遮罩
                     tools.buttonEndLoading(button_id.sure.id, button_id.sure.text);
                     var globalError = $('#globalError');
