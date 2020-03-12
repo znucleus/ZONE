@@ -22,9 +22,13 @@ require(["jquery", "lodash", "tools", "sweetalert2", "clipboard", "bootstrap",
         var param_id = {
             username: '#username',
             defaultUsername: '#defaultUsername',
+            emailPasswordMode: '#emailPasswordMode',
             emailPassword: '#emailPassword',
+            emailPasswordDynamicPassword: '#emailPasswordDynamicPassword',
             email: '#email',
+            mobilePasswordMode: '#mobilePasswordMode',
             mobilePassword: '#mobilePassword',
+            mobilePasswordDynamicPassword: '#mobilePasswordDynamicPassword',
             mobile: '#mobile',
             idCard: '#idCard',
             defaultIdCard: '#defaultIdCard',
@@ -98,9 +102,13 @@ require(["jquery", "lodash", "tools", "sweetalert2", "clipboard", "bootstrap",
 
         var param = {
             username: '',
+            emailPasswordMode: '',
             emailPassword: '',
+            emailPasswordDynamicPassword: '',
             email: '',
+            mobilePasswordMode: '',
             mobilePassword: '',
+            mobilePasswordDynamicPassword: '',
             mobile: '',
             idCard: '',
             googleOauthPassword: '',
@@ -165,9 +173,13 @@ require(["jquery", "lodash", "tools", "sweetalert2", "clipboard", "bootstrap",
 
         function initParam() {
             param.username = _.trim($(param_id.username).val());
+            param.emailPasswordMode = Number($(param_id.emailPasswordMode).val());
             param.emailPassword = _.trim($(param_id.emailPassword).val());
+            param.emailPasswordDynamicPassword = _.trim($(param_id.emailPasswordDynamicPassword).val());
             param.email = _.trim($(param_id.email).val());
+            param.mobilePasswordMode = Number($(param_id.mobilePasswordMode).val());
             param.mobilePassword = _.trim($(param_id.mobilePassword).val());
+            param.mobilePasswordDynamicPassword = _.trim($(param_id.mobilePasswordDynamicPassword).val());
             param.mobile = _.trim($(param_id.mobile).val());
             param.verificationCode = _.trim($(param_id.verificationCode).val());
             param.idCard = _.trim($(param_id.idCard).val());
@@ -250,6 +262,17 @@ require(["jquery", "lodash", "tools", "sweetalert2", "clipboard", "bootstrap",
             }
         });
 
+        $(param_id.emailPasswordMode).change(function () {
+            var v = Number($(this).val());
+            if (v === 0) {
+                $(param_id.emailPassword).parent().parent().css('display', '');
+                $(param_id.emailPasswordDynamicPassword).parent().parent().css('display', 'none');
+            } else {
+                $(param_id.emailPassword).parent().parent().css('display', 'none');
+                $(param_id.emailPasswordDynamicPassword).parent().parent().css('display', '');
+            }
+        });
+
         $(param_id.emailPassword).blur(function () {
             initParam();
             var emailPassword = param.emailPassword;
@@ -294,18 +317,29 @@ require(["jquery", "lodash", "tools", "sweetalert2", "clipboard", "bootstrap",
         });
 
         function validEmailPassword() {
-            var emailPassword = param.emailPassword;
-            if (emailPassword !== '') {
-                $.post(ajax_url.check_password, {password: emailPassword}, function (data) {
-                    if (data.state) {
-                        tools.validSuccessDom(param_id.emailPassword);
-                        validEmail();
-                    } else {
-                        tools.validErrorDom(param_id.emailPassword, '密码错误');
-                    }
-                });
+            var emailPasswordMode = param.emailPasswordMode;
+            if (emailPasswordMode === 0) {
+                var emailPassword = param.emailPassword;
+                if (emailPassword !== '') {
+                    $.post(ajax_url.check_password, {password: emailPassword}, function (data) {
+                        if (data.state) {
+                            tools.validSuccessDom(param_id.emailPassword);
+                            validEmail();
+                        } else {
+                            tools.validErrorDom(param_id.emailPassword, '密码错误');
+                        }
+                    });
+                } else {
+                    tools.validErrorDom(param_id.emailPassword, '请填写密码');
+                }
             } else {
-                tools.validErrorDom(param_id.emailPassword, '请填写密码');
+                var emailPasswordDynamicPassword = param.emailPasswordDynamicPassword;
+                if (emailPasswordDynamicPassword !== '') {
+                    tools.validSuccessDom(param_id.emailPasswordDynamicPassword);
+                    validEmail();
+                } else {
+                    tools.validErrorDom(param_id.closeGoogleOauthDynamicPassword, "请填写动态密码");
+                }
             }
         }
 
@@ -337,7 +371,9 @@ require(["jquery", "lodash", "tools", "sweetalert2", "clipboard", "bootstrap",
             $.post(ajax_url.users_update, {
                 name: 'email',
                 value: param.email,
-                password: param.emailPassword
+                password: param.emailPassword,
+                mode: param.emailPasswordMode,
+                dynamicPassword: param.emailPasswordDynamicPassword
             }, function (data) {
                 // 去除遮罩
                 tools.buttonEndLoading(button_id.saveEmail.id, button_id.saveEmail.text);
@@ -409,6 +445,17 @@ require(["jquery", "lodash", "tools", "sweetalert2", "clipboard", "bootstrap",
                         }
                     });
                 }
+            }
+        });
+
+        $(param_id.mobilePasswordMode).change(function () {
+            var v = Number($(this).val());
+            if (v === 0) {
+                $(param_id.mobilePassword).parent().parent().css('display', '');
+                $(param_id.mobilePasswordDynamicPassword).parent().parent().css('display', 'none');
+            } else {
+                $(param_id.mobilePassword).parent().parent().css('display', 'none');
+                $(param_id.mobilePasswordDynamicPassword).parent().parent().css('display', '');
             }
         });
 
@@ -531,18 +578,29 @@ require(["jquery", "lodash", "tools", "sweetalert2", "clipboard", "bootstrap",
         });
 
         function validMobilePassword() {
-            var mobilePassword = param.mobilePassword;
-            if (mobilePassword !== '') {
-                $.post(ajax_url.check_password, {password: mobilePassword}, function (data) {
-                    if (data.state) {
-                        tools.validSuccessDom(param_id.mobilePassword);
-                        validMobile();
-                    } else {
-                        tools.validErrorDom(param_id.mobilePassword, '密码错误');
-                    }
-                });
+            var mobilePasswordMode = param.mobilePasswordMode;
+            if (mobilePasswordMode === 0) {
+                var mobilePassword = param.mobilePassword;
+                if (mobilePassword !== '') {
+                    $.post(ajax_url.check_password, {password: mobilePassword}, function (data) {
+                        if (data.state) {
+                            tools.validSuccessDom(param_id.mobilePassword);
+                            validMobile();
+                        } else {
+                            tools.validErrorDom(param_id.mobilePassword, '密码错误');
+                        }
+                    });
+                } else {
+                    tools.validErrorDom(param_id.mobilePassword, '请填写密码');
+                }
             } else {
-                tools.validErrorDom(param_id.mobilePassword, '请填写密码');
+                var mobilePasswordDynamicPassword = param.mobilePasswordDynamicPassword;
+                if (mobilePasswordDynamicPassword !== '') {
+                    tools.validSuccessDom(param_id.mobilePasswordDynamicPassword);
+                    validMobile();
+                } else {
+                    tools.validErrorDom(param_id.mobilePasswordDynamicPassword, "请填写动态密码");
+                }
             }
         }
 
@@ -597,7 +655,9 @@ require(["jquery", "lodash", "tools", "sweetalert2", "clipboard", "bootstrap",
             $.post(ajax_url.users_update, {
                 name: 'mobile',
                 value: param.mobile,
-                password: param.mobilePassword
+                password: param.mobilePassword,
+                mode: param.mobilePasswordMode,
+                dynamicPassword: param.mobilePasswordDynamicPassword
             }, function (data) {
                 // 去除遮罩
                 tools.buttonEndLoading(button_id.saveMobile.id, button_id.saveMobile.text);
@@ -731,16 +791,6 @@ require(["jquery", "lodash", "tools", "sweetalert2", "clipboard", "bootstrap",
             }
         });
 
-        $(param_id.closeGoogleOauthDynamicPassword).blur(function () {
-            initParam();
-            var closeGoogleOauthDynamicPassword = param.closeGoogleOauthDynamicPassword;
-            if (closeGoogleOauthDynamicPassword !== '') {
-                tools.validSuccessDom(param_id.closeGoogleOauthDynamicPassword);
-            } else {
-                tools.validSuccessDom(param_id.closeGoogleOauthDynamicPassword);
-            }
-        });
-
         $(button_id.closeGoogleOauth.id).click(function () {
             initParam();
             validCloseGoogleOauthPassword();
@@ -753,6 +803,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "clipboard", "bootstrap",
                 if (closeGoogleOauthPassword !== '') {
                     $.post(ajax_url.check_password, {password: closeGoogleOauthPassword}, function (data) {
                         if (data.state) {
+                            tools.validSuccessDom(param_id.closeGoogleOauthPassword);
                             closeGoogleOauth();
                         } else {
                             tools.validErrorDom(param_id.closeGoogleOauthPassword, '密码错误');
@@ -764,6 +815,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "clipboard", "bootstrap",
             } else {
                 var closeGoogleOauthDynamicPassword = param.closeGoogleOauthDynamicPassword;
                 if (closeGoogleOauthDynamicPassword !== '') {
+                    tools.validSuccessDom(param_id.closeGoogleOauthDynamicPassword);
                     closeGoogleOauth();
                 } else {
                     tools.validErrorDom(param_id.closeGoogleOauthDynamicPassword, "请填写动态密码");

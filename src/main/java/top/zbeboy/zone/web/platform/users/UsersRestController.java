@@ -307,10 +307,51 @@ public class UsersRestController {
         if (!bindingResult.hasErrors()) {
             String name = StringUtils.deleteWhitespace(usersProfileVo.getName());
             String value = StringUtils.deleteWhitespace(usersProfileVo.getValue());
+
+            boolean canUpdate = false;
+            Users own = usersService.getUserFromSession();
+            if (StringUtils.equals("email", name) ||
+                    StringUtils.equals("mobile", name)) {
+                int mode = usersProfileVo.getMode();
+                if (mode == 0) {
+                    String password = usersProfileVo.getPassword();
+                    if (StringUtils.isNotBlank(password)) {
+                        if (BCryptUtil.bCryptPasswordMatches(password, own.getPassword())) {
+                            canUpdate = true;
+                        } else {
+                            ajaxUtil.fail().msg("登录密码错误");
+                        }
+                    } else {
+                        ajaxUtil.fail().msg("请填写登录密码");
+                    }
+                } else if (mode == 1) {
+                    String dynamicPassword = usersProfileVo.getDynamicPassword();
+                    if (StringUtils.isNotBlank(dynamicPassword)) {
+                        if (NumberUtils.isDigits(dynamicPassword)) {
+                            Optional<GoogleOauthRecord> googleOauthRecord = googleOauthService.findByUsername(own.getUsername());
+                            if (googleOauthRecord.isPresent()) {
+                                if (GoogleOauthUtil.validCode(googleOauthRecord.get().getGoogleOauthKey(), NumberUtils.toInt(dynamicPassword))) {
+                                    canUpdate = true;
+                                } else {
+                                    ajaxUtil.fail().msg("动态密码错误");
+                                }
+                            } else {
+                                ajaxUtil.fail().msg("您未开启双因素认证");
+                            }
+                        } else {
+                            ajaxUtil.fail().msg("动态密码错误，非数字");
+                        }
+                    } else {
+                        ajaxUtil.fail().msg("请填写动态密码");
+                    }
+                } else {
+                    ajaxUtil.fail().msg("不支持的验证模式");
+                }
+            }
+
             if (StringUtils.equals("username", name)) {
                 ajaxUtil = checkUsername(value);
                 if (BooleanUtils.isTrue(ajaxUtil.getState())) {
-                    Users own = usersService.getUserFromSession();
                     if (!StringUtils.equals(own.getUsername(), value)) {
                         Result<UsersRecord> usersRecords = usersService.findByUsernameNeOwn(value, own.getUsername());
                         if (usersRecords.isEmpty()) {
@@ -334,95 +375,76 @@ public class UsersRestController {
                     ajaxUtil.fail().msg("姓名未改变");
                 }
             } else if (StringUtils.equals("email", name)) {
-                String password = usersProfileVo.getPassword();
-                if (StringUtils.isNotBlank(password)) {
-                    Users own = usersService.getUserFromSession();
-                    if (BCryptUtil.bCryptPasswordMatches(password, own.getPassword())) {
-                        if (Pattern.matches(SystemMailConfig.MAIL_REGEX, value)) {
-                            if (!StringUtils.equals(own.getEmail(), value)) {
-                                Result<UsersRecord> usersRecords = usersService.findByEmailNeOwn(value, own.getEmail());
-                                if (usersRecords.isEmpty()) {
-                                    // 检查邮件推送是否被关闭
-                                    SystemConfigure mailConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
-                                    if (StringUtils.equals("1", mailConfigure.getDataValue())) {
-                                        DateTime dateTime = DateTime.now();
-                                        dateTime = dateTime.plusDays(ZoneProperties.getMail().getValidCodeTime());
+                if (canUpdate) {
+                    if (Pattern.matches(SystemMailConfig.MAIL_REGEX, value)) {
+                        if (!StringUtils.equals(own.getEmail(), value)) {
+                            Result<UsersRecord> usersRecords = usersService.findByEmailNeOwn(value, own.getEmail());
+                            if (usersRecords.isEmpty()) {
+                                // 检查邮件推送是否被关闭
+                                SystemConfigure mailConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
+                                if (StringUtils.equals("1", mailConfigure.getDataValue())) {
+                                    DateTime dateTime = DateTime.now();
+                                    dateTime = dateTime.plusDays(ZoneProperties.getMail().getValidCodeTime());
 
-                                        Users users = usersService.getUserFromSession();
-                                        users.setEmail(value);
-                                        users.setMailboxVerifyCode(RandomUtil.generateEmailCheckKey());
-                                        users.setMailboxVerifyValid(DateTimeUtil.utilDateToSqlTimestamp(dateTime.toDate()));
-                                        users.setVerifyMailbox(BooleanUtil.toByte(false));
-                                        usersService.update(users);
-                                        systemMailService.sendValidEmailMail(users, RequestUtil.getBaseUrl(request));
-                                        ajaxUtil.success().msg("邮箱更新成功");
-                                    } else {
-                                        ajaxUtil.fail().msg("邮件推送已被管理员关闭");
-                                    }
+                                    Users users = usersService.getUserFromSession();
+                                    users.setEmail(value);
+                                    users.setMailboxVerifyCode(RandomUtil.generateEmailCheckKey());
+                                    users.setMailboxVerifyValid(DateTimeUtil.utilDateToSqlTimestamp(dateTime.toDate()));
+                                    users.setVerifyMailbox(BooleanUtil.toByte(false));
+                                    usersService.update(users);
+                                    systemMailService.sendValidEmailMail(users, RequestUtil.getBaseUrl(request));
+                                    ajaxUtil.success().msg("邮箱更新成功");
                                 } else {
-                                    ajaxUtil.fail().msg("邮箱已被使用");
+                                    ajaxUtil.fail().msg("邮件推送已被管理员关闭");
                                 }
                             } else {
-                                ajaxUtil.fail().msg("邮箱未改变");
+                                ajaxUtil.fail().msg("邮箱已被使用");
                             }
                         } else {
-                            ajaxUtil.fail().msg("邮箱格式不正确");
+                            ajaxUtil.fail().msg("邮箱未改变");
                         }
                     } else {
-                        ajaxUtil.fail().msg("登录密码错误");
+                        ajaxUtil.fail().msg("邮箱格式不正确");
                     }
-                } else {
-                    ajaxUtil.fail().msg("请填写登录密码");
                 }
-
             } else if (StringUtils.equals("mobile", name)) {
-                String password = usersProfileVo.getPassword();
-                if (StringUtils.isNotBlank(password)) {
-                    Users own = usersService.getUserFromSession();
-                    if (BCryptUtil.bCryptPasswordMatches(password, own.getPassword())) {
-                        if (Pattern.matches(SystemMobileConfig.MOBILE_REGEX, value)) {
-                            if (!StringUtils.equals(own.getMobile(), value)) {
-                                Result<UsersRecord> usersRecords = usersService.findByEmailNeOwn(value, own.getMobile());
-                                if (usersRecords.isEmpty()) {
-                                    // step 2.手机号是否已验证
-                                    if (!ObjectUtils.isEmpty(session.getAttribute(value + SystemMobileConfig.MOBILE_VALID))) {
-                                        boolean isValid = (boolean) session.getAttribute(value + SystemMobileConfig.MOBILE_VALID);
-                                        if (isValid) {
-                                            Users users = usersService.getUserFromSession();
-                                            users.setMobile(value);
-                                            usersService.update(users);
-                                            ajaxUtil.success().msg("更新手机号成功");
-                                        } else {
-                                            ajaxUtil.fail().msg("验证手机号失败");
-                                        }
+                if (canUpdate) {
+                    if (Pattern.matches(SystemMobileConfig.MOBILE_REGEX, value)) {
+                        if (!StringUtils.equals(own.getMobile(), value)) {
+                            Result<UsersRecord> usersRecords = usersService.findByEmailNeOwn(value, own.getMobile());
+                            if (usersRecords.isEmpty()) {
+                                // step 2.手机号是否已验证
+                                if (!ObjectUtils.isEmpty(session.getAttribute(value + SystemMobileConfig.MOBILE_VALID))) {
+                                    boolean isValid = (boolean) session.getAttribute(value + SystemMobileConfig.MOBILE_VALID);
+                                    if (isValid) {
+                                        Users users = usersService.getUserFromSession();
+                                        users.setMobile(value);
+                                        usersService.update(users);
+                                        ajaxUtil.success().msg("更新手机号成功");
                                     } else {
-                                        ajaxUtil.fail().msg("请重新验证手机号");
+                                        ajaxUtil.fail().msg("验证手机号失败");
                                     }
                                 } else {
-                                    ajaxUtil.fail().msg("手机号已被使用");
+                                    ajaxUtil.fail().msg("请重新验证手机号");
                                 }
                             } else {
-                                ajaxUtil.fail().msg("手机号未改变");
+                                ajaxUtil.fail().msg("手机号已被使用");
                             }
                         } else {
-                            ajaxUtil.fail().msg("手机号不正确");
+                            ajaxUtil.fail().msg("手机号未改变");
                         }
                     } else {
-                        ajaxUtil.fail().msg("登录密码错误");
+                        ajaxUtil.fail().msg("手机号不正确");
                     }
-                } else {
-                    ajaxUtil.fail().msg("请填写登录密码");
                 }
-
             } else if (StringUtils.equals("idCard", name)) {
                 if (Pattern.matches(Workbook.ID_CARD_REGEX, value)) {
-                    Users users = usersService.getUserFromSession();
-                    if (!StringUtils.equals(users.getIdCard(), value)) {
+                    if (!StringUtils.equals(own.getIdCard(), value)) {
                         // 检查是否已经存在该身份证号
-                        Result<UsersRecord> records = usersService.findByIdCardNeOwn(value, users.getUsername());
+                        Result<UsersRecord> records = usersService.findByIdCardNeOwn(value, own.getUsername());
                         if (records.isEmpty()) {
-                            users.setIdCard(value);
-                            usersService.update(users);
+                            own.setIdCard(value);
+                            usersService.update(own);
                             ajaxUtil.success().msg("身份证号更新成功");
                         } else {
                             ajaxUtil.fail().msg("身份证号已经存在");
@@ -474,6 +496,14 @@ public class UsersRestController {
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
+    /**
+     * 双因素认证关闭
+     *
+     * @param mode            验证模式
+     * @param password        密码
+     * @param dynamicPassword 动态密码
+     * @return true or false
+     */
     @PostMapping("/users/close/google_oauth")
     public ResponseEntity<Map<String, Object>> userCloseGoogleOauth(@RequestParam("mode") int mode, String password, String dynamicPassword) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();

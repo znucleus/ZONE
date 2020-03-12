@@ -144,15 +144,15 @@ public class UsersViewController {
     public String userSetting(ModelMap modelMap) {
         Users users = usersService.getUserFromSession();
         modelMap.addAttribute("username", users.getUsername());
-        modelMap.addAttribute("email", users.getEmail());
-        modelMap.addAttribute("mobile", users.getMobile());
-        modelMap.addAttribute("idCard", users.getIdCard());
+        modelMap.addAttribute("email", StringUtils.overlay(users.getEmail(), "****", 1, users.getEmail().lastIndexOf("@")));
+        modelMap.addAttribute("mobile", StringUtils.overlay(users.getMobile(), "****", 3, 6));
+        modelMap.addAttribute("idCard", StringUtils.isNotBlank(users.getIdCard()) ? StringUtils.overlay(users.getIdCard(), "****", 3, users.getIdCard().length() - 4) : "");
 
         Optional<GoogleOauthRecord> googleOauthRecord = googleOauthService.findByUsername(users.getUsername());
-        if(googleOauthRecord.isPresent()){
-            modelMap.addAttribute("isOpenGoogleOauth",1);
+        if (googleOauthRecord.isPresent()) {
+            modelMap.addAttribute("isOpenGoogleOauth", 1);
         } else {
-            modelMap.addAttribute("isOpenGoogleOauth",0);
+            modelMap.addAttribute("isOpenGoogleOauth", 0);
         }
 
         return "web/platform/users/users_setting::#page-wrapper";

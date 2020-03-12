@@ -167,7 +167,25 @@
                     <form class="mg-t-20">
                         <div class="form-group row">
                             <div class="col-12">
+                                <select class="form-control" id="emailPasswordMode">
+                                    <option value="0">密码验证</option>
+                                    <option value="1">动态密码验证</option>
+                                </select>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-12">
                                 <input id="emailPassword" type="password" placeholder="输入登录密码"
+                                       class="form-control">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row" style="display: none">
+                            <div class="col-12">
+                                <input id="emailPasswordDynamicPassword" type="password" placeholder="输入动态密码"
                                        class="form-control">
                                 <div class="invalid-feedback"></div>
                             </div>
@@ -175,8 +193,7 @@
 
                         <div class="form-group row">
                             <div class="col-12">
-                                <input type="text" class="form-control" placeholder="邮箱" id="email"
-                                       th:value="${email}"/>
+                                <input type="text" class="form-control" placeholder="邮箱" id="email"/>
                                 <div class="invalid-feedback"></div>
                             </div>
                         </div>
@@ -206,7 +223,25 @@
                     <form class="mg-t-20">
                         <div class="form-group row">
                             <div class="col-12">
+                                <select class="form-control" id="mobilePasswordMode">
+                                    <option value="0">密码验证</option>
+                                    <option value="1">动态密码验证</option>
+                                </select>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-12">
                                 <input id="mobilePassword" type="password" placeholder="输入登录密码"
+                                       class="form-control">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row" style="display: none">
+                            <div class="col-12">
+                                <input id="mobilePasswordDynamicPassword" type="password" placeholder="输入动态密码"
                                        class="form-control">
                                 <div class="invalid-feedback"></div>
                             </div>
@@ -214,8 +249,7 @@
 
                         <div class="form-group row">
                             <div class="col-12">
-                                <input type="text" class="form-control" placeholder="手机号" id="mobile"
-                                       th:value="${mobile}"/>
+                                <input type="text" class="form-control" placeholder="手机号" id="mobile"/>
                                 <div class="invalid-feedback"></div>
                             </div>
                         </div>
