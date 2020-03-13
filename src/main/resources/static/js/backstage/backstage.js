@@ -48,7 +48,9 @@ requirejs.config({
         "KaTeX": web_path + "/plugins/KaTeX/katex.min",
         "highlight": web_path + "/plugins/highlight/highlight.min",
         "quill": web_path + "/plugins/quill/quill.min",
-        "jquery.print": web_path + "/plugins/jquery-print/jquery.print.min"
+        "jquery.print": web_path + "/plugins/jquery-print/jquery.print.min",
+        "jquery-toggles": web_path + "/plugins/jquery-toggles/toggles.min",
+        "clipboard": web_path + "/plugins/clipboard/clipboard.min"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -139,6 +141,9 @@ requirejs.config({
         },
         "jquery.print": {
             deps: ["jquery"]
+        },
+        "jquery-toggles":{
+            deps: ["jquery", "css!" + web_path + "/plugins/jquery-toggles/toggles-full.min"]
         }
     }
 });
@@ -257,7 +262,7 @@ require(["jquery", "requirejs-domready", "moment-with-locales", "handlebars", "a
             }
 
             // 轮询扫描通知
-            setInterval(initUserNotify, 30000);
+            setInterval(initUserNotify, 60000);
 
             function initUserNotify() {
                 $.ajax({
