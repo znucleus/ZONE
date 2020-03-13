@@ -288,7 +288,7 @@ public class UsersRestController {
                         Timestamp passwordResetKeyValid = users.getPasswordResetKeyValid();
                         Timestamp now = DateTimeUtil.getNowSqlTimestamp();
                         isValid = now.before(passwordResetKeyValid) && resetPasswordVo.getPasswordResetKey().equals(users.getPasswordResetKey());
-                    } else if(resetPasswordVo.getVerificationMode() == 1){
+                    } else if (resetPasswordVo.getVerificationMode() == 1) {
                         String mobile = users.getMobile();
                         String validKey = mobile + SystemMobileConfig.MOBILE_VALID;
                         isValid = Objects.nonNull(session.getAttribute(validKey)) &&

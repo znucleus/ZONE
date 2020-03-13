@@ -16,11 +16,11 @@ public class AttendReleaseSubBean extends AttendReleaseSub {
     private Byte isSubscribe;
 
     // 微信模板数据
-    private String  templateId;
-    private String  page;
-    private String  data;
-    private String  miniProgramState;
-    private String  lang;
+    private String templateId;
+    private String page;
+    private String data;
+    private String miniProgramState;
+    private String lang;
     private int studentId;
 
     public String getRealName() {

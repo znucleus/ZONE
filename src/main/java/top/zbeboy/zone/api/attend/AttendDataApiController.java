@@ -107,7 +107,7 @@ public class AttendDataApiController {
                                                         Math.abs(weiXinDevice.getScreenWidth() - attendDataAddVo.getScreenWidth()) > 30 ||
                                                         Objects.isNull(weiXinDevice.getScreenHeight()) ||
                                                         Objects.isNull(attendDataAddVo.getScreenHeight()) ||
-                                                        Math.abs(weiXinDevice.getScreenHeight() - attendDataAddVo.getScreenHeight()) > 30){
+                                                        Math.abs(weiXinDevice.getScreenHeight() - attendDataAddVo.getScreenHeight()) > 30) {
                                                     attendData.setDeviceSame(BooleanUtil.toByte(false));
                                                 } else {
                                                     attendData.setDeviceSame(BooleanUtil.toByte(true));

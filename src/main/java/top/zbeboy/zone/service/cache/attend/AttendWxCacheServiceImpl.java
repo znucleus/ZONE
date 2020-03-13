@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zone.config.CacheBook;
 import top.zbeboy.zone.config.WeiXinAppBook;
 import top.zbeboy.zone.domain.tables.pojos.AttendRelease;
-import top.zbeboy.zone.domain.tables.pojos.AttendReleaseSub;
 import top.zbeboy.zone.domain.tables.pojos.AttendSubscribeLog;
 import top.zbeboy.zone.service.attend.AttendSubscribeLogService;
 import top.zbeboy.zone.service.attend.AttendWxStudentSubscribeService;

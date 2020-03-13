@@ -2,7 +2,6 @@ package top.zbeboy.zone.service.util;
 
 import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -22,8 +21,9 @@ public class HttpClientUtil {
 
     /**
      * 发送get请求
+     *
      * @param uri 网址
-     * @param p 参数
+     * @param p   参数
      * @return 返回结果
      * @throws IOException
      */
@@ -52,8 +52,9 @@ public class HttpClientUtil {
 
     /**
      * 发送post请求
+     *
      * @param uri 网址
-     * @param p 参数
+     * @param p   参数
      * @return 返回结果
      * @throws IOException
      */
@@ -79,7 +80,8 @@ public class HttpClientUtil {
 
     /**
      * 发送post请求
-     * @param uri 网址
+     *
+     * @param uri  网址
      * @param json 参数
      * @return 返回结果
      * @throws IOException
@@ -88,7 +90,7 @@ public class HttpClientUtil {
         // 1、创建httpClient
         CloseableHttpClient client = HttpClients.createDefault();
 
-        StringEntity requestEntity = new StringEntity(json,Consts.UTF_8);
+        StringEntity requestEntity = new StringEntity(json, Consts.UTF_8);
         requestEntity.setContentEncoding("UTF-8");
         HttpPost httpPost = new HttpPost(uri);
         httpPost.setEntity(requestEntity);

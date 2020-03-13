@@ -3,7 +3,6 @@ package top.zbeboy.zone.service.cache.attend;
 import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.zone.domain.tables.pojos.AttendRelease;
-import top.zbeboy.zone.domain.tables.pojos.AttendReleaseSub;
 
 import java.io.IOException;
 

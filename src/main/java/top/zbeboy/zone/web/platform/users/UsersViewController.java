@@ -4,7 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.jooq.Record;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import top.zbeboy.zone.config.SessionBook;
 import top.zbeboy.zone.config.Workbook;
@@ -22,7 +21,6 @@ import top.zbeboy.zone.service.platform.UsersTypeService;
 import top.zbeboy.zone.service.system.FilesService;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
-import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 import top.zbeboy.zone.web.system.tip.SystemTipConfig;
 

@@ -5,14 +5,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import top.zbeboy.zone.domain.tables.pojos.SystemNotify;
 import top.zbeboy.zone.service.notify.SystemNotifyService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.web.bean.notify.SystemNotifyBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 
 import javax.annotation.Resource;
-import java.util.Objects;
 import java.util.Optional;
 
 @Controller

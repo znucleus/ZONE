@@ -125,12 +125,12 @@ public class InternshipRegulateServiceImpl implements InternshipRegulateService,
             if (StringUtils.isNotBlank(createDate)) {
                 Timestamp startTime;
                 Timestamp endTime;
-                if(createDate.contains("至")){
+                if (createDate.contains("至")) {
                     String[] arr = createDate.split(" 至 ");
                     startTime = DateTimeUtil.defaultParseSqlTimestamp(arr[0] + " 00:00:00");
                     endTime = DateTimeUtil.defaultParseSqlTimestamp(arr[1] + " 23:59:59");
                 } else {
-                    startTime = DateTimeUtil.defaultParseSqlTimestamp(createDate+ " 00:00:00");
+                    startTime = DateTimeUtil.defaultParseSqlTimestamp(createDate + " 00:00:00");
                     endTime = DateTimeUtil.defaultParseSqlTimestamp(createDate + " 23:59:59");
                 }
                 if (Objects.isNull(a)) {
