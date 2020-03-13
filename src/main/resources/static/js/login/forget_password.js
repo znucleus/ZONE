@@ -43,6 +43,7 @@ require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf"]
                 forget_password_dynamic_password: web_path + '/forget_password/dynamic_password',
                 forget_password_success: web_path + '/tip/forget_password/success',
                 reset_password_mobile: web_path + '/anyone/reset_password/mobile',
+                reset_password_dynamic_password: web_path + '/anyone/reset_password/dynamic_password',
                 send_mobile: web_path + '/anyone/send/mobile',
                 check_mobile_verification_code: web_path + '/anyone/check/mobile/code',
                 check_exist_username: web_path + '/anyone/check/exist/username'
@@ -319,7 +320,7 @@ require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf"]
                     var globalError = $('#globalError');
                     if (data.state) {
                         globalError.text('');
-                        window.location.href = ajax_url.reset_password_mobile;
+                        window.location.href = ajax_url.reset_password_dynamic_password;
                     } else {
                         globalError.text(data.msg);
                     }

@@ -2,7 +2,7 @@ package top.zbeboy.zone.web.system.mobile;
 
 public final class SystemMobileConfig {
 
-    static final String MOBILE = "mobile";
+    public static final String MOBILE = "mobile";
 
     static final String MOBILE_EXPIRE = "_mobile_expire";
 

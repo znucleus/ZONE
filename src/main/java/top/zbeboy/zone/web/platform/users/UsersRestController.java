@@ -293,11 +293,17 @@ public class UsersRestController {
                         String validKey = mobile + SystemMobileConfig.MOBILE_VALID;
                         isValid = Objects.nonNull(session.getAttribute(validKey)) &&
                                 (boolean) session.getAttribute(validKey);
+                        // 删除当次验证
+                        session.removeAttribute(SystemMobileConfig.MOBILE);
+                        session.removeAttribute(validKey);
                     } else {
                         String username = users.getUsername();
                         String validKey = username + SessionBook.DYNAMIC_PASSWORD_VALID;
                         isValid = Objects.nonNull(session.getAttribute(validKey)) &&
                                 (boolean) session.getAttribute(validKey);
+                        // 删除当次验证
+                        session.removeAttribute(SessionBook.DYNAMIC_PASSWORD_USERNAME);
+                        session.removeAttribute(validKey);
                     }
                     if (isValid) {
                         users.setPassword(BCryptUtil.bCryptPassword(resetPasswordVo.getPassword()));

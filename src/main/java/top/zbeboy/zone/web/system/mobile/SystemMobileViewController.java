@@ -2,7 +2,6 @@ package top.zbeboy.zone.web.system.mobile;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.service.platform.UsersService;
@@ -27,11 +26,11 @@ public class SystemMobileViewController {
     @GetMapping("/anyone/reset_password/mobile")
     public String resetPasswordMobile(HttpSession session, ModelMap modelMap) {
         SystemTipConfig config = new SystemTipConfig();
-        if (!ObjectUtils.isEmpty(session.getAttribute(SystemMobileConfig.MOBILE))) {
+        if (Objects.nonNull(session.getAttribute(SystemMobileConfig.MOBILE))) {
             String mobile = (String) session.getAttribute(SystemMobileConfig.MOBILE);
             Users users = usersService.findByMobile(mobile);
             if (Objects.nonNull(users)) {
-                if (!ObjectUtils.isEmpty(session.getAttribute(mobile + SystemMobileConfig.MOBILE_VALID))) {
+                if (Objects.nonNull(session.getAttribute(mobile + SystemMobileConfig.MOBILE_VALID))) {
                     boolean isValid = (boolean) session.getAttribute(mobile + SystemMobileConfig.MOBILE_VALID);
                     if (isValid) {
                         modelMap.addAttribute("username", users.getUsername());
