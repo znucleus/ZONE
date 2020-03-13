@@ -41,6 +41,16 @@ public class MainController {
     private RequestCache requestCache = new HttpSessionRequestCache();
 
     /**
+     * 首页
+     *
+     * @return 首页
+     */
+    @GetMapping(value = {"/", "/index", "/home"})
+    public String index() {
+        return "index";
+    }
+
+    /**
      * 登录页
      *
      * @return 登录页.
