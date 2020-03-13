@@ -44,6 +44,7 @@
         <sendcloud4j.version>0.0.5</sendcloud4j.version>
         <jsoup.version>1.12.1</jsoup.version>
         <httpclient.version>4.5.10</httpclient.version>
+        <googleauth.version>1.4.0</googleauth.version>
 
         <commons-io.verson>2.6</commons-io.verson>
         <commons-collections4.version>4.4</commons-collections4.version>
@@ -331,7 +332,6 @@
             <version>${commons-compress.version}</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
@@ -349,6 +349,13 @@
                     <artifactId>logback-classic</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <!-- google auth-->
+        <dependency>
+            <groupId>com.warrenstrange</groupId>
+            <artifactId>googleauth</artifactId>
+            <version>${googleauth.version}</version>
         </dependency>
 
         <dependency>

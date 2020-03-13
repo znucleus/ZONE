@@ -4,7 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -56,12 +55,12 @@ public class SystemMobileRestController {
             SystemConfigure systemConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MOBILE_SWITCH.name());
             if (StringUtils.equals("1", systemConfigure.getDataValue())) {
                 boolean isSend = false;
-                if (!ObjectUtils.isEmpty(session.getAttribute(SystemMobileConfig.MOBILE))) {
+                if (Objects.nonNull(session.getAttribute(SystemMobileConfig.MOBILE))) {
                     String tempMobile = (String) session.getAttribute(SystemMobileConfig.MOBILE);
                     if (!StringUtils.equals(tempMobile, param)) {
                         isSend = true;
                     } else {
-                        if (!ObjectUtils.isEmpty(session.getAttribute(param + SystemMobileConfig.MOBILE_EXPIRE))) {
+                        if (Objects.nonNull(session.getAttribute(param + SystemMobileConfig.MOBILE_EXPIRE))) {
                             Date mobileExpiry = (Date) session.getAttribute(param + SystemMobileConfig.MOBILE_EXPIRE);
                             if (new Date().before(mobileExpiry)) {
                                 ajaxUtil.fail().msg("验证码不可重复发送(" + ZoneProperties.getMobile().getValidCodeTime() + "分钟内)");
@@ -113,7 +112,7 @@ public class SystemMobileRestController {
             boolean hasError = isHasError(session, param, ajaxUtil);
 
             if (!hasError) {
-                if (!ObjectUtils.isEmpty(session.getAttribute(param + SystemMobileConfig.MOBILE_EXPIRE))) {
+                if (Objects.nonNull(session.getAttribute(param + SystemMobileConfig.MOBILE_EXPIRE))) {
                     Date mobileExpiry = (Date) session.getAttribute(param + SystemMobileConfig.MOBILE_EXPIRE);
                     if (!new Date().before(mobileExpiry)) {
                         ajaxUtil.fail().msg("验证码已失效(" + ZoneProperties.getMobile().getValidCodeTime() + "分钟内有效)");
@@ -126,7 +125,7 @@ public class SystemMobileRestController {
             }
 
             if (!hasError) {
-                if (!ObjectUtils.isEmpty(session.getAttribute(param + SystemMobileConfig.MOBILE_CODE))) {
+                if (Objects.nonNull(session.getAttribute(param + SystemMobileConfig.MOBILE_CODE))) {
                     String mobileCode = (String) session.getAttribute(param + SystemMobileConfig.MOBILE_CODE);
                     if (!StringUtils.equals(mobileCode, code)) {
                         ajaxUtil.fail().msg("验证码错误");
@@ -163,7 +162,7 @@ public class SystemMobileRestController {
             boolean hasError = isHasError(session, param, ajaxUtil);
 
             if (!hasError) {
-                if (!ObjectUtils.isEmpty(session.getAttribute(param + SystemMobileConfig.MOBILE_VALID))) {
+                if (Objects.nonNull(session.getAttribute(param + SystemMobileConfig.MOBILE_VALID))) {
                     boolean isValid = (boolean) session.getAttribute(param + SystemMobileConfig.MOBILE_VALID);
                     if (isValid) {
                         ajaxUtil.success().msg("验证成功");
@@ -189,10 +188,10 @@ public class SystemMobileRestController {
     @PostMapping("/forget_password/mobile")
     public ResponseEntity<Map<String, Object>> forgetPassword(@RequestParam("mobile") String mobile, HttpSession session) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        String param = org.springframework.util.StringUtils.trimWhitespace(mobile);
-        if (org.springframework.util.StringUtils.hasLength(param)) {
+        String param = StringUtils.deleteWhitespace(mobile);
+        if (StringUtils.isNotBlank(param)) {
             if (Pattern.matches(SystemMobileConfig.MOBILE_REGEX, param)) {
-                if (!ObjectUtils.isEmpty(session.getAttribute(param + SystemMobileConfig.MOBILE_VALID))) {
+                if (Objects.nonNull(session.getAttribute(param + SystemMobileConfig.MOBILE_VALID))) {
                     boolean isValid = (boolean) session.getAttribute(param + SystemMobileConfig.MOBILE_VALID);
                     if (isValid) {
                         Users users = usersService.findByMobile(param);
@@ -226,7 +225,7 @@ public class SystemMobileRestController {
      */
     private boolean isHasError(HttpSession session, String param, AjaxUtil ajaxUtil) {
         boolean hasError = false;
-        if (!ObjectUtils.isEmpty(session.getAttribute(SystemMobileConfig.MOBILE))) {
+        if (Objects.nonNull(session.getAttribute(SystemMobileConfig.MOBILE))) {
             String tempMobile = (String) session.getAttribute(SystemMobileConfig.MOBILE);
             if (!StringUtils.equals(tempMobile, param)) {
                 ajaxUtil.fail().msg("请重新获取验证码");

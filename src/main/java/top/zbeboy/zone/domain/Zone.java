@@ -41,6 +41,7 @@ import top.zbeboy.zone.domain.tables.Department;
 import top.zbeboy.zone.domain.tables.EpidemicRegisterData;
 import top.zbeboy.zone.domain.tables.EpidemicRegisterRelease;
 import top.zbeboy.zone.domain.tables.Files;
+import top.zbeboy.zone.domain.tables.GoogleOauth;
 import top.zbeboy.zone.domain.tables.Grade;
 import top.zbeboy.zone.domain.tables.InternshipApply;
 import top.zbeboy.zone.domain.tables.InternshipChangeCompanyHistory;
@@ -103,7 +104,7 @@ import top.zbeboy.zone.domain.tables.WeiXinDevice;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Zone extends SchemaImpl {
 
-    private static final long serialVersionUID = -205859511;
+    private static final long serialVersionUID = 1800585374;
 
     /**
      * The reference instance of <code>zone</code>
@@ -244,6 +245,11 @@ public class Zone extends SchemaImpl {
      * The table <code>zone.files</code>.
      */
     public final Files FILES = top.zbeboy.zone.domain.tables.Files.FILES;
+
+    /**
+     * The table <code>zone.google_oauth</code>.
+     */
+    public final GoogleOauth GOOGLE_OAUTH = top.zbeboy.zone.domain.tables.GoogleOauth.GOOGLE_OAUTH;
 
     /**
      * The table <code>zone.grade</code>.
@@ -529,6 +535,7 @@ public class Zone extends SchemaImpl {
             EpidemicRegisterData.EPIDEMIC_REGISTER_DATA,
             EpidemicRegisterRelease.EPIDEMIC_REGISTER_RELEASE,
             Files.FILES,
+            GoogleOauth.GOOGLE_OAUTH,
             Grade.GRADE,
             InternshipApply.INTERNSHIP_APPLY,
             InternshipChangeCompanyHistory.INTERNSHIP_CHANGE_COMPANY_HISTORY,

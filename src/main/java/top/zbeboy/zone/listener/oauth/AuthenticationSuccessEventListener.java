@@ -36,7 +36,7 @@ public class AuthenticationSuccessEventListener implements ApplicationListener<A
                 String scope = (String) map.get("scope");
                 String username = (String) map.get("username");
 
-                if(StringUtils.isNotBlank(username) && StringUtils.isNotBlank(scope)){
+                if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(scope)) {
                     RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
                     HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(requestAttributes)).getRequest();
 

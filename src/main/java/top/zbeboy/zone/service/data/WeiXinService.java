@@ -1,7 +1,6 @@
 package top.zbeboy.zone.service.data;
 
 import org.jooq.Record;
-import org.jooq.Result;
 import top.zbeboy.zone.domain.tables.pojos.WeiXin;
 import top.zbeboy.zone.domain.tables.records.WeiXinRecord;
 

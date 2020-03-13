@@ -8,6 +8,8 @@ public class UsersProfileVo {
     @NotBlank(message = "参数VALUE不能为空")
     private String value;
     private String password;
+    private int mode;
+    private String dynamicPassword;
 
     public String getName() {
         return name;
@@ -31,5 +33,21 @@ public class UsersProfileVo {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public int getMode() {
+        return mode;
+    }
+
+    public void setMode(int mode) {
+        this.mode = mode;
+    }
+
+    public String getDynamicPassword() {
+        return dynamicPassword;
+    }
+
+    public void setDynamicPassword(String dynamicPassword) {
+        this.dynamicPassword = dynamicPassword;
     }
 }

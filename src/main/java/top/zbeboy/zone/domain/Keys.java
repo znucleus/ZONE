@@ -38,6 +38,7 @@ import top.zbeboy.zone.domain.tables.Department;
 import top.zbeboy.zone.domain.tables.EpidemicRegisterData;
 import top.zbeboy.zone.domain.tables.EpidemicRegisterRelease;
 import top.zbeboy.zone.domain.tables.Files;
+import top.zbeboy.zone.domain.tables.GoogleOauth;
 import top.zbeboy.zone.domain.tables.Grade;
 import top.zbeboy.zone.domain.tables.InternshipApply;
 import top.zbeboy.zone.domain.tables.InternshipChangeCompanyHistory;
@@ -109,6 +110,7 @@ import top.zbeboy.zone.domain.tables.records.DepartmentRecord;
 import top.zbeboy.zone.domain.tables.records.EpidemicRegisterDataRecord;
 import top.zbeboy.zone.domain.tables.records.EpidemicRegisterReleaseRecord;
 import top.zbeboy.zone.domain.tables.records.FilesRecord;
+import top.zbeboy.zone.domain.tables.records.GoogleOauthRecord;
 import top.zbeboy.zone.domain.tables.records.GradeRecord;
 import top.zbeboy.zone.domain.tables.records.InternshipApplyRecord;
 import top.zbeboy.zone.domain.tables.records.InternshipChangeCompanyHistoryRecord;
@@ -231,6 +233,7 @@ public class Keys {
     public static final UniqueKey<EpidemicRegisterDataRecord> KEY_EPIDEMIC_REGISTER_DATA_PRIMARY = UniqueKeys0.KEY_EPIDEMIC_REGISTER_DATA_PRIMARY;
     public static final UniqueKey<EpidemicRegisterReleaseRecord> KEY_EPIDEMIC_REGISTER_RELEASE_PRIMARY = UniqueKeys0.KEY_EPIDEMIC_REGISTER_RELEASE_PRIMARY;
     public static final UniqueKey<FilesRecord> KEY_FILES_PRIMARY = UniqueKeys0.KEY_FILES_PRIMARY;
+    public static final UniqueKey<GoogleOauthRecord> KEY_GOOGLE_OAUTH_PRIMARY = UniqueKeys0.KEY_GOOGLE_OAUTH_PRIMARY;
     public static final UniqueKey<GradeRecord> KEY_GRADE_PRIMARY = UniqueKeys0.KEY_GRADE_PRIMARY;
     public static final UniqueKey<InternshipApplyRecord> KEY_INTERNSHIP_APPLY_PRIMARY = UniqueKeys0.KEY_INTERNSHIP_APPLY_PRIMARY;
     public static final UniqueKey<InternshipApplyRecord> KEY_INTERNSHIP_APPLY_STUDENT_ID = UniqueKeys0.KEY_INTERNSHIP_APPLY_STUDENT_ID;
@@ -326,6 +329,7 @@ public class Keys {
     public static final ForeignKey<EpidemicRegisterDataRecord, UsersRecord> EPIDEMIC_REGISTER_DATA_IBFK_2 = ForeignKeys0.EPIDEMIC_REGISTER_DATA_IBFK_2;
     public static final ForeignKey<EpidemicRegisterDataRecord, ChannelRecord> EPIDEMIC_REGISTER_DATA_IBFK_3 = ForeignKeys0.EPIDEMIC_REGISTER_DATA_IBFK_3;
     public static final ForeignKey<EpidemicRegisterReleaseRecord, UsersRecord> EPIDEMIC_REGISTER_RELEASE_IBFK_1 = ForeignKeys0.EPIDEMIC_REGISTER_RELEASE_IBFK_1;
+    public static final ForeignKey<GoogleOauthRecord, UsersRecord> GOOGLE_OAUTH_IBFK_1 = ForeignKeys0.GOOGLE_OAUTH_IBFK_1;
     public static final ForeignKey<GradeRecord, ScienceRecord> GRADE_IBFK_1 = ForeignKeys0.GRADE_IBFK_1;
     public static final ForeignKey<InternshipApplyRecord, StudentRecord> INTERNSHIP_APPLY_IBFK_1 = ForeignKeys0.INTERNSHIP_APPLY_IBFK_1;
     public static final ForeignKey<InternshipApplyRecord, InternshipReleaseRecord> INTERNSHIP_APPLY_IBFK_2 = ForeignKeys0.INTERNSHIP_APPLY_IBFK_2;
@@ -447,6 +451,7 @@ public class Keys {
         public static final UniqueKey<EpidemicRegisterDataRecord> KEY_EPIDEMIC_REGISTER_DATA_PRIMARY = Internal.createUniqueKey(EpidemicRegisterData.EPIDEMIC_REGISTER_DATA, "KEY_epidemic_register_data_PRIMARY", EpidemicRegisterData.EPIDEMIC_REGISTER_DATA.EPIDEMIC_REGISTER_DATA_ID);
         public static final UniqueKey<EpidemicRegisterReleaseRecord> KEY_EPIDEMIC_REGISTER_RELEASE_PRIMARY = Internal.createUniqueKey(EpidemicRegisterRelease.EPIDEMIC_REGISTER_RELEASE, "KEY_epidemic_register_release_PRIMARY", EpidemicRegisterRelease.EPIDEMIC_REGISTER_RELEASE.EPIDEMIC_REGISTER_RELEASE_ID);
         public static final UniqueKey<FilesRecord> KEY_FILES_PRIMARY = Internal.createUniqueKey(Files.FILES, "KEY_files_PRIMARY", Files.FILES.FILE_ID);
+        public static final UniqueKey<GoogleOauthRecord> KEY_GOOGLE_OAUTH_PRIMARY = Internal.createUniqueKey(GoogleOauth.GOOGLE_OAUTH, "KEY_google_oauth_PRIMARY", GoogleOauth.GOOGLE_OAUTH.USERNAME, GoogleOauth.GOOGLE_OAUTH.GOOGLE_OAUTH_KEY);
         public static final UniqueKey<GradeRecord> KEY_GRADE_PRIMARY = Internal.createUniqueKey(Grade.GRADE, "KEY_grade_PRIMARY", Grade.GRADE.GRADE_ID);
         public static final UniqueKey<InternshipApplyRecord> KEY_INTERNSHIP_APPLY_PRIMARY = Internal.createUniqueKey(InternshipApply.INTERNSHIP_APPLY, "KEY_internship_apply_PRIMARY", InternshipApply.INTERNSHIP_APPLY.INTERNSHIP_APPLY_ID);
         public static final UniqueKey<InternshipApplyRecord> KEY_INTERNSHIP_APPLY_STUDENT_ID = Internal.createUniqueKey(InternshipApply.INTERNSHIP_APPLY, "KEY_internship_apply_student_id", InternshipApply.INTERNSHIP_APPLY.STUDENT_ID, InternshipApply.INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID);
@@ -540,6 +545,7 @@ public class Keys {
         public static final ForeignKey<EpidemicRegisterDataRecord, UsersRecord> EPIDEMIC_REGISTER_DATA_IBFK_2 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_USERS_PRIMARY, EpidemicRegisterData.EPIDEMIC_REGISTER_DATA, "epidemic_register_data_ibfk_2", EpidemicRegisterData.EPIDEMIC_REGISTER_DATA.REGISTER_USERNAME);
         public static final ForeignKey<EpidemicRegisterDataRecord, ChannelRecord> EPIDEMIC_REGISTER_DATA_IBFK_3 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_CHANNEL_PRIMARY, EpidemicRegisterData.EPIDEMIC_REGISTER_DATA, "epidemic_register_data_ibfk_3", EpidemicRegisterData.EPIDEMIC_REGISTER_DATA.CHANNEL_ID);
         public static final ForeignKey<EpidemicRegisterReleaseRecord, UsersRecord> EPIDEMIC_REGISTER_RELEASE_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_USERS_PRIMARY, EpidemicRegisterRelease.EPIDEMIC_REGISTER_RELEASE, "epidemic_register_release_ibfk_1", EpidemicRegisterRelease.EPIDEMIC_REGISTER_RELEASE.USERNAME);
+        public static final ForeignKey<GoogleOauthRecord, UsersRecord> GOOGLE_OAUTH_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_USERS_PRIMARY, GoogleOauth.GOOGLE_OAUTH, "google_oauth_ibfk_1", GoogleOauth.GOOGLE_OAUTH.USERNAME);
         public static final ForeignKey<GradeRecord, ScienceRecord> GRADE_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_SCIENCE_PRIMARY, Grade.GRADE, "grade_ibfk_1", Grade.GRADE.SCIENCE_ID);
         public static final ForeignKey<InternshipApplyRecord, StudentRecord> INTERNSHIP_APPLY_IBFK_1 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_STUDENT_PRIMARY, InternshipApply.INTERNSHIP_APPLY, "internship_apply_ibfk_1", InternshipApply.INTERNSHIP_APPLY.STUDENT_ID);
         public static final ForeignKey<InternshipApplyRecord, InternshipReleaseRecord> INTERNSHIP_APPLY_IBFK_2 = Internal.createForeignKey(top.zbeboy.zone.domain.Keys.KEY_INTERNSHIP_RELEASE_PRIMARY, InternshipApply.INTERNSHIP_APPLY, "internship_apply_ibfk_2", InternshipApply.INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID);

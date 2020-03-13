@@ -34,7 +34,6 @@ import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.sql.Timestamp;
 import java.util.*;
 
 @RestController
@@ -201,9 +200,14 @@ public class InternshipReviewRestController {
                 if (!StringUtils.equals(users.getUsername(), param)) {
                     Optional<Record> record = internshipReviewAuthorizeService.findByInternshipReleaseIdAndUsername(internshipReleaseId, param);
                     if (!record.isPresent()) {
-                        InternshipReviewAuthorize internshipReviewAuthorize = new InternshipReviewAuthorize(internshipReleaseId, param);
-                        internshipReviewAuthorizeService.save(internshipReviewAuthorize);
-                        ajaxUtil.success().msg("保存成功");
+                        Users checkUser = usersService.findByUsername(param);
+                        if (Objects.nonNull(checkUser)) {
+                            InternshipReviewAuthorize internshipReviewAuthorize = new InternshipReviewAuthorize(internshipReleaseId, param);
+                            internshipReviewAuthorizeService.save(internshipReviewAuthorize);
+                            ajaxUtil.success().msg("保存成功");
+                        } else {
+                            ajaxUtil.fail().msg("未查询到账号信息");
+                        }
                     } else {
                         ajaxUtil.fail().msg("该账号已有权限");
                     }

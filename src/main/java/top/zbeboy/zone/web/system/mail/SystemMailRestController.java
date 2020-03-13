@@ -1,9 +1,9 @@
 package top.zbeboy.zone.web.system.mail;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,8 +50,8 @@ public class SystemMailRestController {
     @PostMapping("/forget_password/mail")
     public ResponseEntity<Map<String, Object>> forgetPassword(@RequestParam("email") String email, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        String param = StringUtils.trimWhitespace(email);
-        if (StringUtils.hasLength(param)) {
+        String param = StringUtils.deleteWhitespace(email);
+        if (StringUtils.isNotBlank(param)) {
             if (Pattern.matches(SystemMailConfig.MAIL_REGEX, param)) {
                 Users users = usersService.findByEmail(param);
                 if (Objects.nonNull(users)) {

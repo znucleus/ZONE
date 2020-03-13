@@ -37,6 +37,7 @@ import top.zbeboy.zone.domain.tables.Department;
 import top.zbeboy.zone.domain.tables.EpidemicRegisterData;
 import top.zbeboy.zone.domain.tables.EpidemicRegisterRelease;
 import top.zbeboy.zone.domain.tables.Files;
+import top.zbeboy.zone.domain.tables.GoogleOauth;
 import top.zbeboy.zone.domain.tables.Grade;
 import top.zbeboy.zone.domain.tables.InternshipApply;
 import top.zbeboy.zone.domain.tables.InternshipChangeCompanyHistory;
@@ -160,6 +161,7 @@ public class Indexes {
     public static final Index EPIDEMIC_REGISTER_RELEASE_PRIMARY = Indexes0.EPIDEMIC_REGISTER_RELEASE_PRIMARY;
     public static final Index EPIDEMIC_REGISTER_RELEASE_USERNAME = Indexes0.EPIDEMIC_REGISTER_RELEASE_USERNAME;
     public static final Index FILES_PRIMARY = Indexes0.FILES_PRIMARY;
+    public static final Index GOOGLE_OAUTH_PRIMARY = Indexes0.GOOGLE_OAUTH_PRIMARY;
     public static final Index GRADE_PRIMARY = Indexes0.GRADE_PRIMARY;
     public static final Index GRADE_SCIENCE_ID = Indexes0.GRADE_SCIENCE_ID;
     public static final Index INTERNSHIP_APPLY_INTERNSHIP_RELEASE_ID = Indexes0.INTERNSHIP_APPLY_INTERNSHIP_RELEASE_ID;
@@ -333,6 +335,7 @@ public class Indexes {
         public static Index EPIDEMIC_REGISTER_RELEASE_PRIMARY = Internal.createIndex("PRIMARY", EpidemicRegisterRelease.EPIDEMIC_REGISTER_RELEASE, new OrderField[] { EpidemicRegisterRelease.EPIDEMIC_REGISTER_RELEASE.EPIDEMIC_REGISTER_RELEASE_ID }, true);
         public static Index EPIDEMIC_REGISTER_RELEASE_USERNAME = Internal.createIndex("username", EpidemicRegisterRelease.EPIDEMIC_REGISTER_RELEASE, new OrderField[] { EpidemicRegisterRelease.EPIDEMIC_REGISTER_RELEASE.USERNAME }, false);
         public static Index FILES_PRIMARY = Internal.createIndex("PRIMARY", Files.FILES, new OrderField[] { Files.FILES.FILE_ID }, true);
+        public static Index GOOGLE_OAUTH_PRIMARY = Internal.createIndex("PRIMARY", GoogleOauth.GOOGLE_OAUTH, new OrderField[] { GoogleOauth.GOOGLE_OAUTH.USERNAME, GoogleOauth.GOOGLE_OAUTH.GOOGLE_OAUTH_KEY }, true);
         public static Index GRADE_PRIMARY = Internal.createIndex("PRIMARY", Grade.GRADE, new OrderField[] { Grade.GRADE.GRADE_ID }, true);
         public static Index GRADE_SCIENCE_ID = Internal.createIndex("science_id", Grade.GRADE, new OrderField[] { Grade.GRADE.SCIENCE_ID }, false);
         public static Index INTERNSHIP_APPLY_INTERNSHIP_RELEASE_ID = Internal.createIndex("internship_release_id", InternshipApply.INTERNSHIP_APPLY, new OrderField[] { InternshipApply.INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID }, false);

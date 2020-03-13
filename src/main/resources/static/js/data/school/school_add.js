@@ -95,7 +95,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
         function validSchoolName() {
             var schoolName = param.schoolName;
             if (schoolName.length <= 0 || schoolName.length > 200) {
-                tools.validErrorDom(param_id.roleName, '学校名200个字符以内');
+                tools.validErrorDom(param_id.schoolName, '学校名200个字符以内');
             } else {
                 $.post(ajax_url.check_name, param, function (data) {
                     if (data.state) {

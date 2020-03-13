@@ -33,6 +33,7 @@ import top.zbeboy.zone.domain.tables.Department;
 import top.zbeboy.zone.domain.tables.EpidemicRegisterData;
 import top.zbeboy.zone.domain.tables.EpidemicRegisterRelease;
 import top.zbeboy.zone.domain.tables.Files;
+import top.zbeboy.zone.domain.tables.GoogleOauth;
 import top.zbeboy.zone.domain.tables.Grade;
 import top.zbeboy.zone.domain.tables.InternshipApply;
 import top.zbeboy.zone.domain.tables.InternshipChangeCompanyHistory;
@@ -229,6 +230,11 @@ public class Tables {
      * The table <code>zone.files</code>.
      */
     public static final Files FILES = Files.FILES;
+
+    /**
+     * The table <code>zone.google_oauth</code>.
+     */
+    public static final GoogleOauth GOOGLE_OAUTH = GoogleOauth.GOOGLE_OAUTH;
 
     /**
      * The table <code>zone.grade</code>.

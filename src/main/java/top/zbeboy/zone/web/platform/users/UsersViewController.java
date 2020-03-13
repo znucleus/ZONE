@@ -5,13 +5,16 @@ import org.jooq.Record;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import top.zbeboy.zone.config.SessionBook;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.Files;
 import top.zbeboy.zone.domain.tables.pojos.Role;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
+import top.zbeboy.zone.domain.tables.records.GoogleOauthRecord;
 import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
+import top.zbeboy.zone.service.platform.GoogleOauthService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
@@ -19,8 +22,10 @@ import top.zbeboy.zone.service.system.FilesService;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
+import top.zbeboy.zone.web.system.tip.SystemTipConfig;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -46,6 +51,66 @@ public class UsersViewController {
 
     @Resource
     private RoleService roleService;
+
+    @Resource
+    private GoogleOauthService googleOauthService;
+
+    /**
+     * 重置密码
+     *
+     * @param modelMap 页面对象
+     * @return 消息
+     */
+    @GetMapping("/anyone/reset_password/dynamic_password")
+    public String resetPasswordDynamicPassword(HttpSession session, ModelMap modelMap) {
+        SystemTipConfig config = new SystemTipConfig();
+        final String usernameKey = SessionBook.DYNAMIC_PASSWORD_USERNAME;
+        if (Objects.nonNull(session.getAttribute(usernameKey))) {
+            String username = (String) session.getAttribute(usernameKey);
+            Users users = usersService.findByUsername(username);
+            if (Objects.nonNull(users)) {
+                String validKey = username + SessionBook.DYNAMIC_PASSWORD_VALID;
+                if (Objects.nonNull(session.getAttribute(validKey))) {
+                    boolean isValid = (boolean) session.getAttribute(validKey);
+                    if (isValid) {
+                        modelMap.addAttribute("username", users.getUsername());
+                        modelMap.addAttribute("verificationMode", 2);
+                        return "reset_password";
+                    } else {
+                        config.buildDangerTip(
+                                "重置密码失败。",
+                                "动态密码验证未通过。");
+                        config.addLoginButton();
+                        config.addHomeButton();
+                        config.dataMerging(modelMap);
+                    }
+                } else {
+                    config.buildDangerTip(
+                            "重置密码失败。",
+                            "动态密码未验证。");
+                    config.addLoginButton();
+                    config.addHomeButton();
+                    config.dataMerging(modelMap);
+                }
+            } else {
+                config.buildDangerTip(
+                        "重置密码失败。",
+                        "未发现您的账号注册信息！");
+                config.addLoginButton();
+                config.addHomeButton();
+                config.dataMerging(modelMap);
+            }
+        } else {
+            config.buildDangerTip(
+                    "重置密码失败。",
+                    "获取账号失败！");
+            config.addLoginButton();
+            config.addHomeButton();
+            config.dataMerging(modelMap);
+        }
+
+        return "tip";
+    }
 
     /**
      * 用户设置页面
@@ -139,9 +204,17 @@ public class UsersViewController {
     public String userSetting(ModelMap modelMap) {
         Users users = usersService.getUserFromSession();
         modelMap.addAttribute("username", users.getUsername());
-        modelMap.addAttribute("email", users.getEmail());
-        modelMap.addAttribute("mobile", users.getMobile());
-        modelMap.addAttribute("idCard", users.getIdCard());
+        modelMap.addAttribute("email", StringUtils.overlay(users.getEmail(), "****", 1, users.getEmail().lastIndexOf("@")));
+        modelMap.addAttribute("mobile", StringUtils.overlay(users.getMobile(), "****", 3, 6));
+        modelMap.addAttribute("idCard", StringUtils.isNotBlank(users.getIdCard()) ? StringUtils.overlay(users.getIdCard(), "****", 3, users.getIdCard().length() - 4) : "");
+
+        Optional<GoogleOauthRecord> googleOauthRecord = googleOauthService.findByUsername(users.getUsername());
+        if (googleOauthRecord.isPresent()) {
+            modelMap.addAttribute("isOpenGoogleOauth", 1);
+        } else {
+            modelMap.addAttribute("isOpenGoogleOauth", 0);
+        }
+
         return "web/platform/users/users_setting::#page-wrapper";
     }
 

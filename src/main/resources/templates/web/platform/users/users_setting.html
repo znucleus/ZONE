@@ -21,7 +21,8 @@
                         <div class="form-group row">
                             <label for="username" class="col-sm-3 col-form-label">账号:</label>
                             <div class="col-sm-9">
-                                <input type="text" readonly class="form-control-plaintext" id="username" th:value="${username}">
+                                <input type="text" readonly class="form-control-plaintext" id="username"
+                                       th:value="${username}">
                                 <div class="invalid-feedback"></div>
                                 <input type="hidden" id="defaultUsername" th:value="${username}"/>
                             </div>
@@ -65,7 +66,8 @@
                         <div class="form-group row">
                             <label for="idCard" class="col-sm-3 col-form-label">身份证号:</label>
                             <div class="col-sm-9">
-                                <input type="text" readonly class="form-control-plaintext" id="idCard" th:value="${idCard}">
+                                <input type="text" readonly class="form-control-plaintext" id="idCard"
+                                       th:value="${idCard}">
                                 <div class="invalid-feedback"></div>
                                 <input type="hidden" id="defaultIdCard" th:value="${idCard}"/>
                             </div>
@@ -76,6 +78,28 @@
                     <button class="btn btn-success mg-b-10" hidden="hidden" id="updateIdCard">确定</button>
                     <button class="btn btn-secondary mg-b-10" hidden="hidden" id="cancelUpdateIdCard">取消</button>
                     <button class="btn btn-primary mg-b-10" id="editIdCard">修改</button>
+                </div>
+                <div class="col-md-6">
+                    <form>
+                        <div class="form-group row">
+                            <label for="googleOauth" class="col-sm-3 col-form-label">双因素验证:</label>
+                            <div class="col-sm-9 pt-1">
+                                <span class="form-control-plaintext" id="googleOauth" th:if="${isOpenGoogleOauth==1}">已开启</span>
+                                <span class="form-control-plaintext" id="googleOauth" th:if="${isOpenGoogleOauth==0}">未开启</span>
+                                <i class="fa fa-question-circle-o" data-toggle="tooltip" data-placement="top"
+                                   title="开启双因素认证之后，可使用动态密码更改密码，手机号和邮箱"></i>
+                                <a class="btn btn-outline-primary btn-sm ml-3" href="#"
+                                   th:href="@{/files/Google Authenticator.apk}">安卓客户端</a>
+                                <a class="btn btn-outline-primary btn-sm"
+                                   href="https://apps.apple.com/cn/app/id388497605" target="_blank">苹果客户端</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-6 text-right">
+                    <div class="toggle-wrapper">
+                        <div class="toggle toggle-light primary" id="googleOauthSwitch"></div>
+                    </div>
                 </div>
             </div>
 
@@ -143,7 +167,25 @@
                     <form class="mg-t-20">
                         <div class="form-group row">
                             <div class="col-12">
+                                <select class="form-control" id="emailPasswordMode">
+                                    <option value="0">密码验证</option>
+                                    <option value="1">动态密码验证</option>
+                                </select>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-12">
                                 <input id="emailPassword" type="password" placeholder="输入登录密码"
+                                       class="form-control">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row" style="display: none">
+                            <div class="col-12">
+                                <input id="emailPasswordDynamicPassword" type="password" placeholder="输入动态密码"
                                        class="form-control">
                                 <div class="invalid-feedback"></div>
                             </div>
@@ -151,8 +193,7 @@
 
                         <div class="form-group row">
                             <div class="col-12">
-                                <input type="text" class="form-control" placeholder="邮箱" id="email"
-                                       th:value="${email}"/>
+                                <input type="email" class="form-control" placeholder="邮箱" id="email"/>
                                 <div class="invalid-feedback"></div>
                             </div>
                         </div>
@@ -182,7 +223,25 @@
                     <form class="mg-t-20">
                         <div class="form-group row">
                             <div class="col-12">
+                                <select class="form-control" id="mobilePasswordMode">
+                                    <option value="0">密码验证</option>
+                                    <option value="1">动态密码验证</option>
+                                </select>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-12">
                                 <input id="mobilePassword" type="password" placeholder="输入登录密码"
+                                       class="form-control">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row" style="display: none">
+                            <div class="col-12">
+                                <input id="mobilePasswordDynamicPassword" type="password" placeholder="输入动态密码"
                                        class="form-control">
                                 <div class="invalid-feedback"></div>
                             </div>
@@ -190,8 +249,7 @@
 
                         <div class="form-group row">
                             <div class="col-12">
-                                <input type="text" class="form-control" placeholder="手机号" id="mobile"
-                                       th:value="${mobile}"/>
+                                <input type="text" class="form-control" placeholder="手机号" id="mobile"/>
                                 <div class="invalid-feedback"></div>
                             </div>
                         </div>
@@ -220,7 +278,109 @@
         </div>
     </div>
 
-    <input type="hidden" class="dy_script" th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/platform/users/users_setting.js')}"/>
+    <!-- 双因素认证开启Modal -->
+    <div class="modal fade" id="openGoogleOauthModal" tabindex="-1" role="dialog"
+         aria-labelledby="openGoogleOauthModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="openGoogleOauthModalLabel">双因素认证开启</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="mg-t-20">
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <input id="googleOauthPassword" type="password" placeholder="输入登录密码"
+                                       class="form-control">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row" style="display: none">
+                            <div class="col-12">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" readonly placeholder="双因素认证密钥"
+                                           id="googleOauthKey"/>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="button" id="copyGoogleOauthKey"
+                                                data-clipboard-target="#googleOauthKey">复制
+                                        </button>
+                                    </div>
+                                </div>
+                                <small id="googleOauthKeyHelp" class="form-text text-muted">
+                                    提示：请复制以上密钥留存后，下载谷哥身份认证登录工具，在新建密钥框中填入以上密钥。
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="form-group text-danger" id="globalGoogleOauthError"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="openGoogleOauth">确定</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 双因素认证关闭Modal -->
+    <div class="modal fade" id="closeGoogleOauthModal" tabindex="-1" role="dialog"
+         aria-labelledby="closeGoogleOauthModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="closeGoogleOauthModalLabel">密码验证</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="mg-t-20">
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <select class="form-control" id="closeGoogleOauthMode">
+                                    <option value="0">密码验证</option>
+                                    <option value="1">动态密码验证</option>
+                                </select>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <input id="closeGoogleOauthPassword" type="password" placeholder="输入登录密码"
+                                       class="form-control">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row" style="display: none">
+                            <div class="col-12">
+                                <input id="closeGoogleOauthDynamicPassword" type="password" placeholder="输入动态密码"
+                                       class="form-control">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group text-danger" id="globalCloseGoogleOauthError"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="closeGoogleOauth">确定</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/platform/users/users_setting.js')}"/>
 </div>
 <!-- /#page-wrapper -->
 </body>

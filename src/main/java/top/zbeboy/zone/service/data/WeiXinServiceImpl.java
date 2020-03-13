@@ -2,7 +2,6 @@ package top.zbeboy.zone.service.data;
 
 import org.jooq.DSLContext;
 import org.jooq.Record;
-import org.jooq.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -12,13 +11,9 @@ import top.zbeboy.zone.domain.tables.pojos.WeiXin;
 import top.zbeboy.zone.domain.tables.records.WeiXinRecord;
 
 import javax.annotation.Resource;
-
-import java.util.List;
 import java.util.Optional;
 
-import static top.zbeboy.zone.domain.Tables.STUDENT;
-import static top.zbeboy.zone.domain.Tables.USERS;
-import static top.zbeboy.zone.domain.Tables.WEI_XIN;
+import static top.zbeboy.zone.domain.Tables.*;
 
 @Service("weiXinService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

@@ -2,7 +2,6 @@ package top.zbeboy.zone.api.attend;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.Record;
-import org.jooq.Record11;
 import org.jooq.Record12;
 import org.jooq.Result;
 import org.springframework.http.HttpStatus;

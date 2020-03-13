@@ -1,9 +1,9 @@
 //# sourceURL=users_setting.js
-require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "bootstrap",
-        "csrf", "select2-zh-CN", "jquery.entropizer"],
-    function ($, _, tools, Swal, moment) {
+require(["jquery", "lodash", "tools", "sweetalert2", "clipboard", "bootstrap",
+        "csrf", "select2-zh-CN", "jquery.entropizer", "jquery-toggles", "bootstrap"],
+    function ($, _, tools, Swal, ClipboardJS) {
 
-        moment.locale('zh-cn');
+        $('[data-toggle="tooltip"]').tooltip();
 
         var ajax_url = {
             users_update: web_path + '/users/update',
@@ -14,19 +14,30 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
             send_mobile: web_path + '/anyone/send/mobile',
             check_mobile_verification_code: web_path + '/anyone/check/mobile/code',
             obtain_mobile_code_valid: web_path + '/anyone/data/mobile/code',
-            users_password_update: web_path + '/users/password/update'
+            users_password_update: web_path + '/users/password/update',
+            open_google_oauth: web_path + "/users/open/google_oauth",
+            close_google_oauth: web_path + "/users/close/google_oauth"
         };
 
         var param_id = {
             username: '#username',
             defaultUsername: '#defaultUsername',
+            emailPasswordMode: '#emailPasswordMode',
             emailPassword: '#emailPassword',
+            emailPasswordDynamicPassword: '#emailPasswordDynamicPassword',
             email: '#email',
+            mobilePasswordMode: '#mobilePasswordMode',
             mobilePassword: '#mobilePassword',
+            mobilePasswordDynamicPassword: '#mobilePasswordDynamicPassword',
             mobile: '#mobile',
             idCard: '#idCard',
             defaultIdCard: '#defaultIdCard',
             verificationCode: '#verificationCode',
+            googleOauthPassword: '#googleOauthPassword',
+            googleOauthKey: '#googleOauthKey',
+            closeGoogleOauthMode: '#closeGoogleOauthMode',
+            closeGoogleOauthPassword: '#closeGoogleOauthPassword',
+            closeGoogleOauthDynamicPassword: '#closeGoogleOauthDynamicPassword',
             oldPassword: '#oldPassword',
             newPassword: '#newPassword',
             confirmPassword: '#confirmPassword'
@@ -73,16 +84,38 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
                 tip: '更新中...',
                 text: '保存',
                 id: '#updatePassword'
+            },
+            googleOauthSwitch: {
+                id: '#googleOauthSwitch'
+            },
+            openGoogleOauth: {
+                tip: '开启中...',
+                text: '确定',
+                id: '#openGoogleOauth'
+            },
+            closeGoogleOauth: {
+                tip: '关闭中...',
+                text: '确定',
+                id: '#closeGoogleOauth'
             }
         };
 
         var param = {
             username: '',
+            emailPasswordMode: '',
             emailPassword: '',
+            emailPasswordDynamicPassword: '',
             email: '',
+            mobilePasswordMode: '',
             mobilePassword: '',
+            mobilePasswordDynamicPassword: '',
             mobile: '',
             idCard: '',
+            googleOauthPassword: '',
+            googleOauthKey: '',
+            closeGoogleOauthMode: '',
+            closeGoogleOauthPassword: '',
+            closeGoogleOauthDynamicPassword: '',
             verificationCode: '',
             oldPassword: '',
             newPassword: '',
@@ -102,6 +135,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
         function init() {
             initSystemConfigure();
             initPassword();
+            initGoogleOauthSwitch();
         }
 
         function initSystemConfigure() {
@@ -124,14 +158,36 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
             });
         }
 
+        function initGoogleOauthSwitch() {
+            $(button_id.googleOauthSwitch.id).toggles({
+                on: $('#googleOauth').text() !== '未开启',
+                height: 26,
+                text: {
+                    on: '开', // text for the ON position
+                    off: '关' // and off
+                }
+            });
+
+            new ClipboardJS('#copyGoogleOauthKey');
+        }
+
         function initParam() {
             param.username = _.trim($(param_id.username).val());
+            param.emailPasswordMode = Number($(param_id.emailPasswordMode).val());
             param.emailPassword = _.trim($(param_id.emailPassword).val());
+            param.emailPasswordDynamicPassword = _.trim($(param_id.emailPasswordDynamicPassword).val());
             param.email = _.trim($(param_id.email).val());
+            param.mobilePasswordMode = Number($(param_id.mobilePasswordMode).val());
             param.mobilePassword = _.trim($(param_id.mobilePassword).val());
+            param.mobilePasswordDynamicPassword = _.trim($(param_id.mobilePasswordDynamicPassword).val());
             param.mobile = _.trim($(param_id.mobile).val());
             param.verificationCode = _.trim($(param_id.verificationCode).val());
             param.idCard = _.trim($(param_id.idCard).val());
+            param.googleOauthPassword = _.trim($(param_id.googleOauthPassword).val());
+            param.googleOauthKey = _.trim($(param_id.googleOauthKey).val());
+            param.closeGoogleOauthMode = Number($(param_id.closeGoogleOauthMode).val());
+            param.closeGoogleOauthPassword = _.trim($(param_id.closeGoogleOauthPassword).val());
+            param.closeGoogleOauthDynamicPassword = _.trim($(param_id.closeGoogleOauthDynamicPassword).val());
             param.oldPassword = _.trim($(param_id.oldPassword).val());
             param.newPassword = _.trim($(param_id.newPassword).val());
             param.confirmPassword = _.trim($(param_id.confirmPassword).val());
@@ -206,6 +262,17 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
             }
         });
 
+        $(param_id.emailPasswordMode).change(function () {
+            var v = Number($(this).val());
+            if (v === 0) {
+                $(param_id.emailPassword).parent().parent().css('display', '');
+                $(param_id.emailPasswordDynamicPassword).parent().parent().css('display', 'none');
+            } else {
+                $(param_id.emailPassword).parent().parent().css('display', 'none');
+                $(param_id.emailPasswordDynamicPassword).parent().parent().css('display', '');
+            }
+        });
+
         $(param_id.emailPassword).blur(function () {
             initParam();
             var emailPassword = param.emailPassword;
@@ -250,18 +317,29 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
         });
 
         function validEmailPassword() {
-            var emailPassword = param.emailPassword;
-            if (emailPassword !== '') {
-                $.post(ajax_url.check_password, {password: emailPassword}, function (data) {
-                    if (data.state) {
-                        tools.validSuccessDom(param_id.emailPassword);
-                        validEmail();
-                    } else {
-                        tools.validErrorDom(param_id.emailPassword, '密码错误');
-                    }
-                });
+            var emailPasswordMode = param.emailPasswordMode;
+            if (emailPasswordMode === 0) {
+                var emailPassword = param.emailPassword;
+                if (emailPassword !== '') {
+                    $.post(ajax_url.check_password, {password: emailPassword}, function (data) {
+                        if (data.state) {
+                            tools.validSuccessDom(param_id.emailPassword);
+                            validEmail();
+                        } else {
+                            tools.validErrorDom(param_id.emailPassword, '密码错误');
+                        }
+                    });
+                } else {
+                    tools.validErrorDom(param_id.emailPassword, '请填写密码');
+                }
             } else {
-                tools.validErrorDom(param_id.emailPassword, '请填写密码');
+                var emailPasswordDynamicPassword = param.emailPasswordDynamicPassword;
+                if (emailPasswordDynamicPassword !== '') {
+                    tools.validSuccessDom(param_id.emailPasswordDynamicPassword);
+                    validEmail();
+                } else {
+                    tools.validErrorDom(param_id.closeGoogleOauthDynamicPassword, "请填写动态密码");
+                }
             }
         }
 
@@ -293,7 +371,9 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
             $.post(ajax_url.users_update, {
                 name: 'email',
                 value: param.email,
-                password: param.emailPassword
+                password: param.emailPassword,
+                mode: param.emailPasswordMode,
+                dynamicPassword: param.emailPasswordDynamicPassword
             }, function (data) {
                 // 去除遮罩
                 tools.buttonEndLoading(button_id.saveEmail.id, button_id.saveEmail.text);
@@ -351,7 +431,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
                     }, function (data) {
                         tools.buttonEndLoading(button_id.updateIdCard.id, button_id.updateIdCard.text);
                         if (data.state) {
-                            cancelUpdateEmail();
+                            cancelUpdateIdCard();
                             Swal.fire({
                                 title: data.msg,
                                 type: "success",
@@ -365,6 +445,17 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
                         }
                     });
                 }
+            }
+        });
+
+        $(param_id.mobilePasswordMode).change(function () {
+            var v = Number($(this).val());
+            if (v === 0) {
+                $(param_id.mobilePassword).parent().parent().css('display', '');
+                $(param_id.mobilePasswordDynamicPassword).parent().parent().css('display', 'none');
+            } else {
+                $(param_id.mobilePassword).parent().parent().css('display', 'none');
+                $(param_id.mobilePasswordDynamicPassword).parent().parent().css('display', '');
             }
         });
 
@@ -487,18 +578,29 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
         });
 
         function validMobilePassword() {
-            var mobilePassword = param.mobilePassword;
-            if (mobilePassword !== '') {
-                $.post(ajax_url.check_password, {password: mobilePassword}, function (data) {
-                    if (data.state) {
-                        tools.validSuccessDom(param_id.mobilePassword);
-                        validMobile();
-                    } else {
-                        tools.validErrorDom(param_id.mobilePassword, '密码错误');
-                    }
-                });
+            var mobilePasswordMode = param.mobilePasswordMode;
+            if (mobilePasswordMode === 0) {
+                var mobilePassword = param.mobilePassword;
+                if (mobilePassword !== '') {
+                    $.post(ajax_url.check_password, {password: mobilePassword}, function (data) {
+                        if (data.state) {
+                            tools.validSuccessDom(param_id.mobilePassword);
+                            validMobile();
+                        } else {
+                            tools.validErrorDom(param_id.mobilePassword, '密码错误');
+                        }
+                    });
+                } else {
+                    tools.validErrorDom(param_id.mobilePassword, '请填写密码');
+                }
             } else {
-                tools.validErrorDom(param_id.mobilePassword, '请填写密码');
+                var mobilePasswordDynamicPassword = param.mobilePasswordDynamicPassword;
+                if (mobilePasswordDynamicPassword !== '') {
+                    tools.validSuccessDom(param_id.mobilePasswordDynamicPassword);
+                    validMobile();
+                } else {
+                    tools.validErrorDom(param_id.mobilePasswordDynamicPassword, "请填写动态密码");
+                }
             }
         }
 
@@ -553,7 +655,9 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
             $.post(ajax_url.users_update, {
                 name: 'mobile',
                 value: param.mobile,
-                password: param.mobilePassword
+                password: param.mobilePassword,
+                mode: param.mobilePasswordMode,
+                dynamicPassword: param.mobilePasswordDynamicPassword
             }, function (data) {
                 // 去除遮罩
                 tools.buttonEndLoading(button_id.saveMobile.id, button_id.saveMobile.text);
@@ -574,6 +678,187 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
                 }
             });
         }
+
+        var googleOauthSwitch = true;
+        $(button_id.googleOauthSwitch.id).on('toggle', function (e, active) {
+            if (googleOauthSwitch) {
+                var myToggle = $(button_id.googleOauthSwitch.id).data('toggles');
+                if (active) {
+                    $('#openGoogleOauthModal').modal('show');
+                    googleOauthSwitch = false;
+                    myToggle.toggle(false);
+                } else {
+                    $('#closeGoogleOauthModal').modal('show');
+                    googleOauthSwitch = false;
+                    myToggle.toggle(true);
+                }
+            }
+        });
+
+        $(param_id.googleOauthPassword).blur(function () {
+            initParam();
+            var googleOauthPassword = param.googleOauthPassword;
+            if (googleOauthPassword !== '') {
+                $.post(ajax_url.check_password, {password: googleOauthPassword}, function (data) {
+                    if (data.state) {
+                        tools.validSuccessDom(param_id.googleOauthPassword);
+                    } else {
+                        tools.validErrorDom(param_id.googleOauthPassword, '密码错误');
+                    }
+                });
+            } else {
+                tools.validSuccessDom(param_id.googleOauthPassword);
+            }
+        });
+
+        $(button_id.openGoogleOauth.id).click(function () {
+            initParam();
+            validGoogleOauthPassword();
+        });
+
+        function validGoogleOauthPassword() {
+            var googleOauthPassword = param.googleOauthPassword;
+            if (googleOauthPassword !== '') {
+                $.post(ajax_url.check_password, {password: googleOauthPassword}, function (data) {
+                    if (data.state) {
+                        tools.validSuccessDom(param_id.googleOauthPassword);
+                        openGoogleOauth();
+                    } else {
+                        tools.validErrorDom(param_id.googleOauthPassword, '密码错误');
+                    }
+                });
+            } else {
+                tools.validErrorDom(param_id.googleOauthPassword, '请填写密码');
+            }
+        }
+
+        function openGoogleOauth() {
+            // 显示遮罩
+            tools.buttonLoading(button_id.openGoogleOauth.id, button_id.openGoogleOauth.tip);
+            $.post(ajax_url.open_google_oauth, {
+                password: param.googleOauthPassword
+            }, function (data) {
+                // 去除遮罩
+                tools.buttonEndLoading(button_id.openGoogleOauth.id, button_id.openGoogleOauth.text);
+                var globalError = $('#globalGoogleOauthError');
+                if (data.state) {
+                    globalError.text('');
+                    var myToggle = $(button_id.googleOauthSwitch.id).data('toggles');
+                    myToggle.toggle(true);
+                    $('#googleOauth').text('已开启');
+                    $(button_id.openGoogleOauth.id).css('display', 'none');
+                    $(button_id.openGoogleOauth.id).next().text('关闭');
+                    $(param_id.googleOauthPassword).parent().parent().css('display', 'none');
+                    $(param_id.googleOauthKey).parent().parent().parent().css('display', '');
+                    $(param_id.googleOauthKey).val(data.googleOauthKey);
+
+                } else {
+                    globalError.text(data.msg);
+                }
+            });
+        }
+
+        $('#openGoogleOauthModal').on('show.bs.modal', function (e) {
+            googleOauthSwitch = false;
+        }).on('hidden.bs.modal', function (e) {
+            googleOauthSwitch = true;
+        });
+
+        $(param_id.closeGoogleOauthMode).change(function () {
+            var v = Number($(this).val());
+            if (v === 0) {
+                $(param_id.closeGoogleOauthPassword).parent().parent().css('display', '');
+                $(param_id.closeGoogleOauthDynamicPassword).parent().parent().css('display', 'none');
+            } else {
+                $(param_id.closeGoogleOauthPassword).parent().parent().css('display', 'none');
+                $(param_id.closeGoogleOauthDynamicPassword).parent().parent().css('display', '');
+            }
+        });
+
+        $(param_id.closeGoogleOauthPassword).blur(function () {
+            initParam();
+            var closeGoogleOauthPassword = param.closeGoogleOauthPassword;
+            if (closeGoogleOauthPassword !== '') {
+                $.post(ajax_url.check_password, {password: closeGoogleOauthPassword}, function (data) {
+                    if (data.state) {
+                        tools.validSuccessDom(param_id.closeGoogleOauthPassword);
+                    } else {
+                        tools.validErrorDom(param_id.closeGoogleOauthPassword, '密码错误');
+                    }
+                });
+            } else {
+                tools.validSuccessDom(param_id.closeGoogleOauthPassword);
+            }
+        });
+
+        $(button_id.closeGoogleOauth.id).click(function () {
+            initParam();
+            validCloseGoogleOauthPassword();
+        });
+
+        function validCloseGoogleOauthPassword() {
+            var closeGoogleOauthMode = param.closeGoogleOauthMode;
+            if (closeGoogleOauthMode === 0) {
+                var closeGoogleOauthPassword = param.closeGoogleOauthPassword;
+                if (closeGoogleOauthPassword !== '') {
+                    $.post(ajax_url.check_password, {password: closeGoogleOauthPassword}, function (data) {
+                        if (data.state) {
+                            tools.validSuccessDom(param_id.closeGoogleOauthPassword);
+                            closeGoogleOauth();
+                        } else {
+                            tools.validErrorDom(param_id.closeGoogleOauthPassword, '密码错误');
+                        }
+                    });
+                } else {
+                    tools.validErrorDom(param_id.closeGoogleOauthPassword, "请填写密码");
+                }
+            } else {
+                var closeGoogleOauthDynamicPassword = param.closeGoogleOauthDynamicPassword;
+                if (closeGoogleOauthDynamicPassword !== '') {
+                    tools.validSuccessDom(param_id.closeGoogleOauthDynamicPassword);
+                    closeGoogleOauth();
+                } else {
+                    tools.validErrorDom(param_id.closeGoogleOauthDynamicPassword, "请填写动态密码");
+                }
+            }
+        }
+
+        function closeGoogleOauth() {
+            // 显示遮罩
+            tools.buttonLoading(button_id.closeGoogleOauth.id, button_id.closeGoogleOauth.tip);
+            $.post(ajax_url.close_google_oauth, {
+                mode: param.closeGoogleOauthMode,
+                password: param.closeGoogleOauthPassword,
+                dynamicPassword: param.closeGoogleOauthDynamicPassword
+            }, function (data) {
+                // 去除遮罩
+                tools.buttonEndLoading(button_id.closeGoogleOauth.id, button_id.closeGoogleOauth.text);
+                var globalError = $('#globalCloseGoogleOauthError');
+                if (data.state) {
+                    globalError.text('');
+                    var myToggle = $(button_id.googleOauthSwitch.id).data('toggles');
+                    myToggle.toggle(false);
+                    $('#googleOauth').text('未开启');
+                    $(button_id.openGoogleOauth.id).css('display', '');
+                    $(button_id.openGoogleOauth.id).next().text('取消');
+                    $(param_id.googleOauthPassword).parent().parent().css('display', '');
+                    $(param_id.googleOauthKey).parent().parent().parent().css('display', 'none');
+                    $(param_id.googleOauthKey).val('');
+
+                    $('#closeGoogleOauthModal').modal('hide');
+                    Swal.fire('关闭双因素认证', data.msg, 'success');
+
+                } else {
+                    globalError.text(data.msg);
+                }
+            });
+        }
+
+        $('#closeGoogleOauthModal').on('show.bs.modal', function (e) {
+            googleOauthSwitch = false;
+        }).on('hidden.bs.modal', function (e) {
+            googleOauthSwitch = true;
+        });
 
         $(button_id.password.id).click(function () {
             initParam();
