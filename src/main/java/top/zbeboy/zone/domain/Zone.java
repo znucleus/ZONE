@@ -81,7 +81,7 @@ import top.zbeboy.zone.domain.tables.SystemSmsLog;
 import top.zbeboy.zone.domain.tables.TrainingAttend;
 import top.zbeboy.zone.domain.tables.TrainingAttendAuthorities;
 import top.zbeboy.zone.domain.tables.TrainingAttendUsers;
-import top.zbeboy.zone.domain.tables.TrainingLabs;
+import top.zbeboy.zone.domain.tables.TrainingConfigure;
 import top.zbeboy.zone.domain.tables.TrainingRelease;
 import top.zbeboy.zone.domain.tables.TrainingUsers;
 import top.zbeboy.zone.domain.tables.UserNotify;
@@ -104,7 +104,7 @@ import top.zbeboy.zone.domain.tables.WeiXinDevice;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Zone extends SchemaImpl {
 
-    private static final long serialVersionUID = 1800585374;
+    private static final long serialVersionUID = 873852870;
 
     /**
      * The reference instance of <code>zone</code>
@@ -447,9 +447,9 @@ public class Zone extends SchemaImpl {
     public final TrainingAttendUsers TRAINING_ATTEND_USERS = top.zbeboy.zone.domain.tables.TrainingAttendUsers.TRAINING_ATTEND_USERS;
 
     /**
-     * The table <code>zone.training_labs</code>.
+     * The table <code>zone.training_configure</code>.
      */
-    public final TrainingLabs TRAINING_LABS = top.zbeboy.zone.domain.tables.TrainingLabs.TRAINING_LABS;
+    public final TrainingConfigure TRAINING_CONFIGURE = top.zbeboy.zone.domain.tables.TrainingConfigure.TRAINING_CONFIGURE;
 
     /**
      * The table <code>zone.training_release</code>.
@@ -575,7 +575,7 @@ public class Zone extends SchemaImpl {
             TrainingAttend.TRAINING_ATTEND,
             TrainingAttendAuthorities.TRAINING_ATTEND_AUTHORITIES,
             TrainingAttendUsers.TRAINING_ATTEND_USERS,
-            TrainingLabs.TRAINING_LABS,
+            TrainingConfigure.TRAINING_CONFIGURE,
             TrainingRelease.TRAINING_RELEASE,
             TrainingUsers.TRAINING_USERS,
             UserNotify.USER_NOTIFY,

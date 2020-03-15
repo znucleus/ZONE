@@ -15,7 +15,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row6;
+import org.jooq.Row7;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -42,7 +42,7 @@ import top.zbeboy.zone.domain.tables.records.TrainingAttendUsersRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class TrainingAttendUsers extends TableImpl<TrainingAttendUsersRecord> {
 
-    private static final long serialVersionUID = -356671070;
+    private static final long serialVersionUID = -912927269;
 
     /**
      * The reference instance of <code>zone.training_attend_users</code>
@@ -71,6 +71,11 @@ public class TrainingAttendUsers extends TableImpl<TrainingAttendUsersRecord> {
      * The column <code>zone.training_attend_users.training_users_id</code>.
      */
     public final TableField<TrainingAttendUsersRecord, String> TRAINING_USERS_ID = createField(DSL.name("training_users_id"), org.jooq.impl.SQLDataType.VARCHAR(64).nullable(false), this, "");
+
+    /**
+     * The column <code>zone.training_attend_users.operate_user</code>.
+     */
+    public final TableField<TrainingAttendUsersRecord, String> OPERATE_USER = createField(DSL.name("operate_user"), org.jooq.impl.SQLDataType.VARCHAR(64).nullable(false), this, "");
 
     /**
      * The column <code>zone.training_attend_users.operate_date</code>.
@@ -127,7 +132,7 @@ public class TrainingAttendUsers extends TableImpl<TrainingAttendUsersRecord> {
 
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.TRAINING_ATTEND_USERS_PRIMARY, Indexes.TRAINING_ATTEND_USERS_TRAINING_ATTEND_ID, Indexes.TRAINING_ATTEND_USERS_TRAINING_USERS_ID);
+        return Arrays.<Index>asList(Indexes.TRAINING_ATTEND_USERS_OPERATE_USER, Indexes.TRAINING_ATTEND_USERS_PRIMARY, Indexes.TRAINING_ATTEND_USERS_TRAINING_ATTEND_ID, Indexes.TRAINING_ATTEND_USERS_TRAINING_USERS_ID);
     }
 
     @Override
@@ -142,7 +147,7 @@ public class TrainingAttendUsers extends TableImpl<TrainingAttendUsersRecord> {
 
     @Override
     public List<ForeignKey<TrainingAttendUsersRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<TrainingAttendUsersRecord, ?>>asList(Keys.TRAINING_ATTEND_USERS_IBFK_1, Keys.TRAINING_ATTEND_USERS_IBFK_2);
+        return Arrays.<ForeignKey<TrainingAttendUsersRecord, ?>>asList(Keys.TRAINING_ATTEND_USERS_IBFK_1, Keys.TRAINING_ATTEND_USERS_IBFK_2, Keys.TRAINING_ATTEND_USERS_IBFK_3);
     }
 
     public TrainingAttend trainingAttend() {
@@ -151,6 +156,10 @@ public class TrainingAttendUsers extends TableImpl<TrainingAttendUsersRecord> {
 
     public TrainingUsers trainingUsers() {
         return new TrainingUsers(this, Keys.TRAINING_ATTEND_USERS_IBFK_2);
+    }
+
+    public Users users() {
+        return new Users(this, Keys.TRAINING_ATTEND_USERS_IBFK_3);
     }
 
     @Override
@@ -180,11 +189,11 @@ public class TrainingAttendUsers extends TableImpl<TrainingAttendUsersRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row6 type methods
+    // Row7 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row6<String, String, String, Timestamp, Byte, String> fieldsRow() {
-        return (Row6) super.fieldsRow();
+    public Row7<String, String, String, String, Timestamp, Byte, String> fieldsRow() {
+        return (Row7) super.fieldsRow();
     }
 }

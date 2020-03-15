@@ -25,12 +25,13 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class TrainingAttendAuthorities implements Serializable {
 
-    private static final long serialVersionUID = 1286771824;
+    private static final long serialVersionUID = 1878512088;
 
     private String    authoritiesId;
     private String    trainingAttendId;
     private String    username;
     private Byte      operateType;
+    private Timestamp validDate;
     private Timestamp expireDate;
 
     public TrainingAttendAuthorities() {}
@@ -40,6 +41,7 @@ public class TrainingAttendAuthorities implements Serializable {
         this.trainingAttendId = value.trainingAttendId;
         this.username = value.username;
         this.operateType = value.operateType;
+        this.validDate = value.validDate;
         this.expireDate = value.expireDate;
     }
 
@@ -48,12 +50,14 @@ public class TrainingAttendAuthorities implements Serializable {
         String    trainingAttendId,
         String    username,
         Byte      operateType,
+        Timestamp validDate,
         Timestamp expireDate
     ) {
         this.authoritiesId = authoritiesId;
         this.trainingAttendId = trainingAttendId;
         this.username = username;
         this.operateType = operateType;
+        this.validDate = validDate;
         this.expireDate = expireDate;
     }
 
@@ -97,6 +101,15 @@ public class TrainingAttendAuthorities implements Serializable {
     }
 
     @NotNull
+    public Timestamp getValidDate() {
+        return this.validDate;
+    }
+
+    public void setValidDate(Timestamp validDate) {
+        this.validDate = validDate;
+    }
+
+    @NotNull
     public Timestamp getExpireDate() {
         return this.expireDate;
     }
@@ -113,6 +126,7 @@ public class TrainingAttendAuthorities implements Serializable {
         sb.append(", ").append(trainingAttendId);
         sb.append(", ").append(username);
         sb.append(", ").append(operateType);
+        sb.append(", ").append(validDate);
         sb.append(", ").append(expireDate);
 
         sb.append(")");

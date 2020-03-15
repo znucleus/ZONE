@@ -463,11 +463,6 @@ INSERT INTO application (application_id, application_name, application_sort,
                          application_code, application_en_name, icon, application_data_url_start_with)
 VALUES ('dd534f15c5174f13a9b4a07eb37f6cb7', '实训考勤', 1020, '855e14c857094f1bb6df3938c2f86900', '/web/menu/training/attend', 'training_attend',
         'training_attend', '', '/web/training/attend');
-INSERT INTO application (application_id, application_name, application_sort,
-                         application_pid, application_url,
-                         application_code, application_en_name, icon, application_data_url_start_with)
-VALUES ('c274e184988846a08218cc537ea67c4e', '实训实验室', 1025, '855e14c857094f1bb6df3938c2f86900', '/web/menu/training/labs', 'training_labs',
-        'training_labs', '', '/web/training/labs');
 
 INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
@@ -781,8 +776,6 @@ INSERT INTO role_application (role_id, application_id)
 VALUES ('220f8f10263c4a38bc1f6b7c42759594', '552f3507fd004202aa83f371e0059a96');
 INSERT INTO role_application (role_id, application_id)
 VALUES ('220f8f10263c4a38bc1f6b7c42759594', 'dd534f15c5174f13a9b4a07eb37f6cb7');
-INSERT INTO role_application (role_id, application_id)
-VALUES ('220f8f10263c4a38bc1f6b7c42759594', 'c274e184988846a08218cc537ea67c4e');
 INSERT INTO role_application (role_id, application_id)
 VALUES ('220f8f10263c4a38bc1f6b7c42759594', '7e73aa34c68f4c21a582ec7ece8cfc67');
 INSERT INTO role_application (role_id, application_id)

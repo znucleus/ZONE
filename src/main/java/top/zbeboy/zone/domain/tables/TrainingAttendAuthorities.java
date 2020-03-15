@@ -15,7 +15,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row5;
+import org.jooq.Row6;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -42,7 +42,7 @@ import top.zbeboy.zone.domain.tables.records.TrainingAttendAuthoritiesRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class TrainingAttendAuthorities extends TableImpl<TrainingAttendAuthoritiesRecord> {
 
-    private static final long serialVersionUID = -2051888852;
+    private static final long serialVersionUID = -51801735;
 
     /**
      * The reference instance of <code>zone.training_attend_authorities</code>
@@ -76,6 +76,11 @@ public class TrainingAttendAuthorities extends TableImpl<TrainingAttendAuthoriti
      * The column <code>zone.training_attend_authorities.operate_type</code>.
      */
     public final TableField<TrainingAttendAuthoritiesRecord, Byte> OPERATE_TYPE = createField(DSL.name("operate_type"), org.jooq.impl.SQLDataType.TINYINT.nullable(false), this, "");
+
+    /**
+     * The column <code>zone.training_attend_authorities.valid_date</code>.
+     */
+    public final TableField<TrainingAttendAuthoritiesRecord, Timestamp> VALID_DATE = createField(DSL.name("valid_date"), org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
 
     /**
      * The column <code>zone.training_attend_authorities.expire_date</code>.
@@ -175,11 +180,11 @@ public class TrainingAttendAuthorities extends TableImpl<TrainingAttendAuthoriti
     }
 
     // -------------------------------------------------------------------------
-    // Row5 type methods
+    // Row6 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row5<String, String, String, Byte, Timestamp> fieldsRow() {
-        return (Row5) super.fieldsRow();
+    public Row6<String, String, String, Byte, Timestamp, Timestamp> fieldsRow() {
+        return (Row6) super.fieldsRow();
     }
 }

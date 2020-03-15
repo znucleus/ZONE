@@ -116,6 +116,20 @@ public class TrainingAttendAuthoritiesDao extends DAOImpl<TrainingAttendAuthorit
     }
 
     /**
+     * Fetch records that have <code>valid_date BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.TrainingAttendAuthorities> fetchRangeOfValidDate(Timestamp lowerInclusive, Timestamp upperInclusive) {
+        return fetchRange(TrainingAttendAuthorities.TRAINING_ATTEND_AUTHORITIES.VALID_DATE, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>valid_date IN (values)</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.TrainingAttendAuthorities> fetchByValidDate(Timestamp... values) {
+        return fetch(TrainingAttendAuthorities.TRAINING_ATTEND_AUTHORITIES.VALID_DATE, values);
+    }
+
+    /**
      * Fetch records that have <code>expire_date BETWEEN lowerInclusive AND upperInclusive</code>
      */
     public List<top.zbeboy.zone.domain.tables.pojos.TrainingAttendAuthorities> fetchRangeOfExpireDate(Timestamp lowerInclusive, Timestamp upperInclusive) {

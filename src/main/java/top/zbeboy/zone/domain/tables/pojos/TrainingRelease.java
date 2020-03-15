@@ -6,7 +6,6 @@ package top.zbeboy.zone.domain.tables.pojos;
 
 import java.io.Serializable;
 import java.sql.Date;
-import java.sql.Time;
 import java.sql.Timestamp;
 
 import javax.annotation.Generated;
@@ -27,16 +26,12 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class TrainingRelease implements Serializable {
 
-    private static final long serialVersionUID = 626625077;
+    private static final long serialVersionUID = -2041728432;
 
     private String    trainingReleaseId;
     private String    title;
     private Date      startDate;
     private Date      endDate;
-    private String    cycle;
-    private Time      startTime;
-    private Time      endTime;
-    private Integer   schoolroomId;
     private String    username;
     private Integer   courseId;
     private Integer   organizeId;
@@ -50,10 +45,6 @@ public class TrainingRelease implements Serializable {
         this.title = value.title;
         this.startDate = value.startDate;
         this.endDate = value.endDate;
-        this.cycle = value.cycle;
-        this.startTime = value.startTime;
-        this.endTime = value.endTime;
-        this.schoolroomId = value.schoolroomId;
         this.username = value.username;
         this.courseId = value.courseId;
         this.organizeId = value.organizeId;
@@ -66,10 +57,6 @@ public class TrainingRelease implements Serializable {
         String    title,
         Date      startDate,
         Date      endDate,
-        String    cycle,
-        Time      startTime,
-        Time      endTime,
-        Integer   schoolroomId,
         String    username,
         Integer   courseId,
         Integer   organizeId,
@@ -80,10 +67,6 @@ public class TrainingRelease implements Serializable {
         this.title = title;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.cycle = cycle;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.schoolroomId = schoolroomId;
         this.username = username;
         this.courseId = courseId;
         this.organizeId = organizeId;
@@ -127,43 +110,6 @@ public class TrainingRelease implements Serializable {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
-    }
-
-    @NotNull
-    @Size(max = 20)
-    public String getCycle() {
-        return this.cycle;
-    }
-
-    public void setCycle(String cycle) {
-        this.cycle = cycle;
-    }
-
-    @NotNull
-    public Time getStartTime() {
-        return this.startTime;
-    }
-
-    public void setStartTime(Time startTime) {
-        this.startTime = startTime;
-    }
-
-    @NotNull
-    public Time getEndTime() {
-        return this.endTime;
-    }
-
-    public void setEndTime(Time endTime) {
-        this.endTime = endTime;
-    }
-
-    @NotNull
-    public Integer getSchoolroomId() {
-        return this.schoolroomId;
-    }
-
-    public void setSchoolroomId(Integer schoolroomId) {
-        this.schoolroomId = schoolroomId;
     }
 
     @NotNull
@@ -221,10 +167,6 @@ public class TrainingRelease implements Serializable {
         sb.append(", ").append(title);
         sb.append(", ").append(startDate);
         sb.append(", ").append(endDate);
-        sb.append(", ").append(cycle);
-        sb.append(", ").append(startTime);
-        sb.append(", ").append(endTime);
-        sb.append(", ").append(schoolroomId);
         sb.append(", ").append(username);
         sb.append(", ").append(courseId);
         sb.append(", ").append(organizeId);
