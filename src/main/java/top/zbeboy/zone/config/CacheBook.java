@@ -64,4 +64,8 @@ public final class CacheBook {
     public static final String INTERNSHIP_INFO = "INTERNSHIP_INFO";
     public static final String INTERNSHIP_JOURNAL_CONTENT = "INTERNSHIP_JOURNAL_CONTENT";
 
+    /*
+    实训业务
+     */
+    public static final String TRAINING_RELEASE = "TRAINING_RELEASE";
 }
