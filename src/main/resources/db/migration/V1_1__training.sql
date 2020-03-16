@@ -54,15 +54,14 @@ CREATE TABLE training_attend(
   training_release(training_release_id) ON DELETE CASCADE
 );
 
-CREATE TABLE training_attend_authorities(
+CREATE TABLE training_authorities(
   authorities_id VARCHAR(64) PRIMARY KEY,
-  training_attend_id VARCHAR(64) NOT NULL,
+  training_release_id VARCHAR(64) NOT NULL,
   username VARCHAR(64) NOT NULL,
-  operate_type TINYINT NOT NULL,
   valid_date DATETIME NOT NULL,
   expire_date DATETIME NOT NULL,
-  FOREIGN KEY(training_attend_id) REFERENCES
-  training_attend(training_attend_id) ON DELETE CASCADE,
+  FOREIGN KEY(training_release_id) REFERENCES
+  training_release(training_release_id) ON DELETE CASCADE,
   FOREIGN KEY(username) REFERENCES
   users(username) ON UPDATE CASCADE ON DELETE CASCADE
 );

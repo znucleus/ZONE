@@ -71,8 +71,8 @@ import top.zbeboy.zone.domain.tables.SystemNotify;
 import top.zbeboy.zone.domain.tables.SystemOperatorLog;
 import top.zbeboy.zone.domain.tables.SystemSmsLog;
 import top.zbeboy.zone.domain.tables.TrainingAttend;
-import top.zbeboy.zone.domain.tables.TrainingAttendAuthorities;
 import top.zbeboy.zone.domain.tables.TrainingAttendUsers;
+import top.zbeboy.zone.domain.tables.TrainingAuthorities;
 import top.zbeboy.zone.domain.tables.TrainingConfigure;
 import top.zbeboy.zone.domain.tables.TrainingRelease;
 import top.zbeboy.zone.domain.tables.TrainingUsers;
@@ -422,14 +422,14 @@ public class Tables {
     public static final TrainingAttend TRAINING_ATTEND = TrainingAttend.TRAINING_ATTEND;
 
     /**
-     * The table <code>zone.training_attend_authorities</code>.
-     */
-    public static final TrainingAttendAuthorities TRAINING_ATTEND_AUTHORITIES = TrainingAttendAuthorities.TRAINING_ATTEND_AUTHORITIES;
-
-    /**
      * The table <code>zone.training_attend_users</code>.
      */
     public static final TrainingAttendUsers TRAINING_ATTEND_USERS = TrainingAttendUsers.TRAINING_ATTEND_USERS;
+
+    /**
+     * The table <code>zone.training_authorities</code>.
+     */
+    public static final TrainingAuthorities TRAINING_AUTHORITIES = TrainingAuthorities.TRAINING_AUTHORITIES;
 
     /**
      * The table <code>zone.training_configure</code>.

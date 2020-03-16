@@ -79,8 +79,8 @@ import top.zbeboy.zone.domain.tables.SystemNotify;
 import top.zbeboy.zone.domain.tables.SystemOperatorLog;
 import top.zbeboy.zone.domain.tables.SystemSmsLog;
 import top.zbeboy.zone.domain.tables.TrainingAttend;
-import top.zbeboy.zone.domain.tables.TrainingAttendAuthorities;
 import top.zbeboy.zone.domain.tables.TrainingAttendUsers;
+import top.zbeboy.zone.domain.tables.TrainingAuthorities;
 import top.zbeboy.zone.domain.tables.TrainingConfigure;
 import top.zbeboy.zone.domain.tables.TrainingRelease;
 import top.zbeboy.zone.domain.tables.TrainingUsers;
@@ -104,7 +104,7 @@ import top.zbeboy.zone.domain.tables.WeiXinDevice;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Zone extends SchemaImpl {
 
-    private static final long serialVersionUID = 873852870;
+    private static final long serialVersionUID = 1094740610;
 
     /**
      * The reference instance of <code>zone</code>
@@ -437,14 +437,14 @@ public class Zone extends SchemaImpl {
     public final TrainingAttend TRAINING_ATTEND = top.zbeboy.zone.domain.tables.TrainingAttend.TRAINING_ATTEND;
 
     /**
-     * The table <code>zone.training_attend_authorities</code>.
-     */
-    public final TrainingAttendAuthorities TRAINING_ATTEND_AUTHORITIES = top.zbeboy.zone.domain.tables.TrainingAttendAuthorities.TRAINING_ATTEND_AUTHORITIES;
-
-    /**
      * The table <code>zone.training_attend_users</code>.
      */
     public final TrainingAttendUsers TRAINING_ATTEND_USERS = top.zbeboy.zone.domain.tables.TrainingAttendUsers.TRAINING_ATTEND_USERS;
+
+    /**
+     * The table <code>zone.training_authorities</code>.
+     */
+    public final TrainingAuthorities TRAINING_AUTHORITIES = top.zbeboy.zone.domain.tables.TrainingAuthorities.TRAINING_AUTHORITIES;
 
     /**
      * The table <code>zone.training_configure</code>.
@@ -573,8 +573,8 @@ public class Zone extends SchemaImpl {
             SystemOperatorLog.SYSTEM_OPERATOR_LOG,
             SystemSmsLog.SYSTEM_SMS_LOG,
             TrainingAttend.TRAINING_ATTEND,
-            TrainingAttendAuthorities.TRAINING_ATTEND_AUTHORITIES,
             TrainingAttendUsers.TRAINING_ATTEND_USERS,
+            TrainingAuthorities.TRAINING_AUTHORITIES,
             TrainingConfigure.TRAINING_CONFIGURE,
             TrainingRelease.TRAINING_RELEASE,
             TrainingUsers.TRAINING_USERS,
