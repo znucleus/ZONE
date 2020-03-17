@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jooq.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -130,6 +131,24 @@ public class TrainingReleaseServiceImpl implements TrainingReleaseService, Pagin
                 .leftJoin(COURSE)
                 .on(TRAINING_RELEASE.COURSE_ID.eq(COURSE.COURSE_ID));
         return countAll(selectOnConditionStep, paginationUtil, false);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void save(TrainingRelease trainingRelease) {
+        trainingReleaseDao.insert(trainingRelease);
+    }
+
+    @CacheEvict(cacheNames = CacheBook.TRAINING_RELEASE, key = "#trainingRelease.trainingReleaseId")
+    @Override
+    public void update(TrainingRelease trainingRelease) {
+        trainingReleaseDao.update(trainingRelease);
+    }
+
+    @CacheEvict(cacheNames = CacheBook.TRAINING_RELEASE, key = "#id")
+    @Override
+    public void deleteById(String id) {
+        trainingReleaseDao.deleteById(id);
     }
 
     @Override

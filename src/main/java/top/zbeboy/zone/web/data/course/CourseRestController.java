@@ -46,7 +46,7 @@ public class CourseRestController {
     @GetMapping("/users/data/course")
     public ResponseEntity<Map<String, Object>> usersData(CourseSearchVo courseSearchVo) {
         Select2Data select2Data = Select2Data.of();
-        Result<CourseRecord> records = courseService.findBySchoolYearAndTermAndCollegeIdAndCourseIsDel(courseSearchVo.getSchoolYear(), courseSearchVo.getTerm(), courseSearchVo.getCollegeId(), BooleanUtil.toByte(false));
+        Result<CourseRecord> records = courseService.findByCollegeIdAndCourseIsDel(courseSearchVo.getCollegeId(), BooleanUtil.toByte(false));
         if (records.isNotEmpty()) {
             List<Course> courses = records.into(Course.class);
             courses.forEach(course -> select2Data.add(course.getCourseId().toString(), course.getCourseName()));

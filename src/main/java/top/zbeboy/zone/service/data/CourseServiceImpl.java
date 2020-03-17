@@ -77,11 +77,11 @@ public class CourseServiceImpl implements CourseService, PaginationPlugin<DataTa
                 .fetchOptional();
     }
 
-    @Cacheable(cacheNames = CacheBook.COURSES, key = "#schoolYear + '_' + #term + '_' + #collegeId + '_' + #courseIsDel")
+    @Cacheable(cacheNames = CacheBook.COURSES, key = "#collegeId + '_' + #courseIsDel")
     @Override
-    public Result<CourseRecord> findBySchoolYearAndTermAndCollegeIdAndCourseIsDel(Byte schoolYear, Byte term, int collegeId, Byte courseIsDel) {
+    public Result<CourseRecord> findByCollegeIdAndCourseIsDel(int collegeId, Byte courseIsDel) {
         return create.selectFrom(COURSE)
-                .where(COURSE.SCHOOL_YEAR.eq(schoolYear).and(COURSE.TERM.eq(term)).and(COURSE.COLLEGE_ID.eq(collegeId)).and(COURSE.COURSE_IS_DEL.eq(courseIsDel)))
+                .where(COURSE.COLLEGE_ID.eq(collegeId).and(COURSE.COURSE_IS_DEL.eq(courseIsDel)))
                 .fetch();
     }
 

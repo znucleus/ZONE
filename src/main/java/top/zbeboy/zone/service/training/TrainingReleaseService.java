@@ -2,7 +2,6 @@ package top.zbeboy.zone.service.training;
 
 import org.jooq.Record;
 import org.jooq.Result;
-import top.zbeboy.zone.domain.tables.pojos.InternshipRelease;
 import top.zbeboy.zone.domain.tables.pojos.TrainingRelease;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
@@ -40,4 +39,25 @@ public interface TrainingReleaseService {
      * @return 总数
      */
     int countAll(SimplePaginationUtil paginationUtil);
+
+    /**
+     * 保存
+     *
+     * @param trainingRelease 数据
+     */
+    void save(TrainingRelease trainingRelease);
+
+    /**
+     * 更新
+     *
+     * @param trainingRelease 数据
+     */
+    void update(TrainingRelease trainingRelease);
+
+    /**
+     * 根据主键删除
+     *
+     * @param id 主键
+     */
+    void deleteById(String id);
 }
