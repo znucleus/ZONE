@@ -5,7 +5,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-public class TrainingReleaseAddVo {
+public class TrainingReleaseEditVo {
+    @NotBlank(message = "实训发布ID不能为空")
+    @Size(max = 64, message = "实训发布ID不正确")
+    private String trainingReleaseId;
     @NotBlank(message = "标题不能为空")
     @Size(max = 100, message = "标题100个字符以内")
     private String title;
@@ -16,9 +19,14 @@ public class TrainingReleaseAddVo {
     @NotNull(message = "课程ID不能为空")
     @Min(value = 1, message = "课程ID不正确")
     private Integer courseId;
-    @NotNull(message = "班级ID不能为空")
-    @Min(value = 1, message = "班级ID不正确")
-    private Integer organizeId;
+
+    public String getTrainingReleaseId() {
+        return trainingReleaseId;
+    }
+
+    public void setTrainingReleaseId(String trainingReleaseId) {
+        this.trainingReleaseId = trainingReleaseId;
+    }
 
     public String getTitle() {
         return title;
@@ -50,13 +58,5 @@ public class TrainingReleaseAddVo {
 
     public void setCourseId(Integer courseId) {
         this.courseId = courseId;
-    }
-
-    public Integer getOrganizeId() {
-        return organizeId;
-    }
-
-    public void setOrganizeId(Integer organizeId) {
-        this.organizeId = organizeId;
     }
 }

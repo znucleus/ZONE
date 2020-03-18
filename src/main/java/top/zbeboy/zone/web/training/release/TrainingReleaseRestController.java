@@ -20,6 +20,7 @@ import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zone.web.vo.training.release.TrainingReleaseAddVo;
+import top.zbeboy.zone.web.vo.training.release.TrainingReleaseEditVo;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -86,6 +87,31 @@ public class TrainingReleaseRestController {
 
             trainingReleaseService.save(trainingRelease);
             ajaxUtil.success().msg("保存成功");
+        } else {
+            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 更新
+     *
+     * @param trainingReleaseEditVo 实训
+     * @param bindingResult         检验
+     * @return true or false
+     */
+    @PostMapping("/web/training/release/update")
+    public ResponseEntity<Map<String, Object>> update(@Valid TrainingReleaseEditVo trainingReleaseEditVo, BindingResult bindingResult) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (!bindingResult.hasErrors()) {
+            TrainingRelease trainingRelease = trainingReleaseService.findById(trainingReleaseEditVo.getTrainingReleaseId());
+            trainingRelease.setTitle(trainingReleaseEditVo.getTitle());
+            trainingRelease.setCourseId(trainingReleaseEditVo.getCourseId());
+            trainingRelease.setStartDate(DateTimeUtil.defaultParseSqlDate(trainingReleaseEditVo.getStartDate()));
+            trainingRelease.setEndDate(DateTimeUtil.defaultParseSqlDate(trainingReleaseEditVo.getEndDate()));
+
+            trainingReleaseService.update(trainingRelease);
+            ajaxUtil.success().msg("更新成功");
         } else {
             ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
