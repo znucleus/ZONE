@@ -11,6 +11,7 @@ import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.zone.web.bean.training.release.TrainingReleaseBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
+import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
 
 import javax.annotation.Resource;
 import java.util.Optional;
@@ -20,6 +21,9 @@ public class TrainingReleaseViewController {
 
     @Resource
     private TrainingReleaseService trainingReleaseService;
+
+    @Resource
+    private TrainingConditionCommon trainingConditionCommon;
 
     /**
      * 发布主页
@@ -52,17 +56,22 @@ public class TrainingReleaseViewController {
     public String edit(@PathVariable("id") String id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        Optional<Record> record = trainingReleaseService.findByIdRelation(id);
-        if (record.isPresent()) {
-            TrainingReleaseBean bean = record.get().into(TrainingReleaseBean.class);
-            modelMap.addAttribute("trainingRelease", bean);
-            page = "web/training/release/training_release_edit::#page-wrapper";
+        if(trainingConditionCommon.canOperator(id)){
+            Optional<Record> record = trainingReleaseService.findByIdRelation(id);
+            if (record.isPresent()) {
+                TrainingReleaseBean bean = record.get().into(TrainingReleaseBean.class);
+                modelMap.addAttribute("trainingRelease", bean);
+                page = "web/training/release/training_release_edit::#page-wrapper";
+            } else {
+                config.buildDangerTip("查询错误", "未查询到实训发布数据");
+                config.dataMerging(modelMap);
+                page = "inline_tip::#page-wrapper";
+            }
         } else {
-            config.buildDangerTip("查询错误", "未查询到实训发布数据");
+            config.buildWarningTip("操作警告", "您无权限操作");
             config.dataMerging(modelMap);
             page = "inline_tip::#page-wrapper";
         }
-
         return page;
     }
 }

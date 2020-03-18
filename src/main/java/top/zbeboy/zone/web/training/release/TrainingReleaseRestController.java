@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.domain.tables.pojos.TrainingRelease;
 import top.zbeboy.zone.domain.tables.pojos.Users;
@@ -104,16 +105,38 @@ public class TrainingReleaseRestController {
     public ResponseEntity<Map<String, Object>> update(@Valid TrainingReleaseEditVo trainingReleaseEditVo, BindingResult bindingResult) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
-            TrainingRelease trainingRelease = trainingReleaseService.findById(trainingReleaseEditVo.getTrainingReleaseId());
-            trainingRelease.setTitle(trainingReleaseEditVo.getTitle());
-            trainingRelease.setCourseId(trainingReleaseEditVo.getCourseId());
-            trainingRelease.setStartDate(DateTimeUtil.defaultParseSqlDate(trainingReleaseEditVo.getStartDate()));
-            trainingRelease.setEndDate(DateTimeUtil.defaultParseSqlDate(trainingReleaseEditVo.getEndDate()));
+            if (trainingConditionCommon.canOperator(trainingReleaseEditVo.getTrainingReleaseId())) {
+                TrainingRelease trainingRelease = trainingReleaseService.findById(trainingReleaseEditVo.getTrainingReleaseId());
+                trainingRelease.setTitle(trainingReleaseEditVo.getTitle());
+                trainingRelease.setCourseId(trainingReleaseEditVo.getCourseId());
+                trainingRelease.setStartDate(DateTimeUtil.defaultParseSqlDate(trainingReleaseEditVo.getStartDate()));
+                trainingRelease.setEndDate(DateTimeUtil.defaultParseSqlDate(trainingReleaseEditVo.getEndDate()));
 
-            trainingReleaseService.update(trainingRelease);
-            ajaxUtil.success().msg("更新成功");
+                trainingReleaseService.update(trainingRelease);
+                ajaxUtil.success().msg("更新成功");
+            } else {
+                ajaxUtil.fail().msg("您无权限操作");
+            }
         } else {
             ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 删除
+     *
+     * @param trainingReleaseId 实训id
+     * @return true or false
+     */
+    @PostMapping("/web/training/release/delete")
+    public ResponseEntity<Map<String, Object>> delete(@RequestParam("trainingReleaseId") String trainingReleaseId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (trainingConditionCommon.canOperator(trainingReleaseId)) {
+            trainingReleaseService.deleteById(trainingReleaseId);
+            ajaxUtil.success().msg("删除成功");
+        } else {
+            ajaxUtil.fail().msg("您无权限操作");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }

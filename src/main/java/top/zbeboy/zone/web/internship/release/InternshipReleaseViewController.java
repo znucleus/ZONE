@@ -18,6 +18,7 @@ import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.web.bean.internship.release.InternshipReleaseBean;
+import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 
 import javax.annotation.Resource;
@@ -44,6 +45,9 @@ public class InternshipReleaseViewController {
 
     @Resource
     private InternshipReleaseService internshipReleaseService;
+
+    @Resource
+    private InternshipConditionCommon internshipConditionCommon;
 
     /**
      * 实习发布数据
@@ -115,27 +119,32 @@ public class InternshipReleaseViewController {
     public String edit(@PathVariable("id") String id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        Optional<Record> record = internshipReleaseService.findByIdRelation(id);
-        if (record.isPresent()) {
-            InternshipReleaseBean bean = record.get().into(InternshipReleaseBean.class);
-            bean.setTeacherDistributionStartTimeStr(DateTimeUtil.formatSqlTimestamp(bean.getTeacherDistributionStartTime(), DateTimeUtil.YEAR_MONTH_DAY_FORMAT));
-            bean.setTeacherDistributionEndTimeStr(DateTimeUtil.formatSqlTimestamp(bean.getTeacherDistributionEndTime(), DateTimeUtil.YEAR_MONTH_DAY_FORMAT));
-            bean.setStartTimeStr(DateTimeUtil.formatSqlTimestamp(bean.getStartTime(), DateTimeUtil.YEAR_MONTH_DAY_FORMAT));
-            bean.setEndTimeStr(DateTimeUtil.formatSqlTimestamp(bean.getEndTime(), DateTimeUtil.YEAR_MONTH_DAY_FORMAT));
-            modelMap.addAttribute("internshipRelease", bean);
-            if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
-                modelMap.addAttribute("collegeId", bean.getCollegeId());
-            } else {
-                modelMap.addAttribute("collegeId", 0);
-            }
+        if (internshipConditionCommon.canOperator(id)) {
+            Optional<Record> record = internshipReleaseService.findByIdRelation(id);
+            if (record.isPresent()) {
+                InternshipReleaseBean bean = record.get().into(InternshipReleaseBean.class);
+                bean.setTeacherDistributionStartTimeStr(DateTimeUtil.formatSqlTimestamp(bean.getTeacherDistributionStartTime(), DateTimeUtil.YEAR_MONTH_DAY_FORMAT));
+                bean.setTeacherDistributionEndTimeStr(DateTimeUtil.formatSqlTimestamp(bean.getTeacherDistributionEndTime(), DateTimeUtil.YEAR_MONTH_DAY_FORMAT));
+                bean.setStartTimeStr(DateTimeUtil.formatSqlTimestamp(bean.getStartTime(), DateTimeUtil.YEAR_MONTH_DAY_FORMAT));
+                bean.setEndTimeStr(DateTimeUtil.formatSqlTimestamp(bean.getEndTime(), DateTimeUtil.YEAR_MONTH_DAY_FORMAT));
+                modelMap.addAttribute("internshipRelease", bean);
+                if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+                    modelMap.addAttribute("collegeId", bean.getCollegeId());
+                } else {
+                    modelMap.addAttribute("collegeId", 0);
+                }
 
-            page = "web/internship/release/internship_release_edit::#page-wrapper";
+                page = "web/internship/release/internship_release_edit::#page-wrapper";
+            } else {
+                config.buildDangerTip("查询错误", "未查询到实习发布数据");
+                config.dataMerging(modelMap);
+                page = "inline_tip::#page-wrapper";
+            }
         } else {
-            config.buildDangerTip("查询错误", "未查询到实习发布数据");
+            config.buildWarningTip("操作警告", "您无权限操作");
             config.dataMerging(modelMap);
             page = "inline_tip::#page-wrapper";
         }
-
         return page;
     }
 }
