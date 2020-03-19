@@ -5,16 +5,15 @@ import org.jooq.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.domain.tables.pojos.TrainingRelease;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.service.platform.UsersService;
+import top.zbeboy.zone.service.training.TrainingConfigureService;
 import top.zbeboy.zone.service.training.TrainingReleaseService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
+import top.zbeboy.zone.web.bean.training.release.TrainingConfigureBean;
 import top.zbeboy.zone.web.bean.training.release.TrainingReleaseBean;
 import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
 import top.zbeboy.zone.web.util.AjaxUtil;
@@ -38,6 +37,9 @@ public class TrainingReleaseRestController {
 
     @Resource
     private TrainingConditionCommon trainingConditionCommon;
+
+    @Resource
+    private TrainingConfigureService trainingConfigureService;
 
     @Resource
     private UsersService usersService;
@@ -138,6 +140,23 @@ public class TrainingReleaseRestController {
         } else {
             ajaxUtil.fail().msg("您无权限操作");
         }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 配置数据
+     *
+     * @return 数据
+     */
+    @GetMapping("/web/training/release/configure/data/{id}")
+    public ResponseEntity<Map<String, Object>> configureData(@PathVariable("id") String id) {
+        AjaxUtil<TrainingConfigureBean> ajaxUtil = AjaxUtil.of();
+        List<TrainingConfigureBean> beans = new ArrayList<>();
+        Result<Record> records = trainingConfigureService.findByTrainingReleaseIdRelation(id);
+        if (records.isNotEmpty()) {
+            beans = records.into(TrainingConfigureBean.class);
+        }
+        ajaxUtil.success().list(beans).msg("获取数据成功");
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

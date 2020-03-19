@@ -10,6 +10,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             add: '/web/training/release/add',
             edit: '/web/training/release/edit',
             del: '/web/training/release/delete',
+            configure: '/web/training/release/configure',
             page: '/web/menu/training/release'
         };
 
@@ -119,6 +120,13 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
          */
         $(tableData).delegate('.edit', "click", function () {
             $.address.value(ajax_url.edit + '/' + $(this).attr('data-id'));
+        });
+
+        /*
+        配置
+        */
+        $(tableData).delegate('.configure', "click", function () {
+            $.address.value(ajax_url.configure + '/' + $(this).attr('data-id'));
         });
 
         /*

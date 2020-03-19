@@ -6,6 +6,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zone.config.Workbook;
+import top.zbeboy.zone.domain.tables.pojos.TrainingRelease;
 import top.zbeboy.zone.service.training.TrainingReleaseService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.web.bean.internship.release.InternshipReleaseBean;
@@ -14,6 +15,7 @@ import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
 
 import javax.annotation.Resource;
+import java.util.Objects;
 import java.util.Optional;
 
 @Controller
@@ -62,6 +64,35 @@ public class TrainingReleaseViewController {
                 TrainingReleaseBean bean = record.get().into(TrainingReleaseBean.class);
                 modelMap.addAttribute("trainingRelease", bean);
                 page = "web/training/release/training_release_edit::#page-wrapper";
+            } else {
+                config.buildDangerTip("查询错误", "未查询到实训发布数据");
+                config.dataMerging(modelMap);
+                page = "inline_tip::#page-wrapper";
+            }
+        } else {
+            config.buildWarningTip("操作警告", "您无权限操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
+
+    /**
+     * 配置
+     *
+     * @param id       id
+     * @param modelMap 页面对象
+     * @return 配置页面
+     */
+    @GetMapping("/web/training/release/configure/{id}")
+    public String configure(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        if(trainingConditionCommon.canOperator(id)){
+            TrainingRelease trainingRelease = trainingReleaseService.findById(id);
+            if (Objects.nonNull(trainingRelease)) {
+                modelMap.addAttribute("trainingReleaseId", id);
+                page = "web/training/release/training_configure::#page-wrapper";
             } else {
                 config.buildDangerTip("查询错误", "未查询到实训发布数据");
                 config.dataMerging(modelMap);
