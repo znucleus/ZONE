@@ -21,6 +21,7 @@ import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zone.web.vo.training.release.TrainingConfigureAddVo;
+import top.zbeboy.zone.web.vo.training.release.TrainingConfigureEditVo;
 import top.zbeboy.zone.web.vo.training.release.TrainingReleaseAddVo;
 import top.zbeboy.zone.web.vo.training.release.TrainingReleaseEditVo;
 
@@ -190,6 +191,59 @@ public class TrainingReleaseRestController {
         } else {
             ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 配置更新
+     *
+     * @param trainingConfigureEditVo 数据
+     * @param bindingResult           检验
+     * @return true or false
+     */
+    @PostMapping("/web/training/release/configure/update")
+    public ResponseEntity<Map<String, Object>> configureUpdate(@Valid TrainingConfigureEditVo trainingConfigureEditVo, BindingResult bindingResult) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (!bindingResult.hasErrors()) {
+            if (trainingConditionCommon.canOperator(trainingConfigureEditVo.getTrainingReleaseId())) {
+                TrainingConfigure trainingConfigure = trainingConfigureService.findById(trainingConfigureEditVo.getTrainingConfigureId());
+                trainingConfigure.setStartTime(DateTimeUtil.defaultParseSqlTime(trainingConfigureEditVo.getStartTime()));
+                trainingConfigure.setEndTime(DateTimeUtil.defaultParseSqlTime(trainingConfigureEditVo.getEndTime()));
+                trainingConfigure.setWeekDay(trainingConfigureEditVo.getWeekDay());
+                trainingConfigure.setSchoolroomId(trainingConfigureEditVo.getSchoolroomId());
+
+                trainingConfigureService.update(trainingConfigure);
+                ajaxUtil.success().msg("更新成功");
+            } else {
+                ajaxUtil.fail().msg("您无权限操作");
+            }
+        } else {
+            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 配置删除
+     *
+     * @param trainingConfigureId 数据
+     * @return true or false
+     */
+    @PostMapping("/web/training/release/configure/delete")
+    public ResponseEntity<Map<String, Object>> configureUpdate(@RequestParam("trainingConfigureId") String trainingConfigureId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        TrainingConfigure trainingConfigure = trainingConfigureService.findById(trainingConfigureId);
+        if (Objects.nonNull(trainingConfigure)) {
+            if (trainingConditionCommon.canOperator(trainingConfigure.getTrainingReleaseId())) {
+                trainingConfigureService.deleteById(trainingConfigureId);
+                ajaxUtil.success().msg("删除成功");
+            } else {
+                ajaxUtil.fail().msg("您无权限操作");
+            }
+        } else {
+            ajaxUtil.fail().msg("未查询到实训配置数据");
+        }
+
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

@@ -5,6 +5,8 @@ import top.zbeboy.zone.domain.tables.pojos.TrainingConfigure;
 public class TrainingConfigureBean extends TrainingConfigure {
     private String  buildingCode;
     private String  buildingName;
+    private Integer collegeId;
+    private Integer buildingId;
 
     public String getBuildingCode() {
         return buildingCode;
@@ -20,5 +22,21 @@ public class TrainingConfigureBean extends TrainingConfigure {
 
     public void setBuildingName(String buildingName) {
         this.buildingName = buildingName;
+    }
+
+    public Integer getCollegeId() {
+        return collegeId;
+    }
+
+    public void setCollegeId(Integer collegeId) {
+        this.collegeId = collegeId;
+    }
+
+    public Integer getBuildingId() {
+        return buildingId;
+    }
+
+    public void setBuildingId(Integer buildingId) {
+        this.buildingId = buildingId;
     }
 }

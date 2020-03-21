@@ -4,7 +4,25 @@ import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.zone.domain.tables.pojos.TrainingConfigure;
 
+import java.util.Optional;
+
 public interface TrainingConfigureService {
+
+    /**
+     * 通过主键查询
+     *
+     * @param id 主键
+     * @return 数据
+     */
+    TrainingConfigure findById(String id);
+
+    /**
+     * 通过主键关联查询
+     *
+     * @param id 主键
+     * @return 数据
+     */
+    Optional<Record> findByIdRelation(String id);
 
     /**
      * 根据实训发布id关联查询

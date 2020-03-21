@@ -12,6 +12,8 @@ import top.zbeboy.zone.domain.tables.pojos.TrainingConfigure;
 
 import javax.annotation.Resource;
 
+import java.util.Optional;
+
 import static top.zbeboy.zone.domain.Tables.BUILDING;
 import static top.zbeboy.zone.domain.Tables.SCHOOLROOM;
 import static top.zbeboy.zone.domain.Tables.TRAINING_CONFIGURE;
@@ -28,6 +30,23 @@ public class TrainingConfigureServiceImpl implements TrainingConfigureService {
     @Autowired
     TrainingConfigureServiceImpl(DSLContext dslContext) {
         create = dslContext;
+    }
+
+    @Override
+    public TrainingConfigure findById(String id) {
+        return trainingConfigureDao.findById(id);
+    }
+
+    @Override
+    public Optional<Record> findByIdRelation(String id) {
+        return create.select()
+                .from(TRAINING_CONFIGURE)
+                .leftJoin(SCHOOLROOM)
+                .on(TRAINING_CONFIGURE.SCHOOLROOM_ID.eq(SCHOOLROOM.SCHOOLROOM_ID))
+                .leftJoin(BUILDING)
+                .on(SCHOOLROOM.BUILDING_ID.eq(BUILDING.BUILDING_ID))
+                .where(TRAINING_CONFIGURE.TRAINING_CONFIGURE_ID.eq(id))
+                .fetchOptional();
     }
 
     @Override

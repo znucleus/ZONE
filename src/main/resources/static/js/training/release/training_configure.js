@@ -97,6 +97,10 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
         });
 
 
+        tableElement.delegate('.edit', "click", function () {
+            $.address.value(getAjaxUrl().edit + '/' + $(this).attr('data-id'));
+        });
+
         tableElement.delegate('.del', "click", function () {
             configure_del($(this).attr('data-id'));
         });
