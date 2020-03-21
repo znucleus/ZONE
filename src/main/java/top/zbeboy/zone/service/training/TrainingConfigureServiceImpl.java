@@ -7,6 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import top.zbeboy.zone.domain.tables.daos.TrainingConfigureDao;
+import top.zbeboy.zone.domain.tables.pojos.TrainingConfigure;
+
+import javax.annotation.Resource;
 
 import static top.zbeboy.zone.domain.Tables.BUILDING;
 import static top.zbeboy.zone.domain.Tables.SCHOOLROOM;
@@ -17,6 +21,9 @@ import static top.zbeboy.zone.domain.Tables.TRAINING_CONFIGURE;
 public class TrainingConfigureServiceImpl implements TrainingConfigureService {
 
     private final DSLContext create;
+
+    @Resource
+    private TrainingConfigureDao trainingConfigureDao;
 
     @Autowired
     TrainingConfigureServiceImpl(DSLContext dslContext) {
@@ -33,5 +40,21 @@ public class TrainingConfigureServiceImpl implements TrainingConfigureService {
                 .on(SCHOOLROOM.BUILDING_ID.eq(BUILDING.BUILDING_ID))
                 .where(TRAINING_CONFIGURE.TRAINING_RELEASE_ID.eq(trainingReleaseId))
                 .fetch();
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void save(TrainingConfigure trainingConfigure) {
+        trainingConfigureDao.insert(trainingConfigure);
+    }
+
+    @Override
+    public void update(TrainingConfigure trainingConfigure) {
+        trainingConfigureDao.update(trainingConfigure);
+    }
+
+    @Override
+    public void deleteById(String id) {
+        trainingConfigureDao.deleteById(id);
     }
 }

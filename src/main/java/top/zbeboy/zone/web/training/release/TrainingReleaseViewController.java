@@ -58,7 +58,7 @@ public class TrainingReleaseViewController {
     public String edit(@PathVariable("id") String id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        if(trainingConditionCommon.canOperator(id)){
+        if (trainingConditionCommon.canOperator(id)) {
             Optional<Record> record = trainingReleaseService.findByIdRelation(id);
             if (record.isPresent()) {
                 TrainingReleaseBean bean = record.get().into(TrainingReleaseBean.class);
@@ -88,11 +88,42 @@ public class TrainingReleaseViewController {
     public String configure(@PathVariable("id") String id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        if(trainingConditionCommon.canOperator(id)){
+        if (trainingConditionCommon.canOperator(id)) {
             TrainingRelease trainingRelease = trainingReleaseService.findById(id);
             if (Objects.nonNull(trainingRelease)) {
                 modelMap.addAttribute("trainingReleaseId", id);
                 page = "web/training/release/training_configure::#page-wrapper";
+            } else {
+                config.buildDangerTip("查询错误", "未查询到实训发布数据");
+                config.dataMerging(modelMap);
+                page = "inline_tip::#page-wrapper";
+            }
+        } else {
+            config.buildWarningTip("操作警告", "您无权限操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
+
+    /**
+     * 配置添加
+     *
+     * @param id       id
+     * @param modelMap 页面对象
+     * @return 配置页面
+     */
+    @GetMapping("/web/training/release/configure/add/{id}")
+    public String configureAdd(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        if (trainingConditionCommon.canOperator(id)) {
+            Optional<Record> trainingReleaseRecord = trainingReleaseService.findByIdRelation(id);
+            if (trainingReleaseRecord.isPresent()) {
+                TrainingReleaseBean bean = trainingReleaseRecord.get().into(TrainingReleaseBean.class);
+                modelMap.addAttribute("trainingReleaseId", bean.getTrainingReleaseId());
+                modelMap.addAttribute("collegeId", bean.getCollegeId());
+                page = "web/training/release/training_configure_add::#page-wrapper";
             } else {
                 config.buildDangerTip("查询错误", "未查询到实训发布数据");
                 config.dataMerging(modelMap);

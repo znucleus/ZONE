@@ -1,5 +1,5 @@
 //# sourceURL=training_configure.js
-require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active", "tablesaw", "messenger"],
+require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active", "tablesaw", "messenger", "jquery.address"],
     function ($, _, tools, Handlebars, Swal, navActive) {
 
         /*
@@ -8,7 +8,8 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
         function getAjaxUrl() {
             return {
                 data: web_path + '/web/training/release/configure/data',
-                save: web_path + '/web/training/release/configure/save',
+                add: web_path + '/web/training/release/configure/add',
+                edit: web_path + '/web/training/release/configure/edit',
                 del: web_path + '/web/training/release/configure/delete',
                 page: '/web/menu/training/release'
             };
@@ -92,7 +93,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
          添加
          */
         $('#add').click(function () {
-
+            $.address.value(getAjaxUrl().add + '/' + page_param.paramTrainingReleaseId);
         });
 
 

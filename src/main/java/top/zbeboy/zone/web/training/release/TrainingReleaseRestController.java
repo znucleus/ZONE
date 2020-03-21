@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import top.zbeboy.zone.domain.tables.pojos.TrainingConfigure;
 import top.zbeboy.zone.domain.tables.pojos.TrainingRelease;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.service.platform.UsersService;
@@ -19,6 +20,7 @@ import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
+import top.zbeboy.zone.web.vo.training.release.TrainingConfigureAddVo;
 import top.zbeboy.zone.web.vo.training.release.TrainingReleaseAddVo;
 import top.zbeboy.zone.web.vo.training.release.TrainingReleaseEditVo;
 
@@ -157,6 +159,37 @@ public class TrainingReleaseRestController {
             beans = records.into(TrainingConfigureBean.class);
         }
         ajaxUtil.success().list(beans).msg("获取数据成功");
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 配置保存
+     *
+     * @param trainingConfigureAddVo 数据
+     * @param bindingResult          检验
+     * @return true or false
+     */
+    @PostMapping("/web/training/release/configure/save")
+    public ResponseEntity<Map<String, Object>> configureSave(@Valid TrainingConfigureAddVo trainingConfigureAddVo, BindingResult bindingResult) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (!bindingResult.hasErrors()) {
+            if (trainingConditionCommon.canOperator(trainingConfigureAddVo.getTrainingReleaseId())) {
+                TrainingConfigure trainingConfigure = new TrainingConfigure();
+                trainingConfigure.setTrainingConfigureId(UUIDUtil.getUUID());
+                trainingConfigure.setTrainingReleaseId(trainingConfigureAddVo.getTrainingReleaseId());
+                trainingConfigure.setStartTime(DateTimeUtil.defaultParseSqlTime(trainingConfigureAddVo.getStartTime()));
+                trainingConfigure.setEndTime(DateTimeUtil.defaultParseSqlTime(trainingConfigureAddVo.getEndTime()));
+                trainingConfigure.setWeekDay(trainingConfigureAddVo.getWeekDay());
+                trainingConfigure.setSchoolroomId(trainingConfigureAddVo.getSchoolroomId());
+
+                trainingConfigureService.save(trainingConfigure);
+                ajaxUtil.success().msg("保存成功");
+            } else {
+                ajaxUtil.fail().msg("您无权限操作");
+            }
+        } else {
+            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }
