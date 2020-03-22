@@ -27,7 +27,7 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class TrainingAttend implements Serializable {
 
-    private static final long serialVersionUID = -115834094;
+    private static final long serialVersionUID = -649164759;
 
     private String    trainingAttendId;
     private Date      attendDate;
@@ -36,6 +36,7 @@ public class TrainingAttend implements Serializable {
     private Timestamp publishDate;
     private Time      attendStartTime;
     private Time      attendEndTime;
+    private String    remark;
 
     public TrainingAttend() {}
 
@@ -47,6 +48,7 @@ public class TrainingAttend implements Serializable {
         this.publishDate = value.publishDate;
         this.attendStartTime = value.attendStartTime;
         this.attendEndTime = value.attendEndTime;
+        this.remark = value.remark;
     }
 
     public TrainingAttend(
@@ -56,7 +58,8 @@ public class TrainingAttend implements Serializable {
         String    trainingReleaseId,
         Timestamp publishDate,
         Time      attendStartTime,
-        Time      attendEndTime
+        Time      attendEndTime,
+        String    remark
     ) {
         this.trainingAttendId = trainingAttendId;
         this.attendDate = attendDate;
@@ -65,6 +68,7 @@ public class TrainingAttend implements Serializable {
         this.publishDate = publishDate;
         this.attendStartTime = attendStartTime;
         this.attendEndTime = attendEndTime;
+        this.remark = remark;
     }
 
     @NotNull
@@ -132,6 +136,15 @@ public class TrainingAttend implements Serializable {
         this.attendEndTime = attendEndTime;
     }
 
+    @Size(max = 200)
+    public String getRemark() {
+        return this.remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("TrainingAttend (");
@@ -143,6 +156,7 @@ public class TrainingAttend implements Serializable {
         sb.append(", ").append(publishDate);
         sb.append(", ").append(attendStartTime);
         sb.append(", ").append(attendEndTime);
+        sb.append(", ").append(remark);
 
         sb.append(")");
         return sb.toString();

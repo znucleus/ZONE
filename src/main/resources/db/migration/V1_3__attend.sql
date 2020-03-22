@@ -155,4 +155,9 @@ CREATE TABLE epidemic_register_data(
 INSERT INTO channel (channel_name) VALUES ('WEB');
 INSERT INTO channel (channel_name) VALUES ('API');
 
-INSERT INTO system_configure (data_key, data_value) VALUES ('WEI_XIN_SMALL_REVIEW_SWITCH','1');
+CREATE TABLE wei_xin_small_version(
+  version VARCHAR(20) PRIMARY KEY,
+  remark VARCHAR(200),
+  switch BOOLEAN NOT NULL DEFAULT 0,
+  create_date TIMESTAMP NOT NULL
+);

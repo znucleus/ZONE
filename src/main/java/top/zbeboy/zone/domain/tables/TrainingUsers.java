@@ -4,6 +4,7 @@
 package top.zbeboy.zone.domain.tables;
 
 
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row3;
+import org.jooq.Row5;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -41,7 +42,7 @@ import top.zbeboy.zone.domain.tables.records.TrainingUsersRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class TrainingUsers extends TableImpl<TrainingUsersRecord> {
 
-    private static final long serialVersionUID = -126275780;
+    private static final long serialVersionUID = 95200936;
 
     /**
      * The reference instance of <code>zone.training_users</code>
@@ -70,6 +71,16 @@ public class TrainingUsers extends TableImpl<TrainingUsersRecord> {
      * The column <code>zone.training_users.student_id</code>.
      */
     public final TableField<TrainingUsersRecord, Integer> STUDENT_ID = createField(DSL.name("student_id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+
+    /**
+     * The column <code>zone.training_users.create_date</code>.
+     */
+    public final TableField<TrainingUsersRecord, Timestamp> CREATE_DATE = createField(DSL.name("create_date"), org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
+
+    /**
+     * The column <code>zone.training_users.remark</code>.
+     */
+    public final TableField<TrainingUsersRecord, String> REMARK = createField(DSL.name("remark"), org.jooq.impl.SQLDataType.VARCHAR(200), this, "");
 
     /**
      * Create a <code>zone.training_users</code> table reference
@@ -164,11 +175,11 @@ public class TrainingUsers extends TableImpl<TrainingUsersRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row3 type methods
+    // Row5 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row3<String, String, Integer> fieldsRow() {
-        return (Row3) super.fieldsRow();
+    public Row5<String, String, Integer, Timestamp, String> fieldsRow() {
+        return (Row5) super.fieldsRow();
     }
 }

@@ -45,6 +45,7 @@ public final class CacheBook {
     public static final String CHANNEL_BY_NAME = "CHANNEL_BY_NAME";
     public static final String CHANNEL_BY_ID = "CHANNEL_BY_ID";
     public static final String SYSTEM_CONFIGURE = "SYSTEM_CONFIGURE";
+    public static final String WEI_XIN_SMALL_VERSION = "WEI_XIN_SMALL_VERSION";
 
     /*
     签到业务

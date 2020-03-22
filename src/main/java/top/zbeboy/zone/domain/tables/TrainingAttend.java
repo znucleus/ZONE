@@ -17,7 +17,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row7;
+import org.jooq.Row8;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -44,7 +44,7 @@ import top.zbeboy.zone.domain.tables.records.TrainingAttendRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class TrainingAttend extends TableImpl<TrainingAttendRecord> {
 
-    private static final long serialVersionUID = 1604438315;
+    private static final long serialVersionUID = -2000647687;
 
     /**
      * The reference instance of <code>zone.training_attend</code>
@@ -93,6 +93,11 @@ public class TrainingAttend extends TableImpl<TrainingAttendRecord> {
      * The column <code>zone.training_attend.attend_end_time</code>.
      */
     public final TableField<TrainingAttendRecord, Time> ATTEND_END_TIME = createField(DSL.name("attend_end_time"), org.jooq.impl.SQLDataType.TIME.nullable(false), this, "");
+
+    /**
+     * The column <code>zone.training_attend.remark</code>.
+     */
+    public final TableField<TrainingAttendRecord, String> REMARK = createField(DSL.name("remark"), org.jooq.impl.SQLDataType.VARCHAR(200), this, "");
 
     /**
      * Create a <code>zone.training_attend</code> table reference
@@ -187,11 +192,11 @@ public class TrainingAttend extends TableImpl<TrainingAttendRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row7 type methods
+    // Row8 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row7<String, Date, Integer, String, Timestamp, Time, Time> fieldsRow() {
-        return (Row7) super.fieldsRow();
+    public Row8<String, Date, Integer, String, Timestamp, Time, Time, String> fieldsRow() {
+        return (Row8) super.fieldsRow();
     }
 }

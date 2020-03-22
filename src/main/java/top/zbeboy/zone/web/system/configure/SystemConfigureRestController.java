@@ -39,10 +39,7 @@ public class SystemConfigureRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         SystemConfigure configure1 = systemConfigureService
                 .findByDataKey(Workbook.SystemConfigure.FORBIDDEN_REGISTER.name());
-        SystemConfigure configure2 = systemConfigureService
-                .findByDataKey(Workbook.SystemConfigure.WEI_XIN_SMALL_REVIEW_SWITCH.name());
-        ajaxUtil.success().put(configure1.getDataKey(), configure1.getDataValue())
-                .put(configure2.getDataKey(), configure2.getDataValue());
+        ajaxUtil.success().put(configure1.getDataKey(), configure1.getDataValue());
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 

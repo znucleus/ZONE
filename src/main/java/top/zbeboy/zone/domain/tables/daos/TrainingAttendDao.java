@@ -158,4 +158,18 @@ public class TrainingAttendDao extends DAOImpl<TrainingAttendRecord, top.zbeboy.
     public List<top.zbeboy.zone.domain.tables.pojos.TrainingAttend> fetchByAttendEndTime(Time... values) {
         return fetch(TrainingAttend.TRAINING_ATTEND.ATTEND_END_TIME, values);
     }
+
+    /**
+     * Fetch records that have <code>remark BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.TrainingAttend> fetchRangeOfRemark(String lowerInclusive, String upperInclusive) {
+        return fetchRange(TrainingAttend.TRAINING_ATTEND.REMARK, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>remark IN (values)</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.TrainingAttend> fetchByRemark(String... values) {
+        return fetch(TrainingAttend.TRAINING_ATTEND.REMARK, values);
+    }
 }
