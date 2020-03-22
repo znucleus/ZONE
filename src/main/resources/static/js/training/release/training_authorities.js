@@ -1,4 +1,4 @@
-//# sourceURL=training_configure.js
+//# sourceURL=training_authorities.js
 require(["jquery", "tools", "handlebars", "sweetalert2", "nav.active", "tablesaw", "messenger", "jquery.address"],
     function ($, tools, Handlebars, Swal, navActive) {
 
@@ -7,10 +7,10 @@ require(["jquery", "tools", "handlebars", "sweetalert2", "nav.active", "tablesaw
          */
         function getAjaxUrl() {
             return {
-                data: web_path + '/web/training/release/configure/data',
-                add: web_path + '/web/training/release/configure/add',
-                edit: web_path + '/web/training/release/configure/edit',
-                del: web_path + '/web/training/release/configure/delete',
+                data: web_path + '/web/training/release/authorities/data',
+                add: web_path + '/web/training/release/authorities/add',
+                edit: web_path + '/web/training/release/authorities/edit',
+                del: web_path + '/web/training/release/authorities/delete',
                 page: '/web/menu/training/release'
             };
         }
@@ -48,10 +48,6 @@ require(["jquery", "tools", "handlebars", "sweetalert2", "nav.active", "tablesaw
          */
         function listData(data) {
             var template = Handlebars.compile($("#data_template").html());
-
-            Handlebars.registerHelper('week_day', function () {
-                return new Handlebars.SafeString(Handlebars.escapeExpression(tools.weekDay(this.weekDay)));
-            });
             $('#dataTable > tbody').html(template(data));
             $('#totalSize').text(data.listResult.length);
             tableElement.tablesaw().data("tablesaw").refresh();
@@ -74,13 +70,13 @@ require(["jquery", "tools", "handlebars", "sweetalert2", "nav.active", "tablesaw
         });
 
         tableElement.delegate('.del', "click", function () {
-            configure_del($(this).attr('data-id'));
+            authorities_del($(this).attr('data-id'));
         });
 
         /*
          删除
          */
-        function configure_del(trainingConfigureId) {
+        function authorities_del(authoritiesId) {
             Swal.fire({
                 title: "确定删除吗？",
                 text: "配置删除！",
@@ -90,20 +86,20 @@ require(["jquery", "tools", "handlebars", "sweetalert2", "nav.active", "tablesaw
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
                 preConfirm: function () {
-                    sendDelAjax(trainingConfigureId);
+                    sendDelAjax(authoritiesId);
                 }
             });
         }
 
         /**
          * 删除ajax
-         * @param trainingConfigureId
+         * @param authoritiesId
          */
-        function sendDelAjax(trainingConfigureId) {
+        function sendDelAjax(authoritiesId) {
             $.ajax({
                 type: 'POST',
                 url: getAjaxUrl().del,
-                data: {trainingConfigureId: trainingConfigureId},
+                data: {authoritiesId: authoritiesId},
                 success: function (data) {
                     Messenger().post({
                         message: data.msg,

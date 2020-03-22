@@ -168,4 +168,63 @@ public class TrainingReleaseViewController {
         }
         return page;
     }
+
+    /**
+     * 配置
+     *
+     * @param id       id
+     * @param modelMap 页面对象
+     * @return 配置页面
+     */
+    @GetMapping("/web/training/release/authorities/{id}")
+    public String authorities(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        if (trainingConditionCommon.canOperator(id)) {
+            TrainingRelease trainingRelease = trainingReleaseService.findById(id);
+            if (Objects.nonNull(trainingRelease)) {
+                modelMap.addAttribute("trainingReleaseId", id);
+                page = "web/training/release/training_authorities::#page-wrapper";
+            } else {
+                config.buildDangerTip("查询错误", "未查询到实训发布数据");
+                config.dataMerging(modelMap);
+                page = "inline_tip::#page-wrapper";
+            }
+        } else {
+            config.buildWarningTip("操作警告", "您无权限操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
+
+    /**
+     * 权限添加
+     *
+     * @param id       id
+     * @param modelMap 页面对象
+     * @return 配置页面
+     */
+    @GetMapping("/web/training/release/authorities/add/{id}")
+    public String authoritiesAdd(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        if (trainingConditionCommon.canOperator(id)) {
+            Optional<Record> trainingReleaseRecord = trainingReleaseService.findByIdRelation(id);
+            if (trainingReleaseRecord.isPresent()) {
+                TrainingReleaseBean bean = trainingReleaseRecord.get().into(TrainingReleaseBean.class);
+                modelMap.addAttribute("trainingReleaseId", bean.getTrainingReleaseId());
+                page = "web/training/release/training_authorities_add::#page-wrapper";
+            } else {
+                config.buildDangerTip("查询错误", "未查询到实训发布数据");
+                config.dataMerging(modelMap);
+                page = "inline_tip::#page-wrapper";
+            }
+        } else {
+            config.buildWarningTip("操作警告", "您无权限操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
 }

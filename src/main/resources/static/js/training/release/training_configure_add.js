@@ -159,7 +159,7 @@ require(["jquery", "tools", "moment-with-locales", "handlebars", "sweetalert2",
         function validEndTime() {
             var endTime = param.endTime;
             if (endTime.length <= 0) {
-                tools.validErrorDom(param_id.endTime, '上课结束时间');
+                tools.validErrorDom(param_id.endTime, '请选择上课结束时间');
             } else {
                 var startTime = param.startTime;
                 if (moment(endTime, 'HH:mm:ss').isSameOrAfter(moment(startTime, 'HH:mm:ss'))) {

@@ -11,6 +11,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             edit: '/web/training/release/edit',
             del: '/web/training/release/delete',
             configure: '/web/training/release/configure',
+            authorities: '/web/training/release/authorities',
             page: '/web/menu/training/release'
         };
 
@@ -130,6 +131,13 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         });
 
         /*
+        权限分配
+        */
+        $(tableData).delegate('.authorities', "click", function () {
+            $.address.value(ajax_url.authorities + '/' + $(this).attr('data-id'));
+        });
+
+        /*
          删除
          */
         $(tableData).delegate('.del', "click", function () {
@@ -161,16 +169,15 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
          * @param id
          */
         function del(id) {
-            sendDelAjax(id, 1);
+            sendDelAjax(id);
         }
 
 
         /**
          * 删除ajax
          * @param trainingReleaseId
-         * @param isDel
          */
-        function sendDelAjax(trainingReleaseId, isDel) {
+        function sendDelAjax(trainingReleaseId) {
             $.ajax({
                 type: 'POST',
                 url: ajax_url.del,

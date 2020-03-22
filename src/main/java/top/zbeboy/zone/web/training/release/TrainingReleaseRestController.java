@@ -1,29 +1,32 @@
 package top.zbeboy.zone.web.training.release;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import top.zbeboy.zone.config.Workbook;
+import top.zbeboy.zone.domain.tables.pojos.TrainingAuthorities;
 import top.zbeboy.zone.domain.tables.pojos.TrainingConfigure;
 import top.zbeboy.zone.domain.tables.pojos.TrainingRelease;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.service.platform.UsersService;
+import top.zbeboy.zone.service.system.AuthoritiesService;
+import top.zbeboy.zone.service.training.TrainingAuthoritiesService;
 import top.zbeboy.zone.service.training.TrainingConfigureService;
 import top.zbeboy.zone.service.training.TrainingReleaseService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
+import top.zbeboy.zone.web.bean.training.release.TrainingAuthoritiesBean;
 import top.zbeboy.zone.web.bean.training.release.TrainingConfigureBean;
 import top.zbeboy.zone.web.bean.training.release.TrainingReleaseBean;
 import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
-import top.zbeboy.zone.web.vo.training.release.TrainingConfigureAddVo;
-import top.zbeboy.zone.web.vo.training.release.TrainingConfigureEditVo;
-import top.zbeboy.zone.web.vo.training.release.TrainingReleaseAddVo;
-import top.zbeboy.zone.web.vo.training.release.TrainingReleaseEditVo;
+import top.zbeboy.zone.web.vo.training.release.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -45,7 +48,13 @@ public class TrainingReleaseRestController {
     private TrainingConfigureService trainingConfigureService;
 
     @Resource
+    private TrainingAuthoritiesService trainingAuthoritiesService;
+
+    @Resource
     private UsersService usersService;
+
+    @Resource
+    private AuthoritiesService authoritiesService;
 
     /**
      * 数据
@@ -155,9 +164,11 @@ public class TrainingReleaseRestController {
     public ResponseEntity<Map<String, Object>> configureData(@PathVariable("id") String id) {
         AjaxUtil<TrainingConfigureBean> ajaxUtil = AjaxUtil.of();
         List<TrainingConfigureBean> beans = new ArrayList<>();
-        Result<Record> records = trainingConfigureService.findByTrainingReleaseIdRelation(id);
-        if (records.isNotEmpty()) {
-            beans = records.into(TrainingConfigureBean.class);
+        if (trainingConditionCommon.canOperator(id)) {
+            Result<Record> records = trainingConfigureService.findByTrainingReleaseIdRelation(id);
+            if (records.isNotEmpty()) {
+                beans = records.into(TrainingConfigureBean.class);
+            }
         }
         ajaxUtil.success().list(beans).msg("获取数据成功");
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -244,6 +255,73 @@ public class TrainingReleaseRestController {
             ajaxUtil.fail().msg("未查询到实训配置数据");
         }
 
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 权限分配数据
+     *
+     * @return 数据
+     */
+    @GetMapping("/web/training/release/authorities/data/{id}")
+    public ResponseEntity<Map<String, Object>> authoritiesData(@PathVariable("id") String id) {
+        AjaxUtil<TrainingAuthoritiesBean> ajaxUtil = AjaxUtil.of();
+        List<TrainingAuthoritiesBean> beans = new ArrayList<>();
+        if (trainingConditionCommon.canOperator(id)) {
+            Result<Record> records = trainingAuthoritiesService.findByTrainingReleaseIdRelation(id);
+            if (records.isNotEmpty()) {
+                beans = records.into(TrainingAuthoritiesBean.class);
+                beans.forEach(bean -> bean.setValidDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getValidDate())));
+                beans.forEach(bean -> bean.setExpireDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getExpireDate())));
+            }
+        }
+        ajaxUtil.success().list(beans).msg("获取数据成功");
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 权限保存
+     *
+     * @param trainingAuthoritiesAddVo 数据
+     * @param bindingResult            检验
+     * @return true or false
+     */
+    @PostMapping("/web/training/release/authorities/save")
+    public ResponseEntity<Map<String, Object>> authoritiesSave(@Valid TrainingAuthoritiesAddVo trainingAuthoritiesAddVo, BindingResult bindingResult) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (!bindingResult.hasErrors()) {
+            if (trainingConditionCommon.canOperator(trainingAuthoritiesAddVo.getTrainingReleaseId())) {
+                // 系统或管理员不需要添加权限
+                List<String> authorities = new ArrayList<>();
+                authorities.add(Workbook.authorities.ROLE_SYSTEM.name());
+                authorities.add(Workbook.authorities.ROLE_ADMIN.name());
+                Result<Record> authorityRecord = authoritiesService.findByUsernameAndInAuthorities(trainingAuthoritiesAddVo.getUsername(), authorities);
+                if (authorityRecord.isEmpty()) {
+                    // 本人无需添加权限
+                    Users users = usersService.getUserFromSession();
+                    if (!StringUtils.equals(users.getUsername(), trainingAuthoritiesAddVo.getUsername())) {
+                        TrainingAuthorities trainingAuthorities = new TrainingAuthorities();
+                        trainingAuthorities.setAuthoritiesId(UUIDUtil.getUUID());
+                        trainingAuthorities.setTrainingReleaseId(trainingAuthoritiesAddVo.getTrainingReleaseId());
+                        trainingAuthorities.setUsername(trainingAuthoritiesAddVo.getUsername());
+                        trainingAuthorities.setValidDate(DateTimeUtil.defaultParseSqlTimestamp(trainingAuthoritiesAddVo.getValidDate()));
+                        trainingAuthorities.setExpireDate(DateTimeUtil.defaultParseSqlTimestamp(trainingAuthoritiesAddVo.getExpireDate()));
+
+                        trainingAuthoritiesService.save(trainingAuthorities);
+                        ajaxUtil.success().msg("保存成功");
+                    } else {
+                        ajaxUtil.fail().msg("本人无需添加权限");
+                    }
+                } else {
+                    ajaxUtil.fail().msg("系统或管理员无需添加权限");
+                }
+
+            } else {
+                ajaxUtil.fail().msg("您无权限操作");
+            }
+        } else {
+            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

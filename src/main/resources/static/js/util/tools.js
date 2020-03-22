@@ -77,6 +77,33 @@ define(["jquery"], function ($) {
             moment: {
                 releaseTime: 'YYYY.MM.DD HH:mm:ss',
                 defaultTime:'YYYY-MM-DD HH:mm:ss'
+            },
+            weekDay: function(day){
+                var v = '';
+                switch (day) {
+                    case 1:
+                        v = '星期一';
+                        break;
+                    case 2:
+                        v = '星期二';
+                        break;
+                    case 3:
+                        v = '星期三';
+                        break;
+                    case 4:
+                        v = '星期四';
+                        break;
+                    case 5:
+                        v = '星期五';
+                        break;
+                    case 6:
+                        v = '星期六';
+                        break;
+                    case 7:
+                        v = '星期天';
+                        break;
+                }
+                return v;
             }
         };
     }
