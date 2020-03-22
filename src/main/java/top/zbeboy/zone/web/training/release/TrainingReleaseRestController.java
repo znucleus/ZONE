@@ -8,15 +8,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.config.Workbook;
-import top.zbeboy.zone.domain.tables.pojos.TrainingAuthorities;
-import top.zbeboy.zone.domain.tables.pojos.TrainingConfigure;
-import top.zbeboy.zone.domain.tables.pojos.TrainingRelease;
-import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zone.domain.tables.pojos.*;
+import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.system.AuthoritiesService;
 import top.zbeboy.zone.service.training.TrainingAuthoritiesService;
 import top.zbeboy.zone.service.training.TrainingConfigureService;
 import top.zbeboy.zone.service.training.TrainingReleaseService;
+import top.zbeboy.zone.service.training.TrainingUsersService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.training.release.TrainingAuthoritiesBean;
@@ -56,6 +55,12 @@ public class TrainingReleaseRestController {
     @Resource
     private AuthoritiesService authoritiesService;
 
+    @Resource
+    private StudentService studentService;
+
+    @Resource
+    private TrainingUsersService trainingUsersService;
+
     /**
      * 数据
      *
@@ -89,6 +94,7 @@ public class TrainingReleaseRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
             TrainingRelease trainingRelease = new TrainingRelease();
+            String trainingReleaseId = UUIDUtil.getUUID();
             trainingRelease.setTrainingReleaseId(UUIDUtil.getUUID());
             trainingRelease.setTitle(trainingReleaseAddVo.getTitle());
             trainingRelease.setOrganizeId(trainingReleaseAddVo.getOrganizeId());
@@ -99,6 +105,21 @@ public class TrainingReleaseRestController {
             Users users = usersService.getUserFromSession();
             trainingRelease.setPublisher(users.getRealName());
             trainingRelease.setUsername(users.getUsername());
+
+            // 生成名单
+            Result<Record> studentRecords = studentService.findNormalByOrganizeId(trainingReleaseAddVo.getOrganizeId());
+            if (studentRecords.isNotEmpty()) {
+                List<Student> students = studentRecords.into(Student.class);
+                List<TrainingUsers> trainingUsers = new ArrayList<>();
+                for (Student student : students) {
+                    TrainingUsers au = new TrainingUsers();
+                    au.setTrainingUsersId(UUIDUtil.getUUID());
+                    au.setTrainingReleaseId(trainingReleaseId);
+                    au.setStudentId(student.getStudentId());
+                    trainingUsers.add(au);
+                }
+                trainingUsersService.batchSave(trainingUsers);
+            }
 
             trainingReleaseService.save(trainingRelease);
             ajaxUtil.success().msg("保存成功");
