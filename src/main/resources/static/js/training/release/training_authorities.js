@@ -79,7 +79,7 @@ require(["jquery", "tools", "handlebars", "sweetalert2", "nav.active", "tablesaw
         function authorities_del(authoritiesId) {
             Swal.fire({
                 title: "确定删除吗？",
-                text: "配置删除！",
+                text: "权限删除！",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: '#d33',

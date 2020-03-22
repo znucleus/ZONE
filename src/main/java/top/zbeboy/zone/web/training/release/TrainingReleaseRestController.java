@@ -241,7 +241,7 @@ public class TrainingReleaseRestController {
      * @return true or false
      */
     @PostMapping("/web/training/release/configure/delete")
-    public ResponseEntity<Map<String, Object>> configureUpdate(@RequestParam("trainingConfigureId") String trainingConfigureId) {
+    public ResponseEntity<Map<String, Object>> configureDelete(@RequestParam("trainingConfigureId") String trainingConfigureId) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         TrainingConfigure trainingConfigure = trainingConfigureService.findById(trainingConfigureId);
         if (Objects.nonNull(trainingConfigure)) {
@@ -322,6 +322,74 @@ public class TrainingReleaseRestController {
         } else {
             ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 权限更新
+     *
+     * @param trainingAuthoritiesEditVo 数据
+     * @param bindingResult             检验
+     * @return true or false
+     */
+    @PostMapping("/web/training/release/authorities/update")
+    public ResponseEntity<Map<String, Object>> authoritiesUpdate(@Valid TrainingAuthoritiesEditVo trainingAuthoritiesEditVo, BindingResult bindingResult) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (!bindingResult.hasErrors()) {
+            if (trainingConditionCommon.canOperator(trainingAuthoritiesEditVo.getTrainingReleaseId())) {
+                // 系统或管理员不需要添加权限
+                List<String> authorities = new ArrayList<>();
+                authorities.add(Workbook.authorities.ROLE_SYSTEM.name());
+                authorities.add(Workbook.authorities.ROLE_ADMIN.name());
+                Result<Record> authorityRecord = authoritiesService.findByUsernameAndInAuthorities(trainingAuthoritiesEditVo.getUsername(), authorities);
+                if (authorityRecord.isEmpty()) {
+                    // 本人无需添加权限
+                    Users users = usersService.getUserFromSession();
+                    if (!StringUtils.equals(users.getUsername(), trainingAuthoritiesEditVo.getUsername())) {
+                        TrainingAuthorities trainingAuthorities = trainingAuthoritiesService.findById(trainingAuthoritiesEditVo.getAuthoritiesId());
+                        trainingAuthorities.setUsername(trainingAuthoritiesEditVo.getUsername());
+                        trainingAuthorities.setValidDate(DateTimeUtil.defaultParseSqlTimestamp(trainingAuthoritiesEditVo.getValidDate()));
+                        trainingAuthorities.setExpireDate(DateTimeUtil.defaultParseSqlTimestamp(trainingAuthoritiesEditVo.getExpireDate()));
+
+                        trainingAuthoritiesService.update(trainingAuthorities);
+                        ajaxUtil.success().msg("更新成功");
+                    } else {
+                        ajaxUtil.fail().msg("本人无需添加权限");
+                    }
+                } else {
+                    ajaxUtil.fail().msg("系统或管理员无需添加权限");
+                }
+
+            } else {
+                ajaxUtil.fail().msg("您无权限操作");
+            }
+        } else {
+            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 权限删除
+     *
+     * @param authoritiesId 数据
+     * @return true or false
+     */
+    @PostMapping("/web/training/release/authorities/delete")
+    public ResponseEntity<Map<String, Object>> authoritiesDelete(@RequestParam("authoritiesId") String authoritiesId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        TrainingAuthorities trainingAuthorities = trainingAuthoritiesService.findById(authoritiesId);
+        if (Objects.nonNull(trainingAuthorities)) {
+            if (trainingConditionCommon.canOperator(trainingAuthorities.getTrainingReleaseId())) {
+                trainingAuthoritiesService.deleteById(authoritiesId);
+                ajaxUtil.success().msg("删除成功");
+            } else {
+                ajaxUtil.fail().msg("您无权限操作");
+            }
+        } else {
+            ajaxUtil.fail().msg("未查询到实训配置数据");
+        }
+
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

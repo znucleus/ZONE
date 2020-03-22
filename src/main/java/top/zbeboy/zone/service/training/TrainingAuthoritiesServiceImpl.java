@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 import top.zbeboy.zone.domain.tables.daos.TrainingAuthoritiesDao;
 import top.zbeboy.zone.domain.tables.pojos.TrainingAuthorities;
 
 import javax.annotation.Resource;
+import java.util.Optional;
 
 import static top.zbeboy.zone.domain.Tables.TRAINING_AUTHORITIES;
 import static top.zbeboy.zone.domain.Tables.USERS;
@@ -28,6 +28,21 @@ public class TrainingAuthoritiesServiceImpl implements TrainingAuthoritiesServic
     @Autowired
     TrainingAuthoritiesServiceImpl(DSLContext dslContext) {
         create = dslContext;
+    }
+
+    @Override
+    public TrainingAuthorities findById(String id) {
+        return trainingAuthoritiesDao.findById(id);
+    }
+
+    @Override
+    public Optional<Record> findByIdRelation(String id) {
+        return create.select()
+                .from(TRAINING_AUTHORITIES)
+                .leftJoin(USERS)
+                .on(TRAINING_AUTHORITIES.USERNAME.eq(USERS.USERNAME))
+                .where(TRAINING_AUTHORITIES.AUTHORITIES_ID.eq(id))
+                .fetchOptional();
     }
 
     @Override

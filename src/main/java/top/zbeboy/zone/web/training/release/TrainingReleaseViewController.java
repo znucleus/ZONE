@@ -6,8 +6,11 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zone.domain.tables.pojos.TrainingRelease;
+import top.zbeboy.zone.service.training.TrainingAuthoritiesService;
 import top.zbeboy.zone.service.training.TrainingConfigureService;
 import top.zbeboy.zone.service.training.TrainingReleaseService;
+import top.zbeboy.zone.service.util.DateTimeUtil;
+import top.zbeboy.zone.web.bean.training.release.TrainingAuthoritiesBean;
 import top.zbeboy.zone.web.bean.training.release.TrainingConfigureBean;
 import top.zbeboy.zone.web.bean.training.release.TrainingReleaseBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
@@ -28,6 +31,9 @@ public class TrainingReleaseViewController {
 
     @Resource
     private TrainingConfigureService trainingConfigureService;
+
+    @Resource
+    private TrainingAuthoritiesService trainingAuthoritiesService;
 
     /**
      * 发布主页
@@ -222,6 +228,38 @@ public class TrainingReleaseViewController {
             }
         } else {
             config.buildWarningTip("操作警告", "您无权限操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
+
+    /**
+     * 权限更新
+     *
+     * @param id       权限id
+     * @param modelMap 页面对象
+     * @return 页面
+     */
+    @GetMapping("/web/training/release/authorities/edit/{id}")
+    public String authoritiesEdit(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        Optional<Record> record = trainingAuthoritiesService.findByIdRelation(id);
+        if (record.isPresent()) {
+            TrainingAuthoritiesBean bean = record.get().into(TrainingAuthoritiesBean.class);
+            bean.setValidDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getValidDate()));
+            bean.setExpireDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getExpireDate()));
+            if (trainingConditionCommon.canOperator(bean.getTrainingReleaseId())) {
+                modelMap.addAttribute("trainingAuthorities", bean);
+                page = "web/training/release/training_authorities_edit::#page-wrapper";
+            } else {
+                config.buildWarningTip("操作警告", "您无权限操作");
+                config.dataMerging(modelMap);
+                page = "inline_tip::#page-wrapper";
+            }
+        } else {
+            config.buildDangerTip("查询错误", "未查询到实训配置数据");
             config.dataMerging(modelMap);
             page = "inline_tip::#page-wrapper";
         }
