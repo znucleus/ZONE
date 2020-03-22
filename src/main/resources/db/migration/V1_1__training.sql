@@ -33,6 +33,8 @@ CREATE TABLE training_users(
   training_users_id  VARCHAR(64) PRIMARY KEY,
   training_release_id VARCHAR(64) NOT NULL,
   student_id INT NOT NULL,
+  create_date TIMESTAMP NOT NULL,
+  remark VARCHAR(200),
   FOREIGN KEY(training_release_id) REFERENCES
   training_release(training_release_id) ON DELETE CASCADE,
   FOREIGN KEY(student_id) REFERENCES
@@ -48,6 +50,7 @@ CREATE TABLE training_attend(
   publish_date TIMESTAMP NOT NULL,
   attend_start_time TIME NOT NULL,
   attend_end_time TIME NOT NULL,
+  remark VARCHAR(200),
   FOREIGN KEY(attend_room) REFERENCES
   schoolroom(schoolroom_id),
   FOREIGN KEY(training_release_id) REFERENCES

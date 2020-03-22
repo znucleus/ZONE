@@ -32,7 +32,7 @@ public final class Workbook {
     静态配置参数
      */
     public enum SystemConfigure {
-        MAIL_SWITCH, MOBILE_SWITCH, FORBIDDEN_REGISTER, STATIC_RESOURCES_VERSION
+        MAIL_SWITCH, MOBILE_SWITCH, FORBIDDEN_REGISTER, STATIC_RESOURCES_VERSION, WEI_XIN_SMALL_REVIEW_SWITCH
     }
 
     /*
