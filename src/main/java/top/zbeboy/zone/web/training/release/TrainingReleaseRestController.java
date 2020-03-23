@@ -116,6 +116,7 @@ public class TrainingReleaseRestController {
                     au.setTrainingUsersId(UUIDUtil.getUUID());
                     au.setTrainingReleaseId(trainingReleaseId);
                     au.setStudentId(student.getStudentId());
+                    au.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
                     trainingUsers.add(au);
                 }
                 trainingUsersService.batchSave(trainingUsers);
