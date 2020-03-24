@@ -83,7 +83,6 @@ import top.zbeboy.zone.domain.tables.Users;
 import top.zbeboy.zone.domain.tables.UsersType;
 import top.zbeboy.zone.domain.tables.WeiXin;
 import top.zbeboy.zone.domain.tables.WeiXinDevice;
-import top.zbeboy.zone.domain.tables.WeiXinSmallVersion;
 import top.zbeboy.zone.domain.tables.records.AcademicTitleRecord;
 import top.zbeboy.zone.domain.tables.records.AnswerBankRecord;
 import top.zbeboy.zone.domain.tables.records.AnswerOptionRecord;
@@ -156,7 +155,6 @@ import top.zbeboy.zone.domain.tables.records.UsersRecord;
 import top.zbeboy.zone.domain.tables.records.UsersTypeRecord;
 import top.zbeboy.zone.domain.tables.records.WeiXinDeviceRecord;
 import top.zbeboy.zone.domain.tables.records.WeiXinRecord;
-import top.zbeboy.zone.domain.tables.records.WeiXinSmallVersionRecord;
 
 
 /**
@@ -292,7 +290,6 @@ public class Keys {
     public static final UniqueKey<WeiXinRecord> KEY_WEI_XIN_PRIMARY = UniqueKeys0.KEY_WEI_XIN_PRIMARY;
     public static final UniqueKey<WeiXinRecord> KEY_WEI_XIN_OPEN_ID = UniqueKeys0.KEY_WEI_XIN_OPEN_ID;
     public static final UniqueKey<WeiXinDeviceRecord> KEY_WEI_XIN_DEVICE_PRIMARY = UniqueKeys0.KEY_WEI_XIN_DEVICE_PRIMARY;
-    public static final UniqueKey<WeiXinSmallVersionRecord> KEY_WEI_XIN_SMALL_VERSION_PRIMARY = UniqueKeys0.KEY_WEI_XIN_SMALL_VERSION_PRIMARY;
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions
@@ -512,7 +509,6 @@ public class Keys {
         public static final UniqueKey<WeiXinRecord> KEY_WEI_XIN_PRIMARY = Internal.createUniqueKey(WeiXin.WEI_XIN, "KEY_wei_xin_PRIMARY", WeiXin.WEI_XIN.WEI_XIN_ID);
         public static final UniqueKey<WeiXinRecord> KEY_WEI_XIN_OPEN_ID = Internal.createUniqueKey(WeiXin.WEI_XIN, "KEY_wei_xin_open_id", WeiXin.WEI_XIN.OPEN_ID, WeiXin.WEI_XIN.APP_ID, WeiXin.WEI_XIN.USERNAME);
         public static final UniqueKey<WeiXinDeviceRecord> KEY_WEI_XIN_DEVICE_PRIMARY = Internal.createUniqueKey(WeiXinDevice.WEI_XIN_DEVICE, "KEY_wei_xin_device_PRIMARY", WeiXinDevice.WEI_XIN_DEVICE.DEVICE_ID);
-        public static final UniqueKey<WeiXinSmallVersionRecord> KEY_WEI_XIN_SMALL_VERSION_PRIMARY = Internal.createUniqueKey(WeiXinSmallVersion.WEI_XIN_SMALL_VERSION, "KEY_wei_xin_small_version_PRIMARY", WeiXinSmallVersion.WEI_XIN_SMALL_VERSION.VERSION);
     }
 
     private static class ForeignKeys0 {

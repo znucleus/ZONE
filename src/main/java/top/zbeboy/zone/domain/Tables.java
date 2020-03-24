@@ -81,7 +81,6 @@ import top.zbeboy.zone.domain.tables.Users;
 import top.zbeboy.zone.domain.tables.UsersType;
 import top.zbeboy.zone.domain.tables.WeiXin;
 import top.zbeboy.zone.domain.tables.WeiXinDevice;
-import top.zbeboy.zone.domain.tables.WeiXinSmallVersion;
 
 
 /**
@@ -471,9 +470,4 @@ public class Tables {
      * The table <code>zone.wei_xin_device</code>.
      */
     public static final WeiXinDevice WEI_XIN_DEVICE = WeiXinDevice.WEI_XIN_DEVICE;
-
-    /**
-     * The table <code>zone.wei_xin_small_version</code>.
-     */
-    public static final WeiXinSmallVersion WEI_XIN_SMALL_VERSION = WeiXinSmallVersion.WEI_XIN_SMALL_VERSION;
 }
