@@ -31,6 +31,7 @@ import top.zbeboy.zone.web.vo.attend.release.AttendReleaseEditVo;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.security.Principal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -192,6 +193,11 @@ public class AttendReleaseApiController {
                         String attendStartTimeSuffix = attendReleaseEditVo.getAttendStartTime().split(" ")[1];
                         String attendEndTimeSuffix = attendReleaseEditVo.getAttendEndTime().split(" ")[1];
                         String validDatePrefix = attendReleaseEditVo.getValidDate().split(" ")[0];
+
+                        Timestamp validDate = DateTimeUtil.defaultParseSqlTimestamp(attendReleaseEditVo.getValidDate());
+                        if(DateTimeUtil.nowAfterSqlTimestamp(validDate)){
+                            validDatePrefix = DateTimeUtil.getLocalDateTime(DateTimeUtil.YEAR_MONTH_DAY_FORMAT);
+                        }
 
                         attendReleaseSub.setAttendStartTime(DateTimeUtil.defaultParseSqlTimestamp(validDatePrefix + " " + attendStartTimeSuffix));
                         attendReleaseSub.setAttendEndTime(DateTimeUtil.defaultParseSqlTimestamp(validDatePrefix + " " + attendEndTimeSuffix));
