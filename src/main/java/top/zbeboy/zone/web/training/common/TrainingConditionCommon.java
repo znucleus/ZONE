@@ -2,16 +2,19 @@ package top.zbeboy.zone.web.training.common;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.Record;
+import org.jooq.Result;
 import org.springframework.stereotype.Component;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.College;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
+import top.zbeboy.zone.domain.tables.records.TrainingAuthoritiesRecord;
 import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
+import top.zbeboy.zone.service.training.TrainingAuthoritiesService;
 import top.zbeboy.zone.service.training.TrainingReleaseService;
 import top.zbeboy.zone.web.bean.training.release.TrainingReleaseBean;
 
@@ -24,6 +27,9 @@ public class TrainingConditionCommon {
 
     @Resource
     private TrainingReleaseService trainingReleaseService;
+
+    @Resource
+    private TrainingAuthoritiesService trainingAuthoritiesService;
 
     @Resource
     private UsersService usersService;
@@ -85,6 +91,26 @@ public class TrainingConditionCommon {
             }
         }
 
+        return canOperator;
+    }
+
+    /**
+     * 名单操作条件
+     *
+     * @param trainingReleaseId 实训发布id
+     * @return true or false
+     */
+    public boolean usersCondition(String trainingReleaseId) {
+        boolean canOperator = false;
+        if (canOperator(trainingReleaseId)) {
+            canOperator = true;
+        } else {
+            Users users = usersService.getUserFromSession();
+            Result<TrainingAuthoritiesRecord> records = trainingAuthoritiesService.findEffectiveByTrainingReleaseIdAndUsername(trainingReleaseId, users.getUsername());
+            if (records.isNotEmpty()) {
+                canOperator = true;
+            }
+        }
         return canOperator;
     }
 }

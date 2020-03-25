@@ -3,6 +3,7 @@ package top.zbeboy.zone.service.training;
 import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.zone.domain.tables.pojos.TrainingAuthorities;
+import top.zbeboy.zone.domain.tables.records.TrainingAuthoritiesRecord;
 
 import java.util.Optional;
 
@@ -31,6 +32,15 @@ public interface TrainingAuthoritiesService {
      * @return 数据
      */
     Result<Record> findByTrainingReleaseIdRelation(String trainingReleaseId);
+
+    /**
+     * 根据实训发布id和账号查询有效的权限
+     *
+     * @param trainingReleaseId 实训发布id
+     * @param username          账号
+     * @return 数据
+     */
+    Result<TrainingAuthoritiesRecord> findEffectiveByTrainingReleaseIdAndUsername(String trainingReleaseId, String username);
 
     /**
      * 保存

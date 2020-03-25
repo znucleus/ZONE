@@ -9,10 +9,12 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zone.domain.tables.daos.TrainingAuthoritiesDao;
 import top.zbeboy.zone.domain.tables.pojos.TrainingAuthorities;
+import top.zbeboy.zone.domain.tables.records.TrainingAuthoritiesRecord;
 
 import javax.annotation.Resource;
 import java.util.Optional;
 
+import static org.jooq.impl.DSL.now;
 import static top.zbeboy.zone.domain.Tables.TRAINING_AUTHORITIES;
 import static top.zbeboy.zone.domain.Tables.USERS;
 
@@ -52,6 +54,16 @@ public class TrainingAuthoritiesServiceImpl implements TrainingAuthoritiesServic
                 .leftJoin(USERS)
                 .on(TRAINING_AUTHORITIES.USERNAME.eq(USERS.USERNAME))
                 .where(TRAINING_AUTHORITIES.TRAINING_RELEASE_ID.eq(trainingReleaseId))
+                .fetch();
+    }
+
+    @Override
+    public Result<TrainingAuthoritiesRecord> findEffectiveByTrainingReleaseIdAndUsername(String trainingReleaseId, String username) {
+        return create.selectFrom(TRAINING_AUTHORITIES)
+                .where(TRAINING_AUTHORITIES.TRAINING_RELEASE_ID.eq(trainingReleaseId)
+                .and(TRAINING_AUTHORITIES.USERNAME.eq(username))
+                .and(TRAINING_AUTHORITIES.EXPIRE_DATE.gt(now()))
+                .and(TRAINING_AUTHORITIES.VALID_DATE.le(now())))
                 .fetch();
     }
 
