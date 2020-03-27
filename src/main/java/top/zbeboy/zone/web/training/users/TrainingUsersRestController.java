@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.domain.tables.pojos.Student;
+import top.zbeboy.zone.domain.tables.pojos.TrainingRelease;
 import top.zbeboy.zone.domain.tables.pojos.TrainingUsers;
 import top.zbeboy.zone.domain.tables.records.TrainingUsersRecord;
 import top.zbeboy.zone.service.data.StudentService;
@@ -117,8 +118,9 @@ public class TrainingUsersRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (trainingConditionCommon.canOperator(trainingReleaseId)) {
             String param = StringUtils.deleteWhitespace(studentNumber);
-            Student student = studentService.findByStudentNumber(param);
-            if (Objects.nonNull(student)) {
+            Optional<Record> studentRecord = studentService.findNormalByStudentNumberRelation(param);
+            if (studentRecord.isPresent()) {
+                Student student = studentRecord.get().into(Student.class);
                 Optional<TrainingUsersRecord> trainingUsersRecord = trainingUsersService.findByTrainingReleaseIdAndStudentId(trainingReleaseId, student.getStudentId());
                 if (!trainingUsersRecord.isPresent()) {
                     TrainingUsers trainingUsers = new TrainingUsers();
@@ -134,7 +136,7 @@ public class TrainingUsersRestController {
                     ajaxUtil.fail().msg("学生已在名单中");
                 }
             } else {
-                ajaxUtil.fail().msg("根据学号未查询到学生信息");
+                ajaxUtil.fail().msg("未查询到学生信息或账号状态不正常");
             }
         } else {
             ajaxUtil.fail().msg("您无权限操作");
@@ -186,6 +188,43 @@ public class TrainingUsersRestController {
             }
         } else {
             ajaxUtil.fail().msg("请选择学生");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 名单重置
+     *
+     * @param trainingReleaseId 实训发布id
+     * @return true or false
+     */
+    @PostMapping("/web/training/users/reset")
+    public ResponseEntity<Map<String, Object>> reset(@RequestParam("trainingReleaseId") String trainingReleaseId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (trainingConditionCommon.usersCondition(trainingReleaseId)) {
+            TrainingRelease trainingRelease = trainingReleaseService.findById(trainingReleaseId);
+            if (Objects.nonNull(trainingRelease)) {
+                Result<Record> records = trainingUsersService.findStudentNotExistsUsers(trainingReleaseId, trainingRelease.getOrganizeId());
+                if (records.isNotEmpty()) {
+                    List<Student> students = records.into(Student.class);
+                    List<TrainingUsers> trainingUsers = new ArrayList<>();
+                    for (Student student : students) {
+                        TrainingUsers au = new TrainingUsers();
+                        au.setTrainingUsersId(UUIDUtil.getUUID());
+                        au.setTrainingReleaseId(trainingReleaseId);
+                        au.setStudentId(student.getStudentId());
+                        au.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                        trainingUsers.add(au);
+                    }
+                    trainingUsersService.batchSave(trainingUsers);
+                }
+
+                ajaxUtil.success().msg("重置成功");
+            } else {
+                ajaxUtil.fail().msg("根据ID未查询到实训发布信息");
+            }
+        } else {
+            ajaxUtil.fail().msg("您无权限操作");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }

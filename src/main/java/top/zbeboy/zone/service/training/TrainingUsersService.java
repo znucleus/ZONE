@@ -29,6 +29,14 @@ public interface TrainingUsersService {
     Optional<TrainingUsersRecord> findByTrainingReleaseIdAndStudentId(String trainingReleaseId, int studentId);
 
     /**
+     * 查询不在名单的学生
+     *
+     * @param trainingReleaseId 实训发布id
+     * @return 数据
+     */
+    Result<Record> findStudentNotExistsUsers(String trainingReleaseId, int organizeId);
+
+    /**
      * 分页查询
      *
      * @param dataTablesUtil 工具类

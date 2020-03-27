@@ -365,6 +365,24 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         });
 
         /*
+        重置
+        */
+        $('#training_reset').click(function () {
+            Swal.fire({
+                title: "确定重置名单吗？",
+                text: "名单重置！",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                preConfirm: function () {
+                    sendResetAjax();
+                }
+            });
+        });
+
+        /*
          删除
          */
         function training_del(trainingUsersId, realName) {
@@ -399,6 +417,35 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 type: 'POST',
                 url: getAjaxUrl().del,
                 data: {trainingUsersIds: trainingUsersId, trainingReleaseId: page_param.paramTrainingReleaseId},
+                success: function (data) {
+                    Messenger().post({
+                        message: data.msg,
+                        type: data.state ? 'success' : 'error',
+                        showCloseButton: true
+                    });
+
+                    if (data.state) {
+                        myTable.ajax.reload();
+                    }
+                },
+                error: function (XMLHttpRequest) {
+                    Messenger().post({
+                        message: 'Request error : ' + XMLHttpRequest.status + " " + XMLHttpRequest.statusText,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        }
+
+        /**
+         * 重置ajax
+         */
+        function sendResetAjax() {
+            $.ajax({
+                type: 'POST',
+                url: getAjaxUrl().reset,
+                data: {trainingReleaseId: page_param.paramTrainingReleaseId},
                 success: function (data) {
                     Messenger().post({
                         message: data.msg,
