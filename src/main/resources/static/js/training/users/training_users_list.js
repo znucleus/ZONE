@@ -33,6 +33,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         function getAjaxUrl() {
             return {
                 data: web_path + '/web/training/users/data',
+                export_data_url: web_path + '/web/training/users/export',
                 del: web_path + '/web/training/users/delete',
                 save: '/web/training/users/save',
                 remark: '/web/training/users/remark',
@@ -560,4 +561,23 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             });
         });
 
+        $('#export_xls').click(function () {
+            initParam();
+            var searchParam = JSON.stringify(getParam());
+            var exportFile = {
+                fileName: $('#export_file_name').val(),
+                ext: 'xls'
+            };
+            window.location.href = encodeURI(getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&export_info=" + JSON.stringify(exportFile));
+        });
+
+        $('#export_xlsx').click(function () {
+            initParam();
+            var searchParam = JSON.stringify(getParam());
+            var exportFile = {
+                fileName: $('#export_file_name').val(),
+                ext: 'xlsx'
+            };
+            window.location.href = encodeURI(getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&export_info=" + JSON.stringify(exportFile));
+        });
     });

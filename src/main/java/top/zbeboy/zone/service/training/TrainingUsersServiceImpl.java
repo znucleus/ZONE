@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zone.domain.tables.daos.TrainingUsersDao;
 import top.zbeboy.zone.domain.tables.pojos.TrainingUsers;
-import top.zbeboy.zone.domain.tables.records.AttendUsersRecord;
 import top.zbeboy.zone.domain.tables.records.TrainingUsersRecord;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zone.service.system.AuthoritiesService;
@@ -50,7 +49,7 @@ public class TrainingUsersServiceImpl implements TrainingUsersService, Paginatio
     public Optional<TrainingUsersRecord> findByTrainingReleaseIdAndStudentId(String trainingReleaseId, int studentId) {
         return create.selectFrom(TRAINING_USERS)
                 .where(TRAINING_USERS.TRAINING_RELEASE_ID.eq(trainingReleaseId)
-                .and(TRAINING_USERS.STUDENT_ID.eq(studentId)))
+                        .and(TRAINING_USERS.STUDENT_ID.eq(studentId)))
                 .fetchOptional();
     }
 
@@ -77,6 +76,18 @@ public class TrainingUsersServiceImpl implements TrainingUsersService, Paginatio
                         .join(USERS)
                         .on(STUDENT.USERNAME.eq(USERS.USERNAME));
         return queryAllByPage(selectOnConditionStep, dataTablesUtil, false);
+    }
+
+    @Override
+    public Result<Record> export(DataTablesUtil dataTablesUtil) {
+        SelectOnConditionStep<Record> selectOnConditionStep =
+                create.select()
+                        .from(TRAINING_USERS)
+                        .join(STUDENT)
+                        .on(TRAINING_USERS.STUDENT_ID.eq(STUDENT.STUDENT_ID))
+                        .join(USERS)
+                        .on(STUDENT.USERNAME.eq(USERS.USERNAME));
+        return queryAll(selectOnConditionStep, dataTablesUtil, false);
     }
 
     @Override

@@ -173,4 +173,13 @@ public final class Workbook {
     public static String internshipJournalPath(Users users) {
         return USERS_PORTFOLIOS + users.getUsername() + DIRECTORY_SPLIT + "internship" + DIRECTORY_SPLIT + "journal" + DIRECTORY_SPLIT;
     }
+
+    /**
+     * 实训文件路径
+     *
+     * @return 路径
+     */
+    public static String trainingFilePath() {
+        return FILES_PORTFOLIOS + "training" + DIRECTORY_SPLIT;
+    }
 }

@@ -9,13 +9,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.Student;
 import top.zbeboy.zone.domain.tables.pojos.TrainingRelease;
 import top.zbeboy.zone.domain.tables.pojos.TrainingUsers;
 import top.zbeboy.zone.domain.tables.records.TrainingUsersRecord;
 import top.zbeboy.zone.service.data.StudentService;
+import top.zbeboy.zone.service.export.TrainingUsersExport;
 import top.zbeboy.zone.service.training.TrainingReleaseService;
 import top.zbeboy.zone.service.training.TrainingUsersService;
+import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.training.release.TrainingReleaseBean;
@@ -28,6 +31,8 @@ import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.*;
 
 @RestController
@@ -44,6 +49,9 @@ public class TrainingUsersRestController {
 
     @Resource
     private StudentService studentService;
+
+    @Resource
+    private UploadService uploadService;
 
     /**
      * 数据
@@ -93,7 +101,7 @@ public class TrainingUsersRestController {
             beans = records.into(TrainingUsersBean.class);
             beans.forEach(bean -> bean.setCreateDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getCreateDate())));
             beans.forEach(bean -> {
-                if (!trainingConditionCommon.canOperator(bean.getTrainingReleaseId())) {
+                if (!trainingConditionCommon.usersCondition(bean.getTrainingReleaseId())) {
                     bean.setEmail(StringUtils.overlay(bean.getEmail(), "****", 1, bean.getEmail().lastIndexOf("@")));
                     bean.setMobile(StringUtils.overlay(bean.getMobile(), "****", 3, 6));
                 }
@@ -116,7 +124,7 @@ public class TrainingUsersRestController {
     public ResponseEntity<Map<String, Object>> save(@RequestParam("trainingReleaseId") String trainingReleaseId,
                                                     @RequestParam("studentNumber") String studentNumber, String remark) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        if (trainingConditionCommon.canOperator(trainingReleaseId)) {
+        if (trainingConditionCommon.usersCondition(trainingReleaseId)) {
             String param = StringUtils.deleteWhitespace(studentNumber);
             Optional<Record> studentRecord = studentService.findNormalByStudentNumberRelation(param);
             if (studentRecord.isPresent()) {
@@ -227,5 +235,34 @@ public class TrainingUsersRestController {
             ajaxUtil.fail().msg("您无权限操作");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 导出 名单 数据
+     *
+     * @param request 请求
+     */
+    @GetMapping("/web/training/users/export")
+    public void export(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        DataTablesUtil dataTablesUtil = new DataTablesUtil(request, "studentNumber", "asc",
+                "实训名单数据表", Workbook.trainingFilePath());
+        List<TrainingUsersBean> beans = new ArrayList<>();
+        Result<Record> records = trainingUsersService.export(dataTablesUtil);
+        if (Objects.nonNull(records) && records.isNotEmpty()) {
+            beans = records.into(TrainingUsersBean.class);
+            beans.forEach(bean -> bean.setCreateDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getCreateDate())));
+            beans.forEach(bean -> {
+                if (!trainingConditionCommon.usersCondition(bean.getTrainingReleaseId())) {
+                    bean.setEmail(StringUtils.overlay(bean.getEmail(), "****", 1, bean.getEmail().lastIndexOf("@")));
+                    bean.setMobile(StringUtils.overlay(bean.getMobile(), "****", 3, 6));
+                }
+            });
+        }
+
+        TrainingUsersExport export = new TrainingUsersExport(beans);
+        DataTablesUtil.ExportInfo exportInfo = dataTablesUtil.getExportInfo();
+        if (export.exportExcel(exportInfo.getLastPath(), exportInfo.getFileName(), exportInfo.getExt())) {
+            uploadService.download(exportInfo.getFileName(), exportInfo.getFilePath(), response, request);
+        }
     }
 }
