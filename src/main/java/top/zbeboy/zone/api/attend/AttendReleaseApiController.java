@@ -183,7 +183,6 @@ public class AttendReleaseApiController {
                 Users users = usersService.getUserFromOauth(principal);
                 if (roleService.isOauthUserInRole(Workbook.authorities.ROLE_SYSTEM.name(), principal) ||
                         (Objects.nonNull(users) && StringUtils.equals(users.getUsername(), attendReleaseSub.getUsername()))) {
-                    attendReleaseSub.setReleaseTime(DateTimeUtil.getNowSqlTimestamp());
                     attendReleaseSub.setTitle(attendReleaseEditVo.getTitle());
                     attendReleaseSub.setIsAuto(ByteUtil.toByte(1).equals(attendReleaseEditVo.getIsAuto()) ? ByteUtil.toByte(1) : ByteUtil.toByte(0));
 
@@ -192,12 +191,8 @@ public class AttendReleaseApiController {
                         // 如果生效时间是未来，这个签到开始，结束时间，日期必须是生效时间日期
                         String attendStartTimeSuffix = attendReleaseEditVo.getAttendStartTime().split(" ")[1];
                         String attendEndTimeSuffix = attendReleaseEditVo.getAttendEndTime().split(" ")[1];
-                        String validDatePrefix = attendReleaseEditVo.getValidDate().split(" ")[0];
 
-                        Timestamp validDate = DateTimeUtil.defaultParseSqlTimestamp(attendReleaseEditVo.getValidDate());
-                        if(DateTimeUtil.nowAfterSqlTimestamp(validDate)){
-                            validDatePrefix = DateTimeUtil.getLocalDateTime(DateTimeUtil.YEAR_MONTH_DAY_FORMAT);
-                        }
+                        String validDatePrefix = DateTimeUtil.defaultFormatSqlTimestamp(attendReleaseSub.getReleaseTime()).split(" ")[0];
 
                         attendReleaseSub.setAttendStartTime(DateTimeUtil.defaultParseSqlTimestamp(validDatePrefix + " " + attendStartTimeSuffix));
                         attendReleaseSub.setAttendEndTime(DateTimeUtil.defaultParseSqlTimestamp(validDatePrefix + " " + attendEndTimeSuffix));

@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import top.zbeboy.zone.domain.tables.pojos.AttendRelease;
@@ -26,6 +28,7 @@ import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 
 import javax.annotation.Resource;
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -57,10 +60,12 @@ import java.util.List;
  */
 @Configuration
 @EnableScheduling
-@Profile({Workbook.SPRING_PROFILE_DEVELOPMENT, Workbook.SPRING_PROFILE_PRODUCTION})
 public class ScheduledConfiguration {
 
     private final Logger log = LoggerFactory.getLogger(ScheduledConfiguration.class);
+
+    @Resource
+    private Environment env;
 
     @Resource
     private UsersService usersService;
@@ -89,22 +94,23 @@ public class ScheduledConfiguration {
      */
     @Scheduled(cron = "0 15 01 02 * ?")
     public void cleanUsers() {
-        // 清理
-        DateTime dateTime = DateTime.now();
-        DateTime oldTime = dateTime.minusDays(30);
-        Byte b = 0;
-        // 查询未验证用户
-        Result<UsersRecord> records = this.usersService.findByJoinDateAndVerifyMailbox(DateTimeUtil.utilDateToSqlDate(oldTime.toDate()), b);
-        if (records.isNotEmpty()) {
-            List<Users> users = records.into(Users.class);
-            this.usersService.delete(users);
-            users.forEach(user -> {
-                SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(), "删除未验证用户:" + user.getUsername(), DateTimeUtil.getNowSqlTimestamp(), "actuator", "127.0.0.1");
-                systemOperatorLogService.save(systemLog);
-            });
+        if (env.acceptsProfiles(Profiles.of(Workbook.SPRING_PROFILE_DEVELOPMENT, Workbook.SPRING_PROFILE_PRODUCTION))) {
+            // 清理
+            DateTime dateTime = DateTime.now();
+            DateTime oldTime = dateTime.minusDays(30);
+            Byte b = 0;
+            // 查询未验证用户
+            Result<UsersRecord> records = this.usersService.findByJoinDateAndVerifyMailbox(DateTimeUtil.utilDateToSqlDate(oldTime.toDate()), b);
+            if (records.isNotEmpty()) {
+                List<Users> users = records.into(Users.class);
+                this.usersService.delete(users);
+                users.forEach(user -> {
+                    SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(), "删除未验证用户:" + user.getUsername(), DateTimeUtil.getNowSqlTimestamp(), "actuator", "127.0.0.1");
+                    systemOperatorLogService.save(systemLog);
+                });
+            }
+            log.info(">>>>>>>>>>>>> scheduled ... clean users ");
         }
-        log.info(">>>>>>>>>>>>> scheduled ... clean users ");
-
 
     }
 
@@ -113,9 +119,10 @@ public class ScheduledConfiguration {
      */
     @Scheduled(cron = "0 15 00 * * ?") // 每天 晚间12点15分
     public void unlockUsers() {
-        this.usersService.unlockUsers();
-        log.info(">>>>>>>>>>>>> scheduled ... unlock users ");
-
+        if (env.acceptsProfiles(Profiles.of(Workbook.SPRING_PROFILE_DEVELOPMENT, Workbook.SPRING_PROFILE_PRODUCTION))) {
+            this.usersService.unlockUsers();
+            log.info(">>>>>>>>>>>>> scheduled ... unlock users ");
+        }
     }
 
     /**
@@ -123,36 +130,37 @@ public class ScheduledConfiguration {
      */
     @Scheduled(cron = "0 5 00 * * ?") // 每天 晚间12点05分
     public void generateAttend() {
-        Result<AttendReleaseRecord> releaseRecords = attendReleaseService.findIsAuto();
-        if (releaseRecords.isNotEmpty()) {
-            List<AttendRelease> attendReleases = releaseRecords.into(AttendRelease.class);
-            List<AttendReleaseSub> attendReleaseSubs = new ArrayList<>();
+        if (env.acceptsProfiles(Profiles.of(Workbook.SPRING_PROFILE_DEVELOPMENT, Workbook.SPRING_PROFILE_PRODUCTION))) {
+            Result<AttendReleaseRecord> releaseRecords = attendReleaseService.findIsAuto();
+            if (releaseRecords.isNotEmpty()) {
+                List<AttendRelease> attendReleases = releaseRecords.into(AttendRelease.class);
+                List<AttendReleaseSub> attendReleaseSubs = new ArrayList<>();
 
-            String timePrefix = DateTimeUtil.formatUtilDate(new Date(), DateTimeUtil.YEAR_MONTH_DAY_FORMAT);
-            for (AttendRelease releaseRecord : attendReleases) {
-                String attendStartTime = DateTimeUtil.defaultFormatSqlTimestamp(releaseRecord.getAttendStartTime());
-                String attendEndTime = DateTimeUtil.defaultFormatSqlTimestamp(releaseRecord.getAttendEndTime());
-                String attendStartTimeSuffix = attendStartTime.split(" ")[1];
-                String attendEndTimeSuffix = attendEndTime.split(" ")[1];
-                AttendReleaseSub attendReleaseSub = new AttendReleaseSub();
-                attendReleaseSub.setTitle(releaseRecord.getTitle());
-                attendReleaseSub.setAttendStartTime(DateTimeUtil.defaultParseSqlTimestamp(timePrefix + " " + attendStartTimeSuffix));
-                attendReleaseSub.setAttendEndTime(DateTimeUtil.defaultParseSqlTimestamp(timePrefix + " " + attendEndTimeSuffix));
-                attendReleaseSub.setIsAuto(releaseRecord.getIsAuto());
-                attendReleaseSub.setValidDate(releaseRecord.getValidDate());
-                attendReleaseSub.setExpireDate(releaseRecord.getExpireDate());
-                attendReleaseSub.setOrganizeId(releaseRecord.getOrganizeId());
-                attendReleaseSub.setUsername(releaseRecord.getUsername());
-                attendReleaseSub.setAttendReleaseId(releaseRecord.getAttendReleaseId());
-                attendReleaseSub.setReleaseTime(DateTimeUtil.getNowSqlTimestamp());
+                String timePrefix = DateTimeUtil.getLocalDateTime(DateTimeUtil.YEAR_MONTH_DAY_FORMAT);
+                for (AttendRelease releaseRecord : attendReleases) {
+                    String attendStartTime = DateTimeUtil.defaultFormatSqlTimestamp(releaseRecord.getAttendStartTime());
+                    String attendEndTime = DateTimeUtil.defaultFormatSqlTimestamp(releaseRecord.getAttendEndTime());
+                    String attendStartTimeSuffix = attendStartTime.split(" ")[1];
+                    String attendEndTimeSuffix = attendEndTime.split(" ")[1];
+                    AttendReleaseSub attendReleaseSub = new AttendReleaseSub();
+                    attendReleaseSub.setTitle(releaseRecord.getTitle());
+                    attendReleaseSub.setAttendStartTime(DateTimeUtil.defaultParseSqlTimestamp(timePrefix + " " + attendStartTimeSuffix));
+                    attendReleaseSub.setAttendEndTime(DateTimeUtil.defaultParseSqlTimestamp(timePrefix + " " + attendEndTimeSuffix));
+                    attendReleaseSub.setIsAuto(releaseRecord.getIsAuto());
+                    attendReleaseSub.setValidDate(releaseRecord.getValidDate());
+                    attendReleaseSub.setExpireDate(releaseRecord.getExpireDate());
+                    attendReleaseSub.setOrganizeId(releaseRecord.getOrganizeId());
+                    attendReleaseSub.setUsername(releaseRecord.getUsername());
+                    attendReleaseSub.setAttendReleaseId(releaseRecord.getAttendReleaseId());
+                    attendReleaseSub.setReleaseTime(DateTimeUtil.getNowSqlTimestamp());
 
-                attendReleaseSubs.add(attendReleaseSub);
+                    attendReleaseSubs.add(attendReleaseSub);
+                }
+
+                attendReleaseSubService.batchSave(attendReleaseSubs);
             }
-
-            attendReleaseSubService.batchSave(attendReleaseSubs);
+            log.info(">>>>>>>>>>>>> scheduled ... generate attend ");
         }
-        log.info(">>>>>>>>>>>>> scheduled ... generate attend ");
-
     }
 
     /**
@@ -160,13 +168,15 @@ public class ScheduledConfiguration {
      */
     @Scheduled(cron = "0 5 07 * * ?") // 每天 晚间07点05分
     public void sendAttendWxSubscribe() {
-        // 思路将要下发的订阅存入redis，等redis过期时触发数据下发
-        // 1.删除过期订阅记录
-        attendWxStudentSubscribeService.deleteOverdueRecord();
-        // 2.查询要下发的子表数据
-        Result<Record> records = attendWxStudentSubscribeService.findSubscribe();
-        // 3.存入缓存
-        attendWxCacheService.saveAttendWxSubscribe(records);
+        if (env.acceptsProfiles(Profiles.of(Workbook.SPRING_PROFILE_DEVELOPMENT, Workbook.SPRING_PROFILE_PRODUCTION))) {
+            // 思路将要下发的订阅存入redis，等redis过期时触发数据下发
+            // 1.删除过期订阅记录
+            attendWxStudentSubscribeService.deleteOverdueRecord();
+            // 2.查询要下发的子表数据
+            Result<Record> records = attendWxStudentSubscribeService.findSubscribe();
+            // 3.存入缓存
+            attendWxCacheService.saveAttendWxSubscribe(records);
+        }
 
     }
 
@@ -175,13 +185,14 @@ public class ScheduledConfiguration {
      */
     @Scheduled(cron = "0 15 02 * * ?") // 每天 晚间2点15分
     public void internshipApply() {
-        // 更改实习提交状态
-        internshipApplyService.updateState(0, 1);
-        List<Integer> states = new ArrayList<>();
-        states.add(5);
-        states.add(7);
-        internshipApplyService.updateChangeState(states, 1);
-
+        if (env.acceptsProfiles(Profiles.of(Workbook.SPRING_PROFILE_DEVELOPMENT, Workbook.SPRING_PROFILE_PRODUCTION))) {
+            // 更改实习提交状态
+            internshipApplyService.updateState(0, 1);
+            List<Integer> states = new ArrayList<>();
+            states.add(5);
+            states.add(7);
+            internshipApplyService.updateChangeState(states, 1);
+        }
     }
 
 }
