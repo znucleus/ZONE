@@ -1,7 +1,7 @@
 //# sourceURL=training_users_list.js
-require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootstrap4",
+require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2", "responsive.bootstrap4",
         "check.all", "jquery.address", "messenger"],
-    function ($, Handlebars, navActive, Swal) {
+    function ($, _, tools, Handlebars, navActive, Swal) {
 
         var page_param = {
             paramTrainingReleaseId: $('#paramTrainingReleaseId').val(),
@@ -34,7 +34,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
             return {
                 data: web_path + '/web/training/users/data',
                 del: web_path + '/web/training/users/delete',
-                add: '/web/training/users/add',
+                save: '/web/training/users/save',
                 remark: '/web/training/users/remark',
                 reset: '/web/training/users/reset',
                 page: '/web/menu/training/users'
@@ -42,6 +42,19 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
         }
 
         navActive(getAjaxUrl().page);
+
+        var button_id = {
+            addStudent: {
+                tip: '添加中...',
+                text: '确定',
+                id: '#addStudent'
+            },
+            toRemark: {
+                tip: '更新中...',
+                text: '确定',
+                id: '#toRemark'
+            }
+        };
 
         // 预编译模板
         var template = Handlebars.compile($("#operator_button").html());
@@ -98,7 +111,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                     }
                 },
                 {
-                    targets: 8,
+                    targets: 10,
                     orderable: false,
                     render: function (a, b, c, d) {
 
@@ -106,21 +119,26 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                         var html = '<i class="fa fa-lock"></i>';
 
                         if (Number(page_param.canOperator) === 1) {
-                            context.func.push({
-                                "name": "删除",
-                                "css": "del",
-                                "type": "danger",
-                                "id": c.trainingUsersId,
-                                "student": c.realName,
-                                "remark": c.remark
-                            }, {
-                                "name": "备注",
-                                "css": "remark",
-                                "type": "light",
-                                "id": c.trainingUsersId,
-                                "student": c.realName,
-                                "remark": c.remark
-                            });
+                            context =
+                                {
+                                    func: [
+                                        {
+                                            "name": "删除",
+                                            "css": "del",
+                                            "type": "danger",
+                                            "id": c.trainingUsersId,
+                                            "student": c.realName,
+                                            "remark": c.remark
+                                        }, {
+                                            "name": "备注",
+                                            "css": "remark",
+                                            "type": "light",
+                                            "id": c.trainingUsersId,
+                                            "student": c.realName,
+                                            "remark": c.remark
+                                        }
+                                    ]
+                                };
                         }
 
                         if (context != null) {
@@ -164,8 +182,8 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                     training_del($(this).attr('data-id'), $(this).attr('data-student'));
                 });
 
-                tableElement.delegate('.edit', "click", function () {
-                    remark($(this).attr('data-id'));
+                tableElement.delegate('.remark', "click", function () {
+                    remark($(this).attr('data-id'), $(this).attr('data-remark'));
                 });
 
                 // 初始化搜索框中内容
@@ -311,12 +329,11 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
             myTable.ajax.reload();
         });
 
-
         /*
          添加页面
          */
         $('#training_add').click(function () {
-            $.address.value(getAjaxUrl().add);
+            $('#addModal').modal('show');
         });
 
         /*
@@ -346,13 +363,6 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                 Messenger().post("未发现有选中的学生!");
             }
         });
-
-        /*
-         编辑页面
-         */
-        function edit(courseId) {
-            $.address.value(getAjaxUrl().edit + '/' + courseId);
-        }
 
         /*
          删除
@@ -409,4 +419,98 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                 }
             });
         }
+
+        var add_param_id = {
+            studentNumber: '#addStudentNumber',
+            remark: '#addRemark'
+        };
+
+        $(button_id.addStudent.id).click(function () {
+            validStudentNumber();
+        });
+
+        function validStudentNumber() {
+            var studentNumber = _.trim($(add_param_id.studentNumber).val());
+
+            if (studentNumber.length <= 0 || studentNumber.length > 20) {
+                tools.validErrorDom(add_param_id.studentNumber, '学号20个字符以内');
+            } else {
+                tools.validSuccessDom(add_param_id.studentNumber);
+                sendAddAjax();
+            }
+        }
+
+        function sendAddAjax() {
+            tools.buttonLoading(button_id.addStudent.id, button_id.addStudent.tip);
+            $.ajax({
+                type: 'POST',
+                url: getAjaxUrl().save,
+                data: {
+                    trainingReleaseId: page_param.paramTrainingReleaseId,
+                    studentNumber: $(add_param_id.studentNumber).val(),
+                    remark: $(add_param_id.remark).val()
+                },
+                success: function (data) {
+                    tools.buttonEndLoading(button_id.addStudent.id, button_id.addStudent.text);
+                    Messenger().post({
+                        message: data.msg,
+                        type: data.state ? 'success' : 'error',
+                        showCloseButton: true
+                    });
+
+                    if (data.state) {
+                        $('#addModal').modal('hide');
+                        myTable.ajax.reload();
+                    }
+                },
+                error: function (XMLHttpRequest) {
+                    tools.buttonEndLoading(button_id.addStudent.id, button_id.addStudent.text);
+                    Messenger().post({
+                        message: 'Request error : ' + XMLHttpRequest.status + " " + XMLHttpRequest.statusText,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        }
+
+        /*
+       备注
+       */
+        function remark(trainingUsersId, remark) {
+            $('#editRemark').text(remark);
+            $('#editTrainingUsersId').val(trainingUsersId);
+            $('#remarkModal').modal('show');
+        }
+
+        $(button_id.toRemark.id).click(function () {
+            tools.buttonLoading(button_id.toRemark.id, button_id.toRemark.tip);
+            $.ajax({
+                type: 'POST',
+                url: getAjaxUrl().remark,
+                data: $('#remark_form').serialize(),
+                success: function (data) {
+                    tools.buttonEndLoading(button_id.toRemark.id, button_id.toRemark.text);
+                    Messenger().post({
+                        message: data.msg,
+                        type: data.state ? 'success' : 'error',
+                        showCloseButton: true
+                    });
+
+                    if (data.state) {
+                        $('#remarkModal').modal('hide');
+                        myTable.ajax.reload();
+                    }
+                },
+                error: function (XMLHttpRequest) {
+                    tools.buttonEndLoading(button_id.toRemark.id, button_id.toRemark.text);
+                    Messenger().post({
+                        message: 'Request error : ' + XMLHttpRequest.status + " " + XMLHttpRequest.statusText,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        });
+
     });

@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zone.domain.tables.daos.TrainingUsersDao;
 import top.zbeboy.zone.domain.tables.pojos.TrainingUsers;
+import top.zbeboy.zone.domain.tables.records.TrainingUsersRecord;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zone.service.util.SQLQueryUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
@@ -16,6 +17,7 @@ import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static top.zbeboy.zone.domain.Tables.*;
 
@@ -31,6 +33,19 @@ public class TrainingUsersServiceImpl implements TrainingUsersService, Paginatio
     @Autowired
     TrainingUsersServiceImpl(DSLContext dslContext) {
         create = dslContext;
+    }
+
+    @Override
+    public TrainingUsers findById(String id) {
+        return trainingUsersDao.findById(id);
+    }
+
+    @Override
+    public Optional<TrainingUsersRecord> findByTrainingReleaseIdAndStudentId(String trainingReleaseId, int studentId) {
+        return create.selectFrom(TRAINING_USERS)
+                .where(TRAINING_USERS.TRAINING_RELEASE_ID.eq(trainingReleaseId)
+                .and(TRAINING_USERS.STUDENT_ID.eq(studentId)))
+                .fetchOptional();
     }
 
     @Override
@@ -71,6 +86,17 @@ public class TrainingUsersServiceImpl implements TrainingUsersService, Paginatio
     @Override
     public void batchSave(List<TrainingUsers> trainingUsers) {
         trainingUsersDao.insert(trainingUsers);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void save(TrainingUsers trainingUsers) {
+        trainingUsersDao.insert(trainingUsers);
+    }
+
+    @Override
+    public void update(TrainingUsers trainingUsers) {
+        trainingUsersDao.update(trainingUsers);
     }
 
     @Override

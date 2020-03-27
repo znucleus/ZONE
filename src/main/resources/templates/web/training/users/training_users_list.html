@@ -85,6 +85,75 @@
         </div>
     </div>
 
+    <!-- 添加学生Modal -->
+    <div class="modal fade" id="addModal" tabindex="-1" role="dialog"
+         aria-labelledby="addModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addModalLabel">添加学生</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="mg-t-20">
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <input id="addStudentNumber" placeholder="学号"
+                                       class="form-control">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <textarea class="form-control" id="addRemark" rows="3" placeholder="备注"></textarea>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="addStudent">确定</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 备注Modal -->
+    <div class="modal fade" id="remarkModal" tabindex="-1" role="dialog"
+         aria-labelledby="remarkModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="remarkModalLabel">备注</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="mg-t-20" id="remark_form">
+                        <input type="hidden" id="editTrainingUsersId" name="trainingUsersId" />
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <textarea class="form-control" id="editRemark" name="remark" rows="3" placeholder="备注"></textarea>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="toRemark">确定</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!--定义操作列按钮模板-->
     <script id="operator_button" type="text/x-handlebars-template">
         <div class="btn-group" role="group">

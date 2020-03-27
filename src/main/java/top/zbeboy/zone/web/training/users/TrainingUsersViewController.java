@@ -46,7 +46,7 @@ public class TrainingUsersViewController {
         Optional<Record> record = trainingReleaseService.findByIdRelation(id);
         if (record.isPresent()) {
             modelMap.addAttribute("trainingReleaseId", id);
-            modelMap.addAttribute("canOperator", trainingConditionCommon.canOperator(id) ? 1 : 0);
+            modelMap.addAttribute("canOperator", trainingConditionCommon.usersCondition(id) ? 1 : 0);
             page = "web/training/users/training_users_list::#page-wrapper";
         } else {
             config.buildDangerTip("查询错误", "未查询到实训发布数据");
