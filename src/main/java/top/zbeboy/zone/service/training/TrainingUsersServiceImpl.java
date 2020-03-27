@@ -100,6 +100,11 @@ public class TrainingUsersServiceImpl implements TrainingUsersService, Paginatio
     }
 
     @Override
+    public void deleteById(List<String> ids) {
+        trainingUsersDao.deleteById(ids);
+    }
+
+    @Override
     public Condition searchCondition(DataTablesUtil paginationUtil) {
         Condition a = null;
         JSONObject search = paginationUtil.getSearch();

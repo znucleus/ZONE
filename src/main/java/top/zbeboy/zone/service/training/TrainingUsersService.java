@@ -70,4 +70,11 @@ public interface TrainingUsersService {
      * @param trainingUsers 数据
      */
     void update(TrainingUsers trainingUsers);
+
+    /**
+     * 批量删除
+     *
+     * @param ids id
+     */
+    void deleteById(List<String> ids);
 }

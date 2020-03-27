@@ -398,7 +398,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             $.ajax({
                 type: 'POST',
                 url: getAjaxUrl().del,
-                data: {trainingUsersIds: trainingUsersId},
+                data: {trainingUsersIds: trainingUsersId, trainingReleaseId: page_param.paramTrainingReleaseId},
                 success: function (data) {
                     Messenger().post({
                         message: data.msg,

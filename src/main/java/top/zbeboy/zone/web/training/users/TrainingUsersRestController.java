@@ -21,6 +21,7 @@ import top.zbeboy.zone.web.bean.training.release.TrainingReleaseBean;
 import top.zbeboy.zone.web.bean.training.users.TrainingUsersBean;
 import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
 import top.zbeboy.zone.web.util.AjaxUtil;
+import top.zbeboy.zone.web.util.SmallPropsUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
@@ -162,6 +163,29 @@ public class TrainingUsersRestController {
             }
         } else {
             ajaxUtil.fail().msg("根据ID未查询到名单数据");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 批量删除
+     *
+     * @param trainingReleaseId 实训发布id
+     * @param trainingUsersIds  ids
+     * @return true注销成功
+     */
+    @PostMapping("/web/training/users/delete")
+    public ResponseEntity<Map<String, Object>> delete(@RequestParam("trainingReleaseId") String trainingReleaseId, String trainingUsersIds) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (StringUtils.isNotBlank(trainingUsersIds)) {
+            if (trainingConditionCommon.usersCondition(trainingReleaseId)) {
+                trainingUsersService.deleteById(SmallPropsUtil.StringIdsToStringList(trainingUsersIds));
+                ajaxUtil.success().msg("删除成功");
+            } else {
+                ajaxUtil.fail().msg("您无权限操作");
+            }
+        } else {
+            ajaxUtil.fail().msg("请选择学生");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
