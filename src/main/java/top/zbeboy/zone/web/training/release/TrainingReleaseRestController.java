@@ -95,7 +95,7 @@ public class TrainingReleaseRestController {
         if (!bindingResult.hasErrors()) {
             TrainingRelease trainingRelease = new TrainingRelease();
             String trainingReleaseId = UUIDUtil.getUUID();
-            trainingRelease.setTrainingReleaseId(UUIDUtil.getUUID());
+            trainingRelease.setTrainingReleaseId(trainingReleaseId);
             trainingRelease.setTitle(trainingReleaseAddVo.getTitle());
             trainingRelease.setOrganizeId(trainingReleaseAddVo.getOrganizeId());
             trainingRelease.setCourseId(trainingReleaseAddVo.getCourseId());
@@ -105,6 +105,7 @@ public class TrainingReleaseRestController {
             Users users = usersService.getUserFromSession();
             trainingRelease.setPublisher(users.getRealName());
             trainingRelease.setUsername(users.getUsername());
+            trainingReleaseService.save(trainingRelease);
 
             // 生成名单
             Result<Record> studentRecords = studentService.findNormalByOrganizeId(trainingReleaseAddVo.getOrganizeId());
@@ -122,7 +123,6 @@ public class TrainingReleaseRestController {
                 trainingUsersService.batchSave(trainingUsers);
             }
 
-            trainingReleaseService.save(trainingRelease);
             ajaxUtil.success().msg("保存成功");
         } else {
             ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
