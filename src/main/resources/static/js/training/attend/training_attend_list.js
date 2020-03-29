@@ -7,6 +7,8 @@ require(["jquery",  "tools", "handlebars", "nav.active", "messenger", "jquery.ad
          */
         var ajax_url = {
             data: web_path + '/web/training/attend/data',
+            configure_data: web_path + '/web/training/attend/configure/data',
+            configure_release: web_path + '/web/training/attend/configure/release',
             page: '/web/menu/training/attend'
         };
 
@@ -191,6 +193,69 @@ require(["jquery",  "tools", "handlebars", "nav.active", "messenger", "jquery.ad
             $.get(ajax_url.data, param, function (data) {
                 tools.dataEndLoading();
                 listData(data);
+            });
+        }
+
+        $('#configureRelease').click(function () {
+            $.get(ajax_url.configure_data + '/' + page_param.paramTrainingReleaseId, function (data) {
+                Messenger().post({
+                    message: data.msg,
+                    type: data.state ? 'success' : 'error',
+                    showCloseButton: true
+                });
+                if (data.state) {
+                    configureData(data);
+                    $('#configureReleaseModal').modal('show');
+                }
+            });
+        });
+
+
+        /**
+         * 列表数据
+         * @param data 数据
+         */
+        function configureData(data) {
+            var template = Handlebars.compile($("#configure-data-template").html());
+
+            Handlebars.registerHelper('week_day', function () {
+                return new Handlebars.SafeString(Handlebars.escapeExpression(tools.weekDay(this.weekDay)));
+            });
+            $('#dataTable > tbody').html(template(data));
+        }
+
+        $('#dataTable').delegate('.release', "click", function () {
+            sendConfigureReleaseAjax($(this).attr('data-id'));
+        });
+
+        /**
+         * 配置发布ajax
+         * @param trainingConfigureId
+         */
+        function sendConfigureReleaseAjax(trainingConfigureId) {
+            $.ajax({
+                type: 'POST',
+                url: ajax_url.configure_release,
+                data: {trainingConfigureId: trainingConfigureId},
+                success: function (data) {
+                    Messenger().post({
+                        message: data.msg,
+                        type: data.state ? 'success' : 'error',
+                        showCloseButton: true
+                    });
+
+                    if (data.state) {
+                        init();
+                        $('#configureReleaseModal').modal('hide');
+                    }
+                },
+                error: function (XMLHttpRequest) {
+                    Messenger().post({
+                        message: 'Request error : ' + XMLHttpRequest.status + " " + XMLHttpRequest.statusText,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
             });
         }
 

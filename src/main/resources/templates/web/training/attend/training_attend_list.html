@@ -37,15 +37,21 @@
                 </div>
                 <div class="col-md-12">
                     <div class="float-right mg-t-5">
-                        <button type="button" class="btn btn-secondary" id="export" th:if="${canOperator==1}"><i class="fa fa-download"></i> 导出
+                        <button type="button" class="btn btn-secondary" id="export" th:if="${canOperator==1}"><i
+                                class="fa fa-download"></i> 导出
                         </button>
-                        <button type="button" class="btn btn-dark" id="attendSituation" th:if="${canOperator==1}"><i class="fa fa-bar-chart"></i> 考勤情况
+                        <button type="button" class="btn btn-dark" id="attendSituation" th:if="${canOperator==1}"><i
+                                class="fa fa-bar-chart"></i> 考勤情况
                         </button>
-                        <button type="button" class="btn btn-info" id="configureRelease" th:if="${canOperator==1}"><i class="fa fa-th-list"></i> 配置分布
+                        <button type="button" class="btn btn-info" id="configureRelease" th:if="${canOperator==1}"><i
+                                class="fa fa-th-list"></i>
+                            配置分布
                         </button>
-                        <button type="button" class="btn btn-primary" id="customRelease" th:if="${canOperator==1}"><i class="fa fa-cog"></i> 自定义发布
+                        <button type="button" class="btn btn-primary" id="customRelease" th:if="${canOperator==1}"><i
+                                class="fa fa-cog"></i> 自定义发布
                         </button>
-                        <button type="button" class="btn btn-teal" id="myAttend" th:if="${isStudent==1}"><i class="fa fa-line-chart"></i> 我的考勤
+                        <button type="button" class="btn btn-teal" id="myAttend" th:if="${isStudent==1}"><i
+                                class="fa fa-line-chart"></i> 我的考勤
                         </button>
                         <button type="button" class="btn btn-light" id="refresh"><i class="fa fa-refresh"></i> 刷新
                         </button>
@@ -59,6 +65,42 @@
                             <ul class="pagination" id="pagination"></ul>
                         </nav>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 配置发布Modal -->
+    <div class="modal fade" id="configureReleaseModal" tabindex="-1" role="dialog"
+         aria-labelledby="configureReleaseModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="configureReleaseModalLabel">配置发布</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive-md">
+                        <table class="table" id="dataTable">
+                            <thead>
+                            <tr>
+                                <th scope="col">星期</th>
+                                <th scope="col">开始时间</th>
+                                <th scope="col">结束时间</th>
+                                <th scope="col">教室</th>
+                                <th scope="col">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
                 </div>
             </div>
         </div>
@@ -90,6 +132,25 @@
                 </div>
             </div>
         </div>
+        {{/each}}
+    </script>
+
+    <!--定义数据模板-->
+    <script id="configure-data-template" type="text/x-handlebars-template">
+        {{#each listResult}}
+        <tr>
+            <td>{{week_day}}</td>
+            <td>{{startTime}}</td>
+            <td>{{endTime}}</td>
+            <td>{{buildingName}}{{buildingCode}}</td>
+            <td>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-primary btn-sm release" data-id="{{this.trainingConfigureId}}">
+                        发布
+                    </button>
+                </div>
+            </td>
+        </tr>
         {{/each}}
     </script>
 

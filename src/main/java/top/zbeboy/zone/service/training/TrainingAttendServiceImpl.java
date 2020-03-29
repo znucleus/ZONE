@@ -7,10 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import top.zbeboy.zone.domain.tables.daos.TrainingAttendDao;
+import top.zbeboy.zone.domain.tables.pojos.TrainingAttend;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
+import javax.annotation.Resource;
 import java.util.Objects;
 
 import static top.zbeboy.zone.domain.Tables.*;
@@ -20,6 +23,9 @@ import static top.zbeboy.zone.domain.Tables.*;
 public class TrainingAttendServiceImpl implements TrainingAttendService, PaginationPlugin<SimplePaginationUtil> {
 
     private final DSLContext create;
+
+    @Resource
+    private TrainingAttendDao trainingAttendDao;
 
     @Autowired
     TrainingAttendServiceImpl(DSLContext dslContext) {
@@ -46,6 +52,12 @@ public class TrainingAttendServiceImpl implements TrainingAttendService, Paginat
                 .leftJoin(BUILDING)
                 .on(SCHOOLROOM.BUILDING_ID.eq(BUILDING.BUILDING_ID));
         return countAll(selectOnConditionStep, paginationUtil, false);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void save(TrainingAttend trainingAttend) {
+        trainingAttendDao.insert(trainingAttend);
     }
 
     @Override
