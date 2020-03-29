@@ -98,7 +98,7 @@ require(["jquery",  "tools", "handlebars", "nav.active", "messenger", "jquery.ad
          * @param data 数据
          */
         function listData(data) {
-            var template = Handlebars.compile($("#release-template").html());
+            var template = Handlebars.compile($("#attend-template").html());
             $(tableData).html(template(data));
         }
 
