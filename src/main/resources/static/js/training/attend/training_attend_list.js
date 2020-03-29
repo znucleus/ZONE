@@ -1,17 +1,20 @@
-//# sourceURL=training_attend.js
-require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "jquery.address", "jquery.simple-pagination", "jquery-labelauty"],
-    function ($, _, tools, Handlebars, navActive) {
+//# sourceURL=training_attend_list.js
+require(["jquery",  "tools", "handlebars", "nav.active", "messenger", "jquery.address", "jquery.simple-pagination", "flatpickr-zh"],
+    function ($, tools, Handlebars, navActive) {
 
         /*
          ajax url.
          */
         var ajax_url = {
-            data: web_path + '/web/training/attend/training/data',
-            list: '/web/training/attend/list',
+            data: web_path + '/web/training/attend/data',
             page: '/web/menu/training/attend'
         };
 
         navActive(ajax_url.page);
+
+        var page_param = {
+            paramTrainingReleaseId: $('#paramTrainingReleaseId').val()
+        };
 
         /*
          参数
@@ -20,11 +23,11 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
             pageNum: 0,
             length: 2,
             displayedPages: 3,
-            orderColumnName: 'releaseTime',
+            orderColumnName: 'publishDate',
             orderDir: 'desc',
             extraSearch: JSON.stringify({
-                title: '',
-                dataRange: 0,
+                attendDate: '',
+                trainingReleaseId: page_param.paramTrainingReleaseId
             })
         };
 
@@ -32,16 +35,14 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
         web storage key.
         */
         var webStorageKey = {
-            TITLE: 'TRAINING_USERS_TITLE_SEARCH',
-            DATA_RANGE: 'TRAINING_USERS_DATA_RANGE_SEARCH'
+            ATTEND_DATE: 'TRAINING_ATTEND_DATE_SEARCH'
         };
 
         /*
          参数id
          */
         var param_id = {
-            title: '#search_title',
-            dataRange: '#dataRange'
+            attendDate: '#search_attend_date'
         };
 
         var tableData = '#tableData';
@@ -50,7 +51,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
          清空参数
          */
         function cleanParam() {
-            $(param_id.title).val('');
+            $(param_id.attendDate).val('');
         }
 
         /**
@@ -58,8 +59,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
          */
         function refreshSearch() {
             if (typeof(Storage) !== "undefined") {
-                sessionStorage.setItem(webStorageKey.TITLE, $(param_id.title).val());
-                sessionStorage.setItem(webStorageKey.DATA_RANGE, _.isUndefined($("input[name='dataRange']:checked").val()) ? '0' : '1');
+                sessionStorage.setItem(webStorageKey.ATTEND_DATE, $(param_id.attendDate).val());
             }
         }
 
@@ -84,16 +84,13 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
             init();
         });
 
-        $(param_id.title).keyup(function (event) {
-            if (event.keyCode === 13) {
+        $(param_id.attendDate).flatpickr({
+            "locale": "zh",
+            "mode": "range",
+            onClose: function () {
                 refreshSearch();
                 init();
             }
-        });
-
-        $(param_id.dataRange).click(function () {
-            refreshSearch();
-            init();
         });
 
         /**
@@ -114,7 +111,6 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
 
         init();
         initSearchInput();
-        initLabelauty();
 
         /**
          * 初始化数据
@@ -133,27 +129,20 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
         初始化搜索内容
        */
         function initSearchContent() {
-            var title = null;
-            var dataRange = null;
+            var attendDate = null;
             var params = {
-                title: '',
-                dataRange: 0
+                attendDate: '',
+                trainingReleaseId: page_param.paramTrainingReleaseId
             };
             if (typeof(Storage) !== "undefined") {
-                title = sessionStorage.getItem(webStorageKey.TITLE);
-                dataRange = sessionStorage.getItem(webStorageKey.DATA_RANGE);
+                attendDate = sessionStorage.getItem(webStorageKey.ATTEND_DATE);
             }
-            if (title !== null) {
-                params.title = title;
+            if (attendDate !== null) {
+                params.attendDate = attendDate;
             } else {
-                params.title = $(param_id.title).val();
+                params.attendDate = $(param_id.attendDate).val();
             }
 
-            if (dataRange !== null) {
-                params.dataRange = dataRange;
-            } else {
-                params.dataRange = _.isUndefined($("input[name='dataRange']:checked").val()) ? 0 : 1;
-            }
             param.pageNum = 0;
             param.extraSearch = JSON.stringify(params);
         }
@@ -162,23 +151,13 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
         初始化搜索框
         */
         function initSearchInput() {
-            var title = null;
-            var dataRange = null;
+            var attendDate = null;
             if (typeof(Storage) !== "undefined") {
-                title = sessionStorage.getItem(webStorageKey.TITLE);
-                dataRange = sessionStorage.getItem(webStorageKey.DATA_RANGE);
+                attendDate = sessionStorage.getItem(webStorageKey.ATTEND_DATE);
             }
-            if (title !== null) {
-                $(param_id.title).val(title);
+            if (attendDate !== null) {
+                $(param_id.attendDate).val(attendDate);
             }
-
-            if (dataRange !== null && Number(dataRange) === 1) {
-                $(param_id.dataRange).prop('checked', true);
-            }
-        }
-
-        function initLabelauty() {
-            $(".labelauty").labelauty();
         }
 
         /**

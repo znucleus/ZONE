@@ -9,6 +9,7 @@ import top.zbeboy.zone.service.training.TrainingReleaseService;
 import top.zbeboy.zone.web.bean.training.release.TrainingReleaseBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
+import top.zbeboy.zone.web.util.BooleanUtil;
 
 import javax.annotation.Resource;
 import java.util.Optional;
@@ -46,7 +47,7 @@ public class TrainingUsersViewController {
         Optional<Record> record = trainingReleaseService.findByIdRelation(id);
         if (record.isPresent()) {
             modelMap.addAttribute("trainingReleaseId", id);
-            modelMap.addAttribute("canOperator", trainingConditionCommon.usersCondition(id) ? 1 : 0);
+            modelMap.addAttribute("canOperator", BooleanUtil.toByte(trainingConditionCommon.usersCondition(id)));
             page = "web/training/users/training_users_list::#page-wrapper";
         } else {
             config.buildDangerTip("查询错误", "未查询到实训发布数据");
