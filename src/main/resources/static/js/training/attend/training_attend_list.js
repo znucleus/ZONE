@@ -9,6 +9,7 @@ require(["jquery",  "tools", "handlebars", "nav.active", "messenger", "jquery.ad
             data: web_path + '/web/training/attend/data',
             configure_data: web_path + '/web/training/attend/configure/data',
             configure_release: web_path + '/web/training/attend/configure/release',
+            release: '/web/training/attend/release',
             page: '/web/menu/training/attend'
         };
 
@@ -93,6 +94,10 @@ require(["jquery",  "tools", "handlebars", "nav.active", "messenger", "jquery.ad
                 refreshSearch();
                 init();
             }
+        });
+
+        $('#customRelease').click(function () {
+            $.address.value(ajax_url.release + '/' + page_param.paramTrainingReleaseId);
         });
 
         /**

@@ -77,4 +77,26 @@ public class TrainingAttendViewController {
         }
         return page;
     }
+
+    /**
+     * 自定义发布
+     *
+     * @param id       id
+     * @param modelMap 页面对象
+     * @return 页面
+     */
+    @GetMapping("/web/training/attend/release/{id}")
+    public String release(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        if (trainingConditionCommon.usersCondition(id)) {
+            modelMap.addAttribute("trainingReleaseId", id);
+            page = "web/training/attend/training_attend_release::#page-wrapper";
+        } else {
+            config.buildWarningTip("操作警告", "您无权限操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
 }
