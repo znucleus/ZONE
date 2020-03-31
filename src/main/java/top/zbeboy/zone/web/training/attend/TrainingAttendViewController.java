@@ -12,6 +12,7 @@ import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
 import top.zbeboy.zone.service.training.TrainingReleaseService;
+import top.zbeboy.zone.web.bean.training.release.TrainingReleaseBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
 import top.zbeboy.zone.web.util.BooleanUtil;
@@ -90,8 +91,17 @@ public class TrainingAttendViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         if (trainingConditionCommon.usersCondition(id)) {
-            modelMap.addAttribute("trainingReleaseId", id);
-            page = "web/training/attend/training_attend_release::#page-wrapper";
+            Optional<Record> trainingReleaseRecord = trainingReleaseService.findByIdRelation(id);
+            if (trainingReleaseRecord.isPresent()) {
+                TrainingReleaseBean bean = trainingReleaseRecord.get().into(TrainingReleaseBean.class);
+                modelMap.addAttribute("trainingReleaseId", bean.getTrainingReleaseId());
+                modelMap.addAttribute("collegeId", bean.getCollegeId());
+                page = "web/training/attend/training_attend_release::#page-wrapper";
+            } else {
+                config.buildDangerTip("查询错误", "未查询到实训发布数据");
+                config.dataMerging(modelMap);
+                page = "inline_tip::#page-wrapper";
+            }
         } else {
             config.buildWarningTip("操作警告", "您无权限操作");
             config.dataMerging(modelMap);

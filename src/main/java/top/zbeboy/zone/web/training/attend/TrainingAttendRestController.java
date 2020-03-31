@@ -4,6 +4,7 @@ import org.jooq.Record;
 import org.jooq.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.service.platform.UsersService;
@@ -18,8 +19,10 @@ import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.ByteUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
+import top.zbeboy.zone.web.vo.training.attend.TrainingAttendAddVo;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -159,6 +162,58 @@ public class TrainingAttendRestController {
             ajaxUtil.fail().msg("未查询到实训配置数据");
         }
 
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 自定义发布
+     *
+     * @param trainingAttendAddVo 数据
+     * @return true or false
+     */
+    @PostMapping("/web/training/attend/release/save")
+    public ResponseEntity<Map<String, Object>> releaseSave(@Valid TrainingAttendAddVo trainingAttendAddVo, BindingResult bindingResult) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (!bindingResult.hasErrors()) {
+            if (trainingConditionCommon.usersCondition(trainingAttendAddVo.getTrainingReleaseId())) {
+                TrainingAttend trainingAttend = new TrainingAttend();
+                String trainingAttendId = UUIDUtil.getUUID();
+                trainingAttend.setTrainingAttendId(trainingAttendId);
+                trainingAttend.setTrainingReleaseId(trainingAttendAddVo.getTrainingReleaseId());
+                trainingAttend.setAttendDate(DateTimeUtil.defaultParseSqlDate(trainingAttendAddVo.getAttendDate()));
+                trainingAttend.setAttendStartTime(DateTimeUtil.defaultParseSqlTime(trainingAttendAddVo.getAttendStartTime()));
+                trainingAttend.setAttendEndTime(DateTimeUtil.defaultParseSqlTime(trainingAttendAddVo.getAttendEndTime()));
+                trainingAttend.setAttendRoom(trainingAttendAddVo.getAttendRoom());
+                trainingAttend.setPublishDate(DateTimeUtil.getNowSqlTimestamp());
+                trainingAttend.setRemark(trainingAttendAddVo.getRemark());
+                trainingAttendService.save(trainingAttend);
+
+                Users user = usersService.getUserFromSession();
+                List<TrainingUsers> trainingUsers = trainingUsersService.findByTrainingReleaseId(trainingAttendAddVo.getTrainingReleaseId());
+                if(Objects.nonNull(trainingUsers)){
+                    List<TrainingAttendUsers> trainingAttendUsers = new ArrayList<>();
+                    for(TrainingUsers users : trainingUsers){
+                        TrainingAttendUsers trainingAttendUser = new TrainingAttendUsers();
+                        trainingAttendUser.setAttendUsersId(UUIDUtil.getUUID());
+                        trainingAttendUser.setTrainingAttendId(trainingAttendId);
+                        trainingAttendUser.setTrainingUsersId(users.getTrainingUsersId());
+                        trainingAttendUser.setOperateUser(user.getUsername());
+                        trainingAttendUser.setOperateDate(DateTimeUtil.getNowSqlTimestamp());
+                        trainingAttendUser.setOperate(ByteUtil.toByte(0));
+                        trainingAttendUser.setRemark(users.getRemark());
+
+                        trainingAttendUsers.add(trainingAttendUser);
+                    }
+
+                    trainingAttendUsersService.batchSave(trainingAttendUsers);
+                }
+                ajaxUtil.success().msg("发布成功");
+            } else {
+                ajaxUtil.fail().msg("您无权限操作");
+            }
+        } else {
+            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
