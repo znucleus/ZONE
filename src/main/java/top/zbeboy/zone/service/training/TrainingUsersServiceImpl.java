@@ -54,6 +54,11 @@ public class TrainingUsersServiceImpl implements TrainingUsersService, Paginatio
     }
 
     @Override
+    public List<TrainingUsers> findByTrainingReleaseId(String trainingReleaseId) {
+        return trainingUsersDao.fetchByTrainingReleaseId(trainingReleaseId);
+    }
+
+    @Override
     public Result<Record> findStudentNotExistsUsers(String trainingReleaseId, int organizeId) {
         Select<TrainingUsersRecord> select = create.selectFrom(TRAINING_USERS)
                 .where(TRAINING_USERS.STUDENT_ID.eq(STUDENT.STUDENT_ID).and(TRAINING_USERS.TRAINING_RELEASE_ID.eq(trainingReleaseId)));

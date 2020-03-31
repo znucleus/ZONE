@@ -5,11 +5,9 @@ import org.jooq.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import top.zbeboy.zone.domain.tables.pojos.TrainingAttend;
-import top.zbeboy.zone.domain.tables.pojos.TrainingConfigure;
-import top.zbeboy.zone.service.training.TrainingAttendService;
-import top.zbeboy.zone.service.training.TrainingConfigureService;
-import top.zbeboy.zone.service.training.TrainingReleaseService;
+import top.zbeboy.zone.domain.tables.pojos.*;
+import top.zbeboy.zone.service.platform.UsersService;
+import top.zbeboy.zone.service.training.*;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.training.attend.TrainingAttendBean;
@@ -18,6 +16,7 @@ import top.zbeboy.zone.web.bean.training.release.TrainingReleaseBean;
 import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
+import top.zbeboy.zone.web.util.ByteUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
 import javax.annotation.Resource;
@@ -40,6 +39,15 @@ public class TrainingAttendRestController {
 
     @Resource
     private TrainingConfigureService trainingConfigureService;
+
+    @Resource
+    private TrainingUsersService trainingUsersService;
+
+    @Resource
+    private TrainingAttendUsersService trainingAttendUsersService;
+
+    @Resource
+    private UsersService usersService;
 
     /**
      * 数据
@@ -114,15 +122,35 @@ public class TrainingAttendRestController {
         if (Objects.nonNull(trainingConfigure)) {
             if (trainingConditionCommon.usersCondition(trainingConfigure.getTrainingReleaseId())) {
                 TrainingAttend trainingAttend = new TrainingAttend();
-                trainingAttend.setTrainingAttendId(UUIDUtil.getUUID());
+                String trainingAttendId = UUIDUtil.getUUID();
+                trainingAttend.setTrainingAttendId(trainingAttendId);
                 trainingAttend.setTrainingReleaseId(trainingConfigure.getTrainingReleaseId());
                 trainingAttend.setAttendDate(DateTimeUtil.getNowSqlDate());
                 trainingAttend.setAttendStartTime(trainingConfigure.getStartTime());
                 trainingAttend.setAttendEndTime(trainingConfigure.getEndTime());
                 trainingAttend.setAttendRoom(trainingConfigure.getSchoolroomId());
                 trainingAttend.setPublishDate(DateTimeUtil.getNowSqlTimestamp());
-
                 trainingAttendService.save(trainingAttend);
+
+                Users user = usersService.getUserFromSession();
+                List<TrainingUsers> trainingUsers = trainingUsersService.findByTrainingReleaseId(trainingConfigure.getTrainingReleaseId());
+                if(Objects.nonNull(trainingUsers)){
+                    List<TrainingAttendUsers> trainingAttendUsers = new ArrayList<>();
+                    for(TrainingUsers users : trainingUsers){
+                        TrainingAttendUsers trainingAttendUser = new TrainingAttendUsers();
+                        trainingAttendUser.setAttendUsersId(UUIDUtil.getUUID());
+                        trainingAttendUser.setTrainingAttendId(trainingAttendId);
+                        trainingAttendUser.setTrainingUsersId(users.getTrainingUsersId());
+                        trainingAttendUser.setOperateUser(user.getUsername());
+                        trainingAttendUser.setOperateDate(DateTimeUtil.getNowSqlTimestamp());
+                        trainingAttendUser.setOperate(ByteUtil.toByte(0));
+                        trainingAttendUser.setRemark(users.getRemark());
+
+                        trainingAttendUsers.add(trainingAttendUser);
+                    }
+
+                    trainingAttendUsersService.batchSave(trainingAttendUsers);
+                }
                 ajaxUtil.success().msg("发布成功");
             } else {
                 ajaxUtil.fail().msg("您无权限操作");
