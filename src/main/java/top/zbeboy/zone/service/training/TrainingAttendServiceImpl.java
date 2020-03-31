@@ -15,6 +15,7 @@ import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
 import javax.annotation.Resource;
 import java.util.Objects;
+import java.util.Optional;
 
 import static top.zbeboy.zone.domain.Tables.*;
 
@@ -30,6 +31,36 @@ public class TrainingAttendServiceImpl implements TrainingAttendService, Paginat
     @Autowired
     TrainingAttendServiceImpl(DSLContext dslContext) {
         create = dslContext;
+    }
+
+    @Override
+    public TrainingAttend findById(String id) {
+        return trainingAttendDao.findById(id);
+    }
+
+    @Override
+    public Optional<Record> findByIdRelation(String id) {
+        return create.select()
+                .from(TRAINING_ATTEND)
+                .leftJoin(TRAINING_RELEASE)
+                .on(TRAINING_ATTEND.TRAINING_RELEASE_ID.eq(TRAINING_RELEASE.TRAINING_RELEASE_ID))
+                .leftJoin(ORGANIZE)
+                .on(TRAINING_RELEASE.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID))
+                .leftJoin(GRADE)
+                .on(ORGANIZE.GRADE_ID.eq(GRADE.GRADE_ID))
+                .leftJoin(SCIENCE)
+                .on(GRADE.SCIENCE_ID.eq(SCIENCE.SCIENCE_ID))
+                .leftJoin(DEPARTMENT)
+                .on(SCIENCE.DEPARTMENT_ID.eq(DEPARTMENT.DEPARTMENT_ID))
+                .leftJoin(COLLEGE)
+                .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
+                .leftJoin(SCHOOLROOM)
+                .on(TRAINING_ATTEND.ATTEND_ROOM.eq(SCHOOLROOM.SCHOOLROOM_ID))
+                .leftJoin(BUILDING)
+                .on(SCHOOLROOM.BUILDING_ID.eq(BUILDING.BUILDING_ID))
+                .where(TRAINING_ATTEND.TRAINING_ATTEND_ID.eq(id))
+                .fetchOptional();
+
     }
 
     @Override
@@ -58,6 +89,11 @@ public class TrainingAttendServiceImpl implements TrainingAttendService, Paginat
     @Override
     public void save(TrainingAttend trainingAttend) {
         trainingAttendDao.insert(trainingAttend);
+    }
+
+    @Override
+    public void update(TrainingAttend trainingAttend) {
+        trainingAttendDao.update(trainingAttend);
     }
 
     @Override

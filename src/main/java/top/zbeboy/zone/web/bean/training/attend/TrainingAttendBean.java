@@ -6,6 +6,8 @@ public class TrainingAttendBean extends TrainingAttend {
     private String buildingName;
     private String buildingCode;
     private String publishDateStr;
+    private int buildingId;
+    private int collegeId;
     private Byte canOperator;
 
     public String getBuildingName() {
@@ -38,5 +40,21 @@ public class TrainingAttendBean extends TrainingAttend {
 
     public void setCanOperator(Byte canOperator) {
         this.canOperator = canOperator;
+    }
+
+    public int getBuildingId() {
+        return buildingId;
+    }
+
+    public void setBuildingId(int buildingId) {
+        this.buildingId = buildingId;
+    }
+
+    public int getCollegeId() {
+        return collegeId;
+    }
+
+    public void setCollegeId(int collegeId) {
+        this.collegeId = collegeId;
     }
 }

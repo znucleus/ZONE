@@ -11,7 +11,9 @@ import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
+import top.zbeboy.zone.service.training.TrainingAttendService;
 import top.zbeboy.zone.service.training.TrainingReleaseService;
+import top.zbeboy.zone.web.bean.training.attend.TrainingAttendBean;
 import top.zbeboy.zone.web.bean.training.release.TrainingReleaseBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
@@ -29,6 +31,9 @@ public class TrainingAttendViewController {
 
     @Resource
     private TrainingConditionCommon trainingConditionCommon;
+
+    @Resource
+    private TrainingAttendService trainingAttendService;
 
     @Resource
     private UsersService usersService;
@@ -104,6 +109,36 @@ public class TrainingAttendViewController {
             }
         } else {
             config.buildWarningTip("操作警告", "您无权限操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
+
+    /**
+     * 编辑
+     *
+     * @param id       id
+     * @param modelMap 页面对象
+     * @return 页面
+     */
+    @GetMapping("/web/training/attend/edit/{id}")
+    public String edit(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        Optional<Record> record = trainingAttendService.findByIdRelation(id);
+        if(record.isPresent()){
+            TrainingAttendBean bean = record.get().into(TrainingAttendBean.class);
+            if (trainingConditionCommon.usersCondition(bean.getTrainingReleaseId())) {
+                modelMap.addAttribute("trainingAttend", bean);
+                page = "web/training/attend/training_attend_edit::#page-wrapper";
+            } else {
+                config.buildWarningTip("操作警告", "您无权限操作");
+                config.dataMerging(modelMap);
+                page = "inline_tip::#page-wrapper";
+            }
+        } else {
+            config.buildDangerTip("查询错误", "未查询到实训考勤数据");
             config.dataMerging(modelMap);
             page = "inline_tip::#page-wrapper";
         }

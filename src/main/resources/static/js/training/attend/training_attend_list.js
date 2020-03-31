@@ -10,6 +10,7 @@ require(["jquery",  "tools", "handlebars", "nav.active", "messenger", "jquery.ad
             configure_data: web_path + '/web/training/attend/configure/data',
             configure_release: web_path + '/web/training/attend/configure/release',
             release: '/web/training/attend/release',
+            edit:'/web/training/attend/edit',
             page: '/web/menu/training/attend'
         };
 
@@ -114,6 +115,13 @@ require(["jquery",  "tools", "handlebars", "nav.active", "messenger", "jquery.ad
          */
         $(tableData).delegate('.list', "click", function () {
             $.address.value(ajax_url.list + '/' + $(this).attr('data-id'));
+        });
+
+        /*
+        编辑
+        */
+        $(tableData).delegate('.edit', "click", function () {
+            $.address.value(ajax_url.edit + '/' + $(this).attr('data-id'));
         });
 
         init();

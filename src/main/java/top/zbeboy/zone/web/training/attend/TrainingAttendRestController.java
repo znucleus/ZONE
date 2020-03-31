@@ -20,6 +20,7 @@ import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.ByteUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zone.web.vo.training.attend.TrainingAttendAddVo;
+import top.zbeboy.zone.web.vo.training.attend.TrainingAttendEditVo;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -208,6 +209,34 @@ public class TrainingAttendRestController {
                     trainingAttendUsersService.batchSave(trainingAttendUsers);
                 }
                 ajaxUtil.success().msg("发布成功");
+            } else {
+                ajaxUtil.fail().msg("您无权限操作");
+            }
+        } else {
+            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 编辑
+     *
+     * @param trainingAttendEditVo 数据
+     * @return true or false
+     */
+    @PostMapping("/web/training/attend/update")
+    public ResponseEntity<Map<String, Object>> update(@Valid TrainingAttendEditVo trainingAttendEditVo, BindingResult bindingResult) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (!bindingResult.hasErrors()) {
+            if (trainingConditionCommon.usersCondition(trainingAttendEditVo.getTrainingReleaseId())) {
+                TrainingAttend trainingAttend = trainingAttendService.findById(trainingAttendEditVo.getTrainingAttendId());
+                trainingAttend.setAttendDate(DateTimeUtil.defaultParseSqlDate(trainingAttendEditVo.getAttendDate()));
+                trainingAttend.setAttendStartTime(DateTimeUtil.defaultParseSqlTime(trainingAttendEditVo.getAttendStartTime()));
+                trainingAttend.setAttendEndTime(DateTimeUtil.defaultParseSqlTime(trainingAttendEditVo.getAttendEndTime()));
+                trainingAttend.setAttendRoom(trainingAttendEditVo.getAttendRoom());
+                trainingAttend.setRemark(trainingAttendEditVo.getRemark());
+                trainingAttendService.update(trainingAttend);
+                ajaxUtil.success().msg("更新成功");
             } else {
                 ajaxUtil.fail().msg("您无权限操作");
             }
