@@ -138,9 +138,9 @@ public class TrainingAttendRestController {
 
                 Users user = usersService.getUserFromSession();
                 List<TrainingUsers> trainingUsers = trainingUsersService.findByTrainingReleaseId(trainingConfigure.getTrainingReleaseId());
-                if(Objects.nonNull(trainingUsers)){
+                if (Objects.nonNull(trainingUsers)) {
                     List<TrainingAttendUsers> trainingAttendUsers = new ArrayList<>();
-                    for(TrainingUsers users : trainingUsers){
+                    for (TrainingUsers users : trainingUsers) {
                         TrainingAttendUsers trainingAttendUser = new TrainingAttendUsers();
                         trainingAttendUser.setAttendUsersId(UUIDUtil.getUUID());
                         trainingAttendUser.setTrainingAttendId(trainingAttendId);
@@ -191,9 +191,9 @@ public class TrainingAttendRestController {
 
                 Users user = usersService.getUserFromSession();
                 List<TrainingUsers> trainingUsers = trainingUsersService.findByTrainingReleaseId(trainingAttendAddVo.getTrainingReleaseId());
-                if(Objects.nonNull(trainingUsers)){
+                if (Objects.nonNull(trainingUsers)) {
                     List<TrainingAttendUsers> trainingAttendUsers = new ArrayList<>();
-                    for(TrainingUsers users : trainingUsers){
+                    for (TrainingUsers users : trainingUsers) {
                         TrainingAttendUsers trainingAttendUser = new TrainingAttendUsers();
                         trainingAttendUser.setAttendUsersId(UUIDUtil.getUUID());
                         trainingAttendUser.setTrainingAttendId(trainingAttendId);
@@ -242,6 +242,29 @@ public class TrainingAttendRestController {
             }
         } else {
             ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 删除
+     *
+     * @param trainingAttendId 考勤id
+     * @return true or false
+     */
+    @PostMapping("/web/training/attend/delete")
+    public ResponseEntity<Map<String, Object>> delete(@RequestParam("trainingAttendId") String trainingAttendId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        TrainingAttend trainingAttend = trainingAttendService.findById(trainingAttendId);
+        if (Objects.nonNull(trainingAttend)) {
+            if (trainingConditionCommon.usersCondition(trainingAttend.getTrainingReleaseId())) {
+                trainingAttendService.deleteById(trainingAttendId);
+                ajaxUtil.success().msg("删除成功");
+            } else {
+                ajaxUtil.fail().msg("您无权限操作");
+            }
+        } else {
+            ajaxUtil.fail().msg("未查询到实训考勤数据");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }

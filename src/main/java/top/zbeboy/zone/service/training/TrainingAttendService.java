@@ -53,4 +53,11 @@ public interface TrainingAttendService {
      * @param trainingAttend 数据
      */
     void update(TrainingAttend trainingAttend);
+
+    /**
+     * 根据主键删除
+     *
+     * @param id 主键
+     */
+    void deleteById(String id);
 }

@@ -1,6 +1,6 @@
 //# sourceURL=training_attend_list.js
-require(["jquery",  "tools", "handlebars", "nav.active", "messenger", "jquery.address", "jquery.simple-pagination", "flatpickr-zh"],
-    function ($, tools, Handlebars, navActive) {
+require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "messenger", "jquery.address", "jquery.simple-pagination", "flatpickr-zh"],
+    function ($, tools, Handlebars, navActive, Swal) {
 
         /*
          ajax url.
@@ -10,7 +10,8 @@ require(["jquery",  "tools", "handlebars", "nav.active", "messenger", "jquery.ad
             configure_data: web_path + '/web/training/attend/configure/data',
             configure_release: web_path + '/web/training/attend/configure/release',
             release: '/web/training/attend/release',
-            edit:'/web/training/attend/edit',
+            edit: '/web/training/attend/edit',
+            del: '/web/training/attend/delete',
             page: '/web/menu/training/attend'
         };
 
@@ -122,6 +123,13 @@ require(["jquery",  "tools", "handlebars", "nav.active", "messenger", "jquery.ad
         */
         $(tableData).delegate('.edit', "click", function () {
             $.address.value(ajax_url.edit + '/' + $(this).attr('data-id'));
+        });
+
+        /*
+         删除
+       */
+        $(tableData).delegate('.del', "click", function () {
+            trainingAttendDel($(this).attr('data-id'));
         });
 
         init();
@@ -260,6 +268,64 @@ require(["jquery",  "tools", "handlebars", "nav.active", "messenger", "jquery.ad
                     if (data.state) {
                         init();
                         $('#configureReleaseModal').modal('hide');
+                    }
+                },
+                error: function (XMLHttpRequest) {
+                    Messenger().post({
+                        message: 'Request error : ' + XMLHttpRequest.status + " " + XMLHttpRequest.statusText,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        }
+
+        /**
+         * 删除确认
+         * @param id 考勤id
+         */
+        function trainingAttendDel(id) {
+            Swal.fire({
+                title: "确定删除实训考勤吗？",
+                text: "实训考勤删除！",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                preConfirm: function () {
+                    del(id);
+                }
+            });
+        }
+
+        /**
+         * 删除
+         * @param id
+         */
+        function del(id) {
+            sendDelAjax(id);
+        }
+
+
+        /**
+         * 删除ajax
+         * @param trainingAttendId
+         */
+        function sendDelAjax(trainingAttendId) {
+            $.ajax({
+                type: 'POST',
+                url: ajax_url.del,
+                data: {trainingAttendId: trainingAttendId},
+                success: function (data) {
+                    Messenger().post({
+                        message: data.msg,
+                        type: data.state ? 'success' : 'error',
+                        showCloseButton: true
+                    });
+
+                    if (data.state) {
+                        init();
                     }
                 },
                 error: function (XMLHttpRequest) {

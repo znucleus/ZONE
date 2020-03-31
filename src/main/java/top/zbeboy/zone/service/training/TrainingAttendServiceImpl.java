@@ -97,6 +97,11 @@ public class TrainingAttendServiceImpl implements TrainingAttendService, Paginat
     }
 
     @Override
+    public void deleteById(String id) {
+        trainingAttendDao.deleteById(id);
+    }
+
+    @Override
     public Condition searchCondition(SimplePaginationUtil paginationUtil) {
         Condition a = null;
         JSONObject search = paginationUtil.getSearch();
