@@ -44,9 +44,9 @@ require(["jquery", "tools", "moment-with-locales", "handlebars", "sweetalert2",
          */
         var param = {
             trainingReleaseId: '',
-            attendDate: '#attendDate',
-            attendStartTime: '#attendStartTime',
-            attendEndTime: '#attendEndTime',
+            attendDate: '',
+            attendStartTime: '',
+            attendEndTime: '',
             buildingId: '',
             attendRoom: ''
         };
