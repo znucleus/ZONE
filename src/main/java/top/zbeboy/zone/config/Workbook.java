@@ -23,6 +23,11 @@ public final class Workbook {
     public static final String SPRING_PROFILE_PRODUCTION = "prod";
 
     /*
+    节点
+     */
+    public static final String SPRING_PROFILE_CLUSTER = "cluster";
+
+    /*
     注册类型
      */
     public static final String REGISTER_STUDENT = "student";
