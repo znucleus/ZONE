@@ -76,9 +76,9 @@ public class TrainingUsersServiceImpl implements TrainingUsersService, Paginatio
         SelectOnConditionStep<Record> selectOnConditionStep =
                 create.select()
                         .from(TRAINING_USERS)
-                        .join(STUDENT)
+                        .leftJoin(STUDENT)
                         .on(TRAINING_USERS.STUDENT_ID.eq(STUDENT.STUDENT_ID))
-                        .join(USERS)
+                        .leftJoin(USERS)
                         .on(STUDENT.USERNAME.eq(USERS.USERNAME));
         return queryAllByPage(selectOnConditionStep, dataTablesUtil, false);
     }
@@ -88,9 +88,9 @@ public class TrainingUsersServiceImpl implements TrainingUsersService, Paginatio
         SelectOnConditionStep<Record> selectOnConditionStep =
                 create.select()
                         .from(TRAINING_USERS)
-                        .join(STUDENT)
+                        .leftJoin(STUDENT)
                         .on(TRAINING_USERS.STUDENT_ID.eq(STUDENT.STUDENT_ID))
-                        .join(USERS)
+                        .leftJoin(USERS)
                         .on(STUDENT.USERNAME.eq(USERS.USERNAME));
         return queryAll(selectOnConditionStep, dataTablesUtil, false);
     }
@@ -99,9 +99,9 @@ public class TrainingUsersServiceImpl implements TrainingUsersService, Paginatio
     public int countAll(DataTablesUtil dataTablesUtil) {
         SelectOnConditionStep<Record1<Integer>> selectOnConditionStep = create.selectCount()
                 .from(TRAINING_USERS)
-                .join(STUDENT)
+                .leftJoin(STUDENT)
                 .on(TRAINING_USERS.STUDENT_ID.eq(STUDENT.STUDENT_ID))
-                .join(USERS)
+                .leftJoin(USERS)
                 .on(STUDENT.USERNAME.eq(USERS.USERNAME));
         return countAll(selectOnConditionStep, dataTablesUtil, true);
     }
@@ -110,9 +110,9 @@ public class TrainingUsersServiceImpl implements TrainingUsersService, Paginatio
     public int countByCondition(DataTablesUtil dataTablesUtil) {
         SelectOnConditionStep<Record1<Integer>> selectOnConditionStep = create.selectCount()
                 .from(TRAINING_USERS)
-                .join(STUDENT)
+                .leftJoin(STUDENT)
                 .on(TRAINING_USERS.STUDENT_ID.eq(STUDENT.STUDENT_ID))
-                .join(USERS)
+                .leftJoin(USERS)
                 .on(STUDENT.USERNAME.eq(USERS.USERNAME));
         return countAll(selectOnConditionStep, dataTablesUtil, false);
     }
