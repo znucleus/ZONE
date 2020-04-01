@@ -135,19 +135,30 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                                 {
                                     func: [
                                         {
+                                            "name": "状态",
+                                            "css": "operate",
+                                            "type": "primary",
+                                            "id": c.attendUsersId,
+                                            "student": c.realName,
+                                            "remark": c.remark,
+                                            "operate": c.operate
+                                        },
+                                        {
                                             "name": "删除",
                                             "css": "del",
                                             "type": "danger",
-                                            "id": c.trainingUsersId,
+                                            "id": c.attendUsersId,
                                             "student": c.realName,
-                                            "remark": c.remark
+                                            "remark": c.remark,
+                                            "operate": c.operate
                                         }, {
                                             "name": "备注",
                                             "css": "remark",
                                             "type": "light",
-                                            "id": c.trainingUsersId,
+                                            "id": c.attendUsersId,
                                             "student": c.realName,
-                                            "remark": c.remark
+                                            "remark": c.remark,
+                                            "operate": c.operate
                                         }
                                     ]
                                 };
@@ -205,7 +216,8 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
 
         var global_button = '';
         if (Number(page_param.canOperator) === 1) {
-            global_button += '<button type="button" id="training_dels" class="btn btn-outline-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>' +
+            global_button += '<button type="button" id="all_ok" class="btn btn-outline-primary btn-sm"><i class="fa fa-star-o"></i>全勤</button>' +
+            '  <button type="button" id="training_dels" class="btn btn-outline-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>' +
                 '  <button type="button" id="training_reset" class="btn btn-outline-warning btn-sm"><i class="fa fa-reply-all"></i>重置</button>';
         }
 
