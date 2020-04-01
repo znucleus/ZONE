@@ -127,7 +127,7 @@ public class TrainingAttendViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         Optional<Record> record = trainingAttendService.findByIdRelation(id);
-        if(record.isPresent()){
+        if (record.isPresent()) {
             TrainingAttendBean bean = record.get().into(TrainingAttendBean.class);
             if (trainingConditionCommon.usersCondition(bean.getTrainingReleaseId())) {
                 modelMap.addAttribute("trainingAttend", bean);
@@ -137,6 +137,31 @@ public class TrainingAttendViewController {
                 config.dataMerging(modelMap);
                 page = "inline_tip::#page-wrapper";
             }
+        } else {
+            config.buildDangerTip("查询错误", "未查询到实训考勤数据");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
+
+    /**
+     * 列表
+     *
+     * @param id       id
+     * @param modelMap 页面对象
+     * @return 页面
+     */
+    @GetMapping("/web/training/attend/users/list/{id}")
+    public String usersList(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        Optional<Record> record = trainingAttendService.findByIdRelation(id);
+        if (record.isPresent()) {
+            TrainingAttendBean bean = record.get().into(TrainingAttendBean.class);
+            modelMap.addAttribute("trainingAttendId", id);
+            modelMap.addAttribute("canOperator", BooleanUtil.toByte(trainingConditionCommon.usersCondition(bean.getTrainingReleaseId())));
+            page = "web/training/attend/training_attend_users::#page-wrapper";
         } else {
             config.buildDangerTip("查询错误", "未查询到实训考勤数据");
             config.dataMerging(modelMap);

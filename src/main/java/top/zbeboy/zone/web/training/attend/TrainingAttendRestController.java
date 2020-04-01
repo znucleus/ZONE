@@ -1,6 +1,9 @@
 package top.zbeboy.zone.web.training.attend;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jooq.Record;
+import org.jooq.Record10;
+import org.jooq.Record11;
 import org.jooq.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,17 +15,21 @@ import top.zbeboy.zone.service.training.*;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.training.attend.TrainingAttendBean;
+import top.zbeboy.zone.web.bean.training.attend.TrainingAttendUsersBean;
 import top.zbeboy.zone.web.bean.training.release.TrainingConfigureBean;
 import top.zbeboy.zone.web.bean.training.release.TrainingReleaseBean;
+import top.zbeboy.zone.web.bean.training.users.TrainingUsersBean;
 import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.ByteUtil;
+import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zone.web.vo.training.attend.TrainingAttendAddVo;
 import top.zbeboy.zone.web.vo.training.attend.TrainingAttendEditVo;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -267,6 +274,47 @@ public class TrainingAttendRestController {
             ajaxUtil.fail().msg("未查询到实训考勤数据");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 数据
+     *
+     * @param request 请求
+     * @return 数据
+     */
+    @GetMapping("/web/training/attend/users/data")
+    public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
+        // 前台数据标题 注：要和前台标题顺序一致，获取order用
+        List<String> headers = new ArrayList<>();
+        headers.add("#");
+        headers.add("select");
+        headers.add("realName");
+        headers.add("studentNumber");
+        headers.add("organizeName");
+        headers.add("mobile");
+        headers.add("email");
+        headers.add("sex");
+        headers.add("operate");
+        headers.add("remark");
+        headers.add("operateUser");
+        headers.add("operator");
+        DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
+        Result<Record11<String, String, Byte, String, String, String, String, String, String, String, String>>
+                records = trainingAttendUsersService.findAllByPage(dataTablesUtil);
+        List<TrainingAttendUsersBean> beans = new ArrayList<>();
+        if (Objects.nonNull(records) && records.isNotEmpty()) {
+            beans = records.into(TrainingAttendUsersBean.class);
+            beans.forEach(bean -> {
+                if (!trainingConditionCommon.usersCondition(bean.getTrainingReleaseId())) {
+                    bean.setEmail(StringUtils.overlay(bean.getEmail(), "****", 1, bean.getEmail().lastIndexOf("@")));
+                    bean.setMobile(StringUtils.overlay(bean.getMobile(), "****", 3, 6));
+                }
+            });
+        }
+        dataTablesUtil.setData(beans);
+        dataTablesUtil.setiTotalRecords(trainingAttendUsersService.countAll(dataTablesUtil));
+        dataTablesUtil.setiTotalDisplayRecords(trainingAttendUsersService.countByCondition(dataTablesUtil));
+        return new ResponseEntity<>(dataTablesUtil, HttpStatus.OK);
     }
 
 }

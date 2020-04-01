@@ -12,6 +12,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "messenge
             release: '/web/training/attend/release',
             edit: '/web/training/attend/edit',
             del: '/web/training/attend/delete',
+            users: '/web/training/attend/users/list',
             page: '/web/menu/training/attend'
         };
 
@@ -115,7 +116,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "messenge
          列表
          */
         $(tableData).delegate('.list', "click", function () {
-            $.address.value(ajax_url.list + '/' + $(this).attr('data-id'));
+            $.address.value(ajax_url.users + '/' + $(this).attr('data-id'));
         });
 
         /*
