@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.service.export.TrainingAttendUsersExport;
-import top.zbeboy.zone.service.export.TrainingUsersExport;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.training.*;
 import top.zbeboy.zone.service.upload.UploadService;
@@ -21,7 +20,6 @@ import top.zbeboy.zone.web.bean.training.attend.TrainingAttendBean;
 import top.zbeboy.zone.web.bean.training.attend.TrainingAttendUsersBean;
 import top.zbeboy.zone.web.bean.training.release.TrainingConfigureBean;
 import top.zbeboy.zone.web.bean.training.release.TrainingReleaseBean;
-import top.zbeboy.zone.web.bean.training.users.TrainingUsersBean;
 import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
@@ -467,7 +465,7 @@ public class TrainingAttendRestController {
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, "studentNumber", "asc",
                 "实训考勤数据表", Workbook.trainingFilePath());
         List<TrainingAttendUsersBean> beans = new ArrayList<>();
-        Result<Record11<String, String, Byte, String, String, String, String, String, String, String, String>>  records = trainingAttendUsersService.export(dataTablesUtil);
+        Result<Record11<String, String, Byte, String, String, String, String, String, String, String, String>> records = trainingAttendUsersService.export(dataTablesUtil);
         if (Objects.nonNull(records) && records.isNotEmpty()) {
             beans = records.into(TrainingAttendUsersBean.class);
             beans.forEach(bean -> {
