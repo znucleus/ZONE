@@ -159,6 +159,7 @@ public class TrainingAttendViewController {
         Optional<Record> record = trainingAttendService.findByIdRelation(id);
         if (record.isPresent()) {
             TrainingAttendBean bean = record.get().into(TrainingAttendBean.class);
+            modelMap.addAttribute("trainingReleaseId", bean.getTrainingReleaseId());
             modelMap.addAttribute("trainingAttendId", id);
             modelMap.addAttribute("canOperator", BooleanUtil.toByte(trainingConditionCommon.usersCondition(bean.getTrainingReleaseId())));
             page = "web/training/attend/training_attend_users::#page-wrapper";

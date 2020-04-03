@@ -11,7 +11,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "messenge
             configure_release: web_path + '/web/training/attend/configure/release',
             release: '/web/training/attend/release',
             edit: '/web/training/attend/edit',
-            del: '/web/training/attend/delete',
+            del: web_path + '/web/training/attend/delete',
             users: '/web/training/attend/users/list',
             page: '/web/menu/training/attend'
         };

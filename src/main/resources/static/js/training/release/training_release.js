@@ -9,7 +9,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             data: web_path + '/web/training/release/data',
             add: '/web/training/release/add',
             edit: '/web/training/release/edit',
-            del: '/web/training/release/delete',
+            del: web_path + '/web/training/release/delete',
             configure: '/web/training/release/configure',
             authorities: '/web/training/release/authorities',
             page: '/web/menu/training/release'

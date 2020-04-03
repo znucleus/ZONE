@@ -1,5 +1,6 @@
 package top.zbeboy.zone.service.training;
 
+import org.jooq.Record;
 import org.jooq.Record11;
 import org.jooq.Result;
 import top.zbeboy.zone.domain.tables.pojos.TrainingAttendUsers;
@@ -16,6 +17,15 @@ public interface TrainingAttendUsersService {
      * @return data
      */
     TrainingAttendUsers findById(String id);
+
+    /**
+     * 查询不在名单的学生
+     *
+     * @param trainingReleaseId 实训发布id
+     * @param trainingAttendId  考勤id
+     * @return 数据
+     */
+    Result<Record> findStudentNotExistsUsers(String trainingReleaseId, String trainingAttendId);
 
     /**
      * 分页查询
@@ -60,4 +70,19 @@ public interface TrainingAttendUsersService {
      * @param trainingAttendUsers data
      */
     void update(TrainingAttendUsers trainingAttendUsers);
+
+    /**
+     * update operate
+     *
+     * @param trainingAttendId 考勤id
+     * @param operate          状态
+     */
+    void updateOperateByTrainingAttendId(String trainingAttendId, Byte operate);
+
+    /**
+     * delete
+     *
+     * @param ids ids
+     */
+    void deleteById(List<String> ids);
 }

@@ -21,6 +21,7 @@ import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.ByteUtil;
+import top.zbeboy.zone.web.util.SmallPropsUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zone.web.vo.training.attend.TrainingAttendAddVo;
@@ -318,31 +319,27 @@ public class TrainingAttendRestController {
     /**
      * 更新状态
      *
-     * @param attendUsersId    人员id
-     * @param operate          状态
-     * @param trainingAttendId 考勤id
+     * @param attendUsersId     人员id
+     * @param operate           状态
+     * @param trainingReleaseId 发布id
      * @return true or false
      */
     @PostMapping("/web/training/attend/users/operate")
     public ResponseEntity<Map<String, Object>> operate(@RequestParam("attendUsersId") String attendUsersId, @RequestParam("operate") Byte operate,
-                                                       @RequestParam("trainingAttendId") String trainingAttendId) {
+                                                       @RequestParam("trainingReleaseId") String trainingReleaseId) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        TrainingAttend trainingAttend = trainingAttendService.findById(trainingAttendId);
-        if (Objects.nonNull(trainingAttend)) {
-            if (trainingConditionCommon.usersCondition(trainingAttend.getTrainingReleaseId())) {
-                Users users = usersService.getUserFromSession();
-                TrainingAttendUsers trainingAttendUsers = trainingAttendUsersService.findById(attendUsersId);
-                trainingAttendUsers.setOperate(operate);
-                trainingAttendUsers.setOperateUser(users.getUsername());
-                trainingAttendUsers.setOperateDate(DateTimeUtil.getNowSqlTimestamp());
 
-                trainingAttendUsersService.update(trainingAttendUsers);
-                ajaxUtil.success().msg("更新成功");
-            } else {
-                ajaxUtil.fail().msg("您无权限操作");
-            }
+        if (trainingConditionCommon.usersCondition(trainingReleaseId)) {
+            Users users = usersService.getUserFromSession();
+            TrainingAttendUsers trainingAttendUsers = trainingAttendUsersService.findById(attendUsersId);
+            trainingAttendUsers.setOperate(operate);
+            trainingAttendUsers.setOperateUser(users.getUsername());
+            trainingAttendUsers.setOperateDate(DateTimeUtil.getNowSqlTimestamp());
+
+            trainingAttendUsersService.update(trainingAttendUsers);
+            ajaxUtil.success().msg("更新成功");
         } else {
-            ajaxUtil.fail().msg("未查询到实训考勤数据");
+            ajaxUtil.fail().msg("您无权限操作");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
@@ -356,21 +353,96 @@ public class TrainingAttendRestController {
      */
     @PostMapping("/web/training/attend/users/remark")
     public ResponseEntity<Map<String, Object>> remark(@RequestParam("attendUsersId") String attendUsersId, String remark,
-                                                      @RequestParam("trainingAttendId") String trainingAttendId) {
+                                                      @RequestParam("trainingReleaseId") String trainingReleaseId) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        TrainingAttend trainingAttend = trainingAttendService.findById(trainingAttendId);
-        if (Objects.nonNull(trainingAttend)) {
-            if (trainingConditionCommon.usersCondition(trainingAttend.getTrainingReleaseId())) {
-                TrainingAttendUsers trainingAttendUsers = trainingAttendUsersService.findById(attendUsersId);
-                trainingAttendUsers.setRemark(remark);
+        if (trainingConditionCommon.usersCondition(trainingReleaseId)) {
+            TrainingAttendUsers trainingAttendUsers = trainingAttendUsersService.findById(attendUsersId);
+            trainingAttendUsers.setRemark(remark);
 
-                trainingAttendUsersService.update(trainingAttendUsers);
-                ajaxUtil.success().msg("更新成功");
+            trainingAttendUsersService.update(trainingAttendUsers);
+            ajaxUtil.success().msg("更新成功");
+        } else {
+            ajaxUtil.fail().msg("您无权限操作");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 批量删除
+     *
+     * @param trainingReleaseId 发布id
+     * @param attendUsersIds    ids
+     * @return true注销成功
+     */
+    @PostMapping("/web/training/attend/users/delete")
+    public ResponseEntity<Map<String, Object>> delete(@RequestParam("trainingReleaseId") String trainingReleaseId, String attendUsersIds) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (StringUtils.isNotBlank(attendUsersIds)) {
+            if (trainingConditionCommon.usersCondition(trainingReleaseId)) {
+                trainingAttendUsersService.deleteById(SmallPropsUtil.StringIdsToStringList(attendUsersIds));
+                ajaxUtil.success().msg("删除成功");
             } else {
                 ajaxUtil.fail().msg("您无权限操作");
             }
         } else {
-            ajaxUtil.fail().msg("未查询到实训考勤数据");
+            ajaxUtil.fail().msg("请选择学生");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 更新全勤
+     *
+     * @param trainingReleaseId 发布id
+     * @param trainingAttendId  考勤id
+     * @return true or false
+     */
+    @PostMapping("/web/training/attend/users/all_ok")
+    public ResponseEntity<Map<String, Object>> allOk(@RequestParam("trainingReleaseId") String trainingReleaseId, @RequestParam("trainingAttendId") String trainingAttendId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (trainingConditionCommon.usersCondition(trainingReleaseId)) {
+            trainingAttendUsersService.updateOperateByTrainingAttendId(trainingAttendId, ByteUtil.toByte(3));
+            ajaxUtil.success().msg("更新成功");
+        } else {
+            ajaxUtil.fail().msg("您无权限操作");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 名单重置
+     *
+     * @param trainingReleaseId 实训发布id
+     * @param trainingAttendId  考勤id
+     * @return true or false
+     */
+    @PostMapping("/web/training/attend/users/reset")
+    public ResponseEntity<Map<String, Object>> reset(@RequestParam("trainingReleaseId") String trainingReleaseId, @RequestParam("trainingAttendId") String trainingAttendId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (trainingConditionCommon.usersCondition(trainingReleaseId)) {
+            Result<Record> records = trainingAttendUsersService.findStudentNotExistsUsers(trainingReleaseId, trainingAttendId);
+            if (records.isNotEmpty()) {
+                Users user = usersService.getUserFromSession();
+                List<TrainingUsers> trainingUsers = records.into(TrainingUsers.class);
+                List<TrainingAttendUsers> trainingAttendUsers = new ArrayList<>();
+                for (TrainingUsers users : trainingUsers) {
+                    TrainingAttendUsers au = new TrainingAttendUsers();
+                    au.setAttendUsersId(UUIDUtil.getUUID());
+                    au.setTrainingAttendId(trainingAttendId);
+                    au.setTrainingUsersId(users.getTrainingUsersId());
+                    au.setOperate(ByteUtil.toByte(0));
+                    au.setOperateDate(DateTimeUtil.getNowSqlTimestamp());
+                    au.setOperateUser(user.getUsername());
+
+                    trainingAttendUsers.add(au);
+                }
+                trainingAttendUsersService.batchSave(trainingAttendUsers);
+            }
+
+            ajaxUtil.success().msg("重置成功");
+
+        } else {
+            ajaxUtil.fail().msg("您无权限操作");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }

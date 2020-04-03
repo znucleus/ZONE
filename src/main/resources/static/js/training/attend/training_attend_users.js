@@ -4,6 +4,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
     function ($, _, tools, Handlebars, navActive, Swal) {
 
         var page_param = {
+            paramTrainingReleaseId: $('#paramTrainingReleaseId').val(),
             paramTrainingAttendId: $('#paramTrainingAttendId').val(),
             canOperator: $('#canOperator').val()
         };
@@ -36,8 +37,9 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 export_data_url: web_path + '/web/training/attend/users/export',
                 operate: web_path + '/web/training/attend/users/operate',
                 del: web_path + '/web/training/attend/users/delete',
-                remark: '/web/training/attend/users/remark',
-                reset: '/web/training/attend/users/reset',
+                remark: web_path + '/web/training/attend/users/remark',
+                reset: web_path + '/web/training/attend/users/reset',
+                all_ok: web_path + '/web/training/attend/users/all_ok',
                 page: '/web/menu/training/attend'
             };
         }
@@ -355,6 +357,21 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             myTable.ajax.reload();
         });
 
+        $('#all_ok').click(function () {
+            Swal.fire({
+                title: "确定全勤吗？",
+                text: "全勤！",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#2998dd',
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                preConfirm: function () {
+                    sendAllOkAjax();
+                }
+            });
+        });
+
         /*
          批量删除
          */
@@ -435,7 +452,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             $.ajax({
                 type: 'POST',
                 url: getAjaxUrl().del,
-                data: {attendUsersIds: attendUsersId, trainingAttendId: page_param.paramTrainingAttendId},
+                data: {attendUsersIds: attendUsersId, trainingReleaseId: page_param.paramTrainingReleaseId},
                 success: function (data) {
                     Messenger().post({
                         message: data.msg,
@@ -464,7 +481,42 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             $.ajax({
                 type: 'POST',
                 url: getAjaxUrl().reset,
-                data: {trainingAttendId: page_param.paramTrainingAttendId},
+                data: {
+                    trainingAttendId: page_param.paramTrainingAttendId,
+                    trainingReleaseId: page_param.paramTrainingReleaseId
+                },
+                success: function (data) {
+                    Messenger().post({
+                        message: data.msg,
+                        type: data.state ? 'success' : 'error',
+                        showCloseButton: true
+                    });
+
+                    if (data.state) {
+                        myTable.ajax.reload();
+                    }
+                },
+                error: function (XMLHttpRequest) {
+                    Messenger().post({
+                        message: 'Request error : ' + XMLHttpRequest.status + " " + XMLHttpRequest.statusText,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        }
+
+        /**
+         * 全勤ajax
+         */
+        function sendAllOkAjax() {
+            $.ajax({
+                type: 'POST',
+                url: getAjaxUrl().all_ok,
+                data: {
+                    trainingAttendId: page_param.paramTrainingAttendId,
+                    trainingReleaseId: page_param.paramTrainingReleaseId
+                },
                 success: function (data) {
                     Messenger().post({
                         message: data.msg,
@@ -503,7 +555,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 data: {
                     attendUsersId: $('#editAttendUsersId').val(),
                     remark: $('#editRemark').val(),
-                    trainingAttendId: page_param.paramTrainingAttendId
+                    trainingReleaseId: page_param.paramTrainingReleaseId
                 },
                 success: function (data) {
                     tools.buttonEndLoading(button_id.toRemark.id, button_id.toRemark.text);
@@ -591,7 +643,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 data: {
                     attendUsersId: $('#operateAttendUsersId').val(),
                     operate: operate,
-                    trainingAttendId: page_param.paramTrainingAttendId
+                    trainingReleaseId: page_param.paramTrainingReleaseId
                 },
                 success: function (data) {
                     Messenger().post({

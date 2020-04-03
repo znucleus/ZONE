@@ -35,9 +35,9 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 data: web_path + '/web/training/users/data',
                 export_data_url: web_path + '/web/training/users/export',
                 del: web_path + '/web/training/users/delete',
-                save: '/web/training/users/save',
-                remark: '/web/training/users/remark',
-                reset: '/web/training/users/reset',
+                save: web_path + '/web/training/users/save',
+                remark: web_path + '/web/training/users/remark',
+                reset: web_path + '/web/training/users/reset',
                 page: '/web/menu/training/users'
             };
         }

@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zone.domain.tables.daos.TrainingAttendUsersDao;
 import top.zbeboy.zone.domain.tables.pojos.TrainingAttendUsers;
+import top.zbeboy.zone.domain.tables.records.TrainingAttendUsersRecord;
+import top.zbeboy.zone.domain.tables.records.TrainingUsersRecord;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zone.service.util.SQLQueryUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
@@ -37,6 +39,16 @@ public class TrainingAttendUsersServiceImpl implements TrainingAttendUsersServic
     @Override
     public TrainingAttendUsers findById(String id) {
         return trainingAttendUsersDao.findById(id);
+    }
+
+    @Override
+    public Result<Record> findStudentNotExistsUsers(String trainingReleaseId, String trainingAttendId) {
+        Select<TrainingAttendUsersRecord> select = create.selectFrom(TRAINING_ATTEND_USERS)
+                .where(TRAINING_USERS.TRAINING_USERS_ID.eq(TRAINING_ATTEND_USERS.TRAINING_USERS_ID).and(TRAINING_ATTEND_USERS.TRAINING_ATTEND_ID.eq(trainingAttendId)));
+        return create.select()
+                .from(TRAINING_USERS)
+                .where(TRAINING_USERS.TRAINING_RELEASE_ID.eq(trainingReleaseId).andNotExists(select))
+                .fetch();
     }
 
     @Override
@@ -116,6 +128,19 @@ public class TrainingAttendUsersServiceImpl implements TrainingAttendUsersServic
     @Override
     public void update(TrainingAttendUsers trainingAttendUsers) {
         trainingAttendUsersDao.update(trainingAttendUsers);
+    }
+
+    @Override
+    public void updateOperateByTrainingAttendId(String trainingAttendId, Byte operate) {
+        create.update(TRAINING_ATTEND_USERS)
+                .set(TRAINING_ATTEND_USERS.OPERATE, operate)
+                .where(TRAINING_ATTEND_USERS.TRAINING_ATTEND_ID.eq(trainingAttendId))
+                .execute();
+    }
+
+    @Override
+    public void deleteById(List<String> ids) {
+        trainingAttendUsersDao.deleteById(ids);
     }
 
     private Result<Record11<String, String, Byte, String, String, String, String, String, String, String, String>> queryAllByPage(SelectOnConditionStep<Record11<String, String, Byte, String, String, String, String, String, String, String, String>> selectOnConditionStep, DataTablesUtil paginationUtil, boolean useExtraCondition) {
