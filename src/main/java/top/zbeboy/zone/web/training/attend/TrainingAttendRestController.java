@@ -8,15 +8,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
+import top.zbeboy.zone.service.export.TrainingAttendUsersExport;
+import top.zbeboy.zone.service.export.TrainingUsersExport;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.training.*;
+import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.training.attend.TrainingAttendBean;
 import top.zbeboy.zone.web.bean.training.attend.TrainingAttendUsersBean;
 import top.zbeboy.zone.web.bean.training.release.TrainingConfigureBean;
 import top.zbeboy.zone.web.bean.training.release.TrainingReleaseBean;
+import top.zbeboy.zone.web.bean.training.users.TrainingUsersBean;
 import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
@@ -29,7 +34,9 @@ import top.zbeboy.zone.web.vo.training.attend.TrainingAttendEditVo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +65,9 @@ public class TrainingAttendRestController {
 
     @Resource
     private UsersService usersService;
+
+    @Resource
+    private UploadService uploadService;
 
     /**
      * 数据
@@ -445,6 +455,34 @@ public class TrainingAttendRestController {
             ajaxUtil.fail().msg("您无权限操作");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 导出 名单 数据
+     *
+     * @param request 请求
+     */
+    @GetMapping("/web/training/attend/users/export")
+    public void export(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        DataTablesUtil dataTablesUtil = new DataTablesUtil(request, "studentNumber", "asc",
+                "实训考勤数据表", Workbook.trainingFilePath());
+        List<TrainingAttendUsersBean> beans = new ArrayList<>();
+        Result<Record11<String, String, Byte, String, String, String, String, String, String, String, String>>  records = trainingAttendUsersService.export(dataTablesUtil);
+        if (Objects.nonNull(records) && records.isNotEmpty()) {
+            beans = records.into(TrainingAttendUsersBean.class);
+            beans.forEach(bean -> {
+                if (!trainingConditionCommon.usersCondition(bean.getTrainingReleaseId())) {
+                    bean.setEmail(StringUtils.overlay(bean.getEmail(), "****", 1, bean.getEmail().lastIndexOf("@")));
+                    bean.setMobile(StringUtils.overlay(bean.getMobile(), "****", 3, 6));
+                }
+            });
+        }
+
+        TrainingAttendUsersExport export = new TrainingAttendUsersExport(beans);
+        DataTablesUtil.ExportInfo exportInfo = dataTablesUtil.getExportInfo();
+        if (export.exportExcel(exportInfo.getLastPath(), exportInfo.getFileName(), exportInfo.getExt())) {
+            uploadService.download(exportInfo.getFileName(), exportInfo.getFilePath(), response, request);
+        }
     }
 
 }
