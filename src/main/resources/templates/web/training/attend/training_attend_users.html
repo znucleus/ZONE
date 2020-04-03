@@ -93,6 +93,56 @@
         </div>
     </div>
 
+    <!-- 状态Modal -->
+    <div class="modal fade" id="operateModal" tabindex="-1" role="dialog"
+         aria-labelledby="operateModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="operateModalLabel">状态</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="mg-t-20" id="operate_form">
+                        <input type="hidden" id="operateAttendUsersId" name="attendUsersId" />
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label for="student">学生</label>
+                                <input class="form-control" id="student" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label for="operate">当前状态</label>
+                                <input class="form-control" id="operate" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12 text-center">
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-danger btn-sm" id="absent">缺席
+                                    </button>
+                                    <button type="button" class="btn btn-info btn-sm" id="leave">请假
+                                    </button>
+                                    <button type="button" class="btn btn-warning btn-sm" id="late">迟到
+                                    </button>
+                                    <button type="button" class="btn btn-success btn-sm" id="sign">正常
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- 备注Modal -->
     <div class="modal fade" id="remarkModal" tabindex="-1" role="dialog"
          aria-labelledby="remarkModalLabel"

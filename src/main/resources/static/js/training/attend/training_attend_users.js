@@ -34,6 +34,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             return {
                 data: web_path + '/web/training/attend/users/data',
                 export_data_url: web_path + '/web/training/attend/users/export',
+                operate: web_path + '/web/training/attend/users/operate',
                 del: web_path + '/web/training/attend/users/delete',
                 remark: '/web/training/attend/users/remark',
                 reset: '/web/training/attend/users/reset',
@@ -201,6 +202,10 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 "t" +
                 "<'row'<'col-sm-5'i><'col-sm-7'p>>",
             initComplete: function () {
+                tableElement.delegate('.operate', "click", function () {
+                    operate($(this).attr('data-id'), $(this).attr('data-student'), $(this).attr('data-operate'));
+                });
+
                 tableElement.delegate('.del', "click", function () {
                     training_del($(this).attr('data-id'), $(this).attr('data-student'));
                 });
@@ -217,7 +222,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         var global_button = '';
         if (Number(page_param.canOperator) === 1) {
             global_button += '<button type="button" id="all_ok" class="btn btn-outline-primary btn-sm"><i class="fa fa-star-o"></i>全勤</button>' +
-            '  <button type="button" id="training_dels" class="btn btn-outline-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>' +
+                '  <button type="button" id="training_dels" class="btn btn-outline-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>' +
                 '  <button type="button" id="training_reset" class="btn btn-outline-warning btn-sm"><i class="fa fa-reply-all"></i>重置</button>';
         }
 
@@ -495,7 +500,11 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             $.ajax({
                 type: 'POST',
                 url: getAjaxUrl().remark,
-                data: $('#remark_form').serialize(),
+                data: {
+                    attendUsersId: $('#editAttendUsersId').val(),
+                    remark: $('#editRemark').val(),
+                    trainingAttendId: page_param.paramTrainingAttendId
+                },
                 success: function (data) {
                     tools.buttonEndLoading(button_id.toRemark.id, button_id.toRemark.text);
                     Messenger().post({
@@ -539,4 +548,70 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             };
             window.location.href = encodeURI(getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&export_info=" + JSON.stringify(exportFile));
         });
+
+        /*
+       状态
+       */
+        function operate(attendUsersId, student, operate) {
+            $('#student').val(student);
+            var v = Number(operate);
+            if (v === 0) {
+                $('#operate').val('缺席');
+            } else if (v === 1) {
+                $('#operate').val('请假');
+            } else if (v === 2) {
+                $('#operate').val('迟到');
+            } else if (v === 3) {
+                $('#operate').val('正常');
+            }
+            $('#operateAttendUsersId').val(attendUsersId);
+            $('#operateModal').modal('show');
+        }
+
+        $('#absent').click(function () {
+            toOperate(0);
+        });
+
+        $('#leave').click(function () {
+            toOperate(1);
+        });
+
+        $('#late').click(function () {
+            toOperate(2);
+        });
+
+        $('#sign').click(function () {
+            toOperate(3);
+        });
+
+        function toOperate(operate) {
+            $.ajax({
+                type: 'POST',
+                url: getAjaxUrl().operate,
+                data: {
+                    attendUsersId: $('#operateAttendUsersId').val(),
+                    operate: operate,
+                    trainingAttendId: page_param.paramTrainingAttendId
+                },
+                success: function (data) {
+                    Messenger().post({
+                        message: data.msg,
+                        type: data.state ? 'success' : 'error',
+                        showCloseButton: true
+                    });
+
+                    if (data.state) {
+                        $('#operateModal').modal('hide');
+                        myTable.ajax.reload();
+                    }
+                },
+                error: function (XMLHttpRequest) {
+                    Messenger().post({
+                        message: 'Request error : ' + XMLHttpRequest.status + " " + XMLHttpRequest.statusText,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        }
     });

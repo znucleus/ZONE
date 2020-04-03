@@ -10,6 +10,14 @@ import java.util.List;
 public interface TrainingAttendUsersService {
 
     /**
+     * Query by id
+     *
+     * @param id primary key
+     * @return data
+     */
+    TrainingAttendUsers findById(String id);
+
+    /**
      * 分页查询
      *
      * @param dataTablesUtil 工具类
@@ -45,4 +53,11 @@ public interface TrainingAttendUsersService {
      * @param trainingAttendUsers 数据
      */
     void batchSave(List<TrainingAttendUsers> trainingAttendUsers);
+
+    /**
+     * update
+     *
+     * @param trainingAttendUsers data
+     */
+    void update(TrainingAttendUsers trainingAttendUsers);
 }

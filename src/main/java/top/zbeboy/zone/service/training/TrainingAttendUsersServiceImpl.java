@@ -35,6 +35,11 @@ public class TrainingAttendUsersServiceImpl implements TrainingAttendUsersServic
     }
 
     @Override
+    public TrainingAttendUsers findById(String id) {
+        return trainingAttendUsersDao.findById(id);
+    }
+
+    @Override
     public Result<Record11<String, String, Byte, String, String, String, String, String, String, String, String>> findAllByPage(DataTablesUtil dataTablesUtil) {
         SelectOnConditionStep<Record11<String, String, Byte, String, String, String, String, String, String, String, String>> selectOnConditionStep =
                 create.select(TRAINING_ATTEND_USERS.ATTEND_USERS_ID, TRAINING_ATTEND_USERS.OPERATE_USER,
@@ -106,6 +111,11 @@ public class TrainingAttendUsersServiceImpl implements TrainingAttendUsersServic
     @Override
     public void batchSave(List<TrainingAttendUsers> trainingAttendUsers) {
         trainingAttendUsersDao.insert(trainingAttendUsers);
+    }
+
+    @Override
+    public void update(TrainingAttendUsers trainingAttendUsers) {
+        trainingAttendUsersDao.update(trainingAttendUsers);
     }
 
     private Result<Record11<String, String, Byte, String, String, String, String, String, String, String, String>> queryAllByPage(SelectOnConditionStep<Record11<String, String, Byte, String, String, String, String, String, String, String, String>> selectOnConditionStep, DataTablesUtil paginationUtil, boolean useExtraCondition) {
