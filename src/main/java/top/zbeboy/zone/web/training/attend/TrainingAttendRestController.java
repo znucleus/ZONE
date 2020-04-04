@@ -12,6 +12,7 @@ import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.domain.tables.records.StudentRecord;
 import top.zbeboy.zone.service.data.StudentService;
+import top.zbeboy.zone.service.export.TrainingAttendSituationExport;
 import top.zbeboy.zone.service.export.TrainingAttendUsersExport;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
@@ -555,6 +556,28 @@ public class TrainingAttendRestController {
         dataTablesUtil.setiTotalRecords(trainingAttendSituationService.countAll(dataTablesUtil));
         dataTablesUtil.setiTotalDisplayRecords(trainingAttendSituationService.countByCondition(dataTablesUtil));
         return new ResponseEntity<>(dataTablesUtil, HttpStatus.OK);
+    }
+
+    /**
+     * 导出 考勤情况 数据
+     *
+     * @param request 请求
+     */
+    @GetMapping("/web/training/attend/situation/export")
+    public void situationExport(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        DataTablesUtil dataTablesUtil = new DataTablesUtil(request, "studentNumber", "asc",
+                "实训考勤情况数据表", Workbook.trainingFilePath());
+        List<TrainingAttendUsersBean> beans = new ArrayList<>();
+        Result<Record> records = trainingAttendSituationService.export(dataTablesUtil);
+        if (Objects.nonNull(records) && records.isNotEmpty()) {
+            beans = records.into(TrainingAttendUsersBean.class);
+        }
+
+        TrainingAttendSituationExport export = new TrainingAttendSituationExport(beans);
+        DataTablesUtil.ExportInfo exportInfo = dataTablesUtil.getExportInfo();
+        if (export.exportExcel(exportInfo.getLastPath(), exportInfo.getFileName(), exportInfo.getExt())) {
+            uploadService.download(exportInfo.getFileName(), exportInfo.getFilePath(), response, request);
+        }
     }
 
 }
