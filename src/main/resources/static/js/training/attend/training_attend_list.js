@@ -13,7 +13,8 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "messenge
             edit: '/web/training/attend/edit',
             del: web_path + '/web/training/attend/delete',
             users: '/web/training/attend/users/list',
-            my:'/web/training/attend/my',
+            my: '/web/training/attend/my',
+            situation: '/web/training/attend/situation',
             page: '/web/menu/training/attend'
         };
 
@@ -42,7 +43,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "messenge
         web storage key.
         */
         var webStorageKey = {
-            ATTEND_DATE: 'TRAINING_ATTEND_DATE_SEARCH'
+            ATTEND_DATE: 'TRAINING_ATTEND_DATE_SEARCH' + page_param.paramTrainingReleaseId
         };
 
         /*
@@ -342,6 +343,10 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "messenge
 
         $('#myAttend').click(function () {
             $.address.value(ajax_url.my + '/' + page_param.paramTrainingReleaseId);
+        });
+
+        $('#attendSituation').click(function () {
+            $.address.value(ajax_url.situation + '/' + page_param.paramTrainingReleaseId);
         });
 
     });

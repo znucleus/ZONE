@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jooq.*;
+import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -29,16 +30,18 @@ public class TrainingAttendMyServiceImpl implements TrainingAttendMyService, Pag
 
     @Override
     public Result<Record> findAll(TableSawUtil paginationUtil) {
-        SelectOnConditionStep<Record> selectOnConditionStep = create.select()
-                .from(TRAINING_ATTEND)
-                .join(TRAINING_ATTEND_USERS)
-                .on(TRAINING_ATTEND.TRAINING_ATTEND_ID.eq(TRAINING_ATTEND_USERS.TRAINING_ATTEND_ID))
-                .join(TRAINING_USERS)
-                .on(TRAINING_USERS.TRAINING_USERS_ID.eq(TRAINING_ATTEND_USERS.TRAINING_USERS_ID))
-                .leftJoin(STUDENT)
-                .on(TRAINING_USERS.STUDENT_ID.eq(STUDENT.STUDENT_ID))
-                .leftJoin(USERS)
-                .on(STUDENT.USERNAME.eq(USERS.USERNAME));
+        SelectOnConditionStep<Record> selectOnConditionStep =
+                create.select()
+                        .from(TRAINING_USERS)
+                        .leftJoin(STUDENT)
+                        .on(TRAINING_USERS.STUDENT_ID.eq(STUDENT.STUDENT_ID))
+                        .leftJoin(USERS)
+                        .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                        .leftJoin(TRAINING_ATTEND)
+                        .on(TRAINING_ATTEND.TRAINING_RELEASE_ID.eq(TRAINING_USERS.TRAINING_RELEASE_ID))
+                        .leftJoin(create.selectFrom(TRAINING_ATTEND_USERS).asTable("OUTER"))
+                        .on(DSL.field("OUTER.training_users_id").eq(TRAINING_USERS.TRAINING_USERS_ID)
+                                .and(DSL.field("OUTER.training_attend_id").eq(TRAINING_ATTEND.TRAINING_ATTEND_ID)));
         return queryAll(selectOnConditionStep, paginationUtil, false);
     }
 
@@ -68,9 +71,9 @@ public class TrainingAttendMyServiceImpl implements TrainingAttendMyService, Pag
             if (StringUtils.isNotBlank(operate)) {
                 Byte operateByte = NumberUtils.toByte(operate);
                 if (Objects.isNull(a)) {
-                    a = TRAINING_ATTEND_USERS.OPERATE.eq(operateByte);
+                    a = DSL.field("OUTER.operate").eq(operateByte);
                 } else {
-                    a = a.and(TRAINING_ATTEND_USERS.OPERATE.eq(operateByte));
+                    a = a.and(DSL.field("OUTER.operate").eq(operateByte));
                 }
             }
 

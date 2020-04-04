@@ -118,7 +118,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "tablesaw", "jquery.addr
         }
 
         function operate(operate) {
-            var v = '';
+            var v = '不存在';
             if (operate === 0) {
                 v = '<span class="text-danger">缺席';
             } else if (operate === 1) {

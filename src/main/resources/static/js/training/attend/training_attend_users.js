@@ -23,9 +23,9 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         web storage key.
         */
         var webStorageKey = {
-            REAL_NAME: 'TRAINING_ATTEND_USERS_REAL_NAME_SEARCH',
-            STUDENT_NUMBER: 'TRAINING_ATTEND_USERS_STUDENT_NUMBER_SEARCH',
-            OPERATE: 'TRAINING_ATTEND_USERS_OPERATE_SEARCH'
+            REAL_NAME: 'TRAINING_ATTEND_USERS_REAL_NAME_SEARCH' + page_param.paramTrainingReleaseId,
+            STUDENT_NUMBER: 'TRAINING_ATTEND_USERS_STUDENT_NUMBER_SEARCH' + page_param.paramTrainingReleaseId,
+            OPERATE: 'TRAINING_ATTEND_USERS_OPERATE_SEARCH' + page_param.paramTrainingReleaseId
         };
 
         /*

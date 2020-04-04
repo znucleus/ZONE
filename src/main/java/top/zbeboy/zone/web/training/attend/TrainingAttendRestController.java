@@ -66,6 +66,9 @@ public class TrainingAttendRestController {
     private TrainingAttendMyService trainingAttendMyService;
 
     @Resource
+    private TrainingAttendSituationService trainingAttendSituationService;
+
+    @Resource
     private UsersService usersService;
 
     @Resource
@@ -522,6 +525,36 @@ public class TrainingAttendRestController {
         tableSawUtil.setTotalSize(beans.size());
         ajaxUtil.success().list(beans).page(tableSawUtil).msg("获取数据成功");
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 数据
+     *
+     * @param request 请求
+     * @return 数据
+     */
+    @GetMapping("/web/training/attend/situation/data")
+    public ResponseEntity<DataTablesUtil> situationData(HttpServletRequest request) {
+        // 前台数据标题 注：要和前台标题顺序一致，获取order用
+        List<String> headers = new ArrayList<>();
+        headers.add("realName");
+        headers.add("studentNumber");
+        headers.add("attendDate");
+        headers.add("organizeName");
+        headers.add("sex");
+        headers.add("operate");
+        headers.add("remark");
+        DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
+        Result<Record>
+                records = trainingAttendSituationService.findAllByPage(dataTablesUtil);
+        List<TrainingAttendUsersBean> beans = new ArrayList<>();
+        if (Objects.nonNull(records) && records.isNotEmpty()) {
+            beans = records.into(TrainingAttendUsersBean.class);
+        }
+        dataTablesUtil.setData(beans);
+        dataTablesUtil.setiTotalRecords(trainingAttendSituationService.countAll(dataTablesUtil));
+        dataTablesUtil.setiTotalDisplayRecords(trainingAttendSituationService.countByCondition(dataTablesUtil));
+        return new ResponseEntity<>(dataTablesUtil, HttpStatus.OK);
     }
 
 }

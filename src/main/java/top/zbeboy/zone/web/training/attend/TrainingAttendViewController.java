@@ -208,4 +208,34 @@ public class TrainingAttendViewController {
         }
         return page;
     }
+
+    /**
+     * 考勤情况
+     *
+     * @param id       id
+     * @param modelMap 页面对象
+     * @return 页面
+     */
+    @GetMapping("/web/training/attend/situation/{id}")
+    public String situation(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        if (trainingConditionCommon.usersCondition(id)) {
+            Optional<Record> trainingReleaseRecord = trainingReleaseService.findByIdRelation(id);
+            if (trainingReleaseRecord.isPresent()) {
+                TrainingReleaseBean bean = trainingReleaseRecord.get().into(TrainingReleaseBean.class);
+                modelMap.addAttribute("trainingReleaseId", bean.getTrainingReleaseId());
+                page = "web/training/attend/training_attend_situation::#page-wrapper";
+            } else {
+                config.buildDangerTip("查询错误", "未查询到实训发布数据");
+                config.dataMerging(modelMap);
+                page = "inline_tip::#page-wrapper";
+            }
+        } else {
+            config.buildWarningTip("操作警告", "您无权限操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
 }
