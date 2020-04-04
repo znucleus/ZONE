@@ -7,6 +7,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zone.config.Workbook;
+import top.zbeboy.zone.domain.tables.pojos.TrainingRelease;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.service.platform.UsersService;
@@ -165,6 +166,43 @@ public class TrainingAttendViewController {
             page = "web/training/attend/training_attend_users::#page-wrapper";
         } else {
             config.buildDangerTip("查询错误", "未查询到实训考勤数据");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
+
+    /**
+     * 我的考勤
+     *
+     * @param id       id
+     * @param modelMap 页面对象
+     * @return 页面
+     */
+    @GetMapping("/web/training/attend/my/{id}")
+    public String my(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        Users users = usersService.getUserFromSession();
+        UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
+        if (Objects.nonNull(usersType)) {
+            if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
+                TrainingRelease trainingRelease = trainingReleaseService.findById(id);
+                if (Objects.nonNull(trainingRelease)) {
+                    modelMap.addAttribute("trainingReleaseId", id);
+                    page = "web/training/attend/training_attend_my::#page-wrapper";
+                } else {
+                    config.buildDangerTip("查询错误", "未查询到实训发布数据");
+                    config.dataMerging(modelMap);
+                    page = "inline_tip::#page-wrapper";
+                }
+            } else {
+                config.buildDangerTip("查询错误", "未查询到学生信息");
+                config.dataMerging(modelMap);
+                page = "inline_tip::#page-wrapper";
+            }
+        } else {
+            config.buildDangerTip("查询错误", "未查询到注册类型信息");
             config.dataMerging(modelMap);
             page = "inline_tip::#page-wrapper";
         }

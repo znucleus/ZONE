@@ -10,8 +10,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
+import top.zbeboy.zone.domain.tables.records.StudentRecord;
+import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.export.TrainingAttendUsersExport;
 import top.zbeboy.zone.service.platform.UsersService;
+import top.zbeboy.zone.service.platform.UsersTypeService;
 import top.zbeboy.zone.service.training.*;
 import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
@@ -27,6 +30,7 @@ import top.zbeboy.zone.web.util.ByteUtil;
 import top.zbeboy.zone.web.util.SmallPropsUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
+import top.zbeboy.zone.web.util.pagination.TableSawUtil;
 import top.zbeboy.zone.web.vo.training.attend.TrainingAttendAddVo;
 import top.zbeboy.zone.web.vo.training.attend.TrainingAttendEditVo;
 
@@ -35,10 +39,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 public class TrainingAttendRestController {
@@ -62,10 +63,19 @@ public class TrainingAttendRestController {
     private TrainingAttendUsersService trainingAttendUsersService;
 
     @Resource
+    private TrainingAttendMyService trainingAttendMyService;
+
+    @Resource
     private UsersService usersService;
 
     @Resource
     private UploadService uploadService;
+
+    @Resource
+    private UsersTypeService usersTypeService;
+
+    @Resource
+    private StudentService studentService;
 
     /**
      * 数据
@@ -481,6 +491,37 @@ public class TrainingAttendRestController {
         if (export.exportExcel(exportInfo.getLastPath(), exportInfo.getFileName(), exportInfo.getExt())) {
             uploadService.download(exportInfo.getFileName(), exportInfo.getFilePath(), response, request);
         }
+    }
+
+    /**
+     * 数据
+     *
+     * @param tableSawUtil 请求
+     * @return 数据
+     */
+    @GetMapping("/web/training/attend/my/data")
+    public ResponseEntity<Map<String, Object>> myData(TableSawUtil tableSawUtil) {
+        AjaxUtil<TrainingAttendUsersBean> ajaxUtil = AjaxUtil.of();
+        List<TrainingAttendUsersBean> beans = new ArrayList<>();
+        Users users = usersService.getUserFromSession();
+        UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
+        if (Objects.nonNull(usersType)) {
+            if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
+                Optional<StudentRecord> record = studentService.findByUsername(users.getUsername());
+                if (record.isPresent()) {
+                    int studentId = record.get().getStudentId();
+                    tableSawUtil.setSearch("studentId", studentId);
+                    Result<Record> records = trainingAttendMyService.findAll(tableSawUtil);
+                    if (records.isNotEmpty()) {
+                        beans = records.into(TrainingAttendUsersBean.class);
+                    }
+                }
+            }
+        }
+
+        tableSawUtil.setTotalSize(beans.size());
+        ajaxUtil.success().list(beans).page(tableSawUtil).msg("获取数据成功");
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
 }

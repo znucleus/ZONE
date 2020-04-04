@@ -2,6 +2,8 @@ package top.zbeboy.zone.web.bean.training.attend;
 
 import top.zbeboy.zone.domain.tables.pojos.TrainingAttendUsers;
 
+import java.sql.Date;
+
 public class TrainingAttendUsersBean extends TrainingAttendUsers {
     private String realName;
     private String studentNumber;
@@ -10,6 +12,8 @@ public class TrainingAttendUsersBean extends TrainingAttendUsers {
     private String email;
     private String sex;
     private String trainingReleaseId;
+
+    private Date attendDate;
 
     public String getRealName() {
         return realName;
@@ -65,5 +69,13 @@ public class TrainingAttendUsersBean extends TrainingAttendUsers {
 
     public void setTrainingReleaseId(String trainingReleaseId) {
         this.trainingReleaseId = trainingReleaseId;
+    }
+
+    public Date getAttendDate() {
+        return attendDate;
+    }
+
+    public void setAttendDate(Date attendDate) {
+        this.attendDate = attendDate;
     }
 }
