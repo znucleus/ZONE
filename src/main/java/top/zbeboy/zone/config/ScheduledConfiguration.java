@@ -6,6 +6,8 @@ import org.jooq.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import top.zbeboy.zone.domain.tables.pojos.*;
@@ -62,6 +64,9 @@ import java.util.Objects;
 public class ScheduledConfiguration {
 
     private final Logger log = LoggerFactory.getLogger(ScheduledConfiguration.class);
+
+    @Resource
+    private Environment env;
 
     @Resource
     private UsersService usersService;
@@ -202,42 +207,44 @@ public class ScheduledConfiguration {
      */
     @Scheduled(cron = "0 30 00 * * ?") // 每天 晚间12点30分
     public void generateTrainingAttend() {
-        Result<Record> records = trainingConfigureService.findIsAuto(ByteUtil.toByte(DateTimeUtil.getNowDayOfWeek()));
-        if (records.isNotEmpty()) {
-            List<TrainingConfigure> trainingConfigures = records.into(TrainingConfigure.class);
-            for (TrainingConfigure trainingConfigure : trainingConfigures) {
-                TrainingAttend trainingAttend = new TrainingAttend();
-                String trainingAttendId = UUIDUtil.getUUID();
-                trainingAttend.setTrainingAttendId(trainingAttendId);
-                trainingAttend.setTrainingReleaseId(trainingConfigure.getTrainingReleaseId());
-                trainingAttend.setAttendDate(DateTimeUtil.getNowSqlDate());
-                trainingAttend.setAttendStartTime(trainingConfigure.getStartTime());
-                trainingAttend.setAttendEndTime(trainingConfigure.getEndTime());
-                trainingAttend.setAttendRoom(trainingConfigure.getSchoolroomId());
-                trainingAttend.setPublishDate(DateTimeUtil.getNowSqlTimestamp());
-                trainingAttendService.save(trainingAttend);
+        if (env.acceptsProfiles(Profiles.of(Workbook.SPRING_PROFILE_DEVELOPMENT, Workbook.SPRING_PROFILE_PRODUCTION))) {
+            Result<Record> records = trainingConfigureService.findIsAuto(ByteUtil.toByte(DateTimeUtil.getNowDayOfWeek()));
+            if (records.isNotEmpty()) {
+                List<TrainingConfigure> trainingConfigures = records.into(TrainingConfigure.class);
+                for (TrainingConfigure trainingConfigure : trainingConfigures) {
+                    TrainingAttend trainingAttend = new TrainingAttend();
+                    String trainingAttendId = UUIDUtil.getUUID();
+                    trainingAttend.setTrainingAttendId(trainingAttendId);
+                    trainingAttend.setTrainingReleaseId(trainingConfigure.getTrainingReleaseId());
+                    trainingAttend.setAttendDate(DateTimeUtil.getNowSqlDate());
+                    trainingAttend.setAttendStartTime(trainingConfigure.getStartTime());
+                    trainingAttend.setAttendEndTime(trainingConfigure.getEndTime());
+                    trainingAttend.setAttendRoom(trainingConfigure.getSchoolroomId());
+                    trainingAttend.setPublishDate(DateTimeUtil.getNowSqlTimestamp());
+                    trainingAttendService.save(trainingAttend);
 
-                List<TrainingUsers> trainingUsers = trainingUsersService.findByTrainingReleaseId(trainingConfigure.getTrainingReleaseId());
-                if (Objects.nonNull(trainingUsers)) {
-                    List<TrainingAttendUsers> trainingAttendUsers = new ArrayList<>();
-                    for (TrainingUsers users : trainingUsers) {
-                        TrainingAttendUsers trainingAttendUser = new TrainingAttendUsers();
-                        trainingAttendUser.setAttendUsersId(UUIDUtil.getUUID());
-                        trainingAttendUser.setTrainingAttendId(trainingAttendId);
-                        trainingAttendUser.setTrainingUsersId(users.getTrainingUsersId());
-                        trainingAttendUser.setOperateUser(Workbook.username.actuator.name());
-                        trainingAttendUser.setOperateDate(DateTimeUtil.getNowSqlTimestamp());
-                        trainingAttendUser.setOperate(ByteUtil.toByte(0));
-                        trainingAttendUser.setRemark(users.getRemark());
+                    List<TrainingUsers> trainingUsers = trainingUsersService.findByTrainingReleaseId(trainingConfigure.getTrainingReleaseId());
+                    if (Objects.nonNull(trainingUsers)) {
+                        List<TrainingAttendUsers> trainingAttendUsers = new ArrayList<>();
+                        for (TrainingUsers users : trainingUsers) {
+                            TrainingAttendUsers trainingAttendUser = new TrainingAttendUsers();
+                            trainingAttendUser.setAttendUsersId(UUIDUtil.getUUID());
+                            trainingAttendUser.setTrainingAttendId(trainingAttendId);
+                            trainingAttendUser.setTrainingUsersId(users.getTrainingUsersId());
+                            trainingAttendUser.setOperateUser(Workbook.username.actuator.name());
+                            trainingAttendUser.setOperateDate(DateTimeUtil.getNowSqlTimestamp());
+                            trainingAttendUser.setOperate(ByteUtil.toByte(0));
+                            trainingAttendUser.setRemark(users.getRemark());
 
-                        trainingAttendUsers.add(trainingAttendUser);
+                            trainingAttendUsers.add(trainingAttendUser);
+                        }
+
+                        trainingAttendUsersService.batchSave(trainingAttendUsers);
                     }
-
-                    trainingAttendUsersService.batchSave(trainingAttendUsers);
                 }
             }
+            log.info(">>>>>>>>>>>>> scheduled ... generate training attend ");
         }
-        log.info(">>>>>>>>>>>>> scheduled ... generate training attend ");
     }
 
 }
