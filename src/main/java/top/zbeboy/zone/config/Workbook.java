@@ -67,6 +67,13 @@ public final class Workbook {
     public static final String STAFF_USERS_TYPE = "教职工";
 
     /*
+    系统账号
+    */
+    public enum username {
+        zbeboy, actuator
+    }
+
+    /*
     角色类型参数
      */
     public enum authorities {

@@ -14,9 +14,9 @@ import javax.annotation.Resource;
 
 import java.util.Optional;
 
-import static top.zbeboy.zone.domain.Tables.BUILDING;
-import static top.zbeboy.zone.domain.Tables.SCHOOLROOM;
-import static top.zbeboy.zone.domain.Tables.TRAINING_CONFIGURE;
+import static org.jooq.impl.DSL.currentDate;
+import static org.jooq.impl.DSL.now;
+import static top.zbeboy.zone.domain.Tables.*;
 
 @Service("trainingConfigureService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -58,6 +58,18 @@ public class TrainingConfigureServiceImpl implements TrainingConfigureService {
                 .leftJoin(BUILDING)
                 .on(SCHOOLROOM.BUILDING_ID.eq(BUILDING.BUILDING_ID))
                 .where(TRAINING_CONFIGURE.TRAINING_RELEASE_ID.eq(trainingReleaseId))
+                .fetch();
+    }
+
+    @Override
+    public Result<Record> findIsAuto(byte dayOfWeek) {
+        return create.select()
+                .from(TRAINING_CONFIGURE)
+                .leftJoin(TRAINING_RELEASE)
+                .on(TRAINING_CONFIGURE.TRAINING_RELEASE_ID.eq(TRAINING_RELEASE.TRAINING_RELEASE_ID))
+                .where(TRAINING_CONFIGURE.WEEK_DAY.eq(dayOfWeek)
+                        .and(TRAINING_RELEASE.START_DATE.le(currentDate()))
+                .and(TRAINING_RELEASE.END_DATE.ge(currentDate())))
                 .fetch();
     }
 

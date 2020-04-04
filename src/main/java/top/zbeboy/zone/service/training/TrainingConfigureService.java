@@ -33,6 +33,14 @@ public interface TrainingConfigureService {
     Result<Record> findByTrainingReleaseIdRelation(String trainingReleaseId);
 
     /**
+     * 自动生成实训考勤
+     *
+     * @param dayOfWeek 星期
+     * @return 数据
+     */
+    Result<Record> findIsAuto(byte dayOfWeek);
+
+    /**
      * 保存
      *
      * @param trainingConfigure 数据

@@ -8,10 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-import top.zbeboy.zone.domain.tables.pojos.AttendRelease;
-import top.zbeboy.zone.domain.tables.pojos.AttendReleaseSub;
-import top.zbeboy.zone.domain.tables.pojos.SystemOperatorLog;
-import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.domain.tables.records.AttendReleaseRecord;
 import top.zbeboy.zone.domain.tables.records.UsersRecord;
 import top.zbeboy.zone.service.attend.AttendReleaseService;
@@ -21,13 +18,19 @@ import top.zbeboy.zone.service.cache.attend.AttendWxCacheService;
 import top.zbeboy.zone.service.internship.InternshipApplyService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.system.SystemOperatorLogService;
+import top.zbeboy.zone.service.training.TrainingAttendService;
+import top.zbeboy.zone.service.training.TrainingAttendUsersService;
+import top.zbeboy.zone.service.training.TrainingConfigureService;
+import top.zbeboy.zone.service.training.TrainingUsersService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
+import top.zbeboy.zone.web.util.ByteUtil;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 定时任务配置
@@ -80,6 +83,18 @@ public class ScheduledConfiguration {
 
     @Resource
     private InternshipApplyService internshipApplyService;
+
+    @Resource
+    private TrainingConfigureService trainingConfigureService;
+
+    @Resource
+    private TrainingAttendService trainingAttendService;
+
+    @Resource
+    private TrainingUsersService trainingUsersService;
+
+    @Resource
+    private TrainingAttendUsersService trainingAttendUsersService;
 
     /**
      * 清理未验证用户信息
@@ -180,6 +195,49 @@ public class ScheduledConfiguration {
         states.add(5);
         states.add(7);
         internshipApplyService.updateChangeState(states, 1);
+    }
+
+    /**
+     * 自动生成实训考勤数据
+     */
+    @Scheduled(cron = "0 30 00 * * ?") // 每天 晚间12点30分
+    public void generateTrainingAttend() {
+        Result<Record> records = trainingConfigureService.findIsAuto(ByteUtil.toByte(DateTimeUtil.getNowDayOfWeek()));
+        if (records.isNotEmpty()) {
+            List<TrainingConfigure> trainingConfigures = records.into(TrainingConfigure.class);
+            for (TrainingConfigure trainingConfigure : trainingConfigures) {
+                TrainingAttend trainingAttend = new TrainingAttend();
+                String trainingAttendId = UUIDUtil.getUUID();
+                trainingAttend.setTrainingAttendId(trainingAttendId);
+                trainingAttend.setTrainingReleaseId(trainingConfigure.getTrainingReleaseId());
+                trainingAttend.setAttendDate(DateTimeUtil.getNowSqlDate());
+                trainingAttend.setAttendStartTime(trainingConfigure.getStartTime());
+                trainingAttend.setAttendEndTime(trainingConfigure.getEndTime());
+                trainingAttend.setAttendRoom(trainingConfigure.getSchoolroomId());
+                trainingAttend.setPublishDate(DateTimeUtil.getNowSqlTimestamp());
+                trainingAttendService.save(trainingAttend);
+
+                List<TrainingUsers> trainingUsers = trainingUsersService.findByTrainingReleaseId(trainingConfigure.getTrainingReleaseId());
+                if (Objects.nonNull(trainingUsers)) {
+                    List<TrainingAttendUsers> trainingAttendUsers = new ArrayList<>();
+                    for (TrainingUsers users : trainingUsers) {
+                        TrainingAttendUsers trainingAttendUser = new TrainingAttendUsers();
+                        trainingAttendUser.setAttendUsersId(UUIDUtil.getUUID());
+                        trainingAttendUser.setTrainingAttendId(trainingAttendId);
+                        trainingAttendUser.setTrainingUsersId(users.getTrainingUsersId());
+                        trainingAttendUser.setOperateUser(Workbook.username.actuator.name());
+                        trainingAttendUser.setOperateDate(DateTimeUtil.getNowSqlTimestamp());
+                        trainingAttendUser.setOperate(ByteUtil.toByte(0));
+                        trainingAttendUser.setRemark(users.getRemark());
+
+                        trainingAttendUsers.add(trainingAttendUser);
+                    }
+
+                    trainingAttendUsersService.batchSave(trainingAttendUsers);
+                }
+            }
+        }
+        log.info(">>>>>>>>>>>>> scheduled ... generate training attend ");
     }
 
 }

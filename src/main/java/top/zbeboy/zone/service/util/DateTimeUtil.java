@@ -4,7 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 
 public class DateTimeUtil {
 
@@ -261,8 +260,7 @@ public class DateTimeUtil {
      * @return 年份
      */
     public static int getNowYear() {
-        Calendar calendar = Calendar.getInstance();
-        return calendar.get(Calendar.YEAR);
+        return LocalDate.now().getYear();
     }
 
     /**
@@ -271,7 +269,15 @@ public class DateTimeUtil {
      * @return 秒
      */
     public static int getNowSecond() {
-        Calendar calendar = Calendar.getInstance();
-        return calendar.get(Calendar.SECOND);
+        return LocalDateTime.now().getSecond();
+    }
+
+    /**
+     * 得到星期
+     *
+     * @return 星期
+     */
+    public static int getNowDayOfWeek() {
+        return LocalDate.now().getDayOfWeek().getValue();
     }
 }
