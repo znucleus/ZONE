@@ -3,15 +3,15 @@ package top.zbeboy.zone.web.bean.training.release;
 import top.zbeboy.zone.domain.tables.pojos.TrainingRelease;
 
 public class TrainingReleaseBean extends TrainingRelease {
-    private String  organizeName;
+    private String organizeName;
     private Integer grade;
     private String scienceName;
     private String departmentName;
     private String schoolName;
     private String collegeName;
-    private String  courseName;
-    private Double  courseCredit;
-    private Double  courseHours;
+    private String courseName;
+    private Double courseCredit;
+    private Double courseHours;
     private String releaseTimeStr;
     private int collegeId;
     private Byte canOperator;

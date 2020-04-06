@@ -10,7 +10,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 import top.zbeboy.zone.config.CacheBook;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.daos.TrainingReleaseDao;
@@ -31,8 +30,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static top.zbeboy.zone.domain.Tables.*;
-import static top.zbeboy.zone.domain.Tables.COLLEGE;
-import static top.zbeboy.zone.domain.Tables.SCHOOL;
 
 @Service("trainingReleaseService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

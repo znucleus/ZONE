@@ -3,8 +3,8 @@ package top.zbeboy.zone.web.bean.training.release;
 import top.zbeboy.zone.domain.tables.pojos.TrainingConfigure;
 
 public class TrainingConfigureBean extends TrainingConfigure {
-    private String  buildingCode;
-    private String  buildingName;
+    private String buildingCode;
+    private String buildingName;
     private Integer collegeId;
     private Integer buildingId;
 

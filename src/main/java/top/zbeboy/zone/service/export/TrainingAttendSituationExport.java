@@ -47,9 +47,9 @@ public class TrainingAttendSituationExport extends ExportUtil<TrainingAttendUser
         row.createCell(7).setCellValue(t.getRemark());
     }
 
-    private String operate(Byte operate){
+    private String operate(Byte operate) {
         String v = "不存在";
-        if(Objects.nonNull(operate)){
+        if (Objects.nonNull(operate)) {
             if (operate == 0) {
                 v = "缺席";
             } else if (operate == 1) {

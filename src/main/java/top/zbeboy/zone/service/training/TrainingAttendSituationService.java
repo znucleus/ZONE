@@ -1,12 +1,8 @@
 package top.zbeboy.zone.service.training;
 
 import org.jooq.Record;
-import org.jooq.Record5;
-import org.jooq.Record6;
 import org.jooq.Result;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
-
-import java.sql.Date;
 
 public interface TrainingAttendSituationService {
 

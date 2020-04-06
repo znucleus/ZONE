@@ -49,7 +49,7 @@ public class TrainingAttendUsersExport extends ExportUtil<TrainingAttendUsersBea
         row.createCell(9).setCellValue(t.getOperateUser());
     }
 
-    private String operate(Byte operate){
+    private String operate(Byte operate) {
         String v = "";
         if (operate == 0) {
             v = "缺席";

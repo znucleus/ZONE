@@ -2,8 +2,6 @@ package top.zbeboy.zone.web.bean.training.release;
 
 import top.zbeboy.zone.domain.tables.pojos.TrainingAuthorities;
 
-import java.sql.Timestamp;
-
 public class TrainingAuthoritiesBean extends TrainingAuthorities {
     private String validDateStr;
     private String expireDateStr;

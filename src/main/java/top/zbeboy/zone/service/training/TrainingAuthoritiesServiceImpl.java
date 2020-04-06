@@ -61,9 +61,9 @@ public class TrainingAuthoritiesServiceImpl implements TrainingAuthoritiesServic
     public Result<TrainingAuthoritiesRecord> findEffectiveByTrainingReleaseIdAndUsername(String trainingReleaseId, String username) {
         return create.selectFrom(TRAINING_AUTHORITIES)
                 .where(TRAINING_AUTHORITIES.TRAINING_RELEASE_ID.eq(trainingReleaseId)
-                .and(TRAINING_AUTHORITIES.USERNAME.eq(username))
-                .and(TRAINING_AUTHORITIES.EXPIRE_DATE.gt(now()))
-                .and(TRAINING_AUTHORITIES.VALID_DATE.le(now())))
+                        .and(TRAINING_AUTHORITIES.USERNAME.eq(username))
+                        .and(TRAINING_AUTHORITIES.EXPIRE_DATE.gt(now()))
+                        .and(TRAINING_AUTHORITIES.VALID_DATE.le(now())))
                 .fetch();
     }
 

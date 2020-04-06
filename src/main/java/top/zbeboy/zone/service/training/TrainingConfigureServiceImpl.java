@@ -11,11 +11,9 @@ import top.zbeboy.zone.domain.tables.daos.TrainingConfigureDao;
 import top.zbeboy.zone.domain.tables.pojos.TrainingConfigure;
 
 import javax.annotation.Resource;
-
 import java.util.Optional;
 
 import static org.jooq.impl.DSL.currentDate;
-import static org.jooq.impl.DSL.now;
 import static top.zbeboy.zone.domain.Tables.*;
 
 @Service("trainingConfigureService")
@@ -69,7 +67,7 @@ public class TrainingConfigureServiceImpl implements TrainingConfigureService {
                 .on(TRAINING_CONFIGURE.TRAINING_RELEASE_ID.eq(TRAINING_RELEASE.TRAINING_RELEASE_ID))
                 .where(TRAINING_CONFIGURE.WEEK_DAY.eq(dayOfWeek)
                         .and(TRAINING_RELEASE.START_DATE.le(currentDate()))
-                .and(TRAINING_RELEASE.END_DATE.ge(currentDate())))
+                        .and(TRAINING_RELEASE.END_DATE.ge(currentDate())))
                 .fetch();
     }
 
