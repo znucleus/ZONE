@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="br-pageheader pd-y-15 pd-l-20">
+        <nav class="breadcrumb pd-0 mg-0 tx-12">
+            <a class="breadcrumb-item dy_href" href="#/web/menu/training/users">列表</a>
+            <span class="breadcrumb-item active">实训名单</span>
+        </nav>
+    </div><!-- br-pageheader -->
+    <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
+        <h4 class="tx-gray-800 mg-b-5">实训名单</h4>
+        <p class="mg-b-0">实训名单列表。</p>
+    </div>
+
+    <div class="br-pagebody">
+        <div class="br-section-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-4 mt-2">
+                            <input type="text" id="search_real_name" class="form-control"
+                                   placeholder="姓名"/>
+                        </div>
+                        <div class="col-md-4 mt-2">
+                            <input type="text" id="search_student_number" class="form-control"
+                                   placeholder="学号"/>
+                        </div>
+                        <div class="col-md-4 mt-2">
+                            <input type="text" id="search_username" class="form-control"
+                                   placeholder="账号"/>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button type="button" id="search" class="btn btn-outline-secondary"><i
+                                class="fa fa-search"></i>搜索
+                        </button>
+                        <button type="button" id="reset_search" class="btn btn-outline-secondary"><i
+                                class="fa fa-repeat"></i>重置
+                        </button>
+                    </div>
+                </div>
+
+                <div class="col-md-12 mt-3">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="export_file_name" placeholder="文件名">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">导出</button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="javascript:" id="export_xls">导出Xls</a>
+                                <a class="dropdown-item" href="javascript:" id="export_xlsx">导出Xlsx</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12 mt-2">
+                    <table id="dataTable" class="table table-striped table-bordered dt-responsive nowrap"
+                           cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th data-priority="1">#</th>
+                            <th data-priority="2">
+                                <input type="checkbox" name="checkall" id="checkall"/>
+                            </th>
+                            <th data-priority="3">姓名</th>
+                            <th>学号</th>
+                            <th>账号</th>
+                            <th>手机号</th>
+                            <th>邮箱</th>
+                            <th>性别</th>
+                            <th>备注</th>
+                            <th>创建时间</th>
+                            <th data-priority="4">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 添加学生Modal -->
+    <div class="modal fade" id="addModal" tabindex="-1" role="dialog"
+         aria-labelledby="addModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addModalLabel">添加学生</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="mg-t-20">
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <input id="addStudentNumber" placeholder="学号"
+                                       class="form-control">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <textarea class="form-control" id="addRemark" rows="3" placeholder="备注"></textarea>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="addStudent">确定</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 备注Modal -->
+    <div class="modal fade" id="remarkModal" tabindex="-1" role="dialog"
+         aria-labelledby="remarkModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="remarkModalLabel">备注</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="mg-t-20" id="remark_form">
+                        <input type="hidden" id="editTrainingUsersId" name="trainingUsersId" />
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <textarea class="form-control" id="editRemark" name="remark" rows="3" placeholder="备注"></textarea>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="toRemark">确定</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--定义操作列按钮模板-->
+    <script id="operator_button" type="text/x-handlebars-template">
+        <div class="btn-group" role="group">
+            {{#each func}}
+            <button type="button" class="btn btn-{{this.type}} btn-sm {{this.css}}" data-id="{{this.id}}"
+                    data-student="{{this.student}}" data-remark="{{this.remark}}">{{this.name}}
+            </button>
+            {{/each}}
+        </div>
+    </script>
+
+    <input type="hidden" id="paramTrainingReleaseId" th:value="${trainingReleaseId}"/>
+    <input type="hidden" id="canOperator" th:value="${canOperator}"/>
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/training/users/training_users_list.js')}"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>

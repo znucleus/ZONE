@@ -1,7 +1,6 @@
 package top.zbeboy.zone.web.util;
 
 import top.zbeboy.zone.web.util.pagination.PaginationUtil;
-import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,7 +13,7 @@ public class AjaxUtil<T> {
     private Map<String, T> mapResult = new HashMap<>();
     private List<T> listResult = new ArrayList<>();
     private Map<String, Object> result = new HashMap<>();
-    private SimplePaginationUtil paginationUtil;
+    private PaginationUtil paginationUtil;
 
     public static <T> AjaxUtil<T> of() {
         return new AjaxUtil<>();
@@ -50,7 +49,7 @@ public class AjaxUtil<T> {
         return this;
     }
 
-    public AjaxUtil<T> page(SimplePaginationUtil paginationUtil) {
+    public AjaxUtil<T> page(PaginationUtil paginationUtil) {
         this.paginationUtil = paginationUtil;
         return this;
     }

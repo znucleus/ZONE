@@ -5,7 +5,6 @@ package top.zbeboy.zone.domain.tables.daos;
 
 
 import java.sql.Date;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -115,62 +114,6 @@ public class TrainingReleaseDao extends DAOImpl<TrainingReleaseRecord, top.zbebo
      */
     public List<top.zbeboy.zone.domain.tables.pojos.TrainingRelease> fetchByEndDate(Date... values) {
         return fetch(TrainingRelease.TRAINING_RELEASE.END_DATE, values);
-    }
-
-    /**
-     * Fetch records that have <code>cycle BETWEEN lowerInclusive AND upperInclusive</code>
-     */
-    public List<top.zbeboy.zone.domain.tables.pojos.TrainingRelease> fetchRangeOfCycle(String lowerInclusive, String upperInclusive) {
-        return fetchRange(TrainingRelease.TRAINING_RELEASE.CYCLE, lowerInclusive, upperInclusive);
-    }
-
-    /**
-     * Fetch records that have <code>cycle IN (values)</code>
-     */
-    public List<top.zbeboy.zone.domain.tables.pojos.TrainingRelease> fetchByCycle(String... values) {
-        return fetch(TrainingRelease.TRAINING_RELEASE.CYCLE, values);
-    }
-
-    /**
-     * Fetch records that have <code>start_time BETWEEN lowerInclusive AND upperInclusive</code>
-     */
-    public List<top.zbeboy.zone.domain.tables.pojos.TrainingRelease> fetchRangeOfStartTime(Time lowerInclusive, Time upperInclusive) {
-        return fetchRange(TrainingRelease.TRAINING_RELEASE.START_TIME, lowerInclusive, upperInclusive);
-    }
-
-    /**
-     * Fetch records that have <code>start_time IN (values)</code>
-     */
-    public List<top.zbeboy.zone.domain.tables.pojos.TrainingRelease> fetchByStartTime(Time... values) {
-        return fetch(TrainingRelease.TRAINING_RELEASE.START_TIME, values);
-    }
-
-    /**
-     * Fetch records that have <code>end_time BETWEEN lowerInclusive AND upperInclusive</code>
-     */
-    public List<top.zbeboy.zone.domain.tables.pojos.TrainingRelease> fetchRangeOfEndTime(Time lowerInclusive, Time upperInclusive) {
-        return fetchRange(TrainingRelease.TRAINING_RELEASE.END_TIME, lowerInclusive, upperInclusive);
-    }
-
-    /**
-     * Fetch records that have <code>end_time IN (values)</code>
-     */
-    public List<top.zbeboy.zone.domain.tables.pojos.TrainingRelease> fetchByEndTime(Time... values) {
-        return fetch(TrainingRelease.TRAINING_RELEASE.END_TIME, values);
-    }
-
-    /**
-     * Fetch records that have <code>schoolroom_id BETWEEN lowerInclusive AND upperInclusive</code>
-     */
-    public List<top.zbeboy.zone.domain.tables.pojos.TrainingRelease> fetchRangeOfSchoolroomId(Integer lowerInclusive, Integer upperInclusive) {
-        return fetchRange(TrainingRelease.TRAINING_RELEASE.SCHOOLROOM_ID, lowerInclusive, upperInclusive);
-    }
-
-    /**
-     * Fetch records that have <code>schoolroom_id IN (values)</code>
-     */
-    public List<top.zbeboy.zone.domain.tables.pojos.TrainingRelease> fetchBySchoolroomId(Integer... values) {
-        return fetch(TrainingRelease.TRAINING_RELEASE.SCHOOLROOM_ID, values);
     }
 
     /**

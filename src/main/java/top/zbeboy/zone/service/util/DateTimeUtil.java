@@ -4,15 +4,16 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 
 public class DateTimeUtil {
 
     public static final String STANDARD_FORMAT = "yyyy-MM-dd HH:mm:ss";
     public static final String YEAR_MONTH_DAY_FORMAT = "yyyy-MM-dd";
     public static final String HOUR_MINUTE_FORMAT = "HH:mm";
+    public static final String HOUR_MINUTE_SECOND_FORMAT = "HH:mm:ss";
     public static final String YEAR_MONTH_DAY_CN_FORMAT = "yyyy年MM月dd日";
     public static final String YEAR_MONTH_DAY_HOUR_MINUTE_FORMAT = YEAR_MONTH_DAY_FORMAT + " " + HOUR_MINUTE_FORMAT;
+    public static final String YEAR_MONTH_DAY_HOUR_MINUTE_SECOND_FORMAT = YEAR_MONTH_DAY_FORMAT + " " + HOUR_MINUTE_SECOND_FORMAT;
 
     /**
      * timestamp
@@ -178,7 +179,7 @@ public class DateTimeUtil {
      * @return sql date
      */
     public static java.sql.Time defaultParseSqlTime(String time) {
-        return new java.sql.Time(java.sql.Time.from(LocalTime.parse(StringUtils.trim(time), DateTimeFormatter.ofPattern(HOUR_MINUTE_FORMAT)).atDate(LocalDate.now()).atZone(ZoneId.systemDefault()).toInstant()).getTime());
+        return new java.sql.Time(java.sql.Time.from(LocalTime.parse(StringUtils.trim(time), DateTimeFormatter.ofPattern(HOUR_MINUTE_SECOND_FORMAT)).atDate(LocalDate.now()).atZone(ZoneId.systemDefault()).toInstant()).getTime());
     }
 
     /**
@@ -259,8 +260,7 @@ public class DateTimeUtil {
      * @return 年份
      */
     public static int getNowYear() {
-        Calendar calendar = Calendar.getInstance();
-        return calendar.get(Calendar.YEAR);
+        return LocalDate.now().getYear();
     }
 
     /**
@@ -269,7 +269,15 @@ public class DateTimeUtil {
      * @return 秒
      */
     public static int getNowSecond() {
-        Calendar calendar = Calendar.getInstance();
-        return calendar.get(Calendar.SECOND);
+        return LocalDateTime.now().getSecond();
+    }
+
+    /**
+     * 得到星期
+     *
+     * @return 星期
+     */
+    public static int getNowDayOfWeek() {
+        return LocalDate.now().getDayOfWeek().getValue();
     }
 }

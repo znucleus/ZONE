@@ -4,6 +4,7 @@
 package top.zbeboy.zone.domain.tables.daos;
 
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.annotation.Generated;
@@ -98,5 +99,33 @@ public class TrainingUsersDao extends DAOImpl<TrainingUsersRecord, top.zbeboy.zo
      */
     public List<top.zbeboy.zone.domain.tables.pojos.TrainingUsers> fetchByStudentId(Integer... values) {
         return fetch(TrainingUsers.TRAINING_USERS.STUDENT_ID, values);
+    }
+
+    /**
+     * Fetch records that have <code>create_date BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.TrainingUsers> fetchRangeOfCreateDate(Timestamp lowerInclusive, Timestamp upperInclusive) {
+        return fetchRange(TrainingUsers.TRAINING_USERS.CREATE_DATE, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>create_date IN (values)</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.TrainingUsers> fetchByCreateDate(Timestamp... values) {
+        return fetch(TrainingUsers.TRAINING_USERS.CREATE_DATE, values);
+    }
+
+    /**
+     * Fetch records that have <code>remark BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.TrainingUsers> fetchRangeOfRemark(String lowerInclusive, String upperInclusive) {
+        return fetchRange(TrainingUsers.TRAINING_USERS.REMARK, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>remark IN (values)</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.TrainingUsers> fetchByRemark(String... values) {
+        return fetch(TrainingUsers.TRAINING_USERS.REMARK, values);
     }
 }

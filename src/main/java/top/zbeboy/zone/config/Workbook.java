@@ -23,6 +23,11 @@ public final class Workbook {
     public static final String SPRING_PROFILE_PRODUCTION = "prod";
 
     /*
+    节点
+     */
+    public static final String SPRING_PROFILE_CLUSTER = "cluster";
+
+    /*
     注册类型
      */
     public static final String REGISTER_STUDENT = "student";
@@ -60,6 +65,13 @@ public final class Workbook {
     public static final String SYSTEM_USERS_TYPE = "系统";
     public static final String STUDENT_USERS_TYPE = "学生";
     public static final String STAFF_USERS_TYPE = "教职工";
+
+    /*
+    系统账号
+    */
+    public enum username {
+        zbeboy, actuator
+    }
 
     /*
     角色类型参数
@@ -172,5 +184,14 @@ public final class Workbook {
      */
     public static String internshipJournalPath(Users users) {
         return USERS_PORTFOLIOS + users.getUsername() + DIRECTORY_SPLIT + "internship" + DIRECTORY_SPLIT + "journal" + DIRECTORY_SPLIT;
+    }
+
+    /**
+     * 实训文件路径
+     *
+     * @return 路径
+     */
+    public static String trainingFilePath() {
+        return FILES_PORTFOLIOS + "training" + DIRECTORY_SPLIT;
     }
 }

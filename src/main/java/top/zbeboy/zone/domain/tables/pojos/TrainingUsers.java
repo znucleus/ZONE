@@ -5,6 +5,7 @@ package top.zbeboy.zone.domain.tables.pojos;
 
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import javax.annotation.Generated;
 import javax.validation.constraints.NotNull;
@@ -24,11 +25,13 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class TrainingUsers implements Serializable {
 
-    private static final long serialVersionUID = 505939930;
+    private static final long serialVersionUID = -1092623473;
 
-    private String  trainingUsersId;
-    private String  trainingReleaseId;
-    private Integer studentId;
+    private String    trainingUsersId;
+    private String    trainingReleaseId;
+    private Integer   studentId;
+    private Timestamp createDate;
+    private String    remark;
 
     public TrainingUsers() {}
 
@@ -36,16 +39,22 @@ public class TrainingUsers implements Serializable {
         this.trainingUsersId = value.trainingUsersId;
         this.trainingReleaseId = value.trainingReleaseId;
         this.studentId = value.studentId;
+        this.createDate = value.createDate;
+        this.remark = value.remark;
     }
 
     public TrainingUsers(
-        String  trainingUsersId,
-        String  trainingReleaseId,
-        Integer studentId
+        String    trainingUsersId,
+        String    trainingReleaseId,
+        Integer   studentId,
+        Timestamp createDate,
+        String    remark
     ) {
         this.trainingUsersId = trainingUsersId;
         this.trainingReleaseId = trainingReleaseId;
         this.studentId = studentId;
+        this.createDate = createDate;
+        this.remark = remark;
     }
 
     @NotNull
@@ -77,6 +86,24 @@ public class TrainingUsers implements Serializable {
         this.studentId = studentId;
     }
 
+    @NotNull
+    public Timestamp getCreateDate() {
+        return this.createDate;
+    }
+
+    public void setCreateDate(Timestamp createDate) {
+        this.createDate = createDate;
+    }
+
+    @Size(max = 200)
+    public String getRemark() {
+        return this.remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("TrainingUsers (");
@@ -84,6 +111,8 @@ public class TrainingUsers implements Serializable {
         sb.append(trainingUsersId);
         sb.append(", ").append(trainingReleaseId);
         sb.append(", ").append(studentId);
+        sb.append(", ").append(createDate);
+        sb.append(", ").append(remark);
 
         sb.append(")");
         return sb.toString();

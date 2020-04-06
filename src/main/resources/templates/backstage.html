@@ -120,6 +120,29 @@
 </div><!-- br-mainpanel -->
 <!-- ########## END: MAIN PANEL ########## -->
 
+<!-- ########## START: FLOAT BUTTON ########## -->
+<ul id="menu" class="mfb-component--br mfb-zoomin" data-mfb-toggle="hover">
+    <li class="mfb-component__wrap">
+        <a href="javascript:" class="mfb-component__button--main" style="background-color: #17a2b8">
+            <i class="mfb-component__main-icon--resting ion-plus-round"></i>
+            <i class="mfb-component__main-icon--active ion-close-round"></i>
+        </a>
+        <ul class="mfb-component__list">
+            <li>
+                <a href="javascript:history.go(-1)" data-mfb-label="返回上一级" class="mfb-component__button--child" style="background-color: #17a2b8">
+                    <i class="mfb-component__child-icon ion-arrow-return-left"></i>
+                </a>
+            </li>
+            <li>
+                <a href="javascript:window.scrollTo(0, 0)" data-mfb-label="返回顶层" class="mfb-component__button--child" style="background-color: #17a2b8">
+                    <i class="mfb-component__child-icon ion-arrow-up-a"></i>
+                </a>
+            </li>
+        </ul>
+    </li>
+</ul>
+<!-- ########## END: FLOAT BUTTON ########## -->
+
 <!--通知模板-->
 <script id="users-notify-template" type="text/x-handlebars-template">
     {{#each listResult}}

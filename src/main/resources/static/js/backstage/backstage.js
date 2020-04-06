@@ -50,7 +50,9 @@ requirejs.config({
         "quill": web_path + "/plugins/quill/quill.min",
         "jquery.print": web_path + "/plugins/jquery-print/jquery.print.min",
         "jquery-toggles": web_path + "/plugins/jquery-toggles/toggles.min",
-        "clipboard": web_path + "/plugins/clipboard/clipboard.min"
+        "clipboard": web_path + "/plugins/clipboard/clipboard.min",
+        "mfb":web_path + "/plugins/mfb/mfb.min",
+        "modernizr.touch":web_path + "/plugins/mfb/lib/modernizr.touch.min"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -144,6 +146,9 @@ requirejs.config({
         },
         "jquery-toggles":{
             deps: ["jquery", "css!" + web_path + "/plugins/jquery-toggles/toggles-full.min"]
+        },
+        "mfb":{
+            deps:["modernizr.touch","css!" + web_path + "/plugins/mfb/mfb.min"]
         }
     }
 });
@@ -161,7 +166,7 @@ requirejs.onError = function (err) {
 
 // require(["module/name", ...], function(params){ ... });
 require(["jquery", "requirejs-domready", "moment-with-locales", "handlebars", "ajax.loading.view", "nav.active",
-        "bootstrap", "bracket", "csrf", "jquery.address"],
+        "bootstrap", "bracket", "csrf", "jquery.address", "mfb"],
     function ($, domready, moment, Handlebars, loadingView, navActive) {
         domready(function () {
             Messenger.options = {

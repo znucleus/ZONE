@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="br-pageheader pd-y-15 pd-l-20">
+        <nav class="breadcrumb pd-0 mg-0 tx-12">
+            <a class="breadcrumb-item dy_href" href="#/web/menu/training/release">列表</a>
+            <a class="breadcrumb-item dy_href" href="javascript:"
+               th:href="${'#/web/training/release/configure/' + trainingConfigure.trainingReleaseId}">配置</a>
+            <span class="breadcrumb-item active">编辑配置</span>
+        </nav>
+    </div><!-- br-pageheader -->
+    <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
+        <h4 class="tx-gray-800 mg-b-5">实训发布</h4>
+        <p class="mg-b-0">编辑配置。</p>
+    </div>
+
+    <div class="br-pagebody">
+        <div class="br-section-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <form id="app_form">
+                        <input type="hidden" id="trainingReleaseId" name="trainingReleaseId"
+                               th:value="${trainingConfigure.trainingReleaseId}"/>
+                        <input type="hidden" id="trainingConfigureId" name="trainingConfigureId"
+                               th:value="${trainingConfigure.trainingConfigureId}"/>
+                        <div class="form-group">
+                            <label>星期</label>
+                            <select class="form-control" id="weekDay" name="weekDay">
+                                <option value="1">星期一</option>
+                                <option value="2">星期二</option>
+                                <option value="3">星期三</option>
+                                <option value="4">星期四</option>
+                                <option value="5">星期五</option>
+                                <option value="6">星期六</option>
+                                <option value="7">星期天</option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>上课开始时间</label>
+                            <input class="form-control" name="startTime" id="startTime"
+                                   placeholder="上课开始时间" th:value="${trainingConfigure.startTime}"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>上课结束时间</label>
+                            <input class="form-control" name="endTime" id="endTime"
+                                   placeholder="上课结束时间" th:value="${trainingConfigure.endTime}"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control select2-show-search" id="building" name="buildingId"
+                                    data-placeholder="请选择楼">
+                                <option label="请选择楼"></option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control select2-show-search" id="schoolroom" name="schoolroomId"
+                                    data-placeholder="请选择教室">
+                                <option label="请选择教室"></option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group text-center">
+                            <button type="button" class="btn btn-primary text-center" id="save">保存</button>
+                            <button type="reset" class="btn btn-default">重置</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" id="paramCollegeId" th:value="${trainingConfigure.collegeId}"/>
+    <input type="hidden" id="paramWeekDay" th:value="${trainingConfigure.weekDay}"/>
+    <input type="hidden" id="paramBuildingId" th:value="${trainingConfigure.buildingId}"/>
+    <input type="hidden" id="paramSchoolroomId" th:value="${trainingConfigure.schoolroomId}"/>
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/training/release/training_configure_edit.js')}"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>

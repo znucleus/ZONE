@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="br-pageheader pd-y-15 pd-l-20">
+        <nav class="breadcrumb pd-0 mg-0 tx-12">
+            <a class="breadcrumb-item dy_href" href="#/web/menu/training/attend">列表</a>
+            <a class="breadcrumb-item dy_href" href="javascript:"
+               th:href="${'#/web/training/attend/list/' + trainingReleaseId}">考勤</a>
+            <span class="breadcrumb-item active">名单</span>
+        </nav>
+    </div><!-- br-pageheader -->
+    <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
+        <h4 class="tx-gray-800 mg-b-5">实训考勤</h4>
+        <p class="mg-b-0">考勤人员名单。</p>
+    </div>
+
+    <div class="br-pagebody">
+        <div class="br-section-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-4 mt-2">
+                            <input type="text" id="search_real_name" class="form-control"
+                                   placeholder="姓名"/>
+                        </div>
+                        <div class="col-md-4 mt-2">
+                            <input type="text" id="search_student_number" class="form-control"
+                                   placeholder="学号"/>
+                        </div>
+                        <div class="col-md-4 mt-2">
+                            <select class="form-control" id="search_operate">
+                                <option value="">请选择状态</option>
+                                <option value="0">缺席</option>
+                                <option value="1">请假</option>
+                                <option value="2">迟到</option>
+                                <option value="3">正常</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button type="button" id="search" class="btn btn-outline-secondary"><i
+                                class="fa fa-search"></i>搜索
+                        </button>
+                        <button type="button" id="reset_search" class="btn btn-outline-secondary"><i
+                                class="fa fa-repeat"></i>重置
+                        </button>
+                    </div>
+                </div>
+
+                <div class="col-md-12 mt-3">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="export_file_name" placeholder="文件名">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">导出</button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="javascript:" id="export_xls">导出Xls</a>
+                                <a class="dropdown-item" href="javascript:" id="export_xlsx">导出Xlsx</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12 mt-2">
+                    <table id="dataTable" class="table table-striped table-bordered dt-responsive nowrap"
+                           cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th data-priority="1">#</th>
+                            <th data-priority="2">
+                                <input type="checkbox" name="checkall" id="checkall"/>
+                            </th>
+                            <th data-priority="3">姓名</th>
+                            <th>学号</th>
+                            <th>班级</th>
+                            <th>手机号</th>
+                            <th>邮箱</th>
+                            <th>性别</th>
+                            <th>状态</th>
+                            <th>备注</th>
+                            <th>操作账号</th>
+                            <th data-priority="4">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 状态Modal -->
+    <div class="modal fade" id="operateModal" tabindex="-1" role="dialog"
+         aria-labelledby="operateModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="operateModalLabel">状态</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="mg-t-20" id="operate_form">
+                        <input type="hidden" id="operateAttendUsersId" name="attendUsersId" />
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label for="student">学生</label>
+                                <input class="form-control" id="student" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label for="operate">当前状态</label>
+                                <input class="form-control" id="operate" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12 text-center">
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-danger btn-sm" id="absent">缺席
+                                    </button>
+                                    <button type="button" class="btn btn-info btn-sm" id="leave">请假
+                                    </button>
+                                    <button type="button" class="btn btn-warning btn-sm" id="late">迟到
+                                    </button>
+                                    <button type="button" class="btn btn-success btn-sm" id="sign">正常
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 备注Modal -->
+    <div class="modal fade" id="remarkModal" tabindex="-1" role="dialog"
+         aria-labelledby="remarkModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="remarkModalLabel">备注</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="mg-t-20" id="remark_form">
+                        <input type="hidden" id="editAttendUsersId" name="attendUsersId" />
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <textarea class="form-control" id="editRemark" name="remark" rows="3" placeholder="备注"></textarea>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="toRemark">确定</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--定义操作列按钮模板-->
+    <script id="operator_button" type="text/x-handlebars-template">
+        <div class="btn-group" role="group">
+            {{#each func}}
+            <button type="button" class="btn btn-{{this.type}} btn-sm {{this.css}}" data-id="{{this.id}}"
+                    data-student="{{this.student}}" data-remark="{{this.remark}}" data-operate="{{this.operate}}">{{this.name}}
+            </button>
+            {{/each}}
+        </div>
+    </script>
+
+    <input type="hidden" id="paramTrainingReleaseId" th:value="${trainingReleaseId}"/>
+    <input type="hidden" id="paramTrainingAttendId" th:value="${trainingAttendId}"/>
+    <input type="hidden" id="canOperator" th:value="${canOperator}"/>
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/training/attend/training_attend_users.js')}"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>

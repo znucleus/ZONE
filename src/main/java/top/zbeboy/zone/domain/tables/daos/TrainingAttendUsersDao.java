@@ -102,6 +102,20 @@ public class TrainingAttendUsersDao extends DAOImpl<TrainingAttendUsersRecord, t
     }
 
     /**
+     * Fetch records that have <code>operate_user BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.TrainingAttendUsers> fetchRangeOfOperateUser(String lowerInclusive, String upperInclusive) {
+        return fetchRange(TrainingAttendUsers.TRAINING_ATTEND_USERS.OPERATE_USER, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>operate_user IN (values)</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.TrainingAttendUsers> fetchByOperateUser(String... values) {
+        return fetch(TrainingAttendUsers.TRAINING_ATTEND_USERS.OPERATE_USER, values);
+    }
+
+    /**
      * Fetch records that have <code>operate_date BETWEEN lowerInclusive AND upperInclusive</code>
      */
     public List<top.zbeboy.zone.domain.tables.pojos.TrainingAttendUsers> fetchRangeOfOperateDate(Timestamp lowerInclusive, Timestamp upperInclusive) {

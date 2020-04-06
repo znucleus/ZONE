@@ -25,11 +25,12 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class TrainingAttendUsers implements Serializable {
 
-    private static final long serialVersionUID = -112929454;
+    private static final long serialVersionUID = 331795544;
 
     private String    attendUsersId;
     private String    trainingAttendId;
     private String    trainingUsersId;
+    private String    operateUser;
     private Timestamp operateDate;
     private Byte      operate;
     private String    remark;
@@ -40,6 +41,7 @@ public class TrainingAttendUsers implements Serializable {
         this.attendUsersId = value.attendUsersId;
         this.trainingAttendId = value.trainingAttendId;
         this.trainingUsersId = value.trainingUsersId;
+        this.operateUser = value.operateUser;
         this.operateDate = value.operateDate;
         this.operate = value.operate;
         this.remark = value.remark;
@@ -49,6 +51,7 @@ public class TrainingAttendUsers implements Serializable {
         String    attendUsersId,
         String    trainingAttendId,
         String    trainingUsersId,
+        String    operateUser,
         Timestamp operateDate,
         Byte      operate,
         String    remark
@@ -56,6 +59,7 @@ public class TrainingAttendUsers implements Serializable {
         this.attendUsersId = attendUsersId;
         this.trainingAttendId = trainingAttendId;
         this.trainingUsersId = trainingUsersId;
+        this.operateUser = operateUser;
         this.operateDate = operateDate;
         this.operate = operate;
         this.remark = remark;
@@ -92,6 +96,16 @@ public class TrainingAttendUsers implements Serializable {
     }
 
     @NotNull
+    @Size(max = 64)
+    public String getOperateUser() {
+        return this.operateUser;
+    }
+
+    public void setOperateUser(String operateUser) {
+        this.operateUser = operateUser;
+    }
+
+    @NotNull
     public Timestamp getOperateDate() {
         return this.operateDate;
     }
@@ -125,6 +139,7 @@ public class TrainingAttendUsers implements Serializable {
         sb.append(attendUsersId);
         sb.append(", ").append(trainingAttendId);
         sb.append(", ").append(trainingUsersId);
+        sb.append(", ").append(operateUser);
         sb.append(", ").append(operateDate);
         sb.append(", ").append(operate);
         sb.append(", ").append(remark);

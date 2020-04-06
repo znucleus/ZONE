@@ -5,7 +5,6 @@ package top.zbeboy.zone.domain.tables;
 
 
 import java.sql.Date;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
@@ -17,7 +16,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row13;
+import org.jooq.Row9;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -44,7 +43,7 @@ import top.zbeboy.zone.domain.tables.records.TrainingReleaseRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class TrainingRelease extends TableImpl<TrainingReleaseRecord> {
 
-    private static final long serialVersionUID = -2068457299;
+    private static final long serialVersionUID = -1252389391;
 
     /**
      * The reference instance of <code>zone.training_release</code>
@@ -78,26 +77,6 @@ public class TrainingRelease extends TableImpl<TrainingReleaseRecord> {
      * The column <code>zone.training_release.end_date</code>.
      */
     public final TableField<TrainingReleaseRecord, Date> END_DATE = createField(DSL.name("end_date"), org.jooq.impl.SQLDataType.DATE.nullable(false), this, "");
-
-    /**
-     * The column <code>zone.training_release.cycle</code>.
-     */
-    public final TableField<TrainingReleaseRecord, String> CYCLE = createField(DSL.name("cycle"), org.jooq.impl.SQLDataType.VARCHAR(20).nullable(false), this, "");
-
-    /**
-     * The column <code>zone.training_release.start_time</code>.
-     */
-    public final TableField<TrainingReleaseRecord, Time> START_TIME = createField(DSL.name("start_time"), org.jooq.impl.SQLDataType.TIME.nullable(false), this, "");
-
-    /**
-     * The column <code>zone.training_release.end_time</code>.
-     */
-    public final TableField<TrainingReleaseRecord, Time> END_TIME = createField(DSL.name("end_time"), org.jooq.impl.SQLDataType.TIME.nullable(false), this, "");
-
-    /**
-     * The column <code>zone.training_release.schoolroom_id</code>.
-     */
-    public final TableField<TrainingReleaseRecord, Integer> SCHOOLROOM_ID = createField(DSL.name("schoolroom_id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
      * The column <code>zone.training_release.username</code>.
@@ -164,7 +143,7 @@ public class TrainingRelease extends TableImpl<TrainingReleaseRecord> {
 
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.TRAINING_RELEASE_COURSE_ID, Indexes.TRAINING_RELEASE_ORGANIZE_ID, Indexes.TRAINING_RELEASE_PRIMARY, Indexes.TRAINING_RELEASE_SCHOOLROOM_ID, Indexes.TRAINING_RELEASE_USERNAME);
+        return Arrays.<Index>asList(Indexes.TRAINING_RELEASE_COURSE_ID, Indexes.TRAINING_RELEASE_ORGANIZE_ID, Indexes.TRAINING_RELEASE_PRIMARY, Indexes.TRAINING_RELEASE_USERNAME);
     }
 
     @Override
@@ -179,23 +158,19 @@ public class TrainingRelease extends TableImpl<TrainingReleaseRecord> {
 
     @Override
     public List<ForeignKey<TrainingReleaseRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<TrainingReleaseRecord, ?>>asList(Keys.TRAINING_RELEASE_IBFK_1, Keys.TRAINING_RELEASE_IBFK_2, Keys.TRAINING_RELEASE_IBFK_3, Keys.TRAINING_RELEASE_IBFK_4);
-    }
-
-    public Schoolroom schoolroom() {
-        return new Schoolroom(this, Keys.TRAINING_RELEASE_IBFK_1);
+        return Arrays.<ForeignKey<TrainingReleaseRecord, ?>>asList(Keys.TRAINING_RELEASE_IBFK_1, Keys.TRAINING_RELEASE_IBFK_2, Keys.TRAINING_RELEASE_IBFK_3);
     }
 
     public Users users() {
-        return new Users(this, Keys.TRAINING_RELEASE_IBFK_2);
+        return new Users(this, Keys.TRAINING_RELEASE_IBFK_1);
     }
 
     public Course course() {
-        return new Course(this, Keys.TRAINING_RELEASE_IBFK_3);
+        return new Course(this, Keys.TRAINING_RELEASE_IBFK_2);
     }
 
     public Organize organize() {
-        return new Organize(this, Keys.TRAINING_RELEASE_IBFK_4);
+        return new Organize(this, Keys.TRAINING_RELEASE_IBFK_3);
     }
 
     @Override
@@ -225,11 +200,11 @@ public class TrainingRelease extends TableImpl<TrainingReleaseRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row13 type methods
+    // Row9 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row13<String, String, Date, Date, String, Time, Time, Integer, String, Integer, Integer, String, Timestamp> fieldsRow() {
-        return (Row13) super.fieldsRow();
+    public Row9<String, String, Date, Date, String, Integer, Integer, String, Timestamp> fieldsRow() {
+        return (Row9) super.fieldsRow();
     }
 }

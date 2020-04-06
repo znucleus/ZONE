@@ -37,10 +37,10 @@ public class SystemConfigureRestController {
     @GetMapping("/anyone/data/configure")
     public ResponseEntity<Map<String, Object>> anyoneConfigure() {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        SystemConfigure systemConfigure = systemConfigureService
+        SystemConfigure configure1 = systemConfigureService
                 .findByDataKey(Workbook.SystemConfigure.FORBIDDEN_REGISTER.name());
-        return new ResponseEntity<>(ajaxUtil.success()
-                .put(Workbook.SystemConfigure.FORBIDDEN_REGISTER.name(), systemConfigure.getDataValue()).send(), HttpStatus.OK);
+        ajaxUtil.success().put(configure1.getDataKey(), configure1.getDataValue());
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
     /**
