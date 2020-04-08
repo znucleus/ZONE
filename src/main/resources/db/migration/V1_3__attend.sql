@@ -152,5 +152,54 @@ CREATE TABLE epidemic_register_data(
   channel(channel_id)
 );
 
+CREATE TABLE leaver_register_release(
+  leaver_register_release_id VARCHAR(64) PRIMARY KEY ,
+  title VARCHAR(100) NOT NULL,
+  username VARCHAR(64) NOT NULL,
+  publisher VARCHAR(30) NOT NULL,
+  release_time TIMESTAMP NOT NULL,
+  data_scope INT NOT NULL
+);
+
+CREATE TABLE leaver_register_scope(
+  leaver_register_release_id VARCHAR(64) NOT NULL,
+  data_id INT NOT NULL,
+  FOREIGN KEY(leaver_register_release_id) REFERENCES
+  leaver_register_release(leaver_register_release_id) ON DELETE CASCADE,
+  UNIQUE (leaver_register_release_id,data_id)
+);
+
+CREATE TABLE leaver_register_option(
+  leaver_register_option_id VARCHAR(64) PRIMARY KEY ,
+  leaver_register_release_id VARCHAR(64) NOT NULL,
+  option_content VARCHAR(300) NOT NULL,
+  sort TINYINT NOT NULL,
+  FOREIGN KEY(leaver_register_release_id) REFERENCES
+  leaver_register_release(leaver_register_release_id) ON DELETE CASCADE
+);
+
+CREATE TABLE leaver_register_data(
+  leaver_register_data_id VARCHAR(64) PRIMARY KEY ,
+  student_id INT NOT NULL,
+  leaver_register_release_id VARCHAR(64) NOT NULL,
+  leaver_address VARCHAR(300) NOT NULL,
+  register_date TIMESTAMP NOT NULL,
+  remark VARCHAR(200),
+  FOREIGN KEY(leaver_register_release_id) REFERENCES
+  leaver_register_release(leaver_register_release_id) ON DELETE CASCADE,
+  FOREIGN KEY(student_id) REFERENCES
+  student(student_id) ON DELETE CASCADE
+);
+
+CREATE TABLE leaver_register_data_option(
+  leaver_register_data_id VARCHAR(64) NOT NULL ,
+  leaver_register_option_id VARCHAR(64) NOT NULL,
+  FOREIGN KEY (leaver_register_data_id)
+  REFERENCES leaver_register_data(leaver_register_data_id) ON DELETE CASCADE,
+  FOREIGN KEY (leaver_register_option_id)
+  REFERENCES leaver_register_option(leaver_register_option_id) ON DELETE CASCADE,
+  UNIQUE (leaver_register_data_id,leaver_register_option_id)
+);
+
 INSERT INTO channel (channel_name) VALUES ('WEB');
 INSERT INTO channel (channel_name) VALUES ('API');

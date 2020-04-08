@@ -47,6 +47,11 @@ import top.zbeboy.zone.domain.tables.InternshipRelease;
 import top.zbeboy.zone.domain.tables.InternshipReviewAuthorize;
 import top.zbeboy.zone.domain.tables.InternshipTeacherDistribution;
 import top.zbeboy.zone.domain.tables.InternshipType;
+import top.zbeboy.zone.domain.tables.LeaverRegisterData;
+import top.zbeboy.zone.domain.tables.LeaverRegisterDataOption;
+import top.zbeboy.zone.domain.tables.LeaverRegisterOption;
+import top.zbeboy.zone.domain.tables.LeaverRegisterRelease;
+import top.zbeboy.zone.domain.tables.LeaverRegisterScope;
 import top.zbeboy.zone.domain.tables.Nation;
 import top.zbeboy.zone.domain.tables.OauthAccessToken;
 import top.zbeboy.zone.domain.tables.OauthApprovals;
@@ -300,6 +305,31 @@ public class Tables {
      * The table <code>zone.internship_type</code>.
      */
     public static final InternshipType INTERNSHIP_TYPE = InternshipType.INTERNSHIP_TYPE;
+
+    /**
+     * The table <code>zone.leaver_register_data</code>.
+     */
+    public static final LeaverRegisterData LEAVER_REGISTER_DATA = LeaverRegisterData.LEAVER_REGISTER_DATA;
+
+    /**
+     * The table <code>zone.leaver_register_data_option</code>.
+     */
+    public static final LeaverRegisterDataOption LEAVER_REGISTER_DATA_OPTION = LeaverRegisterDataOption.LEAVER_REGISTER_DATA_OPTION;
+
+    /**
+     * The table <code>zone.leaver_register_option</code>.
+     */
+    public static final LeaverRegisterOption LEAVER_REGISTER_OPTION = LeaverRegisterOption.LEAVER_REGISTER_OPTION;
+
+    /**
+     * The table <code>zone.leaver_register_release</code>.
+     */
+    public static final LeaverRegisterRelease LEAVER_REGISTER_RELEASE = LeaverRegisterRelease.LEAVER_REGISTER_RELEASE;
+
+    /**
+     * The table <code>zone.leaver_register_scope</code>.
+     */
+    public static final LeaverRegisterScope LEAVER_REGISTER_SCOPE = LeaverRegisterScope.LEAVER_REGISTER_SCOPE;
 
     /**
      * The table <code>zone.nation</code>.

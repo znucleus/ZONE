@@ -55,6 +55,11 @@ import top.zbeboy.zone.domain.tables.InternshipRelease;
 import top.zbeboy.zone.domain.tables.InternshipReviewAuthorize;
 import top.zbeboy.zone.domain.tables.InternshipTeacherDistribution;
 import top.zbeboy.zone.domain.tables.InternshipType;
+import top.zbeboy.zone.domain.tables.LeaverRegisterData;
+import top.zbeboy.zone.domain.tables.LeaverRegisterDataOption;
+import top.zbeboy.zone.domain.tables.LeaverRegisterOption;
+import top.zbeboy.zone.domain.tables.LeaverRegisterRelease;
+import top.zbeboy.zone.domain.tables.LeaverRegisterScope;
 import top.zbeboy.zone.domain.tables.Nation;
 import top.zbeboy.zone.domain.tables.OauthAccessToken;
 import top.zbeboy.zone.domain.tables.OauthApprovals;
@@ -104,7 +109,7 @@ import top.zbeboy.zone.domain.tables.WeiXinDevice;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Zone extends SchemaImpl {
 
-    private static final long serialVersionUID = 1094740610;
+    private static final long serialVersionUID = 221174905;
 
     /**
      * The reference instance of <code>zone</code>
@@ -315,6 +320,31 @@ public class Zone extends SchemaImpl {
      * The table <code>zone.internship_type</code>.
      */
     public final InternshipType INTERNSHIP_TYPE = top.zbeboy.zone.domain.tables.InternshipType.INTERNSHIP_TYPE;
+
+    /**
+     * The table <code>zone.leaver_register_data</code>.
+     */
+    public final LeaverRegisterData LEAVER_REGISTER_DATA = top.zbeboy.zone.domain.tables.LeaverRegisterData.LEAVER_REGISTER_DATA;
+
+    /**
+     * The table <code>zone.leaver_register_data_option</code>.
+     */
+    public final LeaverRegisterDataOption LEAVER_REGISTER_DATA_OPTION = top.zbeboy.zone.domain.tables.LeaverRegisterDataOption.LEAVER_REGISTER_DATA_OPTION;
+
+    /**
+     * The table <code>zone.leaver_register_option</code>.
+     */
+    public final LeaverRegisterOption LEAVER_REGISTER_OPTION = top.zbeboy.zone.domain.tables.LeaverRegisterOption.LEAVER_REGISTER_OPTION;
+
+    /**
+     * The table <code>zone.leaver_register_release</code>.
+     */
+    public final LeaverRegisterRelease LEAVER_REGISTER_RELEASE = top.zbeboy.zone.domain.tables.LeaverRegisterRelease.LEAVER_REGISTER_RELEASE;
+
+    /**
+     * The table <code>zone.leaver_register_scope</code>.
+     */
+    public final LeaverRegisterScope LEAVER_REGISTER_SCOPE = top.zbeboy.zone.domain.tables.LeaverRegisterScope.LEAVER_REGISTER_SCOPE;
 
     /**
      * The table <code>zone.nation</code>.
@@ -549,6 +579,11 @@ public class Zone extends SchemaImpl {
             InternshipReviewAuthorize.INTERNSHIP_REVIEW_AUTHORIZE,
             InternshipTeacherDistribution.INTERNSHIP_TEACHER_DISTRIBUTION,
             InternshipType.INTERNSHIP_TYPE,
+            LeaverRegisterData.LEAVER_REGISTER_DATA,
+            LeaverRegisterDataOption.LEAVER_REGISTER_DATA_OPTION,
+            LeaverRegisterOption.LEAVER_REGISTER_OPTION,
+            LeaverRegisterRelease.LEAVER_REGISTER_RELEASE,
+            LeaverRegisterScope.LEAVER_REGISTER_SCOPE,
             Nation.NATION,
             OauthAccessToken.OAUTH_ACCESS_TOKEN,
             OauthApprovals.OAUTH_APPROVALS,
