@@ -13,13 +13,11 @@ public class OrganizeBean extends Organize {
     private String departmentName;
     private String collegeName;
     private String schoolName;
-    private String realName;
-    private String mobile;
-    private String username;
     private int collegeId;
     private int schoolId;
     private int departmentId;
     private int scienceId;
+    private String realName;
 
     public Byte getSchoolIsDel() {
         return schoolIsDel;
@@ -101,30 +99,6 @@ public class OrganizeBean extends Organize {
         this.schoolName = schoolName;
     }
 
-    public String getRealName() {
-        return realName;
-    }
-
-    public void setRealName(String realName) {
-        this.realName = realName;
-    }
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public int getCollegeId() {
         return collegeId;
     }
@@ -155,5 +129,13 @@ public class OrganizeBean extends Organize {
 
     public void setScienceId(int scienceId) {
         this.scienceId = scienceId;
+    }
+
+    public String getRealName() {
+        return realName;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
     }
 }

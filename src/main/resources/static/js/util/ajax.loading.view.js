@@ -42,11 +42,7 @@ define(["jquery", "tools", "jquery.showLoading", "messenger"], function ($, tool
                     loadJs(web_path + $(scripts[i]).val());
                 }
                 tools.dataEndLoading();
-                loadingMessage.update({
-                    message: 'Loading finish , enjoy you life !',
-                    type: 'success',
-                    showCloseButton: true
-                });
+                loadingMessage.hide();
             },
             error: function (XMLHttpRequest) {
                 tools.dataEndLoading();

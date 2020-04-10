@@ -14,7 +14,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
         };
 
         // 刷新时选中菜单
-        navActive(ajax_url.back);
+        navActive(ajax_url.page);
 
         /*
          参数id

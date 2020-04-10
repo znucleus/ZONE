@@ -80,10 +80,6 @@ public class OrganizeServiceImpl implements OrganizeService, PaginationPlugin<Da
                 .on(DEPARTMENT.COLLEGE_ID.eq(COLLEGE.COLLEGE_ID))
                 .join(SCHOOL)
                 .on(COLLEGE.SCHOOL_ID.eq(SCHOOL.SCHOOL_ID))
-                .leftJoin(STAFF)
-                .on(ORGANIZE.STAFF_ID.eq(STAFF.STAFF_ID))
-                .leftJoin(USERS)
-                .on(STAFF.USERNAME.eq(USERS.USERNAME))
                 .where(ORGANIZE.ORGANIZE_ID.eq(id))
                 .fetchOptional();
     }

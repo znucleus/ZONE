@@ -134,7 +134,7 @@ public class OrganizeRestController {
             map.put("mobile", users.getMobile());
             ajaxUtil.success().msg("查询信息正常").put("staff", map);
         } else {
-            ajaxUtil.fail().msg("未查询到教职工信息");
+            ajaxUtil.fail().msg("未查询到教职工信息或用户状态不正常");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
@@ -182,7 +182,7 @@ public class OrganizeRestController {
                         organizeService.save(organize);
                         ajaxUtil.success().msg("保存成功");
                     } else {
-                        ajaxUtil.fail().msg("未查询到教职工信息");
+                        ajaxUtil.fail().msg("未查询到教职工信息或用户状态不正常");
                     }
                 } else {
                     organizeService.save(organize);
@@ -243,7 +243,7 @@ public class OrganizeRestController {
                     organizeService.update(organize);
                     ajaxUtil.success().msg("更新成功");
                 } else {
-                    ajaxUtil.fail().msg("未查询到教职工信息");
+                    ajaxUtil.fail().msg("未查询到教职工信息或用户状态不正常");
                 }
             } else {
                 organizeService.update(organize);

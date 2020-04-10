@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.College;
+import top.zbeboy.zone.domain.tables.pojos.Staff;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.service.data.OrganizeService;
@@ -17,6 +18,7 @@ import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
 import top.zbeboy.zone.web.bean.data.organize.OrganizeBean;
+import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 
 import javax.annotation.Resource;
@@ -116,13 +118,21 @@ public class OrganizeViewController {
         Optional<Record> record = organizeService.findByIdRelation(id);
         if (record.isPresent()) {
             OrganizeBean organizeBean = record.get().into(OrganizeBean.class);
+            if (Objects.nonNull(organizeBean.getStaffId())) {
+                Optional<Record> staffRecord = staffService.findByIdRelation(organizeBean.getStaffId());
+                if (staffRecord.isPresent()) {
+                    StaffBean staffBean = staffRecord.get().into(StaffBean.class);
+                    modelMap.addAttribute("username", staffBean.getUsername());
+                    modelMap.addAttribute("realName", staffBean.getRealName());
+                    modelMap.addAttribute("mobile", staffBean.getMobile());
+                }
+            }
             modelMap.addAttribute("organize", organizeBean);
             if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
                 modelMap.addAttribute("collegeId", organizeBean.getCollegeId());
             } else {
                 modelMap.addAttribute("collegeId", 0);
             }
-
             page = "web/data/organize/organize_edit::#page-wrapper";
         } else {
             config.buildDangerTip("查询错误", "未查询到班级数据");

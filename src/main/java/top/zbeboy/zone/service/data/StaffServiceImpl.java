@@ -117,7 +117,9 @@ public class StaffServiceImpl implements StaffService, PaginationPlugin<DataTabl
                 .from(STAFF)
                 .join(USERS)
                 .on(STAFF.USERNAME.eq(USERS.USERNAME))
-                .where(STAFF.USERNAME.eq(staff).or(STAFF.STAFF_NUMBER.eq(staff)))
+                .where(STAFF.USERNAME.eq(staff).or(STAFF.STAFF_NUMBER.eq(staff))
+                        .and(USERS.VERIFY_MAILBOX.eq(BooleanUtil.toByte(true)))
+                        .andExists(authoritiesService.existsAuthoritiesSelect()))
                 .fetchOptional();
     }
 

@@ -1,4 +1,4 @@
-//# sourceURL=organize_add.js
+//# sourceURL=organize_edit.js
 require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", "jquery.address", "bootstrap-maxlength", "select2-zh-CN"],
     function ($, _, tools, Swal, navActive) {
 
