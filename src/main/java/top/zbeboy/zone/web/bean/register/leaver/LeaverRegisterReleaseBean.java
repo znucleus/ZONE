@@ -8,6 +8,8 @@ public class LeaverRegisterReleaseBean extends LeaverRegisterRelease {
     private String releaseTimeStr;
     private Byte canOperator;
     private Byte canReview;
+    private Byte isRegister;
+    private Byte isStudent;
     private List<String> dataName;
     private String dataScopeName;
 
@@ -49,5 +51,21 @@ public class LeaverRegisterReleaseBean extends LeaverRegisterRelease {
 
     public void setDataScopeName(String dataScopeName) {
         this.dataScopeName = dataScopeName;
+    }
+
+    public Byte getIsRegister() {
+        return isRegister;
+    }
+
+    public void setIsRegister(Byte isRegister) {
+        this.isRegister = isRegister;
+    }
+
+    public Byte getIsStudent() {
+        return isStudent;
+    }
+
+    public void setIsStudent(Byte isStudent) {
+        this.isStudent = isStudent;
     }
 }

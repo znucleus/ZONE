@@ -1,5 +1,7 @@
 package top.zbeboy.zone.web.register.leaver;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jooq.Record;
 import org.jooq.Result;
@@ -9,10 +11,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.domain.tables.records.LeaverRegisterScopeRecord;
+import top.zbeboy.zone.domain.tables.records.StudentRecord;
 import top.zbeboy.zone.service.data.*;
 import top.zbeboy.zone.service.platform.UsersService;
+import top.zbeboy.zone.service.platform.UsersTypeService;
+import top.zbeboy.zone.service.register.LeaverRegisterDataService;
 import top.zbeboy.zone.service.register.LeaverRegisterOptionService;
 import top.zbeboy.zone.service.register.LeaverRegisterReleaseService;
 import top.zbeboy.zone.service.register.LeaverRegisterScopeService;
@@ -28,10 +34,7 @@ import top.zbeboy.zone.web.vo.register.leaver.LeaverRegisterReleaseAddVo;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 public class RegisterLeaverRestController {
@@ -44,6 +47,9 @@ public class RegisterLeaverRestController {
 
     @Resource
     private LeaverRegisterOptionService leaverRegisterOptionService;
+
+    @Resource
+    private LeaverRegisterDataService leaverRegisterDataService;
 
     @Resource
     private RegisterConditionCommon registerConditionCommon;
@@ -66,6 +72,12 @@ public class RegisterLeaverRestController {
     @Resource
     private UsersService usersService;
 
+    @Resource
+    private UsersTypeService usersTypeService;
+
+    @Resource
+    private StudentService studentService;
+
     /**
      * 数据
      *
@@ -81,8 +93,10 @@ public class RegisterLeaverRestController {
             beans = records.into(LeaverRegisterReleaseBean.class);
             for (LeaverRegisterReleaseBean bean : beans) {
                 bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime()));
-                bean.setCanOperator(BooleanUtil.toByte(registerConditionCommon.epidemicOperator()));
-                bean.setCanReview(BooleanUtil.toByte(registerConditionCommon.epidemicReview()));
+                bean.setCanOperator(BooleanUtil.toByte(registerConditionCommon.leaverOperator(bean.getLeaverRegisterReleaseId())));
+                bean.setCanReview(BooleanUtil.toByte(registerConditionCommon.leaverReview(bean.getLeaverRegisterReleaseId())));
+                bean.setIsStudent(BooleanUtil.toByte(isStudent()));
+                bean.setIsRegister(BooleanUtil.toByte(isRegister(bean.getLeaverRegisterReleaseId())));
 
                 switch (bean.getDataScope()) {
                     case 1:
@@ -212,5 +226,32 @@ public class RegisterLeaverRestController {
             ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    private boolean isRegister(String leaverRegisterReleaseId){
+        boolean isRegister = false;
+        Users users = usersService.getUserFromSession();
+        UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
+        if (Objects.nonNull(usersType)) {
+            if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
+                Optional<StudentRecord> studentRecord = studentService.findByUsername(users.getUsername());
+                if(studentRecord.isPresent()){
+                    isRegister = leaverRegisterDataService.findByLeaverRegisterReleaseIdAndStudentId(leaverRegisterReleaseId,studentRecord.get().getStudentId()).isPresent();
+                }
+            }
+        }
+        return isRegister;
+    }
+
+    private boolean isStudent(){
+        boolean isStudent = false;
+        Users users = usersService.getUserFromSession();
+        UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
+        if (Objects.nonNull(usersType)) {
+            if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
+                isStudent = true;
+            }
+        }
+        return isStudent;
     }
 }

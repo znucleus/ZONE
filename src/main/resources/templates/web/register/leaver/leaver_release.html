@@ -31,7 +31,8 @@
                 </div>
                 <div class="col-md-12">
                     <div class="float-left mg-t-7">
-                        <input  class="labelauty" id="dataRange" name="dataRange" value="1" type="checkbox" data-labelauty="查看全部|与我相关"/>
+                        <input class="labelauty" id="dataRange" name="dataRange" value="1" type="checkbox"
+                               data-labelauty="查看全部|与我相关"/>
                     </div>
                     <div class="float-right mg-t-5">
                         <button type="button" class="btn btn-outline-primary" id="release"><i class="fa fa-edit"></i> 发布
@@ -82,8 +83,15 @@
                     <button type="button" class="btn btn-teal review" data-id="{{leaverRegisterReleaseId}}">统计
                     </button>
                     {{/if}}
-                    <button type="button" class="btn btn-info register" data-id="{{leaverRegisterReleaseId}}">登记
-                    </button>
+                    {{#if isStudent}}
+                        {{#if isRegister}}
+                        <button type="button" class="btn btn-warning cancel" data-id="{{leaverRegisterReleaseId}}">取消登记
+                        </button>
+                        {{else}}
+                        <button type="button" class="btn btn-info register" data-id="{{leaverRegisterReleaseId}}">登记
+                        </button>
+                        {{/if}}
+                    {{/if}}
                 </div>
             </div>
         </div>
