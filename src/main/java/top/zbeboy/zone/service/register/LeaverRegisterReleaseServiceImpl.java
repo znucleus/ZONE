@@ -65,6 +65,11 @@ public class LeaverRegisterReleaseServiceImpl implements LeaverRegisterReleaseSe
     }
 
     @Override
+    public void deleteById(String id) {
+        leaverRegisterReleaseDao.deleteById(id);
+    }
+
+    @Override
     public Condition searchCondition(SimplePaginationUtil paginationUtil) {
         Condition a = null;
         JSONObject search = paginationUtil.getSearch();

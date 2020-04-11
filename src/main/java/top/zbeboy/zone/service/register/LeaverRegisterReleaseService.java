@@ -43,4 +43,11 @@ public interface LeaverRegisterReleaseService {
      * @param leaverRegisterRelease 数据
      */
     void update(LeaverRegisterRelease leaverRegisterRelease);
+
+    /**
+     * 根据主键删除
+     *
+     * @param id 主键
+     */
+    void deleteById(String id);
 }

@@ -287,44 +287,66 @@ public class RegisterLeaverRestController {
     public ResponseEntity<Map<String, Object>> update(@Valid LeaverRegisterReleaseEditVo leaverRegisterReleaseEditVo, BindingResult bindingResult) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
-            LeaverRegisterRelease leaverRegisterRelease = leaverRegisterReleaseService.findById(leaverRegisterReleaseEditVo.getLeaverRegisterReleaseId());
-            leaverRegisterRelease.setTitle(leaverRegisterReleaseEditVo.getTitle());
-            leaverRegisterRelease.setDataScope(leaverRegisterReleaseEditVo.getDataScope());
-            leaverRegisterReleaseService.update(leaverRegisterRelease);
+            if (registerConditionCommon.leaverOperator(leaverRegisterReleaseEditVo.getLeaverRegisterReleaseId())) {
+                LeaverRegisterRelease leaverRegisterRelease = leaverRegisterReleaseService.findById(leaverRegisterReleaseEditVo.getLeaverRegisterReleaseId());
+                leaverRegisterRelease.setTitle(leaverRegisterReleaseEditVo.getTitle());
+                leaverRegisterRelease.setDataScope(leaverRegisterReleaseEditVo.getDataScope());
+                leaverRegisterReleaseService.update(leaverRegisterRelease);
 
-            leaverRegisterScopeService.deleteByLeaverRegisterReleaseId(leaverRegisterRelease.getLeaverRegisterReleaseId());
-            String dataIdStr = leaverRegisterReleaseEditVo.getDataId();
-            String[] dataIds = dataIdStr.split(",");
-            for (String dataId : dataIds) {
-                LeaverRegisterScope leaverRegisterScope = new LeaverRegisterScope();
-                leaverRegisterScope.setLeaverRegisterReleaseId(leaverRegisterRelease.getLeaverRegisterReleaseId());
-                leaverRegisterScope.setDataId(NumberUtils.toInt(dataId));
+                leaverRegisterScopeService.deleteByLeaverRegisterReleaseId(leaverRegisterRelease.getLeaverRegisterReleaseId());
+                String dataIdStr = leaverRegisterReleaseEditVo.getDataId();
+                String[] dataIds = dataIdStr.split(",");
+                for (String dataId : dataIds) {
+                    LeaverRegisterScope leaverRegisterScope = new LeaverRegisterScope();
+                    leaverRegisterScope.setLeaverRegisterReleaseId(leaverRegisterRelease.getLeaverRegisterReleaseId());
+                    leaverRegisterScope.setDataId(NumberUtils.toInt(dataId));
 
-                leaverRegisterScopeService.save(leaverRegisterScope);
-            }
-
-            String optionContentStr = leaverRegisterReleaseEditVo.getOptionContent();
-            if(StringUtils.isNotBlank(optionContentStr)){
-                byte maxSort = leaverRegisterOptionService.findMaxSortByLeaverRegisterReleaseId(leaverRegisterRelease.getLeaverRegisterReleaseId());
-
-                String[] optionContents = optionContentStr.split("\\|");
-                List<LeaverRegisterOption> leaverRegisterOptions = new ArrayList<>();
-                for (String optionContent : optionContents) {
-                    maxSort++;
-                    LeaverRegisterOption leaverRegisterOption = new LeaverRegisterOption();
-                    leaverRegisterOption.setLeaverRegisterOptionId(UUIDUtil.getUUID());
-                    leaverRegisterOption.setLeaverRegisterReleaseId(leaverRegisterRelease.getLeaverRegisterReleaseId());
-                    leaverRegisterOption.setOptionContent(optionContent);
-                    leaverRegisterOption.setSort(maxSort);
-
-                    leaverRegisterOptions.add(leaverRegisterOption);
+                    leaverRegisterScopeService.save(leaverRegisterScope);
                 }
 
-                leaverRegisterOptionService.batchSave(leaverRegisterOptions);
+                String optionContentStr = leaverRegisterReleaseEditVo.getOptionContent();
+                if (StringUtils.isNotBlank(optionContentStr)) {
+                    byte maxSort = leaverRegisterOptionService.findMaxSortByLeaverRegisterReleaseId(leaverRegisterRelease.getLeaverRegisterReleaseId());
+
+                    String[] optionContents = optionContentStr.split("\\|");
+                    List<LeaverRegisterOption> leaverRegisterOptions = new ArrayList<>();
+                    for (String optionContent : optionContents) {
+                        maxSort++;
+                        LeaverRegisterOption leaverRegisterOption = new LeaverRegisterOption();
+                        leaverRegisterOption.setLeaverRegisterOptionId(UUIDUtil.getUUID());
+                        leaverRegisterOption.setLeaverRegisterReleaseId(leaverRegisterRelease.getLeaverRegisterReleaseId());
+                        leaverRegisterOption.setOptionContent(optionContent);
+                        leaverRegisterOption.setSort(maxSort);
+
+                        leaverRegisterOptions.add(leaverRegisterOption);
+                    }
+
+                    leaverRegisterOptionService.batchSave(leaverRegisterOptions);
+                }
+                ajaxUtil.success().msg("更新成功");
+            } else {
+                ajaxUtil.fail().msg("您无权限操作");
             }
-            ajaxUtil.success().msg("更新成功");
         } else {
             ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 删除
+     *
+     * @param leaverRegisterReleaseId 发布id
+     * @return true or false
+     */
+    @PostMapping("/web/register/leaver/release/delete")
+    public ResponseEntity<Map<String, Object>> delete(@RequestParam("leaverRegisterReleaseId") String leaverRegisterReleaseId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (registerConditionCommon.leaverOperator(leaverRegisterReleaseId)) {
+            leaverRegisterReleaseService.deleteById(leaverRegisterReleaseId);
+            ajaxUtil.success().msg("删除成功");
+        } else {
+            ajaxUtil.fail().msg("您无权限操作");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
