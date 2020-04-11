@@ -5,6 +5,7 @@ import org.jooq.Record;
 import org.springframework.stereotype.Component;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.EpidemicRegisterData;
+import top.zbeboy.zone.domain.tables.pojos.LeaverRegisterRelease;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.service.data.StaffService;
@@ -13,6 +14,7 @@ import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
 import top.zbeboy.zone.service.register.EpidemicRegisterDataService;
+import top.zbeboy.zone.service.register.LeaverRegisterReleaseService;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
 
@@ -40,6 +42,9 @@ public class RegisterConditionCommon {
 
     @Resource
     private EpidemicRegisterDataService epidemicRegisterDataService;
+
+    @Resource
+    private LeaverRegisterReleaseService leaverRegisterReleaseService;
 
     /**
      * 是否可操作
@@ -71,7 +76,7 @@ public class RegisterConditionCommon {
     }
 
     /**
-     * 是否可统计
+     * 是否可删除
      *
      * @return true or false
      */
@@ -129,6 +134,52 @@ public class RegisterConditionCommon {
             }
         }
 
+        return canOperator;
+    }
+
+    /**
+     * 是否可操作
+     *
+     * @return true or false
+     */
+    public boolean leaverOperator(String leaverRegisterReleaseId) {
+        boolean canOperator = false;
+        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+            canOperator = true;
+        } else {
+            LeaverRegisterRelease leaverRegisterRelease = leaverRegisterReleaseService.findById(leaverRegisterReleaseId);
+            if (Objects.nonNull(leaverRegisterRelease)) {
+                Users users = usersService.getUserFromSession();
+                canOperator = StringUtils.equals(users.getUsername(), leaverRegisterRelease.getUsername());
+            }
+        }
+        return canOperator;
+    }
+
+    /**
+     * 是否可统计
+     *
+     * @return true or false
+     */
+    public boolean leaverReview(String leaverRegisterReleaseId) {
+        boolean canOperator = false;
+        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
+                roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+            canOperator = true;
+        } else {
+            Users users = usersService.getUserFromSession();
+            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
+            if (Objects.nonNull(usersType)) {
+                if(StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())){
+                    canOperator = true;
+                } else {
+                    LeaverRegisterRelease leaverRegisterRelease = leaverRegisterReleaseService.findById(leaverRegisterReleaseId);
+                    if (Objects.nonNull(leaverRegisterRelease)) {
+                        canOperator = StringUtils.equals(users.getUsername(), leaverRegisterRelease.getUsername());
+                    }
+                }
+            }
+        }
         return canOperator;
     }
 }
