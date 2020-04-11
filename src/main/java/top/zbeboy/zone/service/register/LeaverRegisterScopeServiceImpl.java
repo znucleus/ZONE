@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import top.zbeboy.zone.domain.tables.pojos.LeaverRegisterScope;
 import top.zbeboy.zone.domain.tables.records.LeaverRegisterScopeRecord;
 
 import static top.zbeboy.zone.domain.Tables.LEAVER_REGISTER_SCOPE;
@@ -27,4 +28,15 @@ public class LeaverRegisterScopeServiceImpl implements LeaverRegisterScopeServic
                 .where(LEAVER_REGISTER_SCOPE.LEAVER_REGISTER_RELEASE_ID.eq(leaverRegisterReleaseId))
                 .fetch();
     }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void save(LeaverRegisterScope leaverRegisterScope) {
+        create.insertInto(LEAVER_REGISTER_SCOPE)
+                .set(LEAVER_REGISTER_SCOPE.LEAVER_REGISTER_RELEASE_ID, leaverRegisterScope.getLeaverRegisterReleaseId())
+                .set(LEAVER_REGISTER_SCOPE.DATA_ID, leaverRegisterScope.getDataId())
+                .execute();
+    }
+
+
 }

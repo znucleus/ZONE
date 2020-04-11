@@ -53,6 +53,12 @@ public class LeaverRegisterReleaseServiceImpl implements LeaverRegisterReleaseSe
         return countAll(create, LEAVER_REGISTER_RELEASE, paginationUtil, false);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void save(LeaverRegisterRelease leaverRegisterRelease) {
+        leaverRegisterReleaseDao.insert(leaverRegisterRelease);
+    }
+
     @Override
     public Condition searchCondition(SimplePaginationUtil paginationUtil) {
         Condition a = null;

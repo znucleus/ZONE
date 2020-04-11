@@ -29,4 +29,11 @@ public interface LeaverRegisterReleaseService {
      * @return 总数
      */
     int countAll(SimplePaginationUtil paginationUtil);
+
+    /**
+     * 保存
+     *
+     * @param leaverRegisterRelease 数据
+     */
+    void save(LeaverRegisterRelease leaverRegisterRelease);
 }

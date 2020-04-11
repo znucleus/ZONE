@@ -9,6 +9,7 @@ public class LeaverRegisterReleaseBean extends LeaverRegisterRelease {
     private Byte canOperator;
     private Byte canReview;
     private List<String> dataName;
+    private String dataScopeName;
 
     public String getReleaseTimeStr() {
         return releaseTimeStr;
@@ -40,5 +41,13 @@ public class LeaverRegisterReleaseBean extends LeaverRegisterRelease {
 
     public void setDataName(List<String> dataName) {
         this.dataName = dataName;
+    }
+
+    public String getDataScopeName() {
+        return dataScopeName;
+    }
+
+    public void setDataScopeName(String dataScopeName) {
+        this.dataScopeName = dataScopeName;
     }
 }

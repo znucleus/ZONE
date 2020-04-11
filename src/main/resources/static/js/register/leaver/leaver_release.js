@@ -12,7 +12,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             del: web_path + '/web/register/leaver/release/delete',
             register:'/web/register/leaver/data/add',
             review:'/web/register/leaver/review',
-            page: '/web/menu/training/leaver'
+            page: '/web/menu/register/leaver'
         };
 
         navActive(ajax_url.page);
