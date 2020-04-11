@@ -4,8 +4,6 @@ import org.jooq.Result;
 import top.zbeboy.zone.domain.tables.pojos.LeaverRegisterScope;
 import top.zbeboy.zone.domain.tables.records.LeaverRegisterScopeRecord;
 
-import java.util.List;
-
 public interface LeaverRegisterScopeService {
 
     /**
@@ -22,4 +20,11 @@ public interface LeaverRegisterScopeService {
      * @param leaverRegisterScope 数据
      */
     void save(LeaverRegisterScope leaverRegisterScope);
+
+    /**
+     * 根据登记发布id删除
+     *
+     * @param leaverRegisterReleaseId id
+     */
+    void deleteByLeaverRegisterReleaseId(String leaverRegisterReleaseId);
 }

@@ -60,6 +60,11 @@ public class LeaverRegisterReleaseServiceImpl implements LeaverRegisterReleaseSe
     }
 
     @Override
+    public void update(LeaverRegisterRelease leaverRegisterRelease) {
+        leaverRegisterReleaseDao.update(leaverRegisterRelease);
+    }
+
+    @Override
     public Condition searchCondition(SimplePaginationUtil paginationUtil) {
         Condition a = null;
         JSONObject search = paginationUtil.getSearch();

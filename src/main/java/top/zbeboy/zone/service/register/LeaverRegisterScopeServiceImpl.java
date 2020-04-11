@@ -38,5 +38,10 @@ public class LeaverRegisterScopeServiceImpl implements LeaverRegisterScopeServic
                 .execute();
     }
 
+    @Override
+    public void deleteByLeaverRegisterReleaseId(String leaverRegisterReleaseId) {
+        create.deleteFrom(LEAVER_REGISTER_SCOPE).where(LEAVER_REGISTER_SCOPE.LEAVER_REGISTER_RELEASE_ID.eq(leaverRegisterReleaseId)).execute();
+    }
+
 
 }

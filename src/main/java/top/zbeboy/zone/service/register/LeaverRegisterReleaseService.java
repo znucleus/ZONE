@@ -36,4 +36,11 @@ public interface LeaverRegisterReleaseService {
      * @param leaverRegisterRelease 数据
      */
     void save(LeaverRegisterRelease leaverRegisterRelease);
+
+    /**
+     * 更新
+     *
+     * @param leaverRegisterRelease 数据
+     */
+    void update(LeaverRegisterRelease leaverRegisterRelease);
 }
