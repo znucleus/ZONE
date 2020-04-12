@@ -6,6 +6,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zone.domain.tables.pojos.LeaverRegisterDataOption;
+import top.zbeboy.zone.domain.tables.records.LeaverRegisterDataOptionRecord;
+
+import java.util.Optional;
 
 import static top.zbeboy.zone.domain.Tables.LEAVER_REGISTER_DATA_OPTION;
 
@@ -18,6 +21,14 @@ public class LeaverRegisterDataOptionServiceImpl implements LeaverRegisterDataOp
     @Autowired
     LeaverRegisterDataOptionServiceImpl(DSLContext dslContext) {
         create = dslContext;
+    }
+
+    @Override
+    public Optional<LeaverRegisterDataOptionRecord> findByLeaverRegisterDataIdAndLeaverRegisterOptionId(String leaverRegisterDataId, String leaverRegisterOptionId) {
+        return create.selectFrom(LEAVER_REGISTER_DATA_OPTION)
+                .where(LEAVER_REGISTER_DATA_OPTION.LEAVER_REGISTER_DATA_ID.eq(leaverRegisterDataId)
+                        .and(LEAVER_REGISTER_DATA_OPTION.LEAVER_REGISTER_OPTION_ID.eq(leaverRegisterOptionId)))
+                .fetchOptional();
     }
 
     @Transactional(propagation = Propagation.REQUIRED)

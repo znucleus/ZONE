@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
+import top.zbeboy.zone.domain.tables.records.LeaverRegisterDataOptionRecord;
+import top.zbeboy.zone.domain.tables.records.LeaverRegisterOptionRecord;
 import top.zbeboy.zone.domain.tables.records.LeaverRegisterScopeRecord;
 import top.zbeboy.zone.domain.tables.records.StudentRecord;
 import top.zbeboy.zone.service.data.*;
@@ -21,6 +23,8 @@ import top.zbeboy.zone.service.platform.UsersTypeService;
 import top.zbeboy.zone.service.register.*;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
+import top.zbeboy.zone.web.bean.register.leaver.LeaverRegisterDataBean;
+import top.zbeboy.zone.web.bean.register.leaver.LeaverRegisterOptionBean;
 import top.zbeboy.zone.web.bean.register.leaver.LeaverRegisterReleaseBean;
 import top.zbeboy.zone.web.register.common.RegisterConditionCommon;
 import top.zbeboy.zone.web.util.AjaxUtil;
@@ -431,6 +435,48 @@ public class RegisterLeaverRestController {
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
+    /**
+     * 删除登记
+     *
+     * @param leaverRegisterReleaseId 发布id
+     * @return true or false
+     */
+    @PostMapping("/web/register/leaver/data/list/delete")
+    public ResponseEntity<Map<String, Object>> dataListDelete(@RequestParam("leaverRegisterReleaseId") String leaverRegisterReleaseId,
+                                                              @RequestParam("leaverRegisterDataId") String leaverRegisterDataId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (registerConditionCommon.leaverReview(leaverRegisterReleaseId)) {
+            leaverRegisterDataService.deleteById(leaverRegisterDataId);
+            ajaxUtil.success().msg("删除成功");
+        } else {
+            ajaxUtil.fail().msg("您无权限操作");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 数据
+     *
+     * @param simplePaginationUtil 请求
+     * @return 数据
+     */
+    @GetMapping("/web/register/leaver/data/list")
+    public ResponseEntity<Map<String, Object>> dataList(SimplePaginationUtil simplePaginationUtil) {
+        AjaxUtil<LeaverRegisterDataBean> ajaxUtil = AjaxUtil.of();
+        List<LeaverRegisterDataBean> beans = new ArrayList<>();
+        Result<Record> records = leaverRegisterDataService.findAllByPage(simplePaginationUtil);
+        if (records.isNotEmpty()) {
+            beans = records.into(LeaverRegisterDataBean.class);
+            for (LeaverRegisterDataBean bean : beans) {
+                // 选项合并
+                mergeOption(bean);
+            }
+        }
+        simplePaginationUtil.setTotalSize(leaverRegisterDataService.countAll(simplePaginationUtil));
+        ajaxUtil.success().list(beans).page(simplePaginationUtil).msg("获取数据成功");
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
     private boolean isRegister(String leaverRegisterReleaseId) {
         boolean isRegister = false;
         Users users = usersService.getUserFromSession();
@@ -456,5 +502,30 @@ public class RegisterLeaverRestController {
             }
         }
         return isStudent;
+    }
+
+    /**
+     * 合并选项数据
+     *
+     * @param bean 数据
+     */
+    private void mergeOption(LeaverRegisterDataBean bean) {
+        // 查询全部选项
+        List<LeaverRegisterOptionBean> leaverRegisterOptionBeans = new ArrayList<>();
+        Result<LeaverRegisterOptionRecord> leaverRegisterOptionRecords =
+                leaverRegisterOptionService.findByLeaverRegisterReleaseId(bean.getLeaverRegisterReleaseId());
+        if (leaverRegisterOptionRecords.isNotEmpty()) {
+            leaverRegisterOptionBeans = leaverRegisterOptionRecords.into(LeaverRegisterOptionBean.class);
+            for (LeaverRegisterOptionBean leaverRegisterOptionBean : leaverRegisterOptionBeans) {
+                // 查询用户选择
+                Optional<LeaverRegisterDataOptionRecord> leaverRegisterDataOptionRecord =
+                        leaverRegisterDataOptionService.findByLeaverRegisterDataIdAndLeaverRegisterOptionId(bean.getLeaverRegisterDataId(), leaverRegisterOptionBean.getLeaverRegisterOptionId());
+                if (leaverRegisterDataOptionRecord.isPresent()) {
+                    leaverRegisterOptionBean.setIsChecked(BooleanUtil.toByte(true));
+                }
+            }
+        }
+
+        bean.setLeaverRegisterOptions(leaverRegisterOptionBeans);
     }
 }

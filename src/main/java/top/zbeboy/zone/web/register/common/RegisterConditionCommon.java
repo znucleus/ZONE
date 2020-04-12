@@ -5,10 +5,13 @@ import org.jooq.Record;
 import org.jooq.Result;
 import org.springframework.stereotype.Component;
 import top.zbeboy.zone.config.Workbook;
-import top.zbeboy.zone.domain.tables.pojos.*;
+import top.zbeboy.zone.domain.tables.pojos.EpidemicRegisterData;
+import top.zbeboy.zone.domain.tables.pojos.LeaverRegisterRelease;
+import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.domain.tables.records.LeaverRegisterScopeRecord;
-import top.zbeboy.zone.domain.tables.records.StudentRecord;
-import top.zbeboy.zone.service.data.*;
+import top.zbeboy.zone.service.data.StaffService;
+import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
@@ -39,21 +42,6 @@ public class RegisterConditionCommon {
 
     @Resource
     private StudentService studentService;
-
-    @Resource
-    private CollegeService collegeService;
-
-    @Resource
-    private DepartmentService departmentService;
-
-    @Resource
-    private ScienceService scienceService;
-
-    @Resource
-    private GradeService gradeService;
-
-    @Resource
-    private OrganizeService organizeService;
 
     @Resource
     private EpidemicRegisterDataService epidemicRegisterDataService;
@@ -244,7 +232,7 @@ public class RegisterConditionCommon {
                                         break;
                                 }
 
-                                if(canOperator){
+                                if (canOperator) {
                                     break;
                                 }
                             }

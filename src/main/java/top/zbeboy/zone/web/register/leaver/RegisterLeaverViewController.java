@@ -266,4 +266,26 @@ public class RegisterLeaverViewController {
         }
         return page;
     }
+
+    /**
+     * 统计
+     *
+     * @param id       发布id
+     * @param modelMap 页面对象
+     * @return 登记页面
+     */
+    @GetMapping("/web/register/leaver/review/{id}")
+    public String dataReview(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        if (registerConditionCommon.leaverReview(id)) {
+            modelMap.addAttribute("leaverRegisterReleaseId", id);
+            page = "web/register/leaver/leaver_data_review::#page-wrapper";
+        } else {
+            config.buildWarningTip("操作警告", "您无权限操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
 }
