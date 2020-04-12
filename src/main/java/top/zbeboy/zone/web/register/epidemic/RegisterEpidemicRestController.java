@@ -311,7 +311,7 @@ public class RegisterEpidemicRestController {
     @GetMapping("/web/register/epidemic/data/export")
     public void export(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, "registerDateStr", "desc",
-                "疫情登记数据表", Workbook.internshipFilePath());
+                "疫情登记数据表", Workbook.registerFilePath());
         Result<Record> records = epidemicRegisterDataService.export(dataTablesUtil);
         List<EpidemicRegisterDataBean> beans = new ArrayList<>();
         if (Objects.nonNull(records) && records.isNotEmpty()) {
