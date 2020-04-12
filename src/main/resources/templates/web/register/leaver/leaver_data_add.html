@@ -30,11 +30,12 @@
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group" th:unless="${#lists.isEmpty(leaverRegisterOptions)}">
-                            <label>离校选择</label>
+                            <label>离校选项</label>
                             <label class="ckbox" th:each="rp : ${leaverRegisterOptions}">
                                 <input type="checkbox" name="leaverRegisterOptionId" th:value="${rp.leaverRegisterOptionId}"/>
                                 <span th:text="${rp.optionContent}"></span>
                             </label>
+                            <div class="text-danger" id="leaverRegisterOptionIdError"></div>
                         </div>
                         <div class="form-group">
                             <label>备注</label>

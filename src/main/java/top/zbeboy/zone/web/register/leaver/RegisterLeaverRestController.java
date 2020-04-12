@@ -18,10 +18,7 @@ import top.zbeboy.zone.domain.tables.records.StudentRecord;
 import top.zbeboy.zone.service.data.*;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
-import top.zbeboy.zone.service.register.LeaverRegisterDataService;
-import top.zbeboy.zone.service.register.LeaverRegisterOptionService;
-import top.zbeboy.zone.service.register.LeaverRegisterReleaseService;
-import top.zbeboy.zone.service.register.LeaverRegisterScopeService;
+import top.zbeboy.zone.service.register.*;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.register.leaver.LeaverRegisterReleaseBean;
@@ -30,6 +27,7 @@ import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.ByteUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
+import top.zbeboy.zone.web.vo.register.leaver.LeaverRegisterDataVo;
 import top.zbeboy.zone.web.vo.register.leaver.LeaverRegisterReleaseAddVo;
 import top.zbeboy.zone.web.vo.register.leaver.LeaverRegisterReleaseEditVo;
 
@@ -51,6 +49,9 @@ public class RegisterLeaverRestController {
 
     @Resource
     private LeaverRegisterDataService leaverRegisterDataService;
+
+    @Resource
+    private LeaverRegisterDataOptionService leaverRegisterDataOptionService;
 
     @Resource
     private RegisterConditionCommon registerConditionCommon;
@@ -345,6 +346,85 @@ public class RegisterLeaverRestController {
         if (registerConditionCommon.leaverOperator(leaverRegisterReleaseId)) {
             leaverRegisterReleaseService.deleteById(leaverRegisterReleaseId);
             ajaxUtil.success().msg("删除成功");
+        } else {
+            ajaxUtil.fail().msg("您无权限操作");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 保存
+     *
+     * @param leaverRegisterDataVo 数据
+     * @param bindingResult        检验
+     * @return true or false
+     */
+    @PostMapping("/web/register/leaver/data/save")
+    public ResponseEntity<Map<String, Object>> dataSave(@Valid LeaverRegisterDataVo leaverRegisterDataVo, BindingResult bindingResult) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (!bindingResult.hasErrors()) {
+            if (registerConditionCommon.leaverRegister(leaverRegisterDataVo.getLeaverRegisterReleaseId())) {
+                Users users = usersService.getUserFromSession();
+                Optional<StudentRecord> studentRecord = studentService.findByUsername(users.getUsername());
+                if (studentRecord.isPresent()) {
+                    Optional<Record> leaverRegisterDataRecord = leaverRegisterDataService.findByLeaverRegisterReleaseIdAndStudentId(leaverRegisterDataVo.getLeaverRegisterReleaseId(), studentRecord.get().getStudentId());
+                    if (!leaverRegisterDataRecord.isPresent()) {
+                        LeaverRegisterData leaverRegisterData = new LeaverRegisterData();
+                        String leaverRegisterDataId = UUIDUtil.getUUID();
+                        leaverRegisterData.setLeaverRegisterDataId(leaverRegisterDataId);
+                        leaverRegisterData.setStudentId(studentRecord.get().getStudentId());
+                        leaverRegisterData.setLeaverRegisterReleaseId(leaverRegisterDataVo.getLeaverRegisterReleaseId());
+                        leaverRegisterData.setLeaverAddress(leaverRegisterDataVo.getLeaverAddress());
+                        leaverRegisterData.setRegisterDate(DateTimeUtil.getNowSqlTimestamp());
+                        leaverRegisterData.setRemark(leaverRegisterDataVo.getRemark());
+
+                        leaverRegisterDataService.save(leaverRegisterData);
+
+                        String[] leaverRegisterOptionIds = leaverRegisterDataVo.getLeaverRegisterOptionId();
+                        if (Objects.nonNull(leaverRegisterOptionIds) && leaverRegisterOptionIds.length > 0) {
+                            for (String id : leaverRegisterOptionIds) {
+                                LeaverRegisterDataOption leaverRegisterDataOption = new LeaverRegisterDataOption();
+                                leaverRegisterDataOption.setLeaverRegisterDataId(leaverRegisterDataId);
+                                leaverRegisterDataOption.setLeaverRegisterOptionId(id);
+
+                                leaverRegisterDataOptionService.save(leaverRegisterDataOption);
+                            }
+                        }
+
+                        ajaxUtil.success().msg("保存成功");
+                    } else {
+                        ajaxUtil.fail().msg("已登记，不能重复登记");
+                    }
+                } else {
+                    ajaxUtil.fail().msg("未查询到学生数据");
+                }
+            } else {
+                ajaxUtil.fail().msg("您不满足登记条件");
+            }
+        } else {
+            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 删除
+     *
+     * @param leaverRegisterReleaseId 发布id
+     * @return true or false
+     */
+    @PostMapping("/web/register/leaver/data/delete")
+    public ResponseEntity<Map<String, Object>> dataDelete(@RequestParam("leaverRegisterReleaseId") String leaverRegisterReleaseId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (registerConditionCommon.leaverRegister(leaverRegisterReleaseId)) {
+            Users users = usersService.getUserFromSession();
+            Optional<StudentRecord> studentRecord = studentService.findByUsername(users.getUsername());
+            if (studentRecord.isPresent()) {
+                leaverRegisterDataService.deleteByLeaverRegisterReleaseIdAndStudentId(leaverRegisterReleaseId, studentRecord.get().getStudentId());
+                ajaxUtil.success().msg("删除成功");
+            } else {
+                ajaxUtil.fail().msg("未查询到学生数据");
+            }
         } else {
             ajaxUtil.fail().msg("您无权限操作");
         }

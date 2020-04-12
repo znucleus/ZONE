@@ -10,8 +10,9 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             add: '/web/register/leaver/release/add',
             edit: '/web/register/leaver/release/edit',
             del: web_path + '/web/register/leaver/release/delete',
-            register:'/web/register/leaver/data/add',
-            review:'/web/register/leaver/review',
+            register: '/web/register/leaver/data/add',
+            cancel_register: '/web/register/leaver/data/delete',
+            review: '/web/register/leaver/review',
             page: '/web/menu/register/leaver'
         };
 
@@ -131,6 +132,13 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         });
 
         /*
+         取消登记
+        */
+        $(tableData).delegate('.cancelRegister', "click", function () {
+            leaverDataDel($(this).attr('data-id'));
+        });
+
+        /*
          统计
         */
         $(tableData).delegate('.review', "click", function () {
@@ -172,7 +180,6 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             sendDelAjax(id);
         }
 
-
         /**
          * 删除ajax
          * @param leaverRegisterReleaseId
@@ -181,6 +188,55 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             $.ajax({
                 type: 'POST',
                 url: ajax_url.del,
+                data: {leaverRegisterReleaseId: leaverRegisterReleaseId},
+                success: function (data) {
+                    Messenger().post({
+                        message: data.msg,
+                        type: data.state ? 'success' : 'error',
+                        showCloseButton: true
+                    });
+
+                    if (data.state) {
+                        init();
+                    }
+                },
+                error: function (XMLHttpRequest) {
+                    Messenger().post({
+                        message: 'Request error : ' + XMLHttpRequest.status + " " + XMLHttpRequest.statusText,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        }
+
+        /**
+         * 取消登记确认
+         * @param id 发布id
+         */
+        function leaverDataDel(id) {
+            Swal.fire({
+                title: "确定取消登记吗？",
+                text: "离校登记取消！",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                preConfirm: function () {
+                    sendLeaverDataDelAjax(id);
+                }
+            });
+        }
+
+        /**
+         * 取消登记ajax
+         * @param leaverRegisterReleaseId
+         */
+        function sendLeaverDataDelAjax(leaverRegisterReleaseId) {
+            $.ajax({
+                type: 'POST',
+                url: ajax_url.cancel_register,
                 data: {leaverRegisterReleaseId: leaverRegisterReleaseId},
                 success: function (data) {
                     Messenger().post({
