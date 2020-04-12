@@ -31,6 +31,7 @@ import top.zbeboy.zone.web.register.common.RegisterConditionCommon;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zone.web.util.pagination.ExportInfo;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zone.web.vo.register.epidemic.EpidemicRegisterDataAddVo;
 import top.zbeboy.zone.web.vo.register.epidemic.EpidemicRegisterReleaseAddVo;
@@ -320,7 +321,7 @@ public class RegisterEpidemicRestController {
         }
 
         EpidemicRegisterDataExport export = new EpidemicRegisterDataExport(beans);
-        DataTablesUtil.ExportInfo exportInfo = dataTablesUtil.getExportInfo();
+        ExportInfo exportInfo = dataTablesUtil.getExportInfo();
         if (export.exportExcel(exportInfo.getLastPath(), exportInfo.getFileName(), exportInfo.getExt())) {
             uploadService.download(exportInfo.getFileName(), exportInfo.getFilePath(), response, request);
         }

@@ -23,6 +23,7 @@ import top.zbeboy.zone.web.plugin.select2.Select2Data;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zone.web.util.pagination.ExportInfo;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
 import javax.annotation.Resource;
@@ -244,7 +245,7 @@ public class InternshipStatisticalRestController {
             beans = records.into(InternshipInfo.class);
         }
         InternshipInfoExport export = new InternshipInfoExport(beans);
-        DataTablesUtil.ExportInfo exportInfo = dataTablesUtil.getExportInfo();
+        ExportInfo exportInfo = dataTablesUtil.getExportInfo();
         if (export.exportExcel(exportInfo.getLastPath(), exportInfo.getFileName(), exportInfo.getExt())) {
             uploadService.download(exportInfo.getFileName(), exportInfo.getFilePath(), response, request);
         }

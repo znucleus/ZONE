@@ -29,6 +29,7 @@ import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.SmallPropsUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zone.web.util.pagination.ExportInfo;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zone.web.vo.internship.regulate.InternshipRegulateAddVo;
 import top.zbeboy.zone.web.vo.internship.regulate.InternshipRegulateEditVo;
@@ -141,7 +142,7 @@ public class InternshipRegulateRestController {
             beans = records.into(InternshipRegulateBean.class);
         }
         InternshipRegulateExport export = new InternshipRegulateExport(beans);
-        DataTablesUtil.ExportInfo exportInfo = dataTablesUtil.getExportInfo();
+        ExportInfo exportInfo = dataTablesUtil.getExportInfo();
         if (export.exportExcel(exportInfo.getLastPath(), exportInfo.getFileName(), exportInfo.getExt())) {
             uploadService.download(exportInfo.getFileName(), exportInfo.getFilePath(), response, request);
         }

@@ -194,4 +194,13 @@ public final class Workbook {
     public static String trainingFilePath() {
         return FILES_PORTFOLIOS + "training" + DIRECTORY_SPLIT;
     }
+
+    /**
+     * 登记文件路径
+     *
+     * @return 路径
+     */
+    public static String registerFilePath() {
+        return FILES_PORTFOLIOS + "register" + DIRECTORY_SPLIT;
+    }
 }

@@ -8,6 +8,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         var ajax_url = {
             data: web_path + '/web/register/leaver/data/list',
             del: web_path + '/web/register/leaver/data/list/delete',
+            export_data_url: web_path + '/web/register/leaver/data/export',
             page: '/web/menu/register/leaver'
         };
 
@@ -206,7 +207,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             var params = {
                 realName: '',
                 studentNumber: '',
-                leaverRegisterReleaseId:page_param.paramLeaverRegisterReleaseId
+                leaverRegisterReleaseId: page_param.paramLeaverRegisterReleaseId
             };
             if (typeof(Storage) !== "undefined") {
                 realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
@@ -279,5 +280,25 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 listData(data);
             });
         }
+
+        $('#export_xls').click(function () {
+            initSearchContent();
+            var searchParam = param.extraSearch;
+            var exportFile = {
+                fileName: $('#export_file_name').val(),
+                ext: 'xls'
+            };
+            window.location.href = encodeURI(ajax_url.export_data_url + "?extra_search=" + searchParam + "&export_info=" + JSON.stringify(exportFile));
+        });
+
+        $('#export_xlsx').click(function () {
+            initSearchContent();
+            var searchParam = param.extraSearch;
+            var exportFile = {
+                fileName: $('#export_file_name').val(),
+                ext: 'xlsx'
+            };
+            window.location.href = encodeURI(ajax_url.export_data_url + "?extra_search=" + searchParam + "&export_info=" + JSON.stringify(exportFile));
+        });
 
     });

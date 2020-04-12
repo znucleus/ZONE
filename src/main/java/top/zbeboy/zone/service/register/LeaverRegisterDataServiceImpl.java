@@ -54,6 +54,17 @@ public class LeaverRegisterDataServiceImpl implements LeaverRegisterDataService,
     }
 
     @Override
+    public Result<Record> export(SimplePaginationUtil paginationUtil) {
+        SelectOnConditionStep<Record> selectOnConditionStep = create.select()
+                .from(LEAVER_REGISTER_DATA)
+                .leftJoin(STUDENT)
+                .on(LEAVER_REGISTER_DATA.STUDENT_ID.eq(STUDENT.STUDENT_ID))
+                .leftJoin(USERS)
+                .on(STUDENT.USERNAME.eq(USERS.USERNAME));
+        return queryAll(selectOnConditionStep, paginationUtil, false);
+    }
+
+    @Override
     public int countAll(SimplePaginationUtil paginationUtil) {
         SelectOnConditionStep<Record1<Integer>> selectOnConditionStep = create.selectCount()
                 .from(LEAVER_REGISTER_DATA)

@@ -117,17 +117,17 @@ public class DataTablesUtil extends PaginationUtil {
         this.search = JSON.parseObject(extraSearchParam);
 
         this.exportInfo = JSON.parseObject(request.getParameter("export_info"), ExportInfo.class);
-        if (StringUtils.isBlank(exportInfo.fileName)) {
-            exportInfo.fileName = fileName;
+        if (StringUtils.isBlank(exportInfo.getFileName())) {
+            exportInfo.setFileName(fileName);
         }
 
-        if (StringUtils.isBlank(exportInfo.ext)) {
-            exportInfo.ext = Workbook.fileSuffix.xlsx.name();
+        if (StringUtils.isBlank(exportInfo.getExt())) {
+            exportInfo.setExt(Workbook.fileSuffix.xlsx.name());
         }
 
-        exportInfo.path = path;
-        exportInfo.filePath = path + exportInfo.fileName + "." + exportInfo.ext;
-        exportInfo.lastPath = RequestUtil.getRealPath(request) + path;
+        exportInfo.setPath(path);
+        exportInfo.setFilePath(path + exportInfo.getFileName() + "." + exportInfo.getExt());
+        exportInfo.setLastPath(RequestUtil.getRealPath(request) + path);
     }
 
     public List<?> getData() {
@@ -223,53 +223,5 @@ public class DataTablesUtil extends PaginationUtil {
                 .append("extraPage", extraPage)
                 .append("search", search)
                 .toString();
-    }
-
-    public static class ExportInfo {
-        private String fileName;
-        private String ext;
-        private String filePath;
-        private String path;
-        private String lastPath;
-
-        public String getFileName() {
-            return fileName;
-        }
-
-        public void setFileName(String fileName) {
-            this.fileName = fileName;
-        }
-
-        public String getExt() {
-            return ext;
-        }
-
-        public void setExt(String ext) {
-            this.ext = ext;
-        }
-
-        public String getFilePath() {
-            return filePath;
-        }
-
-        public void setFilePath(String filePath) {
-            this.filePath = filePath;
-        }
-
-        public String getPath() {
-            return path;
-        }
-
-        public void setPath(String path) {
-            this.path = path;
-        }
-
-        public String getLastPath() {
-            return lastPath;
-        }
-
-        public void setLastPath(String lastPath) {
-            this.lastPath = lastPath;
-        }
     }
 }

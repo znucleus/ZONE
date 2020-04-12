@@ -30,6 +30,7 @@ import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.ByteUtil;
 import top.zbeboy.zone.web.util.SmallPropsUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zone.web.util.pagination.ExportInfo;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zone.web.util.pagination.TableSawUtil;
 import top.zbeboy.zone.web.vo.training.attend.TrainingAttendAddVo;
@@ -491,7 +492,7 @@ public class TrainingAttendRestController {
         }
 
         TrainingAttendUsersExport export = new TrainingAttendUsersExport(beans);
-        DataTablesUtil.ExportInfo exportInfo = dataTablesUtil.getExportInfo();
+        ExportInfo exportInfo = dataTablesUtil.getExportInfo();
         if (export.exportExcel(exportInfo.getLastPath(), exportInfo.getFileName(), exportInfo.getExt())) {
             uploadService.download(exportInfo.getFileName(), exportInfo.getFilePath(), response, request);
         }
@@ -574,7 +575,7 @@ public class TrainingAttendRestController {
         }
 
         TrainingAttendSituationExport export = new TrainingAttendSituationExport(beans);
-        DataTablesUtil.ExportInfo exportInfo = dataTablesUtil.getExportInfo();
+        ExportInfo exportInfo = dataTablesUtil.getExportInfo();
         if (export.exportExcel(exportInfo.getLastPath(), exportInfo.getFileName(), exportInfo.getExt())) {
             uploadService.download(exportInfo.getFileName(), exportInfo.getFilePath(), response, request);
         }

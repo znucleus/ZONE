@@ -27,6 +27,14 @@ public interface LeaverRegisterDataService {
     Result<Record> findAllByPage(SimplePaginationUtil paginationUtil);
 
     /**
+     * 数据导出
+     *
+     * @param paginationUtil 工具类
+     * @return 数据
+     */
+    Result<Record> export(SimplePaginationUtil paginationUtil);
+
+    /**
      * 总数
      *
      * @return 总数

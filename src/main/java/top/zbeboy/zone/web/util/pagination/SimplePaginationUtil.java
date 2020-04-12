@@ -5,7 +5,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+import top.zbeboy.zone.config.Workbook;
+import top.zbeboy.zone.service.util.RequestUtil;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
 public class SimplePaginationUtil extends PaginationUtil {
@@ -18,6 +21,33 @@ public class SimplePaginationUtil extends PaginationUtil {
     private JSONObject search;
     private boolean isToJson;
     private Principal principal;
+    /*
+    导出数据信息
+    */
+    private ExportInfo exportInfo;
+
+    public SimplePaginationUtil(){}
+
+    public SimplePaginationUtil(HttpServletRequest request, String orderColumnName, String orderDir, String fileName, String path) {
+        String extraSearchParam = request.getParameter("extra_search");
+        this.setOrderDir(orderDir);
+        this.setOrderColumnName(orderColumnName);
+        this.extraSearch = extraSearchParam;
+        this.search = JSON.parseObject(extraSearchParam);
+
+        this.exportInfo = JSON.parseObject(request.getParameter("export_info"), ExportInfo.class);
+        if (StringUtils.isBlank(exportInfo.getFileName())) {
+            exportInfo.setFileName(fileName);
+        }
+
+        if (StringUtils.isBlank(exportInfo.getExt())) {
+            exportInfo.setExt(Workbook.fileSuffix.xlsx.name());
+        }
+
+        exportInfo.setPath(path);
+        exportInfo.setFilePath(path + exportInfo.getFileName() + "." + exportInfo.getExt());
+        exportInfo.setLastPath(RequestUtil.getRealPath(request) + path);
+    }
 
     public int getPageNum() {
         return pageNum;
@@ -112,5 +142,13 @@ public class SimplePaginationUtil extends PaginationUtil {
 
     public void setPrincipal(Principal principal) {
         this.principal = principal;
+    }
+
+    public ExportInfo getExportInfo() {
+        return exportInfo;
+    }
+
+    public void setExportInfo(ExportInfo exportInfo) {
+        this.exportInfo = exportInfo;
     }
 }

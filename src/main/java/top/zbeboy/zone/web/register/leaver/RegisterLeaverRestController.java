@@ -18,9 +18,11 @@ import top.zbeboy.zone.domain.tables.records.LeaverRegisterOptionRecord;
 import top.zbeboy.zone.domain.tables.records.LeaverRegisterScopeRecord;
 import top.zbeboy.zone.domain.tables.records.StudentRecord;
 import top.zbeboy.zone.service.data.*;
+import top.zbeboy.zone.service.export.LeaverRegisterDataExport;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
 import top.zbeboy.zone.service.register.*;
+import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.register.leaver.LeaverRegisterDataBean;
@@ -30,13 +32,17 @@ import top.zbeboy.zone.web.register.common.RegisterConditionCommon;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.ByteUtil;
+import top.zbeboy.zone.web.util.pagination.ExportInfo;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zone.web.vo.register.leaver.LeaverRegisterDataVo;
 import top.zbeboy.zone.web.vo.register.leaver.LeaverRegisterReleaseAddVo;
 import top.zbeboy.zone.web.vo.register.leaver.LeaverRegisterReleaseEditVo;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.*;
 
 @RestController
@@ -83,6 +89,9 @@ public class RegisterLeaverRestController {
 
     @Resource
     private StudentService studentService;
+
+    @Resource
+    private UploadService uploadService;
 
     /**
      * 数据
@@ -467,14 +476,35 @@ public class RegisterLeaverRestController {
         Result<Record> records = leaverRegisterDataService.findAllByPage(simplePaginationUtil);
         if (records.isNotEmpty()) {
             beans = records.into(LeaverRegisterDataBean.class);
-            for (LeaverRegisterDataBean bean : beans) {
-                // 选项合并
-                mergeOption(bean);
-            }
+            beans.forEach(this::mergeOption);
         }
         simplePaginationUtil.setTotalSize(leaverRegisterDataService.countAll(simplePaginationUtil));
         ajaxUtil.success().list(beans).page(simplePaginationUtil).msg("获取数据成功");
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 导出 列表 数据
+     *
+     * @param request 请求
+     */
+    @GetMapping("/web/register/leaver/data/export")
+    public void export(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        SimplePaginationUtil simplePaginationUtil = new SimplePaginationUtil(request, "studentNumber", "asc",
+                "离校登记数据表", Workbook.registerFilePath());
+        Result<Record> records = leaverRegisterDataService.export(simplePaginationUtil);
+        List<LeaverRegisterDataBean> beans = new ArrayList<>();
+        if (Objects.nonNull(records) && records.isNotEmpty()) {
+            beans = records.into(LeaverRegisterDataBean.class);
+            beans.forEach(this::mergeOption);
+        }
+
+        LeaverRegisterDataExport export = new LeaverRegisterDataExport(beans);
+        ExportInfo exportInfo = simplePaginationUtil.getExportInfo();
+        if (export.exportExcel(exportInfo.getLastPath(), exportInfo.getFileName(), exportInfo.getExt())) {
+            uploadService.download(exportInfo.getFileName(), exportInfo.getFilePath(), response, request);
+        }
+
     }
 
     private boolean isRegister(String leaverRegisterReleaseId) {
