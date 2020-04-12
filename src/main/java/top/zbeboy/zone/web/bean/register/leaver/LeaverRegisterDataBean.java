@@ -8,6 +8,7 @@ public class LeaverRegisterDataBean extends LeaverRegisterData {
     private String realName;
     private String studentNumber;
     private List<LeaverRegisterOptionBean> leaverRegisterOptions;
+    private String registerDateStr;
 
     public String getRealName() {
         return realName;
@@ -31,5 +32,13 @@ public class LeaverRegisterDataBean extends LeaverRegisterData {
 
     public void setLeaverRegisterOptions(List<LeaverRegisterOptionBean> leaverRegisterOptions) {
         this.leaverRegisterOptions = leaverRegisterOptions;
+    }
+
+    public String getRegisterDateStr() {
+        return registerDateStr;
+    }
+
+    public void setRegisterDateStr(String registerDateStr) {
+        this.registerDateStr = registerDateStr;
     }
 }

@@ -468,6 +468,7 @@ public class RegisterControllerCommon {
         Result<Record> records = leaverRegisterDataService.findAllByPage(simplePaginationUtil);
         if (records.isNotEmpty()) {
             beans = records.into(LeaverRegisterDataBean.class);
+            beans.forEach(bean -> bean.setRegisterDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getRegisterDate())));
             beans.forEach(this::mergeOption);
         }
         simplePaginationUtil.setTotalSize(leaverRegisterDataService.countAll(simplePaginationUtil));
