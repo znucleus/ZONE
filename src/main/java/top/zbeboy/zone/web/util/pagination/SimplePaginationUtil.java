@@ -21,6 +21,7 @@ public class SimplePaginationUtil extends PaginationUtil {
     private JSONObject search;
     private boolean isToJson;
     private Principal principal;
+    private String channel;
     /*
     导出数据信息
     */
@@ -150,5 +151,13 @@ public class SimplePaginationUtil extends PaginationUtil {
 
     public void setExportInfo(ExportInfo exportInfo) {
         this.exportInfo = exportInfo;
+    }
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
     }
 }

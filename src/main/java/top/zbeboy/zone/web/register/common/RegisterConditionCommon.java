@@ -10,18 +10,21 @@ import top.zbeboy.zone.domain.tables.pojos.LeaverRegisterRelease;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.domain.tables.records.LeaverRegisterScopeRecord;
+import top.zbeboy.zone.domain.tables.records.StudentRecord;
 import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
 import top.zbeboy.zone.service.register.EpidemicRegisterDataService;
+import top.zbeboy.zone.service.register.LeaverRegisterDataService;
 import top.zbeboy.zone.service.register.LeaverRegisterReleaseService;
 import top.zbeboy.zone.service.register.LeaverRegisterScopeService;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
 
 import javax.annotation.Resource;
+import java.security.Principal;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -51,6 +54,9 @@ public class RegisterConditionCommon {
 
     @Resource
     private LeaverRegisterScopeService leaverRegisterScopeService;
+
+    @Resource
+    private LeaverRegisterDataService leaverRegisterDataService;
 
     /**
      * 是否可操作
@@ -148,14 +154,14 @@ public class RegisterConditionCommon {
      *
      * @return true or false
      */
-    public boolean leaverOperator(String leaverRegisterReleaseId) {
+    public boolean leaverOperator(String leaverRegisterReleaseId, String channel, Principal principal) {
         boolean canOperator = false;
         if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
             canOperator = true;
         } else {
             LeaverRegisterRelease leaverRegisterRelease = leaverRegisterReleaseService.findById(leaverRegisterReleaseId);
             if (Objects.nonNull(leaverRegisterRelease)) {
-                Users users = usersService.getUserFromSession();
+                Users users = usersService.getUserByChannel(channel, principal);
                 canOperator = StringUtils.equals(users.getUsername(), leaverRegisterRelease.getUsername());
             }
         }
@@ -167,13 +173,13 @@ public class RegisterConditionCommon {
      *
      * @return true or false
      */
-    public boolean leaverReview(String leaverRegisterReleaseId) {
+    public boolean leaverReview(String leaverRegisterReleaseId, String channel, Principal principal) {
         boolean canOperator = false;
         if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
                 roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
             canOperator = true;
         } else {
-            Users users = usersService.getUserFromSession();
+            Users users = usersService.getUserByChannel(channel, principal);
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType)) {
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
@@ -195,9 +201,9 @@ public class RegisterConditionCommon {
      * @param leaverRegisterReleaseId id
      * @return true or false
      */
-    public boolean leaverRegister(String leaverRegisterReleaseId) {
+    public boolean leaverRegister(String leaverRegisterReleaseId, String channel, Principal principal) {
         boolean canOperator = false;
-        Users users = usersService.getUserFromSession();
+        Users users = usersService.getUserByChannel(channel, principal);
         UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
         if (Objects.nonNull(usersType)) {
             if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
@@ -243,5 +249,32 @@ public class RegisterConditionCommon {
         }
 
         return canOperator;
+    }
+
+    boolean isRegisterLeaver(String leaverRegisterReleaseId, String channel, Principal principal) {
+        boolean isRegister = false;
+        Users users = usersService.getUserByChannel(channel,principal);
+        UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
+        if (Objects.nonNull(usersType)) {
+            if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
+                Optional<StudentRecord> studentRecord = studentService.findByUsername(users.getUsername());
+                if (studentRecord.isPresent()) {
+                    isRegister = leaverRegisterDataService.findByLeaverRegisterReleaseIdAndStudentId(leaverRegisterReleaseId, studentRecord.get().getStudentId()).isPresent();
+                }
+            }
+        }
+        return isRegister;
+    }
+
+    boolean isStudent(String channel, Principal principal) {
+        boolean isStudent = false;
+        Users users = usersService.getUserByChannel(channel,principal);
+        UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
+        if (Objects.nonNull(usersType)) {
+            if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
+                isStudent = true;
+            }
+        }
+        return isStudent;
     }
 }

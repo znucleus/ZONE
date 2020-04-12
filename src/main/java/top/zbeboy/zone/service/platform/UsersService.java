@@ -134,6 +134,15 @@ public interface UsersService {
     Users getUserFromOauth(Principal principal);
 
     /**
+     * 根据渠道获取用户信息
+     *
+     * @param channel   渠道
+     * @param principal 用户
+     * @return 数据
+     */
+    Users getUserByChannel(String channel, Principal principal);
+
+    /**
      * 从session中获取用户完整权限
      *
      * @return session中的完整权限

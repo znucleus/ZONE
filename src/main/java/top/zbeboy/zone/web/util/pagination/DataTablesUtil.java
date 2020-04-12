@@ -60,6 +60,11 @@ public class DataTablesUtil extends PaginationUtil {
      */
     private ExportInfo exportInfo;
 
+    /*
+    渠道
+     */
+    private String channel;
+
     public DataTablesUtil(HttpServletRequest request, List<String> headers) {
         String startParam = request.getParameter("start");
         String lengthParam = request.getParameter("length");
@@ -210,6 +215,14 @@ public class DataTablesUtil extends PaginationUtil {
         this.exportInfo = exportInfo;
     }
 
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this)
@@ -222,6 +235,8 @@ public class DataTablesUtil extends PaginationUtil {
                 .append("extraSearch", extraSearch)
                 .append("extraPage", extraPage)
                 .append("search", search)
+                .append("exportInfo", exportInfo)
+                .append("channel", channel)
                 .toString();
     }
 }

@@ -132,7 +132,8 @@ public class RegisterLeaverViewController {
     public String edit(@PathVariable("id") String id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        if (registerConditionCommon.leaverOperator(id)) {
+        String channel = Workbook.channel.WEB.name();
+        if (registerConditionCommon.leaverOperator(id, channel, null)) {
             boolean canAccess = false;
             if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
                 Users users = usersService.getUserFromSession();
@@ -249,7 +250,8 @@ public class RegisterLeaverViewController {
     public String dataAdd(@PathVariable("id") String id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        if (registerConditionCommon.leaverRegister(id)) {
+        String channel = Workbook.channel.WEB.name();
+        if (registerConditionCommon.leaverRegister(id, channel, null)) {
             List<LeaverRegisterOption> leaverRegisterOptions = new ArrayList<>();
             Result<LeaverRegisterOptionRecord> leaverRegisterOptionRecords =
                     leaverRegisterOptionService.findByLeaverRegisterReleaseId(id);
@@ -278,7 +280,8 @@ public class RegisterLeaverViewController {
     public String dataReview(@PathVariable("id") String id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        if (registerConditionCommon.leaverReview(id)) {
+        String channel = Workbook.channel.WEB.name();
+        if (registerConditionCommon.leaverReview(id, channel, null)) {
             modelMap.addAttribute("leaverRegisterReleaseId", id);
             page = "web/register/leaver/leaver_data_review::#page-wrapper";
         } else {

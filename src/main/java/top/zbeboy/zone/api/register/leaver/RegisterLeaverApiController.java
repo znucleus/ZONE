@@ -1,4 +1,4 @@
-package top.zbeboy.zone.web.register.leaver;
+package top.zbeboy.zone.api.register.leaver;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,10 +22,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.Map;
 
 @RestController
-public class RegisterLeaverRestController {
+public class RegisterLeaverApiController {
 
     @Resource
     private RegisterControllerCommon registerControllerCommon;
@@ -36,11 +37,12 @@ public class RegisterLeaverRestController {
      * @param simplePaginationUtil 请求
      * @return 数据
      */
-    @GetMapping("/web/register/leaver/data")
-    public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil) {
-        String channel = Workbook.channel.WEB.name();
+    @GetMapping("/api/register/leaver/data")
+    public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil, Principal principal) {
+        String channel = Workbook.channel.API.name();
         simplePaginationUtil.setChannel(channel);
-        AjaxUtil<LeaverRegisterReleaseBean> ajaxUtil = registerControllerCommon.data(simplePaginationUtil, channel, null);
+        simplePaginationUtil.setPrincipal(principal);
+        AjaxUtil<LeaverRegisterReleaseBean> ajaxUtil = registerControllerCommon.data(simplePaginationUtil, channel, principal);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -51,10 +53,10 @@ public class RegisterLeaverRestController {
      * @param bindingResult              检验
      * @return true or false
      */
-    @PostMapping("/web/register/leaver/release/save")
-    public ResponseEntity<Map<String, Object>> save(@Valid LeaverRegisterReleaseAddVo leaverRegisterReleaseAddVo, BindingResult bindingResult) {
-        String channel = Workbook.channel.WEB.name();
-        AjaxUtil<Map<String, Object>> ajaxUtil = registerControllerCommon.save(leaverRegisterReleaseAddVo, bindingResult, channel, null);
+    @PostMapping("/api/register/leaver/release/save")
+    public ResponseEntity<Map<String, Object>> save(@Valid LeaverRegisterReleaseAddVo leaverRegisterReleaseAddVo, BindingResult bindingResult, Principal principal) {
+        String channel = Workbook.channel.API.name();
+        AjaxUtil<Map<String, Object>> ajaxUtil = registerControllerCommon.save(leaverRegisterReleaseAddVo, bindingResult, channel, principal);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -64,11 +66,12 @@ public class RegisterLeaverRestController {
      * @param leaverRegisterOptionId 选项id
      * @return true or false
      */
-    @PostMapping("/web/register/leaver/option/delete")
+    @PostMapping("/api/register/leaver/option/delete")
     public ResponseEntity<Map<String, Object>> optionDelete(@RequestParam("leaverRegisterOptionId") String leaverRegisterOptionId,
-                                                            @RequestParam("leaverRegisterReleaseId") String leaverRegisterReleaseId) {
-        String channel = Workbook.channel.WEB.name();
-        AjaxUtil<Map<String, Object>> ajaxUtil = registerControllerCommon.optionDelete(leaverRegisterOptionId, leaverRegisterReleaseId, channel, null);
+                                                            @RequestParam("leaverRegisterReleaseId") String leaverRegisterReleaseId,
+                                                            Principal principal) {
+        String channel = Workbook.channel.API.name();
+        AjaxUtil<Map<String, Object>> ajaxUtil = registerControllerCommon.optionDelete(leaverRegisterOptionId, leaverRegisterReleaseId, channel, principal);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -80,13 +83,14 @@ public class RegisterLeaverRestController {
      * @param optionContent           选项内容
      * @return true or false
      */
-    @PostMapping("/web/register/leaver/option/update")
+    @PostMapping("/api/register/leaver/option/update")
     public ResponseEntity<Map<String, Object>> optionUpdate(@RequestParam("leaverRegisterOptionId") String leaverRegisterOptionId,
                                                             @RequestParam("leaverRegisterReleaseId") String leaverRegisterReleaseId,
-                                                            @RequestParam("optionContent") String optionContent) {
-        String channel = Workbook.channel.WEB.name();
+                                                            @RequestParam("optionContent") String optionContent,
+                                                            Principal principal) {
+        String channel = Workbook.channel.API.name();
         AjaxUtil<Map<String, Object>> ajaxUtil =
-                registerControllerCommon.optionUpdate(leaverRegisterOptionId, leaverRegisterReleaseId, optionContent, channel, null);
+                registerControllerCommon.optionUpdate(leaverRegisterOptionId, leaverRegisterReleaseId, optionContent, channel, principal);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -97,11 +101,12 @@ public class RegisterLeaverRestController {
      * @param bindingResult               检验
      * @return true or false
      */
-    @PostMapping("/web/register/leaver/release/update")
-    public ResponseEntity<Map<String, Object>> update(@Valid LeaverRegisterReleaseEditVo leaverRegisterReleaseEditVo, BindingResult bindingResult) {
-        String channel = Workbook.channel.WEB.name();
+    @PostMapping("/api/register/leaver/release/update")
+    public ResponseEntity<Map<String, Object>> update(@Valid LeaverRegisterReleaseEditVo leaverRegisterReleaseEditVo,
+                                                      BindingResult bindingResult, Principal principal) {
+        String channel = Workbook.channel.API.name();
         AjaxUtil<Map<String, Object>> ajaxUtil =
-                registerControllerCommon.update(leaverRegisterReleaseEditVo, bindingResult, channel, null);
+                registerControllerCommon.update(leaverRegisterReleaseEditVo, bindingResult, channel, principal);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -111,10 +116,11 @@ public class RegisterLeaverRestController {
      * @param leaverRegisterReleaseId 发布id
      * @return true or false
      */
-    @PostMapping("/web/register/leaver/release/delete")
-    public ResponseEntity<Map<String, Object>> delete(@RequestParam("leaverRegisterReleaseId") String leaverRegisterReleaseId) {
-        String channel = Workbook.channel.WEB.name();
-        AjaxUtil<Map<String, Object>> ajaxUtil = registerControllerCommon.delete(leaverRegisterReleaseId, channel, null);
+    @PostMapping("/api/register/leaver/release/delete")
+    public ResponseEntity<Map<String, Object>> delete(@RequestParam("leaverRegisterReleaseId") String leaverRegisterReleaseId,
+                                                      Principal principal) {
+        String channel = Workbook.channel.API.name();
+        AjaxUtil<Map<String, Object>> ajaxUtil = registerControllerCommon.delete(leaverRegisterReleaseId, channel, principal);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -125,11 +131,12 @@ public class RegisterLeaverRestController {
      * @param bindingResult        检验
      * @return true or false
      */
-    @PostMapping("/web/register/leaver/data/save")
-    public ResponseEntity<Map<String, Object>> dataSave(@Valid LeaverRegisterDataVo leaverRegisterDataVo, BindingResult bindingResult) {
-        String channel = Workbook.channel.WEB.name();
+    @PostMapping("/api/register/leaver/data/save")
+    public ResponseEntity<Map<String, Object>> dataSave(@Valid LeaverRegisterDataVo leaverRegisterDataVo, BindingResult bindingResult,
+                                                        Principal principal) {
+        String channel = Workbook.channel.API.name();
         AjaxUtil<Map<String, Object>> ajaxUtil =
-                registerControllerCommon.dataSave(leaverRegisterDataVo, bindingResult, channel, null);
+                registerControllerCommon.dataSave(leaverRegisterDataVo, bindingResult, channel, principal);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -139,10 +146,11 @@ public class RegisterLeaverRestController {
      * @param leaverRegisterReleaseId 发布id
      * @return true or false
      */
-    @PostMapping("/web/register/leaver/data/delete")
-    public ResponseEntity<Map<String, Object>> dataDelete(@RequestParam("leaverRegisterReleaseId") String leaverRegisterReleaseId) {
-        String channel = Workbook.channel.WEB.name();
-        AjaxUtil<Map<String, Object>> ajaxUtil = registerControllerCommon.dataDelete(leaverRegisterReleaseId, channel, null);
+    @PostMapping("/api/register/leaver/data/delete")
+    public ResponseEntity<Map<String, Object>> dataDelete(@RequestParam("leaverRegisterReleaseId") String leaverRegisterReleaseId,
+                                                          Principal principal) {
+        String channel = Workbook.channel.API.name();
+        AjaxUtil<Map<String, Object>> ajaxUtil = registerControllerCommon.dataDelete(leaverRegisterReleaseId, channel, principal);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -152,12 +160,13 @@ public class RegisterLeaverRestController {
      * @param leaverRegisterReleaseId 发布id
      * @return true or false
      */
-    @PostMapping("/web/register/leaver/data/list/delete")
+    @PostMapping("/api/register/leaver/data/list/delete")
     public ResponseEntity<Map<String, Object>> dataListDelete(@RequestParam("leaverRegisterReleaseId") String leaverRegisterReleaseId,
-                                                              @RequestParam("leaverRegisterDataId") String leaverRegisterDataId) {
-        String channel = Workbook.channel.WEB.name();
+                                                              @RequestParam("leaverRegisterDataId") String leaverRegisterDataId,
+                                                              Principal principal) {
+        String channel = Workbook.channel.API.name();
         AjaxUtil<Map<String, Object>> ajaxUtil =
-                registerControllerCommon.dataListDelete(leaverRegisterReleaseId, leaverRegisterDataId, channel, null);
+                registerControllerCommon.dataListDelete(leaverRegisterReleaseId, leaverRegisterDataId, channel, principal);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -167,7 +176,7 @@ public class RegisterLeaverRestController {
      * @param simplePaginationUtil 请求
      * @return 数据
      */
-    @GetMapping("/web/register/leaver/data/list")
+    @GetMapping("/api/register/leaver/data/list")
     public ResponseEntity<Map<String, Object>> dataList(SimplePaginationUtil simplePaginationUtil) {
         AjaxUtil<LeaverRegisterDataBean> ajaxUtil = registerControllerCommon.dataList(simplePaginationUtil);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -178,8 +187,10 @@ public class RegisterLeaverRestController {
      *
      * @param request 请求
      */
-    @GetMapping("/web/register/leaver/data/export")
+    @GetMapping("/api/register/leaver/data/export")
     public void export(HttpServletRequest request, HttpServletResponse response) throws IOException {
         registerControllerCommon.export(request, response);
     }
+
+
 }

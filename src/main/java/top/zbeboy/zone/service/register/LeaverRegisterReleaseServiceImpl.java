@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.daos.LeaverRegisterReleaseDao;
 import top.zbeboy.zone.domain.tables.pojos.LeaverRegisterRelease;
 import top.zbeboy.zone.domain.tables.pojos.Users;
@@ -87,7 +88,7 @@ public class LeaverRegisterReleaseServiceImpl implements LeaverRegisterReleaseSe
         Condition a = null;
         JSONObject search = paginationUtil.getSearch();
 
-        Users users = usersService.getUserFromSession();
+        Users users = usersService.getUserByChannel(paginationUtil.getChannel(), paginationUtil.getPrincipal());
         if (Objects.nonNull(search)) {
             String dataRange = StringUtils.trim(search.getString("dataRange"));
             if (StringUtils.isBlank(dataRange)) {

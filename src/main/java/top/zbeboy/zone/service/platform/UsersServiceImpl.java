@@ -157,6 +157,17 @@ public class UsersServiceImpl implements UsersService, PaginationPlugin<DataTabl
     }
 
     @Override
+    public Users getUserByChannel(String channel, Principal principal) {
+        Users users;
+        if(StringUtils.equals(Workbook.channel.API.name(),channel)){
+            users = getUserFromOauth(principal);
+        } else {
+            users = getUserFromSession();
+        }
+        return users;
+    }
+
+    @Override
     public List<String> getAuthoritiesFromSession() {
         List<String> authorities = new ArrayList<>();
         SecurityContextHolder.getContext().getAuthentication().getAuthorities().iterator().forEachRemaining(i -> authorities.add(i.getAuthority()));
