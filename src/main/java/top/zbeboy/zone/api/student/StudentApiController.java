@@ -1,5 +1,6 @@
 package top.zbeboy.zone.api.student;
 
+import org.jooq.Record;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +12,7 @@ import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.records.StudentRecord;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.UsersService;
+import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
 
 import javax.annotation.Resource;
@@ -40,13 +42,14 @@ public class StudentApiController {
         AjaxUtil<Object> ajaxUtil = AjaxUtil.of();
         Users users = usersService.getUserFromOauth(principal);
         if (Objects.nonNull(users)) {
-            Optional<StudentRecord> record = studentService.findByUsername(users.getUsername());
+            Optional<Record> record = studentService.findByUsernameRelation(users.getUsername());
             if (record.isPresent()) {
                 Map<String, Object> outPut = new HashMap<>();
-                Student student = record.get().into(Student.class);
+                StudentBean student = record.get().into(StudentBean.class);
                 outPut.put("studentId", student.getStudentId());
                 outPut.put("studentNumber", student.getStudentNumber());
                 outPut.put("organizeId", student.getOrganizeId());
+                outPut.put("schoolId", student.getSchoolId());
                 ajaxUtil.success().msg("获取用户信息成功").map(outPut);
             } else {
                 ajaxUtil.fail().msg("未查询到学生信息");

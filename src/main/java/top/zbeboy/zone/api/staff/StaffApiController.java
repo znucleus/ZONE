@@ -1,5 +1,6 @@
 package top.zbeboy.zone.api.staff;
 
+import org.jooq.Record;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +10,7 @@ import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.records.StaffRecord;
 import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.platform.UsersService;
+import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
 
 import javax.annotation.Resource;
@@ -38,13 +40,14 @@ public class StaffApiController {
         AjaxUtil<Object> ajaxUtil = AjaxUtil.of();
         Users users = usersService.getUserFromOauth(principal);
         if (Objects.nonNull(users)) {
-            Optional<StaffRecord> record = staffService.findByUsername(users.getUsername());
+            Optional<Record> record = staffService.findByUsernameRelation(users.getUsername());
             if (record.isPresent()) {
                 Map<String, Object> outPut = new HashMap<>();
-                Staff staff = record.get().into(Staff.class);
+                StaffBean staff = record.get().into(StaffBean.class);
                 outPut.put("staffId", staff.getStaffId());
                 outPut.put("staffNumber", staff.getStaffNumber());
                 outPut.put("departmentId", staff.getDepartmentId());
+                outPut.put("schoolId", staff.getSchoolId());
                 ajaxUtil.success().msg("获取用户信息成功").map(outPut);
             } else {
                 ajaxUtil.fail().msg("未查询到教职工信息");
