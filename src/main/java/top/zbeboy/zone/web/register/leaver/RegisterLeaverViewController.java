@@ -2,29 +2,26 @@ package top.zbeboy.zone.web.register.leaver;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.Record;
-import org.jooq.Result;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zone.config.Workbook;
-import top.zbeboy.zone.domain.tables.pojos.*;
-import top.zbeboy.zone.domain.tables.records.LeaverRegisterOptionRecord;
-import top.zbeboy.zone.domain.tables.records.LeaverRegisterScopeRecord;
-import top.zbeboy.zone.service.data.*;
+import top.zbeboy.zone.domain.tables.pojos.LeaverRegisterRelease;
+import top.zbeboy.zone.domain.tables.pojos.School;
+import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zone.domain.tables.pojos.UsersType;
+import top.zbeboy.zone.service.data.StaffService;
+import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
-import top.zbeboy.zone.service.register.LeaverRegisterOptionService;
 import top.zbeboy.zone.service.register.LeaverRegisterReleaseService;
-import top.zbeboy.zone.service.register.LeaverRegisterScopeService;
-import top.zbeboy.zone.web.bean.register.leaver.LeaverRegisterScopeBean;
 import top.zbeboy.zone.web.register.common.RegisterConditionCommon;
+import top.zbeboy.zone.web.register.common.RegisterControllerCommon;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -47,31 +44,13 @@ public class RegisterLeaverViewController {
     private StudentService studentService;
 
     @Resource
-    private CollegeService collegeService;
-
-    @Resource
-    private DepartmentService departmentService;
-
-    @Resource
-    private ScienceService scienceService;
-
-    @Resource
-    private GradeService gradeService;
-
-    @Resource
-    private OrganizeService organizeService;
-
-    @Resource
     private RegisterConditionCommon registerConditionCommon;
 
     @Resource
     private LeaverRegisterReleaseService leaverRegisterReleaseService;
 
     @Resource
-    private LeaverRegisterOptionService leaverRegisterOptionService;
-
-    @Resource
-    private LeaverRegisterScopeService leaverRegisterScopeService;
+    private RegisterControllerCommon registerControllerCommon;
 
     /**
      * 离校登记
@@ -170,62 +149,9 @@ public class RegisterLeaverViewController {
                 LeaverRegisterRelease leaverRegisterRelease = leaverRegisterReleaseService.findById(id);
                 if (Objects.nonNull(leaverRegisterRelease)) {
                     modelMap.addAttribute("leaverRegisterRelease", leaverRegisterRelease);
-
-                    List<LeaverRegisterOption> leaverRegisterOptions = new ArrayList<>();
-                    Result<LeaverRegisterOptionRecord> leaverRegisterOptionRecords =
-                            leaverRegisterOptionService.findByLeaverRegisterReleaseId(id);
-                    if (leaverRegisterOptionRecords.isNotEmpty()) {
-                        leaverRegisterOptions = leaverRegisterOptionRecords.into(LeaverRegisterOption.class);
-                    }
-                    modelMap.addAttribute("leaverRegisterOptions", leaverRegisterOptions);
-
-                    List<LeaverRegisterScopeBean> leaverRegisterScopes = new ArrayList<>();
-                    Result<LeaverRegisterScopeRecord> leaverRegisterScopeRecords =
-                            leaverRegisterScopeService.findByLeaverRegisterReleaseId(id);
-                    if (leaverRegisterScopeRecords.isNotEmpty()) {
-                        leaverRegisterScopes = leaverRegisterScopeRecords.into(LeaverRegisterScopeBean.class);
-                        for (LeaverRegisterScopeBean bean : leaverRegisterScopes) {
-                            switch (leaverRegisterRelease.getDataScope()) {
-                                case 1:
-                                    // 院
-                                    College college = collegeService.findById(bean.getDataId());
-                                    if (Objects.nonNull(college)) {
-                                        bean.setDataName(college.getCollegeName());
-                                    }
-                                    break;
-                                case 2:
-                                    // 系
-                                    Department department = departmentService.findById(bean.getDataId());
-                                    if (Objects.nonNull(department)) {
-                                        bean.setDataName(department.getDepartmentName());
-                                    }
-                                    break;
-                                case 3:
-                                    // 专业
-                                    Science science = scienceService.findById(bean.getDataId());
-                                    if (Objects.nonNull(science)) {
-                                        bean.setDataName(science.getScienceName());
-                                    }
-                                    break;
-                                case 4:
-                                    // 年级
-                                    Grade grade = gradeService.findById(bean.getDataId());
-                                    if (Objects.nonNull(grade)) {
-                                        bean.setDataName(grade.getGrade() + "");
-                                    }
-                                    break;
-                                case 5:
-                                    // 班级
-                                    Organize organize = organizeService.findById(bean.getDataId());
-                                    if (Objects.nonNull(organize)) {
-                                        bean.setDataName(organize.getOrganizeName());
-                                    }
-                                    break;
-                            }
-                        }
-                    }
-
-                    modelMap.addAttribute("leaverRegisterScopes", leaverRegisterScopes);
+                    modelMap.addAttribute("leaverRegisterOptions", registerControllerCommon.leaverRegisterOptions(id));
+                    modelMap.addAttribute("leaverRegisterScopes",
+                            registerControllerCommon.leaverRegisterScopes(id, leaverRegisterRelease.getDataScope()));
                 } else {
                     config.buildDangerTip("查询错误", "未查询到离校登记发布数据");
                     config.dataMerging(modelMap);
@@ -252,13 +178,7 @@ public class RegisterLeaverViewController {
         String page;
         String channel = Workbook.channel.WEB.name();
         if (registerConditionCommon.leaverRegister(id, channel, null)) {
-            List<LeaverRegisterOption> leaverRegisterOptions = new ArrayList<>();
-            Result<LeaverRegisterOptionRecord> leaverRegisterOptionRecords =
-                    leaverRegisterOptionService.findByLeaverRegisterReleaseId(id);
-            if (leaverRegisterOptionRecords.isNotEmpty()) {
-                leaverRegisterOptions = leaverRegisterOptionRecords.into(LeaverRegisterOption.class);
-            }
-            modelMap.addAttribute("leaverRegisterOptions", leaverRegisterOptions);
+            modelMap.addAttribute("leaverRegisterOptions", registerControllerCommon.leaverRegisterOptions(id));
             modelMap.addAttribute("leaverRegisterReleaseId", id);
             page = "web/register/leaver/leaver_data_add::#page-wrapper";
         } else {

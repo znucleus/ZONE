@@ -22,6 +22,7 @@ import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.register.leaver.LeaverRegisterDataBean;
 import top.zbeboy.zone.web.bean.register.leaver.LeaverRegisterOptionBean;
 import top.zbeboy.zone.web.bean.register.leaver.LeaverRegisterReleaseBean;
+import top.zbeboy.zone.web.bean.register.leaver.LeaverRegisterScopeBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.ByteUtil;
@@ -496,6 +497,78 @@ public class RegisterControllerCommon {
         if (export.exportExcel(exportInfo.getLastPath(), exportInfo.getFileName(), exportInfo.getExt())) {
             uploadService.download(exportInfo.getFileName(), exportInfo.getFilePath(), response, request);
         }
+    }
+
+    /**
+     * 获取选项数据
+     *
+     * @param id 发布id
+     * @return 数据
+     */
+    public List<LeaverRegisterOption> leaverRegisterOptions(String id) {
+        List<LeaverRegisterOption> leaverRegisterOptions = new ArrayList<>();
+        Result<LeaverRegisterOptionRecord> leaverRegisterOptionRecords =
+                leaverRegisterOptionService.findByLeaverRegisterReleaseId(id);
+        if (leaverRegisterOptionRecords.isNotEmpty()) {
+            leaverRegisterOptions = leaverRegisterOptionRecords.into(LeaverRegisterOption.class);
+        }
+        return leaverRegisterOptions;
+    }
+
+    /**
+     * 获取数据域
+     *
+     * @param id        发布id
+     * @param dataScope 域
+     * @return 数据
+     */
+    public List<LeaverRegisterScopeBean> leaverRegisterScopes(String id, int dataScope) {
+        List<LeaverRegisterScopeBean> leaverRegisterScopes = new ArrayList<>();
+        Result<LeaverRegisterScopeRecord> leaverRegisterScopeRecords =
+                leaverRegisterScopeService.findByLeaverRegisterReleaseId(id);
+        if (leaverRegisterScopeRecords.isNotEmpty()) {
+            leaverRegisterScopes = leaverRegisterScopeRecords.into(LeaverRegisterScopeBean.class);
+            for (LeaverRegisterScopeBean bean : leaverRegisterScopes) {
+                switch (dataScope) {
+                    case 1:
+                        // 院
+                        College college = collegeService.findById(bean.getDataId());
+                        if (Objects.nonNull(college)) {
+                            bean.setDataName(college.getCollegeName());
+                        }
+                        break;
+                    case 2:
+                        // 系
+                        Department department = departmentService.findById(bean.getDataId());
+                        if (Objects.nonNull(department)) {
+                            bean.setDataName(department.getDepartmentName());
+                        }
+                        break;
+                    case 3:
+                        // 专业
+                        Science science = scienceService.findById(bean.getDataId());
+                        if (Objects.nonNull(science)) {
+                            bean.setDataName(science.getScienceName());
+                        }
+                        break;
+                    case 4:
+                        // 年级
+                        Grade grade = gradeService.findById(bean.getDataId());
+                        if (Objects.nonNull(grade)) {
+                            bean.setDataName(grade.getGrade() + "");
+                        }
+                        break;
+                    case 5:
+                        // 班级
+                        Organize organize = organizeService.findById(bean.getDataId());
+                        if (Objects.nonNull(organize)) {
+                            bean.setDataName(organize.getOrganizeName());
+                        }
+                        break;
+                }
+            }
+        }
+        return leaverRegisterScopes;
     }
 
     /**
