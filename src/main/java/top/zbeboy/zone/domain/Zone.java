@@ -87,7 +87,13 @@ import top.zbeboy.zone.domain.tables.TrainingAttend;
 import top.zbeboy.zone.domain.tables.TrainingAttendUsers;
 import top.zbeboy.zone.domain.tables.TrainingAuthorities;
 import top.zbeboy.zone.domain.tables.TrainingConfigure;
+import top.zbeboy.zone.domain.tables.TrainingDocument;
+import top.zbeboy.zone.domain.tables.TrainingDocumentContent;
+import top.zbeboy.zone.domain.tables.TrainingDocumentFile;
 import top.zbeboy.zone.domain.tables.TrainingRelease;
+import top.zbeboy.zone.domain.tables.TrainingSpecial;
+import top.zbeboy.zone.domain.tables.TrainingSpecialFile;
+import top.zbeboy.zone.domain.tables.TrainingSpecialFileType;
 import top.zbeboy.zone.domain.tables.TrainingUsers;
 import top.zbeboy.zone.domain.tables.UserNotify;
 import top.zbeboy.zone.domain.tables.Users;
@@ -109,7 +115,7 @@ import top.zbeboy.zone.domain.tables.WeiXinDevice;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Zone extends SchemaImpl {
 
-    private static final long serialVersionUID = 221174905;
+    private static final long serialVersionUID = 1489233109;
 
     /**
      * The reference instance of <code>zone</code>
@@ -482,9 +488,39 @@ public class Zone extends SchemaImpl {
     public final TrainingConfigure TRAINING_CONFIGURE = top.zbeboy.zone.domain.tables.TrainingConfigure.TRAINING_CONFIGURE;
 
     /**
+     * The table <code>zone.training_document</code>.
+     */
+    public final TrainingDocument TRAINING_DOCUMENT = top.zbeboy.zone.domain.tables.TrainingDocument.TRAINING_DOCUMENT;
+
+    /**
+     * The table <code>zone.training_document_content</code>.
+     */
+    public final TrainingDocumentContent TRAINING_DOCUMENT_CONTENT = top.zbeboy.zone.domain.tables.TrainingDocumentContent.TRAINING_DOCUMENT_CONTENT;
+
+    /**
+     * The table <code>zone.training_document_file</code>.
+     */
+    public final TrainingDocumentFile TRAINING_DOCUMENT_FILE = top.zbeboy.zone.domain.tables.TrainingDocumentFile.TRAINING_DOCUMENT_FILE;
+
+    /**
      * The table <code>zone.training_release</code>.
      */
     public final TrainingRelease TRAINING_RELEASE = top.zbeboy.zone.domain.tables.TrainingRelease.TRAINING_RELEASE;
+
+    /**
+     * The table <code>zone.training_special</code>.
+     */
+    public final TrainingSpecial TRAINING_SPECIAL = top.zbeboy.zone.domain.tables.TrainingSpecial.TRAINING_SPECIAL;
+
+    /**
+     * The table <code>zone.training_special_file</code>.
+     */
+    public final TrainingSpecialFile TRAINING_SPECIAL_FILE = top.zbeboy.zone.domain.tables.TrainingSpecialFile.TRAINING_SPECIAL_FILE;
+
+    /**
+     * The table <code>zone.training_special_file_type</code>.
+     */
+    public final TrainingSpecialFileType TRAINING_SPECIAL_FILE_TYPE = top.zbeboy.zone.domain.tables.TrainingSpecialFileType.TRAINING_SPECIAL_FILE_TYPE;
 
     /**
      * The table <code>zone.training_users</code>.
@@ -611,7 +647,13 @@ public class Zone extends SchemaImpl {
             TrainingAttendUsers.TRAINING_ATTEND_USERS,
             TrainingAuthorities.TRAINING_AUTHORITIES,
             TrainingConfigure.TRAINING_CONFIGURE,
+            TrainingDocument.TRAINING_DOCUMENT,
+            TrainingDocumentContent.TRAINING_DOCUMENT_CONTENT,
+            TrainingDocumentFile.TRAINING_DOCUMENT_FILE,
             TrainingRelease.TRAINING_RELEASE,
+            TrainingSpecial.TRAINING_SPECIAL,
+            TrainingSpecialFile.TRAINING_SPECIAL_FILE,
+            TrainingSpecialFileType.TRAINING_SPECIAL_FILE_TYPE,
             TrainingUsers.TRAINING_USERS,
             UserNotify.USER_NOTIFY,
             Users.USERS,

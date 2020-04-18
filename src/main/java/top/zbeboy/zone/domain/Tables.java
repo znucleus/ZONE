@@ -79,7 +79,13 @@ import top.zbeboy.zone.domain.tables.TrainingAttend;
 import top.zbeboy.zone.domain.tables.TrainingAttendUsers;
 import top.zbeboy.zone.domain.tables.TrainingAuthorities;
 import top.zbeboy.zone.domain.tables.TrainingConfigure;
+import top.zbeboy.zone.domain.tables.TrainingDocument;
+import top.zbeboy.zone.domain.tables.TrainingDocumentContent;
+import top.zbeboy.zone.domain.tables.TrainingDocumentFile;
 import top.zbeboy.zone.domain.tables.TrainingRelease;
+import top.zbeboy.zone.domain.tables.TrainingSpecial;
+import top.zbeboy.zone.domain.tables.TrainingSpecialFile;
+import top.zbeboy.zone.domain.tables.TrainingSpecialFileType;
 import top.zbeboy.zone.domain.tables.TrainingUsers;
 import top.zbeboy.zone.domain.tables.UserNotify;
 import top.zbeboy.zone.domain.tables.Users;
@@ -467,9 +473,39 @@ public class Tables {
     public static final TrainingConfigure TRAINING_CONFIGURE = TrainingConfigure.TRAINING_CONFIGURE;
 
     /**
+     * The table <code>zone.training_document</code>.
+     */
+    public static final TrainingDocument TRAINING_DOCUMENT = TrainingDocument.TRAINING_DOCUMENT;
+
+    /**
+     * The table <code>zone.training_document_content</code>.
+     */
+    public static final TrainingDocumentContent TRAINING_DOCUMENT_CONTENT = TrainingDocumentContent.TRAINING_DOCUMENT_CONTENT;
+
+    /**
+     * The table <code>zone.training_document_file</code>.
+     */
+    public static final TrainingDocumentFile TRAINING_DOCUMENT_FILE = TrainingDocumentFile.TRAINING_DOCUMENT_FILE;
+
+    /**
      * The table <code>zone.training_release</code>.
      */
     public static final TrainingRelease TRAINING_RELEASE = TrainingRelease.TRAINING_RELEASE;
+
+    /**
+     * The table <code>zone.training_special</code>.
+     */
+    public static final TrainingSpecial TRAINING_SPECIAL = TrainingSpecial.TRAINING_SPECIAL;
+
+    /**
+     * The table <code>zone.training_special_file</code>.
+     */
+    public static final TrainingSpecialFile TRAINING_SPECIAL_FILE = TrainingSpecialFile.TRAINING_SPECIAL_FILE;
+
+    /**
+     * The table <code>zone.training_special_file_type</code>.
+     */
+    public static final TrainingSpecialFileType TRAINING_SPECIAL_FILE_TYPE = TrainingSpecialFileType.TRAINING_SPECIAL_FILE_TYPE;
 
     /**
      * The table <code>zone.training_users</code>.

@@ -25,7 +25,7 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipRelease implements Serializable {
 
-    private static final long serialVersionUID = 1936138449;
+    private static final long serialVersionUID = 1840028483;
 
     private String    internshipReleaseId;
     private String    internshipTitle;
@@ -39,6 +39,7 @@ public class InternshipRelease implements Serializable {
     private Integer   internshipTypeId;
     private String    publisher;
     private Integer   scienceId;
+    private Byte      isTimeLimit;
 
     public InternshipRelease() {}
 
@@ -55,6 +56,7 @@ public class InternshipRelease implements Serializable {
         this.internshipTypeId = value.internshipTypeId;
         this.publisher = value.publisher;
         this.scienceId = value.scienceId;
+        this.isTimeLimit = value.isTimeLimit;
     }
 
     public InternshipRelease(
@@ -69,7 +71,8 @@ public class InternshipRelease implements Serializable {
         Byte      internshipReleaseIsDel,
         Integer   internshipTypeId,
         String    publisher,
-        Integer   scienceId
+        Integer   scienceId,
+        Byte      isTimeLimit
     ) {
         this.internshipReleaseId = internshipReleaseId;
         this.internshipTitle = internshipTitle;
@@ -83,6 +86,7 @@ public class InternshipRelease implements Serializable {
         this.internshipTypeId = internshipTypeId;
         this.publisher = publisher;
         this.scienceId = scienceId;
+        this.isTimeLimit = isTimeLimit;
     }
 
     @NotNull
@@ -124,7 +128,6 @@ public class InternshipRelease implements Serializable {
         this.username = username;
     }
 
-    @NotNull
     public Timestamp getTeacherDistributionStartTime() {
         return this.teacherDistributionStartTime;
     }
@@ -133,7 +136,6 @@ public class InternshipRelease implements Serializable {
         this.teacherDistributionStartTime = teacherDistributionStartTime;
     }
 
-    @NotNull
     public Timestamp getTeacherDistributionEndTime() {
         return this.teacherDistributionEndTime;
     }
@@ -142,7 +144,6 @@ public class InternshipRelease implements Serializable {
         this.teacherDistributionEndTime = teacherDistributionEndTime;
     }
 
-    @NotNull
     public Timestamp getStartTime() {
         return this.startTime;
     }
@@ -151,7 +152,6 @@ public class InternshipRelease implements Serializable {
         this.startTime = startTime;
     }
 
-    @NotNull
     public Timestamp getEndTime() {
         return this.endTime;
     }
@@ -197,6 +197,14 @@ public class InternshipRelease implements Serializable {
         this.scienceId = scienceId;
     }
 
+    public Byte getIsTimeLimit() {
+        return this.isTimeLimit;
+    }
+
+    public void setIsTimeLimit(Byte isTimeLimit) {
+        this.isTimeLimit = isTimeLimit;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("InternshipRelease (");
@@ -213,6 +221,7 @@ public class InternshipRelease implements Serializable {
         sb.append(", ").append(internshipTypeId);
         sb.append(", ").append(publisher);
         sb.append(", ").append(scienceId);
+        sb.append(", ").append(isTimeLimit);
 
         sb.append(")");
         return sb.toString();

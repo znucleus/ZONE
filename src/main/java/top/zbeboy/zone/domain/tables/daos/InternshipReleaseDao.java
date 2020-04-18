@@ -226,4 +226,18 @@ public class InternshipReleaseDao extends DAOImpl<InternshipReleaseRecord, top.z
     public List<top.zbeboy.zone.domain.tables.pojos.InternshipRelease> fetchByScienceId(Integer... values) {
         return fetch(InternshipRelease.INTERNSHIP_RELEASE.SCIENCE_ID, values);
     }
+
+    /**
+     * Fetch records that have <code>is_time_limit BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.InternshipRelease> fetchRangeOfIsTimeLimit(Byte lowerInclusive, Byte upperInclusive) {
+        return fetchRange(InternshipRelease.INTERNSHIP_RELEASE.IS_TIME_LIMIT, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>is_time_limit IN (values)</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.InternshipRelease> fetchByIsTimeLimit(Byte... values) {
+        return fetch(InternshipRelease.INTERNSHIP_RELEASE.IS_TIME_LIMIT, values);
+    }
 }

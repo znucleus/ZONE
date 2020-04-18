@@ -15,7 +15,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row12;
+import org.jooq.Row13;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -42,7 +42,7 @@ import top.zbeboy.zone.domain.tables.records.InternshipReleaseRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class InternshipRelease extends TableImpl<InternshipReleaseRecord> {
 
-    private static final long serialVersionUID = 1926931878;
+    private static final long serialVersionUID = 2009575746;
 
     /**
      * The reference instance of <code>zone.internship_release</code>
@@ -80,22 +80,22 @@ public class InternshipRelease extends TableImpl<InternshipReleaseRecord> {
     /**
      * The column <code>zone.internship_release.teacher_distribution_start_time</code>.
      */
-    public final TableField<InternshipReleaseRecord, Timestamp> TEACHER_DISTRIBUTION_START_TIME = createField(DSL.name("teacher_distribution_start_time"), org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
+    public final TableField<InternshipReleaseRecord, Timestamp> TEACHER_DISTRIBUTION_START_TIME = createField(DSL.name("teacher_distribution_start_time"), org.jooq.impl.SQLDataType.TIMESTAMP, this, "");
 
     /**
      * The column <code>zone.internship_release.teacher_distribution_end_time</code>.
      */
-    public final TableField<InternshipReleaseRecord, Timestamp> TEACHER_DISTRIBUTION_END_TIME = createField(DSL.name("teacher_distribution_end_time"), org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
+    public final TableField<InternshipReleaseRecord, Timestamp> TEACHER_DISTRIBUTION_END_TIME = createField(DSL.name("teacher_distribution_end_time"), org.jooq.impl.SQLDataType.TIMESTAMP, this, "");
 
     /**
      * The column <code>zone.internship_release.start_time</code>.
      */
-    public final TableField<InternshipReleaseRecord, Timestamp> START_TIME = createField(DSL.name("start_time"), org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
+    public final TableField<InternshipReleaseRecord, Timestamp> START_TIME = createField(DSL.name("start_time"), org.jooq.impl.SQLDataType.TIMESTAMP, this, "");
 
     /**
      * The column <code>zone.internship_release.end_time</code>.
      */
-    public final TableField<InternshipReleaseRecord, Timestamp> END_TIME = createField(DSL.name("end_time"), org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
+    public final TableField<InternshipReleaseRecord, Timestamp> END_TIME = createField(DSL.name("end_time"), org.jooq.impl.SQLDataType.TIMESTAMP, this, "");
 
     /**
      * The column <code>zone.internship_release.internship_release_is_del</code>.
@@ -116,6 +116,11 @@ public class InternshipRelease extends TableImpl<InternshipReleaseRecord> {
      * The column <code>zone.internship_release.science_id</code>.
      */
     public final TableField<InternshipReleaseRecord, Integer> SCIENCE_ID = createField(DSL.name("science_id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+
+    /**
+     * The column <code>zone.internship_release.is_time_limit</code>.
+     */
+    public final TableField<InternshipReleaseRecord, Byte> IS_TIME_LIMIT = createField(DSL.name("is_time_limit"), org.jooq.impl.SQLDataType.TINYINT.nullable(false).defaultValue(org.jooq.impl.DSL.inline("1", org.jooq.impl.SQLDataType.TINYINT)), this, "");
 
     /**
      * Create a <code>zone.internship_release</code> table reference
@@ -214,11 +219,11 @@ public class InternshipRelease extends TableImpl<InternshipReleaseRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row12 type methods
+    // Row13 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row12<String, String, Timestamp, String, Timestamp, Timestamp, Timestamp, Timestamp, Byte, Integer, String, Integer> fieldsRow() {
-        return (Row12) super.fieldsRow();
+    public Row13<String, String, Timestamp, String, Timestamp, Timestamp, Timestamp, Timestamp, Byte, Integer, String, Integer, Byte> fieldsRow() {
+        return (Row13) super.fieldsRow();
     }
 }
