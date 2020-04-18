@@ -1,5 +1,5 @@
 /.idea/*
-/logs
+/logs/
 /target/*
 /root/*
 /settings/temp/*
