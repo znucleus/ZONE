@@ -25,6 +25,7 @@ import top.zbeboy.zone.web.bean.training.attend.TrainingAttendUsersBean;
 import top.zbeboy.zone.web.bean.training.release.TrainingConfigureBean;
 import top.zbeboy.zone.web.bean.training.release.TrainingReleaseBean;
 import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
+import top.zbeboy.zone.web.training.common.TrainingControllerCommon;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.ByteUtil;
@@ -45,9 +46,6 @@ import java.util.*;
 
 @RestController
 public class TrainingAttendRestController {
-
-    @Resource
-    private TrainingReleaseService trainingReleaseService;
 
     @Resource
     private TrainingAttendService trainingAttendService;
@@ -71,6 +69,9 @@ public class TrainingAttendRestController {
     private TrainingAttendSituationService trainingAttendSituationService;
 
     @Resource
+    private TrainingControllerCommon trainingControllerCommon;
+
+    @Resource
     private UsersService usersService;
 
     @Resource
@@ -90,15 +91,7 @@ public class TrainingAttendRestController {
      */
     @GetMapping("/web/training/attend/training/data")
     public ResponseEntity<Map<String, Object>> trainingData(SimplePaginationUtil simplePaginationUtil) {
-        AjaxUtil<TrainingReleaseBean> ajaxUtil = AjaxUtil.of();
-        List<TrainingReleaseBean> beans = new ArrayList<>();
-        Result<Record> records = trainingReleaseService.findAllByPage(simplePaginationUtil);
-        if (records.isNotEmpty()) {
-            beans = records.into(TrainingReleaseBean.class);
-            beans.forEach(bean -> bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime())));
-        }
-        simplePaginationUtil.setTotalSize(trainingReleaseService.countAll(simplePaginationUtil));
-        ajaxUtil.success().list(beans).page(simplePaginationUtil).msg("获取数据成功");
+        AjaxUtil<TrainingReleaseBean> ajaxUtil = trainingControllerCommon.trainingData(simplePaginationUtil);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 

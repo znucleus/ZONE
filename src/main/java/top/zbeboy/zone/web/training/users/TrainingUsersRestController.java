@@ -24,6 +24,7 @@ import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.training.release.TrainingReleaseBean;
 import top.zbeboy.zone.web.bean.training.users.TrainingUsersBean;
 import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
+import top.zbeboy.zone.web.training.common.TrainingControllerCommon;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.SmallPropsUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
@@ -49,6 +50,9 @@ public class TrainingUsersRestController {
     private TrainingConditionCommon trainingConditionCommon;
 
     @Resource
+    private TrainingControllerCommon trainingControllerCommon;
+
+    @Resource
     private StudentService studentService;
 
     @Resource
@@ -62,15 +66,7 @@ public class TrainingUsersRestController {
      */
     @GetMapping("/web/training/users/training/data")
     public ResponseEntity<Map<String, Object>> trainingData(SimplePaginationUtil simplePaginationUtil) {
-        AjaxUtil<TrainingReleaseBean> ajaxUtil = AjaxUtil.of();
-        List<TrainingReleaseBean> beans = new ArrayList<>();
-        Result<Record> records = trainingReleaseService.findAllByPage(simplePaginationUtil);
-        if (records.isNotEmpty()) {
-            beans = records.into(TrainingReleaseBean.class);
-            beans.forEach(bean -> bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime())));
-        }
-        simplePaginationUtil.setTotalSize(trainingReleaseService.countAll(simplePaginationUtil));
-        ajaxUtil.success().list(beans).page(simplePaginationUtil).msg("获取数据成功");
+        AjaxUtil<TrainingReleaseBean> ajaxUtil = trainingControllerCommon.trainingData(simplePaginationUtil);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
