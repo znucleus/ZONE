@@ -57,7 +57,9 @@ public class SystemNotifyServiceImpl implements SystemNotifyService, PaginationP
         return create.selectFrom(SYSTEM_NOTIFY)
                 .where(SYSTEM_NOTIFY.EXPIRE_DATE.ge(now())
                         .and(SYSTEM_NOTIFY.VALID_DATE.le(now()))
-                        .and(SYSTEM_NOTIFY.EXPIRE_DATE.gt(SYSTEM_NOTIFY.VALID_DATE))).fetch();
+                        .and(SYSTEM_NOTIFY.EXPIRE_DATE.gt(SYSTEM_NOTIFY.VALID_DATE)))
+                .orderBy(SYSTEM_NOTIFY.CREATE_DATE.desc())
+                .fetch();
     }
 
     @Override
