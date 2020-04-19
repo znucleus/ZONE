@@ -11,7 +11,7 @@
 5.Node 10 +;  
 6.Redis 3.0.504;  
 # 安装
-1.`git clone https://github.com/zbeboy/ZONE.git`;  
+1.`git clone https://github.com/znucleus/ZONE.git`;  
 2.配置`application.properties`,其它环境配置仅供开发者使用;  
 3.额外配置(settings目录),仅供开发者使用.
 # 启动
