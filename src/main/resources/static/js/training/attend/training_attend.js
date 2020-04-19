@@ -32,8 +32,8 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
         web storage key.
         */
         var webStorageKey = {
-            TITLE: 'TRAINING_USERS_TITLE_SEARCH',
-            DATA_RANGE: 'TRAINING_USERS_DATA_RANGE_SEARCH'
+            TITLE: 'TRAINING_ATTEND_TITLE_SEARCH',
+            DATA_RANGE: 'TRAINING_ATTEND_DATA_RANGE_SEARCH'
         };
 
         /*
