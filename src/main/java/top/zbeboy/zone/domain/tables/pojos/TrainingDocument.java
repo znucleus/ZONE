@@ -25,10 +25,11 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class TrainingDocument implements Serializable {
 
-    private static final long serialVersionUID = 942702223;
+    private static final long serialVersionUID = 411960471;
 
     private String    trainingDocumentId;
     private String    trainingReleaseId;
+    private String    documentTitle;
     private String    username;
     private Integer   courseId;
     private String    creator;
@@ -42,6 +43,7 @@ public class TrainingDocument implements Serializable {
     public TrainingDocument(TrainingDocument value) {
         this.trainingDocumentId = value.trainingDocumentId;
         this.trainingReleaseId = value.trainingReleaseId;
+        this.documentTitle = value.documentTitle;
         this.username = value.username;
         this.courseId = value.courseId;
         this.creator = value.creator;
@@ -54,6 +56,7 @@ public class TrainingDocument implements Serializable {
     public TrainingDocument(
         String    trainingDocumentId,
         String    trainingReleaseId,
+        String    documentTitle,
         String    username,
         Integer   courseId,
         String    creator,
@@ -64,6 +67,7 @@ public class TrainingDocument implements Serializable {
     ) {
         this.trainingDocumentId = trainingDocumentId;
         this.trainingReleaseId = trainingReleaseId;
+        this.documentTitle = documentTitle;
         this.username = username;
         this.courseId = courseId;
         this.creator = creator;
@@ -91,6 +95,16 @@ public class TrainingDocument implements Serializable {
 
     public void setTrainingReleaseId(String trainingReleaseId) {
         this.trainingReleaseId = trainingReleaseId;
+    }
+
+    @NotNull
+    @Size(max = 200)
+    public String getDocumentTitle() {
+        return this.documentTitle;
+    }
+
+    public void setDocumentTitle(String documentTitle) {
+        this.documentTitle = documentTitle;
     }
 
     @NotNull
@@ -162,6 +176,7 @@ public class TrainingDocument implements Serializable {
 
         sb.append(trainingDocumentId);
         sb.append(", ").append(trainingReleaseId);
+        sb.append(", ").append(documentTitle);
         sb.append(", ").append(username);
         sb.append(", ").append(courseId);
         sb.append(", ").append(creator);

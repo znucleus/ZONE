@@ -15,7 +15,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row9;
+import org.jooq.Row10;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -42,7 +42,7 @@ import top.zbeboy.zone.domain.tables.records.TrainingDocumentRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class TrainingDocument extends TableImpl<TrainingDocumentRecord> {
 
-    private static final long serialVersionUID = 1238638048;
+    private static final long serialVersionUID = -387435719;
 
     /**
      * The reference instance of <code>zone.training_document</code>
@@ -66,6 +66,11 @@ public class TrainingDocument extends TableImpl<TrainingDocumentRecord> {
      * The column <code>zone.training_document.training_release_id</code>.
      */
     public final TableField<TrainingDocumentRecord, String> TRAINING_RELEASE_ID = createField(DSL.name("training_release_id"), org.jooq.impl.SQLDataType.VARCHAR(64).nullable(false), this, "");
+
+    /**
+     * The column <code>zone.training_document.document_title</code>.
+     */
+    public final TableField<TrainingDocumentRecord, String> DOCUMENT_TITLE = createField(DSL.name("document_title"), org.jooq.impl.SQLDataType.VARCHAR(200).nullable(false), this, "");
 
     /**
      * The column <code>zone.training_document.username</code>.
@@ -199,11 +204,11 @@ public class TrainingDocument extends TableImpl<TrainingDocumentRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row9 type methods
+    // Row10 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row9<String, String, String, Integer, String, Timestamp, Integer, Byte, String> fieldsRow() {
-        return (Row9) super.fieldsRow();
+    public Row10<String, String, String, String, Integer, String, Timestamp, Integer, Byte, String> fieldsRow() {
+        return (Row10) super.fieldsRow();
     }
 }

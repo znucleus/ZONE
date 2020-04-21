@@ -95,13 +95,14 @@ CREATE TABLE training_attend_users
 CREATE TABLE training_document
 (
     training_document_id VARCHAR(64) PRIMARY KEY,
-    training_release_id  VARCHAR(64) NOT NULL,
-    username             VARCHAR(64) NOT NULL,
-    course_id            INT         NOT NULL,
-    creator              VARCHAR(30) NOT NULL,
-    create_date          TIMESTAMP   NOT NULL,
-    reading              INT         NOT NULL DEFAULT 0,
-    is_original          BOOLEAN     NOT NULL DEFAULT 1,
+    training_release_id  VARCHAR(64)  NOT NULL,
+    document_title       VARCHAR(200) NOT NULL,
+    username             VARCHAR(64)  NOT NULL,
+    course_id            INT          NOT NULL,
+    creator              VARCHAR(30)  NOT NULL,
+    create_date          TIMESTAMP    NOT NULL,
+    reading              INT          NOT NULL DEFAULT 0,
+    is_original          BOOLEAN      NOT NULL DEFAULT 1,
     origin               VARCHAR(500),
     FOREIGN KEY (training_release_id) REFERENCES
         training_release (training_release_id) ON DELETE CASCADE,

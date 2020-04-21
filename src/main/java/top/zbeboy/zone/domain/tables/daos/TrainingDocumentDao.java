@@ -88,6 +88,20 @@ public class TrainingDocumentDao extends DAOImpl<TrainingDocumentRecord, top.zbe
     }
 
     /**
+     * Fetch records that have <code>document_title BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.TrainingDocument> fetchRangeOfDocumentTitle(String lowerInclusive, String upperInclusive) {
+        return fetchRange(TrainingDocument.TRAINING_DOCUMENT.DOCUMENT_TITLE, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>document_title IN (values)</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.TrainingDocument> fetchByDocumentTitle(String... values) {
+        return fetch(TrainingDocument.TRAINING_DOCUMENT.DOCUMENT_TITLE, values);
+    }
+
+    /**
      * Fetch records that have <code>username BETWEEN lowerInclusive AND upperInclusive</code>
      */
     public List<top.zbeboy.zone.domain.tables.pojos.TrainingDocument> fetchRangeOfUsername(String lowerInclusive, String upperInclusive) {
