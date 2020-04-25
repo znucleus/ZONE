@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.zone.annotation.logging.LoggingRecord;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.Files;
@@ -38,7 +39,7 @@ public class MainController {
     @Resource
     private FilesService filesService;
 
-    private RequestCache requestCache = new HttpSessionRequestCache();
+    private final RequestCache requestCache = new HttpSessionRequestCache();
 
     /**
      * 首页
@@ -126,5 +127,16 @@ public class MainController {
         modelMap.addAttribute("menu", menuService.getMenu(roles, users.getUsername()));
 
         return "backstage";
+    }
+
+    /**
+     * 健康检查
+     *
+     * @return 健康检查
+     */
+    @GetMapping(value = "/anyone/health")
+    @ResponseBody
+    public String health() {
+        return "ok";
     }
 }
