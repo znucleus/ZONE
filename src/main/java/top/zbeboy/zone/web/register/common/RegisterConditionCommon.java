@@ -158,6 +158,11 @@ public class RegisterConditionCommon {
         boolean canOperator = false;
         if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
             canOperator = true;
+        } else if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+            // 发布人所在院与管理员院相同
+            int collegeId = getCurrentUserCollegeId(channel, principal);
+            int publishCollegeId = getPublishCollegeId(leaverRegisterReleaseId);
+            canOperator = publishCollegeId != 0 && collegeId == publishCollegeId;
         } else {
             LeaverRegisterRelease leaverRegisterRelease = leaverRegisterReleaseService.findById(leaverRegisterReleaseId);
             if (Objects.nonNull(leaverRegisterRelease)) {
@@ -175,15 +180,25 @@ public class RegisterConditionCommon {
      */
     public boolean leaverReview(String leaverRegisterReleaseId, String channel, Principal principal) {
         boolean canOperator = false;
-        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
-                roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
             canOperator = true;
+        } else if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+            // 发布人所在院与管理员院相同
+            int collegeId = getCurrentUserCollegeId(channel, principal);
+            int publishCollegeId = getPublishCollegeId(leaverRegisterReleaseId);
+            canOperator = publishCollegeId != 0 && collegeId == publishCollegeId;
         } else {
             Users users = usersService.getUserByChannel(channel, principal);
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType)) {
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                    canOperator = true;
+                    Optional<Record> staffRecord = staffService.findByUsernameRelation(users.getUsername());
+                    if (staffRecord.isPresent()) {
+                        StaffBean staffBean = staffRecord.get().into(StaffBean.class);
+                        int collegeId = staffBean.getCollegeId();
+                        int publishCollegeId = getPublishCollegeId(leaverRegisterReleaseId);
+                        canOperator = publishCollegeId != 0 && collegeId == publishCollegeId;
+                    }
                 } else {
                     LeaverRegisterRelease leaverRegisterRelease = leaverRegisterReleaseService.findById(leaverRegisterReleaseId);
                     if (Objects.nonNull(leaverRegisterRelease)) {
@@ -251,9 +266,57 @@ public class RegisterConditionCommon {
         return canOperator;
     }
 
+    private int getCurrentUserCollegeId(String channel, Principal principal) {
+        int collegeId = 0;
+        Users users = usersService.getUserByChannel(channel, principal);
+        UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
+        if (Objects.nonNull(usersType)) {
+            if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
+                Optional<Record> staffRecord = staffService.findByUsernameRelation(users.getUsername());
+                if (staffRecord.isPresent()) {
+                    StaffBean staffBean = staffRecord.get().into(StaffBean.class);
+                    collegeId = staffBean.getCollegeId();
+                }
+            } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
+                Optional<Record> studentRecord = studentService.findByUsernameRelation(users.getUsername());
+                if (studentRecord.isPresent()) {
+                    StudentBean studentBean = studentRecord.get().into(StudentBean.class);
+                    collegeId = studentBean.getCollegeId();
+                }
+            }
+        }
+        return collegeId;
+    }
+
+    private int getPublishCollegeId(String leaverRegisterReleaseId) {
+        int publishCollegeId = 0;
+        LeaverRegisterRelease leaverRegisterRelease = leaverRegisterReleaseService.findById(leaverRegisterReleaseId);
+        if (Objects.nonNull(leaverRegisterRelease)) {
+            Users users = usersService.findByUsername(leaverRegisterRelease.getUsername());
+            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
+            if (Objects.nonNull(usersType)) {
+                if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
+                    Optional<Record> staffRecord = staffService.findByUsernameRelation(users.getUsername());
+                    if (staffRecord.isPresent()) {
+                        StaffBean staffBean = staffRecord.get().into(StaffBean.class);
+                        publishCollegeId = staffBean.getCollegeId();
+                    }
+                } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
+                    Optional<Record> studentRecord = studentService.findByUsernameRelation(users.getUsername());
+                    if (studentRecord.isPresent()) {
+                        StudentBean studentBean = studentRecord.get().into(StudentBean.class);
+                        publishCollegeId = studentBean.getCollegeId();
+                    }
+                }
+            }
+        }
+
+        return publishCollegeId;
+    }
+
     boolean isRegisterLeaver(String leaverRegisterReleaseId, String channel, Principal principal) {
         boolean isRegister = false;
-        Users users = usersService.getUserByChannel(channel,principal);
+        Users users = usersService.getUserByChannel(channel, principal);
         UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
         if (Objects.nonNull(usersType)) {
             if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
@@ -268,7 +331,7 @@ public class RegisterConditionCommon {
 
     boolean isStudent(String channel, Principal principal) {
         boolean isStudent = false;
-        Users users = usersService.getUserByChannel(channel,principal);
+        Users users = usersService.getUserByChannel(channel, principal);
         UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
         if (Objects.nonNull(usersType)) {
             if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {

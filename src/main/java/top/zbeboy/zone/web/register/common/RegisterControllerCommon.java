@@ -102,7 +102,7 @@ public class RegisterControllerCommon {
                 bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime()));
                 bean.setCanOperator(BooleanUtil.toByte(registerConditionCommon.leaverOperator(bean.getLeaverRegisterReleaseId(), channel, principal)));
                 bean.setCanReview(BooleanUtil.toByte(registerConditionCommon.leaverReview(bean.getLeaverRegisterReleaseId(), channel, principal)));
-                bean.setIsStudent(BooleanUtil.toByte(registerConditionCommon.isStudent(channel, principal)));
+                bean.setCanRegister(BooleanUtil.toByte(registerConditionCommon.leaverRegister(bean.getLeaverRegisterReleaseId(), channel, principal)));
                 bean.setIsRegister(BooleanUtil.toByte(registerConditionCommon.isRegisterLeaver(bean.getLeaverRegisterReleaseId(), channel, principal)));
 
                 switch (bean.getDataScope()) {
