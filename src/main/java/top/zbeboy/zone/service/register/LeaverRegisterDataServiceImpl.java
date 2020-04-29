@@ -49,7 +49,9 @@ public class LeaverRegisterDataServiceImpl implements LeaverRegisterDataService,
                 .leftJoin(STUDENT)
                 .on(LEAVER_REGISTER_DATA.STUDENT_ID.eq(STUDENT.STUDENT_ID))
                 .leftJoin(USERS)
-                .on(STUDENT.USERNAME.eq(USERS.USERNAME));
+                .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                .leftJoin(ORGANIZE)
+                .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID));
         return queryAllByPage(selectOnConditionStep, paginationUtil, false);
     }
 
@@ -60,7 +62,9 @@ public class LeaverRegisterDataServiceImpl implements LeaverRegisterDataService,
                 .leftJoin(STUDENT)
                 .on(LEAVER_REGISTER_DATA.STUDENT_ID.eq(STUDENT.STUDENT_ID))
                 .leftJoin(USERS)
-                .on(STUDENT.USERNAME.eq(USERS.USERNAME));
+                .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                .leftJoin(ORGANIZE)
+                .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID));
         return queryAll(selectOnConditionStep, paginationUtil, false);
     }
 
@@ -71,7 +75,9 @@ public class LeaverRegisterDataServiceImpl implements LeaverRegisterDataService,
                 .leftJoin(STUDENT)
                 .on(LEAVER_REGISTER_DATA.STUDENT_ID.eq(STUDENT.STUDENT_ID))
                 .leftJoin(USERS)
-                .on(STUDENT.USERNAME.eq(USERS.USERNAME));
+                .on(STUDENT.USERNAME.eq(USERS.USERNAME))
+                .leftJoin(ORGANIZE)
+                .on(STUDENT.ORGANIZE_ID.eq(ORGANIZE.ORGANIZE_ID));
         return countAll(selectOnConditionStep, paginationUtil, false);
     }
 
@@ -101,6 +107,7 @@ public class LeaverRegisterDataServiceImpl implements LeaverRegisterDataService,
         if (Objects.nonNull(search)) {
             String realName = StringUtils.trim(search.getString("realName"));
             String studentNumber = StringUtils.trim(search.getString("studentNumber"));
+            String organizeName = StringUtils.trim(search.getString("organizeName"));
             if (StringUtils.isNotBlank(realName)) {
                 a = USERS.REAL_NAME.like(SQLQueryUtil.likeAllParam(realName));
             }
@@ -110,6 +117,14 @@ public class LeaverRegisterDataServiceImpl implements LeaverRegisterDataService,
                     a = STUDENT.STUDENT_NUMBER.like(SQLQueryUtil.likeAllParam(studentNumber));
                 } else {
                     a = a.and(STUDENT.STUDENT_NUMBER.like(SQLQueryUtil.likeAllParam(studentNumber)));
+                }
+            }
+
+            if (StringUtils.isNotBlank(organizeName)) {
+                if (Objects.isNull(a)) {
+                    a = ORGANIZE.ORGANIZE_NAME.like(SQLQueryUtil.likeAllParam(organizeName));
+                } else {
+                    a = a.and(ORGANIZE.ORGANIZE_NAME.like(SQLQueryUtil.likeAllParam(organizeName)));
                 }
             }
         }

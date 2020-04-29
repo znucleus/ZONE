@@ -30,6 +30,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             extraSearch: JSON.stringify({
                 realName: '',
                 studentNumber: '',
+                organizeName: '',
                 leaverRegisterReleaseId: page_param.paramLeaverRegisterReleaseId
             })
         };
@@ -39,7 +40,8 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         */
         var webStorageKey = {
             REAL_NAME: 'REGISTER_LEAVER_DATA_REVIEW_REAL_NAME_SEARCH' + page_param.paramLeaverRegisterReleaseId,
-            STUDENT_NUMBER: 'REGISTER_LEAVER_DATA_REVIEW_STUDENT_NUMBER_SEARCH' + page_param.paramLeaverRegisterReleaseId
+            STUDENT_NUMBER: 'REGISTER_LEAVER_DATA_REVIEW_STUDENT_NUMBER_SEARCH' + page_param.paramLeaverRegisterReleaseId,
+            ORGANIZE_NAME: 'REGISTER_LEAVER_DATA_REVIEW_ORGANIZE_NAME_SEARCH' + page_param.paramLeaverRegisterReleaseId,
         };
 
         /*
@@ -47,7 +49,8 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
          */
         var param_id = {
             realName: '#search_real_name',
-            studentNumber: '#search_student_number'
+            studentNumber: '#search_student_number',
+            organizeName: '#search_organize_name'
         };
 
         var tableData = '#tableData';
@@ -58,15 +61,17 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         function cleanParam() {
             $(param_id.realName).val('');
             $(param_id.studentNumber).val('');
+            $(param_id.organizeName).val('');
         }
 
         /**
          * 刷新查询参数
          */
         function refreshSearch() {
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.REAL_NAME, $(param_id.realName).val());
                 sessionStorage.setItem(webStorageKey.STUDENT_NUMBER, $(param_id.studentNumber).val());
+                sessionStorage.setItem(webStorageKey.ORGANIZE_NAME, $(param_id.organizeName).val());
             }
         }
 
@@ -99,6 +104,13 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         });
 
         $(param_id.studentNumber).keyup(function (event) {
+            if (event.keyCode === 13) {
+                refreshSearch();
+                init();
+            }
+        });
+
+        $(param_id.organizeName).keyup(function (event) {
             if (event.keyCode === 13) {
                 refreshSearch();
                 init();
@@ -204,14 +216,17 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         function initSearchContent() {
             var realName = null;
             var studentNumber = null;
+            var organizeName = null;
             var params = {
                 realName: '',
                 studentNumber: '',
+                organizeName:'',
                 leaverRegisterReleaseId: page_param.paramLeaverRegisterReleaseId
             };
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
                 studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
+                organizeName = sessionStorage.getItem(webStorageKey.ORGANIZE_NAME);
             }
             if (realName !== null) {
                 params.realName = realName;
@@ -224,6 +239,12 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             } else {
                 params.studentNumber = $(param_id.studentNumber).val();
             }
+
+            if (organizeName !== null) {
+                params.organizeName = organizeName;
+            } else {
+                params.organizeName = $(param_id.organizeName).val();
+            }
             param.pageNum = 0;
             param.extraSearch = JSON.stringify(params);
         }
@@ -234,9 +255,11 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         function initSearchInput() {
             var realName = null;
             var studentNumber = null;
-            if (typeof(Storage) !== "undefined") {
+            var organizeName = null;
+            if (typeof (Storage) !== "undefined") {
                 realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
                 studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
+                organizeName = sessionStorage.getItem(webStorageKey.ORGANIZE_NAME);
             }
             if (realName !== null) {
                 $(param_id.realName).val(realName);
@@ -244,6 +267,10 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
 
             if (studentNumber !== null) {
                 $(param_id.studentNumber).val(studentNumber);
+            }
+
+            if (organizeName !== null) {
+                $(param_id.organizeName).val(organizeName);
             }
         }
 

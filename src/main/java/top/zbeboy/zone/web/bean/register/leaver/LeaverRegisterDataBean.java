@@ -7,6 +7,7 @@ import java.util.List;
 public class LeaverRegisterDataBean extends LeaverRegisterData {
     private String realName;
     private String studentNumber;
+    private String organizeName;
     private List<LeaverRegisterOptionBean> leaverRegisterOptions;
     private String registerDateStr;
 
@@ -24,6 +25,14 @@ public class LeaverRegisterDataBean extends LeaverRegisterData {
 
     public void setStudentNumber(String studentNumber) {
         this.studentNumber = studentNumber;
+    }
+
+    public String getOrganizeName() {
+        return organizeName;
+    }
+
+    public void setOrganizeName(String organizeName) {
+        this.organizeName = organizeName;
     }
 
     public List<LeaverRegisterOptionBean> getLeaverRegisterOptions() {
