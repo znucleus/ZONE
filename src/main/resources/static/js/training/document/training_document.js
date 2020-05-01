@@ -7,8 +7,8 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
          */
         var ajax_url = {
             data: web_path + '/web/training/document/training/data',
-            list: '/web/training/attend/list',
-            page: '/web/menu/training/attend'
+            list: '/web/training/document/list',
+            page: '/web/menu/training/document'
         };
 
         navActive(ajax_url.page);

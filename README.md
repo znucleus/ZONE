@@ -5,7 +5,7 @@
 [![Build Status](https://travis-ci.org/zbeboy/ZONE.svg?branch=master)](https://travis-ci.org/zbeboy/ZONE)
 # 开发环境
 1.JDK 1.8.*;  
-2.Intellij IDEA 2018.2;  
+2.Intellij IDEA 2020.1;  
 3.MySQL 8;  
 4.Maven 3.6.0 +;  
 5.Node 10 +;  
@@ -17,7 +17,7 @@
 # 启动
 1.Intellij IDEA Run Application.class 或 Maven .  
 # 参与条件
-1.Known Spring boot 2.2;  
+1.Known Spring boot 2.2.6;  
 2.Known Git;  
 2.Known Maven;  
 3.Known RequireJs;  
