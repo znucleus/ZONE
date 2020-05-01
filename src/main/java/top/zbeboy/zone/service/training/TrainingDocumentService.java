@@ -2,6 +2,7 @@ package top.zbeboy.zone.service.training;
 
 import org.jooq.Record;
 import org.jooq.Result;
+import top.zbeboy.zone.domain.tables.pojos.TrainingDocument;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
 public interface TrainingDocumentService {
@@ -20,4 +21,11 @@ public interface TrainingDocumentService {
      * @return 总数
      */
     int countAll(SimplePaginationUtil paginationUtil);
+
+    /**
+     * 保存
+     *
+     * @param trainingDocument 数据
+     */
+    void save(TrainingDocument trainingDocument);
 }

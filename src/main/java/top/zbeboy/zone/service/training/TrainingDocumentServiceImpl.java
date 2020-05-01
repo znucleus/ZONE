@@ -7,10 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import top.zbeboy.zone.domain.tables.daos.TrainingDocumentDao;
+import top.zbeboy.zone.domain.tables.pojos.TrainingDocument;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zone.service.util.SQLQueryUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
+import javax.annotation.Resource;
 import java.util.Objects;
 
 import static top.zbeboy.zone.domain.Tables.TRAINING_DOCUMENT;
@@ -20,6 +23,9 @@ import static top.zbeboy.zone.domain.Tables.TRAINING_DOCUMENT;
 public class TrainingDocumentServiceImpl implements TrainingDocumentService, PaginationPlugin<SimplePaginationUtil> {
 
     private final DSLContext create;
+
+    @Resource
+    private TrainingDocumentDao trainingDocumentDao;
 
     @Autowired
     TrainingDocumentServiceImpl(DSLContext dslContext) {
@@ -34,6 +40,12 @@ public class TrainingDocumentServiceImpl implements TrainingDocumentService, Pag
     @Override
     public int countAll(SimplePaginationUtil paginationUtil) {
         return countAll(create, TRAINING_DOCUMENT, paginationUtil, false);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void save(TrainingDocument trainingDocument) {
+        trainingDocumentDao.insert(trainingDocument);
     }
 
     @Override

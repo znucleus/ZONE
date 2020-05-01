@@ -7,6 +7,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
          */
         var ajax_url = {
             data: web_path + '/web/training/document/list/data',
+            add:'/web/training/document/add',
             file_data: web_path + '/web/training/document/file/data',
             look: '/web/training/document/look',
             page: '/web/menu/training/document'
@@ -160,6 +161,10 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
             });
             $(documentFileTableData).html(template(data));
         }
+
+        $('#document_add').click(function () {
+            $.address.value(ajax_url.add + '/' + page_param.paramTrainingReleaseId);
+        });
 
         /*
          查看
