@@ -35,6 +35,11 @@ public class TrainingDocumentServiceImpl implements TrainingDocumentService, Pag
     }
 
     @Override
+    public TrainingDocument findById(String id) {
+        return trainingDocumentDao.findById(id);
+    }
+
+    @Override
     public Optional<Record> findByIdRelation(String id) {
         return create.select()
                 .from(TRAINING_DOCUMENT)
@@ -63,6 +68,11 @@ public class TrainingDocumentServiceImpl implements TrainingDocumentService, Pag
     @Override
     public void update(TrainingDocument trainingDocument) {
         trainingDocumentDao.update(trainingDocument);
+    }
+
+    @Override
+    public void deleteById(String id) {
+        trainingDocumentDao.deleteById(id);
     }
 
     @Override

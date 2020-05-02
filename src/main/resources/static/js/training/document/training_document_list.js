@@ -1,6 +1,6 @@
 //# sourceURL=training_document_list.js
-require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "jquery.address", "jquery.simple-pagination"],
-    function ($, _, tools, Handlebars, navActive) {
+require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2", "messenger", "jquery.address", "jquery.simple-pagination"],
+    function ($, _, tools, Handlebars, navActive, Swal) {
 
         /*
          ajax url.
@@ -9,6 +9,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
             data: web_path + '/web/training/document/list/data',
             add: '/web/training/document/add',
             edit: '/web/training/document/edit',
+            del: web_path + '/web/training/document/delete',
             file_data: web_path + '/web/training/document/file/data',
             look: '/web/training/document/look',
             page: '/web/menu/training/document'
@@ -180,6 +181,53 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
         $(documentTableData).delegate('.edit', "click", function () {
             $.address.value(ajax_url.edit + '/' + $(this).attr('data-id'));
         });
+
+        /*
+       删除
+        */
+        $(documentTableData).delegate('.del', "click", function () {
+            document_del($(this).attr('data-id'));
+        });
+
+        /*
+        文章删除
+        */
+        function document_del(trainingDocumentId) {
+            Swal.fire({
+                title: "确定删除该文章吗？",
+                text: "文章删除！",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                preConfirm: function () {
+                    $.ajax({
+                        type: 'POST',
+                        url: ajax_url.del,
+                        data: {trainingDocumentId: trainingDocumentId},
+                        success: function (data) {
+                            Messenger().post({
+                                message: data.msg,
+                                type: data.state ? 'success' : 'error',
+                                showCloseButton: true
+                            });
+
+                            if (data.state) {
+                                initDocument();
+                            }
+                        },
+                        error: function (XMLHttpRequest) {
+                            Messenger().post({
+                                message: 'Request error : ' + XMLHttpRequest.status + " " + XMLHttpRequest.statusText,
+                                type: 'error',
+                                showCloseButton: true
+                            });
+                        }
+                    });
+                }
+            });
+        }
 
         initDocument();
         initDocumentFile();

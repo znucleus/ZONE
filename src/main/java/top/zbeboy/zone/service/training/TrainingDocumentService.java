@@ -10,6 +10,14 @@ import java.util.Optional;
 public interface TrainingDocumentService {
 
     /**
+     * 通过主键查询
+     *
+     * @param id 主键
+     * @return 数据
+     */
+    TrainingDocument findById(String id);
+
+    /**
      * 通过主键关联查询
      *
      * @param id 主键
@@ -45,4 +53,11 @@ public interface TrainingDocumentService {
      * @param trainingDocument 数据
      */
     void update(TrainingDocument trainingDocument);
+
+    /**
+     * 删除
+     *
+     * @param id 主键
+     */
+    void deleteById(String id);
 }

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.domain.tables.pojos.TrainingDocument;
 import top.zbeboy.zone.domain.tables.pojos.TrainingDocumentContent;
@@ -32,7 +33,10 @@ import top.zbeboy.zone.web.vo.training.document.TrainingDocumentEditVo;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @RestController
 public class TrainingDocumentRestController {
@@ -170,18 +174,17 @@ public class TrainingDocumentRestController {
     public ResponseEntity<Map<String, Object>> update(@Valid TrainingDocumentEditVo trainingDocumentEditVo, BindingResult bindingResult) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
-            Optional<Record> record = trainingDocumentService.findByIdRelation(trainingDocumentEditVo.getTrainingDocumentId());
-            if (record.isPresent()) {
-                TrainingDocumentBean bean = record.get().into(TrainingDocumentBean.class);
-                if (trainingConditionCommon.canOperator(bean.getTrainingReleaseId())) {
-                    bean.setDocumentTitle(trainingDocumentEditVo.getDocumentTitle());
-                    bean.setIsOriginal(trainingDocumentEditVo.getIsOriginal());
-                    bean.setOrigin(trainingDocumentEditVo.getOrigin());
+            TrainingDocument trainingDocument = trainingDocumentService.findById(trainingDocumentEditVo.getTrainingDocumentId());
+            if (Objects.nonNull(trainingDocument)) {
+                if (trainingConditionCommon.canOperator(trainingDocument.getTrainingReleaseId())) {
+                    trainingDocument.setDocumentTitle(trainingDocumentEditVo.getDocumentTitle());
+                    trainingDocument.setIsOriginal(trainingDocumentEditVo.getIsOriginal());
+                    trainingDocument.setOrigin(trainingDocumentEditVo.getOrigin());
 
-                    trainingDocumentService.update(bean);
+                    trainingDocumentService.update(trainingDocument);
 
                     TrainingDocumentContent trainingDocumentContent = new TrainingDocumentContent();
-                    trainingDocumentContent.setTrainingDocumentId(bean.getTrainingDocumentId());
+                    trainingDocumentContent.setTrainingDocumentId(trainingDocument.getTrainingDocumentId());
                     trainingDocumentContent.setTrainingDocumentContent(trainingDocumentEditVo.getTrainingDocumentContent());
 
                     trainingDocumentContentService.update(trainingDocumentContent);
@@ -194,6 +197,29 @@ public class TrainingDocumentRestController {
             }
         } else {
             ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 文章更新
+     *
+     * @param trainingDocumentId 文章id
+     * @return true or false
+     */
+    @PostMapping("/web/training/document/delete")
+    public ResponseEntity<Map<String, Object>> delete(@RequestParam("trainingDocumentId") String trainingDocumentId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        TrainingDocument trainingDocument = trainingDocumentService.findById(trainingDocumentId);
+        if (Objects.nonNull(trainingDocument)) {
+            if (trainingConditionCommon.canOperator(trainingDocument.getTrainingReleaseId())) {
+                trainingDocumentService.deleteById(trainingDocumentId);
+                ajaxUtil.success().msg("删除成功");
+            } else {
+                ajaxUtil.fail().msg("您无权限操作");
+            }
+        } else {
+            ajaxUtil.fail().msg("未查询到实训文章数据");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
