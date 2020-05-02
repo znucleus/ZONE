@@ -25,7 +25,8 @@ public class LeaverRegisterDataExport extends ExportUtil<LeaverRegisterDataBean>
         row.createCell(0).setCellValue("姓名");
         row.createCell(1).setCellValue("学号");
         row.createCell(2).setCellValue("班级");
-        int j = 3;
+        row.createCell(3).setCellValue("离校地点");
+        int j = 4;
         List<LeaverRegisterDataBean> beans = getData();
         if (Objects.nonNull(beans) && beans.size() > 0) {
             List<LeaverRegisterOptionBean> leaverRegisterOptionBeans = beans.get(0).getLeaverRegisterOptions();
@@ -43,7 +44,8 @@ public class LeaverRegisterDataExport extends ExportUtil<LeaverRegisterDataBean>
         row.createCell(0).setCellValue(t.getRealName());
         row.createCell(1).setCellValue(t.getStudentNumber());
         row.createCell(2).setCellValue(t.getOrganizeName());
-        int j = 3;
+        row.createCell(3).setCellValue(t.getLeaverAddress());
+        int j = 4;
         List<LeaverRegisterOptionBean> leaverRegisterOptionBeans = t.getLeaverRegisterOptions();
         if (Objects.nonNull(leaverRegisterOptionBeans) && leaverRegisterOptionBeans.size() > 0) {
             for (LeaverRegisterOptionBean leaverRegisterOptionBean : leaverRegisterOptionBeans) {
