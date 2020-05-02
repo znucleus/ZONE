@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zone.service.training.TrainingDocumentService;
 import top.zbeboy.zone.service.training.TrainingReleaseService;
+import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.web.bean.training.document.TrainingDocumentBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
@@ -97,7 +98,6 @@ public class TrainingDocumentViewController {
         if (record.isPresent()) {
             TrainingDocumentBean bean = record.get().into(TrainingDocumentBean.class);
             if (trainingConditionCommon.canOperator(bean.getTrainingReleaseId())) {
-                modelMap.addAttribute("trainingReleaseId", id);
                 modelMap.addAttribute("trainingDocument", bean);
                 page = "web/training/document/training_document_edit::#page-wrapper";
             } else {
@@ -112,4 +112,30 @@ public class TrainingDocumentViewController {
         }
         return page;
     }
+
+    /**
+     * 查看文章
+     *
+     * @param id       实训文章id
+     * @param modelMap 页面对象
+     * @return 页面
+     */
+    @GetMapping("/web/training/document/look/{id}")
+    public String look(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        Optional<Record> record = trainingDocumentService.findByIdRelation(id);
+        if (record.isPresent()) {
+            TrainingDocumentBean bean = record.get().into(TrainingDocumentBean.class);
+            bean.setCreateDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getCreateDate()));
+            modelMap.addAttribute("trainingDocument", bean);
+            page = "web/training/document/training_document_look::#page-wrapper";
+        } else {
+            config.buildDangerTip("查询错误", "未查询到实训文章数据");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
+
 }

@@ -35,7 +35,6 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
         };
 
         var page_param = {
-            paramTrainingReleaseId: $('#paramTrainingReleaseId').val(),
             paramTrainingDocumentId: $('#paramTrainingDocumentId').val()
         };
 
@@ -47,7 +46,6 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             trainingDocumentContent: '',
             isOriginal: '',
             origin: '',
-            trainingReleaseId: '',
             trainingDocumentId: ''
         };
 
@@ -71,7 +69,6 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             var isOriginal = $('input[name="isOriginal"]:checked').val();
             param.isOriginal = _.isUndefined(isOriginal) ? 0 : isOriginal;
             param.origin = $(param_id.origin).val();
-            param.trainingReleaseId = page_param.paramTrainingReleaseId;
             param.trainingDocumentId = page_param.paramTrainingDocumentId;
         }
 
