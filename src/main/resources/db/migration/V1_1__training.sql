@@ -122,15 +122,16 @@ CREATE TABLE training_document_content
 
 CREATE TABLE training_document_file
 (
-    training_document_id VARCHAR(64) NOT NULL,
+    training_document_file_id VARCHAR(64) PRIMARY KEY,
+    training_release_id  VARCHAR(64)  NOT NULL,
     course_id            INT         NOT NULL,
     file_id              VARCHAR(64) NOT NULL,
     username             VARCHAR(64) NOT NULL,
     uploader             VARCHAR(30) NOT NULL,
     create_date          TIMESTAMP   NOT NULL,
     downloads            INT         NOT NULL DEFAULT 0,
-    FOREIGN KEY (training_document_id) REFERENCES
-        training_document (training_document_id) ON DELETE CASCADE,
+    FOREIGN KEY (training_release_id) REFERENCES
+        training_release (training_release_id) ON DELETE CASCADE,
     FOREIGN KEY (course_id) REFERENCES
         course (course_id),
     FOREIGN KEY (file_id) REFERENCES files (file_id),

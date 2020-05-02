@@ -1,5 +1,6 @@
 //# sourceURL=training_document_list.js
-require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2", "messenger", "jquery.address", "jquery.simple-pagination"],
+require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2", "messenger", "jquery.address",
+        "jquery.simple-pagination", "jquery.fileupload-validate"],
     function ($, _, tools, Handlebars, navActive, Swal) {
 
         /*
@@ -12,6 +13,8 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             del: web_path + '/web/training/document/delete',
             file_data: web_path + '/web/training/document/file/data',
             look: '/web/training/document/look',
+            file_upload_url: web_path + '/web/training/document/upload/file',
+            delete_file_url: web_path + '/web/training/document/delete/file',
             page: '/web/menu/training/document'
         };
 
@@ -380,5 +383,46 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 documentFileData(data);
             });
         }
+
+        // 上传组件
+        $('#fileupload').fileupload({
+            url: ajax_url.file_upload_url,
+            dataType: 'json',
+            maxFileSize: 500000000,// 500MB
+            formAcceptCharset: 'utf-8',
+            messages: {
+                maxFileSize: '单文件上传仅允许500MB大小'
+            },
+            submit: function (e, data) {
+                data.formData = {
+                    'trainingReleaseId': page_param.paramTrainingReleaseId
+                };
+            },
+            done: function (e, data) {
+                Messenger().post({
+                    message: data.result.msg,
+                    type: data.result.state ? 'success' : 'error',
+                    showCloseButton: true
+                });
+                if (data.result.state) {
+                    initDocumentFile();
+                }
+            }
+        }).on('fileuploadadd', function (evt, data) {
+            var isOk = true;
+            var $this = $(this);
+            var validation = data.process(function () {
+                return $this.fileupload('process', data);
+            });
+            validation.fail(function (data) {
+                isOk = false;
+                Messenger().post({
+                    message: '上传失败: ' + data.files[0].error,
+                    type: 'error',
+                    showCloseButton: true
+                });
+            });
+            return isOk;
+        });
 
     });

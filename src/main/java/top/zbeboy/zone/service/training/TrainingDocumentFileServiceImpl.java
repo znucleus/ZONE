@@ -7,19 +7,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import top.zbeboy.zone.domain.tables.daos.TrainingDocumentFileDao;
+import top.zbeboy.zone.domain.tables.pojos.TrainingDocumentFile;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zone.service.util.SQLQueryUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
+import javax.annotation.Resource;
 import java.util.Objects;
 
-import static top.zbeboy.zone.domain.Tables.*;
+import static top.zbeboy.zone.domain.Tables.FILES;
+import static top.zbeboy.zone.domain.Tables.TRAINING_DOCUMENT_FILE;
 
 @Service("trainingDocumentFileService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class TrainingDocumentFileServiceImpl implements TrainingDocumentFileService, PaginationPlugin<SimplePaginationUtil> {
 
     private final DSLContext create;
+
+    @Resource
+    private TrainingDocumentFileDao trainingDocumentFileDao;
 
     @Autowired
     TrainingDocumentFileServiceImpl(DSLContext dslContext) {
@@ -31,9 +38,7 @@ public class TrainingDocumentFileServiceImpl implements TrainingDocumentFileServ
         SelectOnConditionStep<Record> selectOnConditionStep = create.select()
                 .from(TRAINING_DOCUMENT_FILE)
                 .leftJoin(FILES)
-                .on(TRAINING_DOCUMENT_FILE.FILE_ID.eq(FILES.FILE_ID))
-                .leftJoin(TRAINING_DOCUMENT)
-                .on(TRAINING_DOCUMENT_FILE.TRAINING_DOCUMENT_ID.eq(TRAINING_DOCUMENT.TRAINING_DOCUMENT_ID));
+                .on(TRAINING_DOCUMENT_FILE.FILE_ID.eq(FILES.FILE_ID));
         return queryAllByPage(selectOnConditionStep, paginationUtil, false);
     }
 
@@ -42,10 +47,14 @@ public class TrainingDocumentFileServiceImpl implements TrainingDocumentFileServ
         SelectOnConditionStep<Record1<Integer>> selectOnConditionStep = create.selectCount()
                 .from(TRAINING_DOCUMENT_FILE)
                 .leftJoin(FILES)
-                .on(TRAINING_DOCUMENT_FILE.FILE_ID.eq(FILES.FILE_ID))
-                .leftJoin(TRAINING_DOCUMENT)
-                .on(TRAINING_DOCUMENT_FILE.TRAINING_DOCUMENT_ID.eq(TRAINING_DOCUMENT.TRAINING_DOCUMENT_ID));
+                .on(TRAINING_DOCUMENT_FILE.FILE_ID.eq(FILES.FILE_ID));
         return countAll(selectOnConditionStep, paginationUtil, false);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void save(TrainingDocumentFile trainingDocumentFile) {
+        trainingDocumentFileDao.insert(trainingDocumentFile);
     }
 
     @Override
@@ -69,7 +78,7 @@ public class TrainingDocumentFileServiceImpl implements TrainingDocumentFileServ
         if (Objects.nonNull(search)) {
             String trainingReleaseId = StringUtils.trim(search.getString("trainingReleaseId"));
             if (StringUtils.isNotBlank(trainingReleaseId)) {
-                a = TRAINING_DOCUMENT.TRAINING_RELEASE_ID.eq(trainingReleaseId);
+                a = TRAINING_DOCUMENT_FILE.TRAINING_RELEASE_ID.eq(trainingReleaseId);
             }
         }
         return a;

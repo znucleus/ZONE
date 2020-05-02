@@ -2,6 +2,8 @@ package top.zbeboy.zone.web.training.document;
 
 import org.jooq.Record;
 import org.jooq.Result;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -9,16 +11,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import top.zbeboy.zone.domain.tables.pojos.TrainingDocument;
-import top.zbeboy.zone.domain.tables.pojos.TrainingDocumentContent;
-import top.zbeboy.zone.domain.tables.pojos.TrainingRelease;
-import top.zbeboy.zone.domain.tables.pojos.Users;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import top.zbeboy.zone.config.Workbook;
+import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.service.platform.UsersService;
+import top.zbeboy.zone.service.system.FilesService;
 import top.zbeboy.zone.service.training.TrainingDocumentContentService;
 import top.zbeboy.zone.service.training.TrainingDocumentFileService;
 import top.zbeboy.zone.service.training.TrainingDocumentService;
 import top.zbeboy.zone.service.training.TrainingReleaseService;
+import top.zbeboy.zone.service.upload.FileBean;
+import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
+import top.zbeboy.zone.service.util.RequestUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.training.document.TrainingDocumentBean;
 import top.zbeboy.zone.web.bean.training.document.TrainingDocumentFileBean;
@@ -41,6 +46,8 @@ import java.util.Objects;
 @RestController
 public class TrainingDocumentRestController {
 
+    private final Logger log = LoggerFactory.getLogger(TrainingDocumentRestController.class);
+
     @Resource
     private TrainingControllerCommon trainingControllerCommon;
 
@@ -61,6 +68,12 @@ public class TrainingDocumentRestController {
 
     @Resource
     private UsersService usersService;
+
+    @Resource
+    private UploadService uploadService;
+
+    @Resource
+    private FilesService filesService;
 
     /**
      * 数据
@@ -221,6 +234,65 @@ public class TrainingDocumentRestController {
         } else {
             ajaxUtil.fail().msg("未查询到实训文章数据");
         }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 实训文档
+     *
+     * @param trainingReleaseId 实训发布id
+     * @param request           请求
+     * @return true or false
+     */
+    @PostMapping("/web/training/document/upload/file")
+    public ResponseEntity<Map<String, Object>> uploadFile(@RequestParam("trainingReleaseId") String trainingReleaseId,
+                                                          MultipartHttpServletRequest request) {
+        AjaxUtil<FileBean> ajaxUtil = AjaxUtil.of();
+        try {
+            if (trainingConditionCommon.canOperator(trainingReleaseId)) {
+                TrainingRelease trainingRelease = trainingReleaseService.findById(trainingReleaseId);
+                if (Objects.nonNull(trainingRelease)) {
+                    Users users = usersService.getUserFromSession();
+                    String path = Workbook.trainingDocumentFilePath(trainingReleaseId);
+                    List<FileBean> fileBeens = uploadService.upload(request,
+                            RequestUtil.getRealPath(request) + path, request.getRemoteAddr());
+                    for (FileBean fileBean : fileBeens) {
+                        String fileId = UUIDUtil.getUUID();
+                        Files files = new Files();
+                        files.setFileId(fileId);
+                        files.setExt(fileBean.getExt());
+                        files.setNewName(fileBean.getNewName());
+                        files.setOriginalFileName(fileBean.getOriginalFileName());
+                        files.setFileSize(fileBean.getFileSize());
+                        files.setRelativePath(path + fileBean.getNewName());
+                        filesService.save(files);
+
+                        TrainingDocumentFile trainingDocumentFile = new TrainingDocumentFile();
+                        trainingDocumentFile.setTrainingDocumentFileId(UUIDUtil.getUUID());
+                        trainingDocumentFile.setTrainingReleaseId(trainingReleaseId);
+                        trainingDocumentFile.setCourseId(trainingRelease.getCourseId());
+                        trainingDocumentFile.setFileId(fileId);
+                        trainingDocumentFile.setUsername(users.getUsername());
+                        trainingDocumentFile.setUploader(users.getRealName());
+                        trainingDocumentFile.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                        trainingDocumentFile.setDownloads(0);
+
+                        trainingDocumentFileService.save(trainingDocumentFile);
+                    }
+
+                    ajaxUtil.success().msg("保存成功");
+                } else {
+                    ajaxUtil.fail().msg("未查询到实训发布数据");
+                }
+
+            } else {
+                ajaxUtil.fail().msg("您无权限操作");
+            }
+        } catch (Exception e) {
+            log.error("Upload file error, error is {}", e);
+            ajaxUtil.fail().msg("上传文件失败： " + e.getMessage());
+        }
+
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }
