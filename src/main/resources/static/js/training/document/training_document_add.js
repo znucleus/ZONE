@@ -45,7 +45,8 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             documentTitle: '',
             trainingDocumentContent: '',
             isOriginal: '',
-            origin: ''
+            origin: '',
+            trainingReleaseId: ''
         };
 
         // 初始化富文本框
