@@ -28,4 +28,12 @@ public class TrainingDocumentContentServiceImpl implements TrainingDocumentConte
                 .set(TRAINING_DOCUMENT_CONTENT.TRAINING_DOCUMENT_CONTENT_, trainingDocumentContent.getTrainingDocumentContent())
                 .execute();
     }
+
+    @Override
+    public void update(TrainingDocumentContent trainingDocumentContent) {
+        create.update(TRAINING_DOCUMENT_CONTENT)
+                .set(TRAINING_DOCUMENT_CONTENT.TRAINING_DOCUMENT_CONTENT_, trainingDocumentContent.getTrainingDocumentContent())
+                .where(TRAINING_DOCUMENT_CONTENT.TRAINING_DOCUMENT_ID.eq(trainingDocumentContent.getTrainingDocumentId()))
+                .execute();
+    }
 }

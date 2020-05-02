@@ -1,4 +1,4 @@
-//# sourceURL=training_document_add.js
+//# sourceURL=training_document_edit.js
 require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active", "quill", "KaTeX", "messenger", "jquery.address", "bootstrap-maxlength"],
     function ($, _, tools, Handlebars, Swal, navActive, Quill, KaTeX) {
 
@@ -8,7 +8,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
          ajax url.
          */
         var ajax_url = {
-            save: '/web/training/document/save',
+            update: '/web/training/document/update',
             page: '/web/menu/training/document'
         };
 
@@ -35,7 +35,8 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
         };
 
         var page_param = {
-            paramTrainingReleaseId: $('#paramTrainingReleaseId').val()
+            paramTrainingReleaseId: $('#paramTrainingReleaseId').val(),
+            paramTrainingDocumentId: $('#paramTrainingDocumentId').val()
         };
 
         /*
@@ -46,7 +47,8 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             trainingDocumentContent: '',
             isOriginal: '',
             origin: '',
-            trainingReleaseId: ''
+            trainingReleaseId: '',
+            trainingDocumentId: ''
         };
 
         // 初始化富文本框
@@ -70,6 +72,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             param.isOriginal = _.isUndefined(isOriginal) ? 0 : isOriginal;
             param.origin = $(param_id.origin).val();
             param.trainingReleaseId = page_param.paramTrainingReleaseId;
+            param.trainingDocumentId = page_param.paramTrainingDocumentId;
         }
 
         /*
@@ -81,7 +84,20 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
          * 初始化界面
          */
         function init() {
+            initQuill();
+            initOriginal();
             initMaxLength();
+        }
+
+        function initQuill() {
+            quill.setContents(JSON.parse($(param_id.trainingDocumentContent).val()));
+        }
+
+        function initOriginal() {
+            initParam();
+            if (Number(param.isOriginal) === 0) {
+                $(param_id.origin).parent().css('display', '');
+            }
         }
 
         /**
@@ -190,7 +206,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             tools.buttonLoading(button_id.save.id, button_id.save.tip);
             $.ajax({
                 type: 'POST',
-                url: ajax_url.save,
+                url: ajax_url.update,
                 data: param,
                 success: function (data) {
                     tools.buttonEndLoading(button_id.save.id, button_id.save.text);

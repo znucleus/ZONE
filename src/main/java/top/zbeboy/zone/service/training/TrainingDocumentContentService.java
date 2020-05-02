@@ -10,4 +10,11 @@ public interface TrainingDocumentContentService {
      * @param trainingDocumentContent 数据
      */
     void save(TrainingDocumentContent trainingDocumentContent);
+
+    /**
+     * 更新
+     *
+     * @param trainingDocumentContent 数据
+     */
+    void update(TrainingDocumentContent trainingDocumentContent);
 }

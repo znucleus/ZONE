@@ -7,7 +7,8 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
          */
         var ajax_url = {
             data: web_path + '/web/training/document/list/data',
-            add:'/web/training/document/add',
+            add: '/web/training/document/add',
+            edit: '/web/training/document/edit',
             file_data: web_path + '/web/training/document/file/data',
             look: '/web/training/document/look',
             page: '/web/menu/training/document'
@@ -16,7 +17,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
         navActive(ajax_url.page);
 
         var page_param = {
-            paramTrainingReleaseId:$('#paramTrainingReleaseId').val()
+            paramTrainingReleaseId: $('#paramTrainingReleaseId').val()
         };
 
         /*
@@ -51,7 +52,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
         */
         var webStorageKey = {
             DOCUMENT_TITLE: 'TRAINING_DOCUMENT_LIST_TITLE_SEARCH' + page_param.paramTrainingReleaseId,
-            DOCUMENT_FILE:'TRAINING_DOCUMENT_LIST_FILE_SEARCH' + page_param.paramTrainingReleaseId
+            DOCUMENT_FILE: 'TRAINING_DOCUMENT_LIST_FILE_SEARCH' + page_param.paramTrainingReleaseId
         };
 
         /*
@@ -59,7 +60,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
          */
         var param_id = {
             documentTitle: '#search_document_title',
-            documentFile:'#search_document_file'
+            documentFile: '#search_document_file'
         };
 
         var documentTableData = '#documentTableData';
@@ -80,13 +81,13 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
          * 刷新查询参数
          */
         function refreshDocumentSearch() {
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.DOCUMENT_TITLE, $(param_id.documentTitle).val());
             }
         }
 
         function refreshDocumentFileSearch() {
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.DOCUMENT_FILE, $(param_id.documentFile).val());
             }
         }
@@ -173,6 +174,13 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
             $.address.value(ajax_url.look + '/' + $(this).attr('data-id'));
         });
 
+        /*
+         编辑
+         */
+        $(documentTableData).delegate('.edit', "click", function () {
+            $.address.value(ajax_url.edit + '/' + $(this).attr('data-id'));
+        });
+
         initDocument();
         initDocumentFile();
         initDocumentSearchInput();
@@ -210,7 +218,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
                 documentTitle: '',
                 trainingReleaseId: page_param.paramTrainingReleaseId,
             };
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 documentTitle = sessionStorage.getItem(webStorageKey.DOCUMENT_TITLE);
             }
             if (documentTitle !== null) {
@@ -229,7 +237,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
                 originalFileName: '',
                 trainingReleaseId: page_param.paramTrainingReleaseId,
             };
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 documentFile = sessionStorage.getItem(webStorageKey.DOCUMENT_FILE);
             }
             if (documentFile !== null) {
@@ -247,7 +255,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
         */
         function initDocumentSearchInput() {
             var documentTitle = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 documentTitle = sessionStorage.getItem(webStorageKey.DOCUMENT_TITLE);
             }
             if (documentTitle !== null) {
@@ -257,7 +265,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
 
         function initDocumentFileSearchInput() {
             var documentFile = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 documentFile = sessionStorage.getItem(webStorageKey.DOCUMENT_FILE);
             }
             if (documentFile !== null) {

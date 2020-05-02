@@ -5,7 +5,17 @@ import org.jooq.Result;
 import top.zbeboy.zone.domain.tables.pojos.TrainingDocument;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
+import java.util.Optional;
+
 public interface TrainingDocumentService {
+
+    /**
+     * 通过主键关联查询
+     *
+     * @param id 主键
+     * @return 数据
+     */
+    Optional<Record> findByIdRelation(String id);
 
     /**
      * 分页查询
@@ -28,4 +38,11 @@ public interface TrainingDocumentService {
      * @param trainingDocument 数据
      */
     void save(TrainingDocument trainingDocument);
+
+    /**
+     * 更新
+     *
+     * @param trainingDocument 数据
+     */
+    void update(TrainingDocument trainingDocument);
 }

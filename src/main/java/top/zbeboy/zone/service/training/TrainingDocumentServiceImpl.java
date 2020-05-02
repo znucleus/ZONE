@@ -15,8 +15,10 @@ import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
 import javax.annotation.Resource;
 import java.util.Objects;
+import java.util.Optional;
 
 import static top.zbeboy.zone.domain.Tables.TRAINING_DOCUMENT;
+import static top.zbeboy.zone.domain.Tables.TRAINING_DOCUMENT_CONTENT;
 
 @Service("trainingDocumentService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -33,6 +35,16 @@ public class TrainingDocumentServiceImpl implements TrainingDocumentService, Pag
     }
 
     @Override
+    public Optional<Record> findByIdRelation(String id) {
+        return create.select()
+                .from(TRAINING_DOCUMENT)
+                .join(TRAINING_DOCUMENT_CONTENT)
+                .on(TRAINING_DOCUMENT.TRAINING_DOCUMENT_ID.eq(TRAINING_DOCUMENT_CONTENT.TRAINING_DOCUMENT_ID))
+                .where(TRAINING_DOCUMENT.TRAINING_DOCUMENT_ID.eq(id))
+                .fetchOptional();
+    }
+
+    @Override
     public Result<Record> findAllByPage(SimplePaginationUtil paginationUtil) {
         return queryAllByPage(create, TRAINING_DOCUMENT, paginationUtil, false);
     }
@@ -46,6 +58,11 @@ public class TrainingDocumentServiceImpl implements TrainingDocumentService, Pag
     @Override
     public void save(TrainingDocument trainingDocument) {
         trainingDocumentDao.insert(trainingDocument);
+    }
+
+    @Override
+    public void update(TrainingDocument trainingDocument) {
+        trainingDocumentDao.update(trainingDocument);
     }
 
     @Override

@@ -28,13 +28,11 @@ import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zone.web.vo.training.document.TrainingDocumentAddVo;
+import top.zbeboy.zone.web.vo.training.document.TrainingDocumentEditVo;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 public class TrainingDocumentRestController {
@@ -155,6 +153,44 @@ public class TrainingDocumentRestController {
                 }
             } else {
                 ajaxUtil.fail().msg("您无权限操作");
+            }
+        } else {
+            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 文章更新
+     *
+     * @param trainingDocumentEditVo 数据
+     * @return true or false
+     */
+    @PostMapping("/web/training/document/update")
+    public ResponseEntity<Map<String, Object>> update(@Valid TrainingDocumentEditVo trainingDocumentEditVo, BindingResult bindingResult) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (!bindingResult.hasErrors()) {
+            Optional<Record> record = trainingDocumentService.findByIdRelation(trainingDocumentEditVo.getTrainingDocumentId());
+            if (record.isPresent()) {
+                TrainingDocumentBean bean = record.get().into(TrainingDocumentBean.class);
+                if (trainingConditionCommon.canOperator(bean.getTrainingReleaseId())) {
+                    bean.setDocumentTitle(trainingDocumentEditVo.getDocumentTitle());
+                    bean.setIsOriginal(trainingDocumentEditVo.getIsOriginal());
+                    bean.setOrigin(trainingDocumentEditVo.getOrigin());
+
+                    trainingDocumentService.update(bean);
+
+                    TrainingDocumentContent trainingDocumentContent = new TrainingDocumentContent();
+                    trainingDocumentContent.setTrainingDocumentId(bean.getTrainingDocumentId());
+                    trainingDocumentContent.setTrainingDocumentContent(trainingDocumentEditVo.getTrainingDocumentContent());
+
+                    trainingDocumentContentService.update(trainingDocumentContent);
+                    ajaxUtil.success().msg("更新成功");
+                } else {
+                    ajaxUtil.fail().msg("您无权限操作");
+                }
+            } else {
+                ajaxUtil.fail().msg("未查询到实训文章数据");
             }
         } else {
             ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
