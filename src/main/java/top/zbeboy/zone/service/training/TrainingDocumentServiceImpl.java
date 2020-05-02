@@ -3,6 +3,7 @@ package top.zbeboy.zone.service.training;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.*;
+import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -17,6 +18,7 @@ import javax.annotation.Resource;
 import java.util.Objects;
 import java.util.Optional;
 
+import static org.jooq.impl.DSL.select;
 import static top.zbeboy.zone.domain.Tables.TRAINING_DOCUMENT;
 import static top.zbeboy.zone.domain.Tables.TRAINING_DOCUMENT_CONTENT;
 
@@ -68,6 +70,11 @@ public class TrainingDocumentServiceImpl implements TrainingDocumentService, Pag
     @Override
     public void update(TrainingDocument trainingDocument) {
         trainingDocumentDao.update(trainingDocument);
+    }
+
+    @Override
+    public void updateReading(String id) {
+        create.execute("UPDATE TRAINING_DOCUMENT SET READING = READING + 1 WHERE TRAINING_DOCUMENT_ID = ?", id);
     }
 
     @Override

@@ -55,6 +55,13 @@ public interface TrainingDocumentService {
     void update(TrainingDocument trainingDocument);
 
     /**
+     * 更新阅读量
+     *
+     * @param id 主键
+     */
+    void updateReading(String id);
+
+    /**
      * 删除
      *
      * @param id 主键
