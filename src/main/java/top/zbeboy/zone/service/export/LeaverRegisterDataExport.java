@@ -37,6 +37,7 @@ public class LeaverRegisterDataExport extends ExportUtil<LeaverRegisterDataBean>
                 }
             }
         }
+        row.createCell(j).setCellValue("备注");
     }
 
     @Override
@@ -58,5 +59,6 @@ public class LeaverRegisterDataExport extends ExportUtil<LeaverRegisterDataBean>
                 j++;
             }
         }
+        row.createCell(j).setCellValue(t.getRemark());
     }
 }
