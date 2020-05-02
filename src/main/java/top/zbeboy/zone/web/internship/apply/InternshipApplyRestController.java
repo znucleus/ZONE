@@ -161,7 +161,7 @@ public class InternshipApplyRestController {
     @GetMapping("/web/internship/apply/download/{id}")
     public void download(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
         Files files = filesService.findById(id);
-        if (Objects.nonNull(id)) {
+        if (Objects.nonNull(files)) {
             uploadService.download(files.getOriginalFileName(), files.getRelativePath(), response, request);
         }
     }
