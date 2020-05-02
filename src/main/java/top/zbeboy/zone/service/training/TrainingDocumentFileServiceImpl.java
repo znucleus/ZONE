@@ -16,8 +16,7 @@ import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 import javax.annotation.Resource;
 import java.util.Objects;
 
-import static top.zbeboy.zone.domain.Tables.FILES;
-import static top.zbeboy.zone.domain.Tables.TRAINING_DOCUMENT_FILE;
+import static top.zbeboy.zone.domain.Tables.*;
 
 @Service("trainingDocumentFileService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -43,7 +42,9 @@ public class TrainingDocumentFileServiceImpl implements TrainingDocumentFileServ
         SelectOnConditionStep<Record> selectOnConditionStep = create.select()
                 .from(TRAINING_DOCUMENT_FILE)
                 .leftJoin(FILES)
-                .on(TRAINING_DOCUMENT_FILE.FILE_ID.eq(FILES.FILE_ID));
+                .on(TRAINING_DOCUMENT_FILE.FILE_ID.eq(FILES.FILE_ID))
+                .leftJoin(TRAINING_RELEASE)
+                .on(TRAINING_DOCUMENT_FILE.TRAINING_RELEASE_ID.eq(TRAINING_RELEASE.TRAINING_RELEASE_ID));
         return queryAllByPage(selectOnConditionStep, paginationUtil, false);
     }
 
@@ -52,7 +53,9 @@ public class TrainingDocumentFileServiceImpl implements TrainingDocumentFileServ
         SelectOnConditionStep<Record1<Integer>> selectOnConditionStep = create.selectCount()
                 .from(TRAINING_DOCUMENT_FILE)
                 .leftJoin(FILES)
-                .on(TRAINING_DOCUMENT_FILE.FILE_ID.eq(FILES.FILE_ID));
+                .on(TRAINING_DOCUMENT_FILE.FILE_ID.eq(FILES.FILE_ID))
+                .leftJoin(TRAINING_RELEASE)
+                .on(TRAINING_DOCUMENT_FILE.TRAINING_RELEASE_ID.eq(TRAINING_RELEASE.TRAINING_RELEASE_ID));
         return countAll(selectOnConditionStep, paginationUtil, false);
     }
 

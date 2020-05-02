@@ -6,6 +6,7 @@ public class TrainingDocumentBean extends TrainingDocument {
     private String createDateStr;
     private Byte canOperator;
     private String trainingDocumentContent;
+    private String title;
 
     public String getCreateDateStr() {
         return createDateStr;
@@ -29,5 +30,13 @@ public class TrainingDocumentBean extends TrainingDocument {
 
     public void setTrainingDocumentContent(String trainingDocumentContent) {
         this.trainingDocumentContent = trainingDocumentContent;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

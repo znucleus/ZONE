@@ -8,6 +8,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
         var ajax_url = {
             data: web_path + '/web/training/document/training/data',
             list: '/web/training/document/list',
+            relation_document: '/web/training/document/relation/document',
             page: '/web/menu/training/document'
         };
 
@@ -110,6 +111,13 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
          */
         $(tableData).delegate('.list', "click", function () {
             $.address.value(ajax_url.list + '/' + $(this).attr('data-id'));
+        });
+
+        /*
+         相关文章
+         */
+        $(tableData).delegate('.relationDocument', "click", function () {
+            $.address.value(ajax_url.relation_document + '/' + $(this).attr('data-id'));
         });
 
         init();

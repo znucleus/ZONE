@@ -8,6 +8,7 @@ public class TrainingDocumentFileBean extends TrainingDocumentFile {
     private String originalFileName;
     private String ext;
     private Long fileSize;
+    private String title;
 
     public String getCreateDateStr() {
         return createDateStr;
@@ -47,5 +48,13 @@ public class TrainingDocumentFileBean extends TrainingDocumentFile {
 
     public void setFileSize(Long fileSize) {
         this.fileSize = fileSize;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

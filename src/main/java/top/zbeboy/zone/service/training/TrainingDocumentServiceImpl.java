@@ -2,8 +2,8 @@ package top.zbeboy.zone.service.training;
 
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.jooq.*;
-import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -18,9 +18,7 @@ import javax.annotation.Resource;
 import java.util.Objects;
 import java.util.Optional;
 
-import static org.jooq.impl.DSL.select;
-import static top.zbeboy.zone.domain.Tables.TRAINING_DOCUMENT;
-import static top.zbeboy.zone.domain.Tables.TRAINING_DOCUMENT_CONTENT;
+import static top.zbeboy.zone.domain.Tables.*;
 
 @Service("trainingDocumentService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -53,12 +51,20 @@ public class TrainingDocumentServiceImpl implements TrainingDocumentService, Pag
 
     @Override
     public Result<Record> findAllByPage(SimplePaginationUtil paginationUtil) {
-        return queryAllByPage(create, TRAINING_DOCUMENT, paginationUtil, false);
+        SelectOnConditionStep<Record> selectOnConditionStep = create.select()
+                .from(TRAINING_DOCUMENT)
+                .leftJoin(TRAINING_RELEASE)
+                .on(TRAINING_DOCUMENT.TRAINING_RELEASE_ID.eq(TRAINING_RELEASE.TRAINING_RELEASE_ID));
+        return queryAllByPage(selectOnConditionStep, paginationUtil, false);
     }
 
     @Override
     public int countAll(SimplePaginationUtil paginationUtil) {
-        return countAll(create, TRAINING_DOCUMENT, paginationUtil, false);
+        SelectOnConditionStep<Record1<Integer>> selectOnConditionStep = create.selectCount()
+                .from(TRAINING_DOCUMENT)
+                .leftJoin(TRAINING_RELEASE)
+                .on(TRAINING_DOCUMENT.TRAINING_RELEASE_ID.eq(TRAINING_RELEASE.TRAINING_RELEASE_ID));
+        return countAll(selectOnConditionStep, paginationUtil, false);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
@@ -102,8 +108,18 @@ public class TrainingDocumentServiceImpl implements TrainingDocumentService, Pag
 
         if (Objects.nonNull(search)) {
             String trainingReleaseId = StringUtils.trim(search.getString("trainingReleaseId"));
+            String courseId = StringUtils.trim(search.getString("courseId"));
             if (StringUtils.isNotBlank(trainingReleaseId)) {
                 a = TRAINING_DOCUMENT.TRAINING_RELEASE_ID.eq(trainingReleaseId);
+            }
+
+            if (StringUtils.isNotBlank(courseId)) {
+                int courseIdInt = NumberUtils.toInt(courseId);
+                if (Objects.isNull(a)) {
+                    a = TRAINING_DOCUMENT.COURSE_ID.eq(courseIdInt);
+                } else {
+                    a = a.and(TRAINING_DOCUMENT.COURSE_ID.eq(courseIdInt));
+                }
             }
         }
         return a;
@@ -122,6 +138,17 @@ public class TrainingDocumentServiceImpl implements TrainingDocumentService, Pag
                     sortField[0] = TRAINING_DOCUMENT.CREATE_DATE.asc();
                 } else {
                     sortField[0] = TRAINING_DOCUMENT.CREATE_DATE.desc();
+                }
+            }
+
+            if (StringUtils.equals("reading", orderColumnName)) {
+                sortField = new SortField[2];
+                if (isAsc) {
+                    sortField[0] = TRAINING_DOCUMENT.READING.asc();
+                    sortField[1] = TRAINING_DOCUMENT.CREATE_DATE.asc();
+                } else {
+                    sortField[0] = TRAINING_DOCUMENT.READING.desc();
+                    sortField[1] = TRAINING_DOCUMENT.CREATE_DATE.desc();
                 }
             }
         }
