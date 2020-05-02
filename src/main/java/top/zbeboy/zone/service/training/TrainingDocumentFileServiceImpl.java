@@ -34,6 +34,11 @@ public class TrainingDocumentFileServiceImpl implements TrainingDocumentFileServ
     }
 
     @Override
+    public TrainingDocumentFile findById(String id) {
+        return trainingDocumentFileDao.findById(id);
+    }
+
+    @Override
     public Result<Record> findAllByPage(SimplePaginationUtil paginationUtil) {
         SelectOnConditionStep<Record> selectOnConditionStep = create.select()
                 .from(TRAINING_DOCUMENT_FILE)
@@ -55,6 +60,16 @@ public class TrainingDocumentFileServiceImpl implements TrainingDocumentFileServ
     @Override
     public void save(TrainingDocumentFile trainingDocumentFile) {
         trainingDocumentFileDao.insert(trainingDocumentFile);
+    }
+
+    @Override
+    public void updateDownloads(String id) {
+        create.execute("UPDATE TRAINING_DOCUMENT_FILE SET DOWNLOADS = DOWNLOADS + 1 WHERE TRAINING_DOCUMENT_FILE_ID = ?", id);
+    }
+
+    @Override
+    public void deleteById(String id) {
+        trainingDocumentFileDao.deleteById(id);
     }
 
     @Override

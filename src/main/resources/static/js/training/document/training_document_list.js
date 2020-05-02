@@ -15,6 +15,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             look: '/web/training/document/look',
             file_upload_url: web_path + '/web/training/document/upload/file',
             delete_file_url: web_path + '/web/training/document/delete/file',
+            download: '/web/training/document/download',
             page: '/web/menu/training/document'
         };
 
@@ -424,5 +425,59 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             });
             return isOk;
         });
+
+        /*
+        下载
+        */
+        $(documentFileTableData).delegate('.download', "click", function () {
+            window.location.href = ajax_url.download + '/' + $(this).attr('data-id');
+        });
+
+        /*
+       删除
+        */
+        $(documentFileTableData).delegate('.del', "click", function () {
+            document_file_del($(this).attr('data-id'));
+        });
+
+        /*
+        文档删除
+        */
+        function document_file_del(trainingDocumentFileId) {
+            Swal.fire({
+                title: "确定删除该文档吗？",
+                text: "文档删除！",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                preConfirm: function () {
+                    $.ajax({
+                        type: 'POST',
+                        url: ajax_url.delete_file_url,
+                        data: {trainingDocumentFileId: trainingDocumentFileId},
+                        success: function (data) {
+                            Messenger().post({
+                                message: data.msg,
+                                type: data.state ? 'success' : 'error',
+                                showCloseButton: true
+                            });
+
+                            if (data.state) {
+                                initDocumentFile();
+                            }
+                        },
+                        error: function (XMLHttpRequest) {
+                            Messenger().post({
+                                message: 'Request error : ' + XMLHttpRequest.status + " " + XMLHttpRequest.statusText,
+                                type: 'error',
+                                showCloseButton: true
+                            });
+                        }
+                    });
+                }
+            });
+        }
 
     });

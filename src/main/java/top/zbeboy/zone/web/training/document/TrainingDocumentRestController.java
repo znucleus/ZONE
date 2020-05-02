@@ -7,10 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
@@ -23,6 +20,7 @@ import top.zbeboy.zone.service.training.TrainingReleaseService;
 import top.zbeboy.zone.service.upload.FileBean;
 import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
+import top.zbeboy.zone.service.util.FilesUtil;
 import top.zbeboy.zone.service.util.RequestUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.training.document.TrainingDocumentBean;
@@ -37,6 +35,8 @@ import top.zbeboy.zone.web.vo.training.document.TrainingDocumentAddVo;
 import top.zbeboy.zone.web.vo.training.document.TrainingDocumentEditVo;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -215,7 +215,7 @@ public class TrainingDocumentRestController {
     }
 
     /**
-     * 文章更新
+     * 文章删除
      *
      * @param trainingDocumentId 文章id
      * @return true or false
@@ -294,5 +294,53 @@ public class TrainingDocumentRestController {
         }
 
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 文档删除
+     *
+     * @param trainingDocumentFileId 文档id
+     * @return true or false
+     */
+    @PostMapping("/web/training/document/delete/file")
+    public ResponseEntity<Map<String, Object>> deleteFile(@RequestParam("trainingDocumentFileId") String trainingDocumentFileId, HttpServletRequest request) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        TrainingDocumentFile trainingDocumentFile = trainingDocumentFileService.findById(trainingDocumentFileId);
+        if (Objects.nonNull(trainingDocumentFile)) {
+            if (trainingConditionCommon.canOperator(trainingDocumentFile.getTrainingReleaseId())) {
+                trainingDocumentFileService.deleteById(trainingDocumentFileId);
+                Files files = filesService.findById(trainingDocumentFile.getFileId());
+                if(Objects.nonNull(files)){
+                    FilesUtil.deleteFile(RequestUtil.getRealPath(request) + files.getRelativePath());
+                    filesService.delete(files);
+                }
+                ajaxUtil.success().msg("删除成功");
+            } else {
+                ajaxUtil.fail().msg("您无权限操作");
+            }
+        } else {
+            ajaxUtil.fail().msg("未查询到实训文档数据");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 文件下载
+     *
+     * @param id       文件id
+     * @param request  请求
+     * @param response 响应
+     */
+    @GetMapping("/web/training/document/download/{id}")
+    public void download(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
+        TrainingDocumentFile trainingDocumentFile = trainingDocumentFileService.findById(id);
+        if (Objects.nonNull(trainingDocumentFile)) {
+            trainingDocumentFileService.updateDownloads(id);
+            Files files = filesService.findById(trainingDocumentFile.getFileId());
+            if (Objects.nonNull(files)) {
+                uploadService.download(files.getOriginalFileName(), files.getRelativePath(), response, request);
+            }
+        }
+
     }
 }
