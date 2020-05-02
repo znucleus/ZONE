@@ -14,7 +14,7 @@ require(["jquery", "handlebars", "nav.active", "quill", "jquery.address", "jquer
         /*
          参数id
          */
-        var paramId = {
+        var param_id = {
             internshipJournalContent: '#internshipJournalContent',
             internshipJournalHtml: '#internshipJournalHtml'
         };
@@ -47,7 +47,7 @@ require(["jquery", "handlebars", "nav.active", "quill", "jquery.address", "jquer
         });
 
         // 初始化内容与感想富文本框
-        var quill = new Quill(paramId.internshipJournalContent, {
+        var quill = new Quill(param_id.internshipJournalContent, {
             placeholder: '内容与感想',
             theme: 'bubble'
         });
@@ -56,6 +56,6 @@ require(["jquery", "handlebars", "nav.active", "quill", "jquery.address", "jquer
 
         function init() {
             quill.enable(false);
-            quill.setContents(JSON.parse($(paramId.internshipJournalHtml).val()));
+            quill.setContents(JSON.parse($(param_id.internshipJournalHtml).val()));
         }
     });
