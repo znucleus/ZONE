@@ -63,8 +63,7 @@ public class TrainingReportServiceImpl implements TrainingReportService {
             paraMap.put("${classRoom}", bean.getClassRoom());
             paraMap.put("${organizeNum}", bean.getOrganizeNum());
             paraMap.put("${courseType}", bean.getCourseType());
-            paraMap.put("${startDate}", bean.getStartDate());
-            paraMap.put("${endDate}", bean.getEndDate());
+            paraMap.put("${startAndEndDate}", bean.getStartAndEndDate());
         } else {
             paraMap.put("${organizeName}", "");
             paraMap.put("${courseName}", "");
@@ -75,13 +74,15 @@ public class TrainingReportServiceImpl implements TrainingReportService {
             paraMap.put("${classRoom}", "");
             paraMap.put("${organizeNum}", "");
             paraMap.put("${courseType}", "");
-            paraMap.put("${startDate}", "");
-            paraMap.put("${endDate}", "");
+            paraMap.put("${startAndEndDate}", "");
         }
         paraMap.put("${realName}", bean.getRealName());
         paraMap.put("${year}", bean.getYear());
         paraMap.put("${month}", bean.getMonth());
         paraMap.put("${day}", bean.getDay());
+        paraMap.put("${sex}", bean.getSex());
+        paraMap.put("${age}", bean.getAge());
+        paraMap.put("${academicTitleName}", bean.getAcademicTitleName());
         return saveFile(paraMap, bean.getRealName(), Workbook.TRAINING_SITUATION_PATH, request);
     }
 
@@ -103,13 +104,14 @@ public class TrainingReportServiceImpl implements TrainingReportService {
                     }
                     for (Map.Entry<String, String> entry :
                             paraMap.entrySet()) {
-                        System.out.println("test1 : " + oneparaString);
                         oneparaString = oneparaString.replace(entry.getKey(), entry.getValue());
                     }
                     run.setText(oneparaString, 0);
                 }
 
             }
+
+
 
             Iterator<XWPFTable> itTable = document.getTablesIterator();
             while (itTable.hasNext()) {
@@ -127,14 +129,20 @@ public class TrainingReportServiceImpl implements TrainingReportService {
                                 cellTextString = cellTextString.replace(e.getKey(),
                                         e.getValue());
                                 cell.removeParagraph(0);
-                                cell.setText(cellTextString);
+
+                                XWPFParagraph paragraph = document.createParagraph();
+                                XWPFRun paragraphRun = paragraph.createRun();
+                                paragraphRun.setFontSize(14);// 设置字体大小
+                                paragraphRun.setText(cellTextString);
+                                cell.setParagraph(paragraph);
                             }
                         }
                     }
                 }
             }
 
-            String path = RequestUtil.getRealPath(request) + Workbook.trainingReportPath();
+//            String path = RequestUtil.getRealPath(request) + Workbook.trainingReportPath();
+            String path = "e:/";
             String filename = realName + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS")) + ".docx";
             File saveFile = new File(path);
             if (!saveFile.exists()) {
