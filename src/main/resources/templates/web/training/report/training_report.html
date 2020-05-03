@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="pd-30">
+        <h4 class="tx-gray-800 mg-b-5">实训报告</h4>
+        <p class="mg-b-0">管理实训报告。</p>
+    </div><!-- d-flex -->
+
+    <div class="br-pagebody mg-t-5 pd-x-30">
+        <div class="br-section-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">1. 正文，标题均为宋体；</li>
+                        <li class="list-group-item">2. 正文需要首先缩进2个字符，1.5倍行距，五号大小；</li>
+                        <li class="list-group-item">3. 代码不得粘贴过多，仅显示重要部分，与段落保持格式一致，清晰可阅读；</li>
+                        <li class="list-group-item">4. 报告不得抄袭，发现均无成绩；</li>
+                        <li class="list-group-item">5. 报告完成后需要打印并装订提交；<br/>
+                            <small class="text-info">小技巧：推荐使用WPS进行文档编辑，然后再导出为PDF进行打印，使用PDF打印不容易格式在打印后错乱。</small>
+                            <br/>
+                            <small class="text-info">提示：打印前先给指导老师查看，修改后，订版再打印。</small>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="btn-group" role="group" th:if="${canOperator}">
+                                <button id="staff" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    归档资料
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="staff">
+                                    <a class="dropdown-item" href="#">普通模板(基础信息)</a>
+                                    <a class="dropdown-item" href="#">高级模板(课程信息)</a>
+                                </div>
+                            </div>
+                            <div class="btn-group" role="group">
+                                <button id="student" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    报告封面
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="student">
+                                    <a class="dropdown-item" href="#">普通模板(基础信息)</a>
+                                    <a class="dropdown-item" href="#">高级模板(课程信息)</a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/training/report/training_report.js')}"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>

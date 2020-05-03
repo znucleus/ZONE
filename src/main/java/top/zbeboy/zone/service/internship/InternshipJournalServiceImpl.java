@@ -351,6 +351,10 @@ public class InternshipJournalServiceImpl implements InternshipJournalService, P
                                 String oneparaString = run.getText(
                                         run.getTextPosition());
 
+                                if (StringUtils.isBlank(oneparaString)) {
+                                    continue;
+                                }
+
                                 for (Map.Entry<String, String> entry : paraMap
                                         .entrySet()) {
                                     oneparaString = oneparaString.replace(

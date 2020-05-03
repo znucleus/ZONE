@@ -25,4 +25,14 @@ public interface TrainingReportService {
      * @return 路径
      */
     String saveTrainingSituation(TrainingReportBean bean, HttpServletRequest request, boolean isSenior);
+
+    /**
+     * 保存实训报告
+     *
+     * @param bean     数据
+     * @param request  请求
+     * @param isSenior 是否高级
+     * @return 路径
+     */
+    String saveTrainingReport(TrainingReportBean bean, HttpServletRequest request, boolean isSenior);
 }

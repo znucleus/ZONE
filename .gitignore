@@ -2,7 +2,7 @@
 /logs/
 /target/*
 /root/*
-/settings/temp/*
+/settings/*
 *.pfx
 /node_modules/
 /src/main/resources/application-secrecy.yml

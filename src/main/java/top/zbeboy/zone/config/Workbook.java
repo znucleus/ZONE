@@ -137,6 +137,21 @@ public final class Workbook {
     public static final String INTERNSHIP_JOURNAL_FILE_PATH = SETTINGS_PATH + "internshipJournalTemplate.docx";
 
     /*
+    实训归档封面模板
+    */
+    public static final String TRAINING_FILE_PATH = SETTINGS_PATH + "trainingFile.docx";
+
+    /*
+    实训情况汇总模板
+    */
+    public static final String TRAINING_SITUATION_PATH = SETTINGS_PATH + "trainingSituation.docx";
+
+    /*
+    实训报告模板
+    */
+    public static final String TRAINING_REPORT_PATH = SETTINGS_PATH + "trainingReport.docx";
+
+    /*
     image suffix.
     */
     public enum imageSuffix {
@@ -201,7 +216,16 @@ public final class Workbook {
      * @return 路径
      */
     public static String trainingDocumentFilePath(String id) {
-        return FILES_PORTFOLIOS + "training" + DIRECTORY_SPLIT + id + DIRECTORY_SPLIT;
+        return FILES_PORTFOLIOS + "training" + DIRECTORY_SPLIT + "document" + id + DIRECTORY_SPLIT;
+    }
+
+    /**
+     * 保存实训文件路径
+     *
+     * @return 路径
+     */
+    public static String trainingReportPath() {
+        return FILES_PORTFOLIOS + "training" + DIRECTORY_SPLIT + "report" + DIRECTORY_SPLIT;
     }
 
     /**

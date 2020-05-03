@@ -113,4 +113,26 @@ public class TrainingConditionCommon {
         }
         return canOperator;
     }
+
+    /**
+     * 报告条件
+     *
+     * @return true or false
+     */
+    public boolean reportCondition() {
+        boolean canOperator = false;
+        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
+                roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+            canOperator = true;
+        } else {
+            Users users = usersService.getUserFromSession();
+            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
+            if (Objects.nonNull(usersType)) {
+                if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
+                    canOperator = true;
+                }
+            }
+        }
+        return canOperator;
+    }
 }

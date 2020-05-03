@@ -86,6 +86,27 @@ public class TrainingReportServiceImpl implements TrainingReportService {
         return saveFile(paraMap, bean.getRealName(), Workbook.TRAINING_SITUATION_PATH, request);
     }
 
+    @Override
+    public String saveTrainingReport(TrainingReportBean bean, HttpServletRequest request, boolean isSenior) {
+        Map<String, String> paraMap = new HashMap<>();
+        if (isSenior) {
+            paraMap.put("${courseName}", makeUpSpace(bean.getCourseName()));
+            paraMap.put("${classRoom}", makeUpSpace(bean.getClassRoom()));
+        } else {
+            paraMap.put("${courseName}", makeUpSpace(""));
+            paraMap.put("${classRoom}", makeUpSpace(""));
+        }
+
+        paraMap.put("${organizeName}", makeUpSpace(bean.getOrganizeName()));
+        paraMap.put("${studentNumber}", makeUpSpace(bean.getStudentNumber()));
+        paraMap.put("${studentName}", makeUpSpace(bean.getStudentName()));
+        paraMap.put("${realName}", makeUpSpace(bean.getRealName()));
+        paraMap.put("${year}", bean.getYear());
+        paraMap.put("${month}", bean.getMonth());
+        paraMap.put("${day}", bean.getDay());
+        return saveTableFile(paraMap, bean.getRealName(), Workbook.TRAINING_REPORT_PATH, request);
+    }
+
     public String saveFile(Map<String, String> paraMap, String realName, String templatePath, HttpServletRequest request) {
         String outputPath = "";
         try {
@@ -111,8 +132,6 @@ public class TrainingReportServiceImpl implements TrainingReportService {
 
             }
 
-
-
             Iterator<XWPFTable> itTable = document.getTablesIterator();
             while (itTable.hasNext()) {
                 XWPFTable table = itTable.next();
@@ -129,7 +148,6 @@ public class TrainingReportServiceImpl implements TrainingReportService {
                                 cellTextString = cellTextString.replace(e.getKey(),
                                         e.getValue());
                                 cell.removeParagraph(0);
-
                                 XWPFParagraph paragraph = document.createParagraph();
                                 XWPFRun paragraphRun = paragraph.createRun();
                                 paragraphRun.setFontSize(14);// 设置字体大小
@@ -141,8 +159,7 @@ public class TrainingReportServiceImpl implements TrainingReportService {
                 }
             }
 
-//            String path = RequestUtil.getRealPath(request) + Workbook.trainingReportPath();
-            String path = "e:/";
+            String path = RequestUtil.getRealPath(request) + Workbook.trainingReportPath();
             String filename = realName + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS")) + ".docx";
             File saveFile = new File(path);
             if (!saveFile.exists()) {
@@ -161,6 +178,82 @@ public class TrainingReportServiceImpl implements TrainingReportService {
             return outputPath;
         }
         return outputPath;
+    }
+
+    public String saveTableFile(Map<String, String> paraMap, String realName, String templatePath, HttpServletRequest request) {
+        String outputPath = "";
+        try {
+            InputStream is = new FileInputStream(templatePath);
+
+            XWPFDocument document = new XWPFDocument(is);
+
+            Iterator<XWPFTable> itTable = document.getTablesIterator();
+            while (itTable.hasNext()) {
+                XWPFTable table = itTable.next();
+                int count = table.getNumberOfRows();
+                for (int i = 0; i < count; i++) {
+                    XWPFTableRow row = table.getRow(i);
+                    List<XWPFTableCell> cells = row.getTableCells();
+                    for (XWPFTableCell cell : cells) {
+
+                        List<XWPFParagraph> itParas = cell.getParagraphs();
+                        for (XWPFParagraph itPara : itParas) {
+
+                            List<XWPFRun> runs = itPara.getRuns();
+                            for (XWPFRun run : runs) {
+                                String oneparaString = run.getText(
+                                        run.getTextPosition());
+
+                                if (StringUtils.isBlank(oneparaString)) {
+                                    continue;
+                                }
+
+                                for (Map.Entry<String, String> entry : paraMap
+                                        .entrySet()) {
+                                    oneparaString = oneparaString.replace(
+                                            entry.getKey(), entry.getValue());
+                                }
+
+                                run.setText(oneparaString, 0);
+                            }
+                        }
+                    }
+                }
+            }
+
+            String path = RequestUtil.getRealPath(request) + Workbook.trainingReportPath();
+            String filename = realName + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS")) + ".docx";
+            File saveFile = new File(path);
+            if (!saveFile.exists()) {
+                saveFile.mkdirs();
+            }
+            OutputStream os = new FileOutputStream(path + filename);
+            //把doc输出到输出流中
+            document.write(os);
+            log.info("Save senior training file path {}", path);
+            outputPath = Workbook.trainingReportPath() + filename;
+            this.closeStream(os);
+            this.closeStream(is);
+            log.info("Save senior training file finish, the path is {}", outputPath);
+        } catch (IOException e) {
+            log.error("Save senior training file error,error is {}", e);
+            return outputPath;
+        }
+        return outputPath;
+    }
+
+    private String makeUpSpace(String param) {
+        int spaceLength = 33;
+        if (spaceLength > param.length()) {
+            StringBuilder paramBuilder = new StringBuilder(param);
+            for (int i = 0; i <= spaceLength - param.length(); i++) {
+                paramBuilder.append(" ");
+            }
+            param = paramBuilder.toString();
+        }
+
+        return param;
+
     }
 
     /**
