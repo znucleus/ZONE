@@ -30,8 +30,10 @@
                                     归档资料
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="staff">
-                                    <a class="dropdown-item" href="#">普通模板(基础信息)</a>
-                                    <a class="dropdown-item" href="#">高级模板(课程信息)</a>
+                                    <a class="dropdown-item" href="javascript:" id="fileBase">实训归档封面(基础信息)</a>
+                                    <a class="dropdown-item" href="javascript:" id="fileSenior">实训归档封面(课程信息)</a>
+                                    <a class="dropdown-item" href="javascript:" id="situationBase">实训情况汇总表(基础信息)</a>
+                                    <a class="dropdown-item" href="javascript:" id="situationSenior">实训情况汇总表(课程信息)</a>
                                 </div>
                             </div>
                             <div class="btn-group" role="group">
@@ -39,16 +41,93 @@
                                     报告封面
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="student">
-                                    <a class="dropdown-item" href="#">普通模板(基础信息)</a>
-                                    <a class="dropdown-item" href="#">高级模板(课程信息)</a>
+                                    <a class="dropdown-item" href="javascript:" id="reportBase">普通模板(基础信息)</a>
+                                    <a class="dropdown-item" href="javascript:" id="reportSenior">高级模板(课程信息)</a>
                                 </div>
                             </div>
                         </li>
                     </ul>
                 </div>
+
+                <div id="senior" style="display: none;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12 mt-2">
+                                    <input type="text" id="search_title" class="form-control"
+                                           placeholder="标题"/>
+                                </div>
+                                <div class="col-md-12 mt-2">
+                                    <input type="text" id="search_publisher" class="form-control"
+                                           placeholder="指导教师"/>
+                                </div>
+                            </div>
+                            <div class="text-center mt-4">
+                                <button type="button" id="search" class="btn btn-outline-secondary"><i
+                                        class="fa fa-search"></i>搜索
+                                </button>
+                                <button type="button" id="reset_search" class="btn btn-outline-secondary"><i
+                                        class="fa fa-repeat"></i>重置
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="float-left mg-t-7">
+                                <input  class="labelauty" id="dataRange" name="dataRange" value="1" type="checkbox" data-labelauty="查看全部|与我相关"/>
+                            </div>
+                            <div class="float-right mg-t-5">
+                                <button type="button" class="btn btn-light" id="refresh"><i class="fa fa-refresh"></i> 刷新
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-12" id="tableData">
+                        </div>
+                        <div class="col-md-12 mg-t-20">
+                            <div class="ht-80 bd d-flex align-items-center justify-content-center">
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination" id="pagination"></ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
+
+    <script id="release-template" type="text/x-handlebars-template">
+        {{#each listResult}}
+        <div class="card mg-t-10 text-dark">
+            <div class="card-header">{{title}}</div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4"><span>学校：</span><span>{{schoolName}}</span></div>
+                    <div class="col-md-4"><span>院：</span><span>{{collegeName}}</span></div>
+                    <div class="col-md-4"><span>系：</span><span>{{departmentName}}</span></div>
+                    <div class="col-md-4"><span>专业：</span><span>{{scienceName}}</span></div>
+                    <div class="col-md-4"><span>年级：</span><span>{{grade}}</span></div>
+                    <div class="col-md-4"><span>班级：</span><span class="badge badge-secondary">{{organizeName}}</span></div>
+                    <div class="col-md-4"><span>课程名：</span><span>{{courseName}}</span></div>
+                    <div class="col-md-4"><span>学时：</span><span>{{courseHours}}</span></div>
+                    <div class="col-md-4"><span>学分：</span><span>{{courseCredit}}</span></div>
+                    <div class="col-md-4"><span>开始日期：</span><span>{{startDate}}</span>
+                    </div>
+                    <div class="col-md-4"><span>结束日期：</span><span>{{endDate}}</span></div>
+                </div>
+                <p class="text-right font-italic m-t-10">
+                    <small><em><span>发布人：</span><span>{{publisher}}</span> <span>{{releaseTimeStr}}</span></em>
+                    </small>
+                </p>
+            </div>
+            <div class="card-footer text-right">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-primary generate" data-id="{{trainingReleaseId}}">生成报告</button>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </script>
 
     <input type="hidden" class="dy_script"
            th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/training/report/training_report.js')}"/>

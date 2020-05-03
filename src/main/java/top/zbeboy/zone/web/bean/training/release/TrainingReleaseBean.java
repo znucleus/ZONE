@@ -12,6 +12,8 @@ public class TrainingReleaseBean extends TrainingRelease {
     private String courseName;
     private Double courseCredit;
     private Double courseHours;
+    private Byte term;
+    private Byte courseType;
     private String releaseTimeStr;
     private int collegeId;
     private Byte canOperator;
@@ -86,6 +88,22 @@ public class TrainingReleaseBean extends TrainingRelease {
 
     public void setCourseHours(Double courseHours) {
         this.courseHours = courseHours;
+    }
+
+    public Byte getTerm() {
+        return term;
+    }
+
+    public void setTerm(Byte term) {
+        this.term = term;
+    }
+
+    public Byte getCourseType() {
+        return courseType;
+    }
+
+    public void setCourseType(Byte courseType) {
+        this.courseType = courseType;
     }
 
     public String getReleaseTimeStr() {

@@ -88,6 +88,13 @@ public interface OrganizeService {
     int countByCondition(DataTablesUtil dataTablesUtil);
 
     /**
+     * 根据主键统计
+     * @param id 主键
+     * @return 数量
+     */
+    int countById(int id);
+
+    /**
      * 保存
      *
      * @param organize 数据

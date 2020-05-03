@@ -264,6 +264,24 @@ public class DateTimeUtil {
     }
 
     /**
+     * 得到当前月份
+     *
+     * @return 月份
+     */
+    public static int getNowMonth() {
+        return LocalDate.now().getMonthValue();
+    }
+
+    /**
+     * 得到当前日
+     *
+     * @return 日
+     */
+    public static int getNowDay() {
+        return LocalDate.now().getDayOfMonth();
+    }
+
+    /**
      * 得到当前秒
      *
      * @return 秒

@@ -154,8 +154,17 @@ public class TrainingReleaseServiceImpl implements TrainingReleaseService, Pagin
         JSONObject search = paginationUtil.getSearch();
         if (Objects.nonNull(search)) {
             String title = StringUtils.trim(search.getString("title"));
+            String publisher = StringUtils.trim(search.getString("publisher"));
             if (StringUtils.isNotBlank(title)) {
                 a = TRAINING_RELEASE.TITLE.like(SQLQueryUtil.likeAllParam(title));
+            }
+
+            if (StringUtils.isNotBlank(publisher)) {
+                if (Objects.isNull(a)) {
+                    a = TRAINING_RELEASE.PUBLISHER.like(SQLQueryUtil.likeAllParam(publisher));
+                } else {
+                    a = a.and(TRAINING_RELEASE.PUBLISHER.like(SQLQueryUtil.likeAllParam(publisher)));
+                }
             }
         }
         return a;

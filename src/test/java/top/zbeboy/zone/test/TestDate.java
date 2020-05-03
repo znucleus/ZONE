@@ -2,6 +2,7 @@ package top.zbeboy.zone.test;
 
 import org.joda.time.DateTime;
 import org.joda.time.Minutes;
+import org.joda.time.Years;
 import org.junit.Test;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 
@@ -14,7 +15,11 @@ public class TestDate {
     @Test
     public void testDate(){
         DateTime now = DateTime.now();
-        DateTime startTime = new DateTime(DateTimeUtil.defaultParseSqlTimestamp("2020-02-19 22:00:00"));
-        System.out.println(Minutes.minutesBetween(now, startTime).getMinutes());
+        DateTime startTime = new DateTime(DateTimeUtil.defaultParseSqlDate("1994-06-19"));
+        System.out.println(Years.yearsBetween(startTime ,now).getYears());
+
+        System.out.println(DateTimeUtil.getNowYear());
+        System.out.println(DateTimeUtil.getNowMonth());
+        System.out.println(DateTimeUtil.getNowDay());
     }
 }

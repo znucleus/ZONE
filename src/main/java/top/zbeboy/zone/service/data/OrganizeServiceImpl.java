@@ -185,6 +185,15 @@ public class OrganizeServiceImpl implements OrganizeService, PaginationPlugin<Da
         return countAll(selectOnConditionStep, dataTablesUtil, false);
     }
 
+    @Override
+    public int countById(int id) {
+        Record1<Integer> count = create.selectCount()
+                .from(ORGANIZE)
+                .where(ORGANIZE.ORGANIZE_ID.eq(id))
+                .fetchOne();
+        return count.value1();
+    }
+
     @CacheEvict(cacheNames = CacheBook.ORGANIZES, allEntries = true)
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
