@@ -43,7 +43,6 @@ public class TrainingReportServiceImpl implements TrainingReportService {
             paraMap.put("${term}", "");
         }
         paraMap.put("${realName}", bean.getRealName());
-
         paraMap.put("${year}", bean.getYear());
         paraMap.put("${month}", bean.getMonth());
         paraMap.put("${day}", bean.getDay());
