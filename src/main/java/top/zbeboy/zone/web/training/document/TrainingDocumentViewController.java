@@ -152,4 +152,17 @@ public class TrainingDocumentViewController {
         return "web/training/document/training_document_documents::#page-wrapper";
     }
 
+    /**
+     * 相关资料
+     *
+     * @param id       课程id
+     * @param modelMap 页面对象
+     * @return 页面
+     */
+    @GetMapping("/web/training/document/relation/file/{id}")
+    public String relationFile(@PathVariable("id") String id, ModelMap modelMap) {
+        modelMap.addAttribute("courseId", id);
+        return "web/training/document/training_document_file::#page-wrapper";
+    }
+
 }

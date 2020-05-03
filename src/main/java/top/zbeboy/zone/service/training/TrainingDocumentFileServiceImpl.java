@@ -2,6 +2,7 @@ package top.zbeboy.zone.service.training;
 
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.jooq.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -81,8 +82,18 @@ public class TrainingDocumentFileServiceImpl implements TrainingDocumentFileServ
         JSONObject search = paginationUtil.getSearch();
         if (Objects.nonNull(search)) {
             String originalFileName = StringUtils.trim(search.getString("originalFileName"));
+            String courseId = StringUtils.trim(search.getString("courseId"));
             if (StringUtils.isNotBlank(originalFileName)) {
                 a = FILES.ORIGINAL_FILE_NAME.like(SQLQueryUtil.likeAllParam(originalFileName));
+            }
+
+            if (StringUtils.isNotBlank(courseId)) {
+                int courseIdInt = NumberUtils.toInt(courseId);
+                if (Objects.isNull(a)) {
+                    a = TRAINING_DOCUMENT_FILE.COURSE_ID.eq(courseIdInt);
+                } else {
+                    a = a.and(TRAINING_DOCUMENT_FILE.COURSE_ID.eq(courseIdInt));
+                }
             }
         }
         return a;
@@ -115,6 +126,17 @@ public class TrainingDocumentFileServiceImpl implements TrainingDocumentFileServ
                     sortField[0] = TRAINING_DOCUMENT_FILE.CREATE_DATE.asc();
                 } else {
                     sortField[0] = TRAINING_DOCUMENT_FILE.CREATE_DATE.desc();
+                }
+            }
+
+            if (StringUtils.equals("downloads", orderColumnName)) {
+                sortField = new SortField[2];
+                if (isAsc) {
+                    sortField[0] = TRAINING_DOCUMENT_FILE.DOWNLOADS.asc();
+                    sortField[1] = TRAINING_DOCUMENT_FILE.CREATE_DATE.asc();
+                } else {
+                    sortField[0] = TRAINING_DOCUMENT_FILE.DOWNLOADS.desc();
+                    sortField[1] = TRAINING_DOCUMENT_FILE.CREATE_DATE.desc();
                 }
             }
         }

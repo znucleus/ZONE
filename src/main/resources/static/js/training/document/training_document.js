@@ -9,6 +9,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
             data: web_path + '/web/training/document/training/data',
             list: '/web/training/document/list',
             relation_document: '/web/training/document/relation/document',
+            relation_file: '/web/training/document/relation/file',
             page: '/web/menu/training/document'
         };
 
@@ -114,10 +115,17 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
         });
 
         /*
-         相关文章
-         */
+        相关文章
+        */
         $(tableData).delegate('.relationDocument', "click", function () {
             $.address.value(ajax_url.relation_document + '/' + $(this).attr('data-id'));
+        });
+
+        /*
+        相关文档
+        */
+        $(tableData).delegate('.relationFile', "click", function () {
+            $.address.value(ajax_url.relation_file + '/' + $(this).attr('data-id'));
         });
 
         init();
