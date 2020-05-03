@@ -1,9 +1,7 @@
 package top.zbeboy.zone.service.training;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -111,6 +109,29 @@ public class TrainingReportServiceImpl implements TrainingReportService {
                     run.setText(oneparaString, 0);
                 }
 
+            }
+
+            Iterator<XWPFTable> itTable = document.getTablesIterator();
+            while (itTable.hasNext()) {
+                XWPFTable table = itTable.next();
+                int count = table.getNumberOfRows();
+                for (int i = 0; i < count; i++) {
+                    XWPFTableRow row = table.getRow(i);
+                    List<XWPFTableCell> cells = row.getTableCells();
+                    for (XWPFTableCell cell : cells) {
+
+                        String cellTextString = cell.getText();
+                        for (Map.Entry<String, String> e : paraMap.entrySet()) {
+                            if (cellTextString.contains(e.getKey())) {
+
+                                cellTextString = cellTextString.replace(e.getKey(),
+                                        e.getValue());
+                                cell.removeParagraph(0);
+                                cell.setText(cellTextString);
+                            }
+                        }
+                    }
+                }
             }
 
             String path = RequestUtil.getRealPath(request) + Workbook.trainingReportPath();
