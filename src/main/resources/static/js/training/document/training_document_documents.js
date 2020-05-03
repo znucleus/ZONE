@@ -39,7 +39,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         web storage key.
         */
         var webStorageKey = {
-            DOCUMENT_TITLE: 'TRAINING_DOCUMENT_RLEATION_FILE_TITLE_SEARCH' + page_param.paramTrainingReleaseId
+            DOCUMENT_TITLE: 'TRAINING_DOCUMENT_RELATION_FILE_TITLE_SEARCH' + page_param.paramTrainingReleaseId
         };
 
         /*
