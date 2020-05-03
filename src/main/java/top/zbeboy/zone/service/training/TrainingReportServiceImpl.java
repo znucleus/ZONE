@@ -29,22 +29,68 @@ public class TrainingReportServiceImpl implements TrainingReportService {
     private final Logger log = LoggerFactory.getLogger(TrainingReportServiceImpl.class);
 
     @Override
-    public String saveSeniorTrainingFile(TrainingReportBean bean, HttpServletRequest request) {
-        String outputPath = "";
-        try {
-            String templatePath = Workbook.TRAINING_FILE_PATH;
-            InputStream is = new FileInputStream(templatePath);
-
-            Map<String, String> paraMap = new HashMap<>();
+    public String saveTrainingFile(TrainingReportBean bean, HttpServletRequest request, boolean isSenior) {
+        Map<String, String> paraMap = new HashMap<>();
+        if (isSenior) {
             paraMap.put("${organizeName}", bean.getOrganizeName());
             paraMap.put("${courseName}", bean.getCourseName());
-            paraMap.put("${realName}", bean.getRealName());
             paraMap.put("${startYear}", bean.getStartYear());
             paraMap.put("${endYear}", bean.getEndYear());
             paraMap.put("${term}", bean.getTerm());
-            paraMap.put("${year}", bean.getYear());
-            paraMap.put("${month}", bean.getMonth());
-            paraMap.put("${day}", bean.getDay());
+        } else {
+            paraMap.put("${organizeName}", "");
+            paraMap.put("${courseName}", "");
+            paraMap.put("${startYear}", "");
+            paraMap.put("${endYear}", "");
+            paraMap.put("${term}", "");
+        }
+        paraMap.put("${realName}", bean.getRealName());
+
+        paraMap.put("${year}", bean.getYear());
+        paraMap.put("${month}", bean.getMonth());
+        paraMap.put("${day}", bean.getDay());
+        return saveFile(paraMap, bean.getRealName(), Workbook.TRAINING_FILE_PATH, request);
+    }
+
+    @Override
+    public String saveTrainingSituation(TrainingReportBean bean, HttpServletRequest request, boolean isSenior) {
+        Map<String, String> paraMap = new HashMap<>();
+        if (isSenior) {
+            paraMap.put("${organizeName}", bean.getOrganizeName());
+            paraMap.put("${courseName}", bean.getCourseName());
+            paraMap.put("${startYear}", bean.getStartYear());
+            paraMap.put("${endYear}", bean.getEndYear());
+            paraMap.put("${term}", bean.getTerm());
+            paraMap.put("${scienceName}", bean.getScienceName());
+            paraMap.put("${classRoom}", bean.getClassRoom());
+            paraMap.put("${organizeNum}", bean.getOrganizeNum());
+            paraMap.put("${courseType}", bean.getCourseType());
+            paraMap.put("${startDate}", bean.getStartDate());
+            paraMap.put("${endDate}", bean.getEndDate());
+        } else {
+            paraMap.put("${organizeName}", "");
+            paraMap.put("${courseName}", "");
+            paraMap.put("${startYear}", "");
+            paraMap.put("${endYear}", "");
+            paraMap.put("${term}", "");
+            paraMap.put("${scienceName}", "");
+            paraMap.put("${classRoom}", "");
+            paraMap.put("${organizeNum}", "");
+            paraMap.put("${courseType}", "");
+            paraMap.put("${startDate}", "");
+            paraMap.put("${endDate}", "");
+        }
+        paraMap.put("${realName}", bean.getRealName());
+        paraMap.put("${year}", bean.getYear());
+        paraMap.put("${month}", bean.getMonth());
+        paraMap.put("${day}", bean.getDay());
+        return saveFile(paraMap, bean.getRealName(), Workbook.TRAINING_SITUATION_PATH, request);
+    }
+
+    public String saveFile(Map<String, String> paraMap, String realName, String templatePath, HttpServletRequest request) {
+        String outputPath = "";
+        try {
+            InputStream is = new FileInputStream(templatePath);
 
             XWPFDocument document = new XWPFDocument(is);
             // 替换段落中的指定文字
@@ -68,7 +114,7 @@ public class TrainingReportServiceImpl implements TrainingReportService {
             }
 
             String path = RequestUtil.getRealPath(request) + Workbook.trainingReportPath();
-            String filename = bean.getRealName() + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS")) + ".docx";
+            String filename = realName + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS")) + ".docx";
             File saveFile = new File(path);
             if (!saveFile.exists()) {
                 saveFile.mkdirs();
