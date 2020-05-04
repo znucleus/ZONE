@@ -74,6 +74,37 @@
         </div>
     </div>
 
+    <!-- 文件类型编辑Modal -->
+    <div class="modal fade" id="fileTypeEditModal" tabindex="-1" role="dialog" aria-labelledby="fileTypeEditModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="fileTypeEditModalLabel">编辑类型</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="mg-t-20">
+                        <input type="hidden" id="editFileTypeId"/>
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <input id="editFileTypeName" placeholder="文件类型"
+                                       class="form-control">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="editFileType">确定</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script id="type-template" type="text/x-handlebars-template">
         {{#each listResult}}
         <div class="col-md-4">
@@ -116,7 +147,7 @@
                 <div class="card-footer text-right">
                     <div class="btn-group" role="group">
                         <button type="button" class="btn btn-primary btn-sm edit"
-                                data-id="{{fileTypeId}}">编辑
+                                data-id="{{fileTypeId}}" data-type="{{fileTypeName}}">编辑
                         </button>
                         <button type="button" class="btn btn-danger btn-sm del" data-id="{{fileTypeId}}">
                             删除

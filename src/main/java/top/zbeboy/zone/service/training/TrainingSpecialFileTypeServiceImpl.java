@@ -29,6 +29,11 @@ public class TrainingSpecialFileTypeServiceImpl implements TrainingSpecialFileTy
     }
 
     @Override
+    public TrainingSpecialFileType findById(String id) {
+        return trainingSpecialFileTypeDao.findById(id);
+    }
+
+    @Override
     public Result<TrainingSpecialFileTypeRecord> findByTrainingSpecialId(String trainingSpecialId) {
         return create.selectFrom(TRAINING_SPECIAL_FILE_TYPE)
                 .where(TRAINING_SPECIAL_FILE_TYPE.TRAINING_SPECIAL_ID.eq(trainingSpecialId))

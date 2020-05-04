@@ -48,6 +48,14 @@ define(["jquery"], function ($) {
                 // 去除遮罩
                 $('#page-wrapper').hideLoading();
             },
+            dataLocalLoading: function (id) {
+                // 显示遮罩
+                $(id).showLoading();
+            },
+            dataLocalEndLoading: function (id) {
+                // 去除遮罩
+                $(id).hideLoading();
+            },
             toSize: function (size) {
                 var str = "";
                 if (size < 1024) {

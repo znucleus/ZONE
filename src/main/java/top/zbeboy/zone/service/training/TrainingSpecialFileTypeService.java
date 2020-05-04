@@ -7,6 +7,14 @@ import top.zbeboy.zone.domain.tables.records.TrainingSpecialFileTypeRecord;
 public interface TrainingSpecialFileTypeService {
 
     /**
+     * 根据主键查询
+     *
+     * @param id 主键
+     * @return 数据
+     */
+    TrainingSpecialFileType findById(String id);
+
+    /**
      * 根据专题id查询
      *
      * @param trainingSpecialId 专题id

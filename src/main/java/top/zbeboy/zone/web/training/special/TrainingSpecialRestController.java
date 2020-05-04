@@ -391,4 +391,44 @@ public class TrainingSpecialRestController {
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
+
+    /**
+     * 文件类型保存
+     *
+     * @param fileTypeName 文件类型名
+     * @param fileTypeId   类型id
+     * @return true or false
+     */
+    @PostMapping("/web/training/special/file/type/update")
+    public ResponseEntity<Map<String, Object>> fileTypeUpdate(@RequestParam("fileTypeName") String fileTypeName,
+                                                              @RequestParam("fileTypeId") String fileTypeId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (trainingConditionCommon.specialCondition()) {
+            TrainingSpecialFileType trainingSpecialFileType = trainingSpecialFileTypeService.findById(fileTypeId);
+            trainingSpecialFileType.setFileTypeName(fileTypeName);
+            trainingSpecialFileTypeService.update(trainingSpecialFileType);
+            ajaxUtil.success().msg("更新成功");
+        } else {
+            ajaxUtil.fail().msg("您无权限操作");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 文件类型删除
+     *
+     * @param fileTypeId 类型id
+     * @return true or false
+     */
+    @PostMapping("/web/training/special/file/type/delete")
+    public ResponseEntity<Map<String, Object>> fileTypeDelete(@RequestParam("fileTypeId") String fileTypeId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (trainingConditionCommon.specialCondition()) {
+            trainingSpecialFileTypeService.deleteById(fileTypeId);
+            ajaxUtil.success().msg("删除成功");
+        } else {
+            ajaxUtil.fail().msg("您无权限操作");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
 }
