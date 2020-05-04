@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.Files;
 import top.zbeboy.zone.service.system.FilesService;
+import top.zbeboy.zone.service.training.TrainingSpecialDocumentService;
 import top.zbeboy.zone.service.training.TrainingSpecialService;
 import top.zbeboy.zone.web.bean.training.special.TrainingSpecialBean;
+import top.zbeboy.zone.web.bean.training.special.TrainingSpecialDocumentBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
 
@@ -25,6 +27,9 @@ public class TrainingSpecialViewController {
 
     @Resource
     private TrainingSpecialService trainingSpecialService;
+
+    @Resource
+    private TrainingSpecialDocumentService trainingSpecialDocumentService;
 
     @Resource
     private FilesService filesService;
@@ -113,7 +118,7 @@ public class TrainingSpecialViewController {
      * @return 页面
      */
     @GetMapping("/web/training/special/document/add/{id}")
-    public String add(@PathVariable("id") String id, ModelMap modelMap) {
+    public String documentAdd(@PathVariable("id") String id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         if (trainingConditionCommon.specialCondition()) {
@@ -121,6 +126,36 @@ public class TrainingSpecialViewController {
             page = "web/training/special/training_special_document_add::#page-wrapper";
         } else {
             config.buildWarningTip("操作警告", "您无权限操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
+
+    /**
+     * 编辑文章
+     *
+     * @param id       实训文章id
+     * @param modelMap 页面对象
+     * @return 页面
+     */
+    @GetMapping("/web/training/special/document/edit/{id}")
+    public String documentEdit(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        Optional<Record> record = trainingSpecialDocumentService.findByIdRelation(id);
+        if (record.isPresent()) {
+            TrainingSpecialDocumentBean bean = record.get().into(TrainingSpecialDocumentBean.class);
+            if (trainingConditionCommon.specialCondition()) {
+                modelMap.addAttribute("trainingSpecialDocument", bean);
+                page = "web/training/special/training_special_document_edit::#page-wrapper";
+            } else {
+                config.buildWarningTip("操作警告", "您无权限操作");
+                config.dataMerging(modelMap);
+                page = "inline_tip::#page-wrapper";
+            }
+        } else {
+            config.buildDangerTip("查询错误", "未查询到实训专题文章数据");
             config.dataMerging(modelMap);
             page = "inline_tip::#page-wrapper";
         }

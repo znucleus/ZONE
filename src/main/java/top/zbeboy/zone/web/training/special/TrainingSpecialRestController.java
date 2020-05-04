@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
@@ -32,6 +33,7 @@ import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zone.web.vo.training.special.TrainingSpecialAddVo;
 import top.zbeboy.zone.web.vo.training.special.TrainingSpecialDocumentAddVo;
+import top.zbeboy.zone.web.vo.training.special.TrainingSpecialDocumentEditVo;
 import top.zbeboy.zone.web.vo.training.special.TrainingSpecialEditVo;
 
 import javax.annotation.Resource;
@@ -132,14 +134,14 @@ public class TrainingSpecialRestController {
     }
 
     /**
-     * 保存
+     * 更新
      *
      * @param trainingSpecialEditVo 数据
      * @param bindingResult         检验
      * @return true or false
      */
     @PostMapping("/web/training/special/update")
-    public ResponseEntity<Map<String, Object>> udpate(@Valid TrainingSpecialEditVo trainingSpecialEditVo,
+    public ResponseEntity<Map<String, Object>> update(@Valid TrainingSpecialEditVo trainingSpecialEditVo,
                                                       BindingResult bindingResult, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         try {
@@ -215,7 +217,7 @@ public class TrainingSpecialRestController {
      * @return true or false
      */
     @PostMapping("/web/training/special/document/save")
-    public ResponseEntity<Map<String, Object>> save(@Valid TrainingSpecialDocumentAddVo trainingSpecialDocumentAddVo, BindingResult bindingResult) {
+    public ResponseEntity<Map<String, Object>> documentSave(@Valid TrainingSpecialDocumentAddVo trainingSpecialDocumentAddVo, BindingResult bindingResult) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
             if (trainingConditionCommon.specialCondition()) {
@@ -243,6 +245,57 @@ public class TrainingSpecialRestController {
             }
         } else {
             ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 文章更新
+     *
+     * @param trainingSpecialDocumentEditVo 数据
+     * @return true or false
+     */
+    @PostMapping("/web/training/special/document/update")
+    public ResponseEntity<Map<String, Object>> documentUpdate(@Valid TrainingSpecialDocumentEditVo trainingSpecialDocumentEditVo, BindingResult bindingResult) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (!bindingResult.hasErrors()) {
+            TrainingSpecialDocument trainingSpecialDocument = trainingSpecialDocumentService.findById(trainingSpecialDocumentEditVo.getTrainingSpecialDocumentId());
+            if (Objects.nonNull(trainingSpecialDocument)) {
+                if (trainingConditionCommon.specialCondition()) {
+                    trainingSpecialDocument.setTitle(trainingSpecialDocumentEditVo.getTitle());
+                    trainingSpecialDocumentService.update(trainingSpecialDocument);
+
+                    TrainingSpecialDocumentContent trainingSpecialDocumentContent = new TrainingSpecialDocumentContent();
+                    trainingSpecialDocumentContent.setTrainingSpecialDocumentId(trainingSpecialDocumentEditVo.getTrainingSpecialDocumentId());
+                    trainingSpecialDocumentContent.setContent(trainingSpecialDocumentEditVo.getContent());
+                    trainingSpecialDocumentContentService.update(trainingSpecialDocumentContent);
+                    ajaxUtil.success().msg("更新成功");
+                } else {
+                    ajaxUtil.fail().msg("您无权限操作");
+                }
+            } else {
+                ajaxUtil.fail().msg("未查询到实训专题文章数据");
+            }
+        } else {
+            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 文章删除
+     *
+     * @param trainingSpecialDocumentId 文章id
+     * @return true or false
+     */
+    @PostMapping("/web/training/special/document/delete")
+    public ResponseEntity<Map<String, Object>> documentDelete(@RequestParam("trainingSpecialDocumentId") String trainingSpecialDocumentId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (trainingConditionCommon.specialCondition()) {
+            trainingSpecialDocumentService.deleteById(trainingSpecialDocumentId);
+            ajaxUtil.success().msg("删除成功");
+        } else {
+            ajaxUtil.fail().msg("您无权限操作");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
