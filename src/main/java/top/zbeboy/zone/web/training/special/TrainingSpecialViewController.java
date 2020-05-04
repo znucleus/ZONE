@@ -104,4 +104,26 @@ public class TrainingSpecialViewController {
         modelMap.addAttribute("canOperator", trainingConditionCommon.specialCondition());
         return "web/training/special/training_special_document::#page-wrapper";
     }
+
+    /**
+     * 添加
+     *
+     * @param id       id
+     * @param modelMap 页面对象
+     * @return 页面
+     */
+    @GetMapping("/web/training/special/document/add/{id}")
+    public String add(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        if (trainingConditionCommon.specialCondition()) {
+            modelMap.addAttribute("trainingSpecialId", id);
+            page = "web/training/special/training_special_document_add::#page-wrapper";
+        } else {
+            config.buildWarningTip("操作警告", "您无权限操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
 }

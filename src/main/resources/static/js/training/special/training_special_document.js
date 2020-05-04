@@ -7,7 +7,8 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
          ajax url.
          */
         var ajax_url = {
-            data: web_path + '/web/training/special/document/list/data',
+            data: web_path + '/web/training/special/document/data',
+            add: '/web/training/special/document/add',
             edit: '/web/training/special/document/edit',
             del: web_path + '/web/training/special/document/delete',
             look: '/web/training/special/document/look',
@@ -103,6 +104,10 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             var template = Handlebars.compile($("#document-template").html());
             $(tableData).html(template(data));
         }
+
+        $('#add').click(function () {
+            $.address.value(ajax_url.add + '/' + page_param.paramTrainingSpecialId);
+        });
 
         /*
          查看

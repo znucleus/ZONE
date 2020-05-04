@@ -12,11 +12,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.config.Workbook;
-import top.zbeboy.zone.domain.tables.pojos.Files;
-import top.zbeboy.zone.domain.tables.pojos.TrainingSpecial;
-import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.system.FilesService;
+import top.zbeboy.zone.service.training.TrainingSpecialDocumentContentService;
 import top.zbeboy.zone.service.training.TrainingSpecialDocumentService;
 import top.zbeboy.zone.service.training.TrainingSpecialService;
 import top.zbeboy.zone.service.upload.UploadService;
@@ -32,6 +31,7 @@ import top.zbeboy.zone.web.util.BaseImgUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zone.web.vo.training.special.TrainingSpecialAddVo;
+import top.zbeboy.zone.web.vo.training.special.TrainingSpecialDocumentAddVo;
 import top.zbeboy.zone.web.vo.training.special.TrainingSpecialEditVo;
 
 import javax.annotation.Resource;
@@ -52,6 +52,9 @@ public class TrainingSpecialRestController {
 
     @Resource
     private TrainingSpecialDocumentService trainingSpecialDocumentService;
+
+    @Resource
+    private TrainingSpecialDocumentContentService trainingSpecialDocumentContentService;
 
     @Resource
     private FilesService filesService;
@@ -190,7 +193,7 @@ public class TrainingSpecialRestController {
      * @param simplePaginationUtil 请求
      * @return 数据
      */
-    @GetMapping("/web/training/special/document/list/data")
+    @GetMapping("/web/training/special/document/data")
     public ResponseEntity<Map<String, Object>> documentListData(SimplePaginationUtil simplePaginationUtil) {
         AjaxUtil<TrainingSpecialDocumentBean> ajaxUtil = AjaxUtil.of();
         List<TrainingSpecialDocumentBean> beans = new ArrayList<>();
@@ -202,6 +205,45 @@ public class TrainingSpecialRestController {
         }
         simplePaginationUtil.setTotalSize(trainingSpecialDocumentService.countAll(simplePaginationUtil));
         ajaxUtil.success().list(beans).page(simplePaginationUtil).msg("获取数据成功");
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 文章保存
+     *
+     * @param trainingSpecialDocumentAddVo 数据
+     * @return true or false
+     */
+    @PostMapping("/web/training/special/document/save")
+    public ResponseEntity<Map<String, Object>> save(@Valid TrainingSpecialDocumentAddVo trainingSpecialDocumentAddVo, BindingResult bindingResult) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (!bindingResult.hasErrors()) {
+            if (trainingConditionCommon.specialCondition()) {
+                Users users = usersService.getUserFromSession();
+                TrainingSpecialDocument trainingSpecialDocument = new TrainingSpecialDocument();
+                String trainingSpecialDocumentId = UUIDUtil.getUUID();
+                trainingSpecialDocument.setTrainingSpecialDocumentId(trainingSpecialDocumentId);
+                trainingSpecialDocument.setTrainingSpecialId(trainingSpecialDocumentAddVo.getTrainingSpecialId());
+                trainingSpecialDocument.setTitle(trainingSpecialDocumentAddVo.getTitle());
+                trainingSpecialDocument.setUsername(users.getUsername());
+                trainingSpecialDocument.setCreator(users.getRealName());
+                trainingSpecialDocument.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                trainingSpecialDocument.setReading(0);
+                trainingSpecialDocumentService.save(trainingSpecialDocument);
+
+                TrainingSpecialDocumentContent trainingSpecialDocumentContent = new TrainingSpecialDocumentContent();
+                trainingSpecialDocumentContent.setTrainingSpecialDocumentId(trainingSpecialDocumentId);
+                trainingSpecialDocumentContent.setContent(trainingSpecialDocumentAddVo.getContent());
+                trainingSpecialDocumentContentService.save(trainingSpecialDocumentContent);
+
+                ajaxUtil.success().msg("保存成功");
+
+            } else {
+                ajaxUtil.fail().msg("您无权限操作");
+            }
+        } else {
+            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }
