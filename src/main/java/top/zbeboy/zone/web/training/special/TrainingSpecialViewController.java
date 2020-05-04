@@ -10,6 +10,8 @@ import top.zbeboy.zone.domain.tables.pojos.Files;
 import top.zbeboy.zone.service.system.FilesService;
 import top.zbeboy.zone.service.training.TrainingSpecialDocumentService;
 import top.zbeboy.zone.service.training.TrainingSpecialService;
+import top.zbeboy.zone.service.util.DateTimeUtil;
+import top.zbeboy.zone.web.bean.training.document.TrainingDocumentBean;
 import top.zbeboy.zone.web.bean.training.special.TrainingSpecialBean;
 import top.zbeboy.zone.web.bean.training.special.TrainingSpecialDocumentBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
@@ -156,6 +158,32 @@ public class TrainingSpecialViewController {
             }
         } else {
             config.buildDangerTip("查询错误", "未查询到实训专题文章数据");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
+
+    /**
+     * 查看文章
+     *
+     * @param id       实训文章id
+     * @param modelMap 页面对象
+     * @return 页面
+     */
+    @GetMapping("/web/training/special/document/look/{id}")
+    public String look(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        Optional<Record> record = trainingSpecialDocumentService.findByIdRelation(id);
+        if (record.isPresent()) {
+            TrainingSpecialDocumentBean bean = record.get().into(TrainingSpecialDocumentBean.class);
+            bean.setCreateDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getCreateDate()));
+            trainingSpecialDocumentService.updateReading(bean.getTrainingSpecialDocumentId());
+            modelMap.addAttribute("trainingSpecialDocument", bean);
+            page = "web/training/special/training_special_document_look::#page-wrapper";
+        } else {
+            config.buildDangerTip("查询错误", "未查询到实训文章数据");
             config.dataMerging(modelMap);
             page = "inline_tip::#page-wrapper";
         }

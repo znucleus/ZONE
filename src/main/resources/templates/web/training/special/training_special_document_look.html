@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="br-pageheader pd-y-15 pd-l-20">
+        <nav class="breadcrumb pd-0 mg-0 tx-12">
+            <a class="breadcrumb-item dy_href" href="#/web/menu/training/special">列表</a>
+            <a class="breadcrumb-item dy_href" href="javascript:"
+               th:href="${'#/web/training/special/document/' + trainingSpecialDocument.trainingSpecialId}">实训专题文档</a>
+            <span class="breadcrumb-item active">查看文章</span>
+        </nav>
+    </div><!-- br-pageheader -->
+    <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
+        <h4 class="tx-gray-800 mg-b-5">实训专题文档</h4>
+        <p class="mg-b-0">查看文章。</p>
+    </div>
+
+    <div class="br-pagebody">
+        <div class="br-section-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="text-center text-dark"
+                        th:text="${trainingSpecialDocument.title}"></h3>
+                    <p class="mg-b-25 mg-lg-b-50 text-center">
+                        阅读量：<span th:text="${trainingSpecialDocument.reading}"></span> 创建时间：<span th:text="${trainingSpecialDocument.createDateStr}"></span>
+                    </p>
+                    <div id="quill" style="max-width: 500px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" id="content" name="content"
+           th:value="${trainingSpecialDocument.content}"/>
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/training/special/training_special_document_look.js')}"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>
