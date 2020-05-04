@@ -30,7 +30,7 @@ import top.zbeboy.zone.domain.tables.Files;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class FilesRecord extends UpdatableRecordImpl<FilesRecord> implements Record7<String, Long, String, String, String, String, String> {
 
-    private static final long serialVersionUID = 1519970360;
+    private static final long serialVersionUID = -396541035;
 
     /**
      * Setter for <code>zone.files.file_id</code>.
@@ -72,7 +72,7 @@ public class FilesRecord extends UpdatableRecordImpl<FilesRecord> implements Rec
     /**
      * Getter for <code>zone.files.content_type</code>.
      */
-    @Size(max = 20)
+    @Size(max = 50)
     public String getContentType() {
         return (String) get(2);
     }

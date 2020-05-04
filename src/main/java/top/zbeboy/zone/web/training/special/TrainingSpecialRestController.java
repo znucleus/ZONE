@@ -29,10 +29,7 @@ import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BaseImgUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
-import top.zbeboy.zone.web.vo.training.special.TrainingSpecialAddVo;
-import top.zbeboy.zone.web.vo.training.special.TrainingSpecialDocumentAddVo;
-import top.zbeboy.zone.web.vo.training.special.TrainingSpecialDocumentEditVo;
-import top.zbeboy.zone.web.vo.training.special.TrainingSpecialEditVo;
+import top.zbeboy.zone.web.vo.training.special.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -428,6 +425,52 @@ public class TrainingSpecialRestController {
             ajaxUtil.success().msg("删除成功");
         } else {
             ajaxUtil.fail().msg("您无权限操作");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 文件类型保存
+     *
+     * @param trainingSpecialFileAddVo 数据
+     * @param bindingResult            检验
+     * @return true or false
+     */
+    @PostMapping("/web/training/special/file/save")
+    public ResponseEntity<Map<String, Object>> fileSave(@Valid TrainingSpecialFileAddVo trainingSpecialFileAddVo, BindingResult bindingResult) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (!bindingResult.hasErrors()) {
+            if (trainingConditionCommon.specialCondition()) {
+                Files files = new Files();
+                String fileId = UUIDUtil.getUUID();
+                files.setFileId(fileId);
+                files.setRelativePath(Workbook.trainingSpecialFilePath());
+                files.setContentType(trainingSpecialFileAddVo.getContentType());
+                files.setOriginalFileName(trainingSpecialFileAddVo.getOriginalFileName());
+                files.setNewName(trainingSpecialFileAddVo.getNewName());
+                files.setExt(trainingSpecialFileAddVo.getExt());
+                files.setFileSize(trainingSpecialFileAddVo.getFileSize());
+                filesService.save(files);
+
+                Users users = usersService.getUserFromSession();
+                TrainingSpecialFile trainingSpecialFile = new TrainingSpecialFile();
+                trainingSpecialFile.setTrainingSpecialFileId(UUIDUtil.getUUID());
+                trainingSpecialFile.setFileTypeId(trainingSpecialFileAddVo.getFileTypeId());
+                trainingSpecialFile.setFileId(fileId);
+                trainingSpecialFile.setUsername(users.getUsername());
+                trainingSpecialFile.setUploader(users.getRealName());
+                trainingSpecialFile.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                trainingSpecialFile.setDownloads(0);
+                trainingSpecialFile.setMapping(BooleanUtil.toByte(false));
+
+                trainingSpecialFileService.save(trainingSpecialFile);
+
+                ajaxUtil.success().msg("保存成功");
+            } else {
+                ajaxUtil.fail().msg("您无权限操作");
+            }
+        } else {
+            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }

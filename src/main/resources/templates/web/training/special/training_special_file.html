@@ -24,7 +24,8 @@
                         <div class="col-md-12">
                             <div class="float-right mg-t-5">
                                 <button type="button" id="addType" class="btn btn-outline-primary"
-                                        th:if="${canOperator}" data-toggle="modal" data-target="#fileTypeAddModal"><i class="fa fa-plus"></i>添加类型
+                                        th:if="${canOperator}" data-toggle="modal" data-target="#fileTypeAddModal"><i
+                                        class="fa fa-plus"></i>添加类型
                                 </button>
                                 <button type="button" class="btn btn-light" id="refreshType"><i
                                         class="fa fa-refresh"></i> 刷新
@@ -68,6 +69,59 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" id="addFileType">确定</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 文件添加Modal -->
+    <div class="modal fade" id="fileAddModal" tabindex="-1" role="dialog" aria-labelledby="fileAddModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="fileAddModalLabel">添加文件</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="mg-t-20" id="file_form">
+                        <input type="hidden" id="addFileFileTypeId" name="fileTypeId"/>
+                        <input type="hidden" id="contentType" name="contentType" value="application/x-msdownload"/>
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <input id="originalFileName" name="originalFileName" placeholder="文件原名"
+                                       class="form-control">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <input id="newName" name="newName" placeholder="文件新名"
+                                       class="form-control">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <input id="ext" name="ext" placeholder="后缀"
+                                       class="form-control">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <input id="fileSize" name="fileSize" placeholder="文件大小"
+                                       class="form-control" type="number">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="addFile">确定</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
                 </div>
             </div>
@@ -176,9 +230,15 @@
                     <button type="button" class="btn btn-danger btn-sm delFile"
                             data-id="{{trainingSpecialFileId}}">删除
                     </button>
+                    {{#if mapping}}
+                    <button type="button" class="btn btn-warning btn-sm cancelMapping"
+                            data-id="{{trainingSpecialFileId}}">取消映射
+                    </button>
+                    {{else}}
                     <button type="button" class="btn btn-secondary btn-sm mapping"
                             data-id="{{trainingSpecialFileId}}">映射
                     </button>
+                    {{/if}}
                     {{/if}}
                 </div>
             </div>

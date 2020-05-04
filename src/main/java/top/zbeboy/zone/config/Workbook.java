@@ -243,6 +243,15 @@ public final class Workbook {
     }
 
     /**
+     * 保存实训专题文件路径
+     *
+     * @return 路径
+     */
+    public static String trainingSpecialFilePath() {
+        return FILES_PORTFOLIOS + "training" + DIRECTORY_SPLIT + "special" + DIRECTORY_SPLIT + "file" + DIRECTORY_SPLIT;
+    }
+
+    /**
      * 登记文件路径
      *
      * @return 路径

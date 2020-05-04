@@ -1,7 +1,7 @@
 CREATE TABLE files (
     file_id VARCHAR(64) PRIMARY KEY,
     file_size BIGINT,
-	  content_type VARCHAR(20),
+	content_type VARCHAR(50),
     original_file_name VARCHAR(300),
     new_name VARCHAR(300),
     relative_path VARCHAR(800),

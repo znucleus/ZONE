@@ -7,6 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import top.zbeboy.zone.domain.tables.daos.TrainingSpecialFileDao;
+import top.zbeboy.zone.domain.tables.pojos.TrainingSpecialFile;
+
+import javax.annotation.Resource;
 
 import static top.zbeboy.zone.domain.Tables.FILES;
 import static top.zbeboy.zone.domain.Tables.TRAINING_SPECIAL_FILE;
@@ -16,6 +20,9 @@ import static top.zbeboy.zone.domain.Tables.TRAINING_SPECIAL_FILE;
 public class TrainingSpecialFileServiceImpl implements TrainingSpecialFileService {
 
     private final DSLContext create;
+
+    @Resource
+    private TrainingSpecialFileDao trainingSpecialFileDao;
 
     @Autowired
     TrainingSpecialFileServiceImpl(DSLContext dslContext) {
@@ -41,5 +48,16 @@ public class TrainingSpecialFileServiceImpl implements TrainingSpecialFileServic
                 .where(TRAINING_SPECIAL_FILE.FILE_TYPE_ID.eq(fileTypeId)
                         .and(TRAINING_SPECIAL_FILE.MAPPING.eq(mapping)))
                 .fetch();
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void save(TrainingSpecialFile trainingSpecialFile) {
+        trainingSpecialFileDao.insert(trainingSpecialFile);
+    }
+
+    @Override
+    public void deleteById(String id) {
+        trainingSpecialFileDao.deleteById(id);
     }
 }

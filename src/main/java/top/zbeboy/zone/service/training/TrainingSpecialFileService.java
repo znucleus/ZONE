@@ -2,6 +2,7 @@ package top.zbeboy.zone.service.training;
 
 import org.jooq.Record;
 import org.jooq.Result;
+import top.zbeboy.zone.domain.tables.pojos.TrainingSpecialFile;
 
 public interface TrainingSpecialFileService {
 
@@ -21,4 +22,18 @@ public interface TrainingSpecialFileService {
      * @return 数据
      */
     Result<Record> findByFileTypeIdAndMapping(String fileTypeId, Byte mapping);
+
+    /**
+     * 保存
+     *
+     * @param trainingSpecialFile 数据
+     */
+    void save(TrainingSpecialFile trainingSpecialFile);
+
+    /**
+     * 根据主键删除
+     *
+     * @param id 主键
+     */
+    void deleteById(String id);
 }

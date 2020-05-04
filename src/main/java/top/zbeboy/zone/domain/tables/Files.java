@@ -41,7 +41,7 @@ import top.zbeboy.zone.domain.tables.records.FilesRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Files extends TableImpl<FilesRecord> {
 
-    private static final long serialVersionUID = -1557676112;
+    private static final long serialVersionUID = 1893566835;
 
     /**
      * The reference instance of <code>zone.files</code>
@@ -69,7 +69,7 @@ public class Files extends TableImpl<FilesRecord> {
     /**
      * The column <code>zone.files.content_type</code>.
      */
-    public final TableField<FilesRecord, String> CONTENT_TYPE = createField(DSL.name("content_type"), org.jooq.impl.SQLDataType.VARCHAR(20), this, "");
+    public final TableField<FilesRecord, String> CONTENT_TYPE = createField(DSL.name("content_type"), org.jooq.impl.SQLDataType.VARCHAR(50), this, "");
 
     /**
      * The column <code>zone.files.original_file_name</code>.

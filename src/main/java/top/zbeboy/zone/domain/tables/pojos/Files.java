@@ -24,7 +24,7 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Files implements Serializable {
 
-    private static final long serialVersionUID = -684685478;
+    private static final long serialVersionUID = 1609934903;
 
     private String fileId;
     private Long   fileSize;
@@ -82,7 +82,7 @@ public class Files implements Serializable {
         this.fileSize = fileSize;
     }
 
-    @Size(max = 20)
+    @Size(max = 50)
     public String getContentType() {
         return this.contentType;
     }

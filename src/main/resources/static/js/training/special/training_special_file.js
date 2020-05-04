@@ -11,6 +11,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             file_type_update: web_path + '/web/training/special/file/type/update',
             file_type_del: web_path + '/web/training/special/file/type/delete',
             file_data: web_path + '/web/training/special/file/data',
+            file_save: web_path + '/web/training/special/file/save',
             page: '/web/menu/training/special'
         };
 
@@ -73,6 +74,9 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
          */
         function fileListData(data, obj) {
             var template = Handlebars.compile($("#file-template").html());
+            Handlebars.registerHelper('file_size', function () {
+                return new Handlebars.SafeString(Handlebars.escapeExpression(tools.toSize(this.fileSize)));
+            });
             $(obj).html(template(data));
         }
 
@@ -99,13 +103,26 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         */
         $(tableData).delegate('.refresh', "click", function () {
             var curFileTypeId = $(this).attr('data-id');
+            localRefresh(curFileTypeId);
+        });
+
+        function localRefresh(curFileTypeId) {
             var files = $('.file');
             $.each(files, function (i, v) {
                 var fileTypeId = $(v).attr('data-id');
-                if(curFileTypeId === fileTypeId){
+                if (curFileTypeId === fileTypeId) {
                     sendFileAjax(fileTypeId, v);
                 }
             });
+        }
+
+        /*
+        添加文件
+        */
+        $(tableData).delegate('.add', "click", function () {
+            var fileTypeId = $(this).attr('data-id');
+            $('#addFileFileTypeId').val(fileTypeId);
+            $('#fileAddModal').modal('show');
         });
 
         $('#addFileType').click(function () {
@@ -201,6 +218,84 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                                 showCloseButton: true
                             });
                         }
+                    });
+                }
+            });
+        }
+
+        $('#addFile').click(function () {
+            validOriginalFileName();
+        });
+
+        function validOriginalFileName() {
+            var originalFileNameId = '#originalFileName';
+            var originalFileName = _.trim($(originalFileNameId).val());
+            if (originalFileName.length <= 0 || originalFileName.length > 300) {
+                tools.validErrorDom(originalFileNameId, '文件原名300个字符以内');
+            } else {
+                tools.validSuccessDom(originalFileNameId);
+                validNewName();
+            }
+        }
+
+        function validNewName() {
+            var newNameId = '#newName';
+            var newName = _.trim($(newNameId).val());
+            if (newName.length <= 0 || newName.length > 300) {
+                tools.validErrorDom(newNameId, '文件新名300个字符以内');
+            } else {
+                tools.validSuccessDom(newNameId);
+                validExt();
+            }
+        }
+
+        function validExt() {
+            var extId = '#ext';
+            var ext = _.trim($(extId).val());
+            if (ext.length <= 0 || ext.length > 20) {
+                tools.validErrorDom(extId, '后缀20个字符以内');
+            } else {
+                tools.validSuccessDom(extId);
+                validFileSize();
+            }
+        }
+
+        function validFileSize() {
+            var fileSizeId = '#fileSize';
+            var fileSize = _.trim($(fileSizeId).val());
+            if (fileSize.length <= 0) {
+                tools.validErrorDom(fileSizeId, '请填写文件大小');
+            } else {
+                tools.validSuccessDom(fileSizeId);
+                saveFileAjax();
+            }
+        }
+
+        function saveFileAjax() {
+            $.ajax({
+                type: 'POST',
+                url: ajax_url.file_save,
+                data: $('#file_form').serialize(),
+                success: function (data) {
+                    if (data.state) {
+                        Swal.fire({
+                            title: data.msg,
+                            type: "success",
+                            confirmButtonText: "确定",
+                            preConfirm: function () {
+                                localRefresh($('#addFileFileTypeId').val());
+                                $('#fileAddModal').modal('hide');
+                            }
+                        });
+                    } else {
+                        Swal.fire('保存失败', data.msg, 'error');
+                    }
+                },
+                error: function (XMLHttpRequest) {
+                    Messenger().post({
+                        message: 'Request error : ' + XMLHttpRequest.status + " " + XMLHttpRequest.statusText,
+                        type: 'error',
+                        showCloseButton: true
                     });
                 }
             });
