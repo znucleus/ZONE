@@ -92,6 +92,8 @@ import top.zbeboy.zone.domain.tables.TrainingDocumentContent;
 import top.zbeboy.zone.domain.tables.TrainingDocumentFile;
 import top.zbeboy.zone.domain.tables.TrainingRelease;
 import top.zbeboy.zone.domain.tables.TrainingSpecial;
+import top.zbeboy.zone.domain.tables.TrainingSpecialDocument;
+import top.zbeboy.zone.domain.tables.TrainingSpecialDocumentContent;
 import top.zbeboy.zone.domain.tables.TrainingSpecialFile;
 import top.zbeboy.zone.domain.tables.TrainingSpecialFileType;
 import top.zbeboy.zone.domain.tables.TrainingUsers;
@@ -115,7 +117,7 @@ import top.zbeboy.zone.domain.tables.WeiXinDevice;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Zone extends SchemaImpl {
 
-    private static final long serialVersionUID = 477010164;
+    private static final long serialVersionUID = 231850236;
 
     /**
      * The reference instance of <code>zone</code>
@@ -513,6 +515,16 @@ public class Zone extends SchemaImpl {
     public final TrainingSpecial TRAINING_SPECIAL = top.zbeboy.zone.domain.tables.TrainingSpecial.TRAINING_SPECIAL;
 
     /**
+     * The table <code>zone.training_special_document</code>.
+     */
+    public final TrainingSpecialDocument TRAINING_SPECIAL_DOCUMENT = top.zbeboy.zone.domain.tables.TrainingSpecialDocument.TRAINING_SPECIAL_DOCUMENT;
+
+    /**
+     * The table <code>zone.training_special_document_content</code>.
+     */
+    public final TrainingSpecialDocumentContent TRAINING_SPECIAL_DOCUMENT_CONTENT = top.zbeboy.zone.domain.tables.TrainingSpecialDocumentContent.TRAINING_SPECIAL_DOCUMENT_CONTENT;
+
+    /**
      * The table <code>zone.training_special_file</code>.
      */
     public final TrainingSpecialFile TRAINING_SPECIAL_FILE = top.zbeboy.zone.domain.tables.TrainingSpecialFile.TRAINING_SPECIAL_FILE;
@@ -652,6 +664,8 @@ public class Zone extends SchemaImpl {
             TrainingDocumentFile.TRAINING_DOCUMENT_FILE,
             TrainingRelease.TRAINING_RELEASE,
             TrainingSpecial.TRAINING_SPECIAL,
+            TrainingSpecialDocument.TRAINING_SPECIAL_DOCUMENT,
+            TrainingSpecialDocumentContent.TRAINING_SPECIAL_DOCUMENT_CONTENT,
             TrainingSpecialFile.TRAINING_SPECIAL_FILE,
             TrainingSpecialFileType.TRAINING_SPECIAL_FILE_TYPE,
             TrainingUsers.TRAINING_USERS,

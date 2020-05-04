@@ -123,13 +123,13 @@ CREATE TABLE training_document_content
 CREATE TABLE training_document_file
 (
     training_document_file_id VARCHAR(64) PRIMARY KEY,
-    training_release_id  VARCHAR(64)  NOT NULL,
-    course_id            INT         NOT NULL,
-    file_id              VARCHAR(64) NOT NULL,
-    username             VARCHAR(64) NOT NULL,
-    uploader             VARCHAR(30) NOT NULL,
-    create_date          TIMESTAMP   NOT NULL,
-    downloads            INT         NOT NULL DEFAULT 0,
+    training_release_id       VARCHAR(64) NOT NULL,
+    course_id                 INT         NOT NULL,
+    file_id                   VARCHAR(64) NOT NULL,
+    username                  VARCHAR(64) NOT NULL,
+    uploader                  VARCHAR(30) NOT NULL,
+    create_date               TIMESTAMP   NOT NULL,
+    downloads                 INT         NOT NULL DEFAULT 0,
     FOREIGN KEY (training_release_id) REFERENCES
         training_release (training_release_id) ON DELETE CASCADE,
     FOREIGN KEY (course_id) REFERENCES
@@ -143,11 +143,14 @@ CREATE TABLE training_special
 (
     training_special_id VARCHAR(64) PRIMARY KEY,
     title               VARCHAR(100) NOT NULL,
+    cover               VARCHAR(64)  NOT NULL,
     username            VARCHAR(64)  NOT NULL,
     publisher           VARCHAR(30)  NOT NULL,
     release_time        TIMESTAMP    NOT NULL,
     FOREIGN KEY (username) REFERENCES
-        users (username) ON UPDATE CASCADE ON DELETE CASCADE
+        users (username) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (cover)
+        REFERENCES files (file_id)
 );
 
 CREATE TABLE training_special_file_type
@@ -161,12 +164,37 @@ CREATE TABLE training_special_file_type
 
 CREATE TABLE training_special_file
 (
-    file_type_id VARCHAR(64) NOT NULL,
-    file_id      VARCHAR(64),
-    username     VARCHAR(64) NOT NULL,
-    uploader     VARCHAR(30) NOT NULL,
-    create_date  TIMESTAMP   NOT NULL,
-    downloads    INT         NOT NULL DEFAULT 0,
+    training_special_file_id VARCHAR(64) PRIMARY KEY,
+    file_type_id             VARCHAR(64) NOT NULL,
+    file_id                  VARCHAR(64),
+    username                 VARCHAR(64) NOT NULL,
+    uploader                 VARCHAR(30) NOT NULL,
+    create_date              TIMESTAMP   NOT NULL,
+    downloads                INT         NOT NULL DEFAULT 0,
     FOREIGN KEY (file_type_id) REFERENCES
         training_special_file_type (file_type_id) ON DELETE CASCADE
 );
+
+CREATE TABLE training_special_document
+(
+    training_special_document_id VARCHAR(64) PRIMARY KEY,
+    title                        VARCHAR(200) NOT NULL,
+    username                     VARCHAR(64)  NOT NULL,
+    creator                      VARCHAR(30)  NOT NULL,
+    create_date                  TIMESTAMP    NOT NULL,
+    reading                      INT          NOT NULL DEFAULT 0,
+    training_special_id          VARCHAR(64)  NOT NULL,
+    FOREIGN KEY (training_special_id) REFERENCES
+        training_special (training_special_id) ON DELETE CASCADE
+);
+
+CREATE TABLE training_special_document_content
+(
+    training_special_document_id VARCHAR(64) NOT NULL UNIQUE,
+    content                      LONGTEXT    NOT NULL,
+    FOREIGN KEY (training_special_document_id) REFERENCES
+        training_special_document (training_special_document_id) ON DELETE CASCADE
+);
+
+INSERT INTO files(file_id, file_size, content_type, original_file_name, new_name, relative_path, ext)
+VALUES ('1001', 1001, 'image/jpg', 'cover', 'cover', 'images/cover.jpg', 'jpg');

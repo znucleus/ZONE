@@ -60,6 +60,11 @@ public final class Workbook {
     public static final String USERS_AVATAR = "1000";
 
     /*
+    系统默认封面
+     */
+    public static final String SYSTEM_COVER = "1001";
+
+    /*
     用户类型参数
     */
     public static final String SYSTEM_USERS_TYPE = "系统";

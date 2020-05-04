@@ -84,6 +84,8 @@ import top.zbeboy.zone.domain.tables.TrainingDocumentContent;
 import top.zbeboy.zone.domain.tables.TrainingDocumentFile;
 import top.zbeboy.zone.domain.tables.TrainingRelease;
 import top.zbeboy.zone.domain.tables.TrainingSpecial;
+import top.zbeboy.zone.domain.tables.TrainingSpecialDocument;
+import top.zbeboy.zone.domain.tables.TrainingSpecialDocumentContent;
 import top.zbeboy.zone.domain.tables.TrainingSpecialFile;
 import top.zbeboy.zone.domain.tables.TrainingSpecialFileType;
 import top.zbeboy.zone.domain.tables.TrainingUsers;
@@ -496,6 +498,16 @@ public class Tables {
      * The table <code>zone.training_special</code>.
      */
     public static final TrainingSpecial TRAINING_SPECIAL = TrainingSpecial.TRAINING_SPECIAL;
+
+    /**
+     * The table <code>zone.training_special_document</code>.
+     */
+    public static final TrainingSpecialDocument TRAINING_SPECIAL_DOCUMENT = TrainingSpecialDocument.TRAINING_SPECIAL_DOCUMENT;
+
+    /**
+     * The table <code>zone.training_special_document_content</code>.
+     */
+    public static final TrainingSpecialDocumentContent TRAINING_SPECIAL_DOCUMENT_CONTENT = TrainingSpecialDocumentContent.TRAINING_SPECIAL_DOCUMENT_CONTENT;
 
     /**
      * The table <code>zone.training_special_file</code>.

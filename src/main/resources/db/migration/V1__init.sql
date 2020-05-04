@@ -388,7 +388,7 @@ create table google_oauth(
 );
 
 INSERT INTO files(file_id, file_size, content_type, original_file_name, new_name, relative_path, ext) VALUES (
-'1000',4213,'image/jpg','avatar','avatar','images/avatar.jpg','jpg'
+'1000',1000,'image/jpg','avatar','avatar','images/avatar.jpg','jpg'
 );
 INSERT INTO users_type (users_type_name) VALUES ('系统');
 INSERT INTO users_type (users_type_name) VALUES ('学生');

@@ -15,10 +15,11 @@ import org.jooq.ForeignKey;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row6;
+import org.jooq.Row7;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.TableImpl;
 
@@ -41,7 +42,7 @@ import top.zbeboy.zone.domain.tables.records.TrainingSpecialFileRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class TrainingSpecialFile extends TableImpl<TrainingSpecialFileRecord> {
 
-    private static final long serialVersionUID = 1697015390;
+    private static final long serialVersionUID = -1201635818;
 
     /**
      * The reference instance of <code>zone.training_special_file</code>
@@ -55,6 +56,11 @@ public class TrainingSpecialFile extends TableImpl<TrainingSpecialFileRecord> {
     public Class<TrainingSpecialFileRecord> getRecordType() {
         return TrainingSpecialFileRecord.class;
     }
+
+    /**
+     * The column <code>zone.training_special_file.training_special_file_id</code>.
+     */
+    public final TableField<TrainingSpecialFileRecord, String> TRAINING_SPECIAL_FILE_ID = createField(DSL.name("training_special_file_id"), org.jooq.impl.SQLDataType.VARCHAR(64).nullable(false), this, "");
 
     /**
      * The column <code>zone.training_special_file.file_type_id</code>.
@@ -126,7 +132,17 @@ public class TrainingSpecialFile extends TableImpl<TrainingSpecialFileRecord> {
 
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.TRAINING_SPECIAL_FILE_FILE_TYPE_ID);
+        return Arrays.<Index>asList(Indexes.TRAINING_SPECIAL_FILE_FILE_TYPE_ID, Indexes.TRAINING_SPECIAL_FILE_PRIMARY);
+    }
+
+    @Override
+    public UniqueKey<TrainingSpecialFileRecord> getPrimaryKey() {
+        return Keys.KEY_TRAINING_SPECIAL_FILE_PRIMARY;
+    }
+
+    @Override
+    public List<UniqueKey<TrainingSpecialFileRecord>> getKeys() {
+        return Arrays.<UniqueKey<TrainingSpecialFileRecord>>asList(Keys.KEY_TRAINING_SPECIAL_FILE_PRIMARY);
     }
 
     @Override
@@ -165,11 +181,11 @@ public class TrainingSpecialFile extends TableImpl<TrainingSpecialFileRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row6 type methods
+    // Row7 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row6<String, String, String, String, Timestamp, Integer> fieldsRow() {
-        return (Row6) super.fieldsRow();
+    public Row7<String, String, String, String, String, Timestamp, Integer> fieldsRow() {
+        return (Row7) super.fieldsRow();
     }
 }

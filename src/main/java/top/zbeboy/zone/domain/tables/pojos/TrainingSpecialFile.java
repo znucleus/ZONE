@@ -25,8 +25,9 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class TrainingSpecialFile implements Serializable {
 
-    private static final long serialVersionUID = -1571776378;
+    private static final long serialVersionUID = -493450127;
 
+    private String    trainingSpecialFileId;
     private String    fileTypeId;
     private String    fileId;
     private String    username;
@@ -37,6 +38,7 @@ public class TrainingSpecialFile implements Serializable {
     public TrainingSpecialFile() {}
 
     public TrainingSpecialFile(TrainingSpecialFile value) {
+        this.trainingSpecialFileId = value.trainingSpecialFileId;
         this.fileTypeId = value.fileTypeId;
         this.fileId = value.fileId;
         this.username = value.username;
@@ -46,6 +48,7 @@ public class TrainingSpecialFile implements Serializable {
     }
 
     public TrainingSpecialFile(
+        String    trainingSpecialFileId,
         String    fileTypeId,
         String    fileId,
         String    username,
@@ -53,12 +56,23 @@ public class TrainingSpecialFile implements Serializable {
         Timestamp createDate,
         Integer   downloads
     ) {
+        this.trainingSpecialFileId = trainingSpecialFileId;
         this.fileTypeId = fileTypeId;
         this.fileId = fileId;
         this.username = username;
         this.uploader = uploader;
         this.createDate = createDate;
         this.downloads = downloads;
+    }
+
+    @NotNull
+    @Size(max = 64)
+    public String getTrainingSpecialFileId() {
+        return this.trainingSpecialFileId;
+    }
+
+    public void setTrainingSpecialFileId(String trainingSpecialFileId) {
+        this.trainingSpecialFileId = trainingSpecialFileId;
     }
 
     @NotNull
@@ -121,7 +135,8 @@ public class TrainingSpecialFile implements Serializable {
     public String toString() {
         StringBuilder sb = new StringBuilder("TrainingSpecialFile (");
 
-        sb.append(fileTypeId);
+        sb.append(trainingSpecialFileId);
+        sb.append(", ").append(fileTypeId);
         sb.append(", ").append(fileId);
         sb.append(", ").append(username);
         sb.append(", ").append(uploader);

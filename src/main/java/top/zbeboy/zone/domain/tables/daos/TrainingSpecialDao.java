@@ -88,6 +88,20 @@ public class TrainingSpecialDao extends DAOImpl<TrainingSpecialRecord, top.zbebo
     }
 
     /**
+     * Fetch records that have <code>cover BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.TrainingSpecial> fetchRangeOfCover(String lowerInclusive, String upperInclusive) {
+        return fetchRange(TrainingSpecial.TRAINING_SPECIAL.COVER, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>cover IN (values)</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.TrainingSpecial> fetchByCover(String... values) {
+        return fetch(TrainingSpecial.TRAINING_SPECIAL.COVER, values);
+    }
+
+    /**
      * Fetch records that have <code>username BETWEEN lowerInclusive AND upperInclusive</code>
      */
     public List<top.zbeboy.zone.domain.tables.pojos.TrainingSpecial> fetchRangeOfUsername(String lowerInclusive, String upperInclusive) {

@@ -25,10 +25,11 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class TrainingSpecial implements Serializable {
 
-    private static final long serialVersionUID = 1530306474;
+    private static final long serialVersionUID = 523094082;
 
     private String    trainingSpecialId;
     private String    title;
+    private String    cover;
     private String    username;
     private String    publisher;
     private Timestamp releaseTime;
@@ -38,6 +39,7 @@ public class TrainingSpecial implements Serializable {
     public TrainingSpecial(TrainingSpecial value) {
         this.trainingSpecialId = value.trainingSpecialId;
         this.title = value.title;
+        this.cover = value.cover;
         this.username = value.username;
         this.publisher = value.publisher;
         this.releaseTime = value.releaseTime;
@@ -46,12 +48,14 @@ public class TrainingSpecial implements Serializable {
     public TrainingSpecial(
         String    trainingSpecialId,
         String    title,
+        String    cover,
         String    username,
         String    publisher,
         Timestamp releaseTime
     ) {
         this.trainingSpecialId = trainingSpecialId;
         this.title = title;
+        this.cover = cover;
         this.username = username;
         this.publisher = publisher;
         this.releaseTime = releaseTime;
@@ -75,6 +79,16 @@ public class TrainingSpecial implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    @NotNull
+    @Size(max = 64)
+    public String getCover() {
+        return this.cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
     }
 
     @NotNull
@@ -112,6 +126,7 @@ public class TrainingSpecial implements Serializable {
 
         sb.append(trainingSpecialId);
         sb.append(", ").append(title);
+        sb.append(", ").append(cover);
         sb.append(", ").append(username);
         sb.append(", ").append(publisher);
         sb.append(", ").append(releaseTime);

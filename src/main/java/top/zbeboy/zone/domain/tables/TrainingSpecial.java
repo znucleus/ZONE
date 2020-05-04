@@ -15,7 +15,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row5;
+import org.jooq.Row6;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -42,7 +42,7 @@ import top.zbeboy.zone.domain.tables.records.TrainingSpecialRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class TrainingSpecial extends TableImpl<TrainingSpecialRecord> {
 
-    private static final long serialVersionUID = 1861045109;
+    private static final long serialVersionUID = -1876868724;
 
     /**
      * The reference instance of <code>zone.training_special</code>
@@ -66,6 +66,11 @@ public class TrainingSpecial extends TableImpl<TrainingSpecialRecord> {
      * The column <code>zone.training_special.title</code>.
      */
     public final TableField<TrainingSpecialRecord, String> TITLE = createField(DSL.name("title"), org.jooq.impl.SQLDataType.VARCHAR(100).nullable(false), this, "");
+
+    /**
+     * The column <code>zone.training_special.cover</code>.
+     */
+    public final TableField<TrainingSpecialRecord, String> COVER = createField(DSL.name("cover"), org.jooq.impl.SQLDataType.VARCHAR(64).nullable(false), this, "");
 
     /**
      * The column <code>zone.training_special.username</code>.
@@ -122,7 +127,7 @@ public class TrainingSpecial extends TableImpl<TrainingSpecialRecord> {
 
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.TRAINING_SPECIAL_PRIMARY, Indexes.TRAINING_SPECIAL_USERNAME);
+        return Arrays.<Index>asList(Indexes.TRAINING_SPECIAL_COVER, Indexes.TRAINING_SPECIAL_PRIMARY, Indexes.TRAINING_SPECIAL_USERNAME);
     }
 
     @Override
@@ -137,7 +142,11 @@ public class TrainingSpecial extends TableImpl<TrainingSpecialRecord> {
 
     @Override
     public List<ForeignKey<TrainingSpecialRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<TrainingSpecialRecord, ?>>asList(Keys.TRAINING_SPECIAL_IBFK_1);
+        return Arrays.<ForeignKey<TrainingSpecialRecord, ?>>asList(Keys.TRAINING_SPECIAL_IBFK_2, Keys.TRAINING_SPECIAL_IBFK_1);
+    }
+
+    public Files files() {
+        return new Files(this, Keys.TRAINING_SPECIAL_IBFK_2);
     }
 
     public Users users() {
@@ -171,11 +180,11 @@ public class TrainingSpecial extends TableImpl<TrainingSpecialRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row5 type methods
+    // Row6 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row5<String, String, String, String, Timestamp> fieldsRow() {
-        return (Row5) super.fieldsRow();
+    public Row6<String, String, String, String, String, Timestamp> fieldsRow() {
+        return (Row6) super.fieldsRow();
     }
 }
