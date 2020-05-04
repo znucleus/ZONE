@@ -1,6 +1,6 @@
 //# sourceURL=training_document_documents.js
 require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2", "messenger", "jquery.address",
-        "jquery.simple-pagination", "jquery.fileupload-validate"],
+        "jquery.simple-pagination"],
     function ($, _, tools, Handlebars, navActive, Swal) {
 
         /*
