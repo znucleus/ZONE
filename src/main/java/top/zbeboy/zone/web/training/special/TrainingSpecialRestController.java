@@ -17,6 +17,7 @@ import top.zbeboy.zone.domain.tables.pojos.TrainingSpecial;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.system.FilesService;
+import top.zbeboy.zone.service.training.TrainingSpecialDocumentService;
 import top.zbeboy.zone.service.training.TrainingSpecialService;
 import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
@@ -24,6 +25,7 @@ import top.zbeboy.zone.service.util.FilesUtil;
 import top.zbeboy.zone.service.util.RequestUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.training.special.TrainingSpecialBean;
+import top.zbeboy.zone.web.bean.training.special.TrainingSpecialDocumentBean;
 import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BaseImgUtil;
@@ -47,6 +49,9 @@ public class TrainingSpecialRestController {
 
     @Resource
     private TrainingConditionCommon trainingConditionCommon;
+
+    @Resource
+    private TrainingSpecialDocumentService trainingSpecialDocumentService;
 
     @Resource
     private FilesService filesService;
@@ -176,6 +181,27 @@ public class TrainingSpecialRestController {
             log.error("User upload cover error.", e);
             ajaxUtil.fail().msg(String.format("上传专题封面异常:%s", e.getMessage()));
         }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 文章数据
+     *
+     * @param simplePaginationUtil 请求
+     * @return 数据
+     */
+    @GetMapping("/web/training/special/document/list/data")
+    public ResponseEntity<Map<String, Object>> documentListData(SimplePaginationUtil simplePaginationUtil) {
+        AjaxUtil<TrainingSpecialDocumentBean> ajaxUtil = AjaxUtil.of();
+        List<TrainingSpecialDocumentBean> beans = new ArrayList<>();
+        Result<Record> records = trainingSpecialDocumentService.findAllByPage(simplePaginationUtil);
+        if (records.isNotEmpty()) {
+            beans = records.into(TrainingSpecialDocumentBean.class);
+            beans.forEach(bean -> bean.setCreateDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getCreateDate())));
+            beans.forEach(bean -> bean.setCanOperator(BooleanUtil.toByte(trainingConditionCommon.specialCondition())));
+        }
+        simplePaginationUtil.setTotalSize(trainingSpecialDocumentService.countAll(simplePaginationUtil));
+        ajaxUtil.success().list(beans).page(simplePaginationUtil).msg("获取数据成功");
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }
