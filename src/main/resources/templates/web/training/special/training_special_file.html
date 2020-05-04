@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="br-pageheader pd-y-15 pd-l-20">
+        <nav class="breadcrumb pd-0 mg-0 tx-12">
+            <a class="breadcrumb-item dy_href" href="#/web/menu/training/special">列表</a>
+            <span class="breadcrumb-item active">实训专题文件</span>
+        </nav>
+    </div><!-- br-pageheader -->
+    <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
+        <h4 class="tx-gray-800 mg-b-5">实训专题文件</h4>
+        <p class="mg-b-0">实训专题文件列表。</p>
+    </div>
+
+    <div class="br-pagebody">
+        <div class="br-section-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="float-right mg-t-5">
+                                <button type="button" id="addType" class="btn btn-outline-primary"
+                                        th:if="${canOperator}" data-toggle="modal" data-target="#fileTypeAddModal"><i class="fa fa-plus"></i>添加类型
+                                </button>
+                                <button type="button" class="btn btn-light" id="refreshType"><i
+                                        class="fa fa-refresh"></i> 刷新
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="row" id="tableData">
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 文件类型添加Modal -->
+    <div class="modal fade" id="fileTypeAddModal" tabindex="-1" role="dialog" aria-labelledby="fileTypeAddModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="fileTypeAddModalLabel">添加类型</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="mg-t-20">
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <input id="addFileTypeName" placeholder="文件类型"
+                                       class="form-control">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="addFileType">确定</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script id="type-template" type="text/x-handlebars-template">
+        {{#each listResult}}
+        <div class="col-md-4">
+            <div class="card mg-t-10 text-dark">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="float-right">
+                                {{#if canOperator}}
+                                <button type="button" class="btn btn-outline-primary btn-sm add"
+                                        data-id="{{fileTypeId}}"><i class="fa fa-plus"></i>添加
+                                </button>
+                                {{/if}}
+                                <button type="button" class="btn btn-light btn-sm refresh" data-id="{{fileTypeId}}"><i
+                                        class="fa fa-refresh"></i> 刷新
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-12 mg-t-5">
+                            <div class="input-group">
+                                <input type="text" class="form-control form-control-sm" placeholder="文件">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary btn-sm search" type="button"
+                                            data-id="{{fileTypeId}}">搜索
+                                    </button>
+                                    <button class="btn btn-outline-secondary btn-sm reset_search" type="button"
+                                            data-id="{{fileTypeId}}">重置
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h5>{{fileTypeName}}</h5>
+                    <div class="list-group file" data-id="{{fileTypeId}}">
+                    </div>
+                </div>
+                {{#if canOperator}}
+                <div class="card-footer text-right">
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-primary btn-sm edit"
+                                data-id="{{fileTypeId}}">编辑
+                        </button>
+                        <button type="button" class="btn btn-danger btn-sm del" data-id="{{fileTypeId}}">
+                            删除
+                        </button>
+                    </div>
+                </div>
+                {{/if}}
+            </div>
+        </div>
+        {{/each}}
+    </script>
+
+    <script id="file-template" type="text/x-handlebars-template">
+        {{#each listResult}}
+        <div class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">{{originalFileName}}.{{ext}}</h5>
+            </div>
+            <p class="mb-1">大小：{{file_size}} 下载量：{{downloads}}</p>
+            <div class="text-right">
+                <div class="btn-group mb-1" role="group">
+                    <button type="button" class="btn btn-primary btn-sm download"
+                            data-id="{{trainingSpecialFileId}}">下载
+                    </button>
+                    {{#if canOperator}}
+                    <button type="button" class="btn btn-danger btn-sm delFile"
+                            data-id="{{trainingSpecialFileId}}">删除
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-sm mapping"
+                            data-id="{{trainingSpecialFileId}}">映射
+                    </button>
+                    {{/if}}
+                </div>
+            </div>
+
+        </div>
+        {{/each}}
+    </script>
+
+    <input type="hidden" id="paramTrainingSpecialId" th:value="${trainingSpecialId}"/>
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/training/special/training_special_file.js')}"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>

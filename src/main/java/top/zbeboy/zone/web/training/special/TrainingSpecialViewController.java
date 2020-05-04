@@ -189,4 +189,16 @@ public class TrainingSpecialViewController {
         }
         return page;
     }
+
+    /**
+     * 文件页面
+     *
+     * @return 文件页面
+     */
+    @GetMapping("/web/training/special/file/{id}")
+    public String file(@PathVariable("id") String id, ModelMap modelMap) {
+        modelMap.addAttribute("trainingSpecialId", id);
+        modelMap.addAttribute("canOperator", trainingConditionCommon.specialCondition());
+        return "web/training/special/training_special_file::#page-wrapper";
+    }
 }

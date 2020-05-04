@@ -11,7 +11,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             edit: '/web/training/special/edit',
             del: web_path + '/web/training/special/delete',
             document: '/web/training/special/document',
-            file: '/web/training/special/document',
+            file: '/web/training/special/file',
             page: '/web/menu/training/special'
         };
 

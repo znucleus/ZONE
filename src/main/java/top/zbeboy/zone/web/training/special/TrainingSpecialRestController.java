@@ -8,17 +8,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
+import top.zbeboy.zone.domain.tables.records.TrainingSpecialFileTypeRecord;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.system.FilesService;
-import top.zbeboy.zone.service.training.TrainingSpecialDocumentContentService;
-import top.zbeboy.zone.service.training.TrainingSpecialDocumentService;
-import top.zbeboy.zone.service.training.TrainingSpecialService;
+import top.zbeboy.zone.service.training.*;
 import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.FilesUtil;
@@ -26,6 +22,8 @@ import top.zbeboy.zone.service.util.RequestUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.training.special.TrainingSpecialBean;
 import top.zbeboy.zone.web.bean.training.special.TrainingSpecialDocumentBean;
+import top.zbeboy.zone.web.bean.training.special.TrainingSpecialFileBean;
+import top.zbeboy.zone.web.bean.training.special.TrainingSpecialFileTypeBean;
 import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BaseImgUtil;
@@ -57,6 +55,12 @@ public class TrainingSpecialRestController {
 
     @Resource
     private TrainingSpecialDocumentContentService trainingSpecialDocumentContentService;
+
+    @Resource
+    private TrainingSpecialFileTypeService trainingSpecialFileTypeService;
+
+    @Resource
+    private TrainingSpecialFileService trainingSpecialFileService;
 
     @Resource
     private FilesService filesService;
@@ -312,6 +316,76 @@ public class TrainingSpecialRestController {
         if (trainingConditionCommon.specialCondition()) {
             trainingSpecialDocumentService.deleteById(trainingSpecialDocumentId);
             ajaxUtil.success().msg("删除成功");
+        } else {
+            ajaxUtil.fail().msg("您无权限操作");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 文件类型数据
+     *
+     * @param id 专题id
+     * @return 数据
+     */
+    @GetMapping("/web/training/special/file/type/data/{id}")
+    public ResponseEntity<Map<String, Object>> fileTypeData(@PathVariable("id") String id) {
+        AjaxUtil<TrainingSpecialFileTypeBean> ajaxUtil = AjaxUtil.of();
+        List<TrainingSpecialFileTypeBean> trainingSpecialFileTypes = new ArrayList<>();
+        Result<TrainingSpecialFileTypeRecord> records =
+                trainingSpecialFileTypeService.findByTrainingSpecialId(id);
+        if (records.isNotEmpty()) {
+            trainingSpecialFileTypes = records.into(TrainingSpecialFileTypeBean.class);
+            trainingSpecialFileTypes.forEach(bean -> bean.setCanOperator(BooleanUtil.toByte(trainingConditionCommon.specialCondition())));
+        }
+        ajaxUtil.success().list(trainingSpecialFileTypes).msg("获取数据成功");
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 文件数据
+     *
+     * @param id 专题id
+     * @return 数据
+     */
+    @GetMapping("/web/training/special/file/data/{id}")
+    public ResponseEntity<Map<String, Object>> fileData(@PathVariable("id") String id) {
+        AjaxUtil<TrainingSpecialFileBean> ajaxUtil = AjaxUtil.of();
+        List<TrainingSpecialFileBean> trainingSpecialFileBeans = new ArrayList<>();
+        Result<Record> records;
+        if (trainingConditionCommon.specialCondition()) {
+            records = trainingSpecialFileService.findByFileTypeId(id);
+        } else {
+            records = trainingSpecialFileService.findByFileTypeIdAndMapping(id, BooleanUtil.toByte(true));
+        }
+
+        if (records.isNotEmpty()) {
+            trainingSpecialFileBeans = records.into(TrainingSpecialFileBean.class);
+            trainingSpecialFileBeans.forEach(bean -> bean.setCanOperator(BooleanUtil.toByte(trainingConditionCommon.specialCondition())));
+        }
+        ajaxUtil.success().list(trainingSpecialFileBeans).msg("获取数据成功");
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 文件类型保存
+     *
+     * @param fileTypeName      文件类型名
+     * @param trainingSpecialId 专题id
+     * @return true or false
+     */
+    @PostMapping("/web/training/special/file/type/save")
+    public ResponseEntity<Map<String, Object>> fileTypeSave(@RequestParam("fileTypeName") String fileTypeName,
+                                                            @RequestParam("trainingSpecialId") String trainingSpecialId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+
+        if (trainingConditionCommon.specialCondition()) {
+            TrainingSpecialFileType trainingSpecialFileType = new TrainingSpecialFileType();
+            trainingSpecialFileType.setFileTypeId(UUIDUtil.getUUID());
+            trainingSpecialFileType.setFileTypeName(fileTypeName);
+            trainingSpecialFileType.setTrainingSpecialId(trainingSpecialId);
+            trainingSpecialFileTypeService.save(trainingSpecialFileType);
+            ajaxUtil.success().msg("保存成功");
         } else {
             ajaxUtil.fail().msg("您无权限操作");
         }
