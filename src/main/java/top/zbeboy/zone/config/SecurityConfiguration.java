@@ -72,7 +72,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 // allow same origin to frame our site to support iframe SockJS
                 .frameOptions().sameOrigin()
                 .and()
-                .authorizeRequests().antMatchers("/css/**", "/js/**", "/fonts/**", "/images/**", "/plugins/**", "/files/**", "/webjars/**", "/webjarsjs/**").permitAll()
+                .authorizeRequests().antMatchers("/css/**", "/js/**", "/fonts/**", "/images/**", "/plugins/**", "/goods/**", "/portfolios/*/avatar/**", "/webjars/**", "/webjarsjs/**").permitAll()
                 .and().formLogin().loginPage("/login")
                 .successHandler(this.ajaxAuthenticationSuccessHandler)
                 .failureHandler(this.ajaxAuthenticationFailureHandler)
@@ -82,6 +82,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and().authorizeRequests().antMatchers("/web/**").access("@webSecurity.check(authentication,request)")
                 .and().authorizeRequests().antMatchers("/special/channel/**").hasAnyRole("SYSTEM", "ADMIN") // 特别通道 跨controller调用共同方法使用
                 .and().authorizeRequests().antMatchers("/users/**", "/api/**", Workbook.OAUTH_AUTHORIZE).authenticated()
+                .and().authorizeRequests().antMatchers("/files/**", "/portfolios/**").authenticated()
                 .and().authorizeRequests().antMatchers("/anyone/**").permitAll()
                 .antMatchers("/metrics/**").hasRole("ACTUATOR")
                 .antMatchers("/health/**").hasRole("ACTUATOR")

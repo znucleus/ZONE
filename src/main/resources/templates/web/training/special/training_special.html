@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="pd-30">
+        <h4 class="tx-gray-800 mg-b-5">实训专题</h4>
+        <p class="mg-b-0">管理实训专题。</p>
+    </div><!-- d-flex -->
+
+    <div class="br-pagebody mg-t-5 pd-x-30">
+        <div class="br-section-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12 mt-2">
+                            <input type="text" id="search_title" class="form-control"
+                                   placeholder="标题"/>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button type="button" id="search" class="btn btn-outline-secondary"><i
+                                class="fa fa-search"></i>搜索
+                        </button>
+                        <button type="button" id="reset_search" class="btn btn-outline-secondary"><i
+                                class="fa fa-repeat"></i>重置
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="float-right mg-t-5">
+                        <button type="button" class="btn btn-outline-primary" id="release"><i class="fa fa-edit"></i> 发布
+                        </button>
+                        <button type="button" class="btn btn-light" id="refresh"><i class="fa fa-refresh"></i> 刷新
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-12" id="tableData">
+                </div>
+                <div class="col-md-12 mg-t-20">
+                    <div class="ht-80 bd d-flex align-items-center justify-content-center">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination" id="pagination"></ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script id="release-template" type="text/x-handlebars-template">
+        {{#each listResult}}
+        <div class="card mg-t-10 text-dark">
+            <img class="card-img-top img-fluid" src="{{cover}}" alt="专题封面" />
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">{{title}}</div>
+                </div>
+                <p class="text-right font-italic m-t-10">
+                    <small><em><span>发布人：</span><span>{{publisher}}</span> <span>{{releaseTimeStr}}</span></em>
+                    </small>
+                </p>
+            </div>
+            <div class="card-footer text-right">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-info document" data-id="{{trainingSpecialId}}">资料</button>
+                    <button type="button" class="btn btn-purple file" data-id="{{trainingSpecialId}}">文件</button>
+                    {{#if canOperator}}
+                    <button type="button" class="btn btn-primary edit" data-id="{{trainingSpecialId}}">编辑</button>
+                    <button type="button" class="btn btn-outline-danger del" data-id="{{trainingSpecialId}}">删除</button>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </script>
+
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/training/special/training_special.js')}"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>

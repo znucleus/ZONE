@@ -171,6 +171,7 @@ CREATE TABLE training_special_file
     uploader                 VARCHAR(30) NOT NULL,
     create_date              TIMESTAMP   NOT NULL,
     downloads                INT         NOT NULL DEFAULT 0,
+    mapping                  BOOLEAN     NOT NULL DEFAULT 0,
     FOREIGN KEY (file_type_id) REFERENCES
         training_special_file_type (file_type_id) ON DELETE CASCADE
 );

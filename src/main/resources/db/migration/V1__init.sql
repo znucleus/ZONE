@@ -476,8 +476,8 @@ VALUES ('b94ae63db08943219e4bc93b5e85de03', '实训报告', 1030, '855e14c857094
 INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,
                          application_code, application_en_name, icon, application_data_url_start_with)
-VALUES ('25935f54bd7d4167b7a09bcdf37732f2', '实训专题', 1035, '855e14c857094f1bb6df3938c2f86900', '/web/menu/training/subject', 'training_subject',
-        'training_subject', '', '/web/training/subject');
+VALUES ('25935f54bd7d4167b7a09bcdf37732f2', '实训专题', 1035, '855e14c857094f1bb6df3938c2f86900', '/web/menu/training/special', 'training_special',
+        'training_special', '', '/web/training/special');
 
 INSERT INTO application (application_id, application_name, application_sort,
                          application_pid, application_url,

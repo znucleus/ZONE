@@ -15,7 +15,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row7;
+import org.jooq.Row8;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -42,7 +42,7 @@ import top.zbeboy.zone.domain.tables.records.TrainingSpecialFileRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class TrainingSpecialFile extends TableImpl<TrainingSpecialFileRecord> {
 
-    private static final long serialVersionUID = -1201635818;
+    private static final long serialVersionUID = 1695133376;
 
     /**
      * The reference instance of <code>zone.training_special_file</code>
@@ -91,6 +91,11 @@ public class TrainingSpecialFile extends TableImpl<TrainingSpecialFileRecord> {
      * The column <code>zone.training_special_file.downloads</code>.
      */
     public final TableField<TrainingSpecialFileRecord, Integer> DOWNLOADS = createField(DSL.name("downloads"), org.jooq.impl.SQLDataType.INTEGER.nullable(false).defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.INTEGER)), this, "");
+
+    /**
+     * The column <code>zone.training_special_file.mapping</code>.
+     */
+    public final TableField<TrainingSpecialFileRecord, Byte> MAPPING = createField(DSL.name("mapping"), org.jooq.impl.SQLDataType.TINYINT.nullable(false).defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.TINYINT)), this, "");
 
     /**
      * Create a <code>zone.training_special_file</code> table reference
@@ -181,11 +186,11 @@ public class TrainingSpecialFile extends TableImpl<TrainingSpecialFileRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row7 type methods
+    // Row8 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row7<String, String, String, String, String, Timestamp, Integer> fieldsRow() {
-        return (Row7) super.fieldsRow();
+    public Row8<String, String, String, String, String, Timestamp, Integer, Byte> fieldsRow() {
+        return (Row8) super.fieldsRow();
     }
 }

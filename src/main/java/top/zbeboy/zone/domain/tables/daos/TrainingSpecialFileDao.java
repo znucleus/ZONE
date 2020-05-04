@@ -156,4 +156,18 @@ public class TrainingSpecialFileDao extends DAOImpl<TrainingSpecialFileRecord, t
     public List<top.zbeboy.zone.domain.tables.pojos.TrainingSpecialFile> fetchByDownloads(Integer... values) {
         return fetch(TrainingSpecialFile.TRAINING_SPECIAL_FILE.DOWNLOADS, values);
     }
+
+    /**
+     * Fetch records that have <code>mapping BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.TrainingSpecialFile> fetchRangeOfMapping(Byte lowerInclusive, Byte upperInclusive) {
+        return fetchRange(TrainingSpecialFile.TRAINING_SPECIAL_FILE.MAPPING, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>mapping IN (values)</code>
+     */
+    public List<top.zbeboy.zone.domain.tables.pojos.TrainingSpecialFile> fetchByMapping(Byte... values) {
+        return fetch(TrainingSpecialFile.TRAINING_SPECIAL_FILE.MAPPING, values);
+    }
 }

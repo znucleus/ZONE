@@ -25,7 +25,7 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class TrainingSpecialFile implements Serializable {
 
-    private static final long serialVersionUID = -493450127;
+    private static final long serialVersionUID = 1879494121;
 
     private String    trainingSpecialFileId;
     private String    fileTypeId;
@@ -34,6 +34,7 @@ public class TrainingSpecialFile implements Serializable {
     private String    uploader;
     private Timestamp createDate;
     private Integer   downloads;
+    private Byte      mapping;
 
     public TrainingSpecialFile() {}
 
@@ -45,6 +46,7 @@ public class TrainingSpecialFile implements Serializable {
         this.uploader = value.uploader;
         this.createDate = value.createDate;
         this.downloads = value.downloads;
+        this.mapping = value.mapping;
     }
 
     public TrainingSpecialFile(
@@ -54,7 +56,8 @@ public class TrainingSpecialFile implements Serializable {
         String    username,
         String    uploader,
         Timestamp createDate,
-        Integer   downloads
+        Integer   downloads,
+        Byte      mapping
     ) {
         this.trainingSpecialFileId = trainingSpecialFileId;
         this.fileTypeId = fileTypeId;
@@ -63,6 +66,7 @@ public class TrainingSpecialFile implements Serializable {
         this.uploader = uploader;
         this.createDate = createDate;
         this.downloads = downloads;
+        this.mapping = mapping;
     }
 
     @NotNull
@@ -131,6 +135,14 @@ public class TrainingSpecialFile implements Serializable {
         this.downloads = downloads;
     }
 
+    public Byte getMapping() {
+        return this.mapping;
+    }
+
+    public void setMapping(Byte mapping) {
+        this.mapping = mapping;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("TrainingSpecialFile (");
@@ -142,6 +154,7 @@ public class TrainingSpecialFile implements Serializable {
         sb.append(", ").append(uploader);
         sb.append(", ").append(createDate);
         sb.append(", ").append(downloads);
+        sb.append(", ").append(mapping);
 
         sb.append(")");
         return sb.toString();
