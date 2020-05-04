@@ -190,6 +190,24 @@ public class TrainingSpecialRestController {
     }
 
     /**
+     * 专题删除
+     *
+     * @param trainingSpecialId 专题id
+     * @return true or false
+     */
+    @PostMapping("/web/training/special/delete")
+    public ResponseEntity<Map<String, Object>> delete(@RequestParam("trainingSpecialId") String trainingSpecialId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (trainingConditionCommon.specialCondition()) {
+            trainingSpecialService.deleteById(trainingSpecialId);
+            ajaxUtil.success().msg("删除成功");
+        } else {
+            ajaxUtil.fail().msg("您无权限操作");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
      * 文章数据
      *
      * @param simplePaginationUtil 请求
