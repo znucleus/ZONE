@@ -1,22 +1,30 @@
 package top.zbeboy.zone.web.training.special;
 
+import org.jooq.Record;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.Files;
 import top.zbeboy.zone.service.system.FilesService;
+import top.zbeboy.zone.service.training.TrainingSpecialService;
+import top.zbeboy.zone.web.bean.training.special.TrainingSpecialBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
 
 import javax.annotation.Resource;
 import java.util.Objects;
+import java.util.Optional;
 
 @Controller
 public class TrainingSpecialViewController {
 
     @Resource
     private TrainingConditionCommon trainingConditionCommon;
+
+    @Resource
+    private TrainingSpecialService trainingSpecialService;
 
     @Resource
     private FilesService filesService;
@@ -52,6 +60,36 @@ public class TrainingSpecialViewController {
             config.dataMerging(modelMap);
             page = "inline_tip::#page-wrapper";
         }
+        return page;
+    }
+
+    /**
+     * 编辑页面
+     *
+     * @return 编辑页面
+     */
+    @GetMapping("/web/training/special/edit/{id}")
+    public String edit(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        Optional<Record> record = trainingSpecialService.findByIdRelation(id);
+        if (record.isPresent()) {
+            if (trainingConditionCommon.specialCondition()) {
+                TrainingSpecialBean bean = record.get().into(TrainingSpecialBean.class);
+                bean.setRealCover(Workbook.DIRECTORY_SPLIT + bean.getRelativePath());
+                modelMap.addAttribute("trainingSpecial", bean);
+                page = "web/training/special/training_special_edit::#page-wrapper";
+            } else {
+                config.buildWarningTip("操作警告", "您无权限操作");
+                config.dataMerging(modelMap);
+                page = "inline_tip::#page-wrapper";
+            }
+        } else {
+            config.buildDangerTip("查询错误", "未查询到实训专题数据");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+
         return page;
     }
 }

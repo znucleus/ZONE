@@ -4,6 +4,8 @@ import top.zbeboy.zone.domain.tables.pojos.TrainingSpecial;
 
 public class TrainingSpecialBean extends TrainingSpecial {
     private String relativePath;
+    private String newName;
+    private String ext;
     private String releaseTimeStr;
     private Byte canOperator;
     private String realCover;
@@ -14,6 +16,22 @@ public class TrainingSpecialBean extends TrainingSpecial {
 
     public void setRelativePath(String relativePath) {
         this.relativePath = relativePath;
+    }
+
+    public String getNewName() {
+        return newName;
+    }
+
+    public void setNewName(String newName) {
+        this.newName = newName;
+    }
+
+    public String getExt() {
+        return ext;
+    }
+
+    public void setExt(String ext) {
+        this.ext = ext;
     }
 
     public String getReleaseTimeStr() {

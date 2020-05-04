@@ -15,6 +15,7 @@ import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
 import javax.annotation.Resource;
 import java.util.Objects;
+import java.util.Optional;
 
 import static top.zbeboy.zone.domain.Tables.FILES;
 import static top.zbeboy.zone.domain.Tables.TRAINING_SPECIAL;
@@ -31,6 +32,16 @@ public class TrainingSpecialServiceImpl implements TrainingSpecialService, Pagin
     @Autowired
     TrainingSpecialServiceImpl(DSLContext dslContext) {
         create = dslContext;
+    }
+
+    @Override
+    public Optional<Record> findByIdRelation(String id) {
+        return create.select()
+                .from(TRAINING_SPECIAL)
+                .leftJoin(FILES)
+                .on(TRAINING_SPECIAL.COVER.eq(FILES.FILE_ID))
+                .where(TRAINING_SPECIAL.TRAINING_SPECIAL_ID.eq(id))
+                .fetchOptional();
     }
 
     @Override
@@ -51,6 +62,16 @@ public class TrainingSpecialServiceImpl implements TrainingSpecialService, Pagin
     @Override
     public void save(TrainingSpecial trainingSpecial) {
         trainingSpecialDao.insert(trainingSpecial);
+    }
+
+    @Override
+    public void update(TrainingSpecial trainingSpecial) {
+        trainingSpecialDao.update(trainingSpecial);
+    }
+
+    @Override
+    public void deleteById(String id) {
+        trainingSpecialDao.deleteById(id);
     }
 
     @Override

@@ -5,7 +5,17 @@ import org.jooq.Result;
 import top.zbeboy.zone.domain.tables.pojos.TrainingSpecial;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
+import java.util.Optional;
+
 public interface TrainingSpecialService {
+
+    /**
+     * 根据主键关联查询
+     *
+     * @param id 主键
+     * @return 数据
+     */
+    Optional<Record> findByIdRelation(String id);
 
     /**
      * 分页查询
@@ -28,4 +38,18 @@ public interface TrainingSpecialService {
      * @param trainingSpecial 数据
      */
     void save(TrainingSpecial trainingSpecial);
+
+    /**
+     * 更新
+     *
+     * @param trainingSpecial 数据
+     */
+    void update(TrainingSpecial trainingSpecial);
+
+    /**
+     * 根据主键删除
+     *
+     * @param id 主键
+     */
+    void deleteById(String id);
 }

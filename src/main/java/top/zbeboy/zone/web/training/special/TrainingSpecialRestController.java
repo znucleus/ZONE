@@ -20,6 +20,8 @@ import top.zbeboy.zone.service.system.FilesService;
 import top.zbeboy.zone.service.training.TrainingSpecialService;
 import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
+import top.zbeboy.zone.service.util.FilesUtil;
+import top.zbeboy.zone.service.util.RequestUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.training.special.TrainingSpecialBean;
 import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
@@ -28,14 +30,12 @@ import top.zbeboy.zone.web.util.BaseImgUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zone.web.vo.training.special.TrainingSpecialAddVo;
+import top.zbeboy.zone.web.vo.training.special.TrainingSpecialEditVo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 public class TrainingSpecialRestController {
@@ -110,6 +110,62 @@ public class TrainingSpecialRestController {
                     trainingSpecial.setReleaseTime(DateTimeUtil.getNowSqlTimestamp());
                     trainingSpecialService.save(trainingSpecial);
                     ajaxUtil.success().msg("保存成功");
+                } else {
+                    ajaxUtil.fail().msg("您无权限操作");
+                }
+            } else {
+                ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+            }
+        } catch (Exception e) {
+            log.error("User upload cover error.", e);
+            ajaxUtil.fail().msg(String.format("上传专题封面异常:%s", e.getMessage()));
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 保存
+     *
+     * @param trainingSpecialEditVo 数据
+     * @param bindingResult         检验
+     * @return true or false
+     */
+    @PostMapping("/web/training/special/update")
+    public ResponseEntity<Map<String, Object>> udpate(@Valid TrainingSpecialEditVo trainingSpecialEditVo,
+                                                      BindingResult bindingResult, HttpServletRequest request) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        try {
+            if (!bindingResult.hasErrors()) {
+                if (trainingConditionCommon.specialCondition()) {
+                    Optional<Record> record = trainingSpecialService.findByIdRelation(trainingSpecialEditVo.getTrainingSpecialId());
+                    if (record.isPresent()) {
+                        TrainingSpecialBean bean = record.get().into(TrainingSpecialBean.class);
+                        TrainingSpecial trainingSpecial = record.get().into(TrainingSpecial.class);
+                        trainingSpecial.setTitle(trainingSpecialEditVo.getTitle());
+
+                        boolean updateCover = false;
+                        if (StringUtils.isNotBlank(trainingSpecialEditVo.getFile())) {
+                            if (!StringUtils.equals(bean.getNewName() + "." + bean.getExt(), trainingSpecialEditVo.getFileName())) {
+                                Files files = BaseImgUtil.generateImage(trainingSpecialEditVo.getFile(),
+                                        trainingSpecialEditVo.getFileName(), request, Workbook.trainingSpecialCoverPath(), request.getRemoteAddr());
+                                filesService.save(files);
+                                trainingSpecial.setCover(files.getFileId());
+                                updateCover = true;
+                            }
+                        } else {
+                            trainingSpecial.setCover(Workbook.SYSTEM_COVER);
+                            updateCover = true;
+                        }
+                        trainingSpecialService.update(trainingSpecial);
+                        // 处理旧文件
+                        if (updateCover && !StringUtils.equals(bean.getCover(), Workbook.SYSTEM_COVER)) {
+                            FilesUtil.deleteFile(RequestUtil.getRealPath(request) + bean.getRelativePath());
+                            filesService.deleteById(bean.getCover());
+                        }
+                        ajaxUtil.success().msg("更新成功");
+                    } else {
+                        ajaxUtil.fail().msg("未查询到实训专题数据");
+                    }
                 } else {
                     ajaxUtil.fail().msg("您无权限操作");
                 }
