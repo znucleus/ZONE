@@ -234,6 +234,15 @@ public final class Workbook {
     }
 
     /**
+     * 保存实训专题封面路径
+     *
+     * @return 路径
+     */
+    public static String trainingSpecialCoverPath() {
+        return FILES_PORTFOLIOS + "training" + DIRECTORY_SPLIT + "special" + DIRECTORY_SPLIT + "cover" + DIRECTORY_SPLIT;
+    }
+
+    /**
      * 登记文件路径
      *
      * @return 路径

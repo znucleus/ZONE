@@ -1,10 +1,25 @@
 package top.zbeboy.zone.web.training.special;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import top.zbeboy.zone.config.Workbook;
+import top.zbeboy.zone.domain.tables.pojos.Files;
+import top.zbeboy.zone.service.system.FilesService;
+import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
+import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
+
+import javax.annotation.Resource;
+import java.util.Objects;
 
 @Controller
 public class TrainingSpecialViewController {
+
+    @Resource
+    private TrainingConditionCommon trainingConditionCommon;
+
+    @Resource
+    private FilesService filesService;
 
     /**
      * 专题主页
@@ -12,7 +27,31 @@ public class TrainingSpecialViewController {
      * @return 页面
      */
     @GetMapping("/web/menu/training/special")
-    public String index() {
+    public String index(ModelMap modelMap) {
+        modelMap.addAttribute("canOperator", trainingConditionCommon.specialCondition());
         return "web/training/special/training_special::#page-wrapper";
+    }
+
+    /**
+     * 添加页面
+     *
+     * @return 添加页面
+     */
+    @GetMapping("/web/training/special/add")
+    public String add(ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        if (trainingConditionCommon.specialCondition()) {
+            Files files = filesService.findById(Workbook.SYSTEM_COVER);
+            if (Objects.nonNull(files)) {
+                modelMap.addAttribute("cover", Workbook.DIRECTORY_SPLIT + files.getRelativePath());
+            }
+            page = "web/training/special/training_special_add::#page-wrapper";
+        } else {
+            config.buildWarningTip("操作警告", "您无权限操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
     }
 }

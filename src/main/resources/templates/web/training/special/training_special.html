@@ -31,7 +31,7 @@
                 </div>
                 <div class="col-md-12">
                     <div class="float-right mg-t-5">
-                        <button type="button" class="btn btn-outline-primary" id="release"><i class="fa fa-edit"></i> 发布
+                        <button type="button" class="btn btn-outline-primary" id="release" th:if="${canOperator}"><i class="fa fa-edit"></i> 发布
                         </button>
                         <button type="button" class="btn btn-light" id="refresh"><i class="fa fa-refresh"></i> 刷新
                         </button>
@@ -53,7 +53,7 @@
     <script id="release-template" type="text/x-handlebars-template">
         {{#each listResult}}
         <div class="card mg-t-10 text-dark">
-            <img class="card-img-top img-fluid" src="{{cover}}" alt="专题封面" />
+            <img class="card-img-top img-fluid" src="{{realCover}}" alt="专题封面" />
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-12">{{title}}</div>

@@ -135,4 +135,13 @@ public class TrainingConditionCommon {
         }
         return canOperator;
     }
+
+    /**
+     * 专题条件
+     *
+     * @return true or false
+     */
+    public boolean specialCondition() {
+        return roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name());
+    }
 }
