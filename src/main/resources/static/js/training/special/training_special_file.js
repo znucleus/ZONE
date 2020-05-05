@@ -12,6 +12,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             file_type_del: web_path + '/web/training/special/file/type/delete',
             file_data: web_path + '/web/training/special/file/data',
             file_save: web_path + '/web/training/special/file/save',
+            file_del: web_path + '/web/training/special/file/delete',
             page: '/web/menu/training/special'
         };
 
@@ -125,6 +126,13 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             $('#fileAddModal').modal('show');
         });
 
+        /*
+        删除文件
+        */
+        $(tableData).delegate('.delFile', "click", function () {
+            file_del($(this).attr('data-id'), $(this).attr('data-type'))
+        });
+
         $('#addFileType').click(function () {
             var addFileTypeName = '#addFileTypeName';
             var param = {
@@ -209,6 +217,46 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
 
                             if (data.state) {
                                 init();
+                            }
+                        },
+                        error: function (XMLHttpRequest) {
+                            Messenger().post({
+                                message: 'Request error : ' + XMLHttpRequest.status + " " + XMLHttpRequest.statusText,
+                                type: 'error',
+                                showCloseButton: true
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
+        /*
+       文件删除
+       */
+        function file_del(trainingSpecialFileId, fileTypeId) {
+            Swal.fire({
+                title: "确定删除该文件吗？",
+                text: "文件删除！",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                preConfirm: function () {
+                    $.ajax({
+                        type: 'POST',
+                        url: ajax_url.file_del,
+                        data: {trainingSpecialFileId: trainingSpecialFileId},
+                        success: function (data) {
+                            Messenger().post({
+                                message: data.msg,
+                                type: data.state ? 'success' : 'error',
+                                showCloseButton: true
+                            });
+
+                            if (data.state) {
+                                localRefresh(fileTypeId);
                             }
                         },
                         error: function (XMLHttpRequest) {

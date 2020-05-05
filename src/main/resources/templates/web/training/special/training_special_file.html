@@ -224,19 +224,19 @@
             <div class="text-right">
                 <div class="btn-group mb-1" role="group">
                     <button type="button" class="btn btn-primary btn-sm download"
-                            data-id="{{trainingSpecialFileId}}">下载
+                            data-id="{{trainingSpecialFileId}}" >下载
                     </button>
                     {{#if canOperator}}
                     <button type="button" class="btn btn-danger btn-sm delFile"
-                            data-id="{{trainingSpecialFileId}}">删除
+                            data-id="{{trainingSpecialFileId}}" data-type="{{fileTypeId}}">删除
                     </button>
                     {{#if mapping}}
                     <button type="button" class="btn btn-warning btn-sm cancelMapping"
-                            data-id="{{trainingSpecialFileId}}">取消映射
+                            data-id="{{trainingSpecialFileId}}" data-type="{{fileTypeId}}">取消映射
                     </button>
                     {{else}}
                     <button type="button" class="btn btn-secondary btn-sm mapping"
-                            data-id="{{trainingSpecialFileId}}">映射
+                            data-id="{{trainingSpecialFileId}}" data-type="{{fileTypeId}}">映射
                     </button>
                     {{/if}}
                     {{/if}}

@@ -474,4 +474,22 @@ public class TrainingSpecialRestController {
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
+
+    /**
+     * 文件删除
+     *
+     * @param trainingSpecialFileId 文件id
+     * @return true or false
+     */
+    @PostMapping("/web/training/special/file/delete")
+    public ResponseEntity<Map<String, Object>> fileDelete(@RequestParam("trainingSpecialFileId") String trainingSpecialFileId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (trainingConditionCommon.specialCondition()) {
+            trainingSpecialFileService.deleteById(trainingSpecialFileId);
+            ajaxUtil.success().msg("删除成功");
+        } else {
+            ajaxUtil.fail().msg("您无权限操作");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
 }
