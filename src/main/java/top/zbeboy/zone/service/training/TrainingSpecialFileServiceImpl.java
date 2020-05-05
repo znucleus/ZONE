@@ -30,6 +30,11 @@ public class TrainingSpecialFileServiceImpl implements TrainingSpecialFileServic
     }
 
     @Override
+    public TrainingSpecialFile findById(String id) {
+        return trainingSpecialFileDao.findById(id);
+    }
+
+    @Override
     public Result<Record> findByFileTypeId(String fileTypeId) {
         return create.select()
                 .from(TRAINING_SPECIAL_FILE)
@@ -54,6 +59,11 @@ public class TrainingSpecialFileServiceImpl implements TrainingSpecialFileServic
     @Override
     public void save(TrainingSpecialFile trainingSpecialFile) {
         trainingSpecialFileDao.insert(trainingSpecialFile);
+    }
+
+    @Override
+    public void updateDownloads(String id) {
+        create.execute("UPDATE TRAINING_SPECIAL_FILE SET DOWNLOADS = DOWNLOADS + 1 WHERE TRAINING_SPECIAL_FILE_ID = ?", id);
     }
 
     @Override

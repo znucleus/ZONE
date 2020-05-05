@@ -13,6 +13,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             file_data: web_path + '/web/training/special/file/data',
             file_save: web_path + '/web/training/special/file/save',
             file_del: web_path + '/web/training/special/file/delete',
+            file_download: web_path + '/web/training/special/file/download',
             page: '/web/menu/training/special'
         };
 
@@ -131,6 +132,14 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         */
         $(tableData).delegate('.delFile', "click", function () {
             file_del($(this).attr('data-id'), $(this).attr('data-type'))
+        });
+
+        /*
+        下载文件
+        */
+        $(tableData).delegate('.download', "click", function () {
+            var id = $(this).attr('data-id');
+            window.location.href = ajax_url.file_download + '/' + id;
         });
 
         $('#addFileType').click(function () {

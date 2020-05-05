@@ -223,9 +223,11 @@
             <p class="mb-1">大小：{{file_size}} 下载量：{{downloads}}</p>
             <div class="text-right">
                 <div class="btn-group mb-1" role="group">
+                    {{#if mapping}}
                     <button type="button" class="btn btn-primary btn-sm download"
                             data-id="{{trainingSpecialFileId}}" >下载
                     </button>
+                    {{#/if}}
                     {{#if canOperator}}
                     <button type="button" class="btn btn-danger btn-sm delFile"
                             data-id="{{trainingSpecialFileId}}" data-type="{{fileTypeId}}">删除

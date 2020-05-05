@@ -33,6 +33,7 @@ import top.zbeboy.zone.web.vo.training.special.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.*;
 
@@ -444,7 +445,7 @@ public class TrainingSpecialRestController {
                 Files files = new Files();
                 String fileId = UUIDUtil.getUUID();
                 files.setFileId(fileId);
-                files.setRelativePath(Workbook.trainingSpecialFilePath());
+                files.setRelativePath(Workbook.trainingSpecialFilePath() + trainingSpecialFileAddVo.getNewName() + "." + trainingSpecialFileAddVo.getExt());
                 files.setContentType(trainingSpecialFileAddVo.getContentType());
                 files.setOriginalFileName(trainingSpecialFileAddVo.getOriginalFileName());
                 files.setNewName(trainingSpecialFileAddVo.getNewName());
@@ -482,14 +483,46 @@ public class TrainingSpecialRestController {
      * @return true or false
      */
     @PostMapping("/web/training/special/file/delete")
-    public ResponseEntity<Map<String, Object>> fileDelete(@RequestParam("trainingSpecialFileId") String trainingSpecialFileId) {
+    public ResponseEntity<Map<String, Object>> fileDelete(@RequestParam("trainingSpecialFileId") String trainingSpecialFileId, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (trainingConditionCommon.specialCondition()) {
-            trainingSpecialFileService.deleteById(trainingSpecialFileId);
-            ajaxUtil.success().msg("删除成功");
+            TrainingSpecialFile trainingSpecialFile = trainingSpecialFileService.findById(trainingSpecialFileId);
+            if (Objects.nonNull(trainingSpecialFile)) {
+                trainingSpecialFileService.deleteById(trainingSpecialFileId);
+                Files files = filesService.findById(trainingSpecialFile.getFileId());
+                if (Objects.nonNull(files)) {
+                    FilesUtil.deleteFile(RequestUtil.getRealPath(request) + files.getRelativePath());
+                    filesService.delete(files);
+                    ajaxUtil.success().msg("删除成功");
+                } else {
+                    ajaxUtil.fail().msg("未查询到文件信息");
+                }
+            } else {
+                ajaxUtil.fail().msg("未查询到专题文件信息");
+            }
         } else {
             ajaxUtil.fail().msg("您无权限操作");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 文件下载
+     *
+     * @param id       文件id
+     * @param request  请求
+     * @param response 响应
+     */
+    @GetMapping("/web/training/special/file/download/{id}")
+    public void download(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
+        TrainingSpecialFile trainingSpecialFile = trainingSpecialFileService.findById(id);
+        if (Objects.nonNull(trainingSpecialFile)) {
+            trainingSpecialFileService.updateDownloads(id);
+            Files files = filesService.findById(trainingSpecialFile.getFileId());
+            if (Objects.nonNull(files)) {
+                uploadService.download(files.getOriginalFileName(), files.getRelativePath(), response, request);
+            }
+        }
+
     }
 }
