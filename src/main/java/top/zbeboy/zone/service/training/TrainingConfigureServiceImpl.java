@@ -4,9 +4,12 @@ import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import top.zbeboy.zone.config.CacheBook;
 import top.zbeboy.zone.domain.tables.daos.TrainingConfigureDao;
 import top.zbeboy.zone.domain.tables.pojos.TrainingConfigure;
 
@@ -35,6 +38,7 @@ public class TrainingConfigureServiceImpl implements TrainingConfigureService {
         return trainingConfigureDao.findById(id);
     }
 
+    @Cacheable(cacheNames = CacheBook.TRAINING_CONFIGURE, key = "#id")
     @Override
     public Optional<Record> findByIdRelation(String id) {
         return create.select()
@@ -77,11 +81,13 @@ public class TrainingConfigureServiceImpl implements TrainingConfigureService {
         trainingConfigureDao.insert(trainingConfigure);
     }
 
+    @CacheEvict(cacheNames = CacheBook.TRAINING_CONFIGURE, key = "#trainingConfigure.trainingConfigureId")
     @Override
     public void update(TrainingConfigure trainingConfigure) {
         trainingConfigureDao.update(trainingConfigure);
     }
 
+    @CacheEvict(cacheNames = CacheBook.TRAINING_CONFIGURE, key = "#id")
     @Override
     public void deleteById(String id) {
         trainingConfigureDao.deleteById(id);

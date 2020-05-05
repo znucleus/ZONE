@@ -4,9 +4,12 @@ import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import top.zbeboy.zone.config.CacheBook;
 import top.zbeboy.zone.domain.tables.daos.TrainingAuthoritiesDao;
 import top.zbeboy.zone.domain.tables.pojos.TrainingAuthorities;
 import top.zbeboy.zone.domain.tables.records.TrainingAuthoritiesRecord;
@@ -37,6 +40,7 @@ public class TrainingAuthoritiesServiceImpl implements TrainingAuthoritiesServic
         return trainingAuthoritiesDao.findById(id);
     }
 
+    @Cacheable(cacheNames = CacheBook.TRAINING_AUTHORITIES, key = "#id")
     @Override
     public Optional<Record> findByIdRelation(String id) {
         return create.select()
@@ -73,11 +77,13 @@ public class TrainingAuthoritiesServiceImpl implements TrainingAuthoritiesServic
         trainingAuthoritiesDao.insert(trainingAuthorities);
     }
 
+    @CacheEvict(cacheNames = CacheBook.TRAINING_AUTHORITIES, key = "#trainingAuthorities.authoritiesId")
     @Override
     public void update(TrainingAuthorities trainingAuthorities) {
         trainingAuthoritiesDao.update(trainingAuthorities);
     }
 
+    @CacheEvict(cacheNames = CacheBook.TRAINING_AUTHORITIES, key = "#id")
     @Override
     public void deleteById(String id) {
         trainingAuthoritiesDao.deleteById(id);

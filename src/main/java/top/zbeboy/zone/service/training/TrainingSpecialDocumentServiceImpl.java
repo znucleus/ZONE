@@ -4,9 +4,12 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import top.zbeboy.zone.config.CacheBook;
 import top.zbeboy.zone.domain.tables.daos.TrainingSpecialDocumentDao;
 import top.zbeboy.zone.domain.tables.pojos.TrainingSpecialDocument;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
@@ -39,6 +42,7 @@ public class TrainingSpecialDocumentServiceImpl implements TrainingSpecialDocume
         return trainingSpecialDocumentDao.findById(id);
     }
 
+    @Cacheable(cacheNames = CacheBook.TRAINING_SPECIAL_DOCUMENT, key = "#id")
     @Override
     public Optional<Record> findByIdRelation(String id) {
         return create.select()
@@ -65,16 +69,19 @@ public class TrainingSpecialDocumentServiceImpl implements TrainingSpecialDocume
         trainingSpecialDocumentDao.insert(trainingSpecialDocument);
     }
 
+    @CacheEvict(cacheNames = CacheBook.TRAINING_SPECIAL_DOCUMENT, key = "#trainingSpecialDocument.trainingSpecialDocumentId")
     @Override
     public void update(TrainingSpecialDocument trainingSpecialDocument) {
         trainingSpecialDocumentDao.update(trainingSpecialDocument);
     }
 
+    @CacheEvict(cacheNames = CacheBook.TRAINING_SPECIAL_DOCUMENT, key = "#id")
     @Override
     public void updateReading(String id) {
         create.execute("UPDATE TRAINING_SPECIAL_DOCUMENT SET READING = READING + 1 WHERE TRAINING_SPECIAL_DOCUMENT_ID = ?", id);
     }
 
+    @CacheEvict(cacheNames = CacheBook.TRAINING_SPECIAL_DOCUMENT, key = "#id")
     @Override
     public void deleteById(String id) {
         trainingSpecialDocumentDao.deleteById(id);

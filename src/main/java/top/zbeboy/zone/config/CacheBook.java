@@ -68,4 +68,12 @@ public final class CacheBook {
     实训业务
      */
     public static final String TRAINING_RELEASE = "TRAINING_RELEASE";
+    public static final String TRAINING_ATTEND = "TRAINING_ATTEND";
+    public static final String TRAINING_AUTHORITIES = "TRAINING_AUTHORITIES";
+    public static final String TRAINING_CONFIGURE = "TRAINING_CONFIGURE";
+    public static final String TRAINING_DOCUMENT = "TRAINING_DOCUMENT";
+    public static final String TRAINING_SPECIAL_DOCUMENT = "TRAINING_SPECIAL_DOCUMENT";
+    public static final String TRAINING_SPECIAL_FILE = "TRAINING_SPECIAL_FILE";
+    public static final String TRAINING_SPECIAL = "TRAINING_SPECIAL";
+    public static final String TRAINING_USERS = "TRAINING_USERS";
 }

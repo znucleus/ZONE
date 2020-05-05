@@ -4,9 +4,12 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import top.zbeboy.zone.config.CacheBook;
 import top.zbeboy.zone.domain.tables.daos.TrainingAttendDao;
 import top.zbeboy.zone.domain.tables.pojos.TrainingAttend;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
@@ -38,6 +41,7 @@ public class TrainingAttendServiceImpl implements TrainingAttendService, Paginat
         return trainingAttendDao.findById(id);
     }
 
+    @Cacheable(cacheNames = CacheBook.TRAINING_ATTEND, key = "#id")
     @Override
     public Optional<Record> findByIdRelation(String id) {
         return create.select()
@@ -91,11 +95,13 @@ public class TrainingAttendServiceImpl implements TrainingAttendService, Paginat
         trainingAttendDao.insert(trainingAttend);
     }
 
+    @CacheEvict(cacheNames = CacheBook.TRAINING_ATTEND, key = "#trainingAttend.trainingAttendId")
     @Override
     public void update(TrainingAttend trainingAttend) {
         trainingAttendDao.update(trainingAttend);
     }
 
+    @CacheEvict(cacheNames = CacheBook.TRAINING_ATTEND, key = "#id")
     @Override
     public void deleteById(String id) {
         trainingAttendDao.deleteById(id);

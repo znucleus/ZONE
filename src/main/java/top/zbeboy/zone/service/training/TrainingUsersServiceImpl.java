@@ -4,9 +4,12 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import top.zbeboy.zone.config.CacheBook;
 import top.zbeboy.zone.domain.tables.daos.TrainingUsersDao;
 import top.zbeboy.zone.domain.tables.pojos.TrainingUsers;
 import top.zbeboy.zone.domain.tables.records.TrainingUsersRecord;
@@ -45,6 +48,7 @@ public class TrainingUsersServiceImpl implements TrainingUsersService, Paginatio
         return trainingUsersDao.findById(id);
     }
 
+    @Cacheable(cacheNames = CacheBook.TRAINING_USERS, key = "#trainingReleaseId + '_' + #studentId")
     @Override
     public Optional<TrainingUsersRecord> findByTrainingReleaseIdAndStudentId(String trainingReleaseId, int studentId) {
         return create.selectFrom(TRAINING_USERS)
@@ -117,23 +121,27 @@ public class TrainingUsersServiceImpl implements TrainingUsersService, Paginatio
         return countAll(selectOnConditionStep, dataTablesUtil, false);
     }
 
+    @CacheEvict(cacheNames = CacheBook.TRAINING_USERS, allEntries = true)
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public void batchSave(List<TrainingUsers> trainingUsers) {
         trainingUsersDao.insert(trainingUsers);
     }
 
+    @CacheEvict(cacheNames = CacheBook.TRAINING_USERS, key = "#trainingUsers.trainingReleaseId + '_' + #trainingUsers.studentId")
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public void save(TrainingUsers trainingUsers) {
         trainingUsersDao.insert(trainingUsers);
     }
 
+    @CacheEvict(cacheNames = CacheBook.TRAINING_USERS, key = "#trainingUsers.trainingReleaseId + '_' + #trainingUsers.studentId")
     @Override
     public void update(TrainingUsers trainingUsers) {
         trainingUsersDao.update(trainingUsers);
     }
 
+    @CacheEvict(cacheNames = CacheBook.TRAINING_USERS, allEntries = true)
     @Override
     public void deleteById(List<String> ids) {
         trainingUsersDao.deleteById(ids);

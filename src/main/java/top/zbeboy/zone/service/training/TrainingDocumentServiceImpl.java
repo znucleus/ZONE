@@ -5,9 +5,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jooq.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import top.zbeboy.zone.config.CacheBook;
 import top.zbeboy.zone.domain.tables.daos.TrainingDocumentDao;
 import top.zbeboy.zone.domain.tables.pojos.TrainingDocument;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
@@ -39,6 +42,7 @@ public class TrainingDocumentServiceImpl implements TrainingDocumentService, Pag
         return trainingDocumentDao.findById(id);
     }
 
+    @Cacheable(cacheNames = CacheBook.TRAINING_DOCUMENT, key = "#id")
     @Override
     public Optional<Record> findByIdRelation(String id) {
         return create.select()
@@ -73,16 +77,19 @@ public class TrainingDocumentServiceImpl implements TrainingDocumentService, Pag
         trainingDocumentDao.insert(trainingDocument);
     }
 
+    @CacheEvict(cacheNames = CacheBook.TRAINING_DOCUMENT, key = "#trainingDocument.trainingDocumentId")
     @Override
     public void update(TrainingDocument trainingDocument) {
         trainingDocumentDao.update(trainingDocument);
     }
 
+    @CacheEvict(cacheNames = CacheBook.TRAINING_DOCUMENT, key = "#id")
     @Override
     public void updateReading(String id) {
         create.execute("UPDATE TRAINING_DOCUMENT SET READING = READING + 1 WHERE TRAINING_DOCUMENT_ID = ?", id);
     }
 
+    @CacheEvict(cacheNames = CacheBook.TRAINING_DOCUMENT, key = "#id")
     @Override
     public void deleteById(String id) {
         trainingDocumentDao.deleteById(id);

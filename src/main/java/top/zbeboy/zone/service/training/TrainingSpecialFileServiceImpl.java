@@ -6,9 +6,12 @@ import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import top.zbeboy.zone.config.CacheBook;
 import top.zbeboy.zone.domain.tables.daos.TrainingSpecialFileDao;
 import top.zbeboy.zone.domain.tables.pojos.TrainingSpecialFile;
 import top.zbeboy.zone.service.util.SQLQueryUtil;
@@ -41,6 +44,7 @@ public class TrainingSpecialFileServiceImpl implements TrainingSpecialFileServic
         return trainingSpecialFileDao.findById(id);
     }
 
+    @Cacheable(cacheNames = CacheBook.TRAINING_SPECIAL_FILE, key = "#id")
     @Override
     public Optional<Record> findByIdRelation(String id) {
         return create.select()
@@ -102,16 +106,19 @@ public class TrainingSpecialFileServiceImpl implements TrainingSpecialFileServic
         trainingSpecialFileDao.insert(trainingSpecialFile);
     }
 
+    @CacheEvict(cacheNames = CacheBook.TRAINING_SPECIAL_FILE, key = "#trainingSpecialFile.trainingSpecialFileId")
     @Override
     public void update(TrainingSpecialFile trainingSpecialFile) {
         trainingSpecialFileDao.update(trainingSpecialFile);
     }
 
+    @CacheEvict(cacheNames = CacheBook.TRAINING_SPECIAL_FILE, key = "#id")
     @Override
     public void updateDownloads(String id) {
         create.execute("UPDATE TRAINING_SPECIAL_FILE SET DOWNLOADS = DOWNLOADS + 1 WHERE TRAINING_SPECIAL_FILE_ID = ?", id);
     }
 
+    @CacheEvict(cacheNames = CacheBook.TRAINING_SPECIAL_FILE, key = "#id")
     @Override
     public void deleteById(String id) {
         trainingSpecialFileDao.deleteById(id);
