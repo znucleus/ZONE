@@ -23,12 +23,14 @@
                     <form id="app_form">
                         <div class="form-group">
                             <label>ID</label>
-                            <input class="form-control" name="clientId" id="clientId" placeholder="ID" th:value="${clientId}" readonly="readonly"/>
+                            <input class="form-control" name="clientId" id="clientId" placeholder="ID"
+                                   th:value="${clientId}" readonly="readonly"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>KEY</label>
-                            <input class="form-control" name="secret" id="secret" placeholder="KEY" th:value="${secret}" readonly="readonly"/>
+                            <input class="form-control" name="secret" id="secret" placeholder="KEY" th:value="${secret}"
+                                   readonly="readonly"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
@@ -38,13 +40,16 @@
                         </div>
                         <div class="form-group">
                             <label>回调地址</label>
-                            <input class="form-control" name="webServerRedirectUri" id="webServerRedirectUri" maxlength="255" placeholder="回调地址"/>
+                            <input class="form-control" name="webServerRedirectUri" id="webServerRedirectUri"
+                                   maxlength="255" placeholder="回调地址"/>
                             <div class="invalid-feedback"></div>
-                            <small id="webServerRedirectUriHelp" class="form-text text-muted">http://127.0.0.1/callback 或 https://127.0.0.1/callback</small>
+                            <small id="webServerRedirectUriHelp" class="form-text text-muted">http://127.0.0.1/callback
+                                或 https://127.0.0.1/callback</small>
                         </div>
                         <div class="form-group">
                             <label>备注</label>
-                            <textarea class="form-control" name="remark" id="remark" maxlength="300" rows="3"></textarea>
+                            <textarea class="form-control" name="remark" id="remark" maxlength="300"
+                                      rows="3"></textarea>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group text-center">

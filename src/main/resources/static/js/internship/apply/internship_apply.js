@@ -62,7 +62,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "workbook", "m
          * 刷新查询参数
          */
         function refreshSearch() {
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.INTERNSHIP_TITLE, $(param_id.internshipTitle).val());
                 sessionStorage.setItem(webStorageKey.DATA_RANGE, _.isUndefined($("input[name='dataRange']:checked").val()) ? '0' : '1');
             }
@@ -152,7 +152,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "workbook", "m
                 dataRange: 0,
                 internshipReleaseIsDel: 0
             };
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 internshipTitle = sessionStorage.getItem(webStorageKey.INTERNSHIP_TITLE);
                 dataRange = sessionStorage.getItem(webStorageKey.DATA_RANGE);
             }
@@ -177,7 +177,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "workbook", "m
         function initSearchInput() {
             var internshipTitle = null;
             var dataRange = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 internshipTitle = sessionStorage.getItem(webStorageKey.INTERNSHIP_TITLE);
                 dataRange = sessionStorage.getItem(webStorageKey.DATA_RANGE);
             }

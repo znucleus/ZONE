@@ -10,7 +10,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             check_student: web_path + '/web/internship/teacher_distribution/check/add/student',
             obtain_staff_data: web_path + '/web/internship/teacher_distribution/staff',
             page: '/web/menu/internship/teacher_distribution',
-            back:'/web/internship/teacher_distribution/list'
+            back: '/web/internship/teacher_distribution/list'
         };
 
         // 刷新时选中菜单

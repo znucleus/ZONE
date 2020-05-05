@@ -117,7 +117,7 @@ require(["jquery", "nav.active", "responsive.bootstrap4", "jquery.address", "mes
                 organizeSelect2 = $(getParamId().organizeId).select2({data: data.results});
 
                 if (!init_configure.init_organize) {
-                    if (typeof(Storage) !== "undefined") {
+                    if (typeof (Storage) !== "undefined") {
                         var organizeId = sessionStorage.getItem(webStorageKey.ORGANIZE_ID);
                         organizeSelect2.val(Number(organizeId)).trigger("change");
                     }
@@ -157,7 +157,7 @@ require(["jquery", "nav.active", "responsive.bootstrap4", "jquery.address", "mes
             param.realName = $(getParamId().realName).val();
             param.studentNumber = $(getParamId().studentNumber).val();
             param.organizeId = $(getParamId().organizeId).val();
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.REAL_NAME, param.realName);
                 sessionStorage.setItem(webStorageKey.STUDENT_NUMBER, param.studentNumber);
                 sessionStorage.setItem(webStorageKey.ORGANIZE_ID, param.organizeId != null ? param.organizeId : '');
@@ -171,7 +171,7 @@ require(["jquery", "nav.active", "responsive.bootstrap4", "jquery.address", "mes
             var realName = null;
             var studentNumber = null;
             var organizeId = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
                 studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
                 organizeId = sessionStorage.getItem(webStorageKey.ORGANIZE_ID);
@@ -195,7 +195,7 @@ require(["jquery", "nav.active", "responsive.bootstrap4", "jquery.address", "mes
         function initSearchInput() {
             var realName = null;
             var studentNumber = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
                 studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
             }

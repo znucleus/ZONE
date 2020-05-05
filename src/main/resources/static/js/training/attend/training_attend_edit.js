@@ -104,7 +104,7 @@ require(["jquery", "tools", "moment-with-locales", "handlebars", "sweetalert2",
             if (Number(buildingId) > 0) {
                 $.get(ajax_url.obtain_schoolroom_data, {buildingId: buildingId}, function (data) {
                     $(param_id.schoolroom).html('<option label="请选择教室"></option>');
-                    var sl =  $(param_id.schoolroom).select2({data: data.results});
+                    var sl = $(param_id.schoolroom).select2({data: data.results});
 
                     if (!init_configure.init_schoolroomId) {
                         sl.val(page_param.paramAttendRoom).trigger("change");

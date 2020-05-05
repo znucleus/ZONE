@@ -83,19 +83,22 @@
                         <div class="form-group">
                             <label>实习单位地址</label>
                             <input class="form-control" name="companyAddress" id="companyAddress"
-                                   placeholder="实习单位地址" th:value="${internshipInfo.companyAddress}" readonly="readonly"/>
+                                   placeholder="实习单位地址" th:value="${internshipInfo.companyAddress}"
+                                   readonly="readonly"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>实习单位联系人</label>
                             <input class="form-control" name="companyContact" id="companyContact"
-                                   placeholder="实习单位联系人" th:value="${internshipInfo.companyContact}" readonly="readonly"/>
+                                   placeholder="实习单位联系人" th:value="${internshipInfo.companyContact}"
+                                   readonly="readonly"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>实习单位联系人联系方式</label>
                             <input class="form-control" name="companyMobile" id="companyMobile"
-                                   placeholder="实习单位联系人联系方式" th:value="${internshipInfo.companyMobile}" readonly="readonly"/>
+                                   placeholder="实习单位联系人联系方式" th:value="${internshipInfo.companyMobile}"
+                                   readonly="readonly"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
@@ -118,50 +121,64 @@
                         </div>
                         <div class="form-group">
                             <label class="ckbox">
-                                <input type="checkbox" name="commitmentBook" value="1" disabled="disabled" th:if="${internshipInfo.commitmentBook == 0 || internshipInfo.commitmentBook == null}"/>
-                                <input type="checkbox" name="commitmentBook" value="1" disabled="disabled" checked="checked" th:if="${internshipInfo.commitmentBook == 1}"/>
+                                <input type="checkbox" name="commitmentBook" value="1" disabled="disabled"
+                                       th:if="${internshipInfo.commitmentBook == 0 || internshipInfo.commitmentBook == null}"/>
+                                <input type="checkbox" name="commitmentBook" value="1" disabled="disabled"
+                                       checked="checked" th:if="${internshipInfo.commitmentBook == 1}"/>
                                 <span>承诺书</span>
                             </label>
                         </div>
                         <div class="form-group">
                             <label class="ckbox">
-                                <input type="checkbox" name="safetyResponsibilityBook" value="1" disabled="disabled" th:if="${internshipInfo.safetyResponsibilityBook == 0 || internshipInfo.safetyResponsibilityBook == null}"/>
-                                <input type="checkbox" name="safetyResponsibilityBook" value="1" disabled="disabled" checked="checked" th:if="${internshipInfo.safetyResponsibilityBook == 1}"/>
+                                <input type="checkbox" name="safetyResponsibilityBook" value="1" disabled="disabled"
+                                       th:if="${internshipInfo.safetyResponsibilityBook == 0 || internshipInfo.safetyResponsibilityBook == null}"/>
+                                <input type="checkbox" name="safetyResponsibilityBook" value="1" disabled="disabled"
+                                       checked="checked" th:if="${internshipInfo.safetyResponsibilityBook == 1}"/>
                                 <span>安全责任书</span>
                             </label>
                         </div>
                         <div class="form-group">
                             <label class="ckbox">
-                                <input type="checkbox" name="practiceAgreement" value="1" disabled="disabled" th:if="${internshipInfo.practiceAgreement == 0 || internshipInfo.practiceAgreement == null}"/>
-                                <input type="checkbox" name="practiceAgreement" value="1" disabled="disabled" checked="checked" th:if="${internshipInfo.practiceAgreement == 1}"/>
+                                <input type="checkbox" name="practiceAgreement" value="1" disabled="disabled"
+                                       th:if="${internshipInfo.practiceAgreement == 0 || internshipInfo.practiceAgreement == null}"/>
+                                <input type="checkbox" name="practiceAgreement" value="1" disabled="disabled"
+                                       checked="checked" th:if="${internshipInfo.practiceAgreement == 1}"/>
                                 <span>实践协议书</span>
                             </label>
                         </div>
                         <div class="form-group">
                             <label class="ckbox">
-                                <input type="checkbox" name="internshipApplication" value="1" disabled="disabled" th:if="${internshipInfo.internshipApplication == 0 || internshipInfo.internshipApplication == null}"/>
-                                <input type="checkbox" name="internshipApplication" value="1" disabled="disabled" checked="checked" th:if="${internshipInfo.internshipApplication == 1}"/>
+                                <input type="checkbox" name="internshipApplication" value="1" disabled="disabled"
+                                       th:if="${internshipInfo.internshipApplication == 0 || internshipInfo.internshipApplication == null}"/>
+                                <input type="checkbox" name="internshipApplication" value="1" disabled="disabled"
+                                       checked="checked" th:if="${internshipInfo.internshipApplication == 1}"/>
                                 <span>实习申请书</span>
                             </label>
                         </div>
                         <div class="form-group">
                             <label class="ckbox">
-                                <input type="checkbox" name="practiceReceiving" value="1" disabled="disabled" th:if="${internshipInfo.practiceReceiving == 0 || internshipInfo.practiceReceiving == null}"/>
-                                <input type="checkbox" name="practiceReceiving" value="1" disabled="disabled" checked="checked" th:if="${internshipInfo.practiceReceiving == 1}"/>
+                                <input type="checkbox" name="practiceReceiving" value="1" disabled="disabled"
+                                       th:if="${internshipInfo.practiceReceiving == 0 || internshipInfo.practiceReceiving == null}"/>
+                                <input type="checkbox" name="practiceReceiving" value="1" disabled="disabled"
+                                       checked="checked" th:if="${internshipInfo.practiceReceiving == 1}"/>
                                 <span>实习接收</span>
                             </label>
                         </div>
                         <div class="form-group">
                             <label class="ckbox">
-                                <input type="checkbox" name="securityEducationAgreement" value="1" disabled="disabled" th:if="${internshipInfo.securityEducationAgreement == 0 || internshipInfo.securityEducationAgreement == null}"/>
-                                <input type="checkbox" name="securityEducationAgreement" value="1" disabled="disabled" checked="checked" th:if="${internshipInfo.securityEducationAgreement == 1}"/>
+                                <input type="checkbox" name="securityEducationAgreement" value="1" disabled="disabled"
+                                       th:if="${internshipInfo.securityEducationAgreement == 0 || internshipInfo.securityEducationAgreement == null}"/>
+                                <input type="checkbox" name="securityEducationAgreement" value="1" disabled="disabled"
+                                       checked="checked" th:if="${internshipInfo.securityEducationAgreement == 1}"/>
                                 <span>安全教育协议</span>
                             </label>
                         </div>
                         <div class="form-group">
                             <label class="ckbox">
-                                <input type="checkbox" name="parentalConsent" value="1" disabled="disabled" th:if="${internshipInfo.parentalConsent == 0 || internshipInfo.parentalConsent == null}"/>
-                                <input type="checkbox" name="parentalConsent" value="1" disabled="disabled" checked="checked" th:if="${internshipInfo.parentalConsent == 1}"/>
+                                <input type="checkbox" name="parentalConsent" value="1" disabled="disabled"
+                                       th:if="${internshipInfo.parentalConsent == 0 || internshipInfo.parentalConsent == null}"/>
+                                <input type="checkbox" name="parentalConsent" value="1" disabled="disabled"
+                                       checked="checked" th:if="${internshipInfo.parentalConsent == 1}"/>
                                 <span>父母同意书</span>
                             </label>
                         </div>

@@ -105,7 +105,7 @@ require(["jquery", "nav.active", "responsive.bootstrap4"], function ($, navActiv
 
     function initParam() {
         param.acceptMail = $(getParamId().acceptMail).val();
-        if (typeof(Storage) !== "undefined") {
+        if (typeof (Storage) !== "undefined") {
             sessionStorage.setItem(webStorageKey.ACCEPT_MAIL, param.acceptMail);
         }
     }
@@ -115,7 +115,7 @@ require(["jquery", "nav.active", "responsive.bootstrap4"], function ($, navActiv
          */
     function initSearchContent() {
         var acceptMail = null;
-        if (typeof(Storage) !== "undefined") {
+        if (typeof (Storage) !== "undefined") {
             acceptMail = sessionStorage.getItem(webStorageKey.ACCEPT_MAIL);
         }
         if (acceptMail !== null) {
@@ -128,7 +128,7 @@ require(["jquery", "nav.active", "responsive.bootstrap4"], function ($, navActiv
     */
     function initSearchInput() {
         var acceptMail = null;
-        if (typeof(Storage) !== "undefined") {
+        if (typeof (Storage) !== "undefined") {
             acceptMail = sessionStorage.getItem(webStorageKey.ACCEPT_MAIL);
         }
         if (acceptMail !== null) {

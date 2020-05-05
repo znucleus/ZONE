@@ -198,7 +198,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
             param.address = $(getParamId().address).val();
             param.institute = $(getParamId().institute).val();
             param.registerDate = $(getParamId().registerDate).val();
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.REGISTER_REAL_NAME, param.registerRealName);
                 sessionStorage.setItem(webStorageKey.REGISTER_USERNAME, param.registerUsername);
                 sessionStorage.setItem(webStorageKey.REGISTER_TYPE, param.registerType);
@@ -237,7 +237,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                 channelSelect2 = $(getParamId().channelId).select2({data: data.results});
 
                 if (!init_configure.init_channel) {
-                    if (typeof(Storage) !== "undefined") {
+                    if (typeof (Storage) !== "undefined") {
                         var channelId = sessionStorage.getItem(webStorageKey.CHANNEL_ID);
                         channelSelect2.val(Number(channelId)).trigger("change");
                     }
@@ -264,7 +264,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
             var address = null;
             var institute = null;
             var registerDate = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 registerRealName = sessionStorage.getItem(webStorageKey.REGISTER_REAL_NAME);
                 registerUsername = sessionStorage.getItem(webStorageKey.REGISTER_USERNAME);
                 registerType = sessionStorage.getItem(webStorageKey.REGISTER_TYPE);
@@ -319,7 +319,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
             var address = null;
             var institute = null;
             var registerDate = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 registerRealName = sessionStorage.getItem(webStorageKey.REGISTER_REAL_NAME);
                 registerUsername = sessionStorage.getItem(webStorageKey.REGISTER_USERNAME);
                 registerType = sessionStorage.getItem(webStorageKey.REGISTER_TYPE);

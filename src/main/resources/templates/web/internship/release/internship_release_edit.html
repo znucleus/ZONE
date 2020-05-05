@@ -23,7 +23,8 @@
                     <form id="app_form">
                         <div class="form-group">
                             <label>标题</label>
-                            <input class="form-control" name="internshipTitle" th:value="${internshipRelease.internshipTitle}"
+                            <input class="form-control" name="internshipTitle"
+                                   th:value="${internshipRelease.internshipTitle}"
                                    id="internshipTitle" placeholder="标题" maxlength="100"/>
                             <div class="invalid-feedback"></div>
                         </div>
@@ -119,7 +120,8 @@
         {{#each listResult}}
         <tr>
             <th scope="row" class="file" data-file-path="{{lastPath}}" data-original-file-name="{{originalFileName}}"
-                data-new-name="{{newName}}" data-ext="{{ext}}" data-size="{{fileSize}}" data-content-type="{{contentType}}">
+                data-new-name="{{newName}}" data-ext="{{ext}}" data-size="{{fileSize}}"
+                data-content-type="{{contentType}}">
                 {{originalFileName}}.{{ext}}
             </th>
             <td>{{translationSize}}</td>
@@ -134,7 +136,7 @@
     </script>
 
     <input type="hidden" th:value="${internshipRelease.internshipReleaseId}"
-           id="paramInternshipReleaseId" />
+           id="paramInternshipReleaseId"/>
     <input type="hidden" th:value="${internshipRelease.teacherDistributionStartTimeStr}"
            id="paramTeacherDistributionStartTime"/>
     <input type="hidden" th:value="${internshipRelease.teacherDistributionEndTimeStr}"

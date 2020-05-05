@@ -1,5 +1,5 @@
 //# sourceURL=epidemic_release_add.js
-require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active", "messenger", "jquery.address","bootstrap-maxlength"],
+require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active", "messenger", "jquery.address", "bootstrap-maxlength"],
     function ($, _, tools, Handlebars, Swal, navActive) {
 
         /*

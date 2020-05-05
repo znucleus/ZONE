@@ -208,7 +208,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
          */
         function initParam() {
             param.schoolName = $(getParamId().schoolName).val();
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.SCHOOL_NAME, param.schoolName);
             }
         }
@@ -218,7 +218,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
          */
         function initSearchContent() {
             var schoolName = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 schoolName = sessionStorage.getItem(webStorageKey.SCHOOL_NAME);
             }
             if (schoolName !== null) {
@@ -231,7 +231,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
         */
         function initSearchInput() {
             var schoolName = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 schoolName = sessionStorage.getItem(webStorageKey.SCHOOL_NAME);
             }
             if (schoolName !== null) {

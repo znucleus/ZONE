@@ -76,7 +76,8 @@
                             </span>
                             </div>
                             <div id="quill" style="height:450px;"></div>
-                            <input type="hidden" id="content" name="content" th:value="${trainingSpecialDocument.content}"/>
+                            <input type="hidden" id="content" name="content"
+                                   th:value="${trainingSpecialDocument.content}"/>
                         </div>
                         <div class="form-group text-center">
                             <button type="button" class="btn btn-primary text-center" id="save">保存</button>
@@ -88,7 +89,8 @@
         </div>
     </div>
 
-    <input type="hidden" id="paramTrainingSpecialDocumentId" th:value="${trainingSpecialDocument.trainingSpecialDocumentId}"/>
+    <input type="hidden" id="paramTrainingSpecialDocumentId"
+           th:value="${trainingSpecialDocument.trainingSpecialDocumentId}"/>
     <input type="hidden" class="dy_script"
            th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/training/special/training_special_document_edit.js')}"/>
 </div>

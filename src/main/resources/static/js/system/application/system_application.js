@@ -198,7 +198,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
             param.applicationName = $(getParamId().applicationName).val();
             param.applicationEnName = $(getParamId().applicationEnName).val();
             param.applicationCode = $(getParamId().applicationCode).val();
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.APPLICATION_NAME, param.applicationName);
                 sessionStorage.setItem(webStorageKey.APPLICATION_EN_NAME, param.applicationEnName);
                 sessionStorage.setItem(webStorageKey.APPLICATION_CODE, param.applicationCode);
@@ -212,7 +212,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
             var applicationName = null;
             var applicationEnName = null;
             var applicationCode = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 applicationName = sessionStorage.getItem(webStorageKey.APPLICATION_NAME);
                 applicationEnName = sessionStorage.getItem(webStorageKey.APPLICATION_EN_NAME);
                 applicationCode = sessionStorage.getItem(webStorageKey.APPLICATION_CODE);
@@ -237,7 +237,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
             var applicationName = null;
             var applicationEnName = null;
             var applicationCode = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 applicationName = sessionStorage.getItem(webStorageKey.APPLICATION_NAME);
                 applicationEnName = sessionStorage.getItem(webStorageKey.APPLICATION_EN_NAME);
                 applicationCode = sessionStorage.getItem(webStorageKey.APPLICATION_CODE);

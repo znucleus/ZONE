@@ -49,8 +49,10 @@
                         </div>
                         <div class="form-group">
                             <label class="ckbox">
-                                <input type="checkbox" name="collegeIsDel" value="1" th:if="${college.collegeIsDel == 0 || college.collegeIsDel == null}"/>
-                                <input type="checkbox" name="collegeIsDel" value="1" checked="checked" th:if="${college.collegeIsDel == 1}"/>
+                                <input type="checkbox" name="collegeIsDel" value="1"
+                                       th:if="${college.collegeIsDel == 0 || college.collegeIsDel == null}"/>
+                                <input type="checkbox" name="collegeIsDel" value="1" checked="checked"
+                                       th:if="${college.collegeIsDel == 1}"/>
                                 <span>注销</span>
                             </label>
                         </div>
@@ -64,7 +66,7 @@
         </div>
     </div>
 
-    <input type="hidden" id="schoolId" th:value="${college.schoolId}" />
+    <input type="hidden" id="schoolId" th:value="${college.schoolId}"/>
     <input type="hidden" class="dy_script"
            th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/data/college/college_edit.js')}"/>
 </div>

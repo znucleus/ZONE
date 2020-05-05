@@ -257,7 +257,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             param.studentNumber = $(getParamId().studentNumber).val();
             param.operate = $(getParamId().operate).val();
 
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.REAL_NAME, param.realName);
                 sessionStorage.setItem(webStorageKey.STUDENT_NUMBER, param.studentNumber);
                 sessionStorage.setItem(webStorageKey.OPERATE, param.operate);
@@ -271,7 +271,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             var realName = null;
             var studentNumber = null;
             var operate = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
                 studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
                 operate = sessionStorage.getItem(webStorageKey.OPERATE);
@@ -296,7 +296,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             var realName = null;
             var studentNumber = null;
             var operate = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
                 studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
                 operate = sessionStorage.getItem(webStorageKey.OPERATE);

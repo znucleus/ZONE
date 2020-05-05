@@ -29,7 +29,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             science: '#science',
             grade: '#grade',
             organizeName: '#organizeName',
-            staff:'#staff'
+            staff: '#staff'
         };
 
         var button_id = {
@@ -50,7 +50,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             scienceId: '',
             grade: '',
             organizeName: '',
-            staff:'',
+            staff: '',
             organizeIsDel: ''
         };
 
@@ -359,7 +359,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             }
         }
 
-        function validStaff(){
+        function validStaff() {
             var staff = param.staff;
             if (staff.length > 0) {
                 $.post(ajax_url.check_staff, param, function (data) {

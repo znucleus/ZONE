@@ -24,7 +24,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             school: '#school',
             college: '#college',
             building: '#building',
-            buildingCode:'#buildingCode'
+            buildingCode: '#buildingCode'
         };
 
         var button_id = {
@@ -41,7 +41,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
         var param = {
             schoolId: '',
             collegeId: '',
-            buildingId:'',
+            buildingId: '',
             buildingCode: '',
             schoolroomIsDel: ''
         };

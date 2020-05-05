@@ -193,7 +193,8 @@
     <input type="hidden" id="nationParam" th:value="${staff.nationId}"/>
     <input type="hidden" id="politicalLandscapeParam" th:value="${staff.politicalLandscapeId}"/>
     <input type="hidden" id="academicTitleParam" th:value="${staff.academicTitleId}"/>
-    <input type="hidden" class="dy_script" th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/platform/users/users_profile_staff.js')}"/>
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/platform/users/users_profile_staff.js')}"/>
 </div>
 <!-- /#page-wrapper -->
 </body>

@@ -28,7 +28,8 @@
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
-                            <input type="file" class="dropify" name="file" th:data-default-file="@{${trainingSpecial.realCover}}"
+                            <input type="file" class="dropify" name="file"
+                                   th:data-default-file="@{${trainingSpecial.realCover}}"
                                    data-max-file-size="1M" data-allowed-file-extensions="jpg png gif jpeg bmp"
                                    data-max-width="1300"
                                    data-max-height="650"/>
@@ -45,7 +46,7 @@
     </div>
 
     <input type="hidden" th:value="${trainingSpecial.trainingSpecialId}"
-           id="paramTrainingSpecialId" />
+           id="paramTrainingSpecialId"/>
     <input type="hidden" class="dy_script"
            th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/training/special/training_special_edit.js')}"/>
 </div>

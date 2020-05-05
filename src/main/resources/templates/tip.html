@@ -13,18 +13,27 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-body tx-center pd-y-20 pd-x-20">
-                        <i class="icon ion-ios-checkmark-outline tx-100 tx-success lh-1 mg-t-20 d-inline-block" th:if="${successTip}"></i>
-                        <i class="icon ion-ios-close-outline tx-100 tx-danger lh-1 mg-t-20 d-inline-block" th:if="${dangerTip}"></i>
-                        <i class="icon ion-information-circled tx-100 tx-warning lh-1 mg-t-20 d-inline-block" th:if="${warningTip}"></i>
-                        <i class="icon ion-chatbubble-working tx-100 tx-info lh-1 mg-t-20 d-inline-block" th:if="${infoTip}"></i>
+                        <i class="icon ion-ios-checkmark-outline tx-100 tx-success lh-1 mg-t-20 d-inline-block"
+                           th:if="${successTip}"></i>
+                        <i class="icon ion-ios-close-outline tx-100 tx-danger lh-1 mg-t-20 d-inline-block"
+                           th:if="${dangerTip}"></i>
+                        <i class="icon ion-information-circled tx-100 tx-warning lh-1 mg-t-20 d-inline-block"
+                           th:if="${warningTip}"></i>
+                        <i class="icon ion-chatbubble-working tx-100 tx-info lh-1 mg-t-20 d-inline-block"
+                           th:if="${infoTip}"></i>
                         <h4 class="tx-success mg-b-20" th:if="${successTip}" th:text="${title}"></h4>
                         <h4 class="tx-danger mg-b-20" th:if="${dangerTip}" th:text="${title}"></h4>
                         <h4 class="tx-warning mg-b-20" th:if="${warningTip}" th:text="${title}"></h4>
                         <h4 class="tx-infomg-b-20" th:if="${infoTip}" th:text="${title}"></h4>
                         <p class="mg-b-20 mg-x-20" th:text="${subTitle}"></p>
-                        <a th:href="@{/}" class="btn btn-primary tx-11 tx-uppercase pd-y-12 pd-x-25 tx-mont tx-medium mg-b-20" >首页</a>
-                        <a th:href="@{/login}" class="btn btn-info tx-11 tx-uppercase pd-y-12 pd-x-25 tx-mont tx-medium mg-b-20">登录</a>
-                        <button type="button" class="btn btn-light tx-11 tx-uppercase pd-y-12 pd-x-25 tx-mont tx-medium mg-b-20" onclick="history.go(-1);">返回上一页</button>
+                        <a th:href="@{/}"
+                           class="btn btn-primary tx-11 tx-uppercase pd-y-12 pd-x-25 tx-mont tx-medium mg-b-20">首页</a>
+                        <a th:href="@{/login}"
+                           class="btn btn-info tx-11 tx-uppercase pd-y-12 pd-x-25 tx-mont tx-medium mg-b-20">登录</a>
+                        <button type="button"
+                                class="btn btn-light tx-11 tx-uppercase pd-y-12 pd-x-25 tx-mont tx-medium mg-b-20"
+                                onclick="history.go(-1);">返回上一页
+                        </button>
                     </div><!-- modal-body -->
                 </div><!-- modal-content -->
             </div><!-- modal-dialog -->

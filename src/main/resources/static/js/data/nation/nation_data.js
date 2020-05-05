@@ -23,7 +23,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         };
 
         var edit_param_id = {
-            nationId:'#editNationId',
+            nationId: '#editNationId',
             nationName: '#editNationName'
         };
 
@@ -33,7 +33,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 text: '保存',
                 tip: '保存中...'
             },
-            edit:{
+            edit: {
                 id: '#edit',
                 text: '保存',
                 tip: '保存中...'
@@ -179,7 +179,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
          */
         function initParam() {
             param.nationName = $(getParamId().nationName).val();
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.NATION_NAME, param.nationName);
             }
         }
@@ -189,7 +189,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
          */
         function initSearchContent() {
             var nationName = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 nationName = sessionStorage.getItem(webStorageKey.NATION_NAME);
             }
             if (nationName !== null) {
@@ -202,7 +202,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         */
         function initSearchInput() {
             var nationName = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 nationName = sessionStorage.getItem(webStorageKey.NATION_NAME);
             }
             if (nationName !== null) {

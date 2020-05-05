@@ -18,7 +18,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
          */
         var param_id = {
             leaverAddress: '#leaverAddress',
-            remark:'#remark'
+            remark: '#remark'
         };
 
         var button_id = {
@@ -34,9 +34,9 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
          */
         var param = {
             leaverRegisterReleaseId: '',
-            leaverRegisterOptionId:'',
+            leaverRegisterOptionId: '',
             leaverAddress: '',
-            remark:''
+            remark: ''
         };
 
         var page_param = {
@@ -55,7 +55,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             for (var i = 0; i < ids.length; i++) {
                 leaverRegisterOptionIds.push($(ids[i]).val());
             }
-            if(leaverRegisterOptionIds.length > 0){
+            if (leaverRegisterOptionIds.length > 0) {
                 param.leaverRegisterOptionId = leaverRegisterOptionIds.join(',');
             }
         }

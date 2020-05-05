@@ -61,7 +61,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "tablesaw", "jquery.addr
          * 刷新查询参数
          */
         function refreshSearch() {
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.ATTEND_DATE, $(param_id.attendDate).val());
                 sessionStorage.setItem(webStorageKey.OPERATE, $(param_id.operate).val());
             }
@@ -154,7 +154,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "tablesaw", "jquery.addr
                 operate: '',
                 trainingReleaseId: page_param.paramTrainingReleaseId
             };
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 attendDate = sessionStorage.getItem(webStorageKey.ATTEND_DATE);
                 operate = sessionStorage.getItem(webStorageKey.OPERATE);
             }
@@ -179,7 +179,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "tablesaw", "jquery.addr
         function initSearchInput() {
             var attendDate = null;
             var operate = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 attendDate = sessionStorage.getItem(webStorageKey.ATTEND_DATE);
                 operate = sessionStorage.getItem(webStorageKey.OPERATE);
             }

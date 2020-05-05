@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.domain.tables.pojos.Student;
 import top.zbeboy.zone.domain.tables.pojos.Users;
-import top.zbeboy.zone.domain.tables.records.StudentRecord;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;

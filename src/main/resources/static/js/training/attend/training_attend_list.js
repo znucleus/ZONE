@@ -66,7 +66,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "messenge
          * 刷新查询参数
          */
         function refreshSearch() {
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.ATTEND_DATE, $(param_id.attendDate).val());
             }
         }
@@ -160,7 +160,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "messenge
                 attendDate: '',
                 trainingReleaseId: page_param.paramTrainingReleaseId
             };
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 attendDate = sessionStorage.getItem(webStorageKey.ATTEND_DATE);
             }
             if (attendDate !== null) {
@@ -178,7 +178,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "messenge
         */
         function initSearchInput() {
             var attendDate = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 attendDate = sessionStorage.getItem(webStorageKey.ATTEND_DATE);
             }
             if (attendDate !== null) {

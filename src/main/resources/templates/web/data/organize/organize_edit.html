@@ -50,7 +50,8 @@
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
-                            <select class="form-control select2-show-search" name="gradeId" id="grade" data-placeholder="请选择年级">
+                            <select class="form-control select2-show-search" name="gradeId" id="grade"
+                                    data-placeholder="请选择年级">
                                 <option label="请选择年级"></option>
                             </select>
                             <div class="invalid-feedback"></div>
@@ -58,7 +59,7 @@
                         <div class="form-group">
                             <label>班级</label>
                             <input class="form-control" name="organizeName" id="organizeName" maxlength="200"
-                                   placeholder="班级名" th:value="${organize.organizeName}" />
+                                   placeholder="班级名" th:value="${organize.organizeName}"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
@@ -66,15 +67,19 @@
                             <input class="form-control" name="staff" id="staff"
                                    placeholder="班主任账号/工号" th:value="${username}"/>
                             <div class="invalid-feedback"></div>
-                            <small id="staffHelp" class="form-text text-muted" th:if="${null != username && '' != username}" th:text="${realName + ' ' + mobile}">
+                            <small id="staffHelp" class="form-text text-muted"
+                                   th:if="${null != username && '' != username}" th:text="${realName + ' ' + mobile}">
                             </small>
-                            <small id="staffHelp" class="form-text text-muted" th:if="${null == username || '' == username}">
+                            <small id="staffHelp" class="form-text text-muted"
+                                   th:if="${null == username || '' == username}">
                             </small>
                         </div>
                         <div class="form-group">
                             <label class="ckbox">
-                                <input type="checkbox" name="organizeIsDel" value="1" th:if="${organize.organizeIsDel == 0 || organize.organizeIsDel == null}"/>
-                                <input type="checkbox" name="organizeIsDel" value="1" checked="checked" th:if="${organize.organizeIsDel == 1}"/>
+                                <input type="checkbox" name="organizeIsDel" value="1"
+                                       th:if="${organize.organizeIsDel == 0 || organize.organizeIsDel == null}"/>
+                                <input type="checkbox" name="organizeIsDel" value="1" checked="checked"
+                                       th:if="${organize.organizeIsDel == 1}"/>
                                 <span>注销</span>
                             </label>
                         </div>

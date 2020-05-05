@@ -2,7 +2,6 @@ package top.zbeboy.zone.test;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.HttpClientUtil;
@@ -52,20 +51,20 @@ public class TestWeiXin {
         Map<String, Object> data = new HashMap<>();
 
         Map<String, Object> phrase1 = new HashMap<>();
-        phrase1.put("value","待签到");
-        data.put("phrase1",phrase1);
+        phrase1.put("value", "待签到");
+        data.put("phrase1", phrase1);
 
         Map<String, Object> name2 = new HashMap<>();
-        name2.put("value","");
-        data.put("name2",name2);
+        name2.put("value", "");
+        data.put("name2", name2);
 
         Map<String, Object> date3 = new HashMap<>();
-        date3.put("value",DateTimeUtil.formatSqlTimestamp(DateTimeUtil.getNowSqlTimestamp(), DateTimeUtil.YEAR_MONTH_DAY_HOUR_MINUTE_FORMAT));
-        data.put("date3",date3);
+        date3.put("value", DateTimeUtil.formatSqlTimestamp(DateTimeUtil.getNowSqlTimestamp(), DateTimeUtil.YEAR_MONTH_DAY_HOUR_MINUTE_FORMAT));
+        data.put("date3", date3);
 
         Map<String, Object> thing5 = new HashMap<>();
-        thing5.put("value","校内");
-        data.put("thing5",thing5);
+        thing5.put("value", "校内");
+        data.put("thing5", thing5);
 
         map.put("data", data);
         String json = JSON.toJSONString(map);

@@ -30,7 +30,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             science: '#science',
             grade: '#grade',
             organizeName: '#organizeName',
-            staff:'#staff'
+            staff: '#staff'
         };
 
         var button_id = {
@@ -50,28 +50,28 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             departmentId: '',
             scienceId: '',
             gradeId: '',
-            organizeId:'',
+            organizeId: '',
             organizeName: '',
-            staff:'',
+            staff: '',
             organizeIsDel: ''
         };
 
         var page_param = {
-            paramSchoolId:$('#paramSchoolId').val(),
-            paramCollegeId:$('#paramCollegeId').val(),
-            paramDepartmentId:$('#paramDepartmentId').val(),
-            paramScienceId:$('#paramScienceId').val(),
-            paramGradeId:$('#paramGradeId').val(),
-            paramOrganizeId:$('#paramOrganizeId').val(),
+            paramSchoolId: $('#paramSchoolId').val(),
+            paramCollegeId: $('#paramCollegeId').val(),
+            paramDepartmentId: $('#paramDepartmentId').val(),
+            paramScienceId: $('#paramScienceId').val(),
+            paramGradeId: $('#paramGradeId').val(),
+            paramOrganizeId: $('#paramOrganizeId').val(),
             collegeId: $('#collegeId').val()
         };
 
         var init_configure = {
             init_school: false,
             init_college: false,
-            init_department:false,
-            init_science:false,
-            init_grade:false
+            init_department: false,
+            init_science: false,
+            init_grade: false
         };
 
         /**
@@ -128,7 +128,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             if (Number(schoolId) > 0) {
                 $.get(ajax_url.obtain_college_data, {schoolId: schoolId}, function (data) {
                     $(param_id.college).html('<option label="请选择院"></option>');
-                    var sl =  $(param_id.college).select2({data: data.results});
+                    var sl = $(param_id.college).select2({data: data.results});
                     if (!init_configure.init_college) {
                         sl.val(page_param.paramCollegeId).trigger("change");
                         init_configure.init_college = true;
@@ -158,7 +158,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             if (Number(departmentId) > 0) {
                 $.get(ajax_url.obtain_science_data, {departmentId: departmentId}, function (data) {
                     $(param_id.science).html('<option label="请选择专业"></option>');
-                    var sl =  $(param_id.science).select2({data: data.results});
+                    var sl = $(param_id.science).select2({data: data.results});
                     if (!init_configure.init_science) {
                         sl.val(page_param.paramScienceId).trigger("change");
                         init_configure.init_science = true;
@@ -173,7 +173,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             if (Number(scienceId) > 0) {
                 $.get(ajax_url.obtain_grade_data, {scienceId: scienceId}, function (data) {
                     $(param_id.grade).html('<option label="请选择年级"></option>');
-                    var sl =  $(param_id.grade).select2({data: data.results});
+                    var sl = $(param_id.grade).select2({data: data.results});
                     if (!init_configure.init_grade) {
                         sl.val(page_param.paramGradeId).trigger("change");
                         init_configure.init_grade = true;
@@ -380,7 +380,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             }
         }
 
-        function validStaff(){
+        function validStaff() {
             var staff = param.staff;
             if (staff.length > 0) {
                 $.post(ajax_url.check_staff, param, function (data) {

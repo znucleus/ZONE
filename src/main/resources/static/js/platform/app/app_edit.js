@@ -21,7 +21,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             secret: '#secret',
             appName: '#appName',
             webServerRedirectUri: '#webServerRedirectUri',
-            remark:'#remark'
+            remark: '#remark'
         };
 
         var button_id = {
@@ -40,7 +40,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             secret: '',
             appName: '',
             webServerRedirectUri: '',
-            remark:''
+            remark: ''
         };
 
         /**

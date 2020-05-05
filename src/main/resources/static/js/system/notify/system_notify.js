@@ -205,7 +205,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
             param.notifyContent = $(getParamId().notifyContent).val();
             param.realName = $(getParamId().realName).val();
             param.time = $(getParamId().time).val();
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.NOTIFY_TITLE, param.notifyTitle);
                 sessionStorage.setItem(webStorageKey.NOTIFY_CONTENT, param.notifyContent);
                 sessionStorage.setItem(webStorageKey.REAL_NAME, param.realName);
@@ -221,7 +221,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
             var notifyContent = null;
             var realName = null;
             var time = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 notifyTitle = sessionStorage.getItem(webStorageKey.NOTIFY_TITLE);
                 notifyContent = sessionStorage.getItem(webStorageKey.NOTIFY_CONTENT);
                 realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
@@ -252,7 +252,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
             var notifyContent = null;
             var realName = null;
             var time = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 notifyTitle = sessionStorage.getItem(webStorageKey.NOTIFY_TITLE);
                 notifyContent = sessionStorage.getItem(webStorageKey.NOTIFY_CONTENT);
                 realName = sessionStorage.getItem(webStorageKey.REAL_NAME);

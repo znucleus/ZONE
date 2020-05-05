@@ -145,7 +145,7 @@ require(["jquery", "handlebars", "nav.active", "responsive.bootstrap4", "jquery.
          */
         function initParam() {
             param.roleName = $(getParamId().roleName).val();
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.ROLE_NAME, param.roleName);
             }
         }
@@ -155,7 +155,7 @@ require(["jquery", "handlebars", "nav.active", "responsive.bootstrap4", "jquery.
          */
         function initSearchContent() {
             var roleName = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 roleName = sessionStorage.getItem(webStorageKey.ROLE_NAME);
             }
             if (roleName !== null) {
@@ -168,7 +168,7 @@ require(["jquery", "handlebars", "nav.active", "responsive.bootstrap4", "jquery.
         */
         function initSearchInput() {
             var roleName = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 roleName = sessionStorage.getItem(webStorageKey.ROLE_NAME);
             }
             if (roleName !== null) {

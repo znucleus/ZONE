@@ -1,18 +1,18 @@
 # spring setting
 spring:
-      profiles:
-        active: secrecy,dev
-      servlet:
-        multipart:
-          max-request-size: 500MB
-          max-file-size: 500MB
-      mail:
-        default-encoding: UTF-8
-        host: smtp.qq.com
-      jooq:
-        sql-dialect: mysql
-      session:
-        store-type: redis
+  profiles:
+    active: secrecy,dev
+  servlet:
+    multipart:
+      max-request-size: 500MB
+      max-file-size: 500MB
+  mail:
+    default-encoding: UTF-8
+    host: smtp.qq.com
+  jooq:
+    sql-dialect: mysql
+  session:
+    store-type: redis
 
 # project info
 info:

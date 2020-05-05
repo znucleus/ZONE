@@ -233,7 +233,7 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
             param.studentNumber = $(getParamId().studentNumber).val();
             param.schoolGuidanceTeacher = $(getParamId().schoolGuidanceTeacher).val();
             param.createDate = $(getParamId().createDate).val();
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.STUDENT_NAME, param.studentName);
                 sessionStorage.setItem(webStorageKey.STUDENT_NUMBER, param.studentNumber);
                 sessionStorage.setItem(webStorageKey.SCHOOL_GUIDANCE_TEACHER, param.schoolGuidanceTeacher);
@@ -258,7 +258,7 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
             var studentNumber = null;
             var schoolGuidanceTeacher = null;
             var createDate = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
                 studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
                 schoolGuidanceTeacher = sessionStorage.getItem(webStorageKey.SCHOOL_GUIDANCE_TEACHER);
@@ -289,7 +289,7 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
             var studentNumber = null;
             var schoolGuidanceTeacher = null;
             var createDate = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
                 studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
                 schoolGuidanceTeacher = sessionStorage.getItem(webStorageKey.SCHOOL_GUIDANCE_TEACHER);

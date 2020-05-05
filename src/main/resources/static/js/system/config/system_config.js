@@ -164,7 +164,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "responsi
          */
         function initParam() {
             param.dataKey = $(getParamId().dataKey).val();
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.DATA_KEY, param.dataKey);
             }
         }
@@ -179,7 +179,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "responsi
          */
         function initSearchContent() {
             var dataKey = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 dataKey = sessionStorage.getItem(webStorageKey.DATA_KEY);
             }
             if (dataKey !== null) {
@@ -192,7 +192,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "responsi
         */
         function initSearchInput() {
             var dataKey = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 dataKey = sessionStorage.getItem(webStorageKey.DATA_KEY);
             }
             if (dataKey !== null) {

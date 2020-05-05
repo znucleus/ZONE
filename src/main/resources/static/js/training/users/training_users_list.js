@@ -228,7 +228,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             param.studentNumber = $(getParamId().studentNumber).val();
             param.username = $(getParamId().username).val();
 
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.REAL_NAME, param.realName);
                 sessionStorage.setItem(webStorageKey.STUDENT_NUMBER, param.studentNumber);
                 sessionStorage.setItem(webStorageKey.USERNAME, param.username);
@@ -242,7 +242,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             var realName = null;
             var studentNumber = null;
             var username = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
                 studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
                 username = sessionStorage.getItem(webStorageKey.USERNAME);
@@ -267,7 +267,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             var realName = null;
             var studentNumber = null;
             var username = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
                 studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
                 username = sessionStorage.getItem(webStorageKey.USERNAME);

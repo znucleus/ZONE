@@ -1,8 +1,8 @@
 package top.zbeboy.zone.test;
 
-import org.junit.Test;
 import com.warrenstrange.googleauth.GoogleAuthenticator;
 import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
+import org.junit.Test;
 
 public class TestGoogleOauth {
 

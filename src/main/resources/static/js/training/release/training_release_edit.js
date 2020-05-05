@@ -45,7 +45,7 @@ require(["jquery", "lodash", "tools", "moment-with-locales", "handlebars", "swee
          参数
          */
         var param = {
-            trainingReleaseId:'',
+            trainingReleaseId: '',
             title: '',
             courseId: '',
             startDate: '',
@@ -53,9 +53,9 @@ require(["jquery", "lodash", "tools", "moment-with-locales", "handlebars", "swee
         };
 
         var page_param = {
-            paramTrainingReleaseId:$('#paramTrainingReleaseId').val(),
-            paramCourseId:$('#paramCourseId').val(),
-            paramCollegeId:$('#paramCollegeId').val()
+            paramTrainingReleaseId: $('#paramTrainingReleaseId').val(),
+            paramCourseId: $('#paramCourseId').val(),
+            paramCollegeId: $('#paramCollegeId').val()
         };
 
         var init_configure = {
@@ -191,7 +191,7 @@ require(["jquery", "lodash", "tools", "moment-with-locales", "handlebars", "swee
                 tools.validErrorDom(param_id.endDate, '请选择结课时间');
             } else {
                 var startDate = param.startDate;
-                if(moment(endDate).isSameOrAfter(startDate)){
+                if (moment(endDate).isSameOrAfter(startDate)) {
                     tools.validSuccessDom(param_id.endDate);
                     sendAjax();
                 } else {

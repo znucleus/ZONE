@@ -45,10 +45,10 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
         };
 
         var page_param = {
-            paramSchoolId:$('#paramSchoolId').val(),
-            paramCollegeId:$('#paramCollegeId').val(),
+            paramSchoolId: $('#paramSchoolId').val(),
+            paramCollegeId: $('#paramCollegeId').val(),
             collegeId: $('#collegeId').val(),
-            paramDepartmentId:$('#paramDepartmentId').val()
+            paramDepartmentId: $('#paramDepartmentId').val()
         };
 
         var init_configure = {
@@ -87,7 +87,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
 
         function initSchool() {
             $.get(ajax_url.obtain_school_data, function (data) {
-                var sl =  $(param_id.school).select2({
+                var sl = $(param_id.school).select2({
                     data: data.results
                 });
 
@@ -102,7 +102,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             if (Number(schoolId) > 0) {
                 $.get(ajax_url.obtain_college_data, {schoolId: schoolId}, function (data) {
                     $(param_id.college).html('<option label="请选择院"></option>');
-                    var sl =  $(param_id.college).select2({data: data.results});
+                    var sl = $(param_id.college).select2({data: data.results});
                     if (!init_configure.init_college) {
                         sl.val(page_param.paramCollegeId).trigger("change");
                         init_configure.init_college = true;

@@ -222,11 +222,11 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
             param.schoolName = $(getParamId().schoolName).val();
             param.collegeName = $(getParamId().collegeName).val();
 
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.SCHOOL_NAME, param.schoolName);
             }
 
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.COLLEGE_NAME, param.collegeName);
             }
         }
@@ -237,7 +237,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
         function initSearchContent() {
             var schoolName = null;
             var collegeName = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 schoolName = sessionStorage.getItem(webStorageKey.SCHOOL_NAME);
                 collegeName = sessionStorage.getItem(webStorageKey.COLLEGE_NAME);
             }
@@ -256,7 +256,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
         function initSearchInput() {
             var schoolName = null;
             var collegeName = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 schoolName = sessionStorage.getItem(webStorageKey.SCHOOL_NAME);
                 collegeName = sessionStorage.getItem(webStorageKey.COLLEGE_NAME);
             }

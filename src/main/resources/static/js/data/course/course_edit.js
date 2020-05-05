@@ -46,7 +46,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
         var param = {
             schoolId: '',
             collegeId: '',
-            courseId:'',
+            courseId: '',
             courseName: '',
             courseCredit: '',
             courseHours: '',
@@ -60,12 +60,12 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
 
         var page_param = {
             collegeId: $('#collegeId').val(),
-            paramSchoolId:$('#paramSchoolId').val(),
-            paramCollegeId:$('#paramCollegeId').val(),
-            paramCourseId:$('#paramCourseId').val(),
-            paramCourseType:$('#paramCourseType').val(),
-            paramSchoolYear:$('#paramSchoolYear').val(),
-            paramTerm:$('#paramTerm').val()
+            paramSchoolId: $('#paramSchoolId').val(),
+            paramCollegeId: $('#paramCollegeId').val(),
+            paramCourseId: $('#paramCourseId').val(),
+            paramCourseType: $('#paramCourseType').val(),
+            paramSchoolYear: $('#paramSchoolYear').val(),
+            paramTerm: $('#paramTerm').val()
         };
 
         var init_configure = {
@@ -117,7 +117,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
 
         function initSchool() {
             $.get(ajax_url.obtain_school_data, function (data) {
-                var sl =   $(param_id.school).select2({
+                var sl = $(param_id.school).select2({
                     data: data.results
                 });
 
@@ -132,7 +132,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             if (Number(schoolId) > 0) {
                 $.get(ajax_url.obtain_college_data, {schoolId: schoolId}, function (data) {
                     $(param_id.college).html('<option label="请选择院"></option>');
-                    var sl =  $(param_id.college).select2({data: data.results});
+                    var sl = $(param_id.college).select2({data: data.results});
                     if (!init_configure.init_college) {
                         sl.val(page_param.paramCollegeId).trigger("change");
                         init_configure.init_college = true;
@@ -168,15 +168,15 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             });
         }
 
-        function initCourseType(){
+        function initCourseType() {
             $(param_id.courseType).val(page_param.paramCourseType);
         }
 
-        function initSchoolYear(){
+        function initSchoolYear() {
             $(param_id.schoolYear).val(page_param.paramSchoolYear);
         }
 
-        function initTerm(){
+        function initTerm() {
             $(param_id.term).val(page_param.paramTerm);
         }
 

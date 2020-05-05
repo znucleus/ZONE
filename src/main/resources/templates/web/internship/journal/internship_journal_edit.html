@@ -71,19 +71,24 @@
                             </span>
                             </div>
                             <div id="internshipJournalContent" style="height:450px;"></div>
-                            <input type="hidden" id="internshipJournalContentText" name="internshipJournalContent" th:value="${internshipJournalContent.internshipJournalContent}"/>
-                            <input type="hidden" id="internshipJournalHtml" name="internshipJournalHtml" th:value="${internshipJournalContent.internshipJournalHtml}" />
+                            <input type="hidden" id="internshipJournalContentText" name="internshipJournalContent"
+                                   th:value="${internshipJournalContent.internshipJournalContent}"/>
+                            <input type="hidden" id="internshipJournalHtml" name="internshipJournalHtml"
+                                   th:value="${internshipJournalContent.internshipJournalHtml}"/>
                             <small id="internshipTypeHelp" class="form-text text-muted">提示：word中不保留任何格式</small>
                         </div>
                         <div class="form-group">
                             <label>日志日期</label>
-                            <input class="form-control" name="internshipJournalDate" id="internshipJournalDate" th:value="${internshipJournalContent.internshipJournalDate}"
+                            <input class="form-control" name="internshipJournalDate" id="internshipJournalDate"
+                                   th:value="${internshipJournalContent.internshipJournalDate}"
                                    placeholder="日志日期"/>
                         </div>
                         <div class="form-group">
                             <label class="ckbox">
-                                <input type="checkbox" name="isSeeStaff" value="1" th:if="${internshipJournal.isSeeStaff == 0 || internshipJournal.isSeeStaff == null}"/>
-                                <input type="checkbox" name="isSeeStaff" value="1" checked="checked" th:if="${internshipJournal.isSeeStaff == 1}"/>
+                                <input type="checkbox" name="isSeeStaff" value="1"
+                                       th:if="${internshipJournal.isSeeStaff == 0 || internshipJournal.isSeeStaff == null}"/>
+                                <input type="checkbox" name="isSeeStaff" value="1" checked="checked"
+                                       th:if="${internshipJournal.isSeeStaff == 1}"/>
                                 <span>仅允许教职工查阅</span>
                             </label>
                         </div>

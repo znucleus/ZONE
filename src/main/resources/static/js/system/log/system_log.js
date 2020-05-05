@@ -117,7 +117,7 @@ require(["jquery", "nav.active", "responsive.bootstrap4"],
             param.username = $(getParamId().username).val();
             param.behavior = $(getParamId().behavior).val();
             param.ipAddress = $(getParamId().ipAddress).val();
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.USERNAME, param.username);
                 sessionStorage.setItem(webStorageKey.BEHAVIOR, param.behavior);
                 sessionStorage.setItem(webStorageKey.IP_ADDRESS, param.ipAddress);
@@ -131,7 +131,7 @@ require(["jquery", "nav.active", "responsive.bootstrap4"],
             var username = null;
             var behavior = null;
             var ipAddress = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 username = sessionStorage.getItem(webStorageKey.USERNAME);
                 behavior = sessionStorage.getItem(webStorageKey.BEHAVIOR);
                 ipAddress = sessionStorage.getItem(webStorageKey.IP_ADDRESS);
@@ -156,7 +156,7 @@ require(["jquery", "nav.active", "responsive.bootstrap4"],
             var username = null;
             var behavior = null;
             var ipAddress = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 username = sessionStorage.getItem(webStorageKey.USERNAME);
                 behavior = sessionStorage.getItem(webStorageKey.BEHAVIOR);
                 ipAddress = sessionStorage.getItem(webStorageKey.IP_ADDRESS);

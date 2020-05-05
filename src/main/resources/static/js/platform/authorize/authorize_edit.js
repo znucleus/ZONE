@@ -74,7 +74,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
         authorizeTypeId: $('#authorizeTypeIdParam').val(),
         roleId: $('#roleIdParam').val(),
         duration: $('#durationParam').val(),
-        dataScope:$('#dataScopeParam').val(),
+        dataScope: $('#dataScopeParam').val(),
         collegeId: $('#collegeIdParam').val()
     };
 
@@ -228,7 +228,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
         if (Number(gradeId) > 0) {
             $.get(ajax_url.obtain_organize_data, {gradeId: gradeId}, function (data) {
                 $(param_id.organize).html('<option label="请选择班级"></option>');
-                 $(param_id.organize).select2({
+                $(param_id.organize).select2({
                     data: data.results,
                     dropdownParent: $("#dataModal")
                 });

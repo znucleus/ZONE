@@ -37,13 +37,16 @@
                         </div>
                         <div class="form-group">
                             <label>楼</label>
-                            <input class="form-control" name="buildingName" id="buildingName" maxlength="30" placeholder="楼名" th:value="${building.buildingName}"/>
+                            <input class="form-control" name="buildingName" id="buildingName" maxlength="30"
+                                   placeholder="楼名" th:value="${building.buildingName}"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label class="ckbox">
-                                <input type="checkbox" name="buildingIsDel" value="1"  th:if="${building.buildingIsDel == 0 || building.buildingIsDel == null}"/>
-                                <input type="checkbox" name="buildingIsDel" value="1" checked="checked" th:if="${building.buildingIsDel == 1}"/>
+                                <input type="checkbox" name="buildingIsDel" value="1"
+                                       th:if="${building.buildingIsDel == 0 || building.buildingIsDel == null}"/>
+                                <input type="checkbox" name="buildingIsDel" value="1" checked="checked"
+                                       th:if="${building.buildingIsDel == 1}"/>
                                 <span>注销</span>
                             </label>
                         </div>

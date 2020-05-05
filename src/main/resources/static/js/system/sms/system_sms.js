@@ -105,7 +105,7 @@ require(["jquery", "nav.active", "responsive.bootstrap4"], function ($, navActiv
 
     function initParam() {
         param.acceptPhone = $(getParamId().acceptPhone).val();
-        if (typeof(Storage) !== "undefined") {
+        if (typeof (Storage) !== "undefined") {
             sessionStorage.setItem(webStorageKey.ACCEPT_PHONE, param.acceptPhone);
         }
     }
@@ -115,7 +115,7 @@ require(["jquery", "nav.active", "responsive.bootstrap4"], function ($, navActiv
     */
     function initSearchContent() {
         var acceptPhone = null;
-        if (typeof(Storage) !== "undefined") {
+        if (typeof (Storage) !== "undefined") {
             acceptPhone = sessionStorage.getItem(webStorageKey.ACCEPT_PHONE);
         }
         if (acceptPhone !== null) {
@@ -128,7 +128,7 @@ require(["jquery", "nav.active", "responsive.bootstrap4"], function ($, navActiv
     */
     function initSearchInput() {
         var acceptPhone = null;
-        if (typeof(Storage) !== "undefined") {
+        if (typeof (Storage) !== "undefined") {
             acceptPhone = sessionStorage.getItem(webStorageKey.ACCEPT_PHONE);
         }
         if (acceptPhone !== null) {

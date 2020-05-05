@@ -183,7 +183,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
             param.appName = $(getParamId().appName).val();
             param.realName = $(getParamId().realName).val();
 
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.USERNAME, DP.defaultUndefinedValue(param.username, ''));
                 sessionStorage.setItem(webStorageKey.REAL_NAME, DP.defaultUndefinedValue(param.realName, ''));
                 sessionStorage.setItem(webStorageKey.APP_NAME, param.appName);
@@ -198,7 +198,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
             var username = null;
             var appName = null;
             var realName = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 username = sessionStorage.getItem(webStorageKey.USERNAME);
                 appName = sessionStorage.getItem(webStorageKey.APP_NAME);
                 realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
@@ -223,7 +223,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
             var username = null;
             var appName = null;
             var realName = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 username = sessionStorage.getItem(webStorageKey.USERNAME);
                 appName = sessionStorage.getItem(webStorageKey.APP_NAME);
                 realName = sessionStorage.getItem(webStorageKey.REAL_NAME);

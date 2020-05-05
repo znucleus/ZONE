@@ -206,7 +206,7 @@ require(["jquery", "handlebars", "nav.active", "responsive.bootstrap4", "jquery.
                 organizeSelect2 = $(getParamId().organizeId).select2({data: data.results});
 
                 if (!init_configure.init_organize) {
-                    if (typeof(Storage) !== "undefined") {
+                    if (typeof (Storage) !== "undefined") {
                         var organizeId = sessionStorage.getItem(webStorageKey.ORGANIZE_ID);
                         organizeSelect2.val(Number(organizeId)).trigger("change");
                     }
@@ -248,7 +248,7 @@ require(["jquery", "handlebars", "nav.active", "responsive.bootstrap4", "jquery.
             param.studentNumber = $(getParamId().studentNumber).val();
             param.organizeId = $(getParamId().organizeId).val();
             param.internshipApplyState = $(getParamId().internshipApplyState).val();
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.REAL_NAME, param.realName);
                 sessionStorage.setItem(webStorageKey.STUDENT_NUMBER, param.studentNumber);
                 sessionStorage.setItem(webStorageKey.ORGANIZE_ID, param.organizeId != null ? param.organizeId : '');
@@ -264,7 +264,7 @@ require(["jquery", "handlebars", "nav.active", "responsive.bootstrap4", "jquery.
             var studentNumber = null;
             var organizeId = null;
             var internshipApplyState = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
                 studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
                 organizeId = sessionStorage.getItem(webStorageKey.ORGANIZE_ID);
@@ -294,7 +294,7 @@ require(["jquery", "handlebars", "nav.active", "responsive.bootstrap4", "jquery.
             var realName = null;
             var studentNumber = null;
             var internshipApplyState = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
                 studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
                 internshipApplyState = sessionStorage.getItem(webStorageKey.INTERNSHIP_APPLY_STATE);

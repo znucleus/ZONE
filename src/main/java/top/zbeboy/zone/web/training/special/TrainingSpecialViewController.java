@@ -11,7 +11,6 @@ import top.zbeboy.zone.service.system.FilesService;
 import top.zbeboy.zone.service.training.TrainingSpecialDocumentService;
 import top.zbeboy.zone.service.training.TrainingSpecialService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
-import top.zbeboy.zone.web.bean.training.document.TrainingDocumentBean;
 import top.zbeboy.zone.web.bean.training.special.TrainingSpecialBean;
 import top.zbeboy.zone.web.bean.training.special.TrainingSpecialDocumentBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;

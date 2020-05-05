@@ -25,10 +25,14 @@
                     <h3 class="text-center text-dark"
                         th:text="${trainingDocument.documentTitle}"></h3>
                     <p class="mg-b-25 mg-lg-b-50 text-center" th:if="${trainingDocument.isOriginal == 1}">
-                        原创(转载请注明出处) 阅读量：<span th:text="${trainingDocument.reading}"></span> 创建时间：<span th:text="${trainingDocument.createDateStr}"></span>
+                        原创(转载请注明出处) 阅读量：<span th:text="${trainingDocument.reading}"></span> 创建时间：<span
+                            th:text="${trainingDocument.createDateStr}"></span>
                     </p>
-                    <p class="mg-b-25 mg-lg-b-50 text-center" th:if="${trainingDocument.isOriginal == 0 || trainingDocument.isOriginal == null}">
-                        非原创 转载于：<span th:text="${trainingDocument.origin}"></span> 阅读量：<span th:text="${trainingDocument.reading}"></span> 创建时间：<span th:text="${trainingDocument.createDateStr}"></span>
+                    <p class="mg-b-25 mg-lg-b-50 text-center"
+                       th:if="${trainingDocument.isOriginal == 0 || trainingDocument.isOriginal == null}">
+                        非原创 转载于：<span th:text="${trainingDocument.origin}"></span> 阅读量：<span
+                            th:text="${trainingDocument.reading}"></span> 创建时间：<span
+                            th:text="${trainingDocument.createDateStr}"></span>
                     </p>
                     <div id="content" style="max-width: 500px;"></div>
                 </div>

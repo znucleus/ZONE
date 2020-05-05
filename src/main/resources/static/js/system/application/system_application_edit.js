@@ -45,7 +45,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
          参数
          */
         var param = {
-            applicationId:'',
+            applicationId: '',
             applicationPid: '',
             applicationName: '',
             applicationEnName: '',

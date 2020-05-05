@@ -37,13 +37,16 @@
                         </div>
                         <div class="form-group">
                             <label>系</label>
-                            <input class="form-control" name="departmentName" id="departmentName" maxlength="200" placeholder="系名" th:value="${department.departmentName}"/>
+                            <input class="form-control" name="departmentName" id="departmentName" maxlength="200"
+                                   placeholder="系名" th:value="${department.departmentName}"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label class="ckbox">
-                                <input type="checkbox" name="departmentIsDel" value="1" th:if="${department.departmentIsDel == 0 || department.departmentIsDel == null}"/>
-                                <input type="checkbox" name="departmentIsDel" value="1" checked="checked" th:if="${department.departmentIsDel == 1}"/>
+                                <input type="checkbox" name="departmentIsDel" value="1"
+                                       th:if="${department.departmentIsDel == 0 || department.departmentIsDel == null}"/>
+                                <input type="checkbox" name="departmentIsDel" value="1" checked="checked"
+                                       th:if="${department.departmentIsDel == 1}"/>
                                 <span>注销</span>
                             </label>
                         </div>

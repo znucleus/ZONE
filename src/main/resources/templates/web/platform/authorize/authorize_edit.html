@@ -23,7 +23,8 @@
                     <form id="app_form">
                         <div class="form-group" sec:authorize="hasAnyRole('ROLE_SYSTEM','ROLE_ADMIN')">
                             <label>申请账号</label>
-                            <input type="text" class="form-control" id="username" name="username" placeholder="申请账号" th:value="${roleApply.username}" readonly="readonly">
+                            <input type="text" class="form-control" id="username" name="username" placeholder="申请账号"
+                                   th:value="${roleApply.username}" readonly="readonly">
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
@@ -58,7 +59,8 @@
                         </div>
                         <div class="form-group">
                             <label>生效时间</label>
-                            <input type="text" class="form-control" id="validDate" name="validDate" placeholder="生效时间" th:value="${roleApply.validDate}">
+                            <input type="text" class="form-control" id="validDate" name="validDate" placeholder="生效时间"
+                                   th:value="${roleApply.validDate}">
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">

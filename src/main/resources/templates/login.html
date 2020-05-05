@@ -31,7 +31,8 @@
                 <a href="" th:href="@{/forget_password}" class="tx-info tx-12 d-block mg-t-10">忘记密码？</a>
             </div><!-- form-group -->
             <div class="form-group text-danger text-center" id="globalError"></div>
-            <button class="btn btn-info btn-block" type="button" id="login" th:if="${loginType == 'normal'}">登 录</button>
+            <button class="btn btn-info btn-block" type="button" id="login" th:if="${loginType == 'normal'}">登 录
+            </button>
             <button class="btn btn-info btn-block" type="submit" th:if="${loginType == 'oauth'}">登 录</button>
         </form>
 

@@ -61,7 +61,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
          * 刷新查询参数
          */
         function refreshSearch() {
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.INTERNSHIP_TITLE, $(param_id.internshipTitle).val());
             }
         }
@@ -486,7 +486,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             var params = {
                 internshipTitle: ''
             };
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 internshipTitle = sessionStorage.getItem(webStorageKey.INTERNSHIP_TITLE);
             }
             if (internshipTitle !== null) {
@@ -503,7 +503,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         */
         function initSearchInput() {
             var internshipTitle = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 internshipTitle = sessionStorage.getItem(webStorageKey.INTERNSHIP_TITLE);
             }
             if (internshipTitle !== null) {

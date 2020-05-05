@@ -55,7 +55,9 @@
                     <div class="input-group">
                         <input type="text" class="form-control" id="export_file_name" placeholder="文件名">
                         <div class="input-group-append">
-                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">导出</button>
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">导出
+                            </button>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="javascript:" id="export_xls">导出Xls</a>
                                 <a class="dropdown-item" href="javascript:" id="export_xlsx">导出Xlsx</a>
@@ -107,17 +109,17 @@
                 </div>
                 <div class="modal-body">
                     <form class="mg-t-20" id="operate_form">
-                        <input type="hidden" id="operateAttendUsersId" name="attendUsersId" />
+                        <input type="hidden" id="operateAttendUsersId" name="attendUsersId"/>
                         <div class="form-group row">
                             <div class="col-12">
                                 <label for="student">学生</label>
-                                <input class="form-control" id="student" readonly />
+                                <input class="form-control" id="student" readonly/>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-12">
                                 <label for="operate">当前状态</label>
-                                <input class="form-control" id="operate" readonly />
+                                <input class="form-control" id="operate" readonly/>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -157,10 +159,11 @@
                 </div>
                 <div class="modal-body">
                     <form class="mg-t-20" id="remark_form">
-                        <input type="hidden" id="editAttendUsersId" name="attendUsersId" />
+                        <input type="hidden" id="editAttendUsersId" name="attendUsersId"/>
                         <div class="form-group row">
                             <div class="col-12">
-                                <textarea class="form-control" id="editRemark" name="remark" rows="3" placeholder="备注"></textarea>
+                                <textarea class="form-control" id="editRemark" name="remark" rows="3"
+                                          placeholder="备注"></textarea>
                                 <div class="invalid-feedback"></div>
                             </div>
                         </div>
@@ -179,7 +182,8 @@
         <div class="btn-group" role="group">
             {{#each func}}
             <button type="button" class="btn btn-{{this.type}} btn-sm {{this.css}}" data-id="{{this.id}}"
-                    data-student="{{this.student}}" data-remark="{{this.remark}}" data-operate="{{this.operate}}">{{this.name}}
+                    data-student="{{this.student}}" data-remark="{{this.remark}}" data-operate="{{this.operate}}">
+                {{this.name}}
             </button>
             {{/each}}
         </div>

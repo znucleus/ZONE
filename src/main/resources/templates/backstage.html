@@ -27,7 +27,8 @@
 <body>
 <!-- ########## START: LEFT PANEL ########## -->
 <div class="br-logo"><a href="" th:href="@{/web/menu/backstage}"><span>[</span><i
-        style="color: #212529;letter-spacing: -0.5px;" th:text="#{web.app.name}" id="webAppName"></i><span>]</span></a></div>
+        style="color: #212529;letter-spacing: -0.5px;" th:text="#{web.app.name}" id="webAppName"></i><span>]</span></a>
+</div>
 <div class="br-sideleft overflow-y-auto">
     <label class="sidebar-label pd-x-15 mg-t-20">导航</label>
     <div class="br-sideleft-menu" th:utext="${menu}">
@@ -69,7 +70,8 @@
                         </div>
 
                         <div class="pd-y-10 tx-center bd-t">
-                            <a href="#/users/notify" class="tx-12 dy_href"><i class="fa fa-angle-down mg-r-5"></i> 显示所有通知</a>
+                            <a href="#/users/notify" class="tx-12 dy_href"><i class="fa fa-angle-down mg-r-5"></i>
+                                显示所有通知</a>
                         </div>
                     </div><!-- media-list -->
                 </div><!-- dropdown-menu -->
@@ -129,12 +131,14 @@
         </a>
         <ul class="mfb-component__list">
             <li>
-                <a href="javascript:history.go(-1)" data-mfb-label="返回上一级" class="mfb-component__button--child" style="background-color: #17a2b8">
+                <a href="javascript:history.go(-1)" data-mfb-label="返回上一级" class="mfb-component__button--child"
+                   style="background-color: #17a2b8">
                     <i class="mfb-component__child-icon ion-arrow-return-left"></i>
                 </a>
             </li>
             <li>
-                <a href="javascript:window.scrollTo(0, 0)" data-mfb-label="返回顶层" class="mfb-component__button--child" style="background-color: #17a2b8">
+                <a href="javascript:window.scrollTo(0, 0)" data-mfb-label="返回顶层" class="mfb-component__button--child"
+                   style="background-color: #17a2b8">
                     <i class="mfb-component__child-icon ion-arrow-up-a"></i>
                 </a>
             </li>

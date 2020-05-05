@@ -37,7 +37,7 @@
                     <h3 class="mt-4">二、用户进行授权访问</h3>
                     <p>1. 请求授权链接：</p>
                     <div class="alert alert-secondary" role="alert">
-                        GET https://www.zbeboy.top/oauth/authorize  (域名 www.zbeboy.top 以您当前访问系统为准)
+                        GET https://www.zbeboy.top/oauth/authorize (域名 www.zbeboy.top 以您当前访问系统为准)
                     </div>
                     <p>请求时，您需要如下参数：</p>
                     <div class="table-responsive">
@@ -79,11 +79,14 @@
                         </table>
                     </div>
                     <div class="alert alert-primary" role="alert">
-                        GET https://www.zbeboy.top/oauth/authorize?grant_type=authorization_code&response_type=code&client_id=zhe_client&state=1234
+                        GET
+                        https://www.zbeboy.top/oauth/authorize?grant_type=authorization_code&response_type=code&client_id=zhe_client&state=1234
                     </div>
                     <p>2. 用户授权</p>
                     <ul class="list-group">
-                        <li class="list-group-item">2.1 当用户点击请求授权链接后，若用户未登录，将会跳转本系统登录链接 https://www.zbeboy.top/login 进行统一登录，登录后跳转授权页面；</li>
+                        <li class="list-group-item">2.1 当用户点击请求授权链接后，若用户未登录，将会跳转本系统登录链接 https://www.zbeboy.top/login
+                            进行统一登录，登录后跳转授权页面；
+                        </li>
                         <li class="list-group-item">2.2 当用户点击请求授权链接后，若用户已登录，将会跳转授权页面；</li>
                         <li class="list-group-item">2.3 用户同意授权，将会跳转您填写的回调地址。</li>
                     </ul>
@@ -94,7 +97,7 @@
                     </ul>
                     <p class="mt-2">3.3. 请求 access_token 链接：</p>
                     <div class="alert alert-secondary" role="alert">
-                        POST https://www.zbeboy.top/oauth/token  (域名 www.zbeboy.top 以您当前访问系统为准)
+                        POST https://www.zbeboy.top/oauth/token (域名 www.zbeboy.top 以您当前访问系统为准)
                     </div>
                     <p>请求时，您需要如下参数：</p>
                     <div class="table-responsive">
@@ -151,7 +154,8 @@
                         为方便您调试，我们支持除浏览器之外的工具进行调用，比如 curl
                     </p>
                     <div class="alert alert-primary" role="alert">
-                        curl https://www.zbeboy.top/oauth/token -X POST -d "grant_type=authorization_code&response_type=code&client_id=zhe_client&client_secret=ksdf98ErdD&code=Gz1qzy&state=1234"
+                        curl https://www.zbeboy.top/oauth/token -X POST -d
+                        "grant_type=authorization_code&response_type=code&client_id=zhe_client&client_secret=ksdf98ErdD&code=Gz1qzy&state=1234"
                     </div>
                     <p>请求之后，您会获取到以下参数：</p>
                     <div class="alert alert-dark" role="alert">
@@ -204,7 +208,8 @@
                     <h3 class="mt-4">四、获取数据</h3>
                     <p>例如，获取用户信息：</p>
                     <div class="alert alert-primary" role="alert">
-                        curl -H "Authorization: bearer 1dff5cb6-3d22-4644-a1ef-c1d1022a7fe9" https://www.zbeboy.top/api/users
+                        curl -H "Authorization: bearer 1dff5cb6-3d22-4644-a1ef-c1d1022a7fe9"
+                        https://www.zbeboy.top/api/users
                     </div>
                 </div>
             </div>

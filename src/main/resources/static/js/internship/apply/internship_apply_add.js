@@ -113,7 +113,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
 
         function initStaff() {
             $.get(ajax_url.obtain_staff_data + '/' + page_param.paramInternshipReleaseId, function (data) {
-                var sl =  $(param_id.staff).select2({
+                var sl = $(param_id.staff).select2({
                     data: data.results
                 });
 

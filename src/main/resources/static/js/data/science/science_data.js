@@ -164,7 +164,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
                     "sSortDescending": ": 以降序排列此列"
                 }
             },
-            "dom":  "<'row'<'col-lg-2 col-md-12'l><'#global_button.col-lg-10 col-md-12'>r>" +
+            "dom": "<'row'<'col-lg-2 col-md-12'l><'#global_button.col-lg-10 col-md-12'>r>" +
                 "t" +
                 "<'row'<'col-sm-5'i><'col-sm-7'p>>",
             initComplete: function () {
@@ -218,7 +218,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
             param.departmentName = $(getParamId().departmentName).val();
             param.scienceName = $(getParamId().scienceName).val();
 
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.SCHOOL_NAME, DP.defaultUndefinedValue(param.schoolName, ''));
                 sessionStorage.setItem(webStorageKey.COLLEGE_NAME, DP.defaultUndefinedValue(param.collegeName, ''));
                 sessionStorage.setItem(webStorageKey.DEPARTMENT_NAME, DP.defaultUndefinedValue(param.departmentName, ''));
@@ -234,7 +234,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
             var collegeName = null;
             var departmentName = null;
             var scienceName = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 schoolName = sessionStorage.getItem(webStorageKey.SCHOOL_NAME);
                 collegeName = sessionStorage.getItem(webStorageKey.COLLEGE_NAME);
                 departmentName = sessionStorage.getItem(webStorageKey.DEPARTMENT_NAME);
@@ -265,7 +265,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
             var collegeName = null;
             var departmentName = null;
             var scienceName = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 schoolName = sessionStorage.getItem(webStorageKey.SCHOOL_NAME);
                 collegeName = sessionStorage.getItem(webStorageKey.COLLEGE_NAME);
                 departmentName = sessionStorage.getItem(webStorageKey.DEPARTMENT_NAME);

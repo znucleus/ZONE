@@ -266,7 +266,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
             param.collegeName = $(getParamId().collegeName).val();
             param.courseName = $(getParamId().courseName).val();
 
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.SCHOOL_NAME, DP.defaultUndefinedValue(param.schoolName, ''));
                 sessionStorage.setItem(webStorageKey.COLLEGE_NAME, DP.defaultUndefinedValue(param.collegeName, ''));
                 sessionStorage.setItem(webStorageKey.COURSE_NAME, param.courseName);
@@ -280,7 +280,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
             var schoolName = null;
             var collegeName = null;
             var courseName = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 schoolName = sessionStorage.getItem(webStorageKey.SCHOOL_NAME);
                 collegeName = sessionStorage.getItem(webStorageKey.COLLEGE_NAME);
                 courseName = sessionStorage.getItem(webStorageKey.COURSE_NAME);
@@ -305,7 +305,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
             var schoolName = null;
             var collegeName = null;
             var courseName = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 schoolName = sessionStorage.getItem(webStorageKey.SCHOOL_NAME);
                 collegeName = sessionStorage.getItem(webStorageKey.COLLEGE_NAME);
                 courseName = sessionStorage.getItem(webStorageKey.COURSE_NAME);

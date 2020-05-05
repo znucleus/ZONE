@@ -6,7 +6,7 @@ import javax.validation.constraints.Size;
 public class TrainingSpecialEditVo {
     @NotBlank(message = "实训专题ID不能为空")
     @Size(max = 64, message = "实训专题IID不正确")
-    private String    trainingSpecialId;
+    private String trainingSpecialId;
     @NotBlank(message = "标题不能为空")
     @Size(max = 200, message = "标题200个字符以内")
     private String title;

@@ -119,28 +119,28 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
                     orderable: false,
                     render: function (a, b, c, d) {
                         var context =
-                                {
-                                    func: [
-                                        {
-                                            "name": "查看",
-                                            "css": "look",
-                                            "type": "info",
-                                            "id": c.internshipRegulateId
-                                        },
-                                        {
-                                            "name": "编辑",
-                                            "css": "edit",
-                                            "type": "primary",
-                                            "id": c.internshipRegulateId
-                                        },
-                                        {
-                                            "name": "删除",
-                                            "css": "del",
-                                            "type": "danger",
-                                            "id": c.internshipRegulateId
-                                        }
-                                    ]
-                                };
+                            {
+                                func: [
+                                    {
+                                        "name": "查看",
+                                        "css": "look",
+                                        "type": "info",
+                                        "id": c.internshipRegulateId
+                                    },
+                                    {
+                                        "name": "编辑",
+                                        "css": "edit",
+                                        "type": "primary",
+                                        "id": c.internshipRegulateId
+                                    },
+                                    {
+                                        "name": "删除",
+                                        "css": "del",
+                                        "type": "danger",
+                                        "id": c.internshipRegulateId
+                                    }
+                                ]
+                            };
 
                         return template(context);
                     }
@@ -203,7 +203,7 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
             param.studentName = $(getParamId().studentName).val();
             param.studentNumber = $(getParamId().studentNumber).val();
             param.createDate = $(getParamId().createDate).val();
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.STUDENT_NAME, param.studentName);
                 sessionStorage.setItem(webStorageKey.STUDENT_NUMBER, param.studentNumber);
                 sessionStorage.setItem(webStorageKey.CREATE_DATE, param.createDate);
@@ -226,7 +226,7 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
             var studentName = null;
             var studentNumber = null;
             var createDate = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
                 studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
                 createDate = sessionStorage.getItem(webStorageKey.CREATE_DATE);
@@ -251,7 +251,7 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
             var studentName = null;
             var studentNumber = null;
             var createDate = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
                 studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
                 createDate = sessionStorage.getItem(webStorageKey.CREATE_DATE);

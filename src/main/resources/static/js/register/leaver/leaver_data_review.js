@@ -220,7 +220,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             var params = {
                 realName: '',
                 studentNumber: '',
-                organizeName:'',
+                organizeName: '',
                 leaverRegisterReleaseId: page_param.paramLeaverRegisterReleaseId
             };
             if (typeof (Storage) !== "undefined") {

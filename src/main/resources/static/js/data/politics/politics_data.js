@@ -23,7 +23,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         };
 
         var edit_param_id = {
-            politicalLandscapeId:'#editPoliticalLandscapeId',
+            politicalLandscapeId: '#editPoliticalLandscapeId',
             politicalLandscapeName: '#editPoliticalLandscapeName'
         };
 
@@ -33,7 +33,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 text: '保存',
                 tip: '保存中...'
             },
-            edit:{
+            edit: {
                 id: '#edit',
                 text: '保存',
                 tip: '保存中...'
@@ -179,7 +179,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
          */
         function initParam() {
             param.politicalLandscapeName = $(getParamId().politicalLandscapeName).val();
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.POLITICAL_LANDSCAPE_NAME, param.politicalLandscapeName);
             }
         }
@@ -189,7 +189,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
          */
         function initSearchContent() {
             var politicalLandscapeName = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 politicalLandscapeName = sessionStorage.getItem(webStorageKey.POLITICAL_LANDSCAPE_NAME);
             }
             if (politicalLandscapeName !== null) {
@@ -202,7 +202,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         */
         function initSearchInput() {
             var politicalLandscapeName = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 politicalLandscapeName = sessionStorage.getItem(webStorageKey.POLITICAL_LANDSCAPE_NAME);
             }
             if (politicalLandscapeName !== null) {

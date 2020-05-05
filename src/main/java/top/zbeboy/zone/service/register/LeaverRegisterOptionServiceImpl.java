@@ -18,7 +18,6 @@ import java.util.List;
 
 import static org.jooq.impl.DSL.max;
 import static top.zbeboy.zone.domain.Tables.LEAVER_REGISTER_OPTION;
-import static top.zbeboy.zone.domain.Tables.LEAVER_REGISTER_RELEASE;
 
 @Service("leaverRegisterOptionService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

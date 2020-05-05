@@ -18,7 +18,7 @@ public class TestData {
     private TrainingReportService trainingReportService;
 
     @Test
-    public void testTrainingFile(){
+    public void testTrainingFile() {
         TrainingReportBean bean = new TrainingReportBean();
         bean.setOrganizeName("智电1811");
         bean.setCourseName("Java核心实训");
@@ -43,7 +43,7 @@ public class TestData {
     }
 
     @Test
-    public void testTrainingReport(){
+    public void testTrainingReport() {
         TrainingReportBean bean = new TrainingReportBean();
         bean.setOrganizeName("智电1811");
         bean.setCourseName("Java核心实训");

@@ -23,7 +23,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         };
 
         var edit_param_id = {
-            academicTitleId:'#editAcademicTitleId',
+            academicTitleId: '#editAcademicTitleId',
             academicTitleName: '#editAcademicTitleName'
         };
 
@@ -33,7 +33,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 text: '保存',
                 tip: '保存中...'
             },
-            edit:{
+            edit: {
                 id: '#edit',
                 text: '保存',
                 tip: '保存中...'
@@ -179,7 +179,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
          */
         function initParam() {
             param.academicTitleName = $(getParamId().academicTitleName).val();
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.ACADEMIC_TITLE_NAME, param.academicTitleName);
             }
         }
@@ -189,7 +189,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
          */
         function initSearchContent() {
             var academicTitleName = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 academicTitleName = sessionStorage.getItem(webStorageKey.ACADEMIC_TITLE_NAME);
             }
             if (academicTitleName !== null) {
@@ -202,7 +202,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         */
         function initSearchInput() {
             var academicTitleName = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 academicTitleName = sessionStorage.getItem(webStorageKey.ACADEMIC_TITLE_NAME);
             }
             if (academicTitleName !== null) {

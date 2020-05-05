@@ -159,7 +159,7 @@ public class UsersServiceImpl implements UsersService, PaginationPlugin<DataTabl
     @Override
     public Users getUserByChannel(String channel, Principal principal) {
         Users users;
-        if(StringUtils.equals(Workbook.channel.API.name(),channel)){
+        if (StringUtils.equals(Workbook.channel.API.name(), channel)) {
             users = getUserFromOauth(principal);
         } else {
             users = getUserFromSession();

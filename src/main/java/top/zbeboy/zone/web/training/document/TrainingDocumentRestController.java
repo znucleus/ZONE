@@ -310,7 +310,7 @@ public class TrainingDocumentRestController {
             if (trainingConditionCommon.canOperator(trainingDocumentFile.getTrainingReleaseId())) {
                 trainingDocumentFileService.deleteById(trainingDocumentFileId);
                 Files files = filesService.findById(trainingDocumentFile.getFileId());
-                if(Objects.nonNull(files)){
+                if (Objects.nonNull(files)) {
                     FilesUtil.deleteFile(RequestUtil.getRealPath(request) + files.getRelativePath());
                     filesService.delete(files);
                 }

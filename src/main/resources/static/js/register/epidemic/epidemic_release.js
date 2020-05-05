@@ -10,8 +10,8 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             add: '/web/register/epidemic/release/add',
             edit: '/web/register/epidemic/release/edit',
             del: web_path + '/web/register/epidemic/release/delete',
-            register:'/web/register/epidemic/data/add',
-            review:'/web/register/epidemic/review',
+            register: '/web/register/epidemic/data/add',
+            review: '/web/register/epidemic/review',
             page: '/web/menu/register/epidemic'
         };
 
@@ -58,7 +58,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
          * 刷新查询参数
          */
         function refreshSearch() {
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.TITLE, $(param_id.title).val());
             }
         }
@@ -217,7 +217,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             var params = {
                 title: ''
             };
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 title = sessionStorage.getItem(webStorageKey.TITLE);
             }
             if (title !== null) {
@@ -235,7 +235,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         */
         function initSearchInput() {
             var title = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 title = sessionStorage.getItem(webStorageKey.TITLE);
             }
             if (title !== null) {

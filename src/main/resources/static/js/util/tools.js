@@ -84,9 +84,9 @@ define(["jquery"], function ($) {
             },
             moment: {
                 releaseTime: 'YYYY.MM.DD HH:mm:ss',
-                defaultTime:'YYYY-MM-DD HH:mm:ss'
+                defaultTime: 'YYYY-MM-DD HH:mm:ss'
             },
-            weekDay: function(day){
+            weekDay: function (day) {
                 var v = '';
                 switch (day) {
                     case 1:

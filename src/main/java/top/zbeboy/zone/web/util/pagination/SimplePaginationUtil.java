@@ -27,7 +27,8 @@ public class SimplePaginationUtil extends PaginationUtil {
     */
     private ExportInfo exportInfo;
 
-    public SimplePaginationUtil(){}
+    public SimplePaginationUtil() {
+    }
 
     public SimplePaginationUtil(HttpServletRequest request, String orderColumnName, String orderDir, String fileName, String path) {
         String extraSearchParam = request.getParameter("extra_search");

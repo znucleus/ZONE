@@ -1,8 +1,5 @@
 package top.zbeboy.zone.config;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * 微信端app记录
  */

@@ -44,7 +44,7 @@
 
     <!--定义操作列按钮模板-->
     <script id="operator_button" type="text/x-handlebars-template">
-        <div class="btn-group" role="group" >
+        <div class="btn-group" role="group">
             {{#each func}}
             <button type="button" class="btn btn-{{this.type}} btn-sm {{this.css}}" data-id="{{this.id}}"
                     data-application="{{this.application}}">{{this.name}}
@@ -53,7 +53,8 @@
         </div>
     </script>
 
-    <input type="hidden" class="dy_script" th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/system/application/system_application.js')}"/>
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/system/application/system_application.js')}"/>
 </div>
 <!-- /#page-wrapper -->
 </body>

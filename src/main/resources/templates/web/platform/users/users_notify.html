@@ -18,11 +18,14 @@
                         <div class="row">
                             <div class="col-md-3 mg-t-10">
                                 <div class="list-group">
-                                    <a href="javascript:" id="userNotifyUnRead" class="list-group-item d-flex justify-content-between align-items-center active">
+                                    <a href="javascript:" id="userNotifyUnRead"
+                                       class="list-group-item d-flex justify-content-between align-items-center active">
                                         未读
-                                        <span class="badge badge-secondary badge-pill" id="unReadNotifyUnReadNum"></span>
+                                        <span class="badge badge-secondary badge-pill"
+                                              id="unReadNotifyUnReadNum"></span>
                                     </a>
-                                    <a href="javascript:" id="userNotifyRead" class="list-group-item d-flex justify-content-between align-items-center">
+                                    <a href="javascript:" id="userNotifyRead"
+                                       class="list-group-item d-flex justify-content-between align-items-center">
                                         已读
                                         <span class="badge badge-secondary badge-pill" id="readNotifyReadNum"></span>
                                     </a>
@@ -33,7 +36,8 @@
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <div class="jumbotron">
-                                                <h1 class="display-4 text-center"><i class="icon ion-ios-bell-outline tx-60"></i></h1>
+                                                <h1 class="display-4 text-center"><i
+                                                        class="icon ion-ios-bell-outline tx-60"></i></h1>
                                                 <p class="lead text-center">无任何通知提醒</p>
                                             </div>
                                         </div>
@@ -55,7 +59,8 @@
             <div class="card-header" role="tab" id="heading{{userNotifyId}}">
                 <h6 class="mg-b-0">
                     <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{userNotifyId}}"
-                       aria-expanded="true" aria-controls="collapseOne" class="tx-gray-800 transition userNotify" data-id="{{userNotifyId}}">
+                       aria-expanded="true" aria-controls="collapseOne" class="tx-gray-800 transition userNotify"
+                       data-id="{{userNotifyId}}">
                         {{realName}} - {{notifyTitle}} <small class="pull-right text-muted">{{createDateStr}}</small>
                     </a>
                 </h6>
@@ -71,7 +76,8 @@
         {{/each}}
     </script>
 
-    <input type="hidden" class="dy_script" th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/platform/users/users_notify.js')}"/>
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/platform/users/users_notify.js')}"/>
 </div>
 <!-- /#page-wrapper -->
 </body>

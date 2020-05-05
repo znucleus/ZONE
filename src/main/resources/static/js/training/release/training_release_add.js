@@ -385,7 +385,7 @@ require(["jquery", "lodash", "tools", "moment-with-locales", "handlebars", "swee
                 tools.validErrorDom(param_id.endDate, '请选择结课时间');
             } else {
                 var startDate = param.startDate;
-                if(moment(endDate).isSameOrAfter(startDate)){
+                if (moment(endDate).isSameOrAfter(startDate)) {
                     tools.validSuccessDom(param_id.endDate);
                     sendAjax();
                 } else {

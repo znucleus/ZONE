@@ -354,7 +354,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "responsi
             param.audited = 2;
         }
 
-        if (typeof(Storage) !== "undefined") {
+        if (typeof (Storage) !== "undefined") {
             sessionStorage.setItem(webStorageKey.REAL_NAME, param.realName);
             sessionStorage.setItem(webStorageKey.USERNAME, param.username);
             sessionStorage.setItem(webStorageKey.EMAIL, param.email);
@@ -372,7 +372,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "responsi
         var email = null;
         var mobile = null;
         var audited = null;
-        if (typeof(Storage) !== "undefined") {
+        if (typeof (Storage) !== "undefined") {
             realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
             username = sessionStorage.getItem(webStorageKey.USERNAME);
             email = sessionStorage.getItem(webStorageKey.EMAIL);
@@ -409,7 +409,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "responsi
         var email = null;
         var mobile = null;
         var audited = null;
-        if (typeof(Storage) !== "undefined") {
+        if (typeof (Storage) !== "undefined") {
             realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
             username = sessionStorage.getItem(webStorageKey.USERNAME);
             email = sessionStorage.getItem(webStorageKey.EMAIL);

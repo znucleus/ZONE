@@ -291,7 +291,7 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
             param.studentName = $(getParamId().studentName).val();
             param.studentNumber = $(getParamId().studentNumber).val();
             param.organize = $(getParamId().organize).val();
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.STUDENT_NAME, param.studentName);
                 sessionStorage.setItem(webStorageKey.STUDENT_NUMBER, param.studentNumber);
                 sessionStorage.setItem(webStorageKey.ORGANIZE, param.organize);
@@ -305,7 +305,7 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
             var studentName = null;
             var studentNumber = null;
             var organize = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
                 studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
                 organize = sessionStorage.getItem(webStorageKey.ORGANIZE);
@@ -330,7 +330,7 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
             var studentName = null;
             var studentNumber = null;
             var organize = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 studentName = sessionStorage.getItem(webStorageKey.STUDENT_NAME);
                 studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
                 organize = sessionStorage.getItem(webStorageKey.ORGANIZE);

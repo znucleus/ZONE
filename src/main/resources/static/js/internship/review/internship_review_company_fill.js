@@ -79,7 +79,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
          * 刷新查询参数
          */
         function refreshSearch() {
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.REAL_NAME, $(param_id.realName).val());
                 sessionStorage.setItem(webStorageKey.STUDENT_NUMBER, $(param_id.studentNumber).val());
                 sessionStorage.setItem(webStorageKey.ORGANIZE_ID, $(param_id.organize).val() != null ? $(param_id.organize).val() : '');
@@ -505,7 +505,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
                 organizeSelect2 = $(param_id.organize).select2({data: data.results});
 
                 if (!init_configure.init_organize) {
-                    if (typeof(Storage) !== "undefined") {
+                    if (typeof (Storage) !== "undefined") {
                         var organizeId = sessionStorage.getItem(webStorageKey.ORGANIZE_ID);
                         organizeSelect2.val(Number(organizeId)).trigger("change");
                     }
@@ -534,7 +534,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
                 internshipReleaseId: page_param.paramInternshipReleaseId,
                 internshipApplyState: 7
             };
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
                 studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
                 organizeId = sessionStorage.getItem(webStorageKey.ORGANIZE_ID);
@@ -566,7 +566,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
         function initSearchInput() {
             var realName = null;
             var studentNumber = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
                 studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
             }

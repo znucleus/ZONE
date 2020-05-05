@@ -84,7 +84,8 @@
                         </div>
                         <div class="form-group">
                             <label>课程代码</label>
-                            <input class="form-control" name="courseCode" id="courseCode" placeholder="课程代码" th:value="${course.courseCode}"/>
+                            <input class="form-control" name="courseCode" id="courseCode" placeholder="课程代码"
+                                   th:value="${course.courseCode}"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
@@ -95,8 +96,10 @@
                         </div>
                         <div class="form-group">
                             <label class="ckbox">
-                                <input type="checkbox" name="courseIsDel" value="1" th:if="${course.courseIsDel == 0 || course.courseIsDel == null}"/>
-                                <input type="checkbox" name="courseIsDel" value="1" checked="checked" th:if="${course.courseIsDel == 1}"/>
+                                <input type="checkbox" name="courseIsDel" value="1"
+                                       th:if="${course.courseIsDel == 0 || course.courseIsDel == null}"/>
+                                <input type="checkbox" name="courseIsDel" value="1" checked="checked"
+                                       th:if="${course.courseIsDel == 1}"/>
                                 <span>注销</span>
                             </label>
                         </div>

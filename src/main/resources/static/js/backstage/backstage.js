@@ -51,8 +51,8 @@ requirejs.config({
         "jquery.print": web_path + "/plugins/jquery-print/jquery.print.min",
         "jquery-toggles": web_path + "/plugins/jquery-toggles/toggles.min",
         "clipboard": web_path + "/plugins/clipboard/clipboard.min",
-        "mfb":web_path + "/plugins/mfb/mfb.min",
-        "modernizr.touch":web_path + "/plugins/mfb/lib/modernizr.touch.min"
+        "mfb": web_path + "/plugins/mfb/mfb.min",
+        "modernizr.touch": web_path + "/plugins/mfb/lib/modernizr.touch.min"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -144,11 +144,11 @@ requirejs.config({
         "jquery.print": {
             deps: ["jquery"]
         },
-        "jquery-toggles":{
+        "jquery-toggles": {
             deps: ["jquery", "css!" + web_path + "/plugins/jquery-toggles/toggles-full.min"]
         },
-        "mfb":{
-            deps:["modernizr.touch","css!" + web_path + "/plugins/mfb/mfb.min"]
+        "mfb": {
+            deps: ["modernizr.touch", "css!" + web_path + "/plugins/mfb/mfb.min"]
         }
     }
 });

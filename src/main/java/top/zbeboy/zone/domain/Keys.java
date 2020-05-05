@@ -4,197 +4,28 @@
 package top.zbeboy.zone.domain;
 
 
-import javax.annotation.Generated;
-
 import org.jooq.ForeignKey;
 import org.jooq.Identity;
 import org.jooq.UniqueKey;
 import org.jooq.impl.Internal;
+import top.zbeboy.zone.domain.tables.*;
+import top.zbeboy.zone.domain.tables.records.*;
 
-import top.zbeboy.zone.domain.tables.AcademicTitle;
-import top.zbeboy.zone.domain.tables.AnswerBank;
-import top.zbeboy.zone.domain.tables.AnswerOption;
-import top.zbeboy.zone.domain.tables.AnswerRelease;
-import top.zbeboy.zone.domain.tables.AnswerResult;
-import top.zbeboy.zone.domain.tables.AnswerSolving;
-import top.zbeboy.zone.domain.tables.AnswerSubject;
-import top.zbeboy.zone.domain.tables.Application;
-import top.zbeboy.zone.domain.tables.AttendData;
-import top.zbeboy.zone.domain.tables.AttendMapKey;
-import top.zbeboy.zone.domain.tables.AttendRelease;
-import top.zbeboy.zone.domain.tables.AttendReleaseSub;
-import top.zbeboy.zone.domain.tables.AttendSubscribeLog;
-import top.zbeboy.zone.domain.tables.AttendUsers;
-import top.zbeboy.zone.domain.tables.AttendWxStudentSubscribe;
-import top.zbeboy.zone.domain.tables.Authorities;
-import top.zbeboy.zone.domain.tables.AuthorizeType;
-import top.zbeboy.zone.domain.tables.Building;
-import top.zbeboy.zone.domain.tables.Channel;
-import top.zbeboy.zone.domain.tables.College;
-import top.zbeboy.zone.domain.tables.CollegeApplication;
-import top.zbeboy.zone.domain.tables.CollegeRole;
-import top.zbeboy.zone.domain.tables.Course;
-import top.zbeboy.zone.domain.tables.Department;
-import top.zbeboy.zone.domain.tables.EpidemicRegisterData;
-import top.zbeboy.zone.domain.tables.EpidemicRegisterRelease;
-import top.zbeboy.zone.domain.tables.Files;
-import top.zbeboy.zone.domain.tables.GoogleOauth;
-import top.zbeboy.zone.domain.tables.Grade;
-import top.zbeboy.zone.domain.tables.InternshipApply;
-import top.zbeboy.zone.domain.tables.InternshipChangeCompanyHistory;
-import top.zbeboy.zone.domain.tables.InternshipChangeHistory;
-import top.zbeboy.zone.domain.tables.InternshipFile;
-import top.zbeboy.zone.domain.tables.InternshipInfo;
-import top.zbeboy.zone.domain.tables.InternshipJournal;
-import top.zbeboy.zone.domain.tables.InternshipJournalContent;
-import top.zbeboy.zone.domain.tables.InternshipRegulate;
-import top.zbeboy.zone.domain.tables.InternshipRelease;
-import top.zbeboy.zone.domain.tables.InternshipReviewAuthorize;
-import top.zbeboy.zone.domain.tables.InternshipTeacherDistribution;
-import top.zbeboy.zone.domain.tables.InternshipType;
-import top.zbeboy.zone.domain.tables.LeaverRegisterData;
-import top.zbeboy.zone.domain.tables.LeaverRegisterDataOption;
-import top.zbeboy.zone.domain.tables.LeaverRegisterOption;
-import top.zbeboy.zone.domain.tables.LeaverRegisterRelease;
-import top.zbeboy.zone.domain.tables.LeaverRegisterScope;
-import top.zbeboy.zone.domain.tables.Nation;
-import top.zbeboy.zone.domain.tables.OauthAccessToken;
-import top.zbeboy.zone.domain.tables.OauthClientDetails;
-import top.zbeboy.zone.domain.tables.OauthClientToken;
-import top.zbeboy.zone.domain.tables.OauthClientUsers;
-import top.zbeboy.zone.domain.tables.Organize;
-import top.zbeboy.zone.domain.tables.PoliticalLandscape;
-import top.zbeboy.zone.domain.tables.Role;
-import top.zbeboy.zone.domain.tables.RoleApplication;
-import top.zbeboy.zone.domain.tables.RoleApply;
-import top.zbeboy.zone.domain.tables.School;
-import top.zbeboy.zone.domain.tables.Schoolroom;
-import top.zbeboy.zone.domain.tables.Science;
-import top.zbeboy.zone.domain.tables.Staff;
-import top.zbeboy.zone.domain.tables.Student;
-import top.zbeboy.zone.domain.tables.SystemConfigure;
-import top.zbeboy.zone.domain.tables.SystemMailboxLog;
-import top.zbeboy.zone.domain.tables.SystemNotify;
-import top.zbeboy.zone.domain.tables.SystemOperatorLog;
-import top.zbeboy.zone.domain.tables.SystemSmsLog;
-import top.zbeboy.zone.domain.tables.TrainingAttend;
-import top.zbeboy.zone.domain.tables.TrainingAttendUsers;
-import top.zbeboy.zone.domain.tables.TrainingAuthorities;
-import top.zbeboy.zone.domain.tables.TrainingConfigure;
-import top.zbeboy.zone.domain.tables.TrainingDocument;
-import top.zbeboy.zone.domain.tables.TrainingDocumentContent;
-import top.zbeboy.zone.domain.tables.TrainingDocumentFile;
-import top.zbeboy.zone.domain.tables.TrainingRelease;
-import top.zbeboy.zone.domain.tables.TrainingSpecial;
-import top.zbeboy.zone.domain.tables.TrainingSpecialDocument;
-import top.zbeboy.zone.domain.tables.TrainingSpecialDocumentContent;
-import top.zbeboy.zone.domain.tables.TrainingSpecialFile;
-import top.zbeboy.zone.domain.tables.TrainingSpecialFileType;
-import top.zbeboy.zone.domain.tables.TrainingUsers;
-import top.zbeboy.zone.domain.tables.UserNotify;
-import top.zbeboy.zone.domain.tables.Users;
-import top.zbeboy.zone.domain.tables.UsersType;
-import top.zbeboy.zone.domain.tables.WeiXin;
-import top.zbeboy.zone.domain.tables.WeiXinDevice;
-import top.zbeboy.zone.domain.tables.records.AcademicTitleRecord;
-import top.zbeboy.zone.domain.tables.records.AnswerBankRecord;
-import top.zbeboy.zone.domain.tables.records.AnswerOptionRecord;
-import top.zbeboy.zone.domain.tables.records.AnswerReleaseRecord;
-import top.zbeboy.zone.domain.tables.records.AnswerResultRecord;
-import top.zbeboy.zone.domain.tables.records.AnswerSolvingRecord;
-import top.zbeboy.zone.domain.tables.records.AnswerSubjectRecord;
-import top.zbeboy.zone.domain.tables.records.ApplicationRecord;
-import top.zbeboy.zone.domain.tables.records.AttendDataRecord;
-import top.zbeboy.zone.domain.tables.records.AttendMapKeyRecord;
-import top.zbeboy.zone.domain.tables.records.AttendReleaseRecord;
-import top.zbeboy.zone.domain.tables.records.AttendReleaseSubRecord;
-import top.zbeboy.zone.domain.tables.records.AttendSubscribeLogRecord;
-import top.zbeboy.zone.domain.tables.records.AttendUsersRecord;
-import top.zbeboy.zone.domain.tables.records.AttendWxStudentSubscribeRecord;
-import top.zbeboy.zone.domain.tables.records.AuthoritiesRecord;
-import top.zbeboy.zone.domain.tables.records.AuthorizeTypeRecord;
-import top.zbeboy.zone.domain.tables.records.BuildingRecord;
-import top.zbeboy.zone.domain.tables.records.ChannelRecord;
-import top.zbeboy.zone.domain.tables.records.CollegeApplicationRecord;
-import top.zbeboy.zone.domain.tables.records.CollegeRecord;
-import top.zbeboy.zone.domain.tables.records.CollegeRoleRecord;
-import top.zbeboy.zone.domain.tables.records.CourseRecord;
-import top.zbeboy.zone.domain.tables.records.DepartmentRecord;
-import top.zbeboy.zone.domain.tables.records.EpidemicRegisterDataRecord;
-import top.zbeboy.zone.domain.tables.records.EpidemicRegisterReleaseRecord;
-import top.zbeboy.zone.domain.tables.records.FilesRecord;
-import top.zbeboy.zone.domain.tables.records.GoogleOauthRecord;
-import top.zbeboy.zone.domain.tables.records.GradeRecord;
-import top.zbeboy.zone.domain.tables.records.InternshipApplyRecord;
-import top.zbeboy.zone.domain.tables.records.InternshipChangeCompanyHistoryRecord;
-import top.zbeboy.zone.domain.tables.records.InternshipChangeHistoryRecord;
-import top.zbeboy.zone.domain.tables.records.InternshipFileRecord;
-import top.zbeboy.zone.domain.tables.records.InternshipInfoRecord;
-import top.zbeboy.zone.domain.tables.records.InternshipJournalContentRecord;
-import top.zbeboy.zone.domain.tables.records.InternshipJournalRecord;
-import top.zbeboy.zone.domain.tables.records.InternshipRegulateRecord;
-import top.zbeboy.zone.domain.tables.records.InternshipReleaseRecord;
-import top.zbeboy.zone.domain.tables.records.InternshipReviewAuthorizeRecord;
-import top.zbeboy.zone.domain.tables.records.InternshipTeacherDistributionRecord;
-import top.zbeboy.zone.domain.tables.records.InternshipTypeRecord;
-import top.zbeboy.zone.domain.tables.records.LeaverRegisterDataOptionRecord;
-import top.zbeboy.zone.domain.tables.records.LeaverRegisterDataRecord;
-import top.zbeboy.zone.domain.tables.records.LeaverRegisterOptionRecord;
-import top.zbeboy.zone.domain.tables.records.LeaverRegisterReleaseRecord;
-import top.zbeboy.zone.domain.tables.records.LeaverRegisterScopeRecord;
-import top.zbeboy.zone.domain.tables.records.NationRecord;
-import top.zbeboy.zone.domain.tables.records.OauthAccessTokenRecord;
-import top.zbeboy.zone.domain.tables.records.OauthClientDetailsRecord;
-import top.zbeboy.zone.domain.tables.records.OauthClientTokenRecord;
-import top.zbeboy.zone.domain.tables.records.OauthClientUsersRecord;
-import top.zbeboy.zone.domain.tables.records.OrganizeRecord;
-import top.zbeboy.zone.domain.tables.records.PoliticalLandscapeRecord;
-import top.zbeboy.zone.domain.tables.records.RoleApplicationRecord;
-import top.zbeboy.zone.domain.tables.records.RoleApplyRecord;
-import top.zbeboy.zone.domain.tables.records.RoleRecord;
-import top.zbeboy.zone.domain.tables.records.SchoolRecord;
-import top.zbeboy.zone.domain.tables.records.SchoolroomRecord;
-import top.zbeboy.zone.domain.tables.records.ScienceRecord;
-import top.zbeboy.zone.domain.tables.records.StaffRecord;
-import top.zbeboy.zone.domain.tables.records.StudentRecord;
-import top.zbeboy.zone.domain.tables.records.SystemConfigureRecord;
-import top.zbeboy.zone.domain.tables.records.SystemMailboxLogRecord;
-import top.zbeboy.zone.domain.tables.records.SystemNotifyRecord;
-import top.zbeboy.zone.domain.tables.records.SystemOperatorLogRecord;
-import top.zbeboy.zone.domain.tables.records.SystemSmsLogRecord;
-import top.zbeboy.zone.domain.tables.records.TrainingAttendRecord;
-import top.zbeboy.zone.domain.tables.records.TrainingAttendUsersRecord;
-import top.zbeboy.zone.domain.tables.records.TrainingAuthoritiesRecord;
-import top.zbeboy.zone.domain.tables.records.TrainingConfigureRecord;
-import top.zbeboy.zone.domain.tables.records.TrainingDocumentContentRecord;
-import top.zbeboy.zone.domain.tables.records.TrainingDocumentFileRecord;
-import top.zbeboy.zone.domain.tables.records.TrainingDocumentRecord;
-import top.zbeboy.zone.domain.tables.records.TrainingReleaseRecord;
-import top.zbeboy.zone.domain.tables.records.TrainingSpecialDocumentContentRecord;
-import top.zbeboy.zone.domain.tables.records.TrainingSpecialDocumentRecord;
-import top.zbeboy.zone.domain.tables.records.TrainingSpecialFileRecord;
-import top.zbeboy.zone.domain.tables.records.TrainingSpecialFileTypeRecord;
-import top.zbeboy.zone.domain.tables.records.TrainingSpecialRecord;
-import top.zbeboy.zone.domain.tables.records.TrainingUsersRecord;
-import top.zbeboy.zone.domain.tables.records.UserNotifyRecord;
-import top.zbeboy.zone.domain.tables.records.UsersRecord;
-import top.zbeboy.zone.domain.tables.records.UsersTypeRecord;
-import top.zbeboy.zone.domain.tables.records.WeiXinDeviceRecord;
-import top.zbeboy.zone.domain.tables.records.WeiXinRecord;
+import javax.annotation.Generated;
 
 
 /**
- * A class modelling foreign key relationships and constraints of tables of 
+ * A class modelling foreign key relationships and constraints of tables of
  * the <code>zone</code> schema.
  */
 @Generated(
-    value = {
-        "http://www.jooq.org",
-        "jOOQ version:3.12.4"
-    },
-    comments = "This class is generated by jOOQ"
+        value = {
+                "http://www.jooq.org",
+                "jOOQ version:3.12.4"
+        },
+        comments = "This class is generated by jOOQ"
 )
-@SuppressWarnings({ "all", "unchecked", "rawtypes" })
+@SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class Keys {
 
     // -------------------------------------------------------------------------

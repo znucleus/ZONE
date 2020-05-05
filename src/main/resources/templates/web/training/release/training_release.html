@@ -31,7 +31,8 @@
                 </div>
                 <div class="col-md-12">
                     <div class="float-left mg-t-7">
-                        <input  class="labelauty" id="dataRange" name="dataRange" value="1" type="checkbox" data-labelauty="查看全部|与我相关"/>
+                        <input class="labelauty" id="dataRange" name="dataRange" value="1" type="checkbox"
+                               data-labelauty="查看全部|与我相关"/>
                     </div>
                     <div class="float-right mg-t-5">
                         <button type="button" class="btn btn-outline-primary" id="release"><i class="fa fa-edit"></i> 发布
@@ -64,7 +65,8 @@
                     <div class="col-md-4"><span>系：</span><span>{{departmentName}}</span></div>
                     <div class="col-md-4"><span>专业：</span><span>{{scienceName}}</span></div>
                     <div class="col-md-4"><span>年级：</span><span>{{grade}}</span></div>
-                    <div class="col-md-4"><span>班级：</span><span class="badge badge-secondary">{{organizeName}}</span></div>
+                    <div class="col-md-4"><span>班级：</span><span class="badge badge-secondary">{{organizeName}}</span>
+                    </div>
                     <div class="col-md-4"><span>课程名：</span><span>{{courseName}}</span></div>
                     <div class="col-md-4"><span>学时：</span><span>{{courseHours}}</span></div>
                     <div class="col-md-4"><span>学分：</span><span>{{courseCredit}}</span></div>
@@ -82,7 +84,8 @@
                     {{#if canOperator}}
                     <button type="button" class="btn btn-primary edit" data-id="{{trainingReleaseId}}">编辑</button>
                     <button type="button" class="btn btn-info configure" data-id="{{trainingReleaseId}}">配置</button>
-                    <button type="button" class="btn btn-purple authorities" data-id="{{trainingReleaseId}}">权限分配</button>
+                    <button type="button" class="btn btn-purple authorities" data-id="{{trainingReleaseId}}">权限分配
+                    </button>
                     <button type="button" class="btn btn-outline-danger del" data-id="{{trainingReleaseId}}"
                             data-name="{{title}}">删除
                     </button>

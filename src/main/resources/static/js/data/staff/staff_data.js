@@ -380,7 +380,7 @@ require(["jquery", "lodash_plugin", "tools", "handlebars", "nav.active", "sweeta
             param.audited = 2;
         }
 
-        if (typeof(Storage) !== "undefined") {
+        if (typeof (Storage) !== "undefined") {
             sessionStorage.setItem(webStorageKey.SCHOOL, DP.defaultUndefinedValue(param.school, ''));
             sessionStorage.setItem(webStorageKey.COLLEGE, DP.defaultUndefinedValue(param.college, ''));
             sessionStorage.setItem(webStorageKey.DEPARTMENT, param.department);
@@ -406,7 +406,7 @@ require(["jquery", "lodash_plugin", "tools", "handlebars", "nav.active", "sweeta
         var email = null;
         var mobile = null;
         var audited = null;
-        if (typeof(Storage) !== "undefined") {
+        if (typeof (Storage) !== "undefined") {
             school = sessionStorage.getItem(webStorageKey.SCHOOL);
             college = sessionStorage.getItem(webStorageKey.COLLEGE);
             department = sessionStorage.getItem(webStorageKey.DEPARTMENT);
@@ -467,7 +467,7 @@ require(["jquery", "lodash_plugin", "tools", "handlebars", "nav.active", "sweeta
         var email = null;
         var mobile = null;
         var audited = null;
-        if (typeof(Storage) !== "undefined") {
+        if (typeof (Storage) !== "undefined") {
             school = sessionStorage.getItem(webStorageKey.SCHOOL);
             college = sessionStorage.getItem(webStorageKey.COLLEGE);
             department = sessionStorage.getItem(webStorageKey.DEPARTMENT);

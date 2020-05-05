@@ -61,7 +61,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
          * 刷新查询参数
          */
         function refreshSearch() {
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.TITLE, $(param_id.title).val());
                 sessionStorage.setItem(webStorageKey.DATA_RANGE, _.isUndefined($("input[name='dataRange']:checked").val()) ? '0' : '1');
             }
@@ -230,7 +230,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 title: '',
                 dataRange: 0
             };
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 title = sessionStorage.getItem(webStorageKey.TITLE);
                 dataRange = sessionStorage.getItem(webStorageKey.DATA_RANGE);
             }
@@ -255,7 +255,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         function initSearchInput() {
             var title = null;
             var dataRange = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 title = sessionStorage.getItem(webStorageKey.TITLE);
                 dataRange = sessionStorage.getItem(webStorageKey.DATA_RANGE);
             }

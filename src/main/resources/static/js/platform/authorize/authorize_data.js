@@ -307,7 +307,7 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "workbook", "respo
                 param.dataRange = 2;
             }
 
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.USERNAME, param.username);
                 sessionStorage.setItem(webStorageKey.REAL_NAME, param.realName);
                 sessionStorage.setItem(webStorageKey.ROLE_NAME, param.roleName);
@@ -323,7 +323,7 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "workbook", "respo
             var realName = null;
             var roleName = null;
             var dataRange = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 username = sessionStorage.getItem(webStorageKey.USERNAME);
                 realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
                 roleName = sessionStorage.getItem(webStorageKey.ROLE_NAME);
@@ -354,7 +354,7 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "workbook", "respo
             var realName = null;
             var roleName = null;
             var dataRange = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 username = sessionStorage.getItem(webStorageKey.USERNAME);
                 realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
                 roleName = sessionStorage.getItem(webStorageKey.ROLE_NAME);

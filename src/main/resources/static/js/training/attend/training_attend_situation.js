@@ -150,7 +150,7 @@ require(["jquery", "nav.active", "responsive.bootstrap4", "jquery.address", "mes
             param.attendDate = $(getParamId().attendDate).val();
             param.operate = $(getParamId().operate).val();
 
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.REAL_NAME, param.realName);
                 sessionStorage.setItem(webStorageKey.STUDENT_NUMBER, param.studentNumber);
                 sessionStorage.setItem(webStorageKey.ATTEND_DATE, param.attendDate);
@@ -166,7 +166,7 @@ require(["jquery", "nav.active", "responsive.bootstrap4", "jquery.address", "mes
             var studentNumber = null;
             var attendDate = null;
             var operate = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
                 studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
                 attendDate = sessionStorage.getItem(webStorageKey.ATTEND_DATE);
@@ -197,7 +197,7 @@ require(["jquery", "nav.active", "responsive.bootstrap4", "jquery.address", "mes
             var studentNumber = null;
             var attendDate = null;
             var operate = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
                 studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
                 attendDate = sessionStorage.getItem(webStorageKey.ATTEND_DATE);

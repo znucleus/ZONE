@@ -1,5 +1,5 @@
 //# sourceURL=internship_distribution_list.js
-require(["jquery", "nav.active", "sweetalert2", "responsive.bootstrap4","jquery.address", "messenger"],
+require(["jquery", "nav.active", "sweetalert2", "responsive.bootstrap4", "jquery.address", "messenger"],
     function ($, navActive, Swal) {
 
         var page_param = {
@@ -111,7 +111,7 @@ require(["jquery", "nav.active", "sweetalert2", "responsive.bootstrap4","jquery.
                     "sSortDescending": ": 以降序排列此列"
                 }
             },
-            "dom":  "<'row'<'col-lg-2 col-md-12'l><'#global_button.col-lg-10 col-md-12'>r>" +
+            "dom": "<'row'<'col-lg-2 col-md-12'l><'#global_button.col-lg-10 col-md-12'>r>" +
                 "t" +
                 "<'row'<'col-sm-5'i><'col-sm-7'p>>",
             initComplete: function () {
@@ -155,7 +155,7 @@ require(["jquery", "nav.active", "sweetalert2", "responsive.bootstrap4","jquery.
             param.staffNumber = $(getParamId().staffNumber).val();
             param.username = $(getParamId().username).val();
             param.assigner = $(getParamId().assigner).val();
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.STUDENT_USERNAME, param.studentUsername);
                 sessionStorage.setItem(webStorageKey.STAFF_USERNAME, param.staffUsername);
                 sessionStorage.setItem(webStorageKey.STUDENT_NUMBER, param.studentNumber);
@@ -175,7 +175,7 @@ require(["jquery", "nav.active", "sweetalert2", "responsive.bootstrap4","jquery.
             var staffNumber = null;
             var username = null;
             var assigner = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 studentUsername = sessionStorage.getItem(webStorageKey.STUDENT_USERNAME);
                 staffUsername = sessionStorage.getItem(webStorageKey.STAFF_USERNAME);
                 studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
@@ -218,7 +218,7 @@ require(["jquery", "nav.active", "sweetalert2", "responsive.bootstrap4","jquery.
             var staffNumber = null;
             var username = null;
             var assigner = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 studentUsername = sessionStorage.getItem(webStorageKey.STUDENT_USERNAME);
                 staffUsername = sessionStorage.getItem(webStorageKey.STAFF_USERNAME);
                 studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);

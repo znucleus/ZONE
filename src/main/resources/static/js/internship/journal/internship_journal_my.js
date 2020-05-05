@@ -209,7 +209,7 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "responsive.bootst
          */
         function initParam() {
             param.createDate = $(getParamId().createDate).val();
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.CREATE_DATE, param.createDate);
             }
         }
@@ -228,7 +228,7 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "responsive.bootst
        */
         function initSearchContent() {
             var createDate = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 createDate = sessionStorage.getItem(webStorageKey.CREATE_DATE);
             }
             if (createDate !== null) {
@@ -241,7 +241,7 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "responsive.bootst
         */
         function initSearchInput() {
             var createDate = null;
-            if (typeof(Storage) !== "undefined") {
+            if (typeof (Storage) !== "undefined") {
                 createDate = sessionStorage.getItem(webStorageKey.CREATE_DATE);
             }
             if (createDate !== null) {

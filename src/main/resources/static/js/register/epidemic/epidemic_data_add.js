@@ -19,7 +19,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
         var param_id = {
             epidemicStatus: '#epidemicStatus',
             address: '#address',
-            remark:'#remark'
+            remark: '#remark'
         };
 
         var button_id = {
@@ -38,8 +38,8 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             epidemicStatus: '',
             location: '',
             address: '',
-            remark:'',
-            epidemicRegisterDataId:''
+            remark: '',
+            epidemicRegisterDataId: ''
         };
 
         var page_param = {
@@ -75,7 +75,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
          * 初始化界面
          */
         function init() {
-            if(page_param.paramEpidemicRegisterDataId !== ''){
+            if (page_param.paramEpidemicRegisterDataId !== '') {
                 initEpidemicStatus();
             }
             initMaxLength();
