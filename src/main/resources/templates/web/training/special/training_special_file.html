@@ -159,6 +159,72 @@
         </div>
     </div>
 
+    <!-- 文件映射Modal -->
+    <div class="modal fade" id="fileMappingModal" tabindex="-1" role="dialog" aria-labelledby="fileMappingModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="fileMappingModalLabel">文件映射</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="mg-t-20" id="file_mapping_form">
+                        <input id="mappingFileTypeId" type="hidden"/>
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <input id="mappingFileId" name="fileId" placeholder="文件ID"
+                                       class="form-control" readonly>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <input id="mappingOriginalFileName" name="originalFileName" placeholder="文件原名"
+                                       class="form-control">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <input id="mappingNewName" name="newName" placeholder="文件新名"
+                                       class="form-control">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <input id="mappingExt" name="ext" placeholder="后缀"
+                                       class="form-control">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <input id="mappingFileSize" name="fileSize" placeholder="文件大小"
+                                       class="form-control" type="number">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <input id="mappingRelativePath" name="relativePath" placeholder="相对路径"
+                                       class="form-control">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="mappingFile">确定</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script id="type-template" type="text/x-handlebars-template">
         {{#each listResult}}
         <div class="col-md-4">
@@ -225,7 +291,7 @@
                 <div class="btn-group mb-1" role="group">
                     {{#if mapping}}
                     <button type="button" class="btn btn-primary btn-sm download"
-                            data-id="{{trainingSpecialFileId}}" >下载
+                            data-id="{{trainingSpecialFileId}}">下载
                     </button>
                     {{/if}}
                     {{#if canOperator}}

@@ -1,8 +1,10 @@
 package top.zbeboy.zone.service.training;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.jooq.*;
+import org.jooq.Condition;
+import org.jooq.DSLContext;
+import org.jooq.Record;
+import org.jooq.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -13,11 +15,12 @@ import top.zbeboy.zone.service.util.SQLQueryUtil;
 import top.zbeboy.zone.web.vo.training.special.TrainingSpecialFileSearchVo;
 
 import javax.annotation.Resource;
-
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
-import static top.zbeboy.zone.domain.Tables.*;
-import static top.zbeboy.zone.domain.Tables.TRAINING_DOCUMENT;
+import static top.zbeboy.zone.domain.Tables.FILES;
+import static top.zbeboy.zone.domain.Tables.TRAINING_SPECIAL_FILE;
 
 @Service("trainingSpecialFileService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -39,9 +42,23 @@ public class TrainingSpecialFileServiceImpl implements TrainingSpecialFileServic
     }
 
     @Override
+    public Optional<Record> findByIdRelation(String id) {
+        return create.select()
+                .from(TRAINING_SPECIAL_FILE)
+                .leftJoin(FILES)
+                .on(TRAINING_SPECIAL_FILE.FILE_ID.eq(FILES.FILE_ID))
+                .fetchOptional();
+    }
+
+    @Override
+    public List<TrainingSpecialFile> findByFileId(String fileId) {
+        return trainingSpecialFileDao.fetchByFileId(fileId);
+    }
+
+    @Override
     public Result<Record> findAllByCondition(TrainingSpecialFileSearchVo trainingSpecialFileSearchVo) {
         Condition a = null;
-        if(StringUtils.isNotBlank(trainingSpecialFileSearchVo.getFileTypeId())){
+        if (StringUtils.isNotBlank(trainingSpecialFileSearchVo.getFileTypeId())) {
             a = TRAINING_SPECIAL_FILE.FILE_TYPE_ID.eq(trainingSpecialFileSearchVo.getFileTypeId());
         }
 
@@ -83,6 +100,11 @@ public class TrainingSpecialFileServiceImpl implements TrainingSpecialFileServic
     @Override
     public void save(TrainingSpecialFile trainingSpecialFile) {
         trainingSpecialFileDao.insert(trainingSpecialFile);
+    }
+
+    @Override
+    public void update(TrainingSpecialFile trainingSpecialFile) {
+        trainingSpecialFileDao.update(trainingSpecialFile);
     }
 
     @Override

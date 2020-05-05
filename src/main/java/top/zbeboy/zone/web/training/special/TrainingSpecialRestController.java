@@ -35,6 +35,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.File;
 import java.util.*;
 
 @RestController
@@ -530,5 +531,102 @@ public class TrainingSpecialRestController {
             }
         }
 
+    }
+
+    /**
+     * 获取文件信息
+     *
+     * @param trainingSpecialFileId 专题id
+     * @return 数据
+     */
+    @PostMapping("/web/training/special/file/info")
+    public ResponseEntity<Map<String, Object>> fileInfo(@RequestParam("trainingSpecialFileId") String trainingSpecialFileId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (trainingConditionCommon.specialCondition()) {
+            Optional<Record> record = trainingSpecialFileService.findByIdRelation(trainingSpecialFileId);
+            if (record.isPresent()) {
+                TrainingSpecialFileBean bean = record.get().into(TrainingSpecialFileBean.class);
+                ajaxUtil.success().msg("获取文件信息成功").put("trainingSpecialFile", bean);
+            } else {
+                ajaxUtil.fail().msg("未查询到专题文件信息");
+            }
+        } else {
+            ajaxUtil.fail().msg("您无权限操作");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 文件映射
+     *
+     * @param trainingSpecialFileMappingVo 数据
+     * @param bindingResult                检验
+     * @param request                      请求
+     * @return true or false
+     */
+    @PostMapping("/web/training/special/file/mapping")
+    public ResponseEntity<Map<String, Object>> fileMapping(@Valid TrainingSpecialFileMappingVo trainingSpecialFileMappingVo, BindingResult bindingResult, HttpServletRequest request) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (!bindingResult.hasErrors()) {
+            if (trainingConditionCommon.specialCondition()) {
+                String realPath = RequestUtil.getRealPath(request);
+                File file = new File(realPath + trainingSpecialFileMappingVo.getRelativePath());
+                if (file.exists()) {
+                    Files files = filesService.findById(trainingSpecialFileMappingVo.getFileId());
+                    if (Objects.nonNull(files)) {
+                        files.setRelativePath(trainingSpecialFileMappingVo.getRelativePath());
+                        files.setOriginalFileName(trainingSpecialFileMappingVo.getOriginalFileName());
+                        files.setNewName(trainingSpecialFileMappingVo.getNewName());
+                        files.setExt(trainingSpecialFileMappingVo.getExt());
+                        files.setFileSize(trainingSpecialFileMappingVo.getFileSize());
+                        filesService.update(files);
+
+                        List<TrainingSpecialFile> trainingSpecialFiles = trainingSpecialFileService.findByFileId(files.getFileId());
+                        if (Objects.nonNull(trainingSpecialFiles)) {
+                            trainingSpecialFiles.forEach(f -> {
+                                f.setMapping(BooleanUtil.toByte(true));
+                                trainingSpecialFileService.update(f);
+                            });
+                            ajaxUtil.success().msg("文件映射成功");
+                        } else {
+                            ajaxUtil.fail().msg("未查询到专题文件信息");
+                        }
+
+                    } else {
+                        ajaxUtil.fail().msg("未查询到文件信息");
+                    }
+                } else {
+                    ajaxUtil.fail().msg("文件不存在，映射失败");
+                }
+            } else {
+                ajaxUtil.fail().msg("您无权限操作");
+            }
+        } else {
+            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 文件映射解除
+     *
+     * @param trainingSpecialFileId 专题文件id
+     * @return true or false
+     */
+    @PostMapping("/web/training/special/file/relieve")
+    public ResponseEntity<Map<String, Object>> fileRelieve(@RequestParam("trainingSpecialFileId") String trainingSpecialFileId) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (trainingConditionCommon.specialCondition()) {
+            TrainingSpecialFile trainingSpecialFile = trainingSpecialFileService.findById(trainingSpecialFileId);
+            if (Objects.nonNull(trainingSpecialFile)) {
+                trainingSpecialFile.setMapping(BooleanUtil.toByte(false));
+                trainingSpecialFileService.update(trainingSpecialFile);
+            } else {
+                ajaxUtil.fail().msg("未查询到专题文件信息");
+            }
+        } else {
+            ajaxUtil.fail().msg("您无权限操作");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

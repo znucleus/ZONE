@@ -20,6 +20,13 @@ public interface FilesService {
     void save(Files files);
 
     /**
+     * update file.
+     *
+     * @param files data.
+     */
+    void update(Files files);
+
+    /**
      * delete faile.
      *
      * @param files data.

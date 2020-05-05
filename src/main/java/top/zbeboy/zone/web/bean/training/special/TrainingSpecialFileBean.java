@@ -6,6 +6,8 @@ public class TrainingSpecialFileBean extends TrainingSpecialFile {
     private String originalFileName;
     private String ext;
     private Long fileSize;
+    private String relativePath;
+    private String newName;
     private Byte canOperator;
 
     public String getOriginalFileName() {
@@ -38,5 +40,21 @@ public class TrainingSpecialFileBean extends TrainingSpecialFile {
 
     public void setCanOperator(Byte canOperator) {
         this.canOperator = canOperator;
+    }
+
+    public String getRelativePath() {
+        return relativePath;
+    }
+
+    public void setRelativePath(String relativePath) {
+        this.relativePath = relativePath;
+    }
+
+    public String getNewName() {
+        return newName;
+    }
+
+    public void setNewName(String newName) {
+        this.newName = newName;
     }
 }

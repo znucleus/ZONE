@@ -14,6 +14,9 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             file_save: web_path + '/web/training/special/file/save',
             file_del: web_path + '/web/training/special/file/delete',
             file_download: web_path + '/web/training/special/file/download',
+            file_info: web_path + '/web/training/special/file/info',
+            file_mapping: web_path + '/web/training/special/file/mapping',
+            file_cancel_mapping: web_path + '/web/training/special/file/relieve',
             page: '/web/menu/training/special'
         };
 
@@ -164,6 +167,38 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             localRefresh($(this).attr('data-id'));
         });
 
+        /*
+        映射
+        */
+        $(tableData).delegate('.mapping', "click", function () {
+            var id = $(this).attr('data-id');
+            $.post(ajax_url.file_info, {trainingSpecialFileId: id}, function (data) {
+                Messenger().post({
+                    message: data.msg,
+                    type: data.state ? 'success' : 'error',
+                    showCloseButton: true
+                });
+                if (data.state) {
+                    $('#mappingFileTypeId').val(data.trainingSpecialFile.fileTypeId);
+                    $('#mappingFileId').val(data.trainingSpecialFile.fileId);
+                    $('#mappingOriginalFileName').val(data.trainingSpecialFile.originalFileName);
+                    $('#mappingNewName').val(data.trainingSpecialFile.newName);
+                    $('#mappingExt').val(data.trainingSpecialFile.ext);
+                    $('#mappingFileSize').val(data.trainingSpecialFile.fileSize);
+                    $('#mappingRelativePath').val(data.trainingSpecialFile.relativePath);
+
+                    $('#fileMappingModal').modal('show');
+                }
+            });
+        });
+
+        /*
+        取消映射
+        */
+        $(tableData).delegate('.cancelMapping', "click", function () {
+            mapping_del($(this).attr('data-id'), $(this).attr('data-type'))
+        });
+
         $('#addFileType').click(function () {
             var addFileTypeName = '#addFileTypeName';
             var param = {
@@ -302,6 +337,46 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             });
         }
 
+        /*
+        映射解除
+        */
+        function mapping_del(trainingSpecialFileId, fileTypeId) {
+            Swal.fire({
+                title: "确定该文件映射吗？",
+                text: "文件映射解除！",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                preConfirm: function () {
+                    $.ajax({
+                        type: 'POST',
+                        url: ajax_url.file_cancel_mapping,
+                        data: {trainingSpecialFileId: trainingSpecialFileId},
+                        success: function (data) {
+                            Messenger().post({
+                                message: data.msg,
+                                type: data.state ? 'success' : 'error',
+                                showCloseButton: true
+                            });
+
+                            if (data.state) {
+                                localRefresh(fileTypeId);
+                            }
+                        },
+                        error: function (XMLHttpRequest) {
+                            Messenger().post({
+                                message: 'Request error : ' + XMLHttpRequest.status + " " + XMLHttpRequest.statusText,
+                                type: 'error',
+                                showCloseButton: true
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
         $('#addFile').click(function () {
             validOriginalFileName();
         });
@@ -364,6 +439,95 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                             preConfirm: function () {
                                 localRefresh($('#addFileFileTypeId').val());
                                 $('#fileAddModal').modal('hide');
+                            }
+                        });
+                    } else {
+                        Swal.fire('保存失败', data.msg, 'error');
+                    }
+                },
+                error: function (XMLHttpRequest) {
+                    Messenger().post({
+                        message: 'Request error : ' + XMLHttpRequest.status + " " + XMLHttpRequest.statusText,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        }
+
+        $('#mappingFile').click(function () {
+            validMappingOriginalFileName();
+        });
+
+        function validMappingOriginalFileName() {
+            var originalFileNameId = '#mappingOriginalFileName';
+            var originalFileName = _.trim($(originalFileNameId).val());
+            if (originalFileName.length <= 0 || originalFileName.length > 300) {
+                tools.validErrorDom(originalFileNameId, '文件原名300个字符以内');
+            } else {
+                tools.validSuccessDom(originalFileNameId);
+                validMappingNewName();
+            }
+        }
+
+        function validMappingNewName() {
+            var newNameId = '#mappingNewName';
+            var newName = _.trim($(newNameId).val());
+            if (newName.length <= 0 || newName.length > 300) {
+                tools.validErrorDom(newNameId, '文件新名300个字符以内');
+            } else {
+                tools.validSuccessDom(newNameId);
+                validMappingExt();
+            }
+        }
+
+        function validMappingExt() {
+            var extId = '#mappingExt';
+            var ext = _.trim($(extId).val());
+            if (ext.length <= 0 || ext.length > 20) {
+                tools.validErrorDom(extId, '后缀20个字符以内');
+            } else {
+                tools.validSuccessDom(extId);
+                validMappingFileSize();
+            }
+        }
+
+        function validMappingFileSize() {
+            var fileSizeId = '#mappingFileSize';
+            var fileSize = _.trim($(fileSizeId).val());
+            if (fileSize.length <= 0) {
+                tools.validErrorDom(fileSizeId, '请填写文件大小');
+            } else {
+                tools.validSuccessDom(fileSizeId);
+                validMappingRelativePath();
+            }
+        }
+
+        function validMappingRelativePath() {
+            var relativePathId = '#mappingRelativePath';
+            var relativePath = _.trim($(relativePathId).val());
+            if (relativePath.length <= 0 || relativePath.length > 800) {
+                tools.validErrorDom(relativePathId, '相对路径800个字符以内');
+            } else {
+                tools.validSuccessDom(relativePathId);
+                saveMappingAjax();
+            }
+        }
+
+        function saveMappingAjax() {
+            $.ajax({
+                type: 'POST',
+                url: ajax_url.file_mapping,
+                data: $('#file_mapping_form').serialize(),
+                success: function (data) {
+                    if (data.state) {
+                        Swal.fire({
+                            title: data.msg,
+                            type: "success",
+                            confirmButtonText: "确定",
+                            preConfirm: function () {
+                                localRefresh($('#mappingFileTypeId').val());
+                                $('#fileMappingModal').modal('hide');
                             }
                         });
                     } else {
