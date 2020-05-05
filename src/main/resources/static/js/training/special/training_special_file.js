@@ -27,7 +27,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
 
         init();
 
-        $('refreshType').click(function () {
+        $('#refreshType').click(function () {
             init();
         });
 
@@ -53,17 +53,22 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             initFile();
         }
 
+        var file_param = {
+            fileTypeId: '',
+            originalFileName: ''
+        }
+
         function initFile() {
             var files = $('.file');
             $.each(files, function (i, v) {
-                var fileTypeId = $(v).attr('data-id');
-                sendFileAjax(fileTypeId, v);
+                file_param.fileTypeId = $(v).attr('data-id');
+                sendFileAjax(v);
             });
         }
 
-        function sendFileAjax(fileTypeId, obj) {
+        function sendFileAjax(obj) {
             tools.dataLocalLoading(obj);
-            $.get(ajax_url.file_data + '/' + fileTypeId, function (data) {
+            $.get(ajax_url.file_data, file_param, function (data) {
                 tools.dataLocalEndLoading(obj);
                 fileListData(data, obj);
             });
@@ -72,7 +77,6 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         /**
          * 文件列表数据
          * @param data 数据
-         * @param obj 节点
          */
         function fileListData(data, obj) {
             var template = Handlebars.compile($("#file-template").html());
@@ -113,7 +117,8 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             $.each(files, function (i, v) {
                 var fileTypeId = $(v).attr('data-id');
                 if (curFileTypeId === fileTypeId) {
-                    sendFileAjax(fileTypeId, v);
+                    file_param.fileTypeId = fileTypeId;
+                    sendFileAjax(v);
                 }
             });
         }
@@ -140,6 +145,23 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         $(tableData).delegate('.download', "click", function () {
             var id = $(this).attr('data-id');
             window.location.href = ajax_url.file_download + '/' + id;
+        });
+
+        /*
+        搜索文件
+        */
+        $(tableData).delegate('.search', "click", function () {
+            file_param.originalFileName = $(this).parent().prev().val();
+            localRefresh($(this).attr('data-id'));
+        });
+
+        /*
+        重置
+        */
+        $(tableData).delegate('.reset_search', "click", function () {
+            $(this).parent().prev().val('');
+            file_param.originalFileName = '';
+            localRefresh($(this).attr('data-id'));
         });
 
         $('#addFileType').click(function () {

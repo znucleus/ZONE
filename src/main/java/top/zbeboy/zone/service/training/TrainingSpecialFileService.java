@@ -3,6 +3,7 @@ package top.zbeboy.zone.service.training;
 import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.zone.domain.tables.pojos.TrainingSpecialFile;
+import top.zbeboy.zone.web.vo.training.special.TrainingSpecialFileSearchVo;
 
 public interface TrainingSpecialFileService {
 
@@ -15,21 +16,12 @@ public interface TrainingSpecialFileService {
     TrainingSpecialFile findById(String id);
 
     /**
-     * 根据文件类型id关联查询
+     * 根据条件查询全部
      *
-     * @param fileTypeId 文件类型id
+     * @param trainingSpecialFileSearchVo 搜索条件
      * @return 数据
      */
-    Result<Record> findByFileTypeId(String fileTypeId);
-
-    /**
-     * 根据文件类型id及映射关联查询
-     *
-     * @param fileTypeId 文件类型id
-     * @param mapping    映射
-     * @return 数据
-     */
-    Result<Record> findByFileTypeIdAndMapping(String fileTypeId, Byte mapping);
+    Result<Record> findAllByCondition(TrainingSpecialFileSearchVo trainingSpecialFileSearchVo);
 
     /**
      * 保存

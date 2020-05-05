@@ -343,25 +343,31 @@ public class TrainingSpecialRestController {
     /**
      * 文件数据
      *
-     * @param id 专题id
+     * @param trainingSpecialFileSearchVo 搜索条件
      * @return 数据
      */
-    @GetMapping("/web/training/special/file/data/{id}")
-    public ResponseEntity<Map<String, Object>> fileData(@PathVariable("id") String id) {
+    @GetMapping("/web/training/special/file/data")
+    public ResponseEntity<Map<String, Object>> fileData(@Valid TrainingSpecialFileSearchVo trainingSpecialFileSearchVo, BindingResult bindingResult) {
         AjaxUtil<TrainingSpecialFileBean> ajaxUtil = AjaxUtil.of();
-        List<TrainingSpecialFileBean> trainingSpecialFileBeans = new ArrayList<>();
-        Result<Record> records;
-        if (trainingConditionCommon.specialCondition()) {
-            records = trainingSpecialFileService.findByFileTypeId(id);
+        if (!bindingResult.hasErrors()) {
+            List<TrainingSpecialFileBean> trainingSpecialFileBeans = new ArrayList<>();
+            Result<Record> records;
+            if (trainingConditionCommon.specialCondition()) {
+                records = trainingSpecialFileService.findAllByCondition(trainingSpecialFileSearchVo);
+            } else {
+                trainingSpecialFileSearchVo.setMapping(BooleanUtil.toByte(true));
+                records = trainingSpecialFileService.findAllByCondition(trainingSpecialFileSearchVo);
+            }
+
+            if (records.isNotEmpty()) {
+                trainingSpecialFileBeans = records.into(TrainingSpecialFileBean.class);
+                trainingSpecialFileBeans.forEach(bean -> bean.setCanOperator(BooleanUtil.toByte(trainingConditionCommon.specialCondition())));
+            }
+            ajaxUtil.success().list(trainingSpecialFileBeans).msg("获取数据成功");
         } else {
-            records = trainingSpecialFileService.findByFileTypeIdAndMapping(id, BooleanUtil.toByte(true));
+            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
 
-        if (records.isNotEmpty()) {
-            trainingSpecialFileBeans = records.into(TrainingSpecialFileBean.class);
-            trainingSpecialFileBeans.forEach(bean -> bean.setCanOperator(BooleanUtil.toByte(trainingConditionCommon.specialCondition())));
-        }
-        ajaxUtil.success().list(trainingSpecialFileBeans).msg("获取数据成功");
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
