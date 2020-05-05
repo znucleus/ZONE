@@ -68,6 +68,7 @@ public class InternshipApplyAddVo {
     private Byte practiceReceiving;
     private Byte securityEducationAgreement;
     private Byte parentalConsent;
+    private int state;
 
     public int getStudentId() {
         return studentId;
@@ -293,37 +294,46 @@ public class InternshipApplyAddVo {
         this.parentalConsent = parentalConsent;
     }
 
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+    }
+
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("studentId", studentId)
-                .append("username", username)
-                .append("internshipReleaseId", internshipReleaseId)
-                .append("realName", realName)
-                .append("organizeName", organizeName)
-                .append("studentSex", studentSex)
-                .append("studentNumber", studentNumber)
-                .append("mobile", mobile)
-                .append("qqMailbox", qqMailbox)
-                .append("parentContactPhone", parentContactPhone)
-                .append("staffId", staffId)
-                .append("headmaster", headmaster)
-                .append("headmasterTel", headmasterTel)
-                .append("companyName", companyName)
-                .append("companyAddress", companyAddress)
-                .append("companyContact", companyContact)
-                .append("companyMobile", companyMobile)
-                .append("schoolGuidanceTeacher", schoolGuidanceTeacher)
-                .append("schoolGuidanceTeacherTel", schoolGuidanceTeacherTel)
-                .append("startTime", startTime)
-                .append("endTime", endTime)
-                .append("commitmentBook", commitmentBook)
-                .append("safetyResponsibilityBook", safetyResponsibilityBook)
-                .append("practiceAgreement", practiceAgreement)
-                .append("internshipApplication", internshipApplication)
-                .append("practiceReceiving", practiceReceiving)
-                .append("securityEducationAgreement", securityEducationAgreement)
-                .append("parentalConsent", parentalConsent)
-                .toString();
+        return "InternshipApplyAddVo{" +
+                "studentId=" + studentId +
+                ", username='" + username + '\'' +
+                ", internshipReleaseId='" + internshipReleaseId + '\'' +
+                ", realName='" + realName + '\'' +
+                ", organizeName='" + organizeName + '\'' +
+                ", studentSex='" + studentSex + '\'' +
+                ", studentNumber='" + studentNumber + '\'' +
+                ", mobile='" + mobile + '\'' +
+                ", qqMailbox='" + qqMailbox + '\'' +
+                ", parentContactPhone='" + parentContactPhone + '\'' +
+                ", staffId=" + staffId +
+                ", headmaster='" + headmaster + '\'' +
+                ", headmasterTel='" + headmasterTel + '\'' +
+                ", companyName='" + companyName + '\'' +
+                ", companyAddress='" + companyAddress + '\'' +
+                ", companyContact='" + companyContact + '\'' +
+                ", companyMobile='" + companyMobile + '\'' +
+                ", schoolGuidanceTeacher='" + schoolGuidanceTeacher + '\'' +
+                ", schoolGuidanceTeacherTel='" + schoolGuidanceTeacherTel + '\'' +
+                ", startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                ", commitmentBook=" + commitmentBook +
+                ", safetyResponsibilityBook=" + safetyResponsibilityBook +
+                ", practiceAgreement=" + practiceAgreement +
+                ", internshipApplication=" + internshipApplication +
+                ", practiceReceiving=" + practiceReceiving +
+                ", securityEducationAgreement=" + securityEducationAgreement +
+                ", parentalConsent=" + parentalConsent +
+                ", state=" + state +
+                '}';
     }
 }

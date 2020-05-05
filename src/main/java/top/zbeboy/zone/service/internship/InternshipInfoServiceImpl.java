@@ -73,14 +73,13 @@ public class InternshipInfoServiceImpl implements InternshipInfoService, Paginat
     @Override
     public void saveWithTransaction(InternshipApplyAddVo internshipApplyAddVo) {
         create.transaction(configuration -> {
-            int state = 0;
             DSL.using(configuration)
                     .insertInto(INTERNSHIP_APPLY)
                     .set(INTERNSHIP_APPLY.INTERNSHIP_APPLY_ID, UUIDUtil.getUUID())
                     .set(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID, internshipApplyAddVo.getInternshipReleaseId())
                     .set(INTERNSHIP_APPLY.STUDENT_ID, internshipApplyAddVo.getStudentId())
                     .set(INTERNSHIP_APPLY.APPLY_TIME, DateTimeUtil.getNowSqlTimestamp())
-                    .set(INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE, state)
+                    .set(INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE, internshipApplyAddVo.getState())
                     .execute();
 
             DSL.using(configuration)
@@ -113,7 +112,7 @@ public class InternshipInfoServiceImpl implements InternshipInfoService, Paginat
                     .set(INTERNSHIP_CHANGE_HISTORY.INTERNSHIP_CHANGE_HISTORY_ID, UUIDUtil.getUUID())
                     .set(INTERNSHIP_CHANGE_HISTORY.INTERNSHIP_RELEASE_ID, internshipApplyAddVo.getInternshipReleaseId())
                     .set(INTERNSHIP_CHANGE_HISTORY.STUDENT_ID, internshipApplyAddVo.getStudentId())
-                    .set(INTERNSHIP_CHANGE_HISTORY.STATE, state)
+                    .set(INTERNSHIP_CHANGE_HISTORY.STATE, internshipApplyAddVo.getState())
                     .set(INTERNSHIP_CHANGE_HISTORY.APPLY_TIME, DateTimeUtil.getNowSqlTimestamp())
                     .execute();
         });

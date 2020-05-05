@@ -97,10 +97,14 @@ public class InternshipApplyRestController {
         Result<Record> records = internshipReleaseService.findAllByPage(simplePaginationUtil);
         if (records.isNotEmpty()) {
             beans = records.into(InternshipReleaseBean.class);
-            beans.forEach(bean -> bean.setTeacherDistributionStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionStartTime())));
-            beans.forEach(bean -> bean.setTeacherDistributionEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionEndTime())));
-            beans.forEach(bean -> bean.setStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getStartTime())));
-            beans.forEach(bean -> bean.setEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getEndTime())));
+            beans.forEach(bean->{
+                if(BooleanUtil.toBoolean(bean.getIsTimeLimit())){
+                    bean.setTeacherDistributionStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionStartTime()));
+                    bean.setTeacherDistributionEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionEndTime()));
+                    bean.setStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getStartTime()));
+                    bean.setEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getEndTime()));
+                }
+            });
             beans.forEach(bean -> bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime())));
             beans.forEach(bean -> bean.setCanOperator(BooleanUtil.toByte(internshipConditionCommon.applyCondition(bean.getInternshipReleaseId()))));
         }
@@ -122,10 +126,14 @@ public class InternshipApplyRestController {
         Result<Record> records = internshipApplyService.findAllByPage(simplePaginationUtil);
         if (records.isNotEmpty()) {
             beans = records.into(InternshipApplyBean.class);
-            beans.forEach(bean -> bean.setTeacherDistributionStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionStartTime())));
-            beans.forEach(bean -> bean.setTeacherDistributionEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionEndTime())));
-            beans.forEach(bean -> bean.setStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getStartTime())));
-            beans.forEach(bean -> bean.setEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getEndTime())));
+            beans.forEach(bean->{
+                if(BooleanUtil.toBoolean(bean.getIsTimeLimit())){
+                    bean.setTeacherDistributionStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionStartTime()));
+                    bean.setTeacherDistributionEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionEndTime()));
+                    bean.setStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getStartTime()));
+                    bean.setEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getEndTime()));
+                }
+            });
             beans.forEach(bean -> bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime())));
             beans.forEach(bean -> bean.setApplyTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getApplyTime())));
             beans.forEach(bean -> bean.setChangeFillStartTimeStr(Objects.nonNull(bean.getChangeFillStartTime()) ? DateTimeUtil.defaultFormatSqlTimestamp(bean.getChangeFillStartTime()) : ""));
@@ -178,23 +186,36 @@ public class InternshipApplyRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
             if (internshipConditionCommon.applyCondition(internshipApplyAddVo.getInternshipReleaseId())) {
-                Optional<Record> staffRecord = staffService.findByIdRelation(internshipApplyAddVo.getStaffId());
-                if (staffRecord.isPresent()) {
-                    StaffBean staffBean = staffRecord.get().into(StaffBean.class);
-                    internshipApplyAddVo.setHeadmaster(staffBean.getRealName());
-                    internshipApplyAddVo.setHeadmasterTel(staffBean.getMobile());
+                InternshipRelease internshipRelease = internshipReleaseService.findById(internshipApplyAddVo.getInternshipReleaseId());
+                if(Objects.nonNull(internshipRelease)){
+                    Optional<Record> staffRecord = staffService.findByIdRelation(internshipApplyAddVo.getStaffId());
+                    if (staffRecord.isPresent()) {
+                        StaffBean staffBean = staffRecord.get().into(StaffBean.class);
+                        internshipApplyAddVo.setHeadmaster(staffBean.getRealName());
+                        internshipApplyAddVo.setHeadmasterTel(staffBean.getMobile());
 
-                    String[] schoolGuidanceTeacherArr = internshipApplyAddVo.getSchoolGuidanceTeacher().split(" ");
-                    if (schoolGuidanceTeacherArr.length > 1) {
-                        internshipApplyAddVo.setSchoolGuidanceTeacher(schoolGuidanceTeacherArr[0]);
-                        internshipApplyAddVo.setSchoolGuidanceTeacherTel(schoolGuidanceTeacherArr[1]);
+                        String[] schoolGuidanceTeacherArr = internshipApplyAddVo.getSchoolGuidanceTeacher().split(" ");
+                        if (schoolGuidanceTeacherArr.length > 1) {
+                            internshipApplyAddVo.setSchoolGuidanceTeacher(schoolGuidanceTeacherArr[0]);
+                            internshipApplyAddVo.setSchoolGuidanceTeacherTel(schoolGuidanceTeacherArr[1]);
+                        }
+
+                        boolean isTimeLimit = BooleanUtil.toBoolean(internshipRelease.getIsTimeLimit());
+                        if(isTimeLimit){
+                            internshipApplyAddVo.setState(0);
+                        } else {
+                            internshipApplyAddVo.setState(1);
+                        }
+                        internshipInfoService.saveWithTransaction(internshipApplyAddVo);
+                        ajaxUtil.success().msg("保存成功");
+                    } else {
+                        ajaxUtil.fail().msg("未查询到班级任信息");
                     }
-
-                    internshipInfoService.saveWithTransaction(internshipApplyAddVo);
-                    ajaxUtil.success().msg("保存成功");
                 } else {
-                    ajaxUtil.fail().msg("未查询到班级任信息");
+                    ajaxUtil.fail().msg("未查询到实习发布数据");
                 }
+
+
             } else {
                 ajaxUtil.fail().msg("您无权限或当前实习不允许操作");
             }

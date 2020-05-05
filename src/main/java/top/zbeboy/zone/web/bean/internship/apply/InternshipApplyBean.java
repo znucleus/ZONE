@@ -12,6 +12,7 @@ public class InternshipApplyBean extends InternshipApply {
     private Timestamp teacherDistributionEndTime;
     private Timestamp startTime;
     private Timestamp endTime;
+    private Byte isTimeLimit;
     private Byte internshipReleaseIsDel;
     private String teacherDistributionStartTimeStr;
     private String teacherDistributionEndTimeStr;
@@ -87,6 +88,14 @@ public class InternshipApplyBean extends InternshipApply {
 
     public void setEndTime(Timestamp endTime) {
         this.endTime = endTime;
+    }
+
+    public Byte getIsTimeLimit() {
+        return isTimeLimit;
+    }
+
+    public void setIsTimeLimit(Byte isTimeLimit) {
+        this.isTimeLimit = isTimeLimit;
     }
 
     public Byte getInternshipReleaseIsDel() {

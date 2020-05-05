@@ -10,12 +10,11 @@ public class InternshipReleaseEditVo {
     @NotBlank(message = "实习发布标题不能为空")
     @Size(max = 100, message = "标题100个字符以内")
     private String internshipTitle;
-    @NotBlank(message = "指导教师分配时间不能为空")
     private String teacherDistributionTime;
-    @NotBlank(message = "实习申请时间不能为空")
     private String time;
     private Byte internshipReleaseIsDel;
     private String files;
+    private Byte isTimeLimit;
 
     public String getInternshipReleaseId() {
         return internshipReleaseId;
@@ -63,5 +62,13 @@ public class InternshipReleaseEditVo {
 
     public void setFiles(String files) {
         this.files = files;
+    }
+
+    public Byte getIsTimeLimit() {
+        return isTimeLimit;
+    }
+
+    public void setIsTimeLimit(Byte isTimeLimit) {
+        this.isTimeLimit = isTimeLimit;
     }
 }

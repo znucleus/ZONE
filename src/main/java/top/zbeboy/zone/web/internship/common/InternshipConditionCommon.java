@@ -137,9 +137,15 @@ public class InternshipConditionCommon {
             Optional<Record> record = internshipReleaseService.findByIdRelation(internshipReleaseId);
             if (record.isPresent()) {
                 InternshipReleaseBean internshipRelease = record.get().into(InternshipReleaseBean.class);
-                // 检测教师分配时间
-                if (DateTimeUtil.nowAfterSqlTimestamp(internshipRelease.getTeacherDistributionStartTime()) &&
-                        DateTimeUtil.nowBeforeSqlTimestamp(internshipRelease.getTeacherDistributionEndTime())) {
+                // 是否需要时间限制
+                boolean isTimeLimit = BooleanUtil.toBoolean(internshipRelease.getIsTimeLimit());
+                if(isTimeLimit){
+                    // 检测教师分配时间
+                    if (DateTimeUtil.nowAfterSqlTimestamp(internshipRelease.getTeacherDistributionStartTime()) &&
+                            DateTimeUtil.nowBeforeSqlTimestamp(internshipRelease.getTeacherDistributionEndTime())) {
+                        canOperator = true;
+                    }
+                } else {
                     canOperator = true;
                 }
             }
@@ -170,9 +176,23 @@ public class InternshipConditionCommon {
                         if (Objects.equals(studentBean.getScienceId(), internshipRelease.getScienceId())) {
                             // 检测状态正常
                             if (basicCondition(internshipReleaseId)) {
-                                // 检测实习申请时间
-                                if (DateTimeUtil.nowAfterSqlTimestamp(internshipRelease.getStartTime()) &&
-                                        DateTimeUtil.nowBeforeSqlTimestamp(internshipRelease.getEndTime())) {
+                                // 是否限制时间
+                                boolean isTimeLimit = BooleanUtil.toBoolean(internshipRelease.getIsTimeLimit());
+                                if(isTimeLimit){
+                                    // 检测实习申请时间
+                                    if (DateTimeUtil.nowAfterSqlTimestamp(internshipRelease.getStartTime()) &&
+                                            DateTimeUtil.nowBeforeSqlTimestamp(internshipRelease.getEndTime())) {
+                                        // 检测是否有指导老师
+                                        Optional<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
+                                        if (internshipTeacherDistributionRecord.isPresent()) {
+                                            // 检测是否申请过
+                                            Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
+                                            if (!internshipApplyRecord.isPresent()) {
+                                                canOperator = true;
+                                            }
+                                        }
+                                    }
+                                } else {
                                     // 检测是否有指导老师
                                     Optional<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
                                     if (internshipTeacherDistributionRecord.isPresent()) {
@@ -217,10 +237,57 @@ public class InternshipConditionCommon {
                         if (Objects.equals(studentBean.getScienceId(), internshipRelease.getScienceId())) {
                             // 检测状态正常
                             if (basicCondition(internshipReleaseId)) {
-                                // 检测实习申请时间
-                                if (DateTimeUtil.nowAfterSqlTimestamp(internshipRelease.getStartTime()) &&
-                                        DateTimeUtil.nowBeforeSqlTimestamp(internshipRelease.getEndTime())) {
+                                // 是否限制时间
+                                boolean isTimeLimit = BooleanUtil.toBoolean(internshipRelease.getIsTimeLimit());
+                                if(isTimeLimit){
+                                    // 检测实习申请时间
+                                    if (DateTimeUtil.nowAfterSqlTimestamp(internshipRelease.getStartTime()) &&
+                                            DateTimeUtil.nowBeforeSqlTimestamp(internshipRelease.getEndTime())) {
 
+                                        // 检测是否有指导老师
+                                        Optional<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
+                                        if (internshipTeacherDistributionRecord.isPresent()) {
+                                            // 检测是否申请过
+                                            Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
+                                            if (internshipApplyRecord.isPresent()) {
+                                                InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
+                                                // 时间范围内，以下几种状态都可直接编辑 0:未提交，3:未通过
+                                                if (internshipApply.getInternshipApplyState() == 0 || internshipApply.getInternshipApplyState() == 3) {
+                                                    canOperator = true;
+                                                } else if (internshipApply.getInternshipApplyState() == 5 || internshipApply.getInternshipApplyState() == 7) {
+                                                    // 状态为 5：基本信息变更填写中 或 7：单位信息变更填写中 位于这两个状态，一定是通过审核后的 无视实习时间条件 但需要判断更改时间条件
+                                                    // 检测变更时间
+                                                    if (Objects.nonNull(internshipApply.getChangeFillStartTime()) &&
+                                                            Objects.nonNull(internshipApply.getChangeFillEndTime()) &&
+                                                            DateTimeUtil.nowAfterSqlTimestamp(internshipApply.getChangeFillStartTime()) &&
+                                                            DateTimeUtil.nowBeforeSqlTimestamp(internshipApply.getChangeFillEndTime())) {
+                                                        canOperator = true;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        // 不在申请时间范围
+                                        // 检测是否申请过
+                                        Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
+                                        if (internshipApplyRecord.isPresent()) {
+                                            InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
+                                            // 状态为 5：基本信息变更填写中 或 7：单位信息变更填写中 位于这两个状态，一定是通过审核后的 无视实习时间条件 但需要判断更改时间条件
+                                            if (internshipApply.getInternshipApplyState() == 5 || internshipApply.getInternshipApplyState() == 7) {
+                                                // 判断更改时间条件
+                                                // 检测变更时间
+                                                if (Objects.nonNull(internshipApply.getChangeFillStartTime()) &&
+                                                        Objects.nonNull(internshipApply.getChangeFillEndTime()) &&
+                                                        DateTimeUtil.nowAfterSqlTimestamp(internshipApply.getChangeFillStartTime()) &&
+                                                        DateTimeUtil.nowBeforeSqlTimestamp(internshipApply.getChangeFillEndTime())) {
+                                                    canOperator = true;
+                                                }
+                                            } else if (internshipApply.getInternshipApplyState() == 3) {
+                                                canOperator = true;
+                                            }
+                                        }
+                                    }
+                                } else {
                                     // 检测是否有指导老师
                                     Optional<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
                                     if (internshipTeacherDistributionRecord.isPresent()) {
@@ -228,7 +295,7 @@ public class InternshipConditionCommon {
                                         Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
                                         if (internshipApplyRecord.isPresent()) {
                                             InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
-                                            // 时间范围内，以下几种状态都可直接编辑 0:未提交，3:未通过
+                                            // 以下几种状态都可直接编辑 0:未提交，3:未通过
                                             if (internshipApply.getInternshipApplyState() == 0 || internshipApply.getInternshipApplyState() == 3) {
                                                 canOperator = true;
                                             } else if (internshipApply.getInternshipApplyState() == 5 || internshipApply.getInternshipApplyState() == 7) {
@@ -243,27 +310,8 @@ public class InternshipConditionCommon {
                                             }
                                         }
                                     }
-                                } else {
-                                    // 不在申请时间范围
-                                    // 检测是否申请过
-                                    Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
-                                    if (internshipApplyRecord.isPresent()) {
-                                        InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
-                                        // 状态为 5：基本信息变更填写中 或 7：单位信息变更填写中 位于这两个状态，一定是通过审核后的 无视实习时间条件 但需要判断更改时间条件
-                                        if (internshipApply.getInternshipApplyState() == 5 || internshipApply.getInternshipApplyState() == 7) {
-                                            // 判断更改时间条件
-                                            // 检测变更时间
-                                            if (Objects.nonNull(internshipApply.getChangeFillStartTime()) &&
-                                                    Objects.nonNull(internshipApply.getChangeFillEndTime()) &&
-                                                    DateTimeUtil.nowAfterSqlTimestamp(internshipApply.getChangeFillStartTime()) &&
-                                                    DateTimeUtil.nowBeforeSqlTimestamp(internshipApply.getChangeFillEndTime())) {
-                                                canOperator = true;
-                                            }
-                                        } else if (internshipApply.getInternshipApplyState() == 3) {
-                                            canOperator = true;
-                                        }
-                                    }
                                 }
+
                             }
                         }
 

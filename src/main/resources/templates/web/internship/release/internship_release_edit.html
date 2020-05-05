@@ -35,6 +35,15 @@
                             <small id="internshipTypeHelp" class="form-text text-muted">注意：此字段保存后不可编辑</small>
                         </div>
                         <div class="form-group">
+                            <label class="ckbox">
+                                <input type="checkbox" id="isTimeLimit" name="isTimeLimit" value="1"
+                                       th:if="${internshipRelease.isTimeLimit == 0 || internshipRelease.isTimeLimit == null}"/>
+                                <input type="checkbox" id="isTimeLimit" name="isTimeLimit" value="1" checked="checked"
+                                       th:if="${internshipRelease.isTimeLimit == 1}"/>
+                                <span>教师分配及申请时间限制</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
                             <label>指导教师分配时间</label>
                             <input class="form-control" name="teacherDistributionTime" id="teacherDistributionTime"
                                    placeholder="指导教师分配时间"/>

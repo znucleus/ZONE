@@ -83,11 +83,13 @@
                         <span class="badge badge-success">正常</span>
                         {{/if}}
                     </div>
+                    {{#if isTimeLimit}}
                     <div class="col-md-6"><span>教师分配开始时间：</span><span>{{teacherDistributionStartTimeStr}}</span>
                     </div>
                     <div class="col-md-6"><span>实习申请开始时间：</span><span>{{startTimeStr}}</span></div>
                     <div class="col-md-6"><span>教师分配结束时间：</span><span>{{teacherDistributionEndTimeStr}}</span></div>
                     <div class="col-md-6"><span>实习申请结束时间：</span><span>{{endTimeStr}}</span></div>
+                    {{/if}}
                 </div>
                 <p class="text-right font-italic m-t-10">
                     <small><em><span>发布人：</span><span>{{publisher}}</span> <span>{{releaseTimeStr}}</span></em>

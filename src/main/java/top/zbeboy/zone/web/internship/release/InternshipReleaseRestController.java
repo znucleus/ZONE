@@ -85,10 +85,14 @@ public class InternshipReleaseRestController {
         Result<Record> records = internshipReleaseService.findAllByPage(simplePaginationUtil);
         if (records.isNotEmpty()) {
             beans = records.into(InternshipReleaseBean.class);
-            beans.forEach(bean -> bean.setTeacherDistributionStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionStartTime())));
-            beans.forEach(bean -> bean.setTeacherDistributionEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionEndTime())));
-            beans.forEach(bean -> bean.setStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getStartTime())));
-            beans.forEach(bean -> bean.setEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getEndTime())));
+            beans.forEach(bean->{
+                if(BooleanUtil.toBoolean(bean.getIsTimeLimit())){
+                    bean.setTeacherDistributionStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionStartTime()));
+                    bean.setTeacherDistributionEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionEndTime()));
+                    bean.setStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getStartTime()));
+                    bean.setEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getEndTime()));
+                }
+            });
             beans.forEach(bean -> bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime())));
             beans.forEach(bean -> bean.setCanOperator(BooleanUtil.toByte(internshipConditionCommon.canOperator(bean.getInternshipReleaseId()))));
         }
@@ -158,6 +162,7 @@ public class InternshipReleaseRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
             String internshipReleaseId = UUIDUtil.getUUID();
+            boolean isTimeLimit = BooleanUtil.toBoolean(internshipReleaseAddVo.getIsTimeLimit());
             String teacherDistributionTime = internshipReleaseAddVo.getTeacherDistributionTime();
             String time = internshipReleaseAddVo.getTime();
             String files = internshipReleaseAddVo.getFiles();
@@ -184,13 +189,26 @@ public class InternshipReleaseRestController {
             internshipRelease.setReleaseTime(DateTimeUtil.getNowSqlTimestamp());
             internshipRelease.setUsername(users.getUsername());
             internshipRelease.setPublisher(users.getRealName());
-            saveOrUpdateTime(internshipRelease, teacherDistributionTime, time);
             internshipRelease.setScienceId(internshipReleaseAddVo.getScienceId());
             internshipRelease.setInternshipReleaseIsDel(ByteUtil.toByte(1).equals(internshipReleaseAddVo.getInternshipReleaseIsDel()) ? ByteUtil.toByte(1) : ByteUtil.toByte(0));
             internshipRelease.setInternshipTypeId(internshipReleaseAddVo.getInternshipTypeId());
-            internshipReleaseService.save(internshipRelease);
-            saveOrUpdateFiles(files, internshipReleaseId);
-            ajaxUtil.success().msg("保存成功");
+            internshipRelease.setIsTimeLimit(internshipReleaseAddVo.getIsTimeLimit());
+
+            if (isTimeLimit) {
+                if (StringUtils.isNotBlank(teacherDistributionTime) && StringUtils.isNotBlank(time)) {
+                    // 需要时间限制
+                    saveOrUpdateTime(internshipRelease, teacherDistributionTime, time);
+                    internshipReleaseService.save(internshipRelease);
+                    saveOrUpdateFiles(files, internshipReleaseId);
+                    ajaxUtil.success().msg("保存成功");
+                } else {
+                    ajaxUtil.fail().msg("指导教师分配时间与实习申请时间不能为空");
+                }
+            } else {
+                internshipReleaseService.save(internshipRelease);
+                saveOrUpdateFiles(files, internshipReleaseId);
+                ajaxUtil.success().msg("保存成功");
+            }
         } else {
             ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
@@ -210,24 +228,42 @@ public class InternshipReleaseRestController {
         if (!bindingResult.hasErrors()) {
             if (internshipConditionCommon.canOperator(internshipReleaseEditVo.getInternshipReleaseId())) {
                 String internshipReleaseId = internshipReleaseEditVo.getInternshipReleaseId();
+                boolean isTimeLimit = BooleanUtil.toBoolean(internshipReleaseEditVo.getIsTimeLimit());
                 String teacherDistributionTime = internshipReleaseEditVo.getTeacherDistributionTime();
                 String time = internshipReleaseEditVo.getTime();
                 String files = internshipReleaseEditVo.getFiles();
                 InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
                 if (Objects.nonNull(internshipRelease)) {
                     internshipRelease.setInternshipTitle(internshipReleaseEditVo.getInternshipTitle());
-                    saveOrUpdateTime(internshipRelease, teacherDistributionTime, time);
+                    internshipRelease.setIsTimeLimit(internshipReleaseEditVo.getIsTimeLimit());
                     internshipRelease.setInternshipReleaseIsDel(ByteUtil.toByte(1).equals(internshipReleaseEditVo.getInternshipReleaseIsDel()) ? ByteUtil.toByte(1) : ByteUtil.toByte(0));
-                    internshipReleaseService.update(internshipRelease);
-
-                    Result<Record> records = internshipFileService.findByInternshipReleaseId(internshipReleaseId);
-                    if (records.isNotEmpty()) {
-                        internshipFileService.deleteByInternshipReleaseId(internshipReleaseId);
-                        List<InternshipFile> internshipFiles = records.into(InternshipFile.class);
-                        internshipFiles.forEach(file -> filesService.deleteById(file.getFileId()));
+                    if (isTimeLimit) {
+                        if (StringUtils.isNotBlank(teacherDistributionTime) && StringUtils.isNotBlank(time)) {
+                            // 需要时间限制
+                            saveOrUpdateTime(internshipRelease, teacherDistributionTime, time);
+                            internshipReleaseService.update(internshipRelease);
+                            Result<Record> records = internshipFileService.findByInternshipReleaseId(internshipReleaseId);
+                            if (records.isNotEmpty()) {
+                                internshipFileService.deleteByInternshipReleaseId(internshipReleaseId);
+                                List<InternshipFile> internshipFiles = records.into(InternshipFile.class);
+                                internshipFiles.forEach(file -> filesService.deleteById(file.getFileId()));
+                            }
+                            saveOrUpdateFiles(files, internshipReleaseId);
+                            ajaxUtil.success().msg("更新成功");
+                        } else {
+                            ajaxUtil.fail().msg("指导教师分配时间与实习申请时间不能为空");
+                        }
+                    } else {
+                        internshipReleaseService.update(internshipRelease);
+                        Result<Record> records = internshipFileService.findByInternshipReleaseId(internshipReleaseId);
+                        if (records.isNotEmpty()) {
+                            internshipFileService.deleteByInternshipReleaseId(internshipReleaseId);
+                            List<InternshipFile> internshipFiles = records.into(InternshipFile.class);
+                            internshipFiles.forEach(file -> filesService.deleteById(file.getFileId()));
+                        }
+                        saveOrUpdateFiles(files, internshipReleaseId);
+                        ajaxUtil.success().msg("更新成功");
                     }
-                    saveOrUpdateFiles(files, internshipReleaseId);
-                    ajaxUtil.success().msg("更新成功");
                 } else {
                     ajaxUtil.fail().msg("根据实习发布ID未查询到实习发布数据");
                 }

@@ -18,6 +18,7 @@ import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.platform.UsersTypeService;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zone.service.util.SQLQueryUtil;
+import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
 import javax.annotation.Resource;
@@ -131,7 +132,8 @@ public class InternshipApplyServiceImpl implements InternshipApplyService, Pagin
     @Override
     public void updateState(int curState, int updateState) {
         Select<InternshipReleaseRecord> select = create.selectFrom(INTERNSHIP_RELEASE)
-                .where(INTERNSHIP_RELEASE.END_TIME.le(now()).and(INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_ID.eq(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID)));
+                .where(INTERNSHIP_RELEASE.END_TIME.le(now()).and(INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_ID.eq(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID))
+                .and(INTERNSHIP_RELEASE.IS_TIME_LIMIT.eq(BooleanUtil.toByte(true))));
         create.update(INTERNSHIP_APPLY)
                 .set(INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE, updateState)
                 .where(INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE.eq(curState).andExists(select))

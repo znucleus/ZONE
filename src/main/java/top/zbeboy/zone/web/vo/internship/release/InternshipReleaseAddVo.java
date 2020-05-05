@@ -8,9 +8,7 @@ public class InternshipReleaseAddVo {
     @NotNull(message = "实习类型不能为空")
     @Min(value = 1, message = "实习类型不正确")
     private int internshipTypeId;
-    @NotBlank(message = "指导教师分配时间不能为空")
     private String teacherDistributionTime;
-    @NotBlank(message = "实习申请时间不能为空")
     private String time;
     private int schoolId;
     private int collegeId;
@@ -20,6 +18,7 @@ public class InternshipReleaseAddVo {
     private int scienceId;
     private Byte internshipReleaseIsDel;
     private String files;
+    private Byte isTimeLimit;
 
     public int getInternshipTypeId() {
         return internshipTypeId;
@@ -91,5 +90,13 @@ public class InternshipReleaseAddVo {
 
     public void setFiles(String files) {
         this.files = files;
+    }
+
+    public Byte getIsTimeLimit() {
+        return isTimeLimit;
+    }
+
+    public void setIsTimeLimit(Byte isTimeLimit) {
+        this.isTimeLimit = isTimeLimit;
     }
 }

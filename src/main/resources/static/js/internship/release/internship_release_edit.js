@@ -21,6 +21,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
          */
         var param_id = {
             internshipTitle: '#internshipTitle',
+            isTimeLimit: '#isTimeLimit',
             teacherDistributionTime: '#teacherDistributionTime',
             time: '#time'
         };
@@ -39,6 +40,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
         var param = {
             internshipReleaseId: '',
             internshipTitle: '',
+            isTimeLimit: '',
             teacherDistributionTime: '',
             time: '',
             internshipReleaseIsDel: '',
@@ -60,6 +62,8 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
         function initParam() {
             param.internshipReleaseId = page_param.paramInternshipReleaseId;
             param.internshipTitle = $(param_id.internshipTitle).val();
+            var isTimeLimit = $('input[name="isTimeLimit"]:checked').val();
+            param.isTimeLimit = _.isUndefined(isTimeLimit) ? 0 : isTimeLimit;
             param.teacherDistributionTime = $(param_id.teacherDistributionTime).val();
             param.time = $(param_id.time).val();
             var internshipReleaseIsDel = $('input[name="internshipReleaseIsDel"]:checked').val();
@@ -93,6 +97,8 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
          * 初始化界面
          */
         function init() {
+            initTeacherDistributionTime();
+            initTime();
             initInternshipFile();
             initMaxLength();
         }
@@ -126,19 +132,57 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             }
         });
 
-        $(param_id.teacherDistributionTime).flatpickr({
-            "locale": "zh",
-            "mode": "range",
-            dateFormat: "Y-m-d",
-            defaultDate: [page_param.paramTeacherDistributionStartTime, page_param.paramTeacherDistributionEndTime]
+        $(param_id.isTimeLimit).click(function () {
+            initParam();
+            var isTimeLimit = param.isTimeLimit;
+            if (Number(isTimeLimit) === 0) {
+                // 不需要填写时间
+                $(param_id.teacherDistributionTime).parent().css('display', 'none');
+                $(param_id.time).parent().css('display', 'none');
+            } else {
+                $(param_id.teacherDistributionTime).parent().css('display', '');
+                $(param_id.time).parent().css('display', '');
+            }
         });
 
-        $(param_id.time).flatpickr({
-            "locale": "zh",
-            "mode": "range",
-            dateFormat: "Y-m-d",
-            defaultDate: [page_param.paramStartTime, page_param.paramEndTime]
-        });
+        function initTeacherDistributionTime() {
+            initParam();
+            var isTimeLimit = param.isTimeLimit;
+            if (Number(isTimeLimit) === 0) {
+                $(param_id.teacherDistributionTime).parent().css('display', 'none');
+                $(param_id.teacherDistributionTime).flatpickr({
+                    "locale": "zh",
+                    "mode": "range"
+                });
+            } else {
+                $(param_id.teacherDistributionTime).flatpickr({
+                    "locale": "zh",
+                    "mode": "range",
+                    dateFormat: "Y-m-d",
+                    defaultDate: [page_param.paramTeacherDistributionStartTime, page_param.paramTeacherDistributionEndTime]
+                });
+            }
+
+        }
+
+        function initTime() {
+            initParam();
+            var isTimeLimit = param.isTimeLimit;
+            if (Number(isTimeLimit) === 0) {
+                $(param_id.time).parent().css('display', 'none');
+                $(param_id.time).flatpickr({
+                    "locale": "zh",
+                    "mode": "range"
+                });
+            } else {
+                $(param_id.time).flatpickr({
+                    "locale": "zh",
+                    "mode": "range",
+                    dateFormat: "Y-m-d",
+                    defaultDate: [page_param.paramStartTime, page_param.paramEndTime]
+                });
+            }
+        }
 
         // 上传组件
         $('#fileupload').fileupload({
@@ -253,6 +297,15 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
                 tools.validErrorDom(param_id.internshipTitle, '标题100个字符以内');
             } else {
                 tools.validSuccessDom(param_id.internshipTitle);
+                validIsTimeLimit();
+            }
+        }
+
+        function validIsTimeLimit() {
+            var isTimeLimit = param.isTimeLimit;
+            if(Number(isTimeLimit) === 0){
+                sendAjax();
+            } else {
                 validTeacherDistributionTime();
             }
         }

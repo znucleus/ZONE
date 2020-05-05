@@ -25,6 +25,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
          */
         var param_id = {
             internshipType: '#internshipType',
+            isTimeLimit: '#isTimeLimit',
             teacherDistributionTime: '#teacherDistributionTime',
             time: '#time',
             school: '#school',
@@ -46,6 +47,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
          */
         var param = {
             internshipTypeId: '',
+            isTimeLimit:'',
             teacherDistributionTime: '',
             time: '',
             schoolId: '',
@@ -65,6 +67,8 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
          */
         function initParam() {
             param.internshipTypeId = $(param_id.internshipType).val();
+            var isTimeLimit = $('input[name="isTimeLimit"]:checked').val();
+            param.isTimeLimit = _.isUndefined(isTimeLimit) ? 0 : isTimeLimit;
             param.teacherDistributionTime = $(param_id.teacherDistributionTime).val();
             param.time = $(param_id.time).val();
             param.schoolId = $(param_id.school).val();
@@ -169,6 +173,19 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
                 language: "zh-CN"
             });
         }
+
+        $(param_id.isTimeLimit).click(function () {
+            initParam();
+            var isTimeLimit = param.isTimeLimit;
+            if (Number(isTimeLimit) === 0) {
+                // 不需要填写时间
+                $(param_id.teacherDistributionTime).parent().css('display', 'none');
+                $(param_id.time).parent().css('display', 'none');
+            } else {
+                $(param_id.teacherDistributionTime).parent().css('display', '');
+                $(param_id.time).parent().css('display', '');
+            }
+        });
 
         $(param_id.teacherDistributionTime).flatpickr({
             "locale": "zh",
@@ -312,6 +329,15 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
                 tools.validSelect2ErrorDom(param_id.internshipType, '请选择实习类型');
             } else {
                 tools.validSelect2SuccessDom(param_id.internshipType);
+                validIsTimeLimit();
+            }
+        }
+
+        function validIsTimeLimit() {
+            var isTimeLimit = param.isTimeLimit;
+            if(Number(isTimeLimit) === 0){
+                validSchoolId();
+            } else {
                 validTeacherDistributionTime();
             }
         }
