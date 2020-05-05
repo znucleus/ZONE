@@ -254,6 +254,10 @@ public class InternshipReleaseRestController {
                             ajaxUtil.fail().msg("指导教师分配时间与实习申请时间不能为空");
                         }
                     } else {
+                        internshipRelease.setTeacherDistributionStartTime(null);
+                        internshipRelease.setTeacherDistributionEndTime(null);
+                        internshipRelease.setStartTime(null);
+                        internshipRelease.setEndTime(null);
                         internshipReleaseService.update(internshipRelease);
                         Result<Record> records = internshipFileService.findByInternshipReleaseId(internshipReleaseId);
                         if (records.isNotEmpty()) {
