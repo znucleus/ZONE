@@ -621,6 +621,7 @@ public class TrainingSpecialRestController {
             if (Objects.nonNull(trainingSpecialFile)) {
                 trainingSpecialFile.setMapping(BooleanUtil.toByte(false));
                 trainingSpecialFileService.update(trainingSpecialFile);
+                ajaxUtil.success().msg("解除成功");
             } else {
                 ajaxUtil.fail().msg("未查询到专题文件信息");
             }
