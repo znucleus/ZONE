@@ -452,7 +452,7 @@ public class TrainingSpecialRestController {
                 Files files = new Files();
                 String fileId = UUIDUtil.getUUID();
                 files.setFileId(fileId);
-                files.setRelativePath(Workbook.trainingSpecialFilePath() + trainingSpecialFileAddVo.getNewName() + "." + trainingSpecialFileAddVo.getExt());
+                files.setRelativePath(Workbook.trainingSpecialFilePath() + trainingSpecialFileAddVo.getOriginalFileName() + "." + trainingSpecialFileAddVo.getExt());
                 files.setContentType(trainingSpecialFileAddVo.getContentType());
                 files.setOriginalFileName(trainingSpecialFileAddVo.getOriginalFileName());
                 files.setNewName(trainingSpecialFileAddVo.getNewName());
@@ -527,7 +527,7 @@ public class TrainingSpecialRestController {
             trainingSpecialFileService.updateDownloads(id);
             Files files = filesService.findById(trainingSpecialFile.getFileId());
             if (Objects.nonNull(files)) {
-                uploadService.download(files.getOriginalFileName(), files.getRelativePath(), response, request);
+                uploadService.download(files.getNewName(), files.getRelativePath(), response, request);
             }
         }
 
