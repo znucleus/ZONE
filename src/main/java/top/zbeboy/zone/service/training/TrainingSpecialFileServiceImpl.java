@@ -51,6 +51,7 @@ public class TrainingSpecialFileServiceImpl implements TrainingSpecialFileServic
                 .from(TRAINING_SPECIAL_FILE)
                 .leftJoin(FILES)
                 .on(TRAINING_SPECIAL_FILE.FILE_ID.eq(FILES.FILE_ID))
+                .where(TRAINING_SPECIAL_FILE.TRAINING_SPECIAL_FILE_ID.eq(id))
                 .fetchOptional();
     }
 
