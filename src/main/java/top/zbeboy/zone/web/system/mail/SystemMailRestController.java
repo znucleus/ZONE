@@ -5,6 +5,7 @@ import org.joda.time.DateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.config.Workbook;
@@ -82,5 +83,103 @@ public class SystemMailRestController {
             ajaxUtil.fail().msg("邮箱不能为空");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 发送邮件
+     *
+     * @param to          接收方
+     * @param subject     标题
+     * @param content     内容
+     * @param isMultipart 多段
+     * @param isHtml      是html?
+     */
+    @PostMapping("/web/system/mail/send")
+    public void sendEmail(@RequestParam("to") String to, @RequestParam("subject") String subject,
+                          @RequestParam("content") String content, @RequestParam("isMultipart") Boolean isMultipart, @RequestParam("isHtml") Boolean isHtml) {
+        systemMailService.sendEmail(to, subject, content, isMultipart, isHtml);
+    }
+
+    /**
+     * 发送激活邮件
+     *
+     * @param users   用户
+     * @param baseUrl 服务路径
+     */
+    @PostMapping("/web/system/mail/activation")
+    public void sendActivationEmail(@RequestBody Users users, @RequestParam("baseUrl") String baseUrl) {
+        systemMailService.sendActivationEmail(users, baseUrl);
+    }
+
+    /**
+     * 发送账号创建成功邮件
+     *
+     * @param users   用户
+     * @param baseUrl 服务路径
+     */
+    @PostMapping("/web/system/mail/creation")
+    public void sendCreationEmail(@RequestBody Users users, @RequestParam("baseUrl") String baseUrl) {
+        systemMailService.sendCreationEmail(users, baseUrl);
+    }
+
+    /**
+     * 发送密码重置邮件
+     *
+     * @param users   用户
+     * @param baseUrl 服务路径
+     */
+    @PostMapping("/web/system/mail/reset")
+    public void sendPasswordResetMail(@RequestBody Users users, @RequestParam("baseUrl") String baseUrl) {
+        systemMailService.sendPasswordResetMail(users, baseUrl);
+    }
+
+    /**
+     * 发送邮箱验证邮件
+     *
+     * @param users   用户
+     * @param baseUrl 服务路径
+     */
+    @PostMapping("/web/system/mail/valid")
+    public void sendValidEmailMail(@RequestBody Users users, @RequestParam("baseUrl") String baseUrl) {
+        systemMailService.sendValidEmailMail(users, baseUrl);
+    }
+
+    /**
+     * 发送通知邮件
+     *
+     * @param users   用户
+     * @param baseUrl 服务路径
+     * @param notify  通知内容
+     */
+    @PostMapping("/web/system/mail/notify")
+    public void sendNotifyMail(@RequestBody Users users, @RequestParam("baseUrl") String baseUrl, @RequestParam("notify") String notify) {
+        systemMailService.sendNotifyMail(users, baseUrl, notify);
+    }
+
+    /**
+     * 使用内置方式发送
+     *
+     * @param to          接收方
+     * @param subject     标题
+     * @param content     内容
+     * @param isMultipart 多段
+     * @param isHtml      是html?
+     */
+    @PostMapping("/web/system/mail/send/default")
+    public void sendDefaultMail(@RequestParam("to") String to, @RequestParam("subject") String subject,
+                                @RequestParam("content") String content, @RequestParam("isMultipart") Boolean isMultipart, @RequestParam("isHtml") Boolean isHtml) {
+        systemMailService.sendDefaultMail(to, subject, content, isMultipart, isHtml);
+    }
+
+    /**
+     * sendCloud邮箱服务
+     *
+     * @param userMail 用户邮箱
+     * @param subject  标题
+     * @param content  内容
+     */
+    @PostMapping("/web/system/mail/send/cloud")
+    public void sendCloudMail(@RequestParam("userMail") String userMail, @RequestParam("subject") String subject, @RequestParam("content") String content) {
+        systemMailService.sendCloudMail(userMail, subject, content);
     }
 }

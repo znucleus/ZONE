@@ -26,13 +26,15 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.2.6.RELEASE</version>
+        <version>2.2.7.RELEASE</version>
     </parent>
 
     <properties>
         <org.springframework.webflow.version>2.0.5.RELEASE</org.springframework.webflow.version>
         <spring-security-oauth2.version>2.3.8.RELEASE</spring-security-oauth2.version>
         <spring-security-oauth2-autoconfigure.version>2.2.1.RELEASE</spring-security-oauth2-autoconfigure.version>
+
+        <spring-cloud.version>Hoxton.SR1</spring-cloud.version>
 
         <org.apache.poi.version>4.1.0</org.apache.poi.version>
         <ooxml-schemas.version>1.4</ooxml-schemas.version>
@@ -62,6 +64,18 @@
         <webjars.lodash.version>4.17.15</webjars.lodash.version>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <!-- Add typical dependencies for a web application -->
     <dependencies>
 
@@ -74,6 +88,16 @@
                     <artifactId>spring-boot-starter-logging</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
 
         <dependency>
