@@ -2,6 +2,7 @@ package top.zbeboy.zone.web.util.pagination;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -15,7 +16,7 @@ import java.util.Objects;
 public class DataTablesUtil extends PaginationUtil {
     /*
     返回的数据
-     */
+   */
     private List<?> data;
 
     private int draw;
@@ -65,6 +66,14 @@ public class DataTablesUtil extends PaginationUtil {
      */
     private String channel;
 
+    /*
+    当前用户账号
+     */
+    private String username;
+
+    public DataTablesUtil() {
+    }
+
     public DataTablesUtil(HttpServletRequest request, List<String> headers) {
         String startParam = request.getParameter("start");
         String lengthParam = request.getParameter("length");
@@ -74,6 +83,7 @@ public class DataTablesUtil extends PaginationUtil {
         String extraSearchParam = request.getParameter("extra_search");
         String extraPage = request.getParameter("extra_page");
         String dramParam = request.getParameter("draw");
+        String username = request.getParameter("username");
 
         if (NumberUtils.isDigits(startParam)) {
             this.setStart(NumberUtils.toInt(startParam));
@@ -111,6 +121,10 @@ public class DataTablesUtil extends PaginationUtil {
 
         if (NumberUtils.isDigits(dramParam)) {
             this.draw = NumberUtils.toInt(dramParam);
+        }
+
+        if (StringUtils.isNotBlank(username)) {
+            this.setUsername(username);
         }
     }
 
@@ -223,6 +237,15 @@ public class DataTablesUtil extends PaginationUtil {
         this.channel = channel;
     }
 
+    @JsonIgnore
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this)
@@ -237,6 +260,7 @@ public class DataTablesUtil extends PaginationUtil {
                 .append("search", search)
                 .append("exportInfo", exportInfo)
                 .append("channel", channel)
+                .append("username", username)
                 .toString();
     }
 }

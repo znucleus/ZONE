@@ -4,6 +4,8 @@ spring:
     active: secrecy,dev
   application:
     name: web-server
+  main:
+    allow-bean-definition-overriding: true
   servlet:
     multipart:
       max-request-size: 500MB

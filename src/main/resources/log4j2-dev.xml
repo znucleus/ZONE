@@ -10,15 +10,9 @@
         </Console>
     </Appenders>
     <Loggers>
-        <logger name="org.apache" level="warn"/>
 
-        <logger name="org.jooq" level="debug"/>
 
-        <logger name="top.zbeboy.zone" level="debug"/>
-
-        <logger name="org.springframework.web" level="debug"/>
-
-        <Root level="error">
+        <Root level="debug">
             <AppenderRef ref="CONSOLE"/>
         </Root>
     </Loggers>

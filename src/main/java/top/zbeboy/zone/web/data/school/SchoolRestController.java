@@ -1,8 +1,5 @@
 package top.zbeboy.zone.web.data.school;
 
-import org.apache.commons.lang3.StringUtils;
-import org.jooq.Record;
-import org.jooq.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -11,14 +8,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.domain.tables.pojos.School;
-import top.zbeboy.zone.domain.tables.records.SchoolRecord;
-import top.zbeboy.zone.service.data.SchoolService;
-import top.zbeboy.zone.web.bean.data.school.SchoolBean;
+import top.zbeboy.zone.feign.data.SchoolFeignService;
 import top.zbeboy.zone.web.plugin.select2.Select2Data;
 import top.zbeboy.zone.web.util.AjaxUtil;
-import top.zbeboy.zone.web.util.BooleanUtil;
-import top.zbeboy.zone.web.util.ByteUtil;
-import top.zbeboy.zone.web.util.SmallPropsUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.vo.data.school.SchoolAddVo;
 import top.zbeboy.zone.web.vo.data.school.SchoolEditVo;
@@ -29,13 +21,12 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @RestController
 public class SchoolRestController {
 
     @Resource
-    private SchoolService schoolService;
+    private SchoolFeignService schoolFeignService;
 
     /**
      * 获取全部有效学校
@@ -45,7 +36,7 @@ public class SchoolRestController {
     @GetMapping("/anyone/data/school")
     public ResponseEntity<Map<String, Object>> anyoneData() {
         Select2Data select2Data = Select2Data.of();
-        List<School> schools = schoolService.findBySchoolIsDel(BooleanUtil.toByte(false));
+        List<School> schools = schoolFeignService.anyoneData();
         schools.forEach(school -> select2Data.add(school.getSchoolId().toString(), school.getSchoolName()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
@@ -67,15 +58,7 @@ public class SchoolRestController {
         headers.add("schoolIsDel");
         headers.add("operator");
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
-        Result<Record> records = schoolService.findAllByPage(dataTablesUtil);
-        List<SchoolBean> beans = new ArrayList<>();
-        if (Objects.nonNull(records) && records.isNotEmpty()) {
-            beans = records.into(SchoolBean.class);
-        }
-        dataTablesUtil.setData(beans);
-        dataTablesUtil.setiTotalRecords(schoolService.countAll());
-        dataTablesUtil.setiTotalDisplayRecords(schoolService.countByCondition(dataTablesUtil));
-        return new ResponseEntity<>(dataTablesUtil, HttpStatus.OK);
+        return new ResponseEntity<>(schoolFeignService.data(dataTablesUtil), HttpStatus.OK);
     }
 
     /**
@@ -86,15 +69,7 @@ public class SchoolRestController {
      */
     @PostMapping("/web/data/school/check/add/name")
     public ResponseEntity<Map<String, Object>> checkAddName(@RequestParam("schoolName") String schoolName) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        String param = StringUtils.deleteWhitespace(schoolName);
-
-        List<School> schools = schoolService.findBySchoolName(param);
-        if (Objects.isNull(schools) || schools.isEmpty()) {
-            ajaxUtil.success().msg("学校名不重复");
-        } else {
-            ajaxUtil.fail().msg("学校名重复");
-        }
+        AjaxUtil<Map<String, Object>> ajaxUtil = schoolFeignService.checkAddName(schoolName);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -107,16 +82,7 @@ public class SchoolRestController {
      */
     @PostMapping("/web/data/school/save")
     public ResponseEntity<Map<String, Object>> save(@Valid SchoolAddVo schoolAddVo, BindingResult bindingResult) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        if (!bindingResult.hasErrors()) {
-            School school = new School();
-            school.setSchoolIsDel(ByteUtil.toByte(1).equals(schoolAddVo.getSchoolIsDel()) ? ByteUtil.toByte(1) : ByteUtil.toByte(0));
-            school.setSchoolName(schoolAddVo.getSchoolName());
-            schoolService.save(school);
-            ajaxUtil.success().msg("保存成功");
-        } else {
-            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
-        }
+        AjaxUtil<Map<String, Object>> ajaxUtil = schoolFeignService.save(schoolAddVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -130,15 +96,7 @@ public class SchoolRestController {
     @PostMapping("/web/data/school/check/edit/name")
     public ResponseEntity<Map<String, Object>> checkEditName(@RequestParam("schoolId") int id,
                                                              @RequestParam("schoolName") String schoolName) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        String param = StringUtils.deleteWhitespace(schoolName);
-
-        Result<SchoolRecord> schools = schoolService.findBySchoolNameNeSchoolId(param, id);
-        if (Objects.isNull(schools) || schools.isEmpty()) {
-            ajaxUtil.success().msg("学校名不重复");
-        } else {
-            ajaxUtil.fail().msg("学校名重复");
-        }
+        AjaxUtil<Map<String, Object>> ajaxUtil = schoolFeignService.checkEditName(id, schoolName);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -151,20 +109,7 @@ public class SchoolRestController {
      */
     @PostMapping("/web/data/school/update")
     public ResponseEntity<Map<String, Object>> update(@Valid SchoolEditVo schoolEditVo, BindingResult bindingResult) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        if (!bindingResult.hasErrors()) {
-            School school = schoolService.findById(schoolEditVo.getSchoolId());
-            if (Objects.nonNull(school)) {
-                school.setSchoolIsDel(ByteUtil.toByte(1).equals(schoolEditVo.getSchoolIsDel()) ? ByteUtil.toByte(1) : ByteUtil.toByte(0));
-                school.setSchoolName(schoolEditVo.getSchoolName());
-                schoolService.update(school);
-                ajaxUtil.success().msg("更新成功");
-            } else {
-                ajaxUtil.fail().msg("根据学校ID未查询到学校数据");
-            }
-        } else {
-            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
-        }
+        AjaxUtil<Map<String, Object>> ajaxUtil = schoolFeignService.update(schoolEditVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -176,14 +121,8 @@ public class SchoolRestController {
      * @return true注销成功
      */
     @PostMapping("/web/data/school/status")
-    public ResponseEntity<Map<String, Object>> status(String schoolIds, Byte isDel) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        if (StringUtils.isNotBlank(schoolIds)) {
-            schoolService.updateIsDel(SmallPropsUtil.StringIdsToNumberList(schoolIds), isDel);
-            ajaxUtil.success().msg("更新状态成功");
-        } else {
-            ajaxUtil.fail().msg("请选择学校");
-        }
+    public ResponseEntity<Map<String, Object>> status(@RequestParam("schoolIds") String schoolIds, @RequestParam("isDel") Byte isDel) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = schoolFeignService.status(schoolIds, isDel);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }
