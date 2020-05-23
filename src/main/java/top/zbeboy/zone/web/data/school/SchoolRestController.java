@@ -2,13 +2,12 @@ package top.zbeboy.zone.web.data.school;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.domain.tables.pojos.School;
-import top.zbeboy.zone.feign.data.SchoolFeignService;
+import top.zbeboy.zone.feign.data.SchoolService;
 import top.zbeboy.zone.web.plugin.select2.Select2Data;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
@@ -17,7 +16,6 @@ import top.zbeboy.zone.web.vo.data.school.SchoolEditVo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +24,7 @@ import java.util.Map;
 public class SchoolRestController {
 
     @Resource
-    private SchoolFeignService schoolFeignService;
+    private SchoolService schoolService;
 
     /**
      * 获取全部有效学校
@@ -36,7 +34,7 @@ public class SchoolRestController {
     @GetMapping("/anyone/data/school")
     public ResponseEntity<Map<String, Object>> anyoneData() {
         Select2Data select2Data = Select2Data.of();
-        List<School> schools = schoolFeignService.anyoneData();
+        List<School> schools = schoolService.anyoneData();
         schools.forEach(school -> select2Data.add(school.getSchoolId().toString(), school.getSchoolName()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
@@ -58,7 +56,7 @@ public class SchoolRestController {
         headers.add("schoolIsDel");
         headers.add("operator");
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
-        return new ResponseEntity<>(schoolFeignService.data(dataTablesUtil), HttpStatus.OK);
+        return new ResponseEntity<>(schoolService.data(dataTablesUtil), HttpStatus.OK);
     }
 
     /**
@@ -69,7 +67,7 @@ public class SchoolRestController {
      */
     @PostMapping("/web/data/school/check/add/name")
     public ResponseEntity<Map<String, Object>> checkAddName(@RequestParam("schoolName") String schoolName) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = schoolFeignService.checkAddName(schoolName);
+        AjaxUtil<Map<String, Object>> ajaxUtil = schoolService.checkAddName(schoolName);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -77,12 +75,11 @@ public class SchoolRestController {
      * 保存学校信息
      *
      * @param schoolAddVo   学校
-     * @param bindingResult 检验
      * @return true 保存成功 false 保存失败
      */
     @PostMapping("/web/data/school/save")
-    public ResponseEntity<Map<String, Object>> save(@Valid SchoolAddVo schoolAddVo, BindingResult bindingResult) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = schoolFeignService.save(schoolAddVo);
+    public ResponseEntity<Map<String, Object>> save(SchoolAddVo schoolAddVo) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = schoolService.save(schoolAddVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -96,7 +93,7 @@ public class SchoolRestController {
     @PostMapping("/web/data/school/check/edit/name")
     public ResponseEntity<Map<String, Object>> checkEditName(@RequestParam("schoolId") int id,
                                                              @RequestParam("schoolName") String schoolName) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = schoolFeignService.checkEditName(id, schoolName);
+        AjaxUtil<Map<String, Object>> ajaxUtil = schoolService.checkEditName(id, schoolName);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -104,12 +101,11 @@ public class SchoolRestController {
      * 保存学校更改
      *
      * @param schoolEditVo  学校
-     * @param bindingResult 检验
      * @return true 更改成功 false 更改失败
      */
     @PostMapping("/web/data/school/update")
-    public ResponseEntity<Map<String, Object>> update(@Valid SchoolEditVo schoolEditVo, BindingResult bindingResult) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = schoolFeignService.update(schoolEditVo);
+    public ResponseEntity<Map<String, Object>> update(SchoolEditVo schoolEditVo) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = schoolService.update(schoolEditVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -122,7 +118,7 @@ public class SchoolRestController {
      */
     @PostMapping("/web/data/school/status")
     public ResponseEntity<Map<String, Object>> status(@RequestParam("schoolIds") String schoolIds, @RequestParam("isDel") Byte isDel) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = schoolFeignService.status(schoolIds, isDel);
+        AjaxUtil<Map<String, Object>> ajaxUtil = schoolService.status(schoolIds, isDel);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

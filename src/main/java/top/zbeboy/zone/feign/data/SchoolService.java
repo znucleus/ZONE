@@ -1,11 +1,9 @@
 package top.zbeboy.zone.feign.data;
 
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.domain.tables.pojos.School;
+import top.zbeboy.zone.hystrix.data.SchoolHystrixClientFallbackFactory;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.vo.data.school.SchoolAddVo;
@@ -14,8 +12,17 @@ import top.zbeboy.zone.web.vo.data.school.SchoolEditVo;
 import java.util.List;
 import java.util.Map;
 
-@FeignClient("base-server")
-public interface SchoolFeignService {
+@FeignClient(value = "base-server", fallback = SchoolHystrixClientFallbackFactory.class)
+public interface SchoolService {
+
+    /**
+     * 获取学校
+     *
+     * @param id 学校主键
+     * @return 学校数据
+     */
+    @GetMapping("/base/data/school/{id}")
+    School findById(@PathVariable("id") int id);
 
     /**
      * 获取全部有效学校
@@ -50,7 +57,7 @@ public interface SchoolFeignService {
      * @return true 保存成功 false 保存失败
      */
     @PostMapping("/base/data/school/save")
-    AjaxUtil<Map<String, Object>> save(SchoolAddVo schoolAddVo);
+    AjaxUtil<Map<String, Object>> save(@RequestBody SchoolAddVo schoolAddVo);
 
     /**
      * 检验编辑时学校名重复
@@ -69,7 +76,7 @@ public interface SchoolFeignService {
      * @return true 更改成功 false 更改失败
      */
     @PostMapping("/base/data/school/update")
-    AjaxUtil<Map<String, Object>> update(SchoolEditVo schoolEditVo);
+    AjaxUtil<Map<String, Object>> update(@RequestBody SchoolEditVo schoolEditVo);
 
     /**
      * 批量更改学校状态
