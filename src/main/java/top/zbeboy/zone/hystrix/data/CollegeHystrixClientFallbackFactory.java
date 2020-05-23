@@ -3,7 +3,8 @@ package top.zbeboy.zone.hystrix.data;
 import org.springframework.stereotype.Component;
 import top.zbeboy.zone.domain.tables.pojos.College;
 import top.zbeboy.zone.domain.tables.pojos.CollegeApplication;
-import top.zbeboy.zone.feign.data.CollegeFeignService;
+import top.zbeboy.zone.feign.data.CollegeService;
+import top.zbeboy.zone.web.bean.data.college.CollegeBean;
 import top.zbeboy.zone.web.plugin.treeview.TreeViewData;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
@@ -16,7 +17,17 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class CollegeHystrixClientFallbackFactory implements CollegeFeignService {
+public class CollegeHystrixClientFallbackFactory implements CollegeService {
+    @Override
+    public College findById(int id) {
+        return new College();
+    }
+
+    @Override
+    public CollegeBean findByIdRelation(int id) {
+        return new CollegeBean();
+    }
+
     @Override
     public List<College> anyoneData(CollegeSearchVo collegeSearchVo) {
         return new ArrayList<>();

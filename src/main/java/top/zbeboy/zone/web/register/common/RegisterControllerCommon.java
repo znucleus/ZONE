@@ -12,6 +12,7 @@ import top.zbeboy.zone.domain.tables.records.LeaverRegisterDataOptionRecord;
 import top.zbeboy.zone.domain.tables.records.LeaverRegisterOptionRecord;
 import top.zbeboy.zone.domain.tables.records.LeaverRegisterScopeRecord;
 import top.zbeboy.zone.domain.tables.records.StudentRecord;
+import top.zbeboy.zone.feign.data.CollegeService;
 import top.zbeboy.zone.service.data.*;
 import top.zbeboy.zone.service.export.LeaverRegisterDataExport;
 import top.zbeboy.zone.service.platform.UsersService;
@@ -136,7 +137,7 @@ public class RegisterControllerCommon {
                             case 1:
                                 // 院
                                 College college = collegeService.findById(record.getDataId());
-                                if (Objects.nonNull(college)) {
+                                if (Objects.nonNull(college) && college.getCollegeId() > 0) {
                                     dataName.add(college.getCollegeName());
                                 }
                                 break;
@@ -533,7 +534,7 @@ public class RegisterControllerCommon {
                     case 1:
                         // 院
                         College college = collegeService.findById(bean.getDataId());
-                        if (Objects.nonNull(college)) {
+                        if (Objects.nonNull(college) && college.getCollegeId() > 0) {
                             bean.setDataName(college.getCollegeName());
                         }
                         break;

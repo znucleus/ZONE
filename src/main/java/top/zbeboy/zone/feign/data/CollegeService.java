@@ -1,13 +1,12 @@
 package top.zbeboy.zone.feign.data;
 
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.domain.tables.pojos.College;
 import top.zbeboy.zone.domain.tables.pojos.CollegeApplication;
+import top.zbeboy.zone.domain.tables.pojos.School;
 import top.zbeboy.zone.hystrix.data.CollegeHystrixClientFallbackFactory;
+import top.zbeboy.zone.web.bean.data.college.CollegeBean;
 import top.zbeboy.zone.web.plugin.treeview.TreeViewData;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
@@ -19,7 +18,25 @@ import java.util.List;
 import java.util.Map;
 
 @FeignClient(value = "base-server", fallback = CollegeHystrixClientFallbackFactory.class)
-public interface CollegeFeignService {
+public interface CollegeService {
+
+    /**
+     * 获取院
+     *
+     * @param id 院主键
+     * @return 院数据
+     */
+    @GetMapping("/base/data/college/{id}")
+    College findById(@PathVariable("id") int id);
+
+    /**
+     * 获取院
+     *
+     * @param id 院主键
+     * @return 院数据
+     */
+    @GetMapping("/base/data/college/relation/{id}")
+    CollegeBean findByIdRelation(@PathVariable("id") int id);
 
     /**
      * 获取学校下全部有效院

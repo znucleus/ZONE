@@ -8,9 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.domain.tables.pojos.College;
 import top.zbeboy.zone.domain.tables.pojos.CollegeApplication;
-import top.zbeboy.zone.feign.data.CollegeFeignService;
-import top.zbeboy.zone.service.data.CollegeApplicationService;
-import top.zbeboy.zone.service.system.ApplicationService;
+import top.zbeboy.zone.feign.data.CollegeService;
 import top.zbeboy.zone.web.plugin.select2.Select2Data;
 import top.zbeboy.zone.web.plugin.treeview.TreeViewData;
 import top.zbeboy.zone.web.util.AjaxUtil;
@@ -29,13 +27,7 @@ import java.util.Map;
 public class CollegeRestController {
 
     @Resource
-    private CollegeFeignService collegeFeignService;
-
-    @Resource
-    private ApplicationService applicationService;
-
-    @Resource
-    private CollegeApplicationService collegeApplicationService;
+    private CollegeService collegeService;
 
     /**
      * 获取学校下全部有效院
@@ -46,7 +38,7 @@ public class CollegeRestController {
     @GetMapping("/anyone/data/college")
     public ResponseEntity<Map<String, Object>> anyoneData(CollegeSearchVo collegeSearchVo) {
         Select2Data select2Data = Select2Data.of();
-        List<College> colleges = collegeFeignService.anyoneData(collegeSearchVo);
+        List<College> colleges = collegeService.anyoneData(collegeSearchVo);
         colleges.forEach(college -> select2Data.add(college.getCollegeId().toString(), college.getCollegeName()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
@@ -71,7 +63,7 @@ public class CollegeRestController {
         headers.add("collegeIsDel");
         headers.add("operator");
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
-        return new ResponseEntity<>(collegeFeignService.data(dataTablesUtil), HttpStatus.OK);
+        return new ResponseEntity<>(collegeService.data(dataTablesUtil), HttpStatus.OK);
     }
 
     /**
@@ -84,7 +76,7 @@ public class CollegeRestController {
     @PostMapping("/web/data/college/check/add/name")
     public ResponseEntity<Map<String, Object>> checkAddName(@RequestParam("collegeName") String collegeName,
                                                             @RequestParam("schoolId") int schoolId) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = collegeFeignService.checkAddName(collegeName, schoolId);
+        AjaxUtil<Map<String, Object>> ajaxUtil = collegeService.checkAddName(collegeName, schoolId);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -96,7 +88,7 @@ public class CollegeRestController {
      */
     @PostMapping("/web/data/college/check/add/code")
     public ResponseEntity<Map<String, Object>> checkAddCode(@RequestParam("collegeCode") String collegeCode) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = collegeFeignService.checkAddCode(collegeCode);
+        AjaxUtil<Map<String, Object>> ajaxUtil = collegeService.checkAddCode(collegeCode);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -108,7 +100,7 @@ public class CollegeRestController {
      */
     @PostMapping("/web/data/college/save")
     public ResponseEntity<Map<String, Object>> save(CollegeAddVo collegeAddVo) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = collegeFeignService.save(collegeAddVo);
+        AjaxUtil<Map<String, Object>> ajaxUtil = collegeService.save(collegeAddVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -124,7 +116,7 @@ public class CollegeRestController {
     public ResponseEntity<Map<String, Object>> checkEditName(@RequestParam("collegeId") int collegeId,
                                                              @RequestParam("collegeName") String collegeName,
                                                              @RequestParam("schoolId") int schoolId) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = collegeFeignService.checkEditName(collegeId, collegeName, schoolId);
+        AjaxUtil<Map<String, Object>> ajaxUtil = collegeService.checkEditName(collegeId, collegeName, schoolId);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -138,7 +130,7 @@ public class CollegeRestController {
     @PostMapping("/web/data/college/check/edit/code")
     public ResponseEntity<Map<String, Object>> checkEditCode(@RequestParam("collegeId") int collegeId,
                                                              @RequestParam("collegeCode") String collegeCode) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = collegeFeignService.checkEditCode(collegeId, collegeCode);
+        AjaxUtil<Map<String, Object>> ajaxUtil = collegeService.checkEditCode(collegeId, collegeCode);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -150,7 +142,7 @@ public class CollegeRestController {
      */
     @PostMapping("/web/data/college/update")
     public ResponseEntity<Map<String, Object>> update(CollegeEditVo collegeEditVo) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = collegeFeignService.update(collegeEditVo);
+        AjaxUtil<Map<String, Object>> ajaxUtil = collegeService.update(collegeEditVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -163,7 +155,7 @@ public class CollegeRestController {
      */
     @PostMapping("/web/data/college/status")
     public ResponseEntity<Map<String, Object>> status(String collegeIds, Byte isDel) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = collegeFeignService.status(collegeIds, isDel);
+        AjaxUtil<Map<String, Object>> ajaxUtil = collegeService.status(collegeIds, isDel);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -175,7 +167,7 @@ public class CollegeRestController {
     @GetMapping("/web/data/college/application/json")
     public ResponseEntity<Map<String, Object>> applicationJson() {
         AjaxUtil<TreeViewData> ajaxUtil = AjaxUtil.of();
-        ajaxUtil.success().list(collegeFeignService.applicationJson()).msg("获取数据成功");
+        ajaxUtil.success().list(collegeService.applicationJson()).msg("获取数据成功");
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -188,7 +180,7 @@ public class CollegeRestController {
     @PostMapping("/web/data/college/application/data")
     public ResponseEntity<Map<String, Object>> collegeApplicationData(@RequestParam("collegeId") int collegeId) {
         AjaxUtil<CollegeApplication> ajaxUtil = AjaxUtil.of();
-        ajaxUtil.success().list(collegeFeignService.collegeApplicationData(collegeId)).msg("获取数据成功");
+        ajaxUtil.success().list(collegeService.collegeApplicationData(collegeId)).msg("获取数据成功");
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -201,7 +193,7 @@ public class CollegeRestController {
      */
     @PostMapping("/web/data/college/mount")
     public ResponseEntity<Map<String, Object>> mount(@RequestParam("collegeId") int collegeId, String applicationIds) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = collegeFeignService.mount(collegeId, applicationIds);
+        AjaxUtil<Map<String, Object>> ajaxUtil = collegeService.mount(collegeId, applicationIds);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }
