@@ -13,6 +13,7 @@ import top.zbeboy.zone.domain.tables.records.LeaverRegisterOptionRecord;
 import top.zbeboy.zone.domain.tables.records.LeaverRegisterScopeRecord;
 import top.zbeboy.zone.domain.tables.records.StudentRecord;
 import top.zbeboy.zone.feign.data.CollegeService;
+import top.zbeboy.zone.feign.data.DepartmentService;
 import top.zbeboy.zone.service.data.*;
 import top.zbeboy.zone.service.export.LeaverRegisterDataExport;
 import top.zbeboy.zone.service.platform.UsersService;

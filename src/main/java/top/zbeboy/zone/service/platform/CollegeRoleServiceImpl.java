@@ -13,6 +13,7 @@ import top.zbeboy.zone.domain.tables.daos.CollegeRoleDao;
 import top.zbeboy.zone.domain.tables.pojos.CollegeRole;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
+import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;

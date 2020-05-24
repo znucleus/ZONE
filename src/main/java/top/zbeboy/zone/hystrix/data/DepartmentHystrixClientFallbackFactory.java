@@ -2,7 +2,8 @@ package top.zbeboy.zone.hystrix.data;
 
 import org.springframework.stereotype.Component;
 import top.zbeboy.zone.domain.tables.pojos.Department;
-import top.zbeboy.zone.feign.data.DepartmentFeignService;
+import top.zbeboy.zone.feign.data.DepartmentService;
+import top.zbeboy.zone.web.bean.data.department.DepartmentBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.vo.data.department.DepartmentAddVo;
@@ -14,7 +15,17 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class DepartmentHystrixClientFallbackFactory implements DepartmentFeignService {
+public class DepartmentHystrixClientFallbackFactory implements DepartmentService {
+    @Override
+    public Department findById(int id) {
+        return new Department();
+    }
+
+    @Override
+    public DepartmentBean findByIdRelation(int id) {
+        return new DepartmentBean();
+    }
+
     @Override
     public List<Department> anyoneData(DepartmentSearchVo departmentSearchVo) {
         return new ArrayList<>();

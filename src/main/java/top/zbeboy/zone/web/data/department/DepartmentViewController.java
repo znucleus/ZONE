@@ -10,12 +10,12 @@ import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.College;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
-import top.zbeboy.zone.service.data.DepartmentService;
+import top.zbeboy.zone.feign.data.DepartmentService;
+import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
-import top.zbeboy.zone.service.platform.UsersTypeService;
 import top.zbeboy.zone.web.bean.data.department.DepartmentBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 
@@ -114,9 +114,8 @@ public class DepartmentViewController {
     public String edit(@PathVariable("id") int id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        Optional<Record> record = departmentService.findByIdRelation(id);
-        if (record.isPresent()) {
-            DepartmentBean departmentBean = record.get().into(DepartmentBean.class);
+        DepartmentBean departmentBean = departmentService.findByIdRelation(id);
+        if (Objects.nonNull(departmentBean) && departmentBean.getDepartmentId() > 0) {
             modelMap.addAttribute("department", departmentBean);
             if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
                 modelMap.addAttribute("collegeId", departmentBean.getCollegeId());

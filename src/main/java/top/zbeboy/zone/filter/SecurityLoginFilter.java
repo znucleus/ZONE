@@ -10,13 +10,13 @@ import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.domain.tables.records.StaffRecord;
 import top.zbeboy.zone.domain.tables.records.StudentRecord;
+import top.zbeboy.zone.feign.data.DepartmentService;
+import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.security.AjaxAuthenticationCode;
-import top.zbeboy.zone.service.data.DepartmentService;
 import top.zbeboy.zone.service.data.OrganizeService;
 import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.UsersService;
-import top.zbeboy.zone.service.platform.UsersTypeService;
 import top.zbeboy.zone.web.bean.data.department.DepartmentBean;
 import top.zbeboy.zone.web.bean.data.organize.OrganizeBean;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
@@ -24,6 +24,7 @@ import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.system.mail.SystemMailConfig;
 import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
 import top.zbeboy.zone.web.util.BooleanUtil;
+import top.zbeboy.zone.web.util.SpringBootUtil;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -119,8 +120,7 @@ public class SecurityLoginFilter implements Filter {
                 return;
             }
 
-            UsersTypeService usersTypeService = (UsersTypeService) ctx
-                    .getBean("usersTypeService");
+            UsersTypeService usersTypeService = SpringBootUtil.getBean(UsersTypeService.class);
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.isNull(usersType)) {
                 response.getWriter().print(AjaxAuthenticationCode.USER_TYPE_IS_BLANK);
@@ -152,11 +152,9 @@ public class SecurityLoginFilter implements Filter {
                     Optional<StaffRecord> staffData = staffService.findByUsername(users.getUsername());
                     if (staffData.isPresent()) {
                         StaffBean staffBean = staffData.get().into(StaffBean.class);
-                        DepartmentService departmentService = (DepartmentService) ctx
-                                .getBean("departmentService");
-                        Optional<Record> departmentData = departmentService.findByIdRelation(staffBean.getDepartmentId());
-                        if (departmentData.isPresent()) {
-                            DepartmentBean departmentBean = departmentData.get().into(DepartmentBean.class);
+                        DepartmentService departmentService = SpringBootUtil.getBean(DepartmentService.class);
+                        DepartmentBean departmentBean = departmentService.findByIdRelation(staffBean.getDepartmentId());
+                        if (Objects.nonNull(departmentBean) && departmentBean.getDepartmentId() > 0) {
                             schoolIsNotDel = !BooleanUtil.toBoolean(departmentBean.getSchoolIsDel()) && !BooleanUtil.toBoolean(departmentBean.getCollegeIsDel()) &&
                                     !BooleanUtil.toBoolean(departmentBean.getDepartmentIsDel());
                         }

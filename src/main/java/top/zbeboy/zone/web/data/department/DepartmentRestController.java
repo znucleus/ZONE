@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.domain.tables.pojos.Department;
-import top.zbeboy.zone.feign.data.DepartmentFeignService;
+import top.zbeboy.zone.feign.data.DepartmentService;
 import top.zbeboy.zone.web.plugin.select2.Select2Data;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
@@ -25,7 +25,7 @@ import java.util.Map;
 public class DepartmentRestController {
 
     @Resource
-    private DepartmentFeignService departmentFeignService;
+    private DepartmentService departmentService;
 
     /**
      * 获取院下全部有效系
@@ -36,7 +36,7 @@ public class DepartmentRestController {
     @GetMapping("/anyone/data/department")
     public ResponseEntity<Map<String, Object>> anyoneData(DepartmentSearchVo departmentSearchVo) {
         Select2Data select2Data = Select2Data.of();
-        List<Department> departments = departmentFeignService.anyoneData(departmentSearchVo);
+        List<Department> departments = departmentService.anyoneData(departmentSearchVo);
         departments.forEach(department -> select2Data.add(department.getDepartmentId().toString(), department.getDepartmentName()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
@@ -60,7 +60,7 @@ public class DepartmentRestController {
         headers.add("departmentIsDel");
         headers.add("operator");
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
-        return new ResponseEntity<>(departmentFeignService.data(dataTablesUtil), HttpStatus.OK);
+        return new ResponseEntity<>(departmentService.data(dataTablesUtil), HttpStatus.OK);
     }
 
     /**
@@ -72,7 +72,7 @@ public class DepartmentRestController {
      */
     @PostMapping("/web/data/department/check/add/name")
     public ResponseEntity<Map<String, Object>> checkAddName(@RequestParam("departmentName") String departmentName, @RequestParam("collegeId") int collegeId) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = departmentFeignService.checkAddName(departmentName, collegeId);
+        AjaxUtil<Map<String, Object>> ajaxUtil = departmentService.checkAddName(departmentName, collegeId);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -84,7 +84,7 @@ public class DepartmentRestController {
      */
     @PostMapping("/web/data/department/save")
     public ResponseEntity<Map<String, Object>> save(DepartmentAddVo departmentAddVo) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = departmentFeignService.save(departmentAddVo);
+        AjaxUtil<Map<String, Object>> ajaxUtil = departmentService.save(departmentAddVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -100,7 +100,7 @@ public class DepartmentRestController {
     public ResponseEntity<Map<String, Object>> checkEditName(@RequestParam("departmentId") int departmentId,
                                                              @RequestParam("departmentName") String departmentName,
                                                              @RequestParam("collegeId") int collegeId) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = departmentFeignService.checkEditName(departmentId, departmentName, collegeId);
+        AjaxUtil<Map<String, Object>> ajaxUtil = departmentService.checkEditName(departmentId, departmentName, collegeId);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -112,7 +112,7 @@ public class DepartmentRestController {
      */
     @PostMapping("/web/data/department/update")
     public ResponseEntity<Map<String, Object>> update(DepartmentEditVo departmentEditVo) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = departmentFeignService.update(departmentEditVo);
+        AjaxUtil<Map<String, Object>> ajaxUtil = departmentService.update(departmentEditVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -125,7 +125,7 @@ public class DepartmentRestController {
      */
     @PostMapping("/web/data/department/status")
     public ResponseEntity<Map<String, Object>> status(String departmentIds, Byte isDel) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = departmentFeignService.status(departmentIds, isDel);
+        AjaxUtil<Map<String, Object>> ajaxUtil = departmentService.status(departmentIds, isDel);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

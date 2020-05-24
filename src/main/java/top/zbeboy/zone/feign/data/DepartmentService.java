@@ -1,11 +1,10 @@
 package top.zbeboy.zone.feign.data;
 
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.domain.tables.pojos.Department;
 import top.zbeboy.zone.hystrix.data.DepartmentHystrixClientFallbackFactory;
+import top.zbeboy.zone.web.bean.data.department.DepartmentBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.vo.data.department.DepartmentAddVo;
@@ -16,7 +15,25 @@ import java.util.List;
 import java.util.Map;
 
 @FeignClient(value = "base-server", fallback = DepartmentHystrixClientFallbackFactory.class)
-public interface DepartmentFeignService {
+public interface DepartmentService {
+
+    /**
+     * 获取系
+     *
+     * @param id 系主键
+     * @return 系数据
+     */
+    @GetMapping("/base/data/department/{id}")
+    Department findById(@PathVariable("id") int id);
+
+    /**
+     * 获取系
+     *
+     * @param id 系主键
+     * @return 系数据
+     */
+    @GetMapping("/base/data/department/relation/{id}")
+    DepartmentBean findByIdRelation(@PathVariable("id") int id);
 
     /**
      * 获取院下全部有效系
