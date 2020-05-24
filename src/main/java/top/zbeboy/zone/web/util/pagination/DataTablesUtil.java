@@ -2,12 +2,13 @@ package top.zbeboy.zone.web.util.pagination;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.math.NumberUtils;
 import top.zbeboy.zone.config.Workbook;
+import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.service.util.RequestUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -125,6 +126,11 @@ public class DataTablesUtil extends PaginationUtil {
 
         if (StringUtils.isNotBlank(username)) {
             this.setUsername(username);
+        } else {
+            Users users = SessionUtil.getUserFromSession();
+            if (Objects.nonNull(users)) {
+                this.setUsername(users.getUsername());
+            }
         }
     }
 
@@ -237,7 +243,6 @@ public class DataTablesUtil extends PaginationUtil {
         this.channel = channel;
     }
 
-    @JsonIgnore
     public String getUsername() {
         return username;
     }
