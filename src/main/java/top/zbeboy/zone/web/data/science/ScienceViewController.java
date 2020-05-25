@@ -10,8 +10,8 @@ import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.College;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
+import top.zbeboy.zone.feign.data.ScienceService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
-import top.zbeboy.zone.service.data.ScienceService;
 import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.RoleService;
@@ -113,9 +113,8 @@ public class ScienceViewController {
     public String edit(@PathVariable("id") int id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        Optional<Record> record = scienceService.findByIdRelation(id);
-        if (record.isPresent()) {
-            ScienceBean scienceBean = record.get().into(ScienceBean.class);
+        ScienceBean scienceBean = scienceService.findByIdRelation(id);
+        if (Objects.nonNull(scienceBean) && scienceBean.getScienceId() > 0) {
             modelMap.addAttribute("science", scienceBean);
             if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
                 modelMap.addAttribute("collegeId", scienceBean.getCollegeId());

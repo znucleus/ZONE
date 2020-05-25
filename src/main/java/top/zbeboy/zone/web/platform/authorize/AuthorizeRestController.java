@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.feign.data.DepartmentService;
+import top.zbeboy.zone.feign.data.ScienceService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.data.*;
 import top.zbeboy.zone.service.notify.UserNotifyService;

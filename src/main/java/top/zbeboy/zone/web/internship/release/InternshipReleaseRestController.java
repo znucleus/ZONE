@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
-import top.zbeboy.zone.service.data.ScienceService;
+import top.zbeboy.zone.feign.data.ScienceService;
 import top.zbeboy.zone.service.internship.InternshipFileService;
 import top.zbeboy.zone.service.internship.InternshipReleaseService;
 import top.zbeboy.zone.service.internship.InternshipTypeService;
@@ -169,9 +169,8 @@ public class InternshipReleaseRestController {
             String title = "";
             Users users = usersService.getUserFromSession();
 
-            Optional<Record> scienceRecord = scienceService.findByIdRelation(internshipReleaseAddVo.getScienceId());
-            if (scienceRecord.isPresent()) {
-                ScienceBean scienceBean = scienceRecord.get().into(ScienceBean.class);
+            ScienceBean scienceBean= scienceService.findByIdRelation(internshipReleaseAddVo.getScienceId());
+            if (Objects.nonNull(scienceBean) && scienceBean.getScienceId() > 0) {
                 title = scienceBean.getSchoolName()
                         + "-" + scienceBean.getCollegeName()
                         + "-" + scienceBean.getDepartmentName()

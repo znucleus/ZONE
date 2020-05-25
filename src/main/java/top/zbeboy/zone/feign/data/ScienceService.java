@@ -1,119 +1,126 @@
 package top.zbeboy.zone.feign.data;
 
-import org.jooq.Record;
-import org.jooq.Result;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.*;
+import top.zbeboy.zone.domain.tables.pojos.Department;
 import top.zbeboy.zone.domain.tables.pojos.Science;
-import top.zbeboy.zone.domain.tables.records.ScienceRecord;
+import top.zbeboy.zone.hystrix.data.DepartmentHystrixClientFallbackFactory;
+import top.zbeboy.zone.hystrix.data.ScienceHystrixClientFallbackFactory;
+import top.zbeboy.zone.web.bean.data.department.DepartmentBean;
+import top.zbeboy.zone.web.bean.data.science.ScienceBean;
+import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zone.web.vo.data.science.ScienceAddVo;
+import top.zbeboy.zone.web.vo.data.science.ScienceEditVo;
+import top.zbeboy.zone.web.vo.data.science.ScienceSearchVo;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
+@FeignClient(value = "base-server", fallback = ScienceHystrixClientFallbackFactory.class)
 public interface ScienceService {
 
     /**
-     * 通过主键查询
+     * 获取专业
      *
-     * @param id 主键
+     * @param id 专业主键
+     * @return 专业数据
+     */
+    @GetMapping("/base/data/science/{id}")
+    Science findById(@PathVariable("id") int id);
+
+    /**
+     * 获取专业
+     *
+     * @param id 专业主键
+     * @return 专业数据
+     */
+    @GetMapping("/base/data/science/relation/{id}")
+    ScienceBean findByIdRelation(@PathVariable("id") int id);
+
+    /**
+     * 获取系下全部有效专业
+     *
+     * @param scienceSearchVo 查询参数
+     * @return 专业数据
+     */
+    @PostMapping("/base/anyone/data/science/all")
+    List<Science> anyoneData(@RequestBody ScienceSearchVo scienceSearchVo);
+
+    /**
+     * 数据
+     *
+     * @param dataTablesUtil 请求
      * @return 数据
      */
-    Science findById(int id);
+    @PostMapping("/base/data/science/data")
+    DataTablesUtil data(@RequestBody DataTablesUtil dataTablesUtil);
 
     /**
-     * 通过专业id查询所有信息
-     * 缓存:是
-     *
-     * @param id 系id
-     * @return 所有信息
-     */
-    Optional<Record> findByIdRelation(int id);
-
-    /**
-     * 根据系ID和状态查询全部专业
-     *
-     * @param departmentId 系ID
-     * @param scienceIsDel 状态
-     * @return 全部专业
-     */
-    Result<ScienceRecord> findByDepartmentIdAndScienceIsDel(int departmentId, Byte scienceIsDel);
-
-    /**
-     * 系下 专业名查询 注：等于专业名
+     * 保存时检验专业名是否重复
      *
      * @param scienceName  专业名
      * @param departmentId 系id
-     * @return 数据
+     * @return true 合格 false 不合格
      */
-    Result<ScienceRecord> findByScienceNameAndDepartmentId(String scienceName, int departmentId);
+    @PostMapping("/base/data/science/check/add/name")
+    AjaxUtil<Map<String, Object>> checkAddName(@RequestParam("scienceName") String scienceName, @RequestParam("departmentId") int departmentId);
 
     /**
-     * 专业代码查询 注：等于专业代码
+     * 保存时检验专业代码是否重复
      *
      * @param scienceCode 专业代码
-     * @return 数据
+     * @return true 合格 false 不合格
      */
-    List<Science> findByScienceCode(String scienceCode);
+    @PostMapping("/base/data/science/check/add/code")
+    AjaxUtil<Map<String, Object>> checkAddCode(@RequestParam("scienceCode") String scienceCode);
 
     /**
-     * 查找系下不等于该专业id的专业名
+     * 保存专业信息
      *
-     * @param scienceName  专业名
+     * @param scienceAddVo 专业
+     * @return true 保存成功 false 保存失败
+     */
+    @PostMapping("/base/data/science/save")
+    AjaxUtil<Map<String, Object>> save(@RequestBody ScienceAddVo scienceAddVo);
+
+    /**
+     * 检验编辑时专业名重复
+     *
      * @param scienceId    专业id
+     * @param scienceName  专业名
      * @param departmentId 系id
-     * @return 数据
+     * @return true 合格 false 不合格
      */
-    Result<ScienceRecord> findByScienceNameAndDepartmentIdNeScienceId(String scienceName, int departmentId, int scienceId);
+    @PostMapping("/base/data/science/check/edit/name")
+    AjaxUtil<Map<String, Object>> checkEditName(@RequestParam("scienceId") int scienceId, @RequestParam("scienceName") String scienceName, @RequestParam("departmentId") int departmentId);
 
     /**
-     * 专业代码查询 注：等于专业id
+     * 检验编辑时专业代码重复
      *
-     * @param scienceCode 专业代码
      * @param scienceId   专业id
-     * @return 数据
+     * @param scienceCode 专业代码
+     * @return true 合格 false 不合格
      */
-    Result<ScienceRecord> findByScienceCodeNeScienceId(String scienceCode, int scienceId);
+    @PostMapping("/base/data/science/check/edit/code")
+    AjaxUtil<Map<String, Object>> checkEditCode(@RequestParam("scienceId") int scienceId, @RequestParam("scienceCode") String scienceCode);
 
     /**
-     * 分页查询
+     * 保存专业更改
      *
-     * @param dataTablesUtil 工具类
-     * @return 分页数据
+     * @param scienceEditVo 专业
+     * @return true 更改成功 false 更改失败
      */
-    Result<Record> findAllByPage(DataTablesUtil dataTablesUtil);
+    @PostMapping("/base/data/science/update")
+    AjaxUtil<Map<String, Object>> update(@RequestBody ScienceEditVo scienceEditVo);
 
     /**
-     * 应用 总数
+     * 批量更改专业状态
      *
-     * @return 总数
+     * @param scienceIds 专业ids
+     * @param isDel      is_del
+     * @return true注销成功
      */
-    int countAll(DataTablesUtil dataTablesUtil);
-
-    /**
-     * 根据条件查询总数
-     *
-     * @return 条件查询总数
-     */
-    int countByCondition(DataTablesUtil dataTablesUtil);
-
-    /**
-     * 保存
-     *
-     * @param science 数据
-     */
-    void save(Science science);
-
-    /**
-     * 更新
-     *
-     * @param science 数据
-     */
-    void update(Science science);
-
-    /**
-     * 更新状态
-     *
-     * @param ids   ids
-     * @param isDel 状态
-     */
-    void updateIsDel(List<Integer> ids, Byte isDel);
+    @PostMapping("/base/data/science/status")
+    AjaxUtil<Map<String, Object>> status(@RequestParam(value = "scienceIds", required = false) String scienceIds, @RequestParam("isDel") Byte isDel);
 }
