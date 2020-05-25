@@ -86,5 +86,5 @@ public interface SchoolService {
      * @return true注销成功
      */
     @PostMapping("/base/data/school/status")
-    AjaxUtil<Map<String, Object>> status(@RequestParam("schoolIds") String schoolIds, @RequestParam("isDel") Byte isDel);
+    AjaxUtil<Map<String, Object>> status(@RequestParam(value = "schoolIds", required = false) String schoolIds, @RequestParam("isDel") Byte isDel);
 }

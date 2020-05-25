@@ -100,5 +100,5 @@ public interface DepartmentService {
      * @return true注销成功
      */
     @PostMapping("/base/data/department/status")
-    AjaxUtil<Map<String, Object>> status(@RequestParam("departmentIds") String departmentIds, @RequestParam("isDel") Byte isDel);
+    AjaxUtil<Map<String, Object>> status(@RequestParam(value = "departmentIds", required = false) String departmentIds, @RequestParam("isDel") Byte isDel);
 }

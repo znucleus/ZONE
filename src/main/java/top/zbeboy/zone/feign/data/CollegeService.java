@@ -122,7 +122,7 @@ public interface CollegeService {
      * @return true注销成功
      */
     @PostMapping("/base/data/college/status")
-    AjaxUtil<Map<String, Object>> status(@RequestParam("collegeIds") String collegeIds, @RequestParam("isDel") Byte isDel);
+    AjaxUtil<Map<String, Object>> status(@RequestParam(value = "collegeIds", required = false) String collegeIds, @RequestParam("isDel") Byte isDel);
 
     /**
      * 数据json

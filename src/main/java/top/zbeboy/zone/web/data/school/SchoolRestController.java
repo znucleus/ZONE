@@ -117,7 +117,7 @@ public class SchoolRestController {
      * @return true注销成功
      */
     @PostMapping("/web/data/school/status")
-    public ResponseEntity<Map<String, Object>> status(@RequestParam("schoolIds") String schoolIds, @RequestParam("isDel") Byte isDel) {
+    public ResponseEntity<Map<String, Object>> status(String schoolIds, Byte isDel) {
         AjaxUtil<Map<String, Object>> ajaxUtil = schoolService.status(schoolIds, isDel);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
