@@ -1,28 +1,26 @@
 package top.zbeboy.zone.web.internship.regulate;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jooq.Record;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.InternshipRegulate;
-import top.zbeboy.zone.domain.tables.pojos.Staff;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
+import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
-import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.internship.InternshipRegulateService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
+import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 
 import javax.annotation.Resource;
 import java.util.Objects;
-import java.util.Optional;
 
 @Controller
 public class InternshipRegulateViewController {
@@ -73,10 +71,9 @@ public class InternshipRegulateViewController {
         UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
         if (Objects.nonNull(usersType)) {
             if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                Optional<Record> record = staffService.findByUsernameRelation(users.getUsername());
-                if (record.isPresent()) {
-                    Staff staff = record.get().into(Staff.class);
-                    modelMap.addAttribute("staffId", staff.getStaffId());
+                StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
+                if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+                    modelMap.addAttribute("staffId", bean.getStaffId());
                 }
             }
         }

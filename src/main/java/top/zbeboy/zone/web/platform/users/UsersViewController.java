@@ -12,8 +12,8 @@ import top.zbeboy.zone.domain.tables.pojos.Role;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.domain.tables.records.GoogleOauthRecord;
+import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
-import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.GoogleOauthService;
 import top.zbeboy.zone.service.platform.RoleService;
@@ -153,12 +153,8 @@ public class UsersViewController {
                 modelMap.addAttribute("student", studentBean);
                 page = "web/platform/users/users_profile_student::#page-wrapper";
             } else if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                StaffBean staffBean = new StaffBean();
-                Optional<Record> record = staffService.findByUsernameRelation(users.getUsername());
-                if (record.isPresent()) {
-                    staffBean = record.get().into(StaffBean.class);
-                }
-                modelMap.addAttribute("staff", staffBean);
+                StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
+                modelMap.addAttribute("staff", bean);
                 page = "web/platform/users/users_profile_staff::#page-wrapper";
             } else {
                 config.buildDangerTip("数据错误", "暂不支持您的用户类型进行修改");

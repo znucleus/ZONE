@@ -8,13 +8,12 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
-import top.zbeboy.zone.domain.tables.records.StaffRecord;
 import top.zbeboy.zone.domain.tables.records.StudentRecord;
 import top.zbeboy.zone.feign.data.DepartmentService;
+import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.security.AjaxAuthenticationCode;
 import top.zbeboy.zone.service.data.OrganizeService;
-import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.web.bean.data.department.DepartmentBean;
@@ -147,11 +146,10 @@ public class SecurityLoginFilter implements Filter {
                     }
                     break;
                 case Workbook.STAFF_USERS_TYPE:
-                    StaffService staffService = (StaffService) ctx
-                            .getBean("staffService");
-                    Optional<StaffRecord> staffData = staffService.findByUsername(users.getUsername());
-                    if (staffData.isPresent()) {
-                        StaffBean staffBean = staffData.get().into(StaffBean.class);
+
+                    StaffService staffService = SpringBootUtil.getBean(StaffService.class);
+                    StaffBean staffBean = staffService.findByUsername(users.getUsername());
+                    if (Objects.nonNull(staffBean) && staffBean.getStaffId() > 0) {
                         DepartmentService departmentService = SpringBootUtil.getBean(DepartmentService.class);
                         DepartmentBean departmentBean = departmentService.findByIdRelation(staffBean.getDepartmentId());
                         if (Objects.nonNull(departmentBean) && departmentBean.getDepartmentId() > 0) {

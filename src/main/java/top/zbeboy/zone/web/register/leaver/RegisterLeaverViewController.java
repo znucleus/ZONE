@@ -11,12 +11,13 @@ import top.zbeboy.zone.domain.tables.pojos.LeaverRegisterRelease;
 import top.zbeboy.zone.domain.tables.pojos.School;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
+import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
-import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.register.LeaverRegisterReleaseService;
+import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.register.common.RegisterConditionCommon;
 import top.zbeboy.zone.web.register.common.RegisterControllerCommon;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
@@ -75,15 +76,21 @@ public class RegisterLeaverViewController {
             Users users = usersService.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType)) {
-                Optional<Record> record = Optional.empty();
+                int schoolId = 0;
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                    record = staffService.findByUsernameRelation(users.getUsername());
+                    StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
+                    if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+                        schoolId = bean.getSchoolId();
+                    }
                 } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                    record = studentService.findByUsernameRelation(users.getUsername());
+                    Optional<Record> record =  studentService.findByUsernameRelation(users.getUsername());
+                    if(record.isPresent()){
+                        schoolId = record.get().into(School.class).getSchoolId();
+                    }
                 }
 
-                if (record.isPresent()) {
-                    modelMap.addAttribute("schoolId", record.get().into(School.class).getSchoolId());
+                if (schoolId > 0) {
+                    modelMap.addAttribute("schoolId", schoolId);
                     page = "web/register/leaver/leaver_release_add::#page-wrapper";
                 } else {
                     config.buildDangerTip("查询错误", "未查询到您的学校ID或暂不支持您的注册类型");
@@ -118,16 +125,22 @@ public class RegisterLeaverViewController {
                 Users users = usersService.getUserFromSession();
                 UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
                 if (Objects.nonNull(usersType)) {
-                    Optional<Record> record = Optional.empty();
+                    int schoolId = 0;
                     if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                        record = staffService.findByUsernameRelation(users.getUsername());
+                        StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
+                        if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+                            schoolId = bean.getSchoolId();
+                        }
                     } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                        record = studentService.findByUsernameRelation(users.getUsername());
+                        Optional<Record> record = studentService.findByUsernameRelation(users.getUsername());
+                        if(record.isPresent()){
+                            schoolId = record.get().into(School.class).getSchoolId();
+                        }
                     }
 
-                    if (record.isPresent()) {
+                    if (schoolId > 0) {
                         canAccess = true;
-                        modelMap.addAttribute("schoolId", record.get().into(School.class).getSchoolId());
+                        modelMap.addAttribute("schoolId", schoolId);
                         page = "web/register/leaver/leaver_release_edit::#page-wrapper";
                     } else {
                         config.buildDangerTip("查询错误", "未查询到您的学校ID或暂不支持您的注册类型");

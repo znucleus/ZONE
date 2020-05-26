@@ -10,11 +10,13 @@ import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.feign.data.DepartmentService;
 import top.zbeboy.zone.feign.data.ScienceService;
+import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.data.*;
 import top.zbeboy.zone.service.platform.RoleApplyService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
+import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.bean.platform.authorize.RoleApplyBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 
@@ -86,15 +88,21 @@ public class AuthorizeViewController {
             Users users = usersService.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType)) {
-                Optional<Record> record = Optional.empty();
+                int collegeId = 0;
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                    record = staffService.findByUsernameRelation(users.getUsername());
+                    StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
+                    if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+                        collegeId = bean.getCollegeId();
+                    }
                 } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                    record = studentService.findByUsernameRelation(users.getUsername());
+                    Optional<Record> record = studentService.findByUsernameRelation(users.getUsername());
+                    if(record.isPresent()){
+                        collegeId = record.get().into(College.class).getCollegeId();
+                    }
                 }
 
-                if (record.isPresent()) {
-                    modelMap.addAttribute("collegeId", record.get().into(College.class).getCollegeId());
+                if (collegeId > 0) {
+                    modelMap.addAttribute("collegeId", collegeId);
                     page = "web/platform/authorize/authorize_add::#page-wrapper";
                 } else {
                     config.buildDangerTip("查询错误", "未查询到您的院ID或暂不支持您的注册类型");
@@ -151,15 +159,16 @@ public class AuthorizeViewController {
                     int collegeId = 0;
                     UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
                     if (Objects.nonNull(usersType)) {
-                        Optional<Record> record = Optional.empty();
                         if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                            record = staffService.findByUsernameRelation(users.getUsername());
+                            StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
+                            if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+                                collegeId = bean.getCollegeId();
+                            }
                         } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                            record = studentService.findByUsernameRelation(users.getUsername());
-                        }
-
-                        if (record.isPresent()) {
-                            collegeId = record.get().into(College.class).getCollegeId();
+                            Optional<Record> record = studentService.findByUsernameRelation(users.getUsername());
+                            if(record.isPresent()){
+                                collegeId = record.get().into(College.class).getCollegeId();;
+                            }
                         }
                     }
 

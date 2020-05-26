@@ -12,14 +12,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.domain.tables.pojos.Grade;
 import top.zbeboy.zone.domain.tables.pojos.Organize;
-import top.zbeboy.zone.domain.tables.pojos.Staff;
-import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.records.GradeRecord;
 import top.zbeboy.zone.domain.tables.records.OrganizeRecord;
+import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.service.data.GradeService;
 import top.zbeboy.zone.service.data.OrganizeService;
-import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.web.bean.data.organize.OrganizeBean;
+import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.plugin.select2.Select2Data;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
@@ -126,12 +125,11 @@ public class OrganizeRestController {
     public ResponseEntity<Map<String, Object>> checkAddStaff(@RequestParam("staff") String staff) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         String param = StringUtils.deleteWhitespace(staff);
-        Optional<Record> staffRecord = staffService.findByUsernameOrStaffNumberRelation(param);
-        if (staffRecord.isPresent()) {
-            Users users = staffRecord.get().into(Users.class);
+        StaffBean bean = staffService.findByUsernameOrStaffNumberRelation(param);
+        if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
             Map<String, String> map = new HashMap<>();
-            map.put("realName", users.getRealName());
-            map.put("mobile", users.getMobile());
+            map.put("realName", bean.getRealName());
+            map.put("mobile", bean.getMobile());
             ajaxUtil.success().msg("查询信息正常").put("staff", map);
         } else {
             ajaxUtil.fail().msg("未查询到教职工信息或用户状态不正常");
@@ -175,10 +173,9 @@ public class OrganizeRestController {
                 organize.setOrganizeName(organizeAddVo.getOrganizeName());
                 organize.setGradeId(gradeId);
                 if (StringUtils.isNotBlank(organizeAddVo.getStaff())) {
-                    Optional<Record> staffRecord = staffService.findByUsernameOrStaffNumberRelation(organizeAddVo.getStaff());
-                    if (staffRecord.isPresent()) {
-                        Staff staff = staffRecord.get().into(Staff.class);
-                        organize.setStaffId(staff.getStaffId());
+                    StaffBean bean = staffService.findByUsernameOrStaffNumberRelation(organizeAddVo.getStaff());
+                    if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+                        organize.setStaffId(bean.getStaffId());
                         organizeService.save(organize);
                         ajaxUtil.success().msg("保存成功");
                     } else {
@@ -236,10 +233,9 @@ public class OrganizeRestController {
             organize.setOrganizeName(organizeEditVo.getOrganizeName());
             organize.setGradeId(organizeEditVo.getGradeId());
             if (StringUtils.isNotBlank(organizeEditVo.getStaff())) {
-                Optional<Record> staffRecord = staffService.findByUsernameOrStaffNumberRelation(organizeEditVo.getStaff());
-                if (staffRecord.isPresent()) {
-                    Staff staff = staffRecord.get().into(Staff.class);
-                    organize.setStaffId(staff.getStaffId());
+                StaffBean bean = staffService.findByUsernameOrStaffNumberRelation(organizeEditVo.getStaff());
+                if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+                    organize.setStaffId(bean.getStaffId());
                     organizeService.update(organize);
                     ajaxUtil.success().msg("更新成功");
                 } else {

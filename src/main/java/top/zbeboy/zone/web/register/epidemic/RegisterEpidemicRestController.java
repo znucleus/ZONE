@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
+import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.data.ChannelService;
-import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.export.EpidemicRegisterDataExport;
 import top.zbeboy.zone.service.platform.UsersService;
@@ -205,9 +205,8 @@ public class RegisterEpidemicRestController {
                 if (Objects.nonNull(usersType)) {
                     epidemicRegisterData.setRegisterType(usersType.getUsersTypeName());
                     if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                        Optional<Record> record = staffService.findByUsernameRelation(users.getUsername());
-                        if (record.isPresent()) {
-                            StaffBean bean = record.get().into(StaffBean.class);
+                        StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
+                        if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
                             epidemicRegisterData.setInstitute(bean.getSchoolName() + "-" + bean.getCollegeName() + "-" + bean.getDepartmentName());
                         }
                     } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {

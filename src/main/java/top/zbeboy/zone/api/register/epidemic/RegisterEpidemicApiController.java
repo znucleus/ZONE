@@ -13,9 +13,9 @@ import top.zbeboy.zone.domain.tables.pojos.EpidemicRegisterData;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.domain.tables.records.EpidemicRegisterDataRecord;
+import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.data.ChannelService;
-import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.register.EpidemicRegisterDataService;
@@ -89,9 +89,8 @@ public class RegisterEpidemicApiController {
                     if (Objects.nonNull(usersType)) {
                         epidemicRegisterData.setRegisterType(usersType.getUsersTypeName());
                         if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                            Optional<Record> record = staffService.findByUsernameRelation(users.getUsername());
-                            if (record.isPresent()) {
-                                StaffBean bean = record.get().into(StaffBean.class);
+                            StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
+                            if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
                                 epidemicRegisterData.setInstitute(bean.getSchoolName() + "-" + bean.getCollegeName() + "-" + bean.getDepartmentName());
                             }
                         } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {

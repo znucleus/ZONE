@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.domain.tables.records.StudentRecord;
-import top.zbeboy.zone.service.data.StaffService;
+import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.internship.*;
 import top.zbeboy.zone.service.platform.UsersService;
@@ -188,11 +188,10 @@ public class InternshipApplyRestController {
             if (internshipConditionCommon.applyCondition(internshipApplyAddVo.getInternshipReleaseId())) {
                 InternshipRelease internshipRelease = internshipReleaseService.findById(internshipApplyAddVo.getInternshipReleaseId());
                 if(Objects.nonNull(internshipRelease)){
-                    Optional<Record> staffRecord = staffService.findByIdRelation(internshipApplyAddVo.getStaffId());
-                    if (staffRecord.isPresent()) {
-                        StaffBean staffBean = staffRecord.get().into(StaffBean.class);
-                        internshipApplyAddVo.setHeadmaster(staffBean.getRealName());
-                        internshipApplyAddVo.setHeadmasterTel(staffBean.getMobile());
+                    StaffBean bean = staffService.findByIdRelation(internshipApplyAddVo.getStaffId());
+                    if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+                        internshipApplyAddVo.setHeadmaster(bean.getRealName());
+                        internshipApplyAddVo.setHeadmasterTel(bean.getMobile());
 
                         String[] schoolGuidanceTeacherArr = internshipApplyAddVo.getSchoolGuidanceTeacher().split(" ");
                         if (schoolGuidanceTeacherArr.length > 1) {
@@ -247,11 +246,10 @@ public class InternshipApplyRestController {
                         if (internshipApply.getInternshipApplyState() == 5 ||
                                 internshipApply.getInternshipApplyState() == 3 ||
                                 internshipApply.getInternshipApplyState() == 0) {
-                            Optional<Record> staffRecord = staffService.findByIdRelation(internshipApplyEditVo.getStaffId());
-                            if (staffRecord.isPresent()) {
-                                StaffBean staffBean = staffRecord.get().into(StaffBean.class);
-                                internshipApplyEditVo.setHeadmaster(staffBean.getRealName());
-                                internshipApplyEditVo.setHeadmasterTel(staffBean.getMobile());
+                            StaffBean bean = staffService.findByIdRelation(internshipApplyEditVo.getStaffId());
+                            if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+                                internshipApplyEditVo.setHeadmaster(bean.getRealName());
+                                internshipApplyEditVo.setHeadmasterTel(bean.getMobile());
 
                                 String[] schoolGuidanceTeacherArr = internshipApplyEditVo.getSchoolGuidanceTeacher().split(" ");
                                 if (schoolGuidanceTeacherArr.length > 1) {

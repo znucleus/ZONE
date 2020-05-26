@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
+import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.data.OrganizeService;
-import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.internship.InternshipApplyService;
 import top.zbeboy.zone.service.internship.InternshipInfoService;
@@ -95,11 +95,10 @@ public class InternshipApplyViewController {
 
                 Organize organize = organizeService.findById(studentBean.getOrganizeId());
                 if (Objects.nonNull(organize) && Objects.nonNull(organize.getStaffId())) {
-                    Optional<Record> staffRecord = staffService.findByIdRelation(organize.getStaffId());
-                    if (staffRecord.isPresent()) {
-                        StaffBean staffBean = staffRecord.get().into(StaffBean.class);
-                        modelMap.addAttribute("headmaster", staffBean.getRealName());
-                        modelMap.addAttribute("headmasterTel", staffBean.getMobile());
+                    StaffBean bean = staffService.findByIdRelation(organize.getStaffId());
+                    if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+                        modelMap.addAttribute("headmaster", bean.getRealName());
+                        modelMap.addAttribute("headmasterTel", bean.getMobile());
                     }
 
                 }
@@ -107,12 +106,11 @@ public class InternshipApplyViewController {
                 Optional<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(id, studentBean.getStudentId());
                 if (internshipTeacherDistributionRecord.isPresent()) {
                     InternshipTeacherDistribution internshipTeacherDistribution = internshipTeacherDistributionRecord.get().into(InternshipTeacherDistribution.class);
-                    Optional<Record> staffRecord = staffService.findByIdRelation(internshipTeacherDistribution.getStaffId());
-                    if (staffRecord.isPresent()) {
-                        StaffBean staffBean = staffRecord.get().into(StaffBean.class);
-                        modelMap.put("internshipTeacherName", staffBean.getRealName());
-                        modelMap.put("internshipTeacherMobile", staffBean.getMobile());
-                        modelMap.put("internshipTeacher", staffBean.getRealName() + " " + staffBean.getMobile());
+                    StaffBean bean = staffService.findByIdRelation(internshipTeacherDistribution.getStaffId());
+                    if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+                        modelMap.put("internshipTeacherName", bean.getRealName());
+                        modelMap.put("internshipTeacherMobile", bean.getMobile());
+                        modelMap.put("internshipTeacher", bean.getRealName() + " " + bean.getMobile());
                     }
                 }
             }

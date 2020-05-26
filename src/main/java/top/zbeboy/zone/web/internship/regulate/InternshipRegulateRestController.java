@@ -9,8 +9,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
+import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
-import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.export.InternshipRegulateExport;
 import top.zbeboy.zone.service.internship.InternshipInfoService;
 import top.zbeboy.zone.service.internship.InternshipRegulateService;
@@ -166,9 +166,8 @@ public class InternshipRegulateRestController {
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType)) {
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                    Optional<Record> staffRecord = staffService.findByUsernameRelation(users.getUsername());
-                    if (staffRecord.isPresent()) {
-                        StaffBean staffBean = staffRecord.get().into(StaffBean.class);
+                    StaffBean staffBean = staffService.findByUsernameRelation(users.getUsername());
+                    if (Objects.nonNull(staffBean) && staffBean.getStaffId() > 0) {
                         Result<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStaffId(id, staffBean.getStaffId());
                         if (internshipTeacherDistributionRecord.isNotEmpty()) {
                             List<InternshipTeacherDistribution> beans = internshipTeacherDistributionRecord.into(InternshipTeacherDistribution.class);
@@ -221,9 +220,8 @@ public class InternshipRegulateRestController {
                 UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
                 if (Objects.nonNull(usersType)) {
                     if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                        Optional<Record> staffRecord = staffService.findByUsernameRelation(users.getUsername());
-                        if (staffRecord.isPresent()) {
-                            StaffBean staffBean = staffRecord.get().into(StaffBean.class);
+                        StaffBean staffBean = staffService.findByUsernameRelation(users.getUsername());
+                        if (Objects.nonNull(staffBean) && staffBean.getStaffId() > 0) {
                             InternshipRegulate internshipRegulate = new InternshipRegulate();
                             internshipRegulate.setInternshipRegulateId(UUIDUtil.getUUID());
                             internshipRegulate.setStudentName(internshipRegulateAddVo.getStudentName());

@@ -11,8 +11,8 @@ import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.domain.tables.records.LeaverRegisterScopeRecord;
 import top.zbeboy.zone.domain.tables.records.StudentRecord;
+import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
-import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
@@ -102,11 +102,9 @@ public class RegisterConditionCommon {
                 if (StringUtils.equals(epidemicRegisterData.getRegisterType(), Workbook.STAFF_USERS_TYPE)) {
                     if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
                         Users users = usersService.getUserFromSession();
-                        Optional<Record> record1 = staffService.findByUsernameRelation(users.getUsername());
-                        Optional<Record> record2 = staffService.findByUsernameRelation(epidemicRegisterData.getRegisterUsername());
-                        if (record1.isPresent() && record2.isPresent()) {
-                            StaffBean bean1 = record1.get().into(StaffBean.class);
-                            StaffBean bean2 = record2.get().into(StaffBean.class);
+                        StaffBean bean1 = staffService.findByUsernameRelation(users.getUsername());
+                        StaffBean bean2 = staffService.findByUsernameRelation(epidemicRegisterData.getRegisterUsername());
+                        if (Objects.nonNull(bean1) && bean1.getStaffId() > 0 && Objects.nonNull(bean2) && bean2.getStaffId() > 0) {
                             canOperator = Objects.equals(bean1.getCollegeId(), bean2.getCollegeId());
                         }
                     } else {
@@ -116,12 +114,11 @@ public class RegisterConditionCommon {
                 } else if (StringUtils.equals(epidemicRegisterData.getRegisterType(), Workbook.STUDENT_USERS_TYPE)) {
                     if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
                         Users users = usersService.getUserFromSession();
-                        Optional<Record> record1 = staffService.findByUsernameRelation(users.getUsername());
+                        StaffBean staffBean = staffService.findByUsernameRelation(users.getUsername());
                         Optional<Record> record2 = studentService.findByUsernameRelation(epidemicRegisterData.getRegisterUsername());
-                        if (record1.isPresent() && record2.isPresent()) {
-                            StaffBean bean1 = record1.get().into(StaffBean.class);
+                        if (Objects.nonNull(staffBean) && staffBean.getStaffId() > 0 && record2.isPresent()) {
                             StudentBean bean2 = record2.get().into(StudentBean.class);
-                            canOperator = Objects.equals(bean1.getCollegeId(), bean2.getCollegeId());
+                            canOperator = Objects.equals(staffBean.getCollegeId(), bean2.getCollegeId());
                         }
                     } else {
                         Users users = usersService.getUserFromSession();
@@ -131,12 +128,11 @@ public class RegisterConditionCommon {
                             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
                             if (Objects.nonNull(usersType)) {
                                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                                    Optional<Record> record1 = staffService.findByUsernameRelation(users.getUsername());
+                                    StaffBean staffBean = staffService.findByUsernameRelation(users.getUsername());
                                     Optional<Record> record2 = studentService.findByUsernameRelation(epidemicRegisterData.getRegisterUsername());
-                                    if (record1.isPresent() && record2.isPresent()) {
-                                        StaffBean bean1 = record1.get().into(StaffBean.class);
+                                    if (Objects.nonNull(staffBean) && staffBean.getStaffId() > 0 && record2.isPresent()) {
                                         StudentBean bean2 = record2.get().into(StudentBean.class);
-                                        canOperator = Objects.equals(bean1.getDepartmentId(), bean2.getDepartmentId());
+                                        canOperator = Objects.equals(staffBean.getDepartmentId(), bean2.getDepartmentId());
                                     }
                                 }
                             }
@@ -192,10 +188,9 @@ public class RegisterConditionCommon {
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType)) {
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                    Optional<Record> staffRecord = staffService.findByUsernameRelation(users.getUsername());
-                    if (staffRecord.isPresent()) {
-                        StaffBean staffBean = staffRecord.get().into(StaffBean.class);
-                        int collegeId = staffBean.getCollegeId();
+                    StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
+                    if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+                        int collegeId = bean.getCollegeId();
                         int publishCollegeId = getPublishCollegeId(leaverRegisterReleaseId);
                         canOperator = publishCollegeId != 0 && collegeId == publishCollegeId;
                     }
@@ -272,10 +267,9 @@ public class RegisterConditionCommon {
         UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
         if (Objects.nonNull(usersType)) {
             if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                Optional<Record> staffRecord = staffService.findByUsernameRelation(users.getUsername());
-                if (staffRecord.isPresent()) {
-                    StaffBean staffBean = staffRecord.get().into(StaffBean.class);
-                    collegeId = staffBean.getCollegeId();
+                StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
+                if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+                    collegeId = bean.getCollegeId();
                 }
             } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
                 Optional<Record> studentRecord = studentService.findByUsernameRelation(users.getUsername());
@@ -296,10 +290,9 @@ public class RegisterConditionCommon {
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType)) {
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                    Optional<Record> staffRecord = staffService.findByUsernameRelation(users.getUsername());
-                    if (staffRecord.isPresent()) {
-                        StaffBean staffBean = staffRecord.get().into(StaffBean.class);
-                        publishCollegeId = staffBean.getCollegeId();
+                    StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
+                    if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+                        publishCollegeId = bean.getCollegeId();
                     }
                 } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
                     Optional<Record> studentRecord = studentService.findByUsernameRelation(users.getUsername());

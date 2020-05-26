@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
+import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.data.OrganizeService;
-import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.training.TrainingConfigureService;
@@ -191,9 +191,8 @@ public class TrainingReportRestController {
         UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
         if (Objects.nonNull(usersType)) {
             if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                Optional<Record> staffRecord = staffService.findByUsernameRelation(users.getUsername());
-                if (staffRecord.isPresent()) {
-                    StaffBean staffBean = staffRecord.get().into(StaffBean.class);
+                StaffBean staffBean = staffService.findByUsernameRelation(users.getUsername());
+                if (Objects.nonNull(staffBean) && staffBean.getStaffId() > 0) {
                     bean.setSex(StringUtils.defaultIfBlank(staffBean.getSex(), ""));
                     bean.setAcademicTitleName(StringUtils.defaultIfBlank(staffBean.getAcademicTitleName(), ""));
                     if (Objects.nonNull(staffBean.getBirthday())) {
@@ -244,9 +243,8 @@ public class TrainingReportRestController {
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType)) {
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                    Optional<Record> staffRecord = staffService.findByUsernameRelation(users.getUsername());
-                    if (staffRecord.isPresent()) {
-                        StaffBean staffBean = staffRecord.get().into(StaffBean.class);
+                    StaffBean staffBean = staffService.findByUsernameRelation(users.getUsername());
+                    if (Objects.nonNull(staffBean) && staffBean.getStaffId() > 0) {
                         bean.setSex(StringUtils.defaultIfBlank(staffBean.getSex(), ""));
                         bean.setAcademicTitleName(StringUtils.defaultIfBlank(staffBean.getAcademicTitleName(), ""));
                         if (Objects.nonNull(staffBean.getBirthday())) {

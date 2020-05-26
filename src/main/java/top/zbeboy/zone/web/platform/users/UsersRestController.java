@@ -23,8 +23,8 @@ import top.zbeboy.zone.config.ZoneProperties;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.domain.tables.records.GoogleOauthRecord;
 import top.zbeboy.zone.domain.tables.records.UsersRecord;
+import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
-import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.notify.UserNotifyService;
 import top.zbeboy.zone.service.platform.*;
@@ -33,6 +33,7 @@ import top.zbeboy.zone.service.system.FilesService;
 import top.zbeboy.zone.service.system.SystemConfigureService;
 import top.zbeboy.zone.service.system.SystemMailService;
 import top.zbeboy.zone.service.util.*;
+import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.bean.platform.users.UsersBean;
 import top.zbeboy.zone.web.system.mail.SystemMailConfig;
 import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
@@ -727,15 +728,16 @@ public class UsersRestController {
             int collegeId = 0;
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType)) {
-                Optional<Record> record = Optional.empty();
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                    record = staffService.findByUsernameRelation(users.getUsername());
+                    StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
+                    if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+                        collegeId = bean.getCollegeId();
+                    }
                 } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                    record = studentService.findByUsernameRelation(users.getUsername());
-                }
-
-                if (record.isPresent()) {
-                    collegeId = record.get().into(College.class).getCollegeId();
+                    Optional<Record> record = studentService.findByUsernameRelation(users.getUsername());
+                    if(record.isPresent()){
+                        collegeId = record.get().into(College.class).getCollegeId();
+                    }
                 }
             }
 

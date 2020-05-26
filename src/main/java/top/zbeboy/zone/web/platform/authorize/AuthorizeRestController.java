@@ -14,6 +14,7 @@ import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.feign.data.DepartmentService;
 import top.zbeboy.zone.feign.data.ScienceService;
+import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.data.*;
 import top.zbeboy.zone.service.notify.UserNotifyService;
@@ -24,6 +25,7 @@ import top.zbeboy.zone.service.system.SystemMailService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.RequestUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
+import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.bean.platform.authorize.RoleApplyBean;
 import top.zbeboy.zone.web.plugin.select2.Select2Data;
 import top.zbeboy.zone.web.util.AjaxUtil;
@@ -200,16 +202,20 @@ public class AuthorizeRestController {
         if (Objects.nonNull(users)) {
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType)) {
-                Optional<Record> record = Optional.empty();
+
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                    record = staffService.findByUsernameRelation(users.getUsername());
+                    StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
+                    if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+                        userCollegeId = bean.getCollegeId();
+                    }
                 } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                    record = studentService.findByUsernameRelation(users.getUsername());
+                    Optional<Record> record = studentService.findByUsernameRelation(users.getUsername());
+                    if (record.isPresent()) {
+                        userCollegeId = record.get().into(College.class).getCollegeId();
+                    }
                 }
 
-                if (record.isPresent()) {
-                    userCollegeId = record.get().into(College.class).getCollegeId();
-                } else {
+                if (userCollegeId <= 0) {
                     ajaxUtil.fail().msg("未查询到用户所属院信息");
                 }
             } else {
@@ -255,19 +261,25 @@ public class AuthorizeRestController {
                 if (Objects.nonNull(users)) {
                     UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
                     if (Objects.nonNull(usersType)) {
-                        Optional<Record> record = Optional.empty();
+                        int collegeId = 0;
                         if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                            record = staffService.findByUsernameRelation(users.getUsername());
+                            StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
+                            if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+                                collegeId = bean.getCollegeId();
+                            }
                         } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                            record = studentService.findByUsernameRelation(users.getUsername());
+                            Optional<Record> record = studentService.findByUsernameRelation(users.getUsername());
+                            if(record.isPresent()){
+                                collegeId = record.get().into(College.class).getCollegeId();
+                            }
                         }
 
-                        if (record.isPresent()) {
+                        if (collegeId > 0) {
                             if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
-                                rule1(ajaxUtil, param, record.get().into(College.class).getCollegeId());
+                                rule1(ajaxUtil, param, collegeId);
                             } else if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
-                                if (record.get().into(College.class).getCollegeId() == authorizeAddVo.getCollegeId()) {
-                                    rule1(ajaxUtil, param, record.get().into(College.class).getCollegeId());
+                                if (collegeId == authorizeAddVo.getCollegeId()) {
+                                    rule1(ajaxUtil, param, collegeId);
                                 } else {
                                     ajaxUtil.fail().msg("该账号不在您所属院下，不允许申请操作");
                                 }
@@ -322,9 +334,9 @@ public class AuthorizeRestController {
 
                 // 查询该申请人所在院所有院管理员
                 List<Users> admins = new ArrayList<>();
-                Result<Record> staffAdmin = staffService.findAdmin(Workbook.authorities.ROLE_ADMIN.name(), authorizeAddVo.getCollegeId());
-                if (staffAdmin.isNotEmpty()) {
-                    admins.addAll(staffAdmin.into(Users.class));
+                List<Users> staffAdmin = staffService.findByAuthorityAndCollegeId(Workbook.authorities.ROLE_ADMIN.name(), authorizeAddVo.getCollegeId());
+                if (Objects.nonNull(staffAdmin) && staffAdmin.size() > 0) {
+                    admins.addAll(staffAdmin);
                 }
 
                 Result<Record> studentAdmin = studentService.findAdmin(Workbook.authorities.ROLE_ADMIN.name(), authorizeAddVo.getCollegeId());

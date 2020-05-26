@@ -9,14 +9,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.domain.tables.records.InternshipJournalContentRecord;
+import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
-import top.zbeboy.zone.service.data.StaffService;
 import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.internship.InternshipJournalContentService;
 import top.zbeboy.zone.service.internship.InternshipJournalService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
+import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.bean.internship.journal.InternshipJournalContentBean;
 import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
@@ -83,10 +84,9 @@ public class InternshipJournalViewController {
             modelMap.addAttribute("usersTypeName", usersType.getUsersTypeName());
 
             if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                Optional<Record> record = staffService.findByUsernameRelation(users.getUsername());
-                if (record.isPresent()) {
-                    Staff staff = record.get().into(Staff.class);
-                    modelMap.addAttribute("staffId", staff.getStaffId());
+                StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
+                if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+                    modelMap.addAttribute("staffId", bean.getStaffId());
                 }
             } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
                 Optional<Record> record = studentService.findByUsernameRelation(users.getUsername());
@@ -215,10 +215,9 @@ public class InternshipJournalViewController {
     public String statistical(@PathVariable("id") String id, @PathVariable("staffId") int staffId, ModelMap modelMap) {
         modelMap.addAttribute("internshipReleaseId", id);
         modelMap.addAttribute("staffId", staffId);
-        Optional<Record> record = staffService.findByIdRelation(staffId);
-        if (record.isPresent()) {
-            Users users = record.get().into(Users.class);
-            modelMap.addAttribute("realName", users.getRealName());
+        StaffBean bean = staffService.findByIdRelation(staffId);
+        if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+            modelMap.addAttribute("realName", bean.getRealName());
         }
         return "web/internship/journal/internship_journal_statistical::#page-wrapper";
     }
