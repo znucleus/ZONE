@@ -1,8 +1,11 @@
 package top.zbeboy.zone.feign.data;
 
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.domain.tables.pojos.Role;
 import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zone.hystrix.data.ScienceHystrixClientFallbackFactory;
+import top.zbeboy.zone.hystrix.data.StaffHystrixClientFallbackFactory;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
@@ -12,6 +15,7 @@ import top.zbeboy.zone.web.vo.data.staff.StaffEditVo;
 import java.util.List;
 import java.util.Map;
 
+@FeignClient(value = "base-server", fallback = StaffHystrixClientFallbackFactory.class)
 public interface StaffService {
 
     /**
