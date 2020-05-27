@@ -12,8 +12,8 @@ import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.config.ZoneProperties;
 import top.zbeboy.zone.domain.tables.pojos.SystemConfigure;
 import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zone.feign.system.SystemConfigureService;
 import top.zbeboy.zone.service.platform.UsersService;
-import top.zbeboy.zone.service.system.SystemConfigureService;
 import top.zbeboy.zone.service.system.SystemMailService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.RandomUtil;
@@ -94,7 +94,7 @@ public class SystemMailRestController {
      * @param isMultipart 多段
      * @param isHtml      是html?
      */
-    @PostMapping("/web/system/mail/send")
+    @PostMapping("/anyone/system/mail/send")
     public void sendEmail(@RequestParam("to") String to, @RequestParam("subject") String subject,
                           @RequestParam("content") String content, @RequestParam("isMultipart") Boolean isMultipart, @RequestParam("isHtml") Boolean isHtml) {
         systemMailService.sendEmail(to, subject, content, isMultipart, isHtml);
@@ -106,7 +106,7 @@ public class SystemMailRestController {
      * @param users   用户
      * @param baseUrl 服务路径
      */
-    @PostMapping("/web/system/mail/activation")
+    @PostMapping("/anyone/system/mail/activation")
     public void sendActivationEmail(@RequestBody Users users, @RequestParam("baseUrl") String baseUrl) {
         systemMailService.sendActivationEmail(users, baseUrl);
     }
@@ -117,7 +117,7 @@ public class SystemMailRestController {
      * @param users   用户
      * @param baseUrl 服务路径
      */
-    @PostMapping("/web/system/mail/creation")
+    @PostMapping("/anyone/system/mail/creation")
     public void sendCreationEmail(@RequestBody Users users, @RequestParam("baseUrl") String baseUrl) {
         systemMailService.sendCreationEmail(users, baseUrl);
     }
@@ -128,7 +128,7 @@ public class SystemMailRestController {
      * @param users   用户
      * @param baseUrl 服务路径
      */
-    @PostMapping("/web/system/mail/reset")
+    @PostMapping("/anyone/system/mail/reset")
     public void sendPasswordResetMail(@RequestBody Users users, @RequestParam("baseUrl") String baseUrl) {
         systemMailService.sendPasswordResetMail(users, baseUrl);
     }
@@ -139,8 +139,9 @@ public class SystemMailRestController {
      * @param users   用户
      * @param baseUrl 服务路径
      */
-    @PostMapping("/web/system/mail/valid")
-    public void sendValidEmailMail(@RequestBody Users users, @RequestParam("baseUrl") String baseUrl) {
+    @PostMapping("/anyone/system/mail/valid")
+    public void sendValidEmailMail(@RequestBody Users users, @RequestParam("baseUrl") String baseUrl, HttpServletRequest request) {
+        String ip = RequestUtil.getIpAddress(request);
         systemMailService.sendValidEmailMail(users, baseUrl);
     }
 
@@ -151,7 +152,7 @@ public class SystemMailRestController {
      * @param baseUrl 服务路径
      * @param notify  通知内容
      */
-    @PostMapping("/web/system/mail/notify")
+    @PostMapping("/anyone/system/mail/notify")
     public void sendNotifyMail(@RequestBody Users users, @RequestParam("baseUrl") String baseUrl, @RequestParam("notify") String notify) {
         systemMailService.sendNotifyMail(users, baseUrl, notify);
     }
@@ -165,7 +166,7 @@ public class SystemMailRestController {
      * @param isMultipart 多段
      * @param isHtml      是html?
      */
-    @PostMapping("/web/system/mail/send/default")
+    @PostMapping("/anyone/system/mail/send/default")
     public void sendDefaultMail(@RequestParam("to") String to, @RequestParam("subject") String subject,
                                 @RequestParam("content") String content, @RequestParam("isMultipart") Boolean isMultipart, @RequestParam("isHtml") Boolean isHtml) {
         systemMailService.sendDefaultMail(to, subject, content, isMultipart, isHtml);
@@ -178,7 +179,7 @@ public class SystemMailRestController {
      * @param subject  标题
      * @param content  内容
      */
-    @PostMapping("/web/system/mail/send/cloud")
+    @PostMapping("/anyone/system/mail/send/cloud")
     public void sendCloudMail(@RequestParam("userMail") String userMail, @RequestParam("subject") String subject, @RequestParam("content") String content) {
         systemMailService.sendCloudMail(userMail, subject, content);
     }

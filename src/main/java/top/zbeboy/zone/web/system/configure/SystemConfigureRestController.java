@@ -1,16 +1,12 @@
 package top.zbeboy.zone.web.system.configure;
 
-import org.jooq.Record;
-import org.jooq.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.zbeboy.zone.config.Workbook;
-import top.zbeboy.zone.domain.tables.pojos.SystemConfigure;
-import top.zbeboy.zone.service.system.SystemConfigureService;
+import top.zbeboy.zone.feign.system.SystemConfigureService;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.vo.system.config.SystemConfigureEditVo;
@@ -21,7 +17,6 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @RestController
 public class SystemConfigureRestController {
@@ -36,10 +31,7 @@ public class SystemConfigureRestController {
      */
     @GetMapping("/anyone/data/configure")
     public ResponseEntity<Map<String, Object>> anyoneConfigure() {
-        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        SystemConfigure configure1 = systemConfigureService
-                .findByDataKey(Workbook.SystemConfigure.FORBIDDEN_REGISTER.name());
-        ajaxUtil.success().put(configure1.getDataKey(), configure1.getDataValue());
+        AjaxUtil<Map<String, Object>> ajaxUtil = systemConfigureService.anyoneConfigure();
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -57,15 +49,7 @@ public class SystemConfigureRestController {
         headers.add("dataValue");
         headers.add("operator");
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
-        Result<Record> records = systemConfigureService.findAllByPage(dataTablesUtil);
-        List<SystemConfigure> beans = new ArrayList<>();
-        if (Objects.nonNull(records) && records.isNotEmpty()) {
-            beans = records.into(SystemConfigure.class);
-        }
-        dataTablesUtil.setData(beans);
-        dataTablesUtil.setiTotalRecords(systemConfigureService.countAll());
-        dataTablesUtil.setiTotalDisplayRecords(systemConfigureService.countByCondition(dataTablesUtil));
-        return new ResponseEntity<>(dataTablesUtil, HttpStatus.OK);
+        return new ResponseEntity<>(systemConfigureService.data(dataTablesUtil), HttpStatus.OK);
     }
 
     /**
@@ -77,19 +61,7 @@ public class SystemConfigureRestController {
      */
     @PostMapping("/web/system/config/update")
     public ResponseEntity<Map<String, Object>> save(@Valid SystemConfigureEditVo systemConfigureEditVo, BindingResult bindingResult) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        if (!bindingResult.hasErrors()) {
-            SystemConfigure systemConfigure = systemConfigureService.findByDataKey(systemConfigureEditVo.getDataKey());
-            if (Objects.nonNull(systemConfigure)) {
-                systemConfigure.setDataValue(systemConfigureEditVo.getDataValue());
-                systemConfigureService.update(systemConfigure);
-                ajaxUtil.success().msg("更新成功");
-            } else {
-                ajaxUtil.fail().msg("根据KEY未查询到数据");
-            }
-        } else {
-            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
-        }
+        AjaxUtil<Map<String, Object>> ajaxUtil = systemConfigureService.save(systemConfigureEditVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

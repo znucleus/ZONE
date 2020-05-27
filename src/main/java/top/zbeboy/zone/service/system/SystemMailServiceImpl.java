@@ -23,6 +23,7 @@ import top.zbeboy.zone.config.ZoneProperties;
 import top.zbeboy.zone.domain.tables.pojos.SystemConfigure;
 import top.zbeboy.zone.domain.tables.pojos.SystemMailboxLog;
 import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zone.feign.system.SystemConfigureService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.system.mail.SystemMailConfig;

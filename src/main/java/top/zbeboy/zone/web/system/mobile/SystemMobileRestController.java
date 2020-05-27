@@ -12,8 +12,8 @@ import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.config.ZoneProperties;
 import top.zbeboy.zone.domain.tables.pojos.SystemConfigure;
 import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zone.feign.system.SystemConfigureService;
 import top.zbeboy.zone.service.platform.UsersService;
-import top.zbeboy.zone.service.system.SystemConfigureService;
 import top.zbeboy.zone.service.system.SystemMobileService;
 import top.zbeboy.zone.service.util.RandomUtil;
 import top.zbeboy.zone.web.util.AjaxUtil;
@@ -238,7 +238,7 @@ public class SystemMobileRestController {
      * ：选填--返回内容编码方式，默认为UTF-8
      * @return 返回发送之后收到的信息
      */
-    @PostMapping("/web/system/mobile/send")
+    @PostMapping("/anyone/system/mobile/send")
     public void sendShortMessage(@RequestParam("mobile") String mobile, @RequestParam("content") String content,
                                  @RequestParam(value = "action", required = false) String action,
                                  @RequestParam(value = "sendType", required = false) String sendType,
@@ -253,7 +253,7 @@ public class SystemMobileRestController {
      * @param mobile           手机号
      * @param verificationCode 验证码
      */
-    @PostMapping("/web/system/mobile/valid")
+    @PostMapping("/anyone/system/mobile/valid")
     public void sendValidMobileShortMessage(@RequestParam("mobile") String mobile, @RequestParam("verificationCode") String verificationCode) {
         systemMobileService.sendValidMobileShortMessage(mobile, verificationCode);
     }
