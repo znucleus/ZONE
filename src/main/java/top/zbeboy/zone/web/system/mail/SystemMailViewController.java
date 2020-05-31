@@ -11,8 +11,8 @@ import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.config.ZoneProperties;
 import top.zbeboy.zone.domain.tables.pojos.SystemConfigure;
 import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.feign.system.SystemConfigureService;
-import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.system.SystemMailService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.RandomUtil;
@@ -53,7 +53,7 @@ public class SystemMailViewController {
                                   @PathVariable("username") String username, ModelMap modelMap) {
         SystemTipConfig config = new SystemTipConfig();
         Users users = usersService.findByUsername(username);
-        if (Objects.nonNull(users)) {
+        if (Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername())) {
             Timestamp mailboxVerifyValid = users.getMailboxVerifyValid();
             Timestamp now = DateTimeUtil.getNowSqlTimestamp();
             if (now.before(mailboxVerifyValid)) {
@@ -109,7 +109,7 @@ public class SystemMailViewController {
     public String reSendVerifyMail(@PathVariable("username") String username, HttpServletRequest request, ModelMap modelMap) {
         SystemTipConfig config = new SystemTipConfig();
         Users users = usersService.findByUsername(username);
-        if (Objects.nonNull(users)) {
+        if (Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername())) {
             if (users.getVerifyMailbox().equals(BooleanUtil.toByte(true))) {
                 SystemConfigure mailConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
                 if (StringUtils.equals("1", mailConfigure.getDataValue())) {
@@ -165,7 +165,7 @@ public class SystemMailViewController {
                                     @PathVariable("username") String username, ModelMap modelMap) {
         SystemTipConfig config = new SystemTipConfig();
         Users users = usersService.findByUsername(username);
-        if (Objects.nonNull(users)) {
+        if (Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername())) {
             Timestamp passwordResetKeyValid = users.getPasswordResetKeyValid();
             Timestamp now = DateTimeUtil.getNowSqlTimestamp();
             if (now.before(passwordResetKeyValid)) {

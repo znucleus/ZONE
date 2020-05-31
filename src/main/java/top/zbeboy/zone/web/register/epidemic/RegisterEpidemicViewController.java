@@ -8,11 +8,11 @@ import top.zbeboy.zone.domain.tables.pojos.EpidemicRegisterData;
 import top.zbeboy.zone.domain.tables.pojos.EpidemicRegisterRelease;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.records.EpidemicRegisterDataRecord;
-import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.register.EpidemicRegisterDataService;
 import top.zbeboy.zone.service.register.EpidemicRegisterReleaseService;
 import top.zbeboy.zone.web.register.common.RegisterConditionCommon;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import java.util.Objects;
@@ -29,9 +29,6 @@ public class RegisterEpidemicViewController {
 
     @Resource
     private RegisterConditionCommon registerConditionCommon;
-
-    @Resource
-    private UsersService usersService;
 
     /**
      * 疫情登记
@@ -101,7 +98,7 @@ public class RegisterEpidemicViewController {
      */
     @GetMapping("/web/register/epidemic/data/add/{id}")
     public String dataAdd(@PathVariable("id") String id, ModelMap modelMap) {
-        Users users = usersService.getUserFromSession();
+        Users users = SessionUtil.getUserFromSession();
         Optional<EpidemicRegisterDataRecord> registerDataRecord =
                 epidemicRegisterDataService.findTodayByUsernameAndEpidemicRegisterReleaseId(users.getUsername(), id);
         EpidemicRegisterData epidemicRegisterData = new EpidemicRegisterData();

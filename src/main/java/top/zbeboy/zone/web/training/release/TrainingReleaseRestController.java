@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.feign.data.StudentService;
-import top.zbeboy.zone.service.platform.UsersService;
+import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.service.system.AuthoritiesService;
 import top.zbeboy.zone.service.training.TrainingAuthoritiesService;
 import top.zbeboy.zone.service.training.TrainingConfigureService;
@@ -25,6 +25,7 @@ import top.zbeboy.zone.web.bean.training.release.TrainingReleaseBean;
 import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zone.web.vo.training.release.*;
 
@@ -103,7 +104,7 @@ public class TrainingReleaseRestController {
             trainingRelease.setStartDate(DateTimeUtil.defaultParseSqlDate(trainingReleaseAddVo.getStartDate()));
             trainingRelease.setEndDate(DateTimeUtil.defaultParseSqlDate(trainingReleaseAddVo.getEndDate()));
             trainingRelease.setReleaseTime(DateTimeUtil.getNowSqlTimestamp());
-            Users users = usersService.getUserFromSession();
+            Users users = SessionUtil.getUserFromSession();
             trainingRelease.setPublisher(users.getRealName());
             trainingRelease.setUsername(users.getUsername());
             trainingReleaseService.save(trainingRelease);
@@ -320,7 +321,7 @@ public class TrainingReleaseRestController {
                 Result<Record> authorityRecord = authoritiesService.findByUsernameAndInAuthorities(trainingAuthoritiesAddVo.getUsername(), authorities);
                 if (authorityRecord.isEmpty()) {
                     // 本人无需添加权限
-                    Users users = usersService.getUserFromSession();
+                    Users users = SessionUtil.getUserFromSession();
                     if (!StringUtils.equals(users.getUsername(), trainingAuthoritiesAddVo.getUsername())) {
                         TrainingAuthorities trainingAuthorities = new TrainingAuthorities();
                         trainingAuthorities.setAuthoritiesId(UUIDUtil.getUUID());
@@ -366,7 +367,7 @@ public class TrainingReleaseRestController {
                 Result<Record> authorityRecord = authoritiesService.findByUsernameAndInAuthorities(trainingAuthoritiesEditVo.getUsername(), authorities);
                 if (authorityRecord.isEmpty()) {
                     // 本人无需添加权限
-                    Users users = usersService.getUserFromSession();
+                    Users users = SessionUtil.getUserFromSession();
                     if (!StringUtils.equals(users.getUsername(), trainingAuthoritiesEditVo.getUsername())) {
                         TrainingAuthorities trainingAuthorities = trainingAuthoritiesService.findById(trainingAuthoritiesEditVo.getAuthoritiesId());
                         trainingAuthorities.setUsername(trainingAuthoritiesEditVo.getUsername());

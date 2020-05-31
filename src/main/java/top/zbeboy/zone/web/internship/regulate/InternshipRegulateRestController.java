@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.feign.data.StaffService;
+import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.export.InternshipRegulateExport;
 import top.zbeboy.zone.service.internship.InternshipInfoService;
 import top.zbeboy.zone.service.internship.InternshipRegulateService;
 import top.zbeboy.zone.service.internship.InternshipReleaseService;
 import top.zbeboy.zone.service.internship.InternshipTeacherDistributionService;
-import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
@@ -27,6 +27,7 @@ import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
 import top.zbeboy.zone.web.plugin.select2.Select2Data;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zone.web.util.SmallPropsUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.util.pagination.ExportInfo;
@@ -162,7 +163,7 @@ public class InternshipRegulateRestController {
     public ResponseEntity<Map<String, Object>> studentData(@PathVariable("id") String id) {
         Select2Data select2Data = Select2Data.of();
         if (internshipConditionCommon.basicCondition(id)) {
-            Users users = usersService.getUserFromSession();
+            Users users = SessionUtil.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType)) {
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
@@ -216,7 +217,7 @@ public class InternshipRegulateRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
             if (internshipConditionCommon.regulateCondition(internshipRegulateAddVo.getInternshipReleaseId())) {
-                Users users = usersService.getUserFromSession();
+                Users users = SessionUtil.getUserFromSession();
                 UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
                 if (Objects.nonNull(usersType)) {
                     if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {

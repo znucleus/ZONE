@@ -5,7 +5,7 @@ import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 
 @Component
-public class UsersTypeFeignHystrixClientFallbackFactory implements UsersTypeService {
+public class UsersTypeHystrixClientFallbackFactory implements UsersTypeService {
     @Override
     public UsersType findById(int id) {
         return new UsersType();

@@ -4,9 +4,9 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
-import top.zbeboy.zone.hystrix.platform.UsersTypeFeignHystrixClientFallbackFactory;
+import top.zbeboy.zone.hystrix.platform.UsersTypeHystrixClientFallbackFactory;
 
-@FeignClient(value = "base-server", fallback = UsersTypeFeignHystrixClientFallbackFactory.class)
+@FeignClient(value = "base-server", fallback = UsersTypeHystrixClientFallbackFactory.class)
 public interface UsersTypeService {
 
     /**

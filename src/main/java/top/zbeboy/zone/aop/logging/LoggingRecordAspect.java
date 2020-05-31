@@ -9,11 +9,11 @@ import org.slf4j.LoggerFactory;
 import top.zbeboy.zone.annotation.logging.LoggingRecord;
 import top.zbeboy.zone.domain.tables.pojos.SystemOperatorLog;
 import top.zbeboy.zone.domain.tables.pojos.Users;
-import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.system.SystemLogService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.RequestUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -23,9 +23,6 @@ import java.lang.reflect.Method;
 public class LoggingRecordAspect {
 
     private final Logger log = LoggerFactory.getLogger(LoggingRecordAspect.class);
-
-    @Resource
-    private UsersService usersService;
 
     @Resource
     private SystemLogService systemLogService;
@@ -58,7 +55,7 @@ public class LoggingRecordAspect {
                     for (Object o : arguments) {
                         if (o instanceof HttpServletRequest) {
                             HttpServletRequest request = (HttpServletRequest) o;
-                            Users users = usersService.getUserFromSession();
+                            Users users = SessionUtil.getUserFromSession();
                             SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(), String.valueOf(method.getAnnotation(LoggingRecord.class).description()), DateTimeUtil.getNowSqlTimestamp(), users.getUsername(), RequestUtil.getIpAddress(request));
                             systemLogService.save(systemLog);
                             log.info(" Record operator logging to database , the module is {} , the method is {} ", method.getAnnotation(LoggingRecord.class).module(), method.getAnnotation(LoggingRecord.class).methods());

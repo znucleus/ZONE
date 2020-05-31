@@ -13,10 +13,11 @@ import top.zbeboy.zone.annotation.logging.LoggingRecord;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.Files;
 import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.service.platform.MenuService;
-import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.system.AuthoritiesService;
 import top.zbeboy.zone.service.system.FilesService;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -113,9 +114,9 @@ public class MainController {
     @LoggingRecord(module = "Main", methods = "backstage", description = "访问系统主页")
     @GetMapping(Workbook.WEB_BACKSTAGE)
     public String backstage(ModelMap modelMap, HttpServletRequest request) {
-        List<String> roles = usersService.getAuthoritiesFromSession();
+        List<String> roles = SessionUtil.getAuthoritiesFromSession();
         // avatar.
-        Users users = usersService.getUserFromSession();
+        Users users = SessionUtil.getUserFromSession();
         if (StringUtils.isNotBlank(users.getAvatar())) {
             Files files = filesService.findById(users.getAvatar());
             if (Objects.nonNull(files)) {

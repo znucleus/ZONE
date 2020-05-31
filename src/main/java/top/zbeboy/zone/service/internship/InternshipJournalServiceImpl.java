@@ -21,13 +21,13 @@ import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.domain.tables.records.InternshipJournalRecord;
 import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
-import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.RequestUtil;
 import top.zbeboy.zone.service.util.SQLQueryUtil;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.bean.internship.journal.InternshipJournalBean;
+import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zone.web.util.SmallPropsUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
@@ -52,9 +52,6 @@ public class InternshipJournalServiceImpl implements InternshipJournalService, P
 
     @Resource
     private InternshipJournalDao internshipJournalDao;
-
-    @Resource
-    private UsersService usersService;
 
     @Resource
     private UsersTypeService usersTypeService;
@@ -225,7 +222,7 @@ public class InternshipJournalServiceImpl implements InternshipJournalService, P
             // 个人
             if (dataRangeInt == 1) {
                 int studentId = 0;
-                Users users = usersService.getUserFromSession();
+                Users users = SessionUtil.getUserFromSession();
                 UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
                 if (Objects.nonNull(usersType)) {
                     if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
@@ -314,7 +311,7 @@ public class InternshipJournalServiceImpl implements InternshipJournalService, P
      *
      * @param internshipJournal        数据
      * @param internshipJournalContent 内容
-     * @param username                    用户
+     * @param username                 用户
      * @param request                  请求
      * @return 路径
      */

@@ -12,13 +12,12 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.domain.tables.records.AttendReleaseRecord;
-import top.zbeboy.zone.domain.tables.records.UsersRecord;
+import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.service.attend.AttendReleaseService;
 import top.zbeboy.zone.service.attend.AttendReleaseSubService;
 import top.zbeboy.zone.service.attend.AttendWxStudentSubscribeService;
 import top.zbeboy.zone.service.cache.attend.AttendWxCacheService;
 import top.zbeboy.zone.service.internship.InternshipApplyService;
-import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.system.SystemOperatorLogService;
 import top.zbeboy.zone.service.training.TrainingAttendService;
 import top.zbeboy.zone.service.training.TrainingAttendUsersService;
@@ -112,9 +111,8 @@ public class ScheduledConfiguration {
             DateTime oldTime = dateTime.minusDays(30);
             Byte b = 0;
             // 查询未验证用户
-            Result<UsersRecord> records = this.usersService.findByJoinDateAndVerifyMailbox(DateTimeUtil.utilDateToSqlDate(oldTime.toDate()), b);
-            if (records.isNotEmpty()) {
-                List<Users> users = records.into(Users.class);
+            List<Users> users = this.usersService.findByJoinDateAndVerifyMailbox(DateTimeUtil.utilDateToSqlDate(oldTime.toDate()), b);
+            if (Objects.nonNull(users) && users.size() > 0) {
                 this.usersService.delete(users);
                 users.forEach(user -> {
                     SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(), "删除未验证用户:" + user.getUsername(), DateTimeUtil.getNowSqlTimestamp(), "actuator", "127.0.0.1");

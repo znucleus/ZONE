@@ -15,6 +15,7 @@ import top.zbeboy.zone.domain.tables.pojos.Role;
 import top.zbeboy.zone.domain.tables.pojos.SystemConfigure;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.feign.data.StaffService;
+import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.feign.system.SystemConfigureService;
 import top.zbeboy.zone.service.system.SystemMailService;
@@ -44,6 +45,9 @@ public class StaffRestController {
 
     @Resource
     private StaffService staffService;
+
+    @Resource
+    private UsersService usersService;
 
     @Resource
     private UsersTypeService usersTypeService;
@@ -222,7 +226,7 @@ public class StaffRestController {
             // 检查邮件推送是否被关闭
             SystemConfigure mailConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
             if (StringUtils.equals("1", mailConfigure.getDataValue())) {
-                systemMailService.sendNotifyMail(users, RequestUtil.getBaseUrl(request), notify);
+                systemMailService.sendNotifyMail(usersService.findByUsername(username), RequestUtil.getBaseUrl(request), notify);
             }
         }
 

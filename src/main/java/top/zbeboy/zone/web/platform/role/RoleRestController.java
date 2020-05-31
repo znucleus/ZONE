@@ -15,6 +15,7 @@ import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.data.StudentService;
+import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.data.CollegeApplicationService;
 import top.zbeboy.zone.service.platform.*;
@@ -26,6 +27,7 @@ import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.bean.platform.role.RoleBean;
 import top.zbeboy.zone.web.plugin.treeview.TreeViewData;
 import top.zbeboy.zone.web.util.AjaxUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zone.web.util.SmallPropsUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.vo.platform.role.RoleAddVo;
@@ -112,7 +114,7 @@ public class RoleRestController {
 
         if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
                 roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
-            Users users = usersService.getUserFromSession();
+            Users users = SessionUtil.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType)) {
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
@@ -160,7 +162,7 @@ public class RoleRestController {
         String param = StringUtils.deleteWhitespace(roleName);
         if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
                 roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
-            Users users = usersService.getUserFromSession();
+            Users users = SessionUtil.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType)) {
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
@@ -220,7 +222,7 @@ public class RoleRestController {
                 roleApplicationService.batchSave(roleApplications);
 
                 int collegeId = roleAddVo.getCollegeId();
-                Users users = usersService.getUserFromSession();
+                Users users = SessionUtil.getUserFromSession();
                 UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
                 if (Objects.nonNull(usersType)) {
                     if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {

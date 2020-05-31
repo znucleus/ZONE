@@ -12,18 +12,19 @@ import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.domain.tables.records.AttendWxStudentSubscribeRecord;
 import top.zbeboy.zone.feign.data.StudentService;
+import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.attend.AttendDataService;
 import top.zbeboy.zone.service.attend.AttendReleaseSubService;
 import top.zbeboy.zone.service.attend.AttendWxStudentSubscribeService;
 import top.zbeboy.zone.service.cache.attend.AttendWxCacheService;
 import top.zbeboy.zone.service.platform.RoleService;
-import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.web.bean.attend.AttendReleaseSubBean;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
 import javax.annotation.Resource;
@@ -78,7 +79,7 @@ public class AttendReleaseSubApiController {
             beans.forEach(bean -> bean.setValidDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getValidDate())));
             beans.forEach(bean -> bean.setExpireDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getExpireDate())));
 
-            Users users = usersService.getUserFromOauth(principal);
+            Users users = SessionUtil.getUserFromOauth(principal);
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType)) {
                 if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
@@ -138,7 +139,7 @@ public class AttendReleaseSubApiController {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         AttendReleaseSub attendReleaseSub = attendReleaseSubService.findById(attendReleaseSubId);
         if (Objects.nonNull(attendReleaseSub)) {
-            Users users = usersService.getUserFromOauth(principal);
+            Users users = SessionUtil.getUserFromOauth(principal);
             if (roleService.isOauthUserInRole(Workbook.authorities.ROLE_SYSTEM.name(), principal) ||
                     (Objects.nonNull(users) && StringUtils.equals(users.getUsername(), attendReleaseSub.getUsername()))) {
                 attendReleaseSubService.deleteById(attendReleaseSubId);

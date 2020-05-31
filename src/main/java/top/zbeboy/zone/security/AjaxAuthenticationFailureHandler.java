@@ -11,12 +11,13 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.SystemOperatorLog;
 import top.zbeboy.zone.domain.tables.pojos.Users;
-import top.zbeboy.zone.service.platform.UsersService;
+import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.service.system.SystemOperatorLogService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.RequestUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
+import top.zbeboy.zone.web.util.SpringBootUtil;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -62,8 +63,7 @@ public class AjaxAuthenticationFailureHandler extends ExceptionMappingAuthentica
                 int loginErrorCount = (int) session.getAttribute(key);
                 if (loginErrorCount > 7) {
                     code = AjaxAuthenticationCode.USERNAME_ACCOUNT_NON_LOCKED;
-                    UsersService usersService = (UsersService) Objects.requireNonNull(ctx)
-                            .getBean("usersService");
+                    UsersService usersService = SpringBootUtil.getBean(UsersService.class);
                     Users users = usersService.findByUsername(username);
                     users.setAccountNonLocked(BooleanUtil.toByte(false));
                     usersService.update(users);

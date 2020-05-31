@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.domain.tables.records.TrainingSpecialFileTypeRecord;
-import top.zbeboy.zone.service.platform.UsersService;
+import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.service.system.FilesService;
 import top.zbeboy.zone.service.training.*;
 import top.zbeboy.zone.service.upload.UploadService;
@@ -28,6 +28,7 @@ import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BaseImgUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zone.web.vo.training.special.*;
 
@@ -106,7 +107,7 @@ public class TrainingSpecialRestController {
         try {
             if (!bindingResult.hasErrors()) {
                 if (trainingConditionCommon.specialCondition()) {
-                    Users users = usersService.getUserFromSession();
+                    Users users = SessionUtil.getUserFromSession();
                     TrainingSpecial trainingSpecial = new TrainingSpecial();
                     if (StringUtils.isNotBlank(trainingSpecialAddVo.getFile())) {
                         Files files = BaseImgUtil.generateImage(trainingSpecialAddVo.getFile(),
@@ -242,7 +243,7 @@ public class TrainingSpecialRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
             if (trainingConditionCommon.specialCondition()) {
-                Users users = usersService.getUserFromSession();
+                Users users = SessionUtil.getUserFromSession();
                 TrainingSpecialDocument trainingSpecialDocument = new TrainingSpecialDocument();
                 String trainingSpecialDocumentId = UUIDUtil.getUUID();
                 trainingSpecialDocument.setTrainingSpecialDocumentId(trainingSpecialDocumentId);
@@ -460,7 +461,7 @@ public class TrainingSpecialRestController {
                 files.setFileSize(trainingSpecialFileAddVo.getFileSize());
                 filesService.save(files);
 
-                Users users = usersService.getUserFromSession();
+                Users users = SessionUtil.getUserFromSession();
                 TrainingSpecialFile trainingSpecialFile = new TrainingSpecialFile();
                 trainingSpecialFile.setTrainingSpecialFileId(UUIDUtil.getUUID());
                 trainingSpecialFile.setFileTypeId(trainingSpecialFileAddVo.getFileTypeId());

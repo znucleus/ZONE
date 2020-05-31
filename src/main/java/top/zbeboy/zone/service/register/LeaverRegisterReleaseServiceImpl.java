@@ -11,9 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zone.domain.tables.daos.LeaverRegisterReleaseDao;
 import top.zbeboy.zone.domain.tables.pojos.LeaverRegisterRelease;
 import top.zbeboy.zone.domain.tables.pojos.Users;
-import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zone.service.util.SQLQueryUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
 import javax.annotation.Resource;
@@ -29,9 +29,6 @@ public class LeaverRegisterReleaseServiceImpl implements LeaverRegisterReleaseSe
 
     @Resource
     private LeaverRegisterReleaseDao leaverRegisterReleaseDao;
-
-    @Resource
-    private UsersService usersService;
 
     @Autowired
     LeaverRegisterReleaseServiceImpl(DSLContext dslContext) {
@@ -87,7 +84,7 @@ public class LeaverRegisterReleaseServiceImpl implements LeaverRegisterReleaseSe
         Condition a = null;
         JSONObject search = paginationUtil.getSearch();
 
-        Users users = usersService.getUserByChannel(paginationUtil.getChannel(), paginationUtil.getPrincipal());
+        Users users = SessionUtil.getUserByChannel(paginationUtil.getChannel(), paginationUtil.getPrincipal());
         if (Objects.nonNull(search)) {
             String dataRange = StringUtils.trim(search.getString("dataRange"));
             if (StringUtils.isBlank(dataRange)) {

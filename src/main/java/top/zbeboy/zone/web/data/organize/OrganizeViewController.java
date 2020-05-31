@@ -14,11 +14,11 @@ import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.data.OrganizeService;
 import top.zbeboy.zone.service.platform.RoleService;
-import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.web.bean.data.organize.OrganizeBean;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import java.util.Objects;
@@ -29,9 +29,6 @@ public class OrganizeViewController {
 
     @Resource
     private RoleService roleService;
-
-    @Resource
-    private UsersService usersService;
 
     @Resource
     private UsersTypeService usersTypeService;
@@ -65,7 +62,7 @@ public class OrganizeViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
-            Users users = usersService.getUserFromSession();
+            Users users = SessionUtil.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType)) {
                 int collegeId = 0;

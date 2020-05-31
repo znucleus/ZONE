@@ -14,11 +14,13 @@ import top.zbeboy.zone.domain.tables.pojos.OauthAccessToken;
 import top.zbeboy.zone.domain.tables.pojos.OauthClientDetails;
 import top.zbeboy.zone.domain.tables.pojos.OauthClientUsers;
 import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.service.platform.*;
 import top.zbeboy.zone.service.util.BCryptUtil;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.web.bean.platform.app.OauthClientUsersBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.vo.platform.app.AppAddVo;
 import top.zbeboy.zone.web.vo.platform.app.AppEditVo;
@@ -113,7 +115,7 @@ public class AppRestController {
             oauthClientUsers.setSecret(appAddVo.getSecret());
             oauthClientUsers.setAppName(appAddVo.getAppName());
 
-            Users users = usersService.getUserFromSession();
+            Users users = SessionUtil.getUserFromSession();
             oauthClientUsers.setUsername(users.getUsername());
             oauthClientUsers.setRemark(appAddVo.getRemark());
             oauthClientUsers.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
@@ -141,7 +143,7 @@ public class AppRestController {
             if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
                 record = oauthClientUsersService.findByIdRelation(appEditVo.getClientId());
             } else {
-                Users users = usersService.getUserFromSession();
+                Users users = SessionUtil.getUserFromSession();
                 record = oauthClientUsersService.findByIdAndUsernameRelation(appEditVo.getClientId(), users.getUsername());
             }
 
@@ -179,7 +181,7 @@ public class AppRestController {
         if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
             record = oauthClientUsersService.findByIdRelation(clientId);
         } else {
-            Users users = usersService.getUserFromSession();
+            Users users = SessionUtil.getUserFromSession();
             record = oauthClientUsersService.findByIdAndUsernameRelation(clientId, users.getUsername());
         }
 
@@ -216,7 +218,7 @@ public class AppRestController {
         if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
             record = oauthClientUsersService.findByIdRelation(clientId);
         } else {
-            Users users = usersService.getUserFromSession();
+            Users users = SessionUtil.getUserFromSession();
             record = oauthClientUsersService.findByIdAndUsernameRelation(clientId, users.getUsername());
         }
 

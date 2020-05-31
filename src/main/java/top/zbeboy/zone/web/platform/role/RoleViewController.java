@@ -14,11 +14,11 @@ import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.platform.CollegeRoleService;
 import top.zbeboy.zone.service.platform.RoleService;
-import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.bean.platform.role.RoleBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import java.util.Objects;
@@ -29,9 +29,6 @@ public class RoleViewController {
 
     @Resource
     private RoleService roleService;
-
-    @Resource
-    private UsersService usersService;
 
     @Resource
     private UsersTypeService usersTypeService;
@@ -75,12 +72,12 @@ public class RoleViewController {
             modelMap.addAttribute("collegeId", 0);
             page = "web/platform/role/role_add::#page-wrapper";
         } else if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
-            Users users = usersService.getUserFromSession();
+            Users users = SessionUtil.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType)) {
                 int collegeId = 0;
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                    StaffBean bean =  staffService.findByUsernameRelation(users.getUsername());
+                    StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
                     if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
                         collegeId = bean.getCollegeId();
                     }
@@ -137,7 +134,7 @@ public class RoleViewController {
             }
         } else if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
             // 判断是否同一个院
-            Users users = usersService.getUserFromSession();
+            Users users = SessionUtil.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType)) {
                 int collegeId = 0;

@@ -14,15 +14,16 @@ import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.domain.tables.records.EpidemicRegisterDataRecord;
 import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.data.StudentService;
+import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.data.ChannelService;
-import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.register.EpidemicRegisterDataService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zone.web.vo.register.epidemic.EpidemicRegisterDataAddVo;
 
 import javax.annotation.Resource;
@@ -64,7 +65,7 @@ public class RegisterEpidemicApiController {
     public ResponseEntity<Map<String, Object>> dataSave(@Valid EpidemicRegisterDataAddVo epidemicRegisterDataAddVo, BindingResult bindingResult, Principal principal) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
-            Users users = usersService.getUserFromOauth(principal);
+            Users users = SessionUtil.getUserFromOauth(principal);
             if (Objects.nonNull(users)) {
                 Optional<EpidemicRegisterDataRecord> registerDataRecord =
                         epidemicRegisterDataService.findTodayByUsernameAndEpidemicRegisterReleaseId(users.getUsername(),

@@ -24,12 +24,12 @@ import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.service.attend.AttendWxStudentSubscribeService;
 import top.zbeboy.zone.service.cache.attend.AttendWxCacheService;
 import top.zbeboy.zone.service.data.WeiXinService;
-import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.HttpClientUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zone.web.vo.attend.weixin.AttendWxStudentSubscribeAddVo;
 
 import javax.annotation.Resource;
@@ -48,9 +48,6 @@ public class AttendWxStudentSubscribeApiController {
 
     @Autowired
     private ZoneProperties zoneProperties;
-
-    @Resource
-    private UsersService usersService;
 
     @Resource
     private WeiXinService weiXinService;
@@ -86,7 +83,7 @@ public class AttendWxStudentSubscribeApiController {
                 JSONObject params = JSON.parseObject(result);
                 String openId = params.getString("openid");
                 if (StringUtils.isNotBlank(openId)) {
-                    Users users = usersService.getUserFromOauth(principal);
+                    Users users = SessionUtil.getUserFromOauth(principal);
                     if (Objects.nonNull(users)) {
                         Optional<WeiXinRecord> record = weiXinService.findByUsernameAndAppId(users.getUsername(), appId);
                         if (record.isPresent()) {
@@ -144,7 +141,7 @@ public class AttendWxStudentSubscribeApiController {
                                                          Principal principal) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
-            Users users = usersService.getUserFromOauth(principal);
+            Users users = SessionUtil.getUserFromOauth(principal);
             if (Objects.nonNull(users)) {
                 StudentBean studentBean = studentService.findByUsername(users.getUsername());
                 if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
@@ -206,7 +203,7 @@ public class AttendWxStudentSubscribeApiController {
     public ResponseEntity<Map<String, Object>> subscribeDelete(@RequestParam("attendReleaseId") String attendReleaseId,
                                                                Principal principal) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        Users users = usersService.getUserFromOauth(principal);
+        Users users = SessionUtil.getUserFromOauth(principal);
         if (Objects.nonNull(users)) {
             StudentBean studentBean = studentService.findByUsername(users.getUsername());
             if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
@@ -232,7 +229,7 @@ public class AttendWxStudentSubscribeApiController {
     public ResponseEntity<Map<String, Object>> subscribeQuery(@RequestParam("attendReleaseId") String attendReleaseId,
                                                               Principal principal) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        Users users = usersService.getUserFromOauth(principal);
+        Users users = SessionUtil.getUserFromOauth(principal);
         if (Objects.nonNull(users)) {
             StudentBean studentBean = studentService.findByUsername(users.getUsername());
             if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {

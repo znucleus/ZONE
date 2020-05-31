@@ -13,20 +13,17 @@ import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.internship.InternshipRegulateService;
 import top.zbeboy.zone.service.platform.RoleService;
-import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import java.util.Objects;
 
 @Controller
 public class InternshipRegulateViewController {
-
-    @Resource
-    private UsersService usersService;
 
     @Resource
     private UsersTypeService usersTypeService;
@@ -67,7 +64,7 @@ public class InternshipRegulateViewController {
             modelMap.addAttribute("authorities", Workbook.authorities.ROLE_ADMIN.name());
         }
 
-        Users users = usersService.getUserFromSession();
+        Users users = SessionUtil.getUserFromSession();
         UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
         if (Objects.nonNull(usersType)) {
             if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {

@@ -15,9 +15,9 @@ import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.data.StudentService;
+import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.data.OrganizeService;
-import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.training.TrainingConfigureService;
 import top.zbeboy.zone.service.training.TrainingReleaseService;
 import top.zbeboy.zone.service.training.TrainingReportService;
@@ -31,6 +31,7 @@ import top.zbeboy.zone.web.bean.training.report.TrainingReportBean;
 import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
 import top.zbeboy.zone.web.training.common.TrainingControllerCommon;
 import top.zbeboy.zone.web.util.AjaxUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
 import javax.annotation.Resource;
@@ -98,7 +99,6 @@ public class TrainingReportRestController {
     @GetMapping("/web/training/report/generate/{type}/{trainingReleaseId}")
     public void generate(@PathVariable("type") int type, @PathVariable("trainingReleaseId") String trainingReleaseId,
                          HttpServletRequest request, HttpServletResponse response) {
-        Users users = usersService.getUserFromSession();
         if (type == 0 || type == 1 || type == 2 || type == 3) {
             if (trainingConditionCommon.reportCondition()) {
                 if (type == 0) {
@@ -125,7 +125,7 @@ public class TrainingReportRestController {
      * @param response 响应
      */
     private void fileBase(HttpServletRequest request, HttpServletResponse response) {
-        Users users = usersService.getUserFromSession();
+        Users users = SessionUtil.getUserFromSession();
         TrainingReportBean bean = new TrainingReportBean();
         bean.setRealName(users.getRealName());
         bean.setYear(DateTimeUtil.getNowYear() + "");
@@ -143,7 +143,7 @@ public class TrainingReportRestController {
      * @param response          响应
      */
     private void fileSenior(String trainingReleaseId, HttpServletRequest request, HttpServletResponse response) {
-        Users users = usersService.getUserFromSession();
+        Users users = SessionUtil.getUserFromSession();
         Optional<Record> record = trainingReleaseService.findByIdRelation(trainingReleaseId);
         if (record.isPresent()) {
             TrainingReleaseBean releaseBean = record.get().into(TrainingReleaseBean.class);
@@ -178,7 +178,7 @@ public class TrainingReportRestController {
      * @param response 响应
      */
     private void situationBase(HttpServletRequest request, HttpServletResponse response) {
-        Users users = usersService.getUserFromSession();
+        Users users = SessionUtil.getUserFromSession();
         TrainingReportBean bean = new TrainingReportBean();
         bean.setRealName(users.getRealName());
         bean.setYear(DateTimeUtil.getNowYear() + "");
@@ -226,7 +226,7 @@ public class TrainingReportRestController {
      * @param response          响应
      */
     private void situationSenior(String trainingReleaseId, HttpServletRequest request, HttpServletResponse response) {
-        Users users = usersService.getUserFromSession();
+        Users users = SessionUtil.getUserFromSession();
         Optional<Record> record = trainingReleaseService.findByIdRelation(trainingReleaseId);
         if (record.isPresent()) {
             TrainingReleaseBean releaseBean = record.get().into(TrainingReleaseBean.class);
@@ -305,7 +305,7 @@ public class TrainingReportRestController {
      * @param response 响应
      */
     private void reportBase(HttpServletRequest request, HttpServletResponse response) {
-        Users users = usersService.getUserFromSession();
+        Users users = SessionUtil.getUserFromSession();
         TrainingReportBean bean = new TrainingReportBean();
         bean.setRealName(users.getRealName());
         bean.setYear(DateTimeUtil.getNowYear() + "");
@@ -340,7 +340,7 @@ public class TrainingReportRestController {
      * @param response          响应
      */
     private void reportSenior(String trainingReleaseId, HttpServletRequest request, HttpServletResponse response) {
-        Users users = usersService.getUserFromSession();
+        Users users = SessionUtil.getUserFromSession();
         Optional<Record> record = trainingReleaseService.findByIdRelation(trainingReleaseId);
         if (record.isPresent()) {
             TrainingReleaseBean releaseBean = record.get().into(TrainingReleaseBean.class);

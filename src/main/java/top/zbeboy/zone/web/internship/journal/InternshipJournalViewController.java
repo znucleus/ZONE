@@ -6,7 +6,10 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zone.config.Workbook;
-import top.zbeboy.zone.domain.tables.pojos.*;
+import top.zbeboy.zone.domain.tables.pojos.InternshipJournal;
+import top.zbeboy.zone.domain.tables.pojos.InternshipJournalContent;
+import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.domain.tables.records.InternshipJournalContentRecord;
 import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.data.StudentService;
@@ -14,13 +17,13 @@ import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.internship.InternshipJournalContentService;
 import top.zbeboy.zone.service.internship.InternshipJournalService;
 import top.zbeboy.zone.service.platform.RoleService;
-import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.bean.internship.journal.InternshipJournalContentBean;
 import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import java.util.Objects;
@@ -28,9 +31,6 @@ import java.util.Optional;
 
 @Controller
 public class InternshipJournalViewController {
-
-    @Resource
-    private UsersService usersService;
 
     @Resource
     private UsersTypeService usersTypeService;
@@ -77,7 +77,7 @@ public class InternshipJournalViewController {
             modelMap.addAttribute("authorities", Workbook.authorities.ROLE_ADMIN.name());
         }
 
-        Users users = usersService.getUserFromSession();
+        Users users = SessionUtil.getUserFromSession();
         UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
         if (Objects.nonNull(usersType)) {
             modelMap.addAttribute("usersTypeName", usersType.getUsersTypeName());
@@ -230,7 +230,7 @@ public class InternshipJournalViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         if (internshipConditionCommon.journalLookMyCondition(id)) {
-            Users users = usersService.getUserFromSession();
+            Users users = SessionUtil.getUserFromSession();
             StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
             if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
                 modelMap.addAttribute("internshipReleaseId", id);

@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.feign.data.StudentService;
+import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.feign.system.SystemConfigureService;
 import top.zbeboy.zone.service.internship.*;
 import top.zbeboy.zone.service.notify.UserNotifyService;
-import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.system.AuthoritiesService;
 import top.zbeboy.zone.service.system.FilesService;
 import top.zbeboy.zone.service.system.SystemMailService;
@@ -30,6 +30,7 @@ import top.zbeboy.zone.web.plugin.select2.Select2Data;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.ByteUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
 import javax.annotation.Resource;
@@ -201,12 +202,12 @@ public class InternshipReviewRestController {
             Result<Record> authorityRecord = authoritiesService.findByUsernameAndInAuthorities(param, authorities);
             if (authorityRecord.isEmpty()) {
                 // 本人无需添加权限
-                Users users = usersService.getUserFromSession();
+                Users users = SessionUtil.getUserFromSession();
                 if (!StringUtils.equals(users.getUsername(), param)) {
                     Optional<Record> record = internshipReviewAuthorizeService.findByInternshipReleaseIdAndUsername(internshipReleaseId, param);
                     if (!record.isPresent()) {
                         Users checkUser = usersService.findByUsername(param);
-                        if (Objects.nonNull(checkUser)) {
+                        if (Objects.nonNull(checkUser) && StringUtils.isNotBlank(checkUser.getUsername())) {
                             InternshipReviewAuthorize internshipReviewAuthorize = new InternshipReviewAuthorize(internshipReleaseId, param);
                             internshipReviewAuthorizeService.save(internshipReviewAuthorize);
                             ajaxUtil.success().msg("保存成功");
@@ -281,7 +282,7 @@ public class InternshipReviewRestController {
     @PostMapping("/web/internship/review/save")
     public ResponseEntity<Map<String, Object>> save(InternshipReviewBean internshipReviewBean) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        if (StringUtils.isNotBlank(internshipReviewBean.getInternshipReleaseId()) && Objects.nonNull(internshipReviewBean.getStudentId())) {
+        if (StringUtils.isNotBlank(internshipReviewBean.getInternshipReleaseId())) {
             if (internshipConditionCommon.reviewCondition(internshipReviewBean.getInternshipReleaseId())) {
                 Optional<Record> internshipInfoRecord = internshipInfoService.findByInternshipReleaseIdAndStudentId(internshipReviewBean.getInternshipReleaseId(), internshipReviewBean.getStudentId());
                 if (internshipInfoRecord.isPresent()) {
@@ -317,7 +318,7 @@ public class InternshipReviewRestController {
     @PostMapping("/web/internship/review/pass")
     public ResponseEntity<Map<String, Object>> pass(InternshipReviewBean internshipReviewBean, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        if (StringUtils.isNotBlank(internshipReviewBean.getInternshipReleaseId()) && Objects.nonNull(internshipReviewBean.getStudentId())) {
+        if (StringUtils.isNotBlank(internshipReviewBean.getInternshipReleaseId())) {
             if (internshipConditionCommon.reviewCondition(internshipReviewBean.getInternshipReleaseId())) {
                 Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReviewBean.getInternshipReleaseId(), internshipReviewBean.getStudentId());
                 if (internshipApplyRecord.isPresent()) {
@@ -349,7 +350,7 @@ public class InternshipReviewRestController {
 
                     InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReviewBean.getInternshipReleaseId());
                     if (Objects.nonNull(internshipRelease)) {
-                        Users sendUser = usersService.getUserFromSession();
+                        Users sendUser = SessionUtil.getUserFromSession();
                         StudentBean studentBean = studentService.findByIdRelation(internshipReviewBean.getStudentId());
                         if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
                             Users acceptUsers = new Users();
@@ -421,7 +422,7 @@ public class InternshipReviewRestController {
 
                 InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
                 if (Objects.nonNull(internshipRelease)) {
-                    Users sendUser = usersService.getUserFromSession();
+                    Users sendUser = SessionUtil.getUserFromSession();
                     StudentBean studentBean = studentService.findByIdRelation(studentId);
                     if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
                         Users acceptUsers = new Users();
@@ -483,7 +484,7 @@ public class InternshipReviewRestController {
 
             InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
             if (Objects.nonNull(internshipRelease)) {
-                Users sendUser = usersService.getUserFromSession();
+                Users sendUser = SessionUtil.getUserFromSession();
                 StudentBean studentBean= studentService.findByIdRelation(studentId);
                 if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
                     Users acceptUsers = new Users();
@@ -544,7 +545,7 @@ public class InternshipReviewRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         String internshipReleaseId = internshipReviewBean.getInternshipReleaseId();
         int studentId = internshipReviewBean.getStudentId();
-        if (StringUtils.isNotBlank(internshipReleaseId) && Objects.nonNull(studentId)) {
+        if (StringUtils.isNotBlank(internshipReleaseId)) {
             if (internshipConditionCommon.reviewCondition(internshipReleaseId)) {
                 Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
                 if (internshipApplyRecord.isPresent()) {
@@ -594,7 +595,7 @@ public class InternshipReviewRestController {
 
                     InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
                     if (Objects.nonNull(internshipRelease)) {
-                        Users sendUser = usersService.getUserFromSession();
+                        Users sendUser = SessionUtil.getUserFromSession();
                         StudentBean studentBean = studentService.findByIdRelation(studentId);
                         if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
                             Users acceptUsers = new Users();
@@ -645,7 +646,7 @@ public class InternshipReviewRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         String internshipReleaseId = internshipReviewBean.getInternshipReleaseId();
         int studentId = internshipReviewBean.getStudentId();
-        if (StringUtils.isNotBlank(internshipReleaseId) && Objects.nonNull(studentId)) {
+        if (StringUtils.isNotBlank(internshipReleaseId)) {
             if (internshipConditionCommon.reviewCondition(internshipReleaseId)) {
                 Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentId);
                 if (internshipApplyRecord.isPresent()) {
@@ -664,7 +665,7 @@ public class InternshipReviewRestController {
 
                     InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
                     if (Objects.nonNull(internshipRelease)) {
-                        Users sendUser = usersService.getUserFromSession();
+                        Users sendUser = SessionUtil.getUserFromSession();
                         StudentBean studentBean = studentService.findByIdRelation(studentId);
                         if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
                             Users acceptUsers = new Users();

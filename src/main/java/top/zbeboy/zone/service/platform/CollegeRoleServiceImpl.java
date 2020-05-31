@@ -20,6 +20,7 @@ import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zone.service.util.SQLQueryUtil;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
+import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
 import javax.annotation.Resource;
@@ -39,9 +40,6 @@ public class CollegeRoleServiceImpl implements CollegeRoleService, PaginationPlu
 
     @Resource
     private RoleService roleService;
-
-    @Resource
-    private UsersService usersService;
 
     @Resource
     private UsersTypeService usersTypeService;
@@ -248,7 +246,7 @@ public class CollegeRoleServiceImpl implements CollegeRoleService, PaginationPlu
         }
 
         if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
-            Users users = usersService.getUserFromSession();
+            Users users = SessionUtil.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType)) {
                 int collegeId = 0;

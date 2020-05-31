@@ -13,15 +13,16 @@ import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.domain.tables.records.GoogleOauthRecord;
 import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.data.StudentService;
+import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.platform.GoogleOauthService;
 import top.zbeboy.zone.service.platform.RoleService;
-import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.system.FilesService;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 import top.zbeboy.zone.web.system.tip.SystemTipConfig;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -67,7 +68,7 @@ public class UsersViewController {
         if (Objects.nonNull(session.getAttribute(usernameKey))) {
             String username = (String) session.getAttribute(usernameKey);
             Users users = usersService.findByUsername(username);
-            if (Objects.nonNull(users)) {
+            if (Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername())) {
                 String validKey = username + SessionBook.DYNAMIC_PASSWORD_VALID;
                 if (Objects.nonNull(session.getAttribute(validKey))) {
                     boolean isValid = (boolean) session.getAttribute(validKey);
@@ -121,7 +122,7 @@ public class UsersViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
 
-        Users users = usersService.getUserFromSession();
+        Users users = SessionUtil.getUserFromSession();
         modelMap.addAttribute("realName", users.getRealName());
         modelMap.addAttribute("joinDate", users.getJoinDate());
 
@@ -172,7 +173,7 @@ public class UsersViewController {
      */
     @GetMapping("/users/profile/edit")
     public String usersProfileEdit(ModelMap modelMap) {
-        Users users = usersService.getUserFromSession();
+        Users users = SessionUtil.getUserFromSession();
         modelMap.addAttribute("realName", users.getRealName());
         modelMap.addAttribute("joinDate", users.getJoinDate());
 
@@ -193,7 +194,7 @@ public class UsersViewController {
      */
     @GetMapping("/users/setting")
     public String userSetting(ModelMap modelMap) {
-        Users users = usersService.getUserFromSession();
+        Users users = SessionUtil.getUserFromSession();
         modelMap.addAttribute("username", users.getUsername());
         modelMap.addAttribute("email", StringUtils.overlay(users.getEmail(), "****", 1, users.getEmail().lastIndexOf("@")));
         modelMap.addAttribute("mobile", StringUtils.overlay(users.getMobile(), "****", 3, 6));

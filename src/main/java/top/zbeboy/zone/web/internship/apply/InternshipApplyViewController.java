@@ -15,11 +15,11 @@ import top.zbeboy.zone.service.data.OrganizeService;
 import top.zbeboy.zone.service.internship.InternshipApplyService;
 import top.zbeboy.zone.service.internship.InternshipInfoService;
 import top.zbeboy.zone.service.internship.InternshipTeacherDistributionService;
-import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import java.util.Objects;
@@ -41,9 +41,6 @@ public class InternshipApplyViewController {
     private InternshipApplyService internshipApplyService;
 
     @Resource
-    private UsersService usersService;
-
-    @Resource
     private StudentService studentService;
 
     @Resource
@@ -62,7 +59,7 @@ public class InternshipApplyViewController {
      */
     @GetMapping("/web/menu/internship/apply")
     public String index(ModelMap modelMap) {
-        Users users = usersService.getUserFromSession();
+        Users users = SessionUtil.getUserFromSession();
         UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
         if (Objects.nonNull(usersType)) {
             modelMap.put("usersType", usersType.getUsersTypeName());
@@ -82,7 +79,7 @@ public class InternshipApplyViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         if (internshipConditionCommon.applyCondition(id)) {
-            Users users = usersService.getUserFromSession();
+            Users users = SessionUtil.getUserFromSession();
             StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
             if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
                 String qqMail = "";
@@ -132,7 +129,7 @@ public class InternshipApplyViewController {
     public String my(ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        Users users = usersService.getUserFromSession();
+        Users users = SessionUtil.getUserFromSession();
         UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
         if (Objects.nonNull(usersType)) {
             if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
@@ -162,7 +159,7 @@ public class InternshipApplyViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         if (internshipConditionCommon.applyEditCondition(id)) {
-            Users users = usersService.getUserFromSession();
+            Users users = SessionUtil.getUserFromSession();
             StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
             if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
                 Optional<Record> internshipInfoRecord = internshipInfoService.findByInternshipReleaseIdAndStudentId(id, studentBean.getStudentId());
@@ -208,7 +205,7 @@ public class InternshipApplyViewController {
     public String look(@PathVariable("id") String id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        Users users = usersService.getUserFromSession();
+        Users users = SessionUtil.getUserFromSession();
         StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
         if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
             Optional<Record> internshipInfoRecord = internshipInfoService.findByInternshipReleaseIdAndStudentId(id, studentBean.getStudentId());

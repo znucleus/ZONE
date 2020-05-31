@@ -7,9 +7,10 @@ import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.WeiXinDevice;
 import top.zbeboy.zone.domain.tables.records.WeiXinDeviceRecord;
+import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.service.data.WeiXinDeviceService;
-import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.web.util.AjaxUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import java.security.Principal;
@@ -35,7 +36,7 @@ public class AttendWxDeviceApiController {
     @PostMapping("/api/attend/weixin/device/query")
     public ResponseEntity<Map<String, Object>> query(Principal principal) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        Users users = usersService.getUserFromOauth(principal);
+        Users users = SessionUtil.getUserFromOauth(principal);
         if (Objects.nonNull(users)) {
             Optional<WeiXinDeviceRecord> record = weiXinDeviceService.findByUsername(users.getUsername());
             if (record.isPresent()) {

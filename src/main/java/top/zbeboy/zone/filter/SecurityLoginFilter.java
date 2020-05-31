@@ -1,9 +1,9 @@
 package top.zbeboy.zone.filter;
 
 
+import org.apache.commons.lang3.StringUtils;
 import org.jooq.Record;
 import org.springframework.context.ApplicationContext;
-import org.springframework.util.StringUtils;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.Users;
@@ -11,10 +11,10 @@ import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.feign.data.DepartmentService;
 import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.data.StudentService;
+import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.security.AjaxAuthenticationCode;
 import top.zbeboy.zone.service.data.OrganizeService;
-import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.web.bean.data.department.DepartmentBean;
 import top.zbeboy.zone.web.bean.data.organize.OrganizeBean;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
@@ -48,15 +48,15 @@ public class SecurityLoginFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         if ("POST".equalsIgnoreCase(request.getMethod()) && request.getRequestURI().endsWith("/login")) {
-            String username = StringUtils.trimWhitespace(request.getParameter("username"));
-            String password = StringUtils.trimWhitespace(request.getParameter("password"));
+            String username = StringUtils.deleteWhitespace(request.getParameter("username"));
+            String password = StringUtils.deleteWhitespace(request.getParameter("password"));
 
-            if (!StringUtils.hasLength(username)) {// 账号/邮箱/手机号为空
+            if (StringUtils.isBlank(username)) {// 账号/邮箱/手机号为空
                 response.getWriter().print(AjaxAuthenticationCode.USERNAME_IS_BLANK);
                 return;
             }
 
-            if (!StringUtils.hasLength(password)) {// 密码为空
+            if (StringUtils.isBlank(password)) {// 密码为空
                 response.getWriter().print(AjaxAuthenticationCode.PASSWORD_IS_BLANK);
                 return;
             }
@@ -68,24 +68,24 @@ public class SecurityLoginFilter implements Filter {
                 response.getWriter().print(AjaxAuthenticationCode.INIT_SERVE_ERROR);
                 return;
             }
-            UsersService usersService = (UsersService) ctx
-                    .getBean("usersService");
+
+            UsersService usersService = SpringBootUtil.getBean(UsersService.class);
 
             Users users = null;
             boolean hasUser = false;
             if (Pattern.matches(SystemMailConfig.MAIL_REGEX, username)) {
                 users = usersService.findByEmail(username);
-                hasUser = Objects.nonNull(users);
+                hasUser = Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername());
             }
 
             if (!hasUser && Pattern.matches(SystemMobileConfig.MOBILE_REGEX, username)) {
                 users = usersService.findByMobile(username);
-                hasUser = Objects.nonNull(users);
+                hasUser = Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername());
             }
 
             if (!hasUser) {
                 users = usersService.findByUsername(username);
-                hasUser = Objects.nonNull(users);
+                hasUser = Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername());
             }
 
             if (!hasUser) {

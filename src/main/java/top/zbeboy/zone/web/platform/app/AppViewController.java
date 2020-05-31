@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.service.platform.OauthClientUsersService;
-import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.util.RandomUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.platform.app.OauthClientUsersBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import java.util.Optional;
@@ -21,9 +21,6 @@ public class AppViewController {
 
     @Resource
     private OauthClientUsersService oauthClientUsersService;
-
-    @Resource
-    private UsersService usersService;
 
     /**
      * 平台应用
@@ -58,7 +55,7 @@ public class AppViewController {
     public String edit(@PathVariable("id") String id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        Users users = usersService.getUserFromSession();
+        Users users = SessionUtil.getUserFromSession();
         Optional<Record> record = oauthClientUsersService.findByIdAndUsernameRelation(id, users.getUsername());
         if (record.isPresent()) {
             OauthClientUsersBean oauthClientUsersBean = record.get().into(OauthClientUsersBean.class);

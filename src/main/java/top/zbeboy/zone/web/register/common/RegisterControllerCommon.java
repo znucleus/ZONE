@@ -15,9 +15,9 @@ import top.zbeboy.zone.feign.data.CollegeService;
 import top.zbeboy.zone.feign.data.DepartmentService;
 import top.zbeboy.zone.feign.data.ScienceService;
 import top.zbeboy.zone.feign.data.StudentService;
+import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.service.data.*;
 import top.zbeboy.zone.service.export.LeaverRegisterDataExport;
-import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.register.*;
 import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
@@ -30,6 +30,7 @@ import top.zbeboy.zone.web.bean.register.leaver.LeaverRegisterScopeBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.ByteUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zone.web.util.pagination.ExportInfo;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zone.web.vo.register.leaver.LeaverRegisterDataVo;
@@ -195,7 +196,7 @@ public class RegisterControllerCommon {
     public AjaxUtil<Map<String, Object>> save(LeaverRegisterReleaseAddVo leaverRegisterReleaseAddVo, BindingResult bindingResult, String channel, Principal principal) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
-            Users users = usersService.getUserByChannel(channel, principal);
+            Users users = SessionUtil.getUserByChannel(channel, principal);
             LeaverRegisterRelease leaverRegisterRelease = new LeaverRegisterRelease();
             String leaverRegisterReleaseId = UUIDUtil.getUUID();
             leaverRegisterRelease.setLeaverRegisterReleaseId(leaverRegisterReleaseId);
@@ -375,7 +376,7 @@ public class RegisterControllerCommon {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
             if (registerConditionCommon.leaverRegister(leaverRegisterDataVo.getLeaverRegisterReleaseId(), channel, principal)) {
-                Users users = usersService.getUserByChannel(channel, principal);
+                Users users = SessionUtil.getUserByChannel(channel, principal);
                 StudentBean studentBean = studentService.findByUsername(users.getUsername());
                 if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
                     Optional<Record> leaverRegisterDataRecord = leaverRegisterDataService.findByLeaverRegisterReleaseIdAndStudentId(leaverRegisterDataVo.getLeaverRegisterReleaseId(), studentBean.getStudentId());
@@ -428,7 +429,7 @@ public class RegisterControllerCommon {
                                                     Principal principal) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (registerConditionCommon.leaverRegister(leaverRegisterReleaseId, channel, principal)) {
-            Users users = usersService.getUserByChannel(channel, principal);
+            Users users = SessionUtil.getUserByChannel(channel, principal);
             StudentBean studentBean = studentService.findByUsername(users.getUsername());
             if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
                 leaverRegisterDataService.deleteByLeaverRegisterReleaseIdAndStudentId(leaverRegisterReleaseId, studentBean.getStudentId());

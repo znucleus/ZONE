@@ -17,11 +17,11 @@ import top.zbeboy.zone.domain.tables.records.AttendReleaseRecord;
 import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.platform.RoleService;
-import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zone.service.util.SQLQueryUtil;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.util.ByteUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
 import javax.annotation.Resource;
@@ -41,9 +41,6 @@ public class AttendReleaseServiceImpl implements AttendReleaseService, Paginatio
 
     @Resource
     private RoleService roleService;
-
-    @Resource
-    private UsersService usersService;
 
     @Resource
     private UsersTypeService usersTypeService;
@@ -142,7 +139,7 @@ public class AttendReleaseServiceImpl implements AttendReleaseService, Paginatio
         Condition a = null;
         JSONObject search = paginationUtil.getSearch();
 
-        Users users = usersService.getUserFromOauth(paginationUtil.getPrincipal());
+        Users users = SessionUtil.getUserFromOauth(paginationUtil.getPrincipal());
         if (Objects.nonNull(search)) {
             String dataRange = StringUtils.trim(search.getString("dataRange"));
             if (StringUtils.isBlank(dataRange)) {

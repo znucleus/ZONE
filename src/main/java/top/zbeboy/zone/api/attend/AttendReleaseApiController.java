@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.feign.data.StudentService;
+import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.service.attend.AttendReleaseService;
 import top.zbeboy.zone.service.attend.AttendReleaseSubService;
 import top.zbeboy.zone.service.attend.AttendUsersService;
 import top.zbeboy.zone.service.cache.attend.AttendWxCacheService;
 import top.zbeboy.zone.service.platform.RoleService;
-import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.attend.AttendReleaseBean;
@@ -25,6 +25,7 @@ import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.ByteUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zone.web.vo.attend.release.AttendReleaseAddVo;
 import top.zbeboy.zone.web.vo.attend.release.AttendReleaseEditVo;
@@ -72,7 +73,7 @@ public class AttendReleaseApiController {
     @PostMapping("/api/attend/save")
     public ResponseEntity<Map<String, Object>> save(@Valid AttendReleaseAddVo attendReleaseAddVo, BindingResult bindingResult, Principal principal) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        Users users = usersService.getUserFromOauth(principal);
+        Users users = SessionUtil.getUserFromOauth(principal);
         if (Objects.nonNull(users)) {
             if (!bindingResult.hasErrors()) {
                 // 保存主表
@@ -179,7 +180,7 @@ public class AttendReleaseApiController {
             // 更新子表
             AttendReleaseSub attendReleaseSub = attendReleaseSubService.findById(attendReleaseEditVo.getAttendReleaseSubId());
             if (Objects.nonNull(attendReleaseSub)) {
-                Users users = usersService.getUserFromOauth(principal);
+                Users users = SessionUtil.getUserFromOauth(principal);
                 if (roleService.isOauthUserInRole(Workbook.authorities.ROLE_SYSTEM.name(), principal) ||
                         (Objects.nonNull(users) && StringUtils.equals(users.getUsername(), attendReleaseSub.getUsername()))) {
                     attendReleaseSub.setTitle(attendReleaseEditVo.getTitle());

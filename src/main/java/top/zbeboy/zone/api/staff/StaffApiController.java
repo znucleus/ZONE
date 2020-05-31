@@ -6,9 +6,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.feign.data.StaffService;
-import top.zbeboy.zone.service.platform.UsersService;
+import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import java.security.Principal;
@@ -34,7 +35,7 @@ public class StaffApiController {
     @GetMapping("/api/staff")
     public ResponseEntity<Map<String, Object>> users(Principal principal) {
         AjaxUtil<Object> ajaxUtil = AjaxUtil.of();
-        Users users = usersService.getUserFromOauth(principal);
+        Users users = SessionUtil.getUserFromOauth(principal);
         if (Objects.nonNull(users)) {
             StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
             if (Objects.nonNull(bean) && bean.getStaffId() > 0) {

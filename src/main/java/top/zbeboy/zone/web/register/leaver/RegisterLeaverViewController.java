@@ -13,13 +13,13 @@ import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.platform.RoleService;
-import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.register.LeaverRegisterReleaseService;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.register.common.RegisterConditionCommon;
 import top.zbeboy.zone.web.register.common.RegisterControllerCommon;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import java.util.Objects;
@@ -29,9 +29,6 @@ public class RegisterLeaverViewController {
 
     @Resource
     private RoleService roleService;
-
-    @Resource
-    private UsersService usersService;
 
     @Resource
     private UsersTypeService usersTypeService;
@@ -71,7 +68,7 @@ public class RegisterLeaverViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
-            Users users = usersService.getUserFromSession();
+            Users users = SessionUtil.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType)) {
                 int schoolId = 0;
@@ -81,7 +78,7 @@ public class RegisterLeaverViewController {
                         schoolId = bean.getSchoolId();
                     }
                 } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                    StudentBean studentBean =  studentService.findByUsernameRelation(users.getUsername());
+                    StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
                     if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
                         schoolId = studentBean.getSchoolId();
                     }
@@ -120,7 +117,7 @@ public class RegisterLeaverViewController {
         if (registerConditionCommon.leaverOperator(id, channel, null)) {
             boolean canAccess = false;
             if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
-                Users users = usersService.getUserFromSession();
+                Users users = SessionUtil.getUserFromSession();
                 UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
                 if (Objects.nonNull(usersType)) {
                     int schoolId = 0;

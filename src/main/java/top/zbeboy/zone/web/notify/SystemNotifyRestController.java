@@ -12,12 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.domain.tables.pojos.SystemNotify;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.records.SystemNotifyRecord;
+import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.service.notify.SystemNotifyService;
-import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.notify.SystemNotifyBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zone.web.util.SmallPropsUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.vo.system.notify.SystemNotifyAddVo;
@@ -113,7 +114,7 @@ public class SystemNotifyRestController {
             systemNotify.setValidDate(DateTimeUtil.defaultParseSqlTimestamp(systemNotifyAddVo.getValidDate()));
             systemNotify.setExpireDate(DateTimeUtil.defaultParseSqlTimestamp(systemNotifyAddVo.getExpireDate()));
             systemNotify.setNotifyType(systemNotifyAddVo.getNotifyType());
-            Users users = usersService.getUserFromSession();
+            Users users = SessionUtil.getUserFromSession();
             systemNotify.setSendUser(users.getUsername());
 
             systemNotifyService.save(systemNotify);

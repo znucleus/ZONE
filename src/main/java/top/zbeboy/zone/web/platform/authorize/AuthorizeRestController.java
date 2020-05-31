@@ -16,6 +16,7 @@ import top.zbeboy.zone.feign.data.DepartmentService;
 import top.zbeboy.zone.feign.data.ScienceService;
 import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.data.StudentService;
+import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.feign.system.SystemConfigureService;
 import top.zbeboy.zone.service.data.*;
@@ -33,6 +34,7 @@ import top.zbeboy.zone.web.plugin.select2.Select2Data;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.ByteUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.vo.platform.authorize.AuthorizeAddVo;
 import top.zbeboy.zone.web.vo.platform.authorize.AuthorizeEditVo;
@@ -201,7 +203,7 @@ public class AuthorizeRestController {
 
         int userCollegeId = 0;
         Users users = usersService.findByUsername(param);
-        if (Objects.nonNull(users)) {
+        if (Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername())) {
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType)) {
 
@@ -260,7 +262,7 @@ public class AuthorizeRestController {
             if (StringUtils.isNotBlank(authorizeAddVo.getUsername())) {
                 String param = StringUtils.deleteWhitespace(authorizeAddVo.getUsername());
                 Users users = usersService.findByUsername(param);
-                if (Objects.nonNull(users)) {
+                if (Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername())) {
                     UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
                     if (Objects.nonNull(usersType)) {
                         int collegeId = 0;
@@ -324,7 +326,7 @@ public class AuthorizeRestController {
                     String param = StringUtils.deleteWhitespace(authorizeAddVo.getUsername());
                     applyUser = usersService.findByUsername(param);
                 } else {
-                    applyUser = usersService.getUserFromSession();
+                    applyUser = SessionUtil.getUserFromSession();
                 }
 
                 roleApply.setUsername(applyUser.getUsername());
@@ -469,7 +471,7 @@ public class AuthorizeRestController {
                 roleApply.setRefuse(refuse);
                 roleApplyService.update(roleApply);
                 Users applyUser = usersService.findByUsername(roleApply.getUsername());
-                Users users = usersService.getUserFromSession();
+                Users users = SessionUtil.getUserFromSession();
 
                 String notify = "管理员用户【" + users.getRealName() + "】";
                 if (applyStatus == 1) {
@@ -549,7 +551,7 @@ public class AuthorizeRestController {
             Optional<Record> roleApplyRecord = roleApplyService.findByIdRelation(roleApplyId);
             if (roleApplyRecord.isPresent()) {
                 RoleApplyBean roleApplyBean = roleApplyRecord.get().into(RoleApplyBean.class);
-                Users users = usersService.getUserFromSession();
+                Users users = SessionUtil.getUserFromSession();
                 if (StringUtils.equals(users.getUsername(), roleApplyBean.getUsername())) {
                     Byte status = roleApplyBean.getApplyStatus();
                     if (status != 1) {
@@ -574,7 +576,7 @@ public class AuthorizeRestController {
             Optional<Record> roleApplyRecord = roleApplyService.findByIdRelation(roleApplyId);
             if (roleApplyRecord.isPresent()) {
                 RoleApplyBean roleApplyBean = roleApplyRecord.get().into(RoleApplyBean.class);
-                Users users = usersService.getUserFromSession();
+                Users users = SessionUtil.getUserFromSession();
                 if (StringUtils.equals(users.getUsername(), roleApplyBean.getUsername())) {
                     ajaxUtil.success().msg("可操作");
                 } else {

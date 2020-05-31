@@ -5,8 +5,9 @@ import org.springframework.security.core.Authentication;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.Application;
 import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.service.platform.RoleService;
-import top.zbeboy.zone.service.platform.UsersService;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +38,7 @@ public class WebSecurity {
      * @return true可访问 false 不可访问该路径
      */
     public boolean check(Authentication authentication, HttpServletRequest request) {
-        Users users = usersService.getUserFromSession();
+        Users users = SessionUtil.getUserFromSession();
         if (Objects.isNull(users)) {
             return false;
         }

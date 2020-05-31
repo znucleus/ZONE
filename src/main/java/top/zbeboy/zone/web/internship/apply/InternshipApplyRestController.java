@@ -15,7 +15,6 @@ import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.service.internship.*;
-import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.system.FilesService;
 import top.zbeboy.zone.service.upload.FileBean;
 import top.zbeboy.zone.service.upload.UploadService;
@@ -32,6 +31,7 @@ import top.zbeboy.zone.web.internship.common.InternshipControllerCommon;
 import top.zbeboy.zone.web.plugin.select2.Select2Data;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zone.web.vo.internship.apply.InternshipApplyAddVo;
 import top.zbeboy.zone.web.vo.internship.apply.InternshipApplyEditVo;
@@ -79,9 +79,6 @@ public class InternshipApplyRestController {
     private StaffService staffService;
 
     @Resource
-    private UsersService usersService;
-
-    @Resource
     private StudentService studentService;
 
     /**
@@ -97,8 +94,8 @@ public class InternshipApplyRestController {
         Result<Record> records = internshipReleaseService.findAllByPage(simplePaginationUtil);
         if (records.isNotEmpty()) {
             beans = records.into(InternshipReleaseBean.class);
-            beans.forEach(bean->{
-                if(BooleanUtil.toBoolean(bean.getIsTimeLimit())){
+            beans.forEach(bean -> {
+                if (BooleanUtil.toBoolean(bean.getIsTimeLimit())) {
                     bean.setTeacherDistributionStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionStartTime()));
                     bean.setTeacherDistributionEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionEndTime()));
                     bean.setStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getStartTime()));
@@ -126,8 +123,8 @@ public class InternshipApplyRestController {
         Result<Record> records = internshipApplyService.findAllByPage(simplePaginationUtil);
         if (records.isNotEmpty()) {
             beans = records.into(InternshipApplyBean.class);
-            beans.forEach(bean->{
-                if(BooleanUtil.toBoolean(bean.getIsTimeLimit())){
+            beans.forEach(bean -> {
+                if (BooleanUtil.toBoolean(bean.getIsTimeLimit())) {
                     bean.setTeacherDistributionStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionStartTime()));
                     bean.setTeacherDistributionEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionEndTime()));
                     bean.setStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getStartTime()));
@@ -187,7 +184,7 @@ public class InternshipApplyRestController {
         if (!bindingResult.hasErrors()) {
             if (internshipConditionCommon.applyCondition(internshipApplyAddVo.getInternshipReleaseId())) {
                 InternshipRelease internshipRelease = internshipReleaseService.findById(internshipApplyAddVo.getInternshipReleaseId());
-                if(Objects.nonNull(internshipRelease)){
+                if (Objects.nonNull(internshipRelease)) {
                     StaffBean bean = staffService.findByIdRelation(internshipApplyAddVo.getStaffId());
                     if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
                         internshipApplyAddVo.setHeadmaster(bean.getRealName());
@@ -200,7 +197,7 @@ public class InternshipApplyRestController {
                         }
 
                         boolean isTimeLimit = BooleanUtil.toBoolean(internshipRelease.getIsTimeLimit());
-                        if(isTimeLimit){
+                        if (isTimeLimit) {
                             internshipApplyAddVo.setState(0);
                         } else {
                             internshipApplyAddVo.setState(1);
@@ -360,7 +357,7 @@ public class InternshipApplyRestController {
     @PostMapping("/web/internship/apply/recall")
     public ResponseEntity<Map<String, Object>> recall(@RequestParam("id") String internshipReleaseId) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        Users users = usersService.getUserFromSession();
+        Users users = SessionUtil.getUserFromSession();
         StudentBean studentBean = studentService.findByUsername(users.getUsername());
         if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
             Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
@@ -421,7 +418,7 @@ public class InternshipApplyRestController {
     public ResponseEntity<Map<String, Object>> state(@RequestParam("reason") String reason, @RequestParam("internshipApplyState") int state,
                                                      @RequestParam("internshipReleaseId") String internshipReleaseId) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        Users users = usersService.getUserFromSession();
+        Users users = SessionUtil.getUserFromSession();
         StudentBean studentBean = studentService.findByUsername(users.getUsername());
         if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
             Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
@@ -470,7 +467,7 @@ public class InternshipApplyRestController {
                                                           MultipartHttpServletRequest request) {
         AjaxUtil<FileBean> ajaxUtil = AjaxUtil.of();
         try {
-            Users users = usersService.getUserFromSession();
+            Users users = SessionUtil.getUserFromSession();
             StudentBean studentBean = studentService.findByUsername(users.getUsername());
             if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
                 Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
@@ -522,7 +519,7 @@ public class InternshipApplyRestController {
     @PostMapping("/web/internship/apply/delete/file")
     public ResponseEntity<Map<String, Object>> deleteFile(@RequestParam("id") String internshipReleaseId, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        Users users = usersService.getUserFromSession();
+        Users users = SessionUtil.getUserFromSession();
         StudentBean studentBean = studentService.findByUsername(users.getUsername());
         if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
             Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());

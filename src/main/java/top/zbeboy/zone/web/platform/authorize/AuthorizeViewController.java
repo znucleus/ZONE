@@ -12,15 +12,16 @@ import top.zbeboy.zone.feign.data.DepartmentService;
 import top.zbeboy.zone.feign.data.ScienceService;
 import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.data.StudentService;
+import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.data.*;
 import top.zbeboy.zone.service.platform.RoleApplyService;
 import top.zbeboy.zone.service.platform.RoleService;
-import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.bean.platform.authorize.RoleApplyBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import java.util.Objects;
@@ -72,7 +73,7 @@ public class AuthorizeViewController {
             modelMap.addAttribute("authorities", Workbook.authorities.ROLE_ADMIN.name());
         }
 
-        Users users = usersService.getUserFromSession();
+        Users users = SessionUtil.getUserFromSession();
         modelMap.addAttribute("username", users.getUsername());
         return "web/platform/authorize/authorize_data::#page-wrapper";
     }
@@ -87,7 +88,7 @@ public class AuthorizeViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
-            Users users = usersService.getUserFromSession();
+            Users users = SessionUtil.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType)) {
                 int collegeId = 0;
@@ -146,7 +147,7 @@ public class AuthorizeViewController {
             Optional<Record> roleApplyRecord = roleApplyService.findByIdRelation(roleUsersId);
             if (roleApplyRecord.isPresent()) {
                 roleApplyBean = roleApplyRecord.get().into(RoleApplyBean.class);
-                Users users = usersService.getUserFromSession();
+                Users users = SessionUtil.getUserFromSession();
                 if (StringUtils.equals(users.getUsername(), roleApplyBean.getUsername())) {
                     canEdit = true;
                 }
@@ -169,7 +170,7 @@ public class AuthorizeViewController {
                         } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
                             StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
                             if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
-                                collegeId = studentBean.getCollegeId();;
+                                collegeId = studentBean.getCollegeId();
                             }
                         }
                     }

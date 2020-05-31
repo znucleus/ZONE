@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.feign.data.StudentService;
+import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.service.data.OrganizeService;
 import top.zbeboy.zone.service.export.InternshipTeacherDistributionExport;
 import top.zbeboy.zone.service.internship.InternshipReleaseService;
 import top.zbeboy.zone.service.internship.InternshipTeacherDistributionService;
-import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.web.bean.data.organize.OrganizeBean;
@@ -26,6 +26,7 @@ import top.zbeboy.zone.web.internship.common.InternshipControllerCommon;
 import top.zbeboy.zone.web.plugin.select2.Select2Data;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zone.web.util.SmallPropsUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.util.pagination.ExportInfo;
@@ -220,7 +221,7 @@ public class InternshipTeacherDistributionRestController {
                     studentBean = studentService.findNormalByStudentNumberAndDepartmentId(param, department.getDepartmentId());
                 }
                 if (studentBean.getStudentId() > 0) {
-                    Users users = usersService.getUserFromSession();
+                    Users users = SessionUtil.getUserFromSession();
                     InternshipTeacherDistribution internshipTeacherDistribution = new InternshipTeacherDistribution(staffId, studentBean.getStudentId(), internshipReleaseId, users.getUsername(), studentBean.getRealName(), users.getUsername());
                     internshipTeacherDistributionService.save(internshipTeacherDistribution);
                     ajaxUtil.success().msg("保存成功");
@@ -259,7 +260,7 @@ public class InternshipTeacherDistributionRestController {
             List<StudentBean> students = studentService.findNormalInOrganizeIds(organizeIds);
             if (Objects.nonNull(students) && staffIds.size() > 0) {
                 int i = 0;
-                Users users = usersService.getUserFromSession();
+                Users users = SessionUtil.getUserFromSession();
                 for (StudentBean student : students) {
                     if (i >= staffIds.size()) {
                         i = 0;

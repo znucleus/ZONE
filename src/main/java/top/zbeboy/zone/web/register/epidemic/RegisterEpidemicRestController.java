@@ -14,10 +14,10 @@ import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.data.StudentService;
+import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.data.ChannelService;
 import top.zbeboy.zone.service.export.EpidemicRegisterDataExport;
-import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.register.EpidemicRegisterDataService;
 import top.zbeboy.zone.service.register.EpidemicRegisterReleaseService;
 import top.zbeboy.zone.service.upload.UploadService;
@@ -30,6 +30,7 @@ import top.zbeboy.zone.web.bean.register.epidemic.EpidemicRegisterReleaseBean;
 import top.zbeboy.zone.web.register.common.RegisterConditionCommon;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.util.pagination.ExportInfo;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
@@ -108,7 +109,7 @@ public class RegisterEpidemicRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
             if (registerConditionCommon.epidemicOperator()) {
-                Users users = usersService.getUserFromSession();
+                Users users = SessionUtil.getUserFromSession();
                 EpidemicRegisterRelease epidemicRegisterRelease = new EpidemicRegisterRelease();
                 epidemicRegisterRelease.setEpidemicRegisterReleaseId(UUIDUtil.getUUID());
                 epidemicRegisterRelease.setTitle(epidemicRegisterReleaseAddVo.getTitle());
@@ -186,7 +187,7 @@ public class RegisterEpidemicRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
             if (StringUtils.isBlank(epidemicRegisterDataAddVo.getEpidemicRegisterDataId())) {
-                Users users = usersService.getUserFromSession();
+                Users users = SessionUtil.getUserFromSession();
                 EpidemicRegisterData epidemicRegisterData = new EpidemicRegisterData();
                 epidemicRegisterData.setEpidemicRegisterDataId(UUIDUtil.getUUID());
                 epidemicRegisterData.setEpidemicRegisterReleaseId(epidemicRegisterDataAddVo.getEpidemicRegisterReleaseId());
@@ -225,7 +226,7 @@ public class RegisterEpidemicRestController {
             } else {
                 EpidemicRegisterData epidemicRegisterData = epidemicRegisterDataService.findById(epidemicRegisterDataAddVo.getEpidemicRegisterDataId());
                 if (Objects.nonNull(epidemicRegisterData)) {
-                    Users users = usersService.getUserFromSession();
+                    Users users = SessionUtil.getUserFromSession();
                     if (StringUtils.equals(users.getUsername(), epidemicRegisterData.getRegisterUsername())) {
                         epidemicRegisterData.setLocation(epidemicRegisterDataAddVo.getLocation());
                         epidemicRegisterData.setAddress(epidemicRegisterDataAddVo.getAddress());

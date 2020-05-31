@@ -21,6 +21,7 @@ import top.zbeboy.zone.service.util.SQLQueryUtil;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.util.ByteUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
 import javax.annotation.Resource;
@@ -41,9 +42,6 @@ public class RoleApplyServiceImpl implements RoleApplyService, PaginationPlugin<
 
     @Resource
     private RoleService roleService;
-
-    @Resource
-    private UsersService usersService;
 
     @Resource
     private UsersTypeService usersTypeService;
@@ -347,7 +345,7 @@ public class RoleApplyServiceImpl implements RoleApplyService, PaginationPlugin<
         Condition a = null;
         JSONObject search = paginationUtil.getSearch();
 
-        Users users = usersService.getUserFromSession();
+        Users users = SessionUtil.getUserFromSession();
         if (Objects.nonNull(search)) {
             String dataRange = StringUtils.trim(search.getString("dataRange"));
             if (StringUtils.isNotBlank(dataRange)) {

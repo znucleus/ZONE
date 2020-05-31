@@ -14,6 +14,7 @@ import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.records.OauthClientUsersRecord;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zone.service.util.SQLQueryUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
 import javax.annotation.Resource;
@@ -33,9 +34,6 @@ public class OauthClientUsersServiceImpl implements OauthClientUsersService, Pag
 
     @Resource
     private RoleService roleService;
-
-    @Resource
-    private UsersService usersService;
 
     @Autowired
     OauthClientUsersServiceImpl(DSLContext dslContext) {
@@ -155,7 +153,7 @@ public class OauthClientUsersServiceImpl implements OauthClientUsersService, Pag
         Condition a = null;
 
         if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
-            Users users = usersService.getUserFromSession();
+            Users users = SessionUtil.getUserFromSession();
             a = OAUTH_CLIENT_USERS.USERNAME.eq(users.getUsername());
         }
         return a;

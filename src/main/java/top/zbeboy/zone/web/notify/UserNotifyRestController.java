@@ -9,12 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.domain.tables.pojos.UserNotify;
 import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.service.notify.UserNotifyService;
-import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.web.bean.notify.UserNotifyBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
 import javax.annotation.Resource;
@@ -38,7 +39,7 @@ public class UserNotifyRestController {
     @GetMapping("/users/data/notify")
     public ResponseEntity<Map<String, Object>> userDataNotify(SimplePaginationUtil simplePaginationUtil) {
         AjaxUtil<UserNotifyBean> ajaxUtil = AjaxUtil.of();
-        Users users = usersService.getUserFromSession();
+        Users users = SessionUtil.getUserFromSession();
         simplePaginationUtil.setSearch("acceptUser", users.getUsername());
         List<UserNotifyBean> userNotifies = new ArrayList<>();
         Result<Record> records = userNotifyService.findAllByPage(simplePaginationUtil);
@@ -79,7 +80,7 @@ public class UserNotifyRestController {
     @GetMapping("/users/notify/detail/{userNotifyId}")
     public ResponseEntity<Map<String, Object>> userNotifyDetail(@PathVariable("userNotifyId") String userNotifyId) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        Users users = usersService.getUserFromSession();
+        Users users = SessionUtil.getUserFromSession();
         // 防止其它人获取别人的私人通知
         Optional<Record> record = userNotifyService.findByIdAndAcceptUserRelation(userNotifyId, users.getUsername());
         UserNotifyBean userNotify = new UserNotifyBean();
@@ -100,7 +101,7 @@ public class UserNotifyRestController {
     @PostMapping("/users/notify/reads")
     public ResponseEntity<Map<String, Object>> userNotifyReads(@RequestParam("userNotifyId") String userNotifyIds) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        Users users = usersService.getUserFromSession();
+        Users users = SessionUtil.getUserFromSession();
         String[] ids = userNotifyIds.split(",");
         for (String id : ids) {
             // 防止其它人获取别人的私人通知
