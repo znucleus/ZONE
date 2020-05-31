@@ -9,7 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
-import top.zbeboy.zone.service.data.StudentService;
+import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.system.AuthoritiesService;
 import top.zbeboy.zone.service.training.TrainingAuthoritiesService;
@@ -18,6 +18,7 @@ import top.zbeboy.zone.service.training.TrainingReleaseService;
 import top.zbeboy.zone.service.training.TrainingUsersService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
+import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.bean.training.release.TrainingAuthoritiesBean;
 import top.zbeboy.zone.web.bean.training.release.TrainingConfigureBean;
 import top.zbeboy.zone.web.bean.training.release.TrainingReleaseBean;
@@ -108,11 +109,10 @@ public class TrainingReleaseRestController {
             trainingReleaseService.save(trainingRelease);
 
             // 生成名单
-            Result<Record> studentRecords = studentService.findNormalByOrganizeId(trainingReleaseAddVo.getOrganizeId());
-            if (studentRecords.isNotEmpty()) {
-                List<Student> students = studentRecords.into(Student.class);
+            List<StudentBean> studentBeans = studentService.findNormalByOrganizeIdRelation(trainingReleaseAddVo.getOrganizeId());
+            if (Objects.nonNull(studentBeans) && studentBeans.size() > 0) {
                 List<TrainingUsers> trainingUsers = new ArrayList<>();
-                for (Student student : students) {
+                for (StudentBean student : studentBeans) {
                     TrainingUsers au = new TrainingUsers();
                     au.setTrainingUsersId(UUIDUtil.getUUID());
                     au.setTrainingReleaseId(trainingReleaseId);

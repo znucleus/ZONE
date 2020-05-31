@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.feign.data.StaffService;
+import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
-import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.internship.*;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
@@ -83,10 +83,9 @@ public class InternshipConditionCommon {
                             collegeId = staffBean.getCollegeId();
                         }
                     } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                        Optional<Record> record = studentService.findByUsernameRelation(users.getUsername());
-                        if (record.isPresent()) {
-                            College college = record.get().into(College.class);
-                            collegeId = college.getCollegeId();
+                        StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+                        if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                            collegeId = studentBean.getCollegeId();
                         }
                     }
 
@@ -165,9 +164,8 @@ public class InternshipConditionCommon {
         if (Objects.nonNull(usersType)) {
             // 检测是否学生类型
             if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                Optional<Record> studentRecord = studentService.findByUsernameRelation(users.getUsername());
-                if (studentRecord.isPresent()) {
-                    StudentBean studentBean = studentRecord.get().into(StudentBean.class);
+                StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+                if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
                     Optional<Record> record = internshipReleaseService.findByIdRelation(internshipReleaseId);
                     if (record.isPresent()) {
                         InternshipReleaseBean internshipRelease = record.get().into(InternshipReleaseBean.class);
@@ -226,9 +224,8 @@ public class InternshipConditionCommon {
         if (Objects.nonNull(usersType)) {
             // 检测是否学生类型
             if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                Optional<Record> studentRecord = studentService.findByUsernameRelation(users.getUsername());
-                if (studentRecord.isPresent()) {
-                    StudentBean studentBean = studentRecord.get().into(StudentBean.class);
+                StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+                if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
                     Optional<Record> record = internshipReleaseService.findByIdRelation(internshipReleaseId);
                     if (record.isPresent()) {
                         InternshipReleaseBean internshipRelease = record.get().into(InternshipReleaseBean.class);
@@ -366,9 +363,8 @@ public class InternshipConditionCommon {
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType)) {
                 if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                    Optional<Record> studentRecord = studentService.findByUsernameRelation(users.getUsername());
-                    if (studentRecord.isPresent()) {
-                        StudentBean studentBean = studentRecord.get().into(StudentBean.class);
+                    StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+                    if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
                         Optional<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
                         if (internshipTeacherDistributionRecord.isPresent()) {
                             canOperator = true;
@@ -394,9 +390,8 @@ public class InternshipConditionCommon {
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType)) {
                 if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                    Optional<Record> studentRecord = studentService.findByUsernameRelation(users.getUsername());
-                    if (studentRecord.isPresent()) {
-                        StudentBean studentBean = studentRecord.get().into(StudentBean.class);
+                    StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+                    if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
                         Optional<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
                         if (internshipTeacherDistributionRecord.isPresent()) {
                             // 检测是否申请过
@@ -440,10 +435,9 @@ public class InternshipConditionCommon {
                         collegeId = staffBean.getCollegeId();
                     }
                 } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                    Optional<Record> record = studentService.findByUsernameRelation(users.getUsername());
-                    if (record.isPresent()) {
-                        College college = record.get().into(College.class);
-                        collegeId = college.getCollegeId();
+                    StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+                    if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                        collegeId = studentBean.getCollegeId();
                     }
                 }
             }
@@ -469,13 +463,12 @@ public class InternshipConditionCommon {
                         }
                     }
                 } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                    Optional<Record> record = studentService.findByUsernameRelation(users.getUsername());
-                    if (record.isPresent()) {
+                    StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+                    if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
                         // 是否是本人
-                        Student student = record.get().into(Student.class);
                         InternshipJournal internshipJournal = internshipJournalService.findById(internshipJournalId);
                         if (Objects.nonNull(internshipJournal)) {
-                            canOperator = Objects.equals(student.getStudentId(), internshipJournal.getStudentId());
+                            canOperator = Objects.equals(studentBean.getStudentId(), internshipJournal.getStudentId());
                         }
                     }
                 }
@@ -563,10 +556,9 @@ public class InternshipConditionCommon {
                         collegeId = staffBean.getCollegeId();
                     }
                 } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                    Optional<Record> record = studentService.findByUsernameRelation(users.getUsername());
-                    if (record.isPresent()) {
-                        College college = record.get().into(College.class);
-                        collegeId = college.getCollegeId();
+                    StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+                    if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                        collegeId = studentBean.getCollegeId();
                     }
                 }
             }

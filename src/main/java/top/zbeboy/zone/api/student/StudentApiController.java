@@ -1,6 +1,5 @@
 package top.zbeboy.zone.api.student;
 
-import org.jooq.Record;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.domain.tables.pojos.Student;
 import top.zbeboy.zone.domain.tables.pojos.Users;
-import top.zbeboy.zone.service.data.StudentService;
+import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
@@ -19,7 +18,6 @@ import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 @RestController
 public class StudentApiController {
@@ -41,14 +39,13 @@ public class StudentApiController {
         AjaxUtil<Object> ajaxUtil = AjaxUtil.of();
         Users users = usersService.getUserFromOauth(principal);
         if (Objects.nonNull(users)) {
-            Optional<Record> record = studentService.findByUsernameRelation(users.getUsername());
-            if (record.isPresent()) {
+            StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+            if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
                 Map<String, Object> outPut = new HashMap<>();
-                StudentBean student = record.get().into(StudentBean.class);
-                outPut.put("studentId", student.getStudentId());
-                outPut.put("studentNumber", student.getStudentNumber());
-                outPut.put("organizeId", student.getOrganizeId());
-                outPut.put("schoolId", student.getSchoolId());
+                outPut.put("studentId", studentBean.getStudentId());
+                outPut.put("studentNumber", studentBean.getStudentNumber());
+                outPut.put("organizeId", studentBean.getOrganizeId());
+                outPut.put("schoolId", studentBean.getSchoolId());
                 ajaxUtil.success().msg("获取用户信息成功").map(outPut);
             } else {
                 ajaxUtil.fail().msg("未查询到学生信息");
@@ -69,7 +66,7 @@ public class StudentApiController {
     public ResponseEntity<Map<String, Object>> update(@RequestParam("studentNumber") String studentNumber) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         Student student = studentService.findByStudentNumber(studentNumber);
-        if (Objects.nonNull(student)) {
+        if (Objects.nonNull(student) && student.getStudentId() > 0) {
             ajaxUtil.success().msg("查询正常");
         } else {
             ajaxUtil.fail().msg("根据学号未查询到学生信息");

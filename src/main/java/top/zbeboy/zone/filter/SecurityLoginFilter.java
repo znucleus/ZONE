@@ -8,13 +8,12 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
-import top.zbeboy.zone.domain.tables.records.StudentRecord;
 import top.zbeboy.zone.feign.data.DepartmentService;
 import top.zbeboy.zone.feign.data.StaffService;
+import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.security.AjaxAuthenticationCode;
 import top.zbeboy.zone.service.data.OrganizeService;
-import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.web.bean.data.department.DepartmentBean;
 import top.zbeboy.zone.web.bean.data.organize.OrganizeBean;
@@ -129,11 +128,9 @@ public class SecurityLoginFilter implements Filter {
             boolean schoolIsNotDel = false;
             switch (usersType.getUsersTypeName()) {
                 case Workbook.STUDENT_USERS_TYPE:
-                    StudentService studentService = (StudentService) ctx
-                            .getBean("studentService");
-                    Optional<StudentRecord> studentData = studentService.findByUsername(users.getUsername());
-                    if (studentData.isPresent()) {
-                        StudentBean studentBean = studentData.get().into(StudentBean.class);
+                    StudentService studentService = SpringBootUtil.getBean(StudentService.class);
+                    StudentBean studentBean = studentService.findByUsername(users.getUsername());
+                    if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
                         OrganizeService organizeService = (OrganizeService) ctx
                                 .getBean("organizeService");
                         Optional<Record> organizeData = organizeService.findByIdRelation(studentBean.getOrganizeId());

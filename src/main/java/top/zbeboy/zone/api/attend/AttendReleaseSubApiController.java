@@ -8,21 +8,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.AttendReleaseSub;
-import top.zbeboy.zone.domain.tables.pojos.Student;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.domain.tables.records.AttendWxStudentSubscribeRecord;
-import top.zbeboy.zone.domain.tables.records.StudentRecord;
+import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.attend.AttendDataService;
 import top.zbeboy.zone.service.attend.AttendReleaseSubService;
 import top.zbeboy.zone.service.attend.AttendWxStudentSubscribeService;
 import top.zbeboy.zone.service.cache.attend.AttendWxCacheService;
-import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.web.bean.attend.AttendReleaseSubBean;
+import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
@@ -83,16 +82,15 @@ public class AttendReleaseSubApiController {
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType)) {
                 if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                    Optional<StudentRecord> studentRecord = studentService.findByUsername(users.getUsername());
-                    if (studentRecord.isPresent()) {
-                        Student student = studentRecord.get().into(Student.class);
+                    StudentBean studentBean = studentService.findByUsername(users.getUsername());
+                    if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
                         for (AttendReleaseSubBean bean : beans) {
                             Optional<Record> record = attendDataService
-                                    .findByStudentIdAndAttendReleaseIdAndAttendReleaseSubId(student.getStudentId(), bean.getAttendReleaseId(), bean.getAttendReleaseSubId());
+                                    .findByStudentIdAndAttendReleaseIdAndAttendReleaseSubId(studentBean.getStudentId(), bean.getAttendReleaseId(), bean.getAttendReleaseSubId());
                             bean.setIsAttend(BooleanUtil.toByte(record.isPresent()));
 
                             Optional<AttendWxStudentSubscribeRecord> subRecord = attendWxStudentSubscribeService.findByAttendReleaseIdAndStudentId(
-                                    bean.getAttendReleaseId(), studentRecord.get().getStudentId());
+                                    bean.getAttendReleaseId(), studentBean.getStudentId());
                             bean.setIsSubscribe(BooleanUtil.toByte(subRecord.isPresent()));
                         }
                     }

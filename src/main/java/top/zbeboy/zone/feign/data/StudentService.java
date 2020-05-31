@@ -1,150 +1,236 @@
 package top.zbeboy.zone.feign.data;
 
-import org.jooq.Record;
-import org.jooq.Result;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.*;
+import top.zbeboy.zone.domain.tables.pojos.Role;
 import top.zbeboy.zone.domain.tables.pojos.Student;
-import top.zbeboy.zone.domain.tables.records.StudentRecord;
+import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zone.hystrix.data.StudentHystrixClientFallbackFactory;
+import top.zbeboy.zone.web.bean.data.student.StudentBean;
+import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.vo.data.student.StudentAddVo;
+import top.zbeboy.zone.web.vo.data.student.StudentEditVo;
 
+import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
+@FeignClient(value = "base-server", fallback = StudentHystrixClientFallbackFactory.class)
 public interface StudentService {
 
     /**
-     * 根据主键关联查询
+     * 获取学生
      *
-     * @param id 主键
-     * @return 数据
+     * @param id 学生主键
+     * @return 学生数据
      */
-    Optional<Record> findByIdRelation(int id);
+    @GetMapping("/base/student/relation/{id}")
+    StudentBean findByIdRelation(@PathVariable("id") int id);
 
     /**
-     * 根据账号查询信息
+     * 获取学生
      *
-     * @param username 账号
-     * @return 信息
+     * @param username 学生账号
+     * @return 学生数据
      */
-    Optional<StudentRecord> findByUsername(String username);
+    @GetMapping("/base/student/username/{username}")
+    StudentBean findByUsername(@PathVariable("username") String username);
 
     /**
-     * 根据账号查询所有信息
-     * 缓存:是
-     *
-     * @param username 账号
-     * @return 所有信息
-     */
-    Optional<Record> findByUsernameRelation(String username);
-
-    /**
-     * 查询院管理员
-     *
-     * @param authority 权限
-     * @param collegeId 院id
-     * @return 数据
-     */
-    Result<Record> findAdmin(String authority, int collegeId);
-
-    /**
-     * 根据学号查询学生信息(全部)
+     * 获取学生
      *
      * @param studentNumber 学号
-     * @return 学生全部信息
+     * @return 学生数据
      */
-    Student findByStudentNumber(String studentNumber);
+    @GetMapping("/base/student/student_number/{studentNumber}")
+    Student findByStudentNumber(@PathVariable("studentNumber") String studentNumber);
 
     /**
-     * 根据学号关联查询，注：查询状态正常的学生信息
+     * 获取学生
+     *
+     * @param username 学生账号
+     * @return 学生数据
+     */
+    @GetMapping("/base/student/username/relation/{username}")
+    StudentBean findByUsernameRelation(@PathVariable("username") String username);
+
+    /**
+     * 根据班级id获取正常学生
+     *
+     * @param organizeId 班级id
+     * @return 学生数据
+     */
+    @GetMapping("/base/student/normal/organize_id/relation/{organizeId}")
+    List<StudentBean> findNormalByOrganizeIdRelation(@PathVariable("organizeId") int organizeId);
+
+    /**
+     * 根据班级id获取正常学生
+     *
+     * @param organizeIds 班级id
+     * @return 学生数据
+     */
+    @PostMapping("/base/student/normal/organize_ids/relation")
+    public List<StudentBean> findNormalInOrganizeIds(@RequestBody  List<Integer> organizeIds);
+
+    /**
+     * 根据学号获取正常学生
      *
      * @param studentNumber 学号
-     * @return 学生信息
+     * @return 学生数据
      */
-    Optional<Record> findNormalByStudentNumberRelation(String studentNumber);
+    @GetMapping("/base/student/normal/student_number/relation/{studentNumber}")
+    StudentBean findNormalByStudentNumberRelation(@PathVariable("studentNumber") String studentNumber);
 
     /**
-     * 更新时检验账号是否被占用
-     *
-     * @param studentNumber 学号
-     * @param username      当前账号
-     * @return 检验学号
-     */
-    Result<StudentRecord> findByStudentNumberNeUsername(String studentNumber, String username);
-
-    /**
-     * 通过账号与系id查询
+     * 根据账号和系id获取正常学生
      *
      * @param username     账号
      * @param departmentId 系id
-     * @return 数据
+     * @return 学生数据
      */
-    Optional<Record> findNormalByUsernameAndDepartmentId(String username, int departmentId);
+    @GetMapping("/base/student/normal/username/department_id/relation/{username}/{departmentId}")
+    StudentBean findNormalByUsernameAndDepartmentId(@PathVariable("username") String username, @PathVariable("departmentId") int departmentId);
 
     /**
-     * 通过账号与系id查询
+     * 根据学号和系id获取正常学生
      *
      * @param studentNumber 学号
      * @param departmentId  系id
+     * @return 学生数据
+     */
+    @GetMapping("/base/student/normal/student_number/department_id/relation/{studentNumber}/{departmentId}")
+    StudentBean findNormalByStudentNumberAndDepartmentId(@PathVariable("studentNumber") String studentNumber, @PathVariable("departmentId") int departmentId);
+
+    /**
+     * 根据角色和院id获取正常学生
+     *
+     * @param authority 权限
+     * @param collegeId 院id
+     * @return 教职工数据
+     */
+    @GetMapping("/base/student/authority/college_id/{authority}/{collegeId}")
+    List<Users> findByAuthorityAndCollegeId(@PathVariable("authority") String authority, @PathVariable("collegeId") int collegeId);
+
+    /**
+     * 检验学号是否被注册
+     *
+     * @param studentNumber 学号
+     * @return 是否被注册
+     */
+    @PostMapping("/base/anyone/check/student/number")
+    AjaxUtil<Map<String, Object>> anyoneCheckStudentNumber(@RequestParam("studentNumber") String studentNumber);
+
+    /**
+     * 更新时检验学号是否被注册
+     *
+     * @param studentNumber 学号
+     * @return 是否被注册
+     */
+    @PostMapping("/base/users/check/student/number")
+    AjaxUtil<Map<String, Object>> userCheckStudentNumber(@RequestParam("username") String username, @RequestParam("studentNumber") String studentNumber);
+
+    /**
+     * 根据学号检验是否存在以及该用户状态是否正常
+     *
+     * @param studentNumber 学号
+     * @return 是否存在以及该用户状态是否正常
+     */
+    @PostMapping("/base/users/check/student/status")
+    AjaxUtil<Map<String, Object>> userCheckStatusByStudentNumber(@RequestParam("studentNumber") String studentNumber);
+
+    /**
+     * 学生注册
+     *
+     * @param studentAddVo 学生数据
+     * @return 注册
+     */
+    @PostMapping("/base/anyone/data/register/student")
+    AjaxUtil<Map<String, Object>> anyoneDataRegisterStudent(@RequestBody StudentAddVo studentAddVo);
+
+    /**
+     * 学生班级更新
+     *
+     * @param studentEditVo 数据
+     * @return 成功与否
+     */
+    @PostMapping("/base/student/update/school")
+    AjaxUtil<Map<String, Object>> userStudentUpdateSchool(@RequestBody StudentEditVo studentEditVo);
+
+    /**
+     * 更新信息
+     *
+     * @param studentEditVo 数据
+     * @return 更新信息
+     */
+    @PostMapping("/base/student/update/info")
+    AjaxUtil<Map<String, Object>> userStudentUpdateInfo(@RequestBody @Valid StudentEditVo studentEditVo);
+
+    /**
+     * 数据
+     *
+     * @param dataTablesUtil 请求
      * @return 数据
      */
-    Optional<Record> findNormalByStudentNumberAndDepartmentId(String studentNumber, int departmentId);
+    @PostMapping("/base/data/student/data")
+    DataTablesUtil data(@RequestBody DataTablesUtil dataTablesUtil);
 
     /**
-     * 根据班级id查询学生，查询已验证邮箱且已分配权限的学生
+     * 用户角色数据
      *
-     * @param organizeId 班级id
+     * @param username       用户账号
+     * @param targetUsername 目标账号
      * @return 数据
      */
-    Result<Record> findNormalByOrganizeId(int organizeId);
+    @PostMapping("/base/data/student/role/data")
+    List<Role> roleData(@RequestParam("username") String username, @RequestParam("targetUsername") String targetUsername);
 
     /**
-     * 根据班级id查询学生，查询已验证邮箱且已分配权限的学生
+     * 角色设置
      *
-     * @param organizeIds 班级id
-     * @return 数据
+     * @param username 账号
+     * @param roles    角色
+     * @return success or false
      */
-    Result<Record> findNormalInOrganizeIds(List<Integer> organizeIds);
+    @PostMapping("/base/data/student/role/save")
+    AjaxUtil<Map<String, Object>> roleSave(@RequestParam("username") String username, @RequestParam("targetUsername") String targetUsername, @RequestParam("roles") String roles);
 
     /**
-     * 分页查询
+     * 更新状态
      *
-     * @param dataTablesUtil 工具类
-     * @return 分页数据
+     * @param userIds 账号
+     * @param enabled 状态
+     * @return 是否成功
      */
-    Result<Record> findAllByPage(DataTablesUtil dataTablesUtil);
+    @PostMapping("/base/data/student/update/enabled")
+    AjaxUtil<Map<String, Object>> updateEnabled(@RequestParam("username") String username, @RequestParam(value = "userIds", required = false) String userIds, @RequestParam("enabled") Byte enabled);
 
     /**
-     * 应用 总数
+     * 更新锁定
      *
-     * @return 总数
+     * @param userIds 账号
+     * @param locked  锁定
+     * @return 是否成功
      */
-    int countAll(DataTablesUtil dataTablesUtil);
+    @PostMapping("/base/data/student/update/locked")
+    AjaxUtil<Map<String, Object>> updateLocked(@RequestParam("username") String username, @RequestParam(value = "userIds", required = false) String userIds, @RequestParam("locked") Byte locked);
 
     /**
-     * 根据条件查询总数
+     * 更新密码
      *
-     * @return 条件查询总数
+     * @param username       账号
+     * @param targetUsername 目标账号
+     * @return success or fail
      */
-    int countByCondition(DataTablesUtil dataTablesUtil);
+    @PostMapping("/base/data/student/update/password")
+    AjaxUtil<Map<String, Object>> updatePassword(@RequestParam("username") String username, @RequestParam("targetUsername") String targetUsername);
 
     /**
-     * 保存
+     * 删除无角色关联的用户
      *
-     * @param student 数据
+     * @param userIds 用户账号
+     * @return true 成功 false 失败
      */
-    void save(Student student);
-
-    /**
-     * jooq 事务性保存
-     *
-     * @param studentAddVo 数据
-     */
-    void saveWithUsers(StudentAddVo studentAddVo);
-
-    /**
-     * 更新
-     *
-     * @param student 数据
-     */
-    void update(Student student);
+    @PostMapping("/base/data/student/delete")
+    AjaxUtil<Map<String, Object>> delete(@RequestParam("username") String username, @RequestParam(value = "userIds", required = false) String userIds);
 }

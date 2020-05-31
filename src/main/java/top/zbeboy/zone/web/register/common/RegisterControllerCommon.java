@@ -11,10 +11,10 @@ import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.domain.tables.records.LeaverRegisterDataOptionRecord;
 import top.zbeboy.zone.domain.tables.records.LeaverRegisterOptionRecord;
 import top.zbeboy.zone.domain.tables.records.LeaverRegisterScopeRecord;
-import top.zbeboy.zone.domain.tables.records.StudentRecord;
 import top.zbeboy.zone.feign.data.CollegeService;
 import top.zbeboy.zone.feign.data.DepartmentService;
 import top.zbeboy.zone.feign.data.ScienceService;
+import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.service.data.*;
 import top.zbeboy.zone.service.export.LeaverRegisterDataExport;
 import top.zbeboy.zone.service.platform.UsersService;
@@ -22,6 +22,7 @@ import top.zbeboy.zone.service.register.*;
 import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
+import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.bean.register.leaver.LeaverRegisterDataBean;
 import top.zbeboy.zone.web.bean.register.leaver.LeaverRegisterOptionBean;
 import top.zbeboy.zone.web.bean.register.leaver.LeaverRegisterReleaseBean;
@@ -375,14 +376,14 @@ public class RegisterControllerCommon {
         if (!bindingResult.hasErrors()) {
             if (registerConditionCommon.leaverRegister(leaverRegisterDataVo.getLeaverRegisterReleaseId(), channel, principal)) {
                 Users users = usersService.getUserByChannel(channel, principal);
-                Optional<StudentRecord> studentRecord = studentService.findByUsername(users.getUsername());
-                if (studentRecord.isPresent()) {
-                    Optional<Record> leaverRegisterDataRecord = leaverRegisterDataService.findByLeaverRegisterReleaseIdAndStudentId(leaverRegisterDataVo.getLeaverRegisterReleaseId(), studentRecord.get().getStudentId());
+                StudentBean studentBean = studentService.findByUsername(users.getUsername());
+                if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                    Optional<Record> leaverRegisterDataRecord = leaverRegisterDataService.findByLeaverRegisterReleaseIdAndStudentId(leaverRegisterDataVo.getLeaverRegisterReleaseId(), studentBean.getStudentId());
                     if (!leaverRegisterDataRecord.isPresent()) {
                         LeaverRegisterData leaverRegisterData = new LeaverRegisterData();
                         String leaverRegisterDataId = UUIDUtil.getUUID();
                         leaverRegisterData.setLeaverRegisterDataId(leaverRegisterDataId);
-                        leaverRegisterData.setStudentId(studentRecord.get().getStudentId());
+                        leaverRegisterData.setStudentId(studentBean.getStudentId());
                         leaverRegisterData.setLeaverRegisterReleaseId(leaverRegisterDataVo.getLeaverRegisterReleaseId());
                         leaverRegisterData.setLeaverAddress(leaverRegisterDataVo.getLeaverAddress());
                         leaverRegisterData.setRegisterDate(DateTimeUtil.getNowSqlTimestamp());
@@ -428,9 +429,9 @@ public class RegisterControllerCommon {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (registerConditionCommon.leaverRegister(leaverRegisterReleaseId, channel, principal)) {
             Users users = usersService.getUserByChannel(channel, principal);
-            Optional<StudentRecord> studentRecord = studentService.findByUsername(users.getUsername());
-            if (studentRecord.isPresent()) {
-                leaverRegisterDataService.deleteByLeaverRegisterReleaseIdAndStudentId(leaverRegisterReleaseId, studentRecord.get().getStudentId());
+            StudentBean studentBean = studentService.findByUsername(users.getUsername());
+            if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                leaverRegisterDataService.deleteByLeaverRegisterReleaseIdAndStudentId(leaverRegisterReleaseId, studentBean.getStudentId());
                 ajaxUtil.success().msg("删除成功");
             } else {
                 ajaxUtil.fail().msg("未查询到学生数据");

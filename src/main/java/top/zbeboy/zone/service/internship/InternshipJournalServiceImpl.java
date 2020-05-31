@@ -19,13 +19,14 @@ import top.zbeboy.zone.domain.tables.pojos.InternshipJournalContent;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.domain.tables.records.InternshipJournalRecord;
+import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
-import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.RequestUtil;
 import top.zbeboy.zone.service.util.SQLQueryUtil;
+import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.bean.internship.journal.InternshipJournalBean;
 import top.zbeboy.zone.web.util.SmallPropsUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
@@ -140,8 +141,8 @@ public class InternshipJournalServiceImpl implements InternshipJournalService, P
 
     @Async
     @Override
-    public void saveWord(InternshipJournal internshipJournal, InternshipJournalContent internshipJournalContent, Users users, HttpServletRequest request) {
-        String outputPath = saveInternshipJournal(internshipJournal, internshipJournalContent, users, request);
+    public void saveWord(InternshipJournal internshipJournal, InternshipJournalContent internshipJournalContent, String username, HttpServletRequest request) {
+        String outputPath = saveInternshipJournal(internshipJournal, internshipJournalContent, username, request);
         internshipJournal.setInternshipJournalWord(outputPath);
         update(internshipJournal);
     }
@@ -228,9 +229,9 @@ public class InternshipJournalServiceImpl implements InternshipJournalService, P
                 UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
                 if (Objects.nonNull(usersType)) {
                     if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                        Optional<Record> record = studentService.findByUsernameRelation(users.getUsername());
-                        if (record.isPresent()) {
-                            studentId = record.get().get(STUDENT.STUDENT_ID);
+                        StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+                        if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                            studentId = studentBean.getStudentId();
                         }
                     }
                 }
@@ -313,11 +314,11 @@ public class InternshipJournalServiceImpl implements InternshipJournalService, P
      *
      * @param internshipJournal        数据
      * @param internshipJournalContent 内容
-     * @param users                    用户
+     * @param username                    用户
      * @param request                  请求
      * @return 路径
      */
-    private String saveInternshipJournal(InternshipJournal internshipJournal, InternshipJournalContent internshipJournalContent, Users users, HttpServletRequest request) {
+    private String saveInternshipJournal(InternshipJournal internshipJournal, InternshipJournalContent internshipJournalContent, String username, HttpServletRequest request) {
         String outputPath = "";
         try {
             String templatePath = Workbook.INTERNSHIP_JOURNAL_FILE_PATH;
@@ -381,7 +382,7 @@ public class InternshipJournalServiceImpl implements InternshipJournalService, P
                 }
             }
 
-            String path = RequestUtil.getRealPath(request) + Workbook.internshipJournalPath(users);
+            String path = RequestUtil.getRealPath(request) + Workbook.internshipJournalPath(username);
             String filename = internshipJournal.getStudentName() + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS")) + ".docx";
             File saveFile = new File(path);
             if (!saveFile.exists()) {
@@ -391,7 +392,7 @@ public class InternshipJournalServiceImpl implements InternshipJournalService, P
             //把doc输出到输出流中
             doc.write(os);
             log.info("Save journal path {}", path);
-            outputPath = Workbook.internshipJournalPath(users) + filename;
+            outputPath = Workbook.internshipJournalPath(username) + filename;
             this.closeStream(os);
             this.closeStream(is);
             log.info("Save internship journal finish, the path is {}", outputPath);

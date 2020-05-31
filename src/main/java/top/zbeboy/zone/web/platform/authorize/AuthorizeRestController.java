@@ -15,6 +15,7 @@ import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.feign.data.DepartmentService;
 import top.zbeboy.zone.feign.data.ScienceService;
 import top.zbeboy.zone.feign.data.StaffService;
+import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.feign.system.SystemConfigureService;
 import top.zbeboy.zone.service.data.*;
@@ -26,6 +27,7 @@ import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.RequestUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
+import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.bean.platform.authorize.RoleApplyBean;
 import top.zbeboy.zone.web.plugin.select2.Select2Data;
 import top.zbeboy.zone.web.util.AjaxUtil;
@@ -209,9 +211,9 @@ public class AuthorizeRestController {
                         userCollegeId = bean.getCollegeId();
                     }
                 } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                    Optional<Record> record = studentService.findByUsernameRelation(users.getUsername());
-                    if (record.isPresent()) {
-                        userCollegeId = record.get().into(College.class).getCollegeId();
+                    StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+                    if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                        userCollegeId = studentBean.getCollegeId();
                     }
                 }
 
@@ -268,9 +270,9 @@ public class AuthorizeRestController {
                                 collegeId = bean.getCollegeId();
                             }
                         } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                            Optional<Record> record = studentService.findByUsernameRelation(users.getUsername());
-                            if(record.isPresent()){
-                                collegeId = record.get().into(College.class).getCollegeId();
+                            StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+                            if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                                collegeId = studentBean.getCollegeId();
                             }
                         }
 
@@ -339,9 +341,9 @@ public class AuthorizeRestController {
                     admins.addAll(staffAdmin);
                 }
 
-                Result<Record> studentAdmin = studentService.findAdmin(Workbook.authorities.ROLE_ADMIN.name(), authorizeAddVo.getCollegeId());
-                if (studentAdmin.isNotEmpty()) {
-                    admins.addAll(studentAdmin.into(Users.class));
+                List<Users> studentAdmin = studentService.findByAuthorityAndCollegeId(Workbook.authorities.ROLE_ADMIN.name(), authorizeAddVo.getCollegeId());
+                if (Objects.nonNull(studentAdmin) && studentAdmin.size() > 0) {
+                    admins.addAll(studentAdmin);
                 }
 
                 String notify = "用户【" + applyUser.getRealName() +

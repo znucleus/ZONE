@@ -1,7 +1,6 @@
 package top.zbeboy.zone.web.internship.journal;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jooq.Record;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,8 +9,8 @@ import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.domain.tables.records.InternshipJournalContentRecord;
 import top.zbeboy.zone.feign.data.StaffService;
+import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
-import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.internship.InternshipJournalContentService;
 import top.zbeboy.zone.service.internship.InternshipJournalService;
 import top.zbeboy.zone.service.platform.RoleService;
@@ -89,10 +88,9 @@ public class InternshipJournalViewController {
                     modelMap.addAttribute("staffId", bean.getStaffId());
                 }
             } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                Optional<Record> record = studentService.findByUsernameRelation(users.getUsername());
-                if (record.isPresent()) {
-                    Student student = record.get().into(Student.class);
-                    modelMap.addAttribute("studentId", student.getStudentId());
+                StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+                if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                    modelMap.addAttribute("studentId", studentBean.getStudentId());
                 }
             }
         }
@@ -233,9 +231,8 @@ public class InternshipJournalViewController {
         String page;
         if (internshipConditionCommon.journalLookMyCondition(id)) {
             Users users = usersService.getUserFromSession();
-            Optional<Record> studentRecord = studentService.findByUsernameRelation(users.getUsername());
-            if (studentRecord.isPresent()) {
-                StudentBean studentBean = studentRecord.get().into(StudentBean.class);
+            StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+            if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
                 modelMap.addAttribute("internshipReleaseId", id);
                 modelMap.addAttribute("studentId", studentBean.getStudentId());
                 page = "web/internship/journal/internship_journal_my::#page-wrapper";

@@ -12,9 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
-import top.zbeboy.zone.domain.tables.records.StudentRecord;
 import top.zbeboy.zone.feign.data.StaffService;
-import top.zbeboy.zone.service.data.StudentService;
+import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.service.internship.*;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.system.FilesService;
@@ -25,6 +24,7 @@ import top.zbeboy.zone.service.util.FilesUtil;
 import top.zbeboy.zone.service.util.RequestUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
+import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.bean.internship.apply.InternshipApplyBean;
 import top.zbeboy.zone.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
@@ -361,9 +361,9 @@ public class InternshipApplyRestController {
     public ResponseEntity<Map<String, Object>> recall(@RequestParam("id") String internshipReleaseId) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         Users users = usersService.getUserFromSession();
-        Optional<StudentRecord> student = studentService.findByUsername(users.getUsername());
-        if (student.isPresent()) {
-            Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, student.get().getStudentId());
+        StudentBean studentBean = studentService.findByUsername(users.getUsername());
+        if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+            Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
             if (internshipApplyRecord.isPresent()) {
                 InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
                 int internshipApplyState = internshipApply.getInternshipApplyState();
@@ -373,10 +373,10 @@ public class InternshipApplyRestController {
                     ajaxUtil.fail().msg("当前状态不允许撤消");
                 } else if (internshipApplyState == 1 || internshipApplyState == 0) {
                     // 处于 0：未提交申请 1：申请中 允许撤消 该状态下的撤消将会删除所有相关实习信息
-                    internshipInfoService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, student.get().getStudentId());
-                    internshipApplyService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, student.get().getStudentId());
-                    internshipChangeHistoryService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, student.get().getStudentId());
-                    internshipChangeCompanyHistoryService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, student.get().getStudentId());
+                    internshipInfoService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
+                    internshipApplyService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
+                    internshipChangeHistoryService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
+                    internshipChangeCompanyHistoryService.deleteByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
                     ajaxUtil.success().msg("撤消申请成功");
                 } else if (internshipApplyState == 4 || internshipApplyState == 6) {
                     // 处于4：基本信息变更申请中 6：单位信息变更申请中 在这两个状态下将返回已通过状态
@@ -394,7 +394,7 @@ public class InternshipApplyRestController {
                     }
                     internshipChangeHistory.setInternshipChangeHistoryId(UUIDUtil.getUUID());
                     internshipChangeHistory.setInternshipReleaseId(internshipReleaseId);
-                    internshipChangeHistory.setStudentId(student.get().getStudentId());
+                    internshipChangeHistory.setStudentId(studentBean.getStudentId());
                     internshipChangeHistory.setApplyTime(DateTimeUtil.getNowSqlTimestamp());
                     internshipChangeHistoryService.save(internshipChangeHistory);
                 } else {
@@ -422,9 +422,9 @@ public class InternshipApplyRestController {
                                                      @RequestParam("internshipReleaseId") String internshipReleaseId) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         Users users = usersService.getUserFromSession();
-        Optional<StudentRecord> student = studentService.findByUsername(users.getUsername());
-        if (student.isPresent()) {
-            Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, student.get().getStudentId());
+        StudentBean studentBean = studentService.findByUsername(users.getUsername());
+        if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+            Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
             if (internshipApplyRecord.isPresent()) {
                 InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
                 int internshipApplyState = internshipApply.getInternshipApplyState();
@@ -440,7 +440,7 @@ public class InternshipApplyRestController {
                     InternshipChangeHistory internshipChangeHistory = new InternshipChangeHistory();
                     internshipChangeHistory.setInternshipChangeHistoryId(UUIDUtil.getUUID());
                     internshipChangeHistory.setInternshipReleaseId(internshipReleaseId);
-                    internshipChangeHistory.setStudentId(student.get().getStudentId());
+                    internshipChangeHistory.setStudentId(studentBean.getStudentId());
                     internshipChangeHistory.setState(state);
                     internshipChangeHistory.setApplyTime(now);
                     internshipChangeHistory.setReason(reason);
@@ -471,9 +471,9 @@ public class InternshipApplyRestController {
         AjaxUtil<FileBean> ajaxUtil = AjaxUtil.of();
         try {
             Users users = usersService.getUserFromSession();
-            Optional<StudentRecord> student = studentService.findByUsername(users.getUsername());
-            if (student.isPresent()) {
-                Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, student.get().getStudentId());
+            StudentBean studentBean = studentService.findByUsername(users.getUsername());
+            if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
                 if (internshipApplyRecord.isPresent()) {
                     InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
                     String path = Workbook.internshipFilePath();
@@ -523,9 +523,9 @@ public class InternshipApplyRestController {
     public ResponseEntity<Map<String, Object>> deleteFile(@RequestParam("id") String internshipReleaseId, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         Users users = usersService.getUserFromSession();
-        Optional<StudentRecord> student = studentService.findByUsername(users.getUsername());
-        if (student.isPresent()) {
-            Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, student.get().getStudentId());
+        StudentBean studentBean = studentService.findByUsername(users.getUsername());
+        if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+            Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
             if (internshipApplyRecord.isPresent()) {
                 InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
                 if (StringUtils.isNotBlank(internshipApply.getFileId())) {

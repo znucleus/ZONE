@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.feign.data.StaffService;
+import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.data.ChannelService;
-import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.export.EpidemicRegisterDataExport;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.register.EpidemicRegisterDataService;
@@ -210,11 +210,10 @@ public class RegisterEpidemicRestController {
                             epidemicRegisterData.setInstitute(bean.getSchoolName() + "-" + bean.getCollegeName() + "-" + bean.getDepartmentName());
                         }
                     } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                        Optional<Record> record = studentService.findByUsernameRelation(users.getUsername());
-                        if (record.isPresent()) {
-                            StudentBean bean = record.get().into(StudentBean.class);
-                            epidemicRegisterData.setInstitute(bean.getSchoolName() + "-" + bean.getCollegeName() + "-" + bean.getDepartmentName()
-                                    + "-" + bean.getScienceName() + "-" + bean.getGrade() + "-" + bean.getOrganizeName());
+                        StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+                        if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                            epidemicRegisterData.setInstitute(studentBean.getSchoolName() + "-" + studentBean.getCollegeName() + "-" + studentBean.getDepartmentName()
+                                    + "-" + studentBean.getScienceName() + "-" + studentBean.getGrade() + "-" + studentBean.getOrganizeName());
                         }
                     } else {
                         epidemicRegisterData.setInstitute("未知");

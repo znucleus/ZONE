@@ -1,7 +1,6 @@
 package top.zbeboy.zone.web.platform.users;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jooq.Record;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,8 +12,8 @@ import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.domain.tables.records.GoogleOauthRecord;
 import top.zbeboy.zone.feign.data.StaffService;
+import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
-import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.GoogleOauthService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
@@ -145,11 +144,7 @@ public class UsersViewController {
             if (StringUtils.equals(Workbook.SYSTEM_USERS_TYPE, usersType.getUsersTypeName())) {
                 page = "web/platform/users/users_profile_system::#page-wrapper";
             } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                StudentBean studentBean = new StudentBean();
-                Optional<Record> record = studentService.findByUsernameRelation(users.getUsername());
-                if (record.isPresent()) {
-                    studentBean = record.get().into(StudentBean.class);
-                }
+                StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
                 modelMap.addAttribute("student", studentBean);
                 page = "web/platform/users/users_profile_student::#page-wrapper";
             } else if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {

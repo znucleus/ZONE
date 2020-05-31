@@ -6,13 +6,14 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zone.domain.tables.pojos.InternshipTeacherDistribution;
-import top.zbeboy.zone.service.data.StudentService;
+import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.service.internship.InternshipTeacherDistributionService;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 
 import javax.annotation.Resource;
+import java.util.Objects;
 import java.util.Optional;
 
 @Controller
@@ -139,9 +140,8 @@ public class InternshipTeacherDistributionViewController {
             Optional<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(id, studentId);
             if (internshipTeacherDistributionRecord.isPresent()) {
                 InternshipTeacherDistribution internshipTeacherDistribution = internshipTeacherDistributionRecord.get().into(InternshipTeacherDistribution.class);
-                Optional<Record> studentRecord = studentService.findByIdRelation(studentId);
-                if (studentRecord.isPresent()) {
-                    StudentBean studentBean = studentRecord.get().into(StudentBean.class);
+                StudentBean studentBean = studentService.findByIdRelation(studentId);
+                if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
                     modelMap.addAttribute("internshipReleaseId", internshipTeacherDistribution.getInternshipReleaseId());
                     modelMap.addAttribute("staffId", internshipTeacherDistribution.getStaffId());
                     modelMap.addAttribute("studentRealName", studentBean.getRealName());

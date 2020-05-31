@@ -1,7 +1,6 @@
 package top.zbeboy.zone.api.attend;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jooq.Record;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -13,16 +12,17 @@ import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.domain.tables.records.AttendDataRecord;
 import top.zbeboy.zone.domain.tables.records.AttendUsersRecord;
 import top.zbeboy.zone.domain.tables.records.WeiXinDeviceRecord;
+import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.attend.AttendDataService;
 import top.zbeboy.zone.service.attend.AttendReleaseSubService;
 import top.zbeboy.zone.service.attend.AttendUsersService;
-import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.data.WeiXinDeviceService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
+import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.vo.attend.data.AttendDataAddVo;
@@ -84,11 +84,10 @@ public class AttendDataApiController {
                             // 判断签到时间
                             if (DateTimeUtil.nowBeforeSqlTimestamp(attendReleaseSub.getAttendEndTime()) &&
                                     DateTimeUtil.nowAfterSqlTimestamp(attendReleaseSub.getAttendStartTime())) {
-                                Optional<Record> record = studentService.findByUsernameRelation(users.getUsername());
-                                if (record.isPresent()) {
-                                    Student student = record.get().into(Student.class);
+                                StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+                                if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
                                     Optional<AttendUsersRecord> attendUsersRecord = attendUsersService
-                                            .findByAttendReleaseIdAndStudentId(attendReleaseSub.getAttendReleaseId(), student.getStudentId());
+                                            .findByAttendReleaseIdAndStudentId(attendReleaseSub.getAttendReleaseId(), studentBean.getStudentId());
                                     if (attendUsersRecord.isPresent()) {
                                         AttendUsers attendUsers = attendUsersRecord.get().into(AttendUsers.class);
                                         Optional<AttendDataRecord> attendDataRecord = attendDataService.findByAttendUsersIdAndAttendReleaseSubId(

@@ -11,12 +11,14 @@ import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.feign.data.DepartmentService;
 import top.zbeboy.zone.feign.data.ScienceService;
 import top.zbeboy.zone.feign.data.StaffService;
+import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.data.*;
 import top.zbeboy.zone.service.platform.RoleApplyService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
+import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.bean.platform.authorize.RoleApplyBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 
@@ -95,9 +97,9 @@ public class AuthorizeViewController {
                         collegeId = bean.getCollegeId();
                     }
                 } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                    Optional<Record> record = studentService.findByUsernameRelation(users.getUsername());
-                    if(record.isPresent()){
-                        collegeId = record.get().into(College.class).getCollegeId();
+                    StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+                    if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                        collegeId = studentBean.getCollegeId();
                     }
                 }
 
@@ -165,9 +167,9 @@ public class AuthorizeViewController {
                                 collegeId = bean.getCollegeId();
                             }
                         } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                            Optional<Record> record = studentService.findByUsernameRelation(users.getUsername());
-                            if(record.isPresent()){
-                                collegeId = record.get().into(College.class).getCollegeId();;
+                            StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+                            if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                                collegeId = studentBean.getCollegeId();;
                             }
                         }
                     }

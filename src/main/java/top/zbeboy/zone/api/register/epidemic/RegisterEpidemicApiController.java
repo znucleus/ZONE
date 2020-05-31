@@ -1,7 +1,6 @@
 package top.zbeboy.zone.api.register.epidemic;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jooq.Record;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -14,9 +13,9 @@ import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.domain.tables.records.EpidemicRegisterDataRecord;
 import top.zbeboy.zone.feign.data.StaffService;
+import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.data.ChannelService;
-import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.register.EpidemicRegisterDataService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
@@ -94,11 +93,10 @@ public class RegisterEpidemicApiController {
                                 epidemicRegisterData.setInstitute(bean.getSchoolName() + "-" + bean.getCollegeName() + "-" + bean.getDepartmentName());
                             }
                         } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                            Optional<Record> record = studentService.findByUsernameRelation(users.getUsername());
-                            if (record.isPresent()) {
-                                StudentBean bean = record.get().into(StudentBean.class);
-                                epidemicRegisterData.setInstitute(bean.getSchoolName() + "-" + bean.getCollegeName() + "-" + bean.getDepartmentName()
-                                        + "-" + bean.getScienceName() + "-" + bean.getGrade() + "-" + bean.getOrganizeName());
+                            StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+                            if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                                epidemicRegisterData.setInstitute(studentBean.getSchoolName() + "-" + studentBean.getCollegeName() + "-" + studentBean.getDepartmentName()
+                                        + "-" + studentBean.getScienceName() + "-" + studentBean.getGrade() + "-" + studentBean.getOrganizeName());
                             }
                         } else {
                             epidemicRegisterData.setInstitute("未知");

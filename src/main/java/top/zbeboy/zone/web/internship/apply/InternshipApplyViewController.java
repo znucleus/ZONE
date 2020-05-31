@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.feign.data.StaffService;
+import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.data.OrganizeService;
-import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.internship.InternshipApplyService;
 import top.zbeboy.zone.service.internship.InternshipInfoService;
 import top.zbeboy.zone.service.internship.InternshipTeacherDistributionService;
@@ -83,9 +83,8 @@ public class InternshipApplyViewController {
         String page;
         if (internshipConditionCommon.applyCondition(id)) {
             Users users = usersService.getUserFromSession();
-            Optional<Record> studentRecord = studentService.findByUsernameRelation(users.getUsername());
-            if (studentRecord.isPresent()) {
-                StudentBean studentBean = studentRecord.get().into(StudentBean.class);
+            StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+            if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
                 String qqMail = "";
                 if (studentBean.getEmail().toLowerCase().contains("@qq.com")) {
                     qqMail = studentBean.getEmail();
@@ -164,13 +163,12 @@ public class InternshipApplyViewController {
         String page;
         if (internshipConditionCommon.applyEditCondition(id)) {
             Users users = usersService.getUserFromSession();
-            Optional<Record> studentRecord = studentService.findByUsernameRelation(users.getUsername());
-            if (studentRecord.isPresent()) {
-                Student student = studentRecord.get().into(Student.class);
-                Optional<Record> internshipInfoRecord = internshipInfoService.findByInternshipReleaseIdAndStudentId(id, student.getStudentId());
+            StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+            if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                Optional<Record> internshipInfoRecord = internshipInfoService.findByInternshipReleaseIdAndStudentId(id, studentBean.getStudentId());
                 if (internshipInfoRecord.isPresent()) {
                     InternshipInfo internshipInfo = internshipInfoRecord.get().into(InternshipInfo.class);
-                    Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(id, student.getStudentId());
+                    Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(id, studentBean.getStudentId());
                     if (internshipApplyRecord.isPresent()) {
                         InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
                         modelMap.put("internshipInfo", internshipInfo);
@@ -211,10 +209,9 @@ public class InternshipApplyViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         Users users = usersService.getUserFromSession();
-        Optional<Record> studentRecord = studentService.findByUsernameRelation(users.getUsername());
-        if (studentRecord.isPresent()) {
-            Student student = studentRecord.get().into(Student.class);
-            Optional<Record> internshipInfoRecord = internshipInfoService.findByInternshipReleaseIdAndStudentId(id, student.getStudentId());
+        StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+        if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+            Optional<Record> internshipInfoRecord = internshipInfoService.findByInternshipReleaseIdAndStudentId(id, studentBean.getStudentId());
             if (internshipInfoRecord.isPresent()) {
                 InternshipInfo internshipInfo = internshipInfoRecord.get().into(InternshipInfo.class);
                 modelMap.put("internshipInfo", internshipInfo);

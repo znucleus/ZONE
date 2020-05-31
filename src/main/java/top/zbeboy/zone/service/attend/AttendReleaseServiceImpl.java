@@ -14,18 +14,18 @@ import top.zbeboy.zone.domain.tables.pojos.AttendRelease;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.domain.tables.records.AttendReleaseRecord;
+import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
-import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zone.service.util.SQLQueryUtil;
+import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.util.ByteUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
 import javax.annotation.Resource;
 import java.util.Objects;
-import java.util.Optional;
 
 import static org.jooq.impl.DSL.now;
 import static top.zbeboy.zone.domain.Tables.*;
@@ -157,9 +157,9 @@ public class AttendReleaseServiceImpl implements AttendReleaseService, Paginatio
                     if (dataRangeInt == 1) {
                         if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
                             // 学生查看可签到本班级数据
-                            Optional<Record> record = studentService.findByUsernameRelation(users.getUsername());
-                            if (record.isPresent()) {
-                                int organizeId = record.get().get(ORGANIZE.ORGANIZE_ID);
+                            StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+                            if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                                int organizeId = studentBean.getOrganizeId();
                                 a = ATTEND_RELEASE.ORGANIZE_ID.eq(organizeId)
                                         .and(ATTEND_RELEASE.ATTEND_END_TIME.gt(now()))
                                         .and(ATTEND_RELEASE.ATTEND_END_TIME.gt(ATTEND_RELEASE.ATTEND_START_TIME));

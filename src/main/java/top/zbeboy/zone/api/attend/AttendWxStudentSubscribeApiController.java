@@ -19,16 +19,16 @@ import top.zbeboy.zone.domain.tables.pojos.AttendWxStudentSubscribe;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.WeiXin;
 import top.zbeboy.zone.domain.tables.records.AttendWxStudentSubscribeRecord;
-import top.zbeboy.zone.domain.tables.records.StudentRecord;
 import top.zbeboy.zone.domain.tables.records.WeiXinRecord;
+import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.service.attend.AttendWxStudentSubscribeService;
 import top.zbeboy.zone.service.cache.attend.AttendWxCacheService;
-import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.data.WeiXinService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.HttpClientUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
+import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.vo.attend.weixin.AttendWxStudentSubscribeAddVo;
 
@@ -146,10 +146,10 @@ public class AttendWxStudentSubscribeApiController {
         if (!bindingResult.hasErrors()) {
             Users users = usersService.getUserFromOauth(principal);
             if (Objects.nonNull(users)) {
-                Optional<StudentRecord> studentRecord = studentService.findByUsername(users.getUsername());
-                if (studentRecord.isPresent()) {
+                StudentBean studentBean = studentService.findByUsername(users.getUsername());
+                if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
                     Optional<AttendWxStudentSubscribeRecord> record = attendWxStudentSubscribeService.findByAttendReleaseIdAndStudentId(
-                            attendWxStudentSubscribeAddVo.getAttendReleaseId(), studentRecord.get().getStudentId());
+                            attendWxStudentSubscribeAddVo.getAttendReleaseId(), studentBean.getStudentId());
                     if (!record.isPresent()) {
                         AttendWxStudentSubscribe attendWxStudentSubscribe = new AttendWxStudentSubscribe();
                         attendWxStudentSubscribe.setSubscribeId(UUIDUtil.getUUID());
@@ -159,7 +159,7 @@ public class AttendWxStudentSubscribeApiController {
                         attendWxStudentSubscribe.setMiniProgramState(attendWxStudentSubscribeAddVo.getMiniProgramState());
                         attendWxStudentSubscribe.setPage(attendWxStudentSubscribeAddVo.getPage());
                         attendWxStudentSubscribe.setAttendReleaseId(attendWxStudentSubscribeAddVo.getAttendReleaseId());
-                        attendWxStudentSubscribe.setStudentId(studentRecord.get().getStudentId());
+                        attendWxStudentSubscribe.setStudentId(studentBean.getStudentId());
                         attendWxStudentSubscribe.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
 
                         attendWxStudentSubscribeService.save(attendWxStudentSubscribe);
@@ -208,9 +208,9 @@ public class AttendWxStudentSubscribeApiController {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         Users users = usersService.getUserFromOauth(principal);
         if (Objects.nonNull(users)) {
-            Optional<StudentRecord> studentRecord = studentService.findByUsername(users.getUsername());
-            if (studentRecord.isPresent()) {
-                attendWxStudentSubscribeService.deleteByAttendReleaseIdAndStudentId(attendReleaseId, studentRecord.get().getStudentId());
+            StudentBean studentBean = studentService.findByUsername(users.getUsername());
+            if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                attendWxStudentSubscribeService.deleteByAttendReleaseIdAndStudentId(attendReleaseId, studentBean.getStudentId());
                 ajaxUtil.success().msg("取消订阅成功");
             } else {
                 ajaxUtil.fail().msg("未查询到学生信息");
@@ -234,10 +234,10 @@ public class AttendWxStudentSubscribeApiController {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         Users users = usersService.getUserFromOauth(principal);
         if (Objects.nonNull(users)) {
-            Optional<StudentRecord> studentRecord = studentService.findByUsername(users.getUsername());
-            if (studentRecord.isPresent()) {
+            StudentBean studentBean = studentService.findByUsername(users.getUsername());
+            if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
                 Optional<AttendWxStudentSubscribeRecord> subRecord = attendWxStudentSubscribeService.findByAttendReleaseIdAndStudentId(
-                        attendReleaseId, studentRecord.get().getStudentId());
+                        attendReleaseId, studentBean.getStudentId());
                 if (subRecord.isPresent()) {
                     ajaxUtil.success().msg("已订阅");
                 } else {

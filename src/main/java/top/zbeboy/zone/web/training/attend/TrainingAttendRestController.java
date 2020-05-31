@@ -10,9 +10,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
-import top.zbeboy.zone.domain.tables.records.StudentRecord;
+import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
-import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.export.TrainingAttendSituationExport;
 import top.zbeboy.zone.service.export.TrainingAttendUsersExport;
 import top.zbeboy.zone.service.platform.UsersService;
@@ -20,6 +19,7 @@ import top.zbeboy.zone.service.training.*;
 import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
+import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.bean.training.attend.TrainingAttendBean;
 import top.zbeboy.zone.web.bean.training.attend.TrainingAttendUsersBean;
 import top.zbeboy.zone.web.bean.training.release.TrainingConfigureBean;
@@ -505,9 +505,9 @@ public class TrainingAttendRestController {
         UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
         if (Objects.nonNull(usersType)) {
             if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                Optional<StudentRecord> record = studentService.findByUsername(users.getUsername());
-                if (record.isPresent()) {
-                    int studentId = record.get().getStudentId();
+                StudentBean studentBean = studentService.findByUsername(users.getUsername());
+                if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                    int studentId = studentBean.getStudentId();
                     tableSawUtil.setSearch("studentId", studentId);
                     Result<Record> records = trainingAttendMyService.findAll(tableSawUtil);
                     if (records.isNotEmpty()) {

@@ -14,15 +14,16 @@ import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.domain.tables.records.AttendUsersRecord;
+import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.service.attend.AttendReleaseService;
 import top.zbeboy.zone.service.attend.AttendReleaseSubService;
 import top.zbeboy.zone.service.attend.AttendUsersService;
-import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.attend.AttendUsersBean;
+import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.vo.attend.users.AttendUsersAddVo;
 
@@ -112,22 +113,21 @@ public class AttendUsersApiController {
     public ResponseEntity<Map<String, Object>> save(@Valid AttendUsersAddVo attendUsersAddVo, BindingResult bindingResult, Principal principal) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
-            Optional<Record> studentRecord = studentService.findNormalByStudentNumberRelation(attendUsersAddVo.getStudentNumber());
-            if (studentRecord.isPresent()) {
-                Student student = studentRecord.get().into(Student.class);
+            StudentBean studentBean = studentService.findNormalByStudentNumberRelation(attendUsersAddVo.getStudentNumber());
+            if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
                 AttendRelease attendRelease = attendReleaseService.findById(attendUsersAddVo.getAttendReleaseId());
                 if (Objects.nonNull(attendRelease)) {
                     Users users = usersService.getUserFromOauth(principal);
                     if (roleService.isOauthUserInRole(Workbook.authorities.ROLE_SYSTEM.name(), principal) ||
                             (Objects.nonNull(users) && StringUtils.equals(users.getUsername(), attendRelease.getUsername()))) {
-                        if (Objects.equals(student.getOrganizeId(), attendRelease.getOrganizeId())) {
+                        if (Objects.equals(studentBean.getOrganizeId(), attendRelease.getOrganizeId())) {
                             Optional<AttendUsersRecord> attendUsersRecord = attendUsersService
-                                    .findByAttendReleaseIdAndStudentId(attendUsersAddVo.getAttendReleaseId(), student.getStudentId());
+                                    .findByAttendReleaseIdAndStudentId(attendUsersAddVo.getAttendReleaseId(), studentBean.getStudentId());
                             if (!attendUsersRecord.isPresent()) {
                                 AttendUsers attendUsers = new AttendUsers();
                                 attendUsers.setAttendUsersId(UUIDUtil.getUUID());
                                 attendUsers.setAttendReleaseId(attendUsersAddVo.getAttendReleaseId());
-                                attendUsers.setStudentId(student.getStudentId());
+                                attendUsers.setStudentId(studentBean.getStudentId());
                                 attendUsers.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
                                 attendUsers.setRemark(attendUsersAddVo.getRemark());
 

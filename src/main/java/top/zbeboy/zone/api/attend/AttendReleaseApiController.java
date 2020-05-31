@@ -11,16 +11,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
+import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.service.attend.AttendReleaseService;
 import top.zbeboy.zone.service.attend.AttendReleaseSubService;
 import top.zbeboy.zone.service.attend.AttendUsersService;
 import top.zbeboy.zone.service.cache.attend.AttendWxCacheService;
-import top.zbeboy.zone.service.data.StudentService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.attend.AttendReleaseBean;
+import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.ByteUtil;
@@ -113,11 +114,10 @@ public class AttendReleaseApiController {
                 attendReleaseSubService.copyAttendRelease(attendReleaseId);
 
                 // 生成名单
-                Result<Record> studentRecords = studentService.findNormalByOrganizeId(attendReleaseAddVo.getOrganizeId());
-                if (studentRecords.isNotEmpty()) {
-                    List<Student> students = studentRecords.into(Student.class);
+                List<StudentBean> students = studentService.findNormalByOrganizeIdRelation(attendReleaseAddVo.getOrganizeId());
+                if (Objects.nonNull(students) && students.size() > 0) {
                     List<AttendUsers> attendUsers = new ArrayList<>();
-                    for (Student student : students) {
+                    for (StudentBean student : students) {
                         AttendUsers au = new AttendUsers();
                         au.setAttendUsersId(UUIDUtil.getUUID());
                         au.setAttendReleaseId(attendReleaseId);
