@@ -148,6 +148,8 @@ public class StudentRestController {
      */
     @PostMapping("/users/student/update/school")
     public ResponseEntity<Map<String, Object>> userStudentUpdateSchool(StudentEditVo studentEditVo) {
+        Users users = SessionUtil.getUserFromSession();
+        studentEditVo.setUsername(users.getUsername());
         AjaxUtil<Map<String, Object>> ajaxUtil = studentService.userStudentUpdateSchool(studentEditVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
@@ -160,6 +162,8 @@ public class StudentRestController {
      */
     @PostMapping("/users/student/update/info")
     public ResponseEntity<Map<String, Object>> userStudentUpdateInfo(StudentEditVo studentEditVo) {
+        Users users = SessionUtil.getUserFromSession();
+        studentEditVo.setUsername(users.getUsername());
         AjaxUtil<Map<String, Object>> ajaxUtil = studentService.userStudentUpdateInfo(studentEditVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }

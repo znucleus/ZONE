@@ -138,6 +138,8 @@ public class StaffRestController {
      */
     @PostMapping("/users/staff/update/school")
     public ResponseEntity<Map<String, Object>> userStaffUpdateSchool(StaffEditVo staffEditVo) {
+        Users users = SessionUtil.getUserFromSession();
+        staffEditVo.setUsername(users.getUsername());
         AjaxUtil<Map<String, Object>> ajaxUtil = staffService.userStaffUpdateSchool(staffEditVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
@@ -150,6 +152,8 @@ public class StaffRestController {
      */
     @PostMapping("/users/staff/update/info")
     public ResponseEntity<Map<String, Object>> userStaffUpdateInfo(StaffEditVo staffEditVo) {
+        Users users = SessionUtil.getUserFromSession();
+        staffEditVo.setUsername(users.getUsername());
         AjaxUtil<Map<String, Object>> ajaxUtil = staffService.userStaffUpdateInfo(staffEditVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }

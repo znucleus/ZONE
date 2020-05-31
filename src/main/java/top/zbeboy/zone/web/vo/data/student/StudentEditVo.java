@@ -1,6 +1,7 @@
 package top.zbeboy.zone.web.vo.data.student;
 
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 public class StudentEditVo {
@@ -22,6 +23,9 @@ public class StudentEditVo {
     @Size(max = 200, message = "生源地200位字符")
     private String placeOrigin;
     private Integer organizeId;
+    @NotBlank(message = "当前用户账号不能为空")
+    @Size(max = 64, message = "当前用户账号不正确")
+    private String username;
 
     public String getStudentNumber() {
         return studentNumber;
@@ -109,5 +113,13 @@ public class StudentEditVo {
 
     public void setOrganizeId(Integer organizeId) {
         this.organizeId = organizeId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

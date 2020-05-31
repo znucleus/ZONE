@@ -17,16 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.config.SessionBook;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.config.ZoneProperties;
-import top.zbeboy.zone.domain.tables.pojos.*;
+import top.zbeboy.zone.domain.tables.pojos.Files;
+import top.zbeboy.zone.domain.tables.pojos.Role;
+import top.zbeboy.zone.domain.tables.pojos.SystemConfigure;
+import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.records.GoogleOauthRecord;
-import top.zbeboy.zone.feign.data.StaffService;
-import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.feign.platform.UsersService;
-import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.feign.system.SystemConfigureService;
-import top.zbeboy.zone.service.notify.UserNotifyService;
-import top.zbeboy.zone.service.platform.*;
-import top.zbeboy.zone.service.system.AuthoritiesService;
+import top.zbeboy.zone.service.platform.GoogleOauthService;
 import top.zbeboy.zone.service.system.FilesService;
 import top.zbeboy.zone.service.system.SystemMailService;
 import top.zbeboy.zone.service.util.*;
@@ -64,27 +62,6 @@ public class UsersRestController {
 
     @Resource
     private SystemMailService systemMailService;
-
-    @Resource
-    private UserNotifyService userNotifyService;
-
-    @Resource
-    private RoleService roleService;
-
-    @Resource
-    private UsersTypeService usersTypeService;
-
-    @Resource
-    private StudentService studentService;
-
-    @Resource
-    private StaffService staffService;
-
-    @Resource
-    private CollegeRoleService collegeRoleService;
-
-    @Resource
-    private AuthoritiesService authoritiesService;
 
     @Resource
     private GoogleOauthService googleOauthService;
@@ -560,7 +537,7 @@ public class UsersRestController {
     public ResponseEntity<Map<String, Object>> roleData(@RequestParam("username") String username) {
         AjaxUtil<Role> ajaxUtil = AjaxUtil.of();
         Users users = SessionUtil.getUserFromSession();
-        ajaxUtil.success().list(usersService.roleData(users.getUsername(),username)).msg("获取数据成功");
+        ajaxUtil.success().list(usersService.roleData(users.getUsername(), username)).msg("获取数据成功");
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -576,7 +553,7 @@ public class UsersRestController {
     public ResponseEntity<Map<String, Object>> roleSave(@RequestParam("username") String username, @RequestParam("roles") String roles,
                                                         HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
-        AjaxUtil<Map<String, Object>> ajaxUtil = usersService.roleSave(users.getUsername(),username,roles);
+        AjaxUtil<Map<String, Object>> ajaxUtil = usersService.roleSave(users.getUsername(), username, roles);
 
         if (ajaxUtil.getState()) {
             String notify = "您的权限已发生变更，请登录查看。";
@@ -599,7 +576,7 @@ public class UsersRestController {
      */
     @PostMapping("/web/platform/users/update/enabled")
     public ResponseEntity<Map<String, Object>> updateEnabled(String userIds, Byte enabled) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = usersService.updateEnabled(userIds,enabled);
+        AjaxUtil<Map<String, Object>> ajaxUtil = usersService.updateEnabled(userIds, enabled);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -612,7 +589,7 @@ public class UsersRestController {
      */
     @PostMapping("/web/platform/users/update/locked")
     public ResponseEntity<Map<String, Object>> updateLocked(String userIds, Byte locked) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = usersService.updateLocked(userIds,locked);
+        AjaxUtil<Map<String, Object>> ajaxUtil = usersService.updateLocked(userIds, locked);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -650,8 +627,8 @@ public class UsersRestController {
     @PostMapping("/forget_password/dynamic_password")
     public ResponseEntity<Map<String, Object>> forgetPassword(@RequestParam("username") String username,
                                                               @RequestParam("dynamicPassword") String dynamicPassword, HttpSession session) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = usersService.forgetPassword(username,dynamicPassword);
-        if(ajaxUtil.getState()){
+        AjaxUtil<Map<String, Object>> ajaxUtil = usersService.forgetPassword(username, dynamicPassword);
+        if (ajaxUtil.getState()) {
             session.setAttribute(username + SessionBook.DYNAMIC_PASSWORD_VALID, true);
             session.setAttribute(SessionBook.DYNAMIC_PASSWORD_USERNAME, username);
         }
