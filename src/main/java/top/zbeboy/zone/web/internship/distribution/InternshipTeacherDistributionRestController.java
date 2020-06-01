@@ -8,9 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
+import top.zbeboy.zone.feign.data.OrganizeService;
 import top.zbeboy.zone.feign.data.StudentService;
-import top.zbeboy.zone.feign.platform.UsersService;
-import top.zbeboy.zone.service.data.OrganizeService;
 import top.zbeboy.zone.service.export.InternshipTeacherDistributionExport;
 import top.zbeboy.zone.service.internship.InternshipReleaseService;
 import top.zbeboy.zone.service.internship.InternshipTeacherDistributionService;
@@ -55,9 +54,6 @@ public class InternshipTeacherDistributionRestController {
 
     @Resource
     private StudentService studentService;
-
-    @Resource
-    private UsersService usersService;
 
     @Resource
     private OrganizeService organizeService;
@@ -150,10 +146,7 @@ public class InternshipTeacherDistributionRestController {
         Optional<Record> record = internshipReleaseService.findByIdRelation(id);
         if (record.isPresent()) {
             Science science = record.get().into(Science.class);
-            Result<Record> organizeRecord = organizeService.findNormalByScienceId(science.getScienceId());
-            if (organizeRecord.isNotEmpty()) {
-                beans = organizeRecord.into(OrganizeBean.class);
-            }
+            beans = organizeService.findNormalByScienceId(science.getScienceId());
         }
         beans.forEach(bean -> select2Data.add(bean.getOrganizeId().toString(), bean.getOrganizeName()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);

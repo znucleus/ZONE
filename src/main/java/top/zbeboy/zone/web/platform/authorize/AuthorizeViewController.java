@@ -11,7 +11,6 @@ import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.feign.data.*;
 import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
-import top.zbeboy.zone.service.data.OrganizeService;
 import top.zbeboy.zone.service.platform.RoleApplyService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
@@ -192,7 +191,7 @@ public class AuthorizeViewController {
                             }
                         } else if (roleApplyBean.getDataScope() == 4) {
                             Organize organize = organizeService.findById(roleApplyBean.getDataId());
-                            if (Objects.nonNull(organize)) {
+                            if (Objects.nonNull(organize) && organize.getOrganizeId() > 0) {
                                 roleApplyBean.setDataName(organize.getOrganizeName());
                             }
                         }

@@ -13,11 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
+import top.zbeboy.zone.feign.data.OrganizeService;
 import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.data.StudentService;
-import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
-import top.zbeboy.zone.service.data.OrganizeService;
 import top.zbeboy.zone.service.training.TrainingConfigureService;
 import top.zbeboy.zone.service.training.TrainingReleaseService;
 import top.zbeboy.zone.service.training.TrainingReportService;
@@ -59,9 +58,6 @@ public class TrainingReportRestController {
 
     @Resource
     private TrainingConfigureService trainingConfigureService;
-
-    @Resource
-    private UsersService usersService;
 
     @Resource
     private UploadService uploadService;

@@ -12,8 +12,6 @@ import top.zbeboy.zone.domain.tables.records.LeaverRegisterDataOptionRecord;
 import top.zbeboy.zone.domain.tables.records.LeaverRegisterOptionRecord;
 import top.zbeboy.zone.domain.tables.records.LeaverRegisterScopeRecord;
 import top.zbeboy.zone.feign.data.*;
-import top.zbeboy.zone.feign.platform.UsersService;
-import top.zbeboy.zone.service.data.OrganizeService;
 import top.zbeboy.zone.service.export.LeaverRegisterDataExport;
 import top.zbeboy.zone.service.register.*;
 import top.zbeboy.zone.service.upload.UploadService;
@@ -76,9 +74,6 @@ public class RegisterControllerCommon {
 
     @Resource
     private OrganizeService organizeService;
-
-    @Resource
-    private UsersService usersService;
 
     @Resource
     private StudentService studentService;
@@ -166,7 +161,7 @@ public class RegisterControllerCommon {
                             case 5:
                                 // 班级
                                 Organize organize = organizeService.findById(record.getDataId());
-                                if (Objects.nonNull(organize)) {
+                                if (Objects.nonNull(organize) && organize.getOrganizeId() > 0) {
                                     dataName.add(organize.getOrganizeName());
                                 }
                                 break;
@@ -563,7 +558,7 @@ public class RegisterControllerCommon {
                     case 5:
                         // 班级
                         Organize organize = organizeService.findById(bean.getDataId());
-                        if (Objects.nonNull(organize)) {
+                        if (Objects.nonNull(organize) && organize.getOrganizeId() > 0) {
                             bean.setDataName(organize.getOrganizeName());
                         }
                         break;

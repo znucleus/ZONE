@@ -2,19 +2,18 @@ package top.zbeboy.zone.filter;
 
 
 import org.apache.commons.lang3.StringUtils;
-import org.jooq.Record;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.feign.data.DepartmentService;
+import top.zbeboy.zone.feign.data.OrganizeService;
 import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.security.AjaxAuthenticationCode;
-import top.zbeboy.zone.service.data.OrganizeService;
 import top.zbeboy.zone.web.bean.data.department.DepartmentBean;
 import top.zbeboy.zone.web.bean.data.organize.OrganizeBean;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
@@ -29,7 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.regex.Pattern;
 
 /**
@@ -131,11 +129,9 @@ public class SecurityLoginFilter implements Filter {
                     StudentService studentService = SpringBootUtil.getBean(StudentService.class);
                     StudentBean studentBean = studentService.findByUsername(users.getUsername());
                     if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
-                        OrganizeService organizeService = (OrganizeService) ctx
-                                .getBean("organizeService");
-                        Optional<Record> organizeData = organizeService.findByIdRelation(studentBean.getOrganizeId());
-                        if (organizeData.isPresent()) {
-                            OrganizeBean organizeBean = organizeData.get().into(OrganizeBean.class);
+                        OrganizeService organizeService = SpringBootUtil.getBean(OrganizeService.class);
+                        OrganizeBean organizeBean = organizeService.findByIdRelation(studentBean.getOrganizeId());
+                        if (Objects.nonNull(organizeBean) && organizeBean.getOrganizeId() > 0) {
                             schoolIsNotDel = !BooleanUtil.toBoolean(organizeBean.getSchoolIsDel()) && !BooleanUtil.toBoolean(organizeBean.getCollegeIsDel()) &&
                                     !BooleanUtil.toBoolean(organizeBean.getDepartmentIsDel()) && !BooleanUtil.toBoolean(organizeBean.getScienceIsDel()) &&
                                     !BooleanUtil.toBoolean(organizeBean.getGradeIsDel()) && !BooleanUtil.toBoolean(organizeBean.getOrganizeIsDel());

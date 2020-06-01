@@ -16,7 +16,6 @@ import top.zbeboy.zone.feign.data.*;
 import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.feign.system.SystemConfigureService;
-import top.zbeboy.zone.service.data.OrganizeService;
 import top.zbeboy.zone.service.notify.UserNotifyService;
 import top.zbeboy.zone.service.platform.*;
 import top.zbeboy.zone.service.system.AuthoritiesService;
@@ -143,7 +142,7 @@ public class AuthorizeRestController {
                     }
                 } else if (b.getDataScope() == 4) {
                     Organize organize = organizeService.findById(b.getDataId());
-                    if (Objects.nonNull(organize)) {
+                    if (Objects.nonNull(organize) && organize.getOrganizeId() > 0) {
                         b.setDataName(organize.getOrganizeName());
                     }
                 }

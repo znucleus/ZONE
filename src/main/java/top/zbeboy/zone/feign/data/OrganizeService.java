@@ -1,119 +1,131 @@
 package top.zbeboy.zone.feign.data;
 
-import org.jooq.Record;
-import org.jooq.Result;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.domain.tables.pojos.Organize;
-import top.zbeboy.zone.domain.tables.records.OrganizeRecord;
+import top.zbeboy.zone.hystrix.data.OrganizeHystrixClientFallbackFactory;
+import top.zbeboy.zone.web.bean.data.organize.OrganizeBean;
+import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zone.web.vo.data.organize.OrganizeAddVo;
+import top.zbeboy.zone.web.vo.data.organize.OrganizeEditVo;
+import top.zbeboy.zone.web.vo.data.organize.OrganizeSearchVo;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
+@FeignClient(value = "base-server", fallback = OrganizeHystrixClientFallbackFactory.class)
 public interface OrganizeService {
 
     /**
-     * 通过主键查询
+     * 获取班级
      *
-     * @param id 主键
-     * @return 数据
+     * @param id 班级主键
+     * @return 班级数据
      */
-    Organize findById(int id);
+    @GetMapping("/base/data/organize/{id}")
+    Organize findById(@PathVariable("id") int id);
 
     /**
-     * 通过班级id查询所有信息
-     * 缓存:是
+     * 获取班级数量
      *
-     * @param id 班级id
-     * @return 所有信息
+     * @param id 班级主键
+     * @return 数量
      */
-    Optional<Record> findByIdRelation(int id);
+    @GetMapping("/base/data/count/organize/{id}")
+    int countById(@PathVariable("id") int id);
 
     /**
-     * 根据年级ID和状态查询全部班级
+     * 获取班级
      *
-     * @param gradeId       年级ID
-     * @param organizeIsDel 状态
-     * @return 全部班级
+     * @param id 班级主键
+     * @return 班级数据
      */
-    Result<OrganizeRecord> findByGradeIdAndOrganizeIsDel(int gradeId, Byte organizeIsDel);
+    @GetMapping("/base/data/organize/relation/{id}")
+    OrganizeBean findByIdRelation(@PathVariable("id") int id);
 
     /**
-     * 专业下 班级名查询 注：等于班级名
-     *
-     * @param organizeName 班级名
-     * @param scienceId    专业id
-     * @return 数据
-     */
-    Result<Record> findByOrganizeNameAndScienceId(String organizeName, int scienceId);
-
-    /**
-     * 查找专业下不等于该班级id的班级名
-     *
-     * @param organizeName 班级名
-     * @param organizeId   班级id
-     * @param scienceId    专业id
-     * @return 数据
-     */
-    Result<Record> findByOrganizeNameAndScienceIdNeOrganizeId(String organizeName, int scienceId, int organizeId);
-
-    /**
-     * 根据专业id查询正常班级数据
+     * 根据专业id获取正常班级
      *
      * @param scienceId 专业id
      * @return 数据
      */
-    Result<Record> findNormalByScienceId(int scienceId);
-
-
-    /**
-     * 分页查询
-     *
-     * @param dataTablesUtil 工具类
-     * @return 分页数据
-     */
-    Result<Record> findAllByPage(DataTablesUtil dataTablesUtil);
+    @GetMapping("/base/data/organize/normal/science_id/relation/{scienceId}")
+    List<OrganizeBean> findNormalByScienceId(@PathVariable("scienceId") int scienceId);
 
     /**
-     * 应用 总数
+     * 获取年级下全部有效班级
      *
-     * @return 总数
+     * @param organizeSearchVo 查询参数
+     * @return 班级数据
      */
-    int countAll(DataTablesUtil dataTablesUtil);
+    @GetMapping("/base/anyone/data/organize/all")
+    List<Organize> anyoneData(@RequestBody OrganizeSearchVo organizeSearchVo);
 
     /**
-     * 根据条件查询总数
+     * 数据
      *
-     * @return 条件查询总数
+     * @param dataTablesUtil 请求
+     * @return 数据
      */
-    int countByCondition(DataTablesUtil dataTablesUtil);
+    @PostMapping("/base/data/organize/data")
+    DataTablesUtil data(@RequestBody DataTablesUtil dataTablesUtil);
 
     /**
-     * 根据主键统计
+     * 保存时检验班级名是否重复
      *
-     * @param id 主键
-     * @return 数量
+     * @param organizeName 班级名
+     * @param scienceId    专业id
+     * @return true 合格 false 不合格
      */
-    int countById(int id);
+    @PostMapping("/base/data/organize/check/add/name")
+    AjaxUtil<Map<String, Object>> checkAddName(@RequestParam("organizeName") String organizeName, @RequestParam("scienceId") int scienceId);
 
     /**
-     * 保存
+     * 检验教职工账号
      *
-     * @param organize 数据
+     * @param staff 账号/工号
+     * @return true or false
      */
-    void save(Organize organize);
+    @PostMapping("/base/data/organize/check/add/staff")
+    AjaxUtil<Map<String, Object>> checkAddStaff(@RequestParam("staff") String staff);
 
     /**
-     * 更新
+     * 保存班级信息
      *
-     * @param organize 数据
+     * @param organizeAddVo 班级
+     * @return true 保存成功 false 保存失败
      */
-    void update(Organize organize);
+    @PostMapping("/base/data/organize/save")
+    AjaxUtil<Map<String, Object>> save(@RequestBody OrganizeAddVo organizeAddVo);
 
     /**
-     * 更新状态
+     * 更新时检验班级名是否重复
      *
-     * @param ids   ids
-     * @param isDel 状态
+     * @param organizeId   班级id
+     * @param organizeName 班级名
+     * @param scienceId    专业id
+     * @return true 合格 false 不合格
      */
-    void updateIsDel(List<Integer> ids, Byte isDel);
+    @PostMapping("/base/data/organize/check/edit/name")
+    AjaxUtil<Map<String, Object>> checkEditName(@RequestParam("organizeId") int organizeId, @RequestParam("organizeName") String organizeName, @RequestParam("scienceId") int scienceId);
+
+    /**
+     * 更新班级信息
+     *
+     * @param organizeEditVo 班级
+     * @return true 保存成功 false 保存失败
+     */
+    @PostMapping("/base/data/organize/update")
+    AjaxUtil<Map<String, Object>> update(@RequestBody OrganizeEditVo organizeEditVo);
+
+    /**
+     * 批量更改班级状态
+     *
+     * @param organizeIds 班级ids
+     * @param isDel       is_del
+     * @return true注销成功
+     */
+    @PostMapping("/base/data/organize/status")
+    AjaxUtil<Map<String, Object>> status(@RequestParam(value = "organizeIds", required = false) String organizeIds, @RequestParam("isDel") Byte isDel);
 }
