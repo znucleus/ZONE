@@ -1,102 +1,95 @@
 package top.zbeboy.zone.feign.data;
 
-import org.jooq.Record;
-import org.jooq.Result;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.domain.tables.pojos.Course;
-import top.zbeboy.zone.domain.tables.records.CourseRecord;
+import top.zbeboy.zone.hystrix.data.CourseHystrixClientFallbackFactory;
+import top.zbeboy.zone.hystrix.data.GradeHystrixClientFallbackFactory;
+import top.zbeboy.zone.web.bean.data.course.CourseBean;
+import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zone.web.vo.data.course.CourseAddVo;
+import top.zbeboy.zone.web.vo.data.course.CourseEditVo;
+import top.zbeboy.zone.web.vo.data.course.CourseSearchVo;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
+@FeignClient(value = "base-server", fallback = CourseHystrixClientFallbackFactory.class)
 public interface CourseService {
 
     /**
-     * 根据主键查询
+     * 获取课程
      *
-     * @param id 主键
+     * @param id 课程主键
+     * @return 课程数据
+     */
+    @GetMapping("/base/data/course/relation/{id}")
+    CourseBean findByIdRelation(@PathVariable("id") int id);
+
+    /**
+     * 获取全部有效课程
+     *
+     * @return 课程数据
+     */
+    @PostMapping("/base/users/data/course/all")
+    List<Course> usersData(@RequestBody CourseSearchVo courseSearchVo);
+
+    /**
+     * 数据
+     *
+     * @param dataTablesUtil 请求
      * @return 数据
      */
-    Course findById(int id);
+    @PostMapping("/base/data/course/data")
+    DataTablesUtil data(@RequestBody DataTablesUtil dataTablesUtil);
 
     /**
-     * 通过课程id查询所有信息
-     * 缓存:是
-     *
-     * @param id 课程id
-     * @return 所有信息
-     */
-    Optional<Record> findByIdRelation(int id);
-
-    /**
-     * 根据院id，状态查询有效课程
-     *
-     * @param collegeId   院id
-     * @param courseIsDel 状态
-     * @return 数据
-     */
-    Result<CourseRecord> findByCollegeIdAndCourseIsDel(int collegeId, Byte courseIsDel);
-
-    /**
-     * 院下 课程名查询 注：等于课程名
+     * 保存时检验课程名是否重复
      *
      * @param courseName 课程名
      * @param collegeId  院id
-     * @return 数据
+     * @return true 合格 false 不合格
      */
-    Result<CourseRecord> findByCourseNameAndCollegeId(String courseName, int collegeId);
-
-    /**
-     * 查找院下不等于该课程id的课程名
-     *
-     * @param courseName 课程名
-     * @param courseId   课程id
-     * @param collegeId  院id
-     * @return 数据
-     */
-    Result<CourseRecord> findByCourseNameAndCollegeIdNeCourseId(String courseName, int collegeId, int courseId);
-
-    /**
-     * 分页查询
-     *
-     * @param dataTablesUtil 工具类
-     * @return 分页数据
-     */
-    Result<Record> findAllByPage(DataTablesUtil dataTablesUtil);
-
-    /**
-     * 应用 总数
-     *
-     * @return 总数
-     */
-    int countAll(DataTablesUtil dataTablesUtil);
-
-    /**
-     * 根据条件查询总数
-     *
-     * @return 条件查询总数
-     */
-    int countByCondition(DataTablesUtil dataTablesUtil);
+    @PostMapping("/base/data/course/check/add/name")
+    AjaxUtil<Map<String, Object>> checkAddName(@RequestParam("courseName") String courseName, @RequestParam(value = "collegeId") int collegeId);
 
     /**
      * 保存
      *
-     * @param course 课程
+     * @param courseAddVo 课程
+     * @return true 保存成功 false 保存失败
      */
-    void save(Course course);
+    @PostMapping("/base/data/course/save")
+    AjaxUtil<Map<String, Object>> save(@RequestBody CourseAddVo courseAddVo);
+
+    /**
+     * 检验编辑时课程名重复
+     *
+     * @param courseId   课程id
+     * @param courseName 课程名
+     * @param collegeId  院id
+     * @return true 合格 false 不合格
+     */
+    @PostMapping("/base/data/course/check/edit/name")
+    AjaxUtil<Map<String, Object>> checkEditName(@RequestParam("courseId") int courseId, @RequestParam("courseName") String courseName, @RequestParam("collegeId") int collegeId);
 
     /**
      * 更新
      *
-     * @param course 数据
+     * @param courseEditVo 课程
+     * @return true 更改成功 false 更改失败
      */
-    void update(Course course);
+    @PostMapping("/base/data/course/update")
+    AjaxUtil<Map<String, Object>> update(@RequestBody CourseEditVo courseEditVo);
 
     /**
-     * 更新状态
+     * 批量更改课程状态
      *
-     * @param ids   ids
-     * @param isDel 状态
+     * @param courseIds 课程ids
+     * @param isDel     is_del
+     * @return true注销成功
      */
-    void updateIsDel(List<Integer> ids, Byte isDel);
+    @PostMapping("/base/data/course/status")
+    AjaxUtil<Map<String, Object>> status(@RequestParam(value = "courseIds", required = false) String courseIds, @RequestParam("isDel") Byte isDel);
 }

@@ -1,7 +1,6 @@
 package top.zbeboy.zone.web.data.course;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jooq.Record;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,10 +8,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
+import top.zbeboy.zone.feign.data.CourseService;
 import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
-import top.zbeboy.zone.service.data.CourseService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.web.bean.data.course.CourseBean;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
@@ -22,7 +21,6 @@ import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import java.util.Objects;
-import java.util.Optional;
 
 @Controller
 public class CourseViewController {
@@ -110,9 +108,8 @@ public class CourseViewController {
     public String edit(@PathVariable("id") int id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        Optional<Record> record = courseService.findByIdRelation(id);
-        if (record.isPresent()) {
-            CourseBean courseBean = record.get().into(CourseBean.class);
+        CourseBean courseBean = courseService.findByIdRelation(id);
+        if (Objects.nonNull(courseBean) && courseBean.getCourseId() > 0) {
             modelMap.addAttribute("course", courseBean);
             if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
                 modelMap.addAttribute("collegeId", courseBean.getCollegeId());
