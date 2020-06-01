@@ -1,80 +1,75 @@
 package top.zbeboy.zone.feign.data;
 
-import org.jooq.Record;
-import org.jooq.Result;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import top.zbeboy.zone.domain.tables.pojos.Nation;
-import top.zbeboy.zone.domain.tables.records.NationRecord;
+import top.zbeboy.zone.hystrix.data.NationHystrixClientFallbackFactory;
+import top.zbeboy.zone.hystrix.data.OrganizeHystrixClientFallbackFactory;
+import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zone.web.vo.data.nation.NationAddVo;
+import top.zbeboy.zone.web.vo.data.nation.NationEditVo;
 
 import java.util.List;
+import java.util.Map;
 
+@FeignClient(value = "base-server", fallback = NationHystrixClientFallbackFactory.class)
 public interface NationService {
 
     /**
-     * 根据主键查询
+     * 获取全部民族
      *
-     * @param id 主键
+     * @return 民族数据
+     */
+    @GetMapping("/base/anyone/data/nation/all")
+    List<Nation> anyoneData();
+
+    /**
+     * 数据
+     *
+     * @param dataTablesUtil 请求
      * @return 数据
      */
-    Nation findById(int id);
+    @PostMapping("/base/data/nation/data")
+    DataTablesUtil data(@RequestBody DataTablesUtil dataTablesUtil);
 
     /**
-     * 查询全部
-     *
-     * @return 全部
-     */
-    List<Nation> findAll();
-
-    /**
-     * 通过民族查询
+     * 保存时检验民族是否重复
      *
      * @param nationName 民族
-     * @return 民族
+     * @return true 合格 false 不合格
      */
-    List<Nation> findByNationName(String nationName);
+    @PostMapping("/base/data/nation/check/add/name")
+    AjaxUtil<Map<String, Object>> checkAddName(@RequestParam("nationName") String nationName);
 
     /**
-     * 通过民族查询 注：不等于民族id
+     * 保存民族信息
      *
-     * @param nationName 民族
+     * @param nationAddVo 民族
+     * @return true 保存成功 false 保存失败
+     */
+    @PostMapping("/base/data/nation/save")
+    AjaxUtil<Map<String, Object>> save(@RequestBody NationAddVo nationAddVo);
+
+    /**
+     * 检验编辑时民族名重复
+     *
      * @param nationId   民族id
-     * @return 民族
+     * @param nationName 民族名
+     * @return true 合格 false 不合格
      */
-    Result<NationRecord> findByNationNameNeNationId(String nationName, int nationId);
+    @PostMapping("/base/data/nation/check/edit/name")
+    AjaxUtil<Map<String, Object>> checkEditName(@RequestParam("nationId") int nationId, @RequestParam("nationName") String nationName);
 
     /**
-     * 分页查询
+     * 保存更改
      *
-     * @param dataTablesUtil 工具类
-     * @return 分页数据
+     * @param nationEditVo 民族
+     * @return true 更改成功 false 更改失败
      */
-    Result<Record> findAllByPage(DataTablesUtil dataTablesUtil);
-
-    /**
-     * 应用 总数
-     *
-     * @return 总数
-     */
-    int countAll();
-
-    /**
-     * 根据条件查询总数
-     *
-     * @return 条件查询总数
-     */
-    int countByCondition(DataTablesUtil dataTablesUtil);
-
-    /**
-     * 保存
-     *
-     * @param nation 数据
-     */
-    void save(Nation nation);
-
-    /**
-     * 更新
-     *
-     * @param nation 数据
-     */
-    void update(Nation nation);
+    @PostMapping("/base/data/nation/update")
+    AjaxUtil<Map<String, Object>> update(@RequestBody NationEditVo nationEditVo);
 }
