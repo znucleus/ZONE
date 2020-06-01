@@ -1,102 +1,95 @@
 package top.zbeboy.zone.feign.data;
 
-import org.jooq.Record;
-import org.jooq.Result;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.domain.tables.pojos.Schoolroom;
-import top.zbeboy.zone.domain.tables.records.SchoolroomRecord;
+import top.zbeboy.zone.hystrix.data.OrganizeHystrixClientFallbackFactory;
+import top.zbeboy.zone.hystrix.data.SchoolroomHystrixClientFallbackFactory;
+import top.zbeboy.zone.web.bean.data.schoolroom.SchoolroomBean;
+import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zone.web.vo.data.schoolroom.SchoolroomAddVo;
+import top.zbeboy.zone.web.vo.data.schoolroom.SchoolroomEditVo;
+import top.zbeboy.zone.web.vo.data.schoolroom.SchoolroomSearchVo;
 
 import java.util.List;
-import java.util.Optional;
-
+import java.util.Map;
+@FeignClient(value = "base-server", fallback = SchoolroomHystrixClientFallbackFactory.class)
 public interface SchoolroomService {
 
     /**
-     * 通过主键查询
+     * 获取教室
      *
-     * @param id 主键
+     * @param id 教室主键
+     * @return 教室数据
+     */
+    @GetMapping("/base/data/schoolroom/relation/{id}")
+    SchoolroomBean findByIdRelation(@PathVariable("id") int id);
+
+    /**
+     * 获取楼下全部有效教室
+     *
+     * @param schoolroomSearchVo 查询参数
+     * @return 教室数据
+     */
+    @PostMapping("/base/data/schoolroom/all")
+    List<Schoolroom> usersData(@RequestBody SchoolroomSearchVo schoolroomSearchVo);
+
+    /**
+     * 数据
+     *
+     * @param dataTablesUtil 请求
      * @return 数据
      */
-    Schoolroom findById(int id);
+    @PostMapping("/base/data/schoolroom/data")
+    DataTablesUtil data(@RequestBody DataTablesUtil dataTablesUtil);
 
     /**
-     * 通过教室id查询所有信息
-     * 缓存:是
+     * 保存时检验教室是否重复
      *
-     * @param id 教室id
-     * @return 所有信息
-     */
-    Optional<Record> findByIdRelation(int id);
-
-    /**
-     * 根据状态与楼id查询全部教室
-     *
-     * @param buildingId      楼id
-     * @param schoolroomIsDel 状态
-     * @return 全部教室
-     */
-    Result<SchoolroomRecord> findByBuildingIdAndSchoolroomIsDel(int buildingId, Byte schoolroomIsDel);
-
-    /**
-     * 通过教室与楼id查询
-     *
-     * @param buildingCode 教室
+     * @param buildingCode 教室名
      * @param buildingId   楼id
-     * @return 数据
+     * @return true 合格 false 不合格
      */
-    Result<SchoolroomRecord> findByBuildingCodeAndBuildingId(String buildingCode, int buildingId);
+    @PostMapping("/base/data/schoolroom/check/add/code")
+    AjaxUtil<Map<String, Object>> checkAddCode(@RequestParam("buildingCode") String buildingCode, @RequestParam("buildingId") int buildingId);
 
     /**
-     * 检验一栋里是否有相同教室名
+     * 保存教室信息
      *
-     * @param buildingCode 教室
+     * @param schoolroomAddVo 教室
+     * @return true 保存成功 false 保存失败
+     */
+    @PostMapping("/base/data/schoolroom/save")
+    AjaxUtil<Map<String, Object>> save(@RequestBody SchoolroomAddVo schoolroomAddVo);
+
+    /**
+     * 检验编辑时教室重复
+     *
      * @param schoolroomId 教室id
+     * @param buildingCode 教室
      * @param buildingId   楼id
-     * @return 数据
+     * @return true 合格 false 不合格
      */
-    Result<SchoolroomRecord> findByBuildingCodeAndBuildingIdNeSchoolroomId(String buildingCode, int buildingId, int schoolroomId);
+    @PostMapping("/base/data/schoolroom/check/edit/code")
+    AjaxUtil<Map<String, Object>> checkEditCode(@RequestParam("schoolroomId") int schoolroomId, @RequestParam("buildingCode") String buildingCode, @RequestParam("buildingId") int buildingId);
 
     /**
-     * 分页查询
+     * 保存教室更改
      *
-     * @param dataTablesUtil 工具类
-     * @return 分页数据
+     * @param schoolroomEditVo 教室
+     * @return true 更改成功 false 更改失败
      */
-    Result<Record> findAllByPage(DataTablesUtil dataTablesUtil);
+    @PostMapping("/base/data/schoolroom/update")
+    AjaxUtil<Map<String, Object>> update(@RequestBody SchoolroomEditVo schoolroomEditVo);
 
     /**
-     * 应用 总数
+     * 批量更改教室状态
      *
-     * @return 总数
+     * @param schoolroomIds 教室ids
+     * @param isDel         is_del
+     * @return true注销成功
      */
-    int countAll(DataTablesUtil dataTablesUtil);
-
-    /**
-     * 根据条件查询总数
-     *
-     * @return 条件查询总数
-     */
-    int countByCondition(DataTablesUtil dataTablesUtil);
-
-    /**
-     * 保存
-     *
-     * @param schoolroom 数据
-     */
-    void save(Schoolroom schoolroom);
-
-    /**
-     * 更新
-     *
-     * @param schoolroom 数据
-     */
-    void update(Schoolroom schoolroom);
-
-    /**
-     * 更新状态
-     *
-     * @param ids   ids
-     * @param isDel 状态
-     */
-    void updateIsDel(List<Integer> ids, Byte isDel);
+    @PostMapping("/base/data/schoolroom/status")
+    AjaxUtil<Map<String, Object>> status(@RequestParam(value = "schoolroomIds", required = false) String schoolroomIds, @RequestParam("isDel") Byte isDel);
 }
