@@ -1,80 +1,75 @@
 package top.zbeboy.zone.feign.data;
 
-import org.jooq.Record;
-import org.jooq.Result;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import top.zbeboy.zone.domain.tables.pojos.AcademicTitle;
-import top.zbeboy.zone.domain.tables.records.AcademicTitleRecord;
+import top.zbeboy.zone.hystrix.data.AcademicTitleHystrixClientFallbackFactory;
+import top.zbeboy.zone.hystrix.data.BuildingHystrixClientFallbackFactory;
+import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zone.web.vo.data.academic.AcademicAddVo;
+import top.zbeboy.zone.web.vo.data.academic.AcademicEditVo;
 
 import java.util.List;
+import java.util.Map;
 
+@FeignClient(value = "base-server", fallback = AcademicTitleHystrixClientFallbackFactory.class)
 public interface AcademicTitleService {
 
     /**
-     * 根据主键查询
+     * 获取全部职称
      *
-     * @param id 主键
+     * @return 职称数据
+     */
+    @GetMapping("/base/anyone/data/academic/all")
+    List<AcademicTitle> anyoneData();
+
+    /**
+     * 数据
+     *
+     * @param dataTablesUtil 请求
      * @return 数据
      */
-    AcademicTitle findById(int id);
+    @PostMapping("/base/data/academic/data")
+    DataTablesUtil data(@RequestBody DataTablesUtil dataTablesUtil);
 
     /**
-     * 查询全部
-     *
-     * @return 全部数据
-     */
-    List<AcademicTitle> findAll();
-
-    /**
-     * 通过职称查询
+     * 保存时检验职称是否重复
      *
      * @param academicTitleName 职称
-     * @return 职称
+     * @return true 合格 false 不合格
      */
-    List<AcademicTitle> findByAcademicTitleName(String academicTitleName);
+    @PostMapping("/base/data/academic/check/add/name")
+    AjaxUtil<Map<String, Object>> checkAddName(@RequestParam("academicTitleName") String academicTitleName);
 
     /**
-     * 通过职称查询 注：不等于职称id
+     * 保存职称信息
      *
-     * @param academicTitleName 职称
+     * @param academicAddVo 职称
+     * @return true 保存成功 false 保存失败
+     */
+    @PostMapping("/base/data/academic/save")
+    AjaxUtil<Map<String, Object>> save(@RequestBody AcademicAddVo academicAddVo);
+
+    /**
+     * 检验编辑时职称名重复
+     *
      * @param academicTitleId   职称id
-     * @return 职称
+     * @param academicTitleName 职称名
+     * @return true 合格 false 不合格
      */
-    Result<AcademicTitleRecord> findByAcademicTitleNameNeAcademicTitleId(String academicTitleName, int academicTitleId);
+    @PostMapping("/base/data/academic/check/edit/name")
+    AjaxUtil<Map<String, Object>> checkEditName(@RequestParam("academicTitleId") int academicTitleId, @RequestParam("academicTitleName") String academicTitleName);
 
     /**
-     * 分页查询
+     * 保存更改
      *
-     * @param dataTablesUtil 工具类
-     * @return 分页数据
+     * @param academicEditVo 职称
+     * @return true 更改成功 false 更改失败
      */
-    Result<Record> findAllByPage(DataTablesUtil dataTablesUtil);
-
-    /**
-     * 应用 总数
-     *
-     * @return 总数
-     */
-    int countAll();
-
-    /**
-     * 根据条件查询总数
-     *
-     * @return 条件查询总数
-     */
-    int countByCondition(DataTablesUtil dataTablesUtil);
-
-    /**
-     * 保存
-     *
-     * @param academicTitle 数据
-     */
-    void save(AcademicTitle academicTitle);
-
-    /**
-     * 更新
-     *
-     * @param academicTitle 数据
-     */
-    void update(AcademicTitle academicTitle);
+    @PostMapping("/base/data/academic/update")
+    AjaxUtil<Map<String, Object>> update(@RequestBody AcademicEditVo academicEditVo);
 }
