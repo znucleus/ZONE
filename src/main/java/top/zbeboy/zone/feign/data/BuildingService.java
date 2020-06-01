@@ -1,102 +1,96 @@
 package top.zbeboy.zone.feign.data;
 
-import org.jooq.Record;
-import org.jooq.Result;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.domain.tables.pojos.Building;
-import top.zbeboy.zone.domain.tables.records.BuildingRecord;
+import top.zbeboy.zone.hystrix.data.BuildingHystrixClientFallbackFactory;
+import top.zbeboy.zone.hystrix.data.CourseHystrixClientFallbackFactory;
+import top.zbeboy.zone.web.bean.data.building.BuildingBean;
+import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zone.web.vo.data.building.BuildingAddVo;
+import top.zbeboy.zone.web.vo.data.building.BuildingEditVo;
+import top.zbeboy.zone.web.vo.data.building.BuildingSearchVo;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
+@FeignClient(value = "base-server", fallback = BuildingHystrixClientFallbackFactory.class)
 public interface BuildingService {
 
     /**
-     * 通过主键查询
+     * 获取楼
      *
-     * @param id 主键
+     * @param id 楼主键
+     * @return 楼数据
+     */
+    @GetMapping("/base/data/building/relation/{id}")
+    BuildingBean findByIdRelation(@PathVariable("id") int id);
+
+    /**
+     * 根据院获取全部有效楼
+     *
+     * @param buildingSearchVo 院id
+     * @return 楼数据
+     */
+    @PostMapping("/base/data/building/all")
+    List<Building> usersData(@RequestBody BuildingSearchVo buildingSearchVo);
+
+    /**
+     * 数据
+     *
+     * @param dataTablesUtil 请求
      * @return 数据
      */
-    Building findById(int id);
+    @PostMapping("/base/data/building/data")
+    DataTablesUtil data(@RequestBody DataTablesUtil dataTablesUtil);
 
     /**
-     * 通过楼id查询所有信息
-     * 缓存:是
-     *
-     * @param id 楼id
-     * @return 所有信息
-     */
-    Optional<Record> findByIdRelation(int id);
-
-    /**
-     * 根据院和状态查询全部楼
-     *
-     * @param collegeId     院id
-     * @param buildingIsDel 状态
-     * @return 全部楼
-     */
-    Result<BuildingRecord> findByCollegeIdAndBuildingIsDel(int collegeId, Byte buildingIsDel);
-
-    /**
-     * 根据楼名与院id查询
-     *
-     * @param buildingName 楼名
-     * @param collegeId    院
-     * @return 数据
-     */
-    Result<BuildingRecord> findByBuildingNameAndCollegeId(String buildingName, int collegeId);
-
-    /**
-     * 查找院下不等于该楼id的楼名
+     * 保存时检验楼名是否重复
      *
      * @param buildingName 楼名
      * @param collegeId    院id
+     * @return true 合格 false 不合格
+     */
+    @PostMapping("/base/data/building/check/add/name")
+    AjaxUtil<Map<String, Object>> checkAddName(@RequestParam("buildingName") String buildingName, @RequestParam("collegeId") int collegeId);
+
+    /**
+     * 保存楼信息
+     *
+     * @param buildingAddVo 楼
+     * @return true 保存成功 false 保存失败
+     */
+    @PostMapping("/base/data/building/save")
+    AjaxUtil<Map<String, Object>> save(@RequestBody BuildingAddVo buildingAddVo);
+
+    /**
+     * 检验编辑时楼名重复
+     *
      * @param buildingId   楼id
-     * @return 数据
+     * @param buildingName 楼名
+     * @param collegeId    院id
+     * @return true 合格 false 不合格
      */
-    Result<BuildingRecord> findByBuildingNameAndCollegeIdNeBuildingId(String buildingName, int collegeId, int buildingId);
+    @PostMapping("/base/data/building/check/edit/name")
+    AjaxUtil<Map<String, Object>> checkEditName(@RequestParam("buildingId") int buildingId, @RequestParam("buildingName") String buildingName, @RequestParam("collegeId") int collegeId);
 
     /**
-     * 分页查询
+     * 保存楼更改
      *
-     * @param dataTablesUtil 工具类
-     * @return 分页数据
+     * @param buildingEditVo 楼
+     * @return true 更改成功 false 更改失败
      */
-    Result<Record> findAllByPage(DataTablesUtil dataTablesUtil);
+    @PostMapping("/base/data/building/update")
+    AjaxUtil<Map<String, Object>> update(@RequestBody BuildingEditVo buildingEditVo);
 
     /**
-     * 应用 总数
+     * 批量更改楼状态
      *
-     * @return 总数
+     * @param buildingIds 楼ids
+     * @param isDel       is_del
+     * @return true注销成功
      */
-    int countAll(DataTablesUtil dataTablesUtil);
-
-    /**
-     * 根据条件查询总数
-     *
-     * @return 条件查询总数
-     */
-    int countByCondition(DataTablesUtil dataTablesUtil);
-
-    /**
-     * 保存
-     *
-     * @param building 数据
-     */
-    void save(Building building);
-
-    /**
-     * 更新
-     *
-     * @param building 数据
-     */
-    void update(Building building);
-
-    /**
-     * 更新状态
-     *
-     * @param ids   ids
-     * @param isDel 状态
-     */
-    void updateIsDel(List<Integer> ids, Byte isDel);
+    @PostMapping("/base/data/building/status")
+    AjaxUtil<Map<String, Object>> status(@RequestParam(value = "buildingIds", required = false) String buildingIds, @RequestParam("isDel") Byte isDel);
 }
