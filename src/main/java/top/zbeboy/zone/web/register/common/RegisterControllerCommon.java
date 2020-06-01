@@ -11,12 +11,9 @@ import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.domain.tables.records.LeaverRegisterDataOptionRecord;
 import top.zbeboy.zone.domain.tables.records.LeaverRegisterOptionRecord;
 import top.zbeboy.zone.domain.tables.records.LeaverRegisterScopeRecord;
-import top.zbeboy.zone.feign.data.CollegeService;
-import top.zbeboy.zone.feign.data.DepartmentService;
-import top.zbeboy.zone.feign.data.ScienceService;
-import top.zbeboy.zone.feign.data.StudentService;
+import top.zbeboy.zone.feign.data.*;
 import top.zbeboy.zone.feign.platform.UsersService;
-import top.zbeboy.zone.service.data.*;
+import top.zbeboy.zone.service.data.OrganizeService;
 import top.zbeboy.zone.service.export.LeaverRegisterDataExport;
 import top.zbeboy.zone.service.register.*;
 import top.zbeboy.zone.service.upload.UploadService;
@@ -162,7 +159,7 @@ public class RegisterControllerCommon {
                             case 4:
                                 // 年级
                                 Grade grade = gradeService.findById(record.getDataId());
-                                if (Objects.nonNull(grade)) {
+                                if (Objects.nonNull(grade) && grade.getGradeId() > 0) {
                                     dataName.add(grade.getGrade() + "");
                                 }
                                 break;
@@ -559,7 +556,7 @@ public class RegisterControllerCommon {
                     case 4:
                         // 年级
                         Grade grade = gradeService.findById(bean.getDataId());
-                        if (Objects.nonNull(grade)) {
+                        if (Objects.nonNull(grade) && grade.getGradeId() > 0) {
                             bean.setDataName(grade.getGrade() + "");
                         }
                         break;

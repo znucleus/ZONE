@@ -12,10 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.domain.tables.pojos.Grade;
 import top.zbeboy.zone.domain.tables.pojos.Organize;
-import top.zbeboy.zone.domain.tables.records.GradeRecord;
 import top.zbeboy.zone.domain.tables.records.OrganizeRecord;
+import top.zbeboy.zone.feign.data.GradeService;
 import top.zbeboy.zone.feign.data.StaffService;
-import top.zbeboy.zone.service.data.GradeService;
 import top.zbeboy.zone.service.data.OrganizeService;
 import top.zbeboy.zone.web.bean.data.organize.OrganizeBean;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
@@ -148,21 +147,20 @@ public class OrganizeRestController {
     public ResponseEntity<Map<String, Object>> save(@Valid OrganizeAddVo organizeAddVo, BindingResult bindingResult) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
-            Optional<GradeRecord> gradeRecord = gradeService.findByScienceIdAndGrade(organizeAddVo.getScienceId(),
+            Grade grade = gradeService.findByScienceIdAndGrade(organizeAddVo.getScienceId(),
                     organizeAddVo.getGrade());
             int gradeId = 0;
-            if (gradeRecord.isPresent()) {
-                Grade grade = gradeRecord.get().into(Grade.class);
+            if (Objects.nonNull(grade) && grade.getGradeId() > 0) {
                 gradeId = grade.getGradeId();
             } else {
                 // 保存年级
-                Grade grade = new Grade();
+                grade = new Grade();
                 grade.setGrade(organizeAddVo.getGrade());
                 grade.setGradeIsDel(BooleanUtil.toByte(false));
                 grade.setScienceId(organizeAddVo.getScienceId());
-                GradeRecord record = gradeService.save(grade);
+                Grade record = gradeService.save(grade);
 
-                if (Objects.nonNull(record)) {
+                if (Objects.nonNull(record) && record.getGradeId() > 0) {
                     gradeId = record.getGradeId();
                 }
             }

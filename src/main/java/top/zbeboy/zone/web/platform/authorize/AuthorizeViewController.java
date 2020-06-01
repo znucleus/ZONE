@@ -8,13 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
-import top.zbeboy.zone.feign.data.DepartmentService;
-import top.zbeboy.zone.feign.data.ScienceService;
-import top.zbeboy.zone.feign.data.StaffService;
-import top.zbeboy.zone.feign.data.StudentService;
+import top.zbeboy.zone.feign.data.*;
 import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
-import top.zbeboy.zone.service.data.*;
+import top.zbeboy.zone.service.data.OrganizeService;
 import top.zbeboy.zone.service.platform.RoleApplyService;
 import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
@@ -190,7 +187,7 @@ public class AuthorizeViewController {
                             }
                         } else if (roleApplyBean.getDataScope() == 3) {
                             Grade grade = gradeService.findById(roleApplyBean.getDataId());
-                            if (Objects.nonNull(grade)) {
+                            if (Objects.nonNull(grade) && grade.getGradeId() > 0) {
                                 roleApplyBean.setDataName(grade.getGrade() + "");
                             }
                         } else if (roleApplyBean.getDataScope() == 4) {

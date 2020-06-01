@@ -12,14 +12,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
-import top.zbeboy.zone.feign.data.DepartmentService;
-import top.zbeboy.zone.feign.data.ScienceService;
-import top.zbeboy.zone.feign.data.StaffService;
-import top.zbeboy.zone.feign.data.StudentService;
+import top.zbeboy.zone.feign.data.*;
 import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.feign.system.SystemConfigureService;
-import top.zbeboy.zone.service.data.*;
+import top.zbeboy.zone.service.data.OrganizeService;
 import top.zbeboy.zone.service.notify.UserNotifyService;
 import top.zbeboy.zone.service.platform.*;
 import top.zbeboy.zone.service.system.AuthoritiesService;
@@ -131,17 +128,17 @@ public class AuthorizeRestController {
 
                 if (b.getDataScope() == 1) {
                     Department department = departmentService.findById(b.getDataId());
-                    if (Objects.nonNull(department)) {
+                    if (Objects.nonNull(department) && department.getDepartmentId() > 0) {
                         b.setDataName(department.getDepartmentName());
                     }
                 } else if (b.getDataScope() == 2) {
                     Science science = scienceService.findById(b.getDataId());
-                    if (Objects.nonNull(science)) {
+                    if (Objects.nonNull(science) && science.getScienceId() > 0) {
                         b.setDataName(science.getScienceName());
                     }
                 } else if (b.getDataScope() == 3) {
                     Grade grade = gradeService.findById(b.getDataId());
-                    if (Objects.nonNull(grade)) {
+                    if (Objects.nonNull(grade) && grade.getGradeId() > 0) {
                         b.setDataName(grade.getGrade() + "");
                     }
                 } else if (b.getDataScope() == 4) {
