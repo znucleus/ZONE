@@ -12,7 +12,6 @@ import top.zbeboy.zone.feign.data.ScienceService;
 import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
-import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.web.bean.data.science.ScienceBean;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
@@ -24,9 +23,6 @@ import java.util.Objects;
 
 @Controller
 public class ScienceViewController {
-
-    @Resource
-    private RoleService roleService;
 
     @Resource
     private UsersTypeService usersTypeService;
@@ -59,7 +55,7 @@ public class ScienceViewController {
     public String add(ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+        if (!SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
             Users users = SessionUtil.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType)) {
@@ -110,7 +106,7 @@ public class ScienceViewController {
         ScienceBean scienceBean = scienceService.findByIdRelation(id);
         if (Objects.nonNull(scienceBean) && scienceBean.getScienceId() > 0) {
             modelMap.addAttribute("science", scienceBean);
-            if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+            if (!SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
                 modelMap.addAttribute("collegeId", scienceBean.getCollegeId());
             } else {
                 modelMap.addAttribute("collegeId", 0);

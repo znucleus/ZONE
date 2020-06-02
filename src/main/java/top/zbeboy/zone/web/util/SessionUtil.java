@@ -1,7 +1,11 @@
 package top.zbeboy.zone.web.util;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.Users;
@@ -67,5 +71,37 @@ public class SessionUtil {
         List<String> authorities = new ArrayList<>();
         SecurityContextHolder.getContext().getAuthentication().getAuthorities().iterator().forEachRemaining(i -> authorities.add(i.getAuthority()));
         return authorities;
+    }
+
+    /**
+     * 检查当前用户是否有此权限
+     *
+     * @param role 权限
+     * @return true 有 false 无
+     */
+    public static Boolean isCurrentUserInRole(String role) {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+        if (Objects.nonNull(authentication)) {
+            if (authentication.getPrincipal() instanceof UserDetails) {
+                UserDetails springSecurityUser = (UserDetails) authentication.getPrincipal();
+                return springSecurityUser.getAuthorities().contains(new SimpleGrantedAuthority(role));
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 检查当前用户是否有此权限
+     *
+     * @param role      权限
+     * @param principal oauth用户
+     * @return true 有 false 无
+     */
+    public static Boolean isOauthUserInRole(String role, Principal principal) {
+        if (Objects.nonNull(principal)) {
+            return ((OAuth2Authentication) principal).getUserAuthentication().getAuthorities().contains(new SimpleGrantedAuthority(role));
+        }
+        return false;
     }
 }

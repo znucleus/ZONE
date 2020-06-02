@@ -15,11 +15,9 @@ import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.domain.tables.records.AttendUsersRecord;
 import top.zbeboy.zone.feign.data.StudentService;
-import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.service.attend.AttendReleaseService;
 import top.zbeboy.zone.service.attend.AttendReleaseSubService;
 import top.zbeboy.zone.service.attend.AttendUsersService;
-import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.attend.AttendUsersBean;
@@ -48,12 +46,6 @@ public class AttendUsersApiController {
 
     @Resource
     private StudentService studentService;
-
-    @Resource
-    private UsersService usersService;
-
-    @Resource
-    private RoleService roleService;
 
     /**
      * 获取签到名单数据
@@ -119,7 +111,7 @@ public class AttendUsersApiController {
                 AttendRelease attendRelease = attendReleaseService.findById(attendUsersAddVo.getAttendReleaseId());
                 if (Objects.nonNull(attendRelease)) {
                     Users users = SessionUtil.getUserFromOauth(principal);
-                    if (roleService.isOauthUserInRole(Workbook.authorities.ROLE_SYSTEM.name(), principal) ||
+                    if (SessionUtil.isOauthUserInRole(Workbook.authorities.ROLE_SYSTEM.name(), principal) ||
                             (Objects.nonNull(users) && StringUtils.equals(users.getUsername(), attendRelease.getUsername()))) {
                         if (Objects.equals(studentBean.getOrganizeId(), attendRelease.getOrganizeId())) {
                             Optional<AttendUsersRecord> attendUsersRecord = attendUsersService
@@ -170,7 +162,7 @@ public class AttendUsersApiController {
             AttendRelease attendRelease = attendReleaseService.findById(attendUsers.getAttendReleaseId());
             if (Objects.nonNull(attendRelease)) {
                 Users users = SessionUtil.getUserFromOauth(principal);
-                if (roleService.isOauthUserInRole(Workbook.authorities.ROLE_SYSTEM.name(), principal) ||
+                if (SessionUtil.isOauthUserInRole(Workbook.authorities.ROLE_SYSTEM.name(), principal) ||
                         (Objects.nonNull(users) && StringUtils.equals(users.getUsername(), attendRelease.getUsername()))) {
                     attendUsersService.deleteById(attendUsersId);
                     ajaxUtil.success().msg("删除成功");
@@ -198,7 +190,7 @@ public class AttendUsersApiController {
         AttendRelease attendRelease = attendReleaseService.findById(attendReleaseId);
         if (Objects.nonNull(attendRelease)) {
             Users users = SessionUtil.getUserFromOauth(principal);
-            if (roleService.isOauthUserInRole(Workbook.authorities.ROLE_SYSTEM.name(), principal) ||
+            if (SessionUtil.isOauthUserInRole(Workbook.authorities.ROLE_SYSTEM.name(), principal) ||
                     (Objects.nonNull(users) && StringUtils.equals(users.getUsername(), attendRelease.getUsername()))) {
                 Result<Record> records = attendUsersService.findStudentNotExistsAttendUsers(attendRelease.getAttendReleaseId(), attendRelease.getOrganizeId());
                 if (records.isNotEmpty()) {
@@ -240,7 +232,7 @@ public class AttendUsersApiController {
             AttendRelease attendRelease = attendReleaseService.findById(attendUsers.getAttendReleaseId());
             if (Objects.nonNull(attendRelease)) {
                 Users users = SessionUtil.getUserFromOauth(principal);
-                if (roleService.isOauthUserInRole(Workbook.authorities.ROLE_SYSTEM.name(), principal) ||
+                if (SessionUtil.isOauthUserInRole(Workbook.authorities.ROLE_SYSTEM.name(), principal) ||
                         (Objects.nonNull(users) && StringUtils.equals(users.getUsername(), attendRelease.getUsername()))) {
                     attendUsers.setRemark(remark);
                     attendUsersService.update(attendUsers);

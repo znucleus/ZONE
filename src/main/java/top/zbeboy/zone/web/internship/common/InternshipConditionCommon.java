@@ -8,10 +8,8 @@ import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.data.StudentService;
-import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.internship.*;
-import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
@@ -45,12 +43,6 @@ public class InternshipConditionCommon {
     private InternshipRegulateService internshipRegulateService;
 
     @Resource
-    private UsersService usersService;
-
-    @Resource
-    private RoleService roleService;
-
-    @Resource
     private UsersTypeService usersTypeService;
 
     @Resource
@@ -67,9 +59,9 @@ public class InternshipConditionCommon {
      */
     public boolean canOperator(String internshipReleaseId) {
         boolean canOperator = false;
-        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
             canOperator = true;
-        } else if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+        } else if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
             Optional<Record> internshipReleaseRecord = internshipReleaseService.findByIdRelation(internshipReleaseId);
             if (internshipReleaseRecord.isPresent()) {
                 InternshipReleaseBean bean = internshipReleaseRecord.get().into(InternshipReleaseBean.class);
@@ -138,7 +130,7 @@ public class InternshipConditionCommon {
                 InternshipReleaseBean internshipRelease = record.get().into(InternshipReleaseBean.class);
                 // 是否需要时间限制
                 boolean isTimeLimit = BooleanUtil.toBoolean(internshipRelease.getIsTimeLimit());
-                if(isTimeLimit){
+                if (isTimeLimit) {
                     // 检测教师分配时间
                     if (DateTimeUtil.nowAfterSqlTimestamp(internshipRelease.getTeacherDistributionStartTime()) &&
                             DateTimeUtil.nowBeforeSqlTimestamp(internshipRelease.getTeacherDistributionEndTime())) {
@@ -176,7 +168,7 @@ public class InternshipConditionCommon {
                             if (basicCondition(internshipReleaseId)) {
                                 // 是否限制时间
                                 boolean isTimeLimit = BooleanUtil.toBoolean(internshipRelease.getIsTimeLimit());
-                                if(isTimeLimit){
+                                if (isTimeLimit) {
                                     // 检测实习申请时间
                                     if (DateTimeUtil.nowAfterSqlTimestamp(internshipRelease.getStartTime()) &&
                                             DateTimeUtil.nowBeforeSqlTimestamp(internshipRelease.getEndTime())) {
@@ -236,7 +228,7 @@ public class InternshipConditionCommon {
                             if (basicCondition(internshipReleaseId)) {
                                 // 是否限制时间
                                 boolean isTimeLimit = BooleanUtil.toBoolean(internshipRelease.getIsTimeLimit());
-                                if(isTimeLimit){
+                                if (isTimeLimit) {
                                     // 检测实习申请时间
                                     if (DateTimeUtil.nowAfterSqlTimestamp(internshipRelease.getStartTime()) &&
                                             DateTimeUtil.nowBeforeSqlTimestamp(internshipRelease.getEndTime())) {
@@ -422,9 +414,9 @@ public class InternshipConditionCommon {
      */
     public boolean journalEditCondition(String internshipJournalId) {
         boolean canOperator = false;
-        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
             canOperator = true;
-        } else if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+        } else if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
             // 本院管理员可操作
             int collegeId = 0;
             Users users = SessionUtil.getUserFromSession();
@@ -487,8 +479,8 @@ public class InternshipConditionCommon {
      */
     public boolean journalLookCondition(String internshipJournalId) {
         boolean canOperator = false;
-        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
-                roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
+                SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
             canOperator = true;
         } else {
             InternshipJournal internshipJournal = internshipJournalService.findById(internshipJournalId);
@@ -543,9 +535,9 @@ public class InternshipConditionCommon {
      */
     public boolean regulateEditCondition(String internshipRegulateId) {
         boolean canOperator = false;
-        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
             canOperator = true;
-        } else if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+        } else if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
             // 本院管理员可操作
             int collegeId = 0;
             Users users = SessionUtil.getUserFromSession();

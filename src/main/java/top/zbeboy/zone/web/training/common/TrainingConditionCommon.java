@@ -10,9 +10,8 @@ import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.domain.tables.records.TrainingAuthoritiesRecord;
 import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.data.StudentService;
-import top.zbeboy.zone.feign.platform.UsersService;
+import top.zbeboy.zone.feign.platform.RoleService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
-import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.training.TrainingAuthoritiesService;
 import top.zbeboy.zone.service.training.TrainingReleaseService;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
@@ -34,9 +33,6 @@ public class TrainingConditionCommon {
     private TrainingAuthoritiesService trainingAuthoritiesService;
 
     @Resource
-    private UsersService usersService;
-
-    @Resource
     private RoleService roleService;
 
     @Resource
@@ -56,9 +52,9 @@ public class TrainingConditionCommon {
      */
     public boolean canOperator(String trainingReleaseId) {
         boolean canOperator = false;
-        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
             canOperator = true;
-        } else if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+        } else if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
             Optional<Record> trainingReleaseRecord = trainingReleaseService.findByIdRelation(trainingReleaseId);
             if (trainingReleaseRecord.isPresent()) {
                 TrainingReleaseBean bean = trainingReleaseRecord.get().into(TrainingReleaseBean.class);
@@ -121,8 +117,8 @@ public class TrainingConditionCommon {
      */
     public boolean reportCondition() {
         boolean canOperator = false;
-        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
-                roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
+                SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
             canOperator = true;
         } else {
             Users users = SessionUtil.getUserFromSession();
@@ -142,6 +138,6 @@ public class TrainingConditionCommon {
      * @return true or false
      */
     public boolean specialCondition() {
-        return roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name());
+        return SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name());
     }
 }

@@ -12,7 +12,6 @@ import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.internship.InternshipRegulateService;
-import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
@@ -30,9 +29,6 @@ public class InternshipRegulateViewController {
 
     @Resource
     private StaffService staffService;
-
-    @Resource
-    private RoleService roleService;
 
     @Resource
     private InternshipConditionCommon internshipConditionCommon;
@@ -58,9 +54,9 @@ public class InternshipRegulateViewController {
     @GetMapping("/web/internship/regulate/list/{id}")
     public String list(@PathVariable("id") String id, ModelMap modelMap) {
         modelMap.addAttribute("internshipReleaseId", id);
-        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
             modelMap.addAttribute("authorities", Workbook.authorities.ROLE_SYSTEM.name());
-        } else if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+        } else if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
             modelMap.addAttribute("authorities", Workbook.authorities.ROLE_ADMIN.name());
         }
 

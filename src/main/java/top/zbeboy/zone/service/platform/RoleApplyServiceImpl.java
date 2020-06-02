@@ -41,9 +41,6 @@ public class RoleApplyServiceImpl implements RoleApplyService, PaginationPlugin<
     private RoleApplyDao roleApplyDao;
 
     @Resource
-    private RoleService roleService;
-
-    @Resource
     private UsersTypeService usersTypeService;
 
     @Resource
@@ -360,7 +357,7 @@ public class RoleApplyServiceImpl implements RoleApplyService, PaginationPlugin<
             }
         }
 
-        if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+        if (!SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType)) {
                 int collegeId = 0;

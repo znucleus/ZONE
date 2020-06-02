@@ -12,7 +12,6 @@ import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
-import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.register.LeaverRegisterReleaseService;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
@@ -26,9 +25,6 @@ import java.util.Objects;
 
 @Controller
 public class RegisterLeaverViewController {
-
-    @Resource
-    private RoleService roleService;
 
     @Resource
     private UsersTypeService usersTypeService;
@@ -67,7 +63,7 @@ public class RegisterLeaverViewController {
     public String add(ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+        if (!SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
             Users users = SessionUtil.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType)) {
@@ -116,7 +112,7 @@ public class RegisterLeaverViewController {
         String channel = Workbook.channel.WEB.name();
         if (registerConditionCommon.leaverOperator(id, channel, null)) {
             boolean canAccess = false;
-            if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+            if (!SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
                 Users users = SessionUtil.getUserFromSession();
                 UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
                 if (Objects.nonNull(usersType)) {

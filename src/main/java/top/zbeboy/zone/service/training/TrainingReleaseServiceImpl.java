@@ -19,7 +19,6 @@ import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
-import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zone.service.util.SQLQueryUtil;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
@@ -41,9 +40,6 @@ public class TrainingReleaseServiceImpl implements TrainingReleaseService, Pagin
 
     @Resource
     private TrainingReleaseDao trainingReleaseDao;
-
-    @Resource
-    private RoleService roleService;
 
     @Resource
     private UsersTypeService usersTypeService;
@@ -204,7 +200,7 @@ public class TrainingReleaseServiceImpl implements TrainingReleaseService, Pagin
                 }
             } else {
                 // 非系统，查看全院
-                if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+                if (!SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
                     UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
                     if (Objects.nonNull(usersType)) {
                         int collegeId = 0;

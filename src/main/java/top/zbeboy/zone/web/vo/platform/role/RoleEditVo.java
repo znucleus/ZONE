@@ -12,6 +12,9 @@ public class RoleEditVo {
     private String roleName;
     @NotBlank(message = "应用ID不能为空")
     private String applicationIds;
+    @NotBlank(message = "当前用户账号不能为空")
+    @Size(max = 64, message = "当前用户账号不正确")
+    private String username;
 
     public String getRoleId() {
         return roleId;
@@ -35,5 +38,13 @@ public class RoleEditVo {
 
     public void setApplicationIds(String applicationIds) {
         this.applicationIds = applicationIds;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

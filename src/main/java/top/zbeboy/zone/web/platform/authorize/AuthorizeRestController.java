@@ -53,9 +53,6 @@ public class AuthorizeRestController {
     private CollegeRoleService collegeRoleService;
 
     @Resource
-    private RoleService roleService;
-
-    @Resource
     private UsersService usersService;
 
     @Resource
@@ -225,11 +222,11 @@ public class AuthorizeRestController {
             ajaxUtil.fail().msg("未查询到账号信息");
         }
 
-        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
             if (userCollegeId > 0) {
                 rule1(ajaxUtil, param, userCollegeId);
             }
-        } else if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+        } else if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
             if (userCollegeId > 0) {
                 if (userCollegeId == collegeId) {
                     rule1(ajaxUtil, param, userCollegeId);
@@ -275,9 +272,9 @@ public class AuthorizeRestController {
                         }
 
                         if (collegeId > 0) {
-                            if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+                            if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
                                 rule1(ajaxUtil, param, collegeId);
-                            } else if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+                            } else if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
                                 if (collegeId == authorizeAddVo.getCollegeId()) {
                                     rule1(ajaxUtil, param, collegeId);
                                 } else {
@@ -296,8 +293,8 @@ public class AuthorizeRestController {
                     ajaxUtil.fail().msg("未查询到账号信息");
                 }
             } else {
-                if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
-                        roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+                if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
+                        SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
                     ajaxUtil.fail().msg("申请账号不能为空");
                 } else {
                     ajaxUtil.success();
@@ -459,8 +456,8 @@ public class AuthorizeRestController {
                                                       @RequestParam("applyStatus") Byte applyStatus,
                                                       String refuse, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
-                roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
+                SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
             RoleApply roleApply = roleApplyService.findById(roleApplyId);
             if (Objects.nonNull(roleApply)) {
                 roleApply.setApplyStatus(applyStatus);
@@ -529,8 +526,8 @@ public class AuthorizeRestController {
     }
 
     private void rule2(AjaxUtil<Map<String, Object>> ajaxUtil, String roleApplyId) {
-        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
-                roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
+                SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
             Optional<Record> roleApplyRecord = roleApplyService.findByIdRelation(roleApplyId);
             if (roleApplyRecord.isPresent()) {
                 RoleApplyBean roleApplyBean = roleApplyRecord.get().into(RoleApplyBean.class);
@@ -565,8 +562,8 @@ public class AuthorizeRestController {
     }
 
     private void rule3(AjaxUtil<Map<String, Object>> ajaxUtil, String roleApplyId) {
-        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
-                roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
+                SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
             ajaxUtil.success().msg("可操作");
         } else {
             Optional<Record> roleApplyRecord = roleApplyService.findByIdRelation(roleApplyId);

@@ -14,7 +14,6 @@ import top.zbeboy.zone.domain.tables.pojos.OauthAccessToken;
 import top.zbeboy.zone.domain.tables.pojos.OauthClientDetails;
 import top.zbeboy.zone.domain.tables.pojos.OauthClientUsers;
 import top.zbeboy.zone.domain.tables.pojos.Users;
-import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.service.platform.*;
 import top.zbeboy.zone.service.util.BCryptUtil;
 import top.zbeboy.zone.service.util.DateTimeUtil;
@@ -47,12 +46,6 @@ public class AppRestController {
 
     @Resource
     private OauthApprovalsService oauthApprovalsService;
-
-    @Resource
-    private UsersService usersService;
-
-    @Resource
-    private RoleService roleService;
 
     /**
      * 数据
@@ -140,7 +133,7 @@ public class AppRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
             Optional<Record> record;
-            if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+            if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
                 record = oauthClientUsersService.findByIdRelation(appEditVo.getClientId());
             } else {
                 Users users = SessionUtil.getUserFromSession();
@@ -178,7 +171,7 @@ public class AppRestController {
     public ResponseEntity<Map<String, Object>> delete(@RequestParam("clientId") String clientId) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         Optional<Record> record;
-        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
             record = oauthClientUsersService.findByIdRelation(clientId);
         } else {
             Users users = SessionUtil.getUserFromSession();
@@ -215,7 +208,7 @@ public class AppRestController {
     public ResponseEntity<Map<String, Object>> remark(@RequestParam("clientId") String clientId, String remark) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         Optional<Record> record;
-        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
             record = oauthClientUsersService.findByIdRelation(clientId);
         } else {
             Users users = SessionUtil.getUserFromSession();

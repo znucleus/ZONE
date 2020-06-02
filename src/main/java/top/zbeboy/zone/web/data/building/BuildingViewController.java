@@ -12,7 +12,6 @@ import top.zbeboy.zone.feign.data.BuildingService;
 import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
-import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.web.bean.data.building.BuildingBean;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
@@ -24,9 +23,6 @@ import java.util.Objects;
 
 @Controller
 public class BuildingViewController {
-
-    @Resource
-    private RoleService roleService;
 
     @Resource
     private UsersTypeService usersTypeService;
@@ -60,7 +56,7 @@ public class BuildingViewController {
     public String add(ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+        if (!SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
             Users users = SessionUtil.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType)) {
@@ -112,7 +108,7 @@ public class BuildingViewController {
         BuildingBean buildingBean = buildingService.findByIdRelation(id);
         if (Objects.nonNull(buildingBean) && buildingBean.getBuildingId() > 0) {
             modelMap.addAttribute("building", buildingBean);
-            if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+            if (!SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
                 modelMap.addAttribute("collegeId", buildingBean.getCollegeId());
             } else {
                 modelMap.addAttribute("collegeId", 0);

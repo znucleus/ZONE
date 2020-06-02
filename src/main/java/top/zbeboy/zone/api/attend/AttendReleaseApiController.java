@@ -10,22 +10,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.config.Workbook;
-import top.zbeboy.zone.domain.tables.pojos.*;
+import top.zbeboy.zone.domain.tables.pojos.AttendRelease;
+import top.zbeboy.zone.domain.tables.pojos.AttendReleaseSub;
+import top.zbeboy.zone.domain.tables.pojos.AttendUsers;
+import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.feign.data.StudentService;
-import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.service.attend.AttendReleaseService;
 import top.zbeboy.zone.service.attend.AttendReleaseSubService;
 import top.zbeboy.zone.service.attend.AttendUsersService;
 import top.zbeboy.zone.service.cache.attend.AttendWxCacheService;
-import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.attend.AttendReleaseBean;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
-import top.zbeboy.zone.web.util.AjaxUtil;
-import top.zbeboy.zone.web.util.BooleanUtil;
-import top.zbeboy.zone.web.util.ByteUtil;
-import top.zbeboy.zone.web.util.SessionUtil;
+import top.zbeboy.zone.web.util.*;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zone.web.vo.attend.release.AttendReleaseAddVo;
 import top.zbeboy.zone.web.vo.attend.release.AttendReleaseEditVo;
@@ -42,9 +40,6 @@ import java.util.Objects;
 public class AttendReleaseApiController {
 
     @Resource
-    private UsersService usersService;
-
-    @Resource
     private AttendReleaseService attendReleaseService;
 
     @Resource
@@ -55,9 +50,6 @@ public class AttendReleaseApiController {
 
     @Resource
     private StudentService studentService;
-
-    @Resource
-    private RoleService roleService;
 
     @Resource
     private AttendWxCacheService attendWxCacheService;
@@ -181,7 +173,7 @@ public class AttendReleaseApiController {
             AttendReleaseSub attendReleaseSub = attendReleaseSubService.findById(attendReleaseEditVo.getAttendReleaseSubId());
             if (Objects.nonNull(attendReleaseSub)) {
                 Users users = SessionUtil.getUserFromOauth(principal);
-                if (roleService.isOauthUserInRole(Workbook.authorities.ROLE_SYSTEM.name(), principal) ||
+                if (SessionUtil.isOauthUserInRole(Workbook.authorities.ROLE_SYSTEM.name(), principal) ||
                         (Objects.nonNull(users) && StringUtils.equals(users.getUsername(), attendReleaseSub.getUsername()))) {
                     attendReleaseSub.setTitle(attendReleaseEditVo.getTitle());
                     attendReleaseSub.setIsAuto(ByteUtil.toByte(1).equals(attendReleaseEditVo.getIsAuto()) ? ByteUtil.toByte(1) : ByteUtil.toByte(0));

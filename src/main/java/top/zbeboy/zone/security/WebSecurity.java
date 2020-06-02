@@ -5,8 +5,7 @@ import org.springframework.security.core.Authentication;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.Application;
 import top.zbeboy.zone.domain.tables.pojos.Users;
-import top.zbeboy.zone.feign.platform.UsersService;
-import top.zbeboy.zone.service.platform.RoleService;
+import top.zbeboy.zone.feign.platform.RoleService;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
@@ -23,9 +22,6 @@ import java.util.Objects;
  * @since 1.0
  */
 public class WebSecurity {
-
-    @Resource
-    private UsersService usersService;
 
     @Resource
     private RoleService roleService;

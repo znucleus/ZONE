@@ -32,9 +32,6 @@ public class OauthClientUsersServiceImpl implements OauthClientUsersService, Pag
     @Resource
     private OauthClientUsersDao oauthClientUsersDao;
 
-    @Resource
-    private RoleService roleService;
-
     @Autowired
     OauthClientUsersServiceImpl(DSLContext dslContext) {
         create = dslContext;
@@ -152,7 +149,7 @@ public class OauthClientUsersServiceImpl implements OauthClientUsersService, Pag
     public Condition extraCondition(DataTablesUtil paginationUtil) {
         Condition a = null;
 
-        if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+        if (!SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
             Users users = SessionUtil.getUserFromSession();
             a = OAUTH_CLIENT_USERS.USERNAME.eq(users.getUsername());
         }

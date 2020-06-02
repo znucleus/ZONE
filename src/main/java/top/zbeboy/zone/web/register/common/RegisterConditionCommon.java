@@ -13,7 +13,6 @@ import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
-import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.register.EpidemicRegisterDataService;
 import top.zbeboy.zone.service.register.LeaverRegisterDataService;
 import top.zbeboy.zone.service.register.LeaverRegisterReleaseService;
@@ -28,9 +27,6 @@ import java.util.Objects;
 
 @Component
 public class RegisterConditionCommon {
-
-    @Resource
-    private RoleService roleService;
 
     @Resource
     private UsersService usersService;
@@ -62,7 +58,7 @@ public class RegisterConditionCommon {
      * @return true or false
      */
     public boolean epidemicOperator() {
-        return roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name());
+        return SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name());
     }
 
     /**
@@ -72,8 +68,8 @@ public class RegisterConditionCommon {
      */
     public boolean epidemicReview() {
         boolean canOperator = false;
-        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
-                roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
+                SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
             canOperator = true;
         } else {
             Users users = SessionUtil.getUserFromSession();
@@ -92,13 +88,13 @@ public class RegisterConditionCommon {
      */
     public boolean epidemicDelete(String epidemicRegisterDataId) {
         boolean canOperator = false;
-        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
             canOperator = true;
         } else {
             EpidemicRegisterData epidemicRegisterData = epidemicRegisterDataService.findById(epidemicRegisterDataId);
             if (Objects.nonNull(epidemicRegisterData)) {
                 if (StringUtils.equals(epidemicRegisterData.getRegisterType(), Workbook.STAFF_USERS_TYPE)) {
-                    if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+                    if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
                         Users users = SessionUtil.getUserFromSession();
                         StaffBean bean1 = staffService.findByUsernameRelation(users.getUsername());
                         StaffBean bean2 = staffService.findByUsernameRelation(epidemicRegisterData.getRegisterUsername());
@@ -110,7 +106,7 @@ public class RegisterConditionCommon {
                         canOperator = StringUtils.equals(users.getUsername(), epidemicRegisterData.getRegisterUsername());
                     }
                 } else if (StringUtils.equals(epidemicRegisterData.getRegisterType(), Workbook.STUDENT_USERS_TYPE)) {
-                    if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+                    if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
                         Users users = SessionUtil.getUserFromSession();
                         StaffBean staffBean = staffService.findByUsernameRelation(users.getUsername());
                         StudentBean studentBean = studentService.findByUsernameRelation(epidemicRegisterData.getRegisterUsername());
@@ -148,9 +144,9 @@ public class RegisterConditionCommon {
      */
     public boolean leaverOperator(String leaverRegisterReleaseId, String channel, Principal principal) {
         boolean canOperator = false;
-        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
             canOperator = true;
-        } else if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+        } else if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
             // 发布人所在院与管理员院相同
             int collegeId = getCurrentUserCollegeId(channel, principal);
             int publishCollegeId = getPublishCollegeId(leaverRegisterReleaseId);
@@ -172,9 +168,9 @@ public class RegisterConditionCommon {
      */
     public boolean leaverReview(String leaverRegisterReleaseId, String channel, Principal principal) {
         boolean canOperator = false;
-        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
             canOperator = true;
-        } else if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+        } else if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
             // 发布人所在院与管理员院相同
             int collegeId = getCurrentUserCollegeId(channel, principal);
             int publishCollegeId = getPublishCollegeId(leaverRegisterReleaseId);

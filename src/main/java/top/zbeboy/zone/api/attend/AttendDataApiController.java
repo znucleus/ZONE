@@ -13,13 +13,11 @@ import top.zbeboy.zone.domain.tables.records.AttendDataRecord;
 import top.zbeboy.zone.domain.tables.records.AttendUsersRecord;
 import top.zbeboy.zone.domain.tables.records.WeiXinDeviceRecord;
 import top.zbeboy.zone.feign.data.StudentService;
-import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.attend.AttendDataService;
 import top.zbeboy.zone.service.attend.AttendReleaseSubService;
 import top.zbeboy.zone.service.attend.AttendUsersService;
 import top.zbeboy.zone.service.data.WeiXinDeviceService;
-import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
@@ -39,9 +37,6 @@ import java.util.Optional;
 public class AttendDataApiController {
 
     @Resource
-    private UsersService usersService;
-
-    @Resource
     private UsersTypeService usersTypeService;
 
     @Resource
@@ -58,9 +53,6 @@ public class AttendDataApiController {
 
     @Resource
     private StudentService studentService;
-
-    @Resource
-    private RoleService roleService;
 
     /**
      * 保存
@@ -198,7 +190,7 @@ public class AttendDataApiController {
         AttendReleaseSub attendReleaseSub = attendReleaseSubService.findById(attendReleaseSubId);
         if (Objects.nonNull(attendReleaseSub)) {
             Users users = SessionUtil.getUserFromOauth(principal);
-            if (roleService.isOauthUserInRole(Workbook.authorities.ROLE_SYSTEM.name(), principal) ||
+            if (SessionUtil.isOauthUserInRole(Workbook.authorities.ROLE_SYSTEM.name(), principal) ||
                     (Objects.nonNull(users) && StringUtils.equals(users.getUsername(), attendReleaseSub.getUsername()))) {
                 attendDataService.deleteByAttendUsersIdAndAttendReleaseSubId(attendUsersId, attendReleaseSubId);
                 ajaxUtil.success().msg("删除成功");

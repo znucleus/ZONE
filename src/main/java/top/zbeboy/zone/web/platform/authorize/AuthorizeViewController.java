@@ -12,7 +12,6 @@ import top.zbeboy.zone.feign.data.*;
 import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.platform.RoleApplyService;
-import top.zbeboy.zone.service.platform.RoleService;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.bean.platform.authorize.RoleApplyBean;
@@ -25,9 +24,6 @@ import java.util.Optional;
 
 @Controller
 public class AuthorizeViewController {
-
-    @Resource
-    private RoleService roleService;
 
     @Resource
     private UsersService usersService;
@@ -63,9 +59,9 @@ public class AuthorizeViewController {
      */
     @GetMapping("/web/menu/platform/authorize")
     public String index(ModelMap modelMap) {
-        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
             modelMap.addAttribute("authorities", Workbook.authorities.ROLE_SYSTEM.name());
-        } else if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+        } else if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
             modelMap.addAttribute("authorities", Workbook.authorities.ROLE_ADMIN.name());
         }
 
@@ -83,7 +79,7 @@ public class AuthorizeViewController {
     public String add(ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+        if (!SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
             Users users = SessionUtil.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType)) {
@@ -132,8 +128,8 @@ public class AuthorizeViewController {
 
         boolean canEdit = false;
         RoleApplyBean roleApplyBean = null;
-        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
-                roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
+                SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
             Optional<Record> roleApplyRecord = roleApplyService.findByIdRelation(roleUsersId);
             if (roleApplyRecord.isPresent()) {
                 roleApplyBean = roleApplyRecord.get().into(RoleApplyBean.class);
