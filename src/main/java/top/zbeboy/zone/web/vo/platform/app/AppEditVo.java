@@ -14,6 +14,9 @@ public class AppEditVo {
     @Size(max = 255, message = "回调地址255个字符以内")
     private String webServerRedirectUri;
     private String remark;
+    @NotBlank(message = "当前用户账号不能为空")
+    @Size(max = 64, message = "当前用户账号不正确")
+    private String username;
 
     public String getClientId() {
         return clientId;
@@ -45,5 +48,13 @@ public class AppEditVo {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

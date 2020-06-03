@@ -1,23 +1,13 @@
 package top.zbeboy.zone.web.platform.app;
 
-import org.jooq.Record;
-import org.jooq.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import top.zbeboy.zone.config.Workbook;
-import top.zbeboy.zone.domain.tables.pojos.OauthAccessToken;
-import top.zbeboy.zone.domain.tables.pojos.OauthClientDetails;
-import top.zbeboy.zone.domain.tables.pojos.OauthClientUsers;
 import top.zbeboy.zone.domain.tables.pojos.Users;
-import top.zbeboy.zone.service.platform.*;
-import top.zbeboy.zone.service.util.BCryptUtil;
-import top.zbeboy.zone.service.util.DateTimeUtil;
-import top.zbeboy.zone.web.bean.platform.app.OauthClientUsersBean;
+import top.zbeboy.zone.feign.platform.AppService;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
@@ -26,26 +16,15 @@ import top.zbeboy.zone.web.vo.platform.app.AppEditVo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 public class AppRestController {
 
     @Resource
-    private OauthClientUsersService oauthClientUsersService;
-
-    @Resource
-    private OauthClientDetailsService oauthClientDetailsService;
-
-    @Resource
-    private OauthAccessTokenService oauthAccessTokenService;
-
-    @Resource
-    private OauthRefreshTokenService oauthRefreshTokenService;
-
-    @Resource
-    private OauthApprovalsService oauthApprovalsService;
+    private AppService appService;
 
     /**
      * 数据
@@ -67,97 +46,34 @@ public class AppRestController {
         headers.add("createDate");
         headers.add("operator");
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
-        Result<Record> records = oauthClientUsersService.findAllByPage(dataTablesUtil);
-        List<OauthClientUsersBean> beans = new ArrayList<>();
-        if (Objects.nonNull(records) && records.isNotEmpty()) {
-            beans = records.into(OauthClientUsersBean.class);
-            beans.forEach(bean -> bean.setCreateDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getCreateDate())));
-        }
-        dataTablesUtil.setData(beans);
-        dataTablesUtil.setiTotalRecords(oauthClientUsersService.countAll(dataTablesUtil));
-        dataTablesUtil.setiTotalDisplayRecords(oauthClientUsersService.countByCondition(dataTablesUtil));
-        return new ResponseEntity<>(dataTablesUtil, HttpStatus.OK);
+        return new ResponseEntity<>(appService.data(dataTablesUtil), HttpStatus.OK);
     }
 
     /**
      * 保存
      *
-     * @param appAddVo      应用
-     * @param bindingResult 检验
+     * @param appAddVo 应用
      * @return true 保存成功 false 保存失败
      */
     @PostMapping("/web/platform/app/save")
-    public ResponseEntity<Map<String, Object>> save(@Valid AppAddVo appAddVo, BindingResult bindingResult) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        if (!bindingResult.hasErrors()) {
-            OauthClientDetails oauthClientDetails = new OauthClientDetails();
-            oauthClientDetails.setClientId(appAddVo.getClientId());
-            oauthClientDetails.setResourceIds("product_api");
-            oauthClientDetails.setClientSecret(BCryptUtil.bCryptPassword(appAddVo.getSecret()));
-            oauthClientDetails.setScope("api");
-            oauthClientDetails.setAuthorizedGrantTypes("authorization_code,refresh_token");
-            oauthClientDetails.setWebServerRedirectUri(appAddVo.getWebServerRedirectUri());
-            oauthClientDetails.setAccessTokenValidity(604800);
-            oauthClientDetails.setRefreshTokenValidity(1209600);
-            oauthClientDetails.setAutoapprove("false");
-
-            oauthClientDetailsService.save(oauthClientDetails);
-
-            OauthClientUsers oauthClientUsers = new OauthClientUsers();
-            oauthClientUsers.setClientId(appAddVo.getClientId());
-            oauthClientUsers.setSecret(appAddVo.getSecret());
-            oauthClientUsers.setAppName(appAddVo.getAppName());
-
-            Users users = SessionUtil.getUserFromSession();
-            oauthClientUsers.setUsername(users.getUsername());
-            oauthClientUsers.setRemark(appAddVo.getRemark());
-            oauthClientUsers.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
-
-            oauthClientUsersService.save(oauthClientUsers);
-            ajaxUtil.success().msg("保存成功");
-        } else {
-            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
-        }
+    public ResponseEntity<Map<String, Object>> save(AppAddVo appAddVo) {
+        Users users = SessionUtil.getUserFromSession();
+        appAddVo.setUsername(users.getUsername());
+        AjaxUtil<Map<String, Object>> ajaxUtil = appService.save(appAddVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
     /**
      * 更新
      *
-     * @param appEditVo     应用
-     * @param bindingResult 检验
+     * @param appEditVo 应用
      * @return true 保存成功 false 保存失败
      */
     @PostMapping("/web/platform/app/update")
-    public ResponseEntity<Map<String, Object>> update(@Valid AppEditVo appEditVo, BindingResult bindingResult) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        if (!bindingResult.hasErrors()) {
-            Optional<Record> record;
-            if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
-                record = oauthClientUsersService.findByIdRelation(appEditVo.getClientId());
-            } else {
-                Users users = SessionUtil.getUserFromSession();
-                record = oauthClientUsersService.findByIdAndUsernameRelation(appEditVo.getClientId(), users.getUsername());
-            }
-
-            if (record.isPresent()) {
-                OauthClientDetails oauthClientDetails = record.get().into(OauthClientDetails.class);
-                oauthClientDetails.setWebServerRedirectUri(appEditVo.getWebServerRedirectUri());
-                oauthClientDetailsService.update(oauthClientDetails);
-
-                OauthClientUsers oauthClientUsers = record.get().into(OauthClientUsers.class);
-                oauthClientUsers.setAppName(appEditVo.getAppName());
-                oauthClientUsers.setRemark(appEditVo.getRemark());
-
-                oauthClientUsersService.update(oauthClientUsers);
-
-                ajaxUtil.success().msg("更新成功");
-            } else {
-                ajaxUtil.fail().msg("根据ID未查询到应用数据");
-            }
-        } else {
-            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
-        }
+    public ResponseEntity<Map<String, Object>> update(AppEditVo appEditVo) {
+        Users users = SessionUtil.getUserFromSession();
+        appEditVo.setUsername(users.getUsername());
+        AjaxUtil<Map<String, Object>> ajaxUtil = appService.update(appEditVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -169,31 +85,8 @@ public class AppRestController {
      */
     @PostMapping("/web/platform/app/delete")
     public ResponseEntity<Map<String, Object>> delete(@RequestParam("clientId") String clientId) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        Optional<Record> record;
-        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
-            record = oauthClientUsersService.findByIdRelation(clientId);
-        } else {
-            Users users = SessionUtil.getUserFromSession();
-            record = oauthClientUsersService.findByIdAndUsernameRelation(clientId, users.getUsername());
-        }
-
-        if (record.isPresent()) {
-            List<OauthAccessToken> oauthAccessTokens = oauthAccessTokenService.findByClientId(clientId);
-            if (Objects.nonNull(oauthAccessTokens)) {
-                oauthAccessTokens.forEach(oauthAccessToken -> oauthRefreshTokenService.deleteByTokenId(oauthAccessToken.getRefreshToken()));
-            }
-            oauthAccessTokenService.deleteByClientId(clientId);
-            oauthApprovalsService.deleteByClientId(clientId);
-            oauthClientDetailsService.deleteById(clientId);
-
-            OauthClientUsers oauthClientUsers = record.get().into(OauthClientUsers.class);
-            oauthClientUsersService.delete(oauthClientUsers);
-
-            ajaxUtil.success().msg("删除成功");
-        } else {
-            ajaxUtil.fail().msg("根据ID未查询到应用数据");
-        }
+        Users users = SessionUtil.getUserFromSession();
+        AjaxUtil<Map<String, Object>> ajaxUtil = appService.delete(users.getUsername(), clientId);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -206,24 +99,8 @@ public class AppRestController {
      */
     @PostMapping("/web/platform/app/remark")
     public ResponseEntity<Map<String, Object>> remark(@RequestParam("clientId") String clientId, String remark) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        Optional<Record> record;
-        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
-            record = oauthClientUsersService.findByIdRelation(clientId);
-        } else {
-            Users users = SessionUtil.getUserFromSession();
-            record = oauthClientUsersService.findByIdAndUsernameRelation(clientId, users.getUsername());
-        }
-
-        if (record.isPresent()) {
-            OauthClientUsers oauthClientUsers = record.get().into(OauthClientUsers.class);
-            oauthClientUsers.setRemark(remark);
-            oauthClientUsersService.update(oauthClientUsers);
-
-            ajaxUtil.success().msg("备注成功");
-        } else {
-            ajaxUtil.fail().msg("根据ID未查询到应用数据");
-        }
+        Users users = SessionUtil.getUserFromSession();
+        AjaxUtil<Map<String, Object>> ajaxUtil = appService.remark(users.getUsername(), clientId, remark);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }
