@@ -9,7 +9,7 @@ import top.zbeboy.zone.domain.tables.daos.AttendUsersDao;
 import top.zbeboy.zone.domain.tables.pojos.AttendUsers;
 import top.zbeboy.zone.domain.tables.records.AttendDataRecord;
 import top.zbeboy.zone.domain.tables.records.AttendUsersRecord;
-import top.zbeboy.zone.service.system.AuthoritiesService;
+import top.zbeboy.zone.domain.tables.records.AuthoritiesRecord;
 import top.zbeboy.zone.web.util.BooleanUtil;
 
 import javax.annotation.Resource;
@@ -28,9 +28,6 @@ public class AttendUsersServiceImpl implements AttendUsersService {
 
     @Resource
     private AttendUsersDao attendUsersDao;
-
-    @Resource
-    private AuthoritiesService authoritiesService;
 
     @Autowired
     AttendUsersServiceImpl(DSLContext dslContext) {
@@ -114,12 +111,14 @@ public class AttendUsersServiceImpl implements AttendUsersService {
     public Result<Record> findStudentNotExistsAttendUsers(String attendReleaseId, int organizeId) {
         Select<AttendUsersRecord> select = create.selectFrom(ATTEND_USERS)
                 .where(ATTEND_USERS.STUDENT_ID.eq(STUDENT.STUDENT_ID).and(ATTEND_USERS.ATTEND_RELEASE_ID.eq(attendReleaseId)));
+        Select<AuthoritiesRecord> existsAuthoritiesSelect = create.selectFrom(AUTHORITIES)
+                .where(AUTHORITIES.USERNAME.eq(USERS.USERNAME));
         return create.select()
                 .from(STUDENT)
                 .leftJoin(USERS)
                 .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                 .where(STUDENT.ORGANIZE_ID.eq(organizeId).andNotExists(select)
-                        .and(USERS.VERIFY_MAILBOX.eq(BooleanUtil.toByte(true))).andExists(authoritiesService.existsAuthoritiesSelect()))
+                        .and(USERS.VERIFY_MAILBOX.eq(BooleanUtil.toByte(true))).andExists(existsAuthoritiesSelect))
                 .fetch();
     }
 

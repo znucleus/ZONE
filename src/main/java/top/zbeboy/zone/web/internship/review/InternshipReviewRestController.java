@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.feign.data.StudentService;
+import top.zbeboy.zone.feign.platform.AuthorizeService;
 import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.feign.system.SystemConfigureService;
 import top.zbeboy.zone.service.internship.*;
 import top.zbeboy.zone.service.notify.UserNotifyService;
-import top.zbeboy.zone.service.system.AuthoritiesService;
 import top.zbeboy.zone.service.system.FilesService;
 import top.zbeboy.zone.service.system.SystemMailService;
 import top.zbeboy.zone.service.upload.UploadService;
@@ -66,7 +66,7 @@ public class InternshipReviewRestController {
     private InternshipChangeHistoryService internshipChangeHistoryService;
 
     @Resource
-    private AuthoritiesService authoritiesService;
+    private AuthorizeService authorizeService;
 
     @Resource
     private UsersService usersService;
@@ -199,8 +199,8 @@ public class InternshipReviewRestController {
             List<String> authorities = new ArrayList<>();
             authorities.add(Workbook.authorities.ROLE_SYSTEM.name());
             authorities.add(Workbook.authorities.ROLE_ADMIN.name());
-            Result<Record> authorityRecord = authoritiesService.findByUsernameAndInAuthorities(param, authorities);
-            if (authorityRecord.isEmpty()) {
+            List<Authorities> authoritiesList = authorizeService.findByUsernameAndInAuthorities(param, authorities);
+            if (Objects.isNull(authoritiesList) || authoritiesList.isEmpty()) {
                 // 本人无需添加权限
                 Users users = SessionUtil.getUserFromSession();
                 if (!StringUtils.equals(users.getUsername(), param)) {

@@ -6,8 +6,11 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class AuthorizeAddVo {
-    @Size(max = 64, message = "账号64个字符以内")
+    @NotBlank(message = "当前用户账号不能为空")
+    @Size(max = 64, message = "当前用户账号不正确")
     private String username;
+    @Size(max = 64, message = "账号64个字符以内")
+    private String targetUsername;
     @NotNull(message = "权限类型不能为空")
     @Min(value = 1, message = "权限类型ID最小值为1")
     private int authorizeTypeId;
@@ -38,6 +41,14 @@ public class AuthorizeAddVo {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getTargetUsername() {
+        return targetUsername;
+    }
+
+    public void setTargetUsername(String targetUsername) {
+        this.targetUsername = targetUsername;
     }
 
     public int getAuthorizeTypeId() {

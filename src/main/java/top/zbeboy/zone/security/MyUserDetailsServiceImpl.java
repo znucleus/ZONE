@@ -11,8 +11,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import top.zbeboy.zone.domain.tables.pojos.Authorities;
 import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zone.feign.platform.AuthorizeService;
 import top.zbeboy.zone.feign.platform.UsersService;
-import top.zbeboy.zone.service.system.AuthoritiesService;
 import top.zbeboy.zone.web.system.mail.SystemMailConfig;
 import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
 
@@ -36,7 +36,7 @@ public class MyUserDetailsServiceImpl implements UserDetailsService {
     private UsersService usersService;
 
     @Resource
-    private AuthoritiesService authoritiesService;
+    private AuthorizeService authorizeService;
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
@@ -58,7 +58,7 @@ public class MyUserDetailsServiceImpl implements UserDetailsService {
             users = usersService.findByUsername(username);
         }
         assert Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername());
-        List<GrantedAuthority> authorities = buildUserAuthority(authoritiesService.findByUsername(users.getUsername()));
+        List<GrantedAuthority> authorities = buildUserAuthority(authorizeService.findByUsername(users.getUsername()));
         return buildUserForAuthentication(users, authorities);
     }
 

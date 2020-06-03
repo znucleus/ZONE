@@ -30,7 +30,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
         science: '#science',
         grade: '#grade',
         organize: '#organize',
-        username: '#username',
+        targetUsername: '#targetUsername',
         authorizeType: '#authorizeType',
         role: '#role',
         duration: '#duration',
@@ -58,7 +58,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
      */
     var param = {
         roleApplyId: '',
-        username: '',
+        targetUsername: '',
         authorizeTypeId: '',
         roleId: '',
         duration: '',
@@ -83,7 +83,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
      */
     function initParam() {
         param.roleApplyId = page_param.roleApplyId;
-        param.username = $(param_id.username).val();
+        param.targetUsername = $(param_id.targetUsername).val();
         param.authorizeTypeId = $(param_id.authorizeType).val();
         param.roleId = $(param_id.role).val();
         param.duration = $(param_id.duration).val();
@@ -256,24 +256,24 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
         });
     }
 
-    $(param_id.username).blur(function () {
+    $(param_id.targetUsername).blur(function () {
         initParam();
-        var username = param.username;
-        if (username !== '') {
+        var targetUsername = param.targetUsername;
+        if (targetUsername !== '') {
             $.post(ajax_url.check_username, param, function (data) {
                 if (data.state) {
-                    tools.validSuccessDom(param_id.username);
+                    tools.validSuccessDom(param_id.targetUsername);
                     if (Number(page_param.collegeId) === 0) {
                         initDepartment(data.collegeId);
                         initCollegeRole(data.collegeId);
                         page_param.collegeId = data.collegeId;
                     }
                 } else {
-                    tools.validErrorDom(param_id.username, data.msg);
+                    tools.validErrorDom(param_id.targetUsername, data.msg);
                 }
             });
         } else {
-            tools.validErrorDom(param_id.username, '请填写申请账号');
+            tools.validErrorDom(param_id.targetUsername, '请填写申请账号');
         }
     });
 
@@ -430,19 +430,19 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
     });
 
     function validUsername() {
-        var username = param.username;
-        if (!_.isUndefined(username)) {
-            if (username !== '') {
+        var targetUsername = param.targetUsername;
+        if (!_.isUndefined(targetUsername)) {
+            if (targetUsername !== '') {
                 $.post(ajax_url.check_username, param, function (data) {
                     if (data.state) {
-                        tools.validSuccessDom(param_id.username);
+                        tools.validSuccessDom(param_id.targetUsername);
                         validAuthorizeType();
                     } else {
-                        tools.validErrorDom(param_id.username, data.msg);
+                        tools.validErrorDom(param_id.targetUsername, data.msg);
                     }
                 });
             } else {
-                tools.validErrorDom(param_id.username, '请填写申请账号');
+                tools.validErrorDom(param_id.targetUsername, '请填写申请账号');
             }
         } else {
             validAuthorizeType();

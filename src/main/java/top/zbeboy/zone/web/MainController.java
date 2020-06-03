@@ -13,9 +13,7 @@ import top.zbeboy.zone.annotation.logging.LoggingRecord;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.Files;
 import top.zbeboy.zone.domain.tables.pojos.Users;
-import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.service.platform.MenuService;
-import top.zbeboy.zone.service.system.AuthoritiesService;
 import top.zbeboy.zone.service.system.FilesService;
 import top.zbeboy.zone.web.util.SessionUtil;
 
@@ -29,13 +27,7 @@ import java.util.Objects;
 public class MainController {
 
     @Resource
-    private AuthoritiesService authoritiesService;
-
-    @Resource
     private MenuService menuService;
-
-    @Resource
-    private UsersService usersService;
 
     @Resource
     private FilesService filesService;
@@ -71,7 +63,7 @@ public class MainController {
 
         if (!needSkip) {
             modelMap.put("loginType", "normal");
-            page = !authoritiesService.isAnonymousAuthenticated() ? "redirect:" + Workbook.WEB_BACKSTAGE : "login";
+            page = !SessionUtil.isAnonymousAuthenticated() ? "redirect:" + Workbook.WEB_BACKSTAGE : "login";
         } else {
             modelMap.put("loginType", "oauth");
             page = "login";

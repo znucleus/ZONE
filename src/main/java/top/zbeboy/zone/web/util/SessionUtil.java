@@ -1,12 +1,14 @@
 package top.zbeboy.zone.web.util;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.util.ObjectUtils;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.security.MyUserImpl;
@@ -103,5 +105,16 @@ public class SessionUtil {
             return ((OAuth2Authentication) principal).getUserAuthentication().getAuthorities().contains(new SimpleGrantedAuthority(role));
         }
         return false;
+    }
+
+    /**
+     * Check if users is login by remember me cookie, refer
+     * org.springframework.security.authentication.AuthenticationTrustResolverImpl
+     *
+     * @return true or false
+     */
+    public static Boolean isAnonymousAuthenticated() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return !ObjectUtils.isEmpty(authentication) && new AuthenticationTrustResolverImpl().isAnonymous(authentication);
     }
 }
