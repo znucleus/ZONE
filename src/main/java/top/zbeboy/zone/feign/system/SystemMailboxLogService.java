@@ -3,12 +3,12 @@ package top.zbeboy.zone.feign.system;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import top.zbeboy.zone.domain.tables.pojos.SystemOperatorLog;
-import top.zbeboy.zone.hystrix.system.SystemLogHystrixClientFallbackFactory;
+import top.zbeboy.zone.domain.tables.pojos.SystemMailboxLog;
+import top.zbeboy.zone.hystrix.system.SystemMailboxLogHystrixClientFallbackFactory;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
-@FeignClient(value = "base-server", fallback = SystemLogHystrixClientFallbackFactory.class)
-public interface SystemLogService {
+@FeignClient(value = "base-server", fallback = SystemMailboxLogHystrixClientFallbackFactory.class)
+public interface SystemMailboxLogService {
 
     /**
      * 数据
@@ -16,14 +16,14 @@ public interface SystemLogService {
      * @param dataTablesUtil 请求
      * @return 数据
      */
-    @PostMapping("/base/system/log/data")
+    @PostMapping("/base/system/mailbox/data")
     DataTablesUtil data(@RequestBody DataTablesUtil dataTablesUtil);
 
     /**
      * 保存日志
      *
-     * @param systemLog 数据
+     * @param systemMailboxLog 数据
      */
-    @PostMapping("/base/system/log/save")
-    void save(@RequestBody SystemOperatorLog systemLog);
+    @PostMapping("/base/system/mailbox/log/save")
+    void save(@RequestBody SystemMailboxLog systemMailboxLog);
 }
