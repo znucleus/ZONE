@@ -13,12 +13,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.domain.tables.records.AttendReleaseRecord;
 import top.zbeboy.zone.feign.platform.UsersService;
+import top.zbeboy.zone.feign.system.SystemLogService;
 import top.zbeboy.zone.service.attend.AttendReleaseService;
 import top.zbeboy.zone.service.attend.AttendReleaseSubService;
 import top.zbeboy.zone.service.attend.AttendWxStudentSubscribeService;
 import top.zbeboy.zone.service.cache.attend.AttendWxCacheService;
 import top.zbeboy.zone.service.internship.InternshipApplyService;
-import top.zbeboy.zone.service.system.SystemOperatorLogService;
 import top.zbeboy.zone.service.training.TrainingAttendService;
 import top.zbeboy.zone.service.training.TrainingAttendUsersService;
 import top.zbeboy.zone.service.training.TrainingConfigureService;
@@ -70,7 +70,7 @@ public class ScheduledConfiguration {
     private UsersService usersService;
 
     @Resource
-    private SystemOperatorLogService systemOperatorLogService;
+    private SystemLogService systemLogService;
 
     @Resource
     private AttendReleaseService attendReleaseService;
@@ -116,7 +116,7 @@ public class ScheduledConfiguration {
                 this.usersService.delete(users);
                 users.forEach(user -> {
                     SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(), "删除未验证用户:" + user.getUsername(), DateTimeUtil.getNowSqlTimestamp(), "actuator", "127.0.0.1");
-                    systemOperatorLogService.save(systemLog);
+                    systemLogService.save(systemLog);
                 });
             }
             log.info(">>>>>>>>>>>>> scheduled ... clean users ");

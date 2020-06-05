@@ -10,10 +10,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.SystemOperatorLog;
-import top.zbeboy.zone.service.system.SystemOperatorLogService;
+import top.zbeboy.zone.feign.system.SystemLogService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.RequestUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
+import top.zbeboy.zone.web.util.SpringBootUtil;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -50,9 +51,8 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
             ApplicationContext ctx = WebApplicationContextUtils
                     .getWebApplicationContext(context);
             SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(), "登录系统成功", DateTimeUtil.getNowSqlTimestamp(), username, RequestUtil.getIpAddress(request));
-            SystemOperatorLogService systemOperatorLogService = (SystemOperatorLogService) Objects.requireNonNull(ctx)
-                    .getBean("systemOperatorLogService");
-            systemOperatorLogService.save(systemLog);
+            SystemLogService systemLogService = SpringBootUtil.getBean(SystemLogService.class);
+            systemLogService.save(systemLog);
             String key = username + "_login_error_count";
             HttpSession session = request.getSession();
             if (Objects.nonNull(session.getAttribute(key))) {
@@ -65,9 +65,8 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
             ApplicationContext ctx = WebApplicationContextUtils
                     .getWebApplicationContext(context);
             SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(), "授权登录成功", DateTimeUtil.getNowSqlTimestamp(), username, RequestUtil.getIpAddress(request));
-            SystemOperatorLogService systemOperatorLogService = (SystemOperatorLogService) Objects.requireNonNull(ctx)
-                    .getBean("systemOperatorLogService");
-            systemOperatorLogService.save(systemLog);
+            SystemLogService systemLogService = SpringBootUtil.getBean(SystemLogService.class);
+            systemLogService.save(systemLog);
             // 会帮我们跳转到上一次请求的页面上
             super.onAuthenticationSuccess(request, response, authentication);
         }

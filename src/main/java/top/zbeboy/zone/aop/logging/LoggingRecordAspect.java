@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import top.zbeboy.zone.annotation.logging.LoggingRecord;
 import top.zbeboy.zone.domain.tables.pojos.SystemOperatorLog;
 import top.zbeboy.zone.domain.tables.pojos.Users;
-import top.zbeboy.zone.service.system.SystemLogService;
+import top.zbeboy.zone.feign.system.SystemLogService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.RequestUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;

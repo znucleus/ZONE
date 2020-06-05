@@ -9,7 +9,7 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import top.zbeboy.zone.domain.tables.pojos.SystemOperatorLog;
-import top.zbeboy.zone.service.system.SystemOperatorLogService;
+import top.zbeboy.zone.feign.system.SystemLogService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.RequestUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
@@ -23,7 +23,7 @@ import java.util.Objects;
 public class AuthenticationSuccessEventListener implements ApplicationListener<AuthenticationSuccessEvent> {
 
     @Resource
-    private SystemOperatorLogService systemOperatorLogService;
+    private SystemLogService systemLogService;
 
     @Override
     public void onApplicationEvent(AuthenticationSuccessEvent event) {
@@ -41,7 +41,7 @@ public class AuthenticationSuccessEventListener implements ApplicationListener<A
                     HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(requestAttributes)).getRequest();
 
                     SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(), "OAUTH登录[" + grantType + "][" + scope + "]", DateTimeUtil.getNowSqlTimestamp(), username, RequestUtil.getIpAddress(request));
-                    systemOperatorLogService.save(systemLog);
+                    systemLogService.save(systemLog);
                 }
             }
         }
