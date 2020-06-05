@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.domain.tables.pojos.SystemNotify;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.records.SystemNotifyRecord;
-import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.service.notify.SystemNotifyService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
@@ -37,9 +36,6 @@ public class SystemNotifyRestController {
 
     @Resource
     private SystemNotifyService systemNotifyService;
-
-    @Resource
-    private UsersService usersService;
 
     /**
      * 获取数据

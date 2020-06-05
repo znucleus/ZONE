@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.domain.tables.pojos.UserNotify;
 import top.zbeboy.zone.domain.tables.pojos.Users;
-import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.service.notify.UserNotifyService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.web.bean.notify.UserNotifyBean;
@@ -26,9 +25,6 @@ public class UserNotifyRestController {
 
     @Resource
     private UserNotifyService userNotifyService;
-
-    @Resource
-    private UsersService usersService;
 
     /**
      * 获取用户通知数据

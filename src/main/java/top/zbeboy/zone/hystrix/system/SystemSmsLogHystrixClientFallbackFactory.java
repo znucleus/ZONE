@@ -1,14 +1,14 @@
 package top.zbeboy.zone.hystrix.system;
 
 import org.springframework.stereotype.Component;
-import top.zbeboy.zone.domain.tables.pojos.SystemMailboxLog;
-import top.zbeboy.zone.feign.system.SystemMailboxLogService;
+import top.zbeboy.zone.domain.tables.pojos.SystemSmsLog;
+import top.zbeboy.zone.feign.system.SystemSmsLogService;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 
 import java.util.ArrayList;
 
 @Component
-public class SystemMailboxLogHystrixClientFallbackFactory implements SystemMailboxLogService {
+public class SystemSmsLogHystrixClientFallbackFactory implements SystemSmsLogService {
     @Override
     public DataTablesUtil data(DataTablesUtil dataTablesUtil) {
         dataTablesUtil.setData(new ArrayList<>());
@@ -16,7 +16,7 @@ public class SystemMailboxLogHystrixClientFallbackFactory implements SystemMailb
     }
 
     @Override
-    public void save(SystemMailboxLog systemMailboxLog) {
+    public void save(SystemSmsLog systemSmsLog) {
 
     }
 }
