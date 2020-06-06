@@ -6,18 +6,13 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import top.zbeboy.zone.config.SessionBook;
 import top.zbeboy.zone.config.Workbook;
-import top.zbeboy.zone.domain.tables.pojos.Files;
-import top.zbeboy.zone.domain.tables.pojos.Role;
-import top.zbeboy.zone.domain.tables.pojos.Users;
-import top.zbeboy.zone.domain.tables.pojos.UsersType;
-import top.zbeboy.zone.domain.tables.records.GoogleOauthRecord;
+import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.feign.platform.RoleService;
 import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.feign.system.FilesService;
-import top.zbeboy.zone.service.platform.GoogleOauthService;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
@@ -29,7 +24,6 @@ import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Controller
 public class UsersViewController {
@@ -51,9 +45,6 @@ public class UsersViewController {
 
     @Resource
     private RoleService roleService;
-
-    @Resource
-    private GoogleOauthService googleOauthService;
 
     /**
      * 重置密码
@@ -129,7 +120,7 @@ public class UsersViewController {
         // avatar.
         if (StringUtils.isNotBlank(users.getAvatar())) {
             Files files = filesService.findById(users.getAvatar());
-            if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())){
+            if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())) {
                 modelMap.addAttribute("avatar", Workbook.DIRECTORY_SPLIT + files.getRelativePath());
             }
         }
@@ -180,7 +171,7 @@ public class UsersViewController {
         // avatar.
         if (StringUtils.isNotBlank(users.getAvatar())) {
             Files files = filesService.findById(users.getAvatar());
-            if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())){
+            if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())) {
                 modelMap.addAttribute("avatar", Workbook.DIRECTORY_SPLIT + files.getRelativePath());
             }
         }
@@ -200,8 +191,8 @@ public class UsersViewController {
         modelMap.addAttribute("mobile", StringUtils.overlay(users.getMobile(), "****", 3, 6));
         modelMap.addAttribute("idCard", StringUtils.isNotBlank(users.getIdCard()) ? StringUtils.overlay(users.getIdCard(), "****", 3, users.getIdCard().length() - 4) : "");
 
-        Optional<GoogleOauthRecord> googleOauthRecord = googleOauthService.findByUsername(users.getUsername());
-        if (googleOauthRecord.isPresent()) {
+        GoogleOauth googleOauth = usersService.findGoogleOauthByUsername(users.getUsername());
+        if (Objects.nonNull(googleOauth) && StringUtils.isNotBlank(googleOauth.getUsername())) {
             modelMap.addAttribute("isOpenGoogleOauth", 1);
         } else {
             modelMap.addAttribute("isOpenGoogleOauth", 0);

@@ -5,7 +5,9 @@ import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.domain.tables.pojos.Authorities;
 import top.zbeboy.zone.domain.tables.pojos.AuthorizeType;
 import top.zbeboy.zone.domain.tables.pojos.Role;
+import top.zbeboy.zone.domain.tables.pojos.RoleApply;
 import top.zbeboy.zone.hystrix.platform.AuthorizeHystrixClientFallbackFactory;
+import top.zbeboy.zone.web.bean.platform.authorize.RoleApplyBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.vo.platform.authorize.AuthorizeAddVo;
@@ -16,6 +18,24 @@ import java.util.Map;
 
 @FeignClient(value = "base-server", fallback = AuthorizeHystrixClientFallbackFactory.class)
 public interface AuthorizeService {
+
+    /**
+     * 获取角色申请信息
+     *
+     * @param id 主键
+     * @return 数据
+     */
+    @GetMapping("/base/platform/authorize/role_apply/{id}")
+    RoleApply findRoleApplyById(@PathVariable("id") String id);
+
+    /**
+     * 获取角色申请信息
+     *
+     * @param id 主键
+     * @return 数据
+     */
+    @GetMapping("/base/platform/authorize/role_apply/relation/{id}")
+    RoleApplyBean findRoleApplyByIdRelation(@PathVariable("id") String id);
 
     /**
      * 根据用户账号查询权限

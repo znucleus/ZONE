@@ -1,10 +1,10 @@
 package top.zbeboy.zone.feign.platform;
 
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import top.zbeboy.zone.domain.tables.pojos.OauthClientUsers;
 import top.zbeboy.zone.hystrix.platform.AppHystrixClientFallbackFactory;
+import top.zbeboy.zone.web.bean.platform.app.OauthClientUsersBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.vo.platform.app.AppAddVo;
@@ -14,6 +14,24 @@ import java.util.Map;
 
 @FeignClient(value = "base-server", fallback = AppHystrixClientFallbackFactory.class)
 public interface AppService {
+
+    /**
+     * 获取用户信息
+     *
+     * @param id 主键
+     * @return 数据
+     */
+    @GetMapping("/base/platform/app/oauth_client_users/{id}")
+    OauthClientUsers findOauthClientUsersById(@PathVariable("id") String id);
+
+    /**
+     * 获取用户信息
+     *
+     * @param id 主键
+     * @return 数据
+     */
+    @PostMapping("/base/platform/app/oauth_client_users/id/username/relation")
+    OauthClientUsersBean findOauthClientUsersByIdAndUsernameRelation(@RequestParam("id") String id, @RequestParam("username") String username);
 
     /**
      * 数据

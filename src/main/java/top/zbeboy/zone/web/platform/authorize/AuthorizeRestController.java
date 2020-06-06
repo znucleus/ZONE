@@ -12,7 +12,6 @@ import top.zbeboy.zone.feign.notify.UserNotifyService;
 import top.zbeboy.zone.feign.platform.AuthorizeService;
 import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.feign.system.SystemConfigureService;
-import top.zbeboy.zone.service.platform.RoleApplyService;
 import top.zbeboy.zone.service.system.SystemMailService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.RequestUtil;
@@ -34,9 +33,6 @@ import java.util.Objects;
 
 @RestController
 public class AuthorizeRestController {
-
-    @Resource
-    private RoleApplyService roleApplyService;
 
     @Resource
     private UsersService usersService;
@@ -240,8 +236,8 @@ public class AuthorizeRestController {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Map<String, Object>> ajaxUtil = authorizeService.status(users.getUsername(), roleApplyId, applyStatus, refuse);
         if (ajaxUtil.getState()) {
-            RoleApply roleApply = roleApplyService.findById(roleApplyId);
-            if (Objects.nonNull(roleApply)) {
+            RoleApply roleApply = authorizeService.findRoleApplyById(roleApplyId);
+            if (Objects.nonNull(roleApply) && StringUtils.isNotBlank(roleApply.getRoleApplyId())) {
                 Users applyUser = usersService.findByUsername(roleApply.getUsername());
 
                 String notify = "管理员用户【" + users.getRealName() + "】";

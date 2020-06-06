@@ -1,7 +1,6 @@
 package top.zbeboy.zone.web.platform.role;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jooq.Record;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,8 +10,8 @@ import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.data.StudentService;
+import top.zbeboy.zone.feign.platform.RoleService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
-import top.zbeboy.zone.service.platform.CollegeRoleService;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.bean.platform.role.RoleBean;
@@ -21,7 +20,6 @@ import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import java.util.Objects;
-import java.util.Optional;
 
 @Controller
 public class RoleViewController {
@@ -36,7 +34,7 @@ public class RoleViewController {
     private StudentService studentService;
 
     @Resource
-    private CollegeRoleService collegeRoleService;
+    private RoleService roleService;
 
     /**
      * 平台角色
@@ -118,9 +116,8 @@ public class RoleViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
-            Optional<Record> record = collegeRoleService.findByRoleIdRelation(id);
-            if (record.isPresent()) {
-                RoleBean role = record.get().into(RoleBean.class);
+            RoleBean role = roleService.findByRoleIdRelation(id);
+            if (Objects.nonNull(role) && StringUtils.isNotBlank(role.getRoleId())) {
                 modelMap.addAttribute("role", role);
                 page = "web/platform/role/role_edit::#page-wrapper";
             } else {
@@ -146,9 +143,8 @@ public class RoleViewController {
                     }
                 }
                 if (collegeId > 0) {
-                    Optional<Record> collegeRoleRecord = collegeRoleService.findByRoleIdRelation(id);
-                    if (collegeRoleRecord.isPresent()) {
-                        RoleBean role = collegeRoleRecord.get().into(RoleBean.class);
+                    RoleBean role = roleService.findByRoleIdRelation(id);
+                    if (Objects.nonNull(role) && StringUtils.isNotBlank(role.getRoleId())) {
                         if (collegeId == role.getCollegeId()) {
                             modelMap.addAttribute("role", role);
                             page = "web/platform/role/role_edit::#page-wrapper";
@@ -191,9 +187,8 @@ public class RoleViewController {
     public String see(@PathVariable("id") String id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        Optional<Record> record = collegeRoleService.findByRoleIdRelation(id);
-        if (record.isPresent()) {
-            RoleBean role = record.get().into(RoleBean.class);
+        RoleBean role = roleService.findByRoleIdRelation(id);
+        if (Objects.nonNull(role) && StringUtils.isNotBlank(role.getRoleId())) {
             modelMap.addAttribute("role", role);
             page = "web/platform/role/role_see::#page-wrapper";
         } else {

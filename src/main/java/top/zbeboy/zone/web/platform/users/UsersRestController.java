@@ -17,15 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.config.SessionBook;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.config.ZoneProperties;
-import top.zbeboy.zone.domain.tables.pojos.Files;
-import top.zbeboy.zone.domain.tables.pojos.Role;
-import top.zbeboy.zone.domain.tables.pojos.SystemConfigure;
-import top.zbeboy.zone.domain.tables.pojos.Users;
-import top.zbeboy.zone.domain.tables.records.GoogleOauthRecord;
+import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.feign.system.FilesService;
 import top.zbeboy.zone.feign.system.SystemConfigureService;
-import top.zbeboy.zone.service.platform.GoogleOauthService;
 import top.zbeboy.zone.service.system.SystemMailService;
 import top.zbeboy.zone.service.util.*;
 import top.zbeboy.zone.web.system.mail.SystemMailConfig;
@@ -40,7 +35,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 @RestController
@@ -62,9 +60,6 @@ public class UsersRestController {
 
     @Resource
     private SystemMailService systemMailService;
-
-    @Resource
-    private GoogleOauthService googleOauthService;
 
     /**
      * 检验账号是否被注册
@@ -256,9 +251,9 @@ public class UsersRestController {
                     String dynamicPassword = usersProfileVo.getDynamicPassword();
                     if (StringUtils.isNotBlank(dynamicPassword)) {
                         if (NumberUtils.isDigits(dynamicPassword)) {
-                            Optional<GoogleOauthRecord> googleOauthRecord = googleOauthService.findByUsername(own.getUsername());
-                            if (googleOauthRecord.isPresent()) {
-                                if (GoogleOauthUtil.validCode(googleOauthRecord.get().getGoogleOauthKey(), NumberUtils.toInt(dynamicPassword))) {
+                            GoogleOauth googleOauth = usersService.findGoogleOauthByUsername(own.getUsername());
+                            if (Objects.nonNull(googleOauth) && StringUtils.isNotBlank(googleOauth.getUsername())) {
+                                if (GoogleOauthUtil.validCode(googleOauth.getGoogleOauthKey(), NumberUtils.toInt(dynamicPassword))) {
                                     canUpdate = true;
                                 } else {
                                     ajaxUtil.fail().msg("动态密码错误");
@@ -481,7 +476,7 @@ public class UsersRestController {
                 users.setAvatar(Workbook.USERS_AVATAR);
                 usersService.update(users);
                 Files files = filesService.findById(avatar);
-                if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())){
+                if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())) {
                     // delete file.
                     FilesUtil.deleteFile(RequestUtil.getRealPath(request) + files.getRelativePath());
                     filesService.delete(files);

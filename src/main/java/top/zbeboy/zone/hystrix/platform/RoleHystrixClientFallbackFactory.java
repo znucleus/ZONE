@@ -5,6 +5,7 @@ import top.zbeboy.zone.domain.tables.pojos.Application;
 import top.zbeboy.zone.domain.tables.pojos.Role;
 import top.zbeboy.zone.domain.tables.pojos.RoleApplication;
 import top.zbeboy.zone.feign.platform.RoleService;
+import top.zbeboy.zone.web.bean.platform.role.RoleBean;
 import top.zbeboy.zone.web.plugin.treeview.TreeViewData;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
@@ -41,6 +42,11 @@ public class RoleHystrixClientFallbackFactory implements RoleService
     @Override
     public List<Application> findInRoleEnNamesRelation(List<String> roles, String username) {
         return new ArrayList<>();
+    }
+
+    @Override
+    public RoleBean findByRoleIdRelation(String roleId) {
+        return new RoleBean();
     }
 
     @Override

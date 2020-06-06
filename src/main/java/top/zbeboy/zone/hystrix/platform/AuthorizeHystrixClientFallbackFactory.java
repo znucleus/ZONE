@@ -4,7 +4,9 @@ import org.springframework.stereotype.Component;
 import top.zbeboy.zone.domain.tables.pojos.Authorities;
 import top.zbeboy.zone.domain.tables.pojos.AuthorizeType;
 import top.zbeboy.zone.domain.tables.pojos.Role;
+import top.zbeboy.zone.domain.tables.pojos.RoleApply;
 import top.zbeboy.zone.feign.platform.AuthorizeService;
+import top.zbeboy.zone.web.bean.platform.authorize.RoleApplyBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.vo.platform.authorize.AuthorizeAddVo;
@@ -16,6 +18,16 @@ import java.util.Map;
 
 @Component
 public class AuthorizeHystrixClientFallbackFactory implements AuthorizeService {
+    @Override
+    public RoleApply findRoleApplyById(String id) {
+        return new RoleApply();
+    }
+
+    @Override
+    public RoleApplyBean findRoleApplyByIdRelation(String id) {
+        return new RoleApplyBean();
+    }
+
     @Override
     public List<Authorities> findByUsername(String username) {
         return new ArrayList<>();

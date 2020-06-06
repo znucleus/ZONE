@@ -6,6 +6,7 @@ import top.zbeboy.zone.domain.tables.pojos.Application;
 import top.zbeboy.zone.domain.tables.pojos.Role;
 import top.zbeboy.zone.domain.tables.pojos.RoleApplication;
 import top.zbeboy.zone.hystrix.platform.RoleHystrixClientFallbackFactory;
+import top.zbeboy.zone.web.bean.platform.role.RoleBean;
 import top.zbeboy.zone.web.plugin.treeview.TreeViewData;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
@@ -64,6 +65,15 @@ public interface RoleService {
      */
     @PostMapping("/base/platform/role/role_en_names/relation")
     List<Application> findInRoleEnNamesRelation(@RequestBody List<String> roles, @RequestParam("username") String username);
+
+    /**
+     * 院与角色关联数据
+     *
+     * @param roleId 角色id
+     * @return 数据
+     */
+    @GetMapping("/base/platform/role/college_role/role_id/{roleId}")
+    RoleBean findByRoleIdRelation(@PathVariable("roleId") String roleId);
 
     /**
      * 数据

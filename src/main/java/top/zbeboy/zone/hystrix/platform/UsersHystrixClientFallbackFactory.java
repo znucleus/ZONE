@@ -1,6 +1,7 @@
 package top.zbeboy.zone.hystrix.platform;
 
 import org.springframework.stereotype.Component;
+import top.zbeboy.zone.domain.tables.pojos.GoogleOauth;
 import top.zbeboy.zone.domain.tables.pojos.Role;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.feign.platform.UsersService;
@@ -27,6 +28,11 @@ public class UsersHystrixClientFallbackFactory implements UsersService {
     @Override
     public Users findByMobile(String mobile) {
         return new Users();
+    }
+
+    @Override
+    public GoogleOauth findGoogleOauthByUsername(String username) {
+        return new GoogleOauth();
     }
 
     @Override

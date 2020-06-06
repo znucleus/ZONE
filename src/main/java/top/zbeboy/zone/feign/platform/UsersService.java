@@ -2,6 +2,7 @@ package top.zbeboy.zone.feign.platform;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
+import top.zbeboy.zone.domain.tables.pojos.GoogleOauth;
 import top.zbeboy.zone.domain.tables.pojos.Role;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.hystrix.platform.UsersHystrixClientFallbackFactory;
@@ -40,6 +41,15 @@ public interface UsersService {
      */
     @GetMapping("/base/users/mobile/{mobile}")
     Users findByMobile(@PathVariable("mobile") String mobile);
+
+    /**
+     * 获取google oauth
+     *
+     * @param username 账号
+     * @return 数据
+     */
+    @GetMapping("/base/users/google_oauth/{username}")
+    GoogleOauth findGoogleOauthByUsername(@PathVariable("username") String username);
 
     /**
      * 获取用户

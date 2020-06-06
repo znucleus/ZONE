@@ -1,7 +1,9 @@
 package top.zbeboy.zone.hystrix.platform;
 
 import org.springframework.stereotype.Component;
+import top.zbeboy.zone.domain.tables.pojos.OauthClientUsers;
 import top.zbeboy.zone.feign.platform.AppService;
+import top.zbeboy.zone.web.bean.platform.app.OauthClientUsersBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.vo.platform.app.AppAddVo;
@@ -12,6 +14,16 @@ import java.util.Map;
 
 @Component
 public class AppHystrixClientFallbackFactory implements AppService {
+    @Override
+    public OauthClientUsers findOauthClientUsersById(String id) {
+        return new OauthClientUsers();
+    }
+
+    @Override
+    public OauthClientUsersBean findOauthClientUsersByIdAndUsernameRelation(String id, String username) {
+        return new OauthClientUsersBean();
+    }
+
     @Override
     public DataTablesUtil data(DataTablesUtil dataTablesUtil) {
         dataTablesUtil.setData(new ArrayList<>());

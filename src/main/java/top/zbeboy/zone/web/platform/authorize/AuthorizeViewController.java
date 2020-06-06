@@ -1,7 +1,6 @@
 package top.zbeboy.zone.web.platform.authorize;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jooq.Record;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,9 +8,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.feign.data.*;
+import top.zbeboy.zone.feign.platform.AuthorizeService;
 import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
-import top.zbeboy.zone.service.platform.RoleApplyService;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.bean.platform.authorize.RoleApplyBean;
@@ -20,7 +19,6 @@ import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import java.util.Objects;
-import java.util.Optional;
 
 @Controller
 public class AuthorizeViewController {
@@ -38,7 +36,7 @@ public class AuthorizeViewController {
     private StudentService studentService;
 
     @Resource
-    private RoleApplyService roleApplyService;
+    private AuthorizeService authorizeService;
 
     @Resource
     private DepartmentService departmentService;
@@ -130,15 +128,13 @@ public class AuthorizeViewController {
         RoleApplyBean roleApplyBean = null;
         if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
                 SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
-            Optional<Record> roleApplyRecord = roleApplyService.findByIdRelation(roleUsersId);
-            if (roleApplyRecord.isPresent()) {
-                roleApplyBean = roleApplyRecord.get().into(RoleApplyBean.class);
+            roleApplyBean = authorizeService.findRoleApplyByIdRelation(roleUsersId);
+            if (Objects.nonNull(roleApplyBean) && StringUtils.isNotBlank(roleApplyBean.getRoleApplyId())) {
                 canEdit = true;
             }
         } else {
-            Optional<Record> roleApplyRecord = roleApplyService.findByIdRelation(roleUsersId);
-            if (roleApplyRecord.isPresent()) {
-                roleApplyBean = roleApplyRecord.get().into(RoleApplyBean.class);
+            roleApplyBean = authorizeService.findRoleApplyByIdRelation(roleUsersId);
+            if (Objects.nonNull(roleApplyBean) && StringUtils.isNotBlank(roleApplyBean.getRoleApplyId())) {
                 Users users = SessionUtil.getUserFromSession();
                 if (StringUtils.equals(users.getUsername(), roleApplyBean.getUsername())) {
                     canEdit = true;
