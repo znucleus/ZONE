@@ -6,10 +6,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import top.zbeboy.zone.config.Workbook;
+import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.service.util.RequestUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
+import java.util.Objects;
 
 public class SimplePaginationUtil extends PaginationUtil {
     private int pageNum;
@@ -22,6 +25,7 @@ public class SimplePaginationUtil extends PaginationUtil {
     private boolean isToJson;
     private Principal principal;
     private String channel;
+    private String username;
     /*
     导出数据信息
     */
@@ -160,5 +164,13 @@ public class SimplePaginationUtil extends PaginationUtil {
 
     public void setChannel(String channel) {
         this.channel = channel;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

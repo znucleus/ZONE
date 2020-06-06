@@ -1,6 +1,8 @@
 package top.zbeboy.zone.web.util;
 
 import top.zbeboy.zone.web.util.pagination.PaginationUtil;
+import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
+import top.zbeboy.zone.web.util.pagination.TableSawUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,7 +52,13 @@ public class AjaxUtil<T> {
     }
 
     public AjaxUtil<T> page(PaginationUtil paginationUtil) {
-        this.paginationUtil = paginationUtil;
+        if (paginationUtil instanceof SimplePaginationUtil) {
+            this.result.put("page", (SimplePaginationUtil) paginationUtil);
+        } else if (paginationUtil instanceof TableSawUtil) {
+            this.result.put("page", (TableSawUtil) paginationUtil);
+        } else {
+            this.result.put("page", paginationUtil);
+        }
         return this;
     }
 
@@ -59,7 +67,6 @@ public class AjaxUtil<T> {
         this.result.put("msg", this.msg);
         this.result.put("mapResult", this.mapResult);
         this.result.put("listResult", this.listResult);
-        this.result.put("page", this.paginationUtil);
         return this.result;
     }
 
