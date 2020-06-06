@@ -45,7 +45,7 @@ public class UsersApiController {
             outPut.put("accountNonLocked", users.getAccountNonLocked());
             if (StringUtils.isNotBlank(users.getAvatar())) {
                 Files files = filesService.findById(users.getAvatar());
-                if (Objects.nonNull(files)) {
+                if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())) {
                     outPut.put("avatar", Workbook.DIRECTORY_SPLIT + files.getRelativePath());
                 }
             }

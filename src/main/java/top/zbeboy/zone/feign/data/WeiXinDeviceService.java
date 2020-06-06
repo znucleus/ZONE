@@ -1,31 +1,38 @@
 package top.zbeboy.zone.feign.data;
 
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import top.zbeboy.zone.domain.tables.pojos.WeiXinDevice;
-import top.zbeboy.zone.domain.tables.records.WeiXinDeviceRecord;
+import top.zbeboy.zone.hystrix.data.WeiXinDeviceHystrixClientFallbackFactory;
 
-import java.util.Optional;
-
+@FeignClient(value = "base-server", fallback = WeiXinDeviceHystrixClientFallbackFactory.class)
 public interface WeiXinDeviceService {
 
     /**
-     * 通过账号查询
+     * 获取设备信息
      *
      * @param username 账号
-     * @return 结果
+     * @return 数据
      */
-    Optional<WeiXinDeviceRecord> findByUsername(String username);
+    @GetMapping("/base/data/wei_xin_device/username/{username}")
+    WeiXinDevice findByUsername(@PathVariable("username") String username);
 
     /**
      * 保存
      *
      * @param weiXinDevice 数据
      */
-    void save(WeiXinDevice weiXinDevice);
+    @PostMapping("/base/data/wei_xin_device/save")
+    void save(@RequestBody WeiXinDevice weiXinDevice);
 
     /**
      * 更新
      *
      * @param weiXinDevice 数据
      */
-    void update(WeiXinDevice weiXinDevice);
+    @PostMapping("/base/data/wei_xin_device/update")
+    void update(@RequestBody WeiXinDevice weiXinDevice);
 }

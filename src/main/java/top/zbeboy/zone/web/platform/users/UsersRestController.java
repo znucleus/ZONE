@@ -481,7 +481,7 @@ public class UsersRestController {
                 users.setAvatar(Workbook.USERS_AVATAR);
                 usersService.update(users);
                 Files files = filesService.findById(avatar);
-                if (Objects.nonNull(files)) {
+                if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())){
                     // delete file.
                     FilesUtil.deleteFile(RequestUtil.getRealPath(request) + files.getRelativePath());
                     filesService.delete(files);

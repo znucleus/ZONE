@@ -494,7 +494,7 @@ public class TrainingSpecialRestController {
             if (Objects.nonNull(trainingSpecialFile)) {
                 trainingSpecialFileService.deleteById(trainingSpecialFileId);
                 Files files = filesService.findById(trainingSpecialFile.getFileId());
-                if (Objects.nonNull(files)) {
+                if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())){
                     FilesUtil.deleteFile(RequestUtil.getRealPath(request) + files.getRelativePath());
                     filesService.delete(files);
                     ajaxUtil.success().msg("删除成功");
@@ -523,7 +523,7 @@ public class TrainingSpecialRestController {
         if (Objects.nonNull(trainingSpecialFile)) {
             trainingSpecialFileService.updateDownloads(id);
             Files files = filesService.findById(trainingSpecialFile.getFileId());
-            if (Objects.nonNull(files)) {
+            if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())){
                 uploadService.download(files.getNewName(), files.getRelativePath(), response, request);
             }
         }
@@ -570,7 +570,7 @@ public class TrainingSpecialRestController {
                 File file = new File(realPath + trainingSpecialFileMappingVo.getRelativePath());
                 if (file.exists()) {
                     Files files = filesService.findById(trainingSpecialFileMappingVo.getFileId());
-                    if (Objects.nonNull(files)) {
+                    if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())){
                         files.setRelativePath(trainingSpecialFileMappingVo.getRelativePath());
                         files.setOriginalFileName(trainingSpecialFileMappingVo.getOriginalFileName());
                         files.setNewName(trainingSpecialFileMappingVo.getNewName());

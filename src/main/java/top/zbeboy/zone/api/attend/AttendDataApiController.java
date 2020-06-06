@@ -11,13 +11,12 @@ import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.domain.tables.records.AttendDataRecord;
 import top.zbeboy.zone.domain.tables.records.AttendUsersRecord;
-import top.zbeboy.zone.domain.tables.records.WeiXinDeviceRecord;
 import top.zbeboy.zone.feign.data.StudentService;
+import top.zbeboy.zone.feign.data.WeiXinDeviceService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.attend.AttendDataService;
 import top.zbeboy.zone.service.attend.AttendReleaseSubService;
 import top.zbeboy.zone.service.attend.AttendUsersService;
-import top.zbeboy.zone.service.data.WeiXinDeviceService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
@@ -95,9 +94,8 @@ public class AttendDataApiController {
                                             attendData.setAttendDate(DateTimeUtil.getNowSqlTimestamp());
 
                                             // 机型处理
-                                            Optional<WeiXinDeviceRecord> weiXinDeviceRecord = weiXinDeviceService.findByUsername(users.getUsername());
-                                            if (weiXinDeviceRecord.isPresent()) {
-                                                WeiXinDevice weiXinDevice = weiXinDeviceRecord.get().into(WeiXinDevice.class);
+                                            WeiXinDevice weiXinDevice = weiXinDeviceService.findByUsername(users.getUsername());
+                                            if (Objects.nonNull(weiXinDevice) && StringUtils.isNotBlank(weiXinDevice.getDeviceId())) {
                                                 if (!StringUtils.equals(weiXinDevice.getModel(), attendDataAddVo.getModel()) ||
                                                         Objects.isNull(weiXinDevice.getScreenWidth()) ||
                                                         Objects.isNull(attendDataAddVo.getScreenWidth()) ||
@@ -123,21 +121,21 @@ public class AttendDataApiController {
 
                                                 weiXinDeviceService.update(weiXinDevice);
                                             } else {
-                                                WeiXinDevice weiXinDevice = new WeiXinDevice();
-                                                weiXinDevice.setDeviceId(UUIDUtil.getUUID());
-                                                weiXinDevice.setBrand(attendDataAddVo.getBrand());
-                                                weiXinDevice.setModel(attendDataAddVo.getModel());
-                                                weiXinDevice.setVersion(attendDataAddVo.getVersion());
-                                                weiXinDevice.setScreenWidth(attendDataAddVo.getScreenWidth());
-                                                weiXinDevice.setScreenHeight(attendDataAddVo.getScreenHeight());
-                                                weiXinDevice.setSystemInfo(attendDataAddVo.getSystemInfo());
-                                                weiXinDevice.setPlatform(attendDataAddVo.getPlatform());
-                                                weiXinDevice.setLocationAuthorized(attendDataAddVo.getLocationAuthorized());
-                                                weiXinDevice.setNotificationAuthorized(attendDataAddVo.getNotificationAuthorized());
-                                                weiXinDevice.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
-                                                weiXinDevice.setUsername(users.getUsername());
+                                                WeiXinDevice bean = new WeiXinDevice();
+                                                bean.setDeviceId(UUIDUtil.getUUID());
+                                                bean.setBrand(attendDataAddVo.getBrand());
+                                                bean.setModel(attendDataAddVo.getModel());
+                                                bean.setVersion(attendDataAddVo.getVersion());
+                                                bean.setScreenWidth(attendDataAddVo.getScreenWidth());
+                                                bean.setScreenHeight(attendDataAddVo.getScreenHeight());
+                                                bean.setSystemInfo(attendDataAddVo.getSystemInfo());
+                                                bean.setPlatform(attendDataAddVo.getPlatform());
+                                                bean.setLocationAuthorized(attendDataAddVo.getLocationAuthorized());
+                                                bean.setNotificationAuthorized(attendDataAddVo.getNotificationAuthorized());
+                                                bean.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                                                bean.setUsername(users.getUsername());
 
-                                                weiXinDeviceService.save(weiXinDevice);
+                                                weiXinDeviceService.save(bean);
 
                                                 attendData.setDeviceSame(BooleanUtil.toByte(true));
                                             }

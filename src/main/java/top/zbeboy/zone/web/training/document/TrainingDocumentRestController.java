@@ -1,5 +1,6 @@
 package top.zbeboy.zone.web.training.document;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.slf4j.Logger;
@@ -307,7 +308,7 @@ public class TrainingDocumentRestController {
             if (trainingConditionCommon.canOperator(trainingDocumentFile.getTrainingReleaseId())) {
                 trainingDocumentFileService.deleteById(trainingDocumentFileId);
                 Files files = filesService.findById(trainingDocumentFile.getFileId());
-                if (Objects.nonNull(files)) {
+                if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())){
                     FilesUtil.deleteFile(RequestUtil.getRealPath(request) + files.getRelativePath());
                     filesService.delete(files);
                 }
@@ -334,7 +335,7 @@ public class TrainingDocumentRestController {
         if (Objects.nonNull(trainingDocumentFile)) {
             trainingDocumentFileService.updateDownloads(id);
             Files files = filesService.findById(trainingDocumentFile.getFileId());
-            if (Objects.nonNull(files)) {
+            if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())){
                 uploadService.download(files.getOriginalFileName(), files.getRelativePath(), response, request);
             }
         }

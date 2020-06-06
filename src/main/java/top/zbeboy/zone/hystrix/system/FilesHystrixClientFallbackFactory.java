@@ -8,7 +8,7 @@ import top.zbeboy.zone.feign.system.FilesService;
 public class FilesHystrixClientFallbackFactory implements FilesService {
     @Override
     public Files findById(String id) {
-        return null;
+        return new Files();
     }
 
     @Override

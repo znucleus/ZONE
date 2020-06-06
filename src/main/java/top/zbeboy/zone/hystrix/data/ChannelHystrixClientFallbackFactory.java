@@ -11,12 +11,12 @@ import java.util.List;
 public class ChannelHystrixClientFallbackFactory implements ChannelService {
     @Override
     public Channel findById(int id) {
-        return null;
+        return new Channel();
     }
 
     @Override
     public Channel findByChannelName(String name) {
-        return null;
+        return new Channel();
     }
 
     @Override

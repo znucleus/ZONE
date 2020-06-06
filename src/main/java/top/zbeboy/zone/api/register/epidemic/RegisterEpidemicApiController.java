@@ -79,7 +79,9 @@ public class RegisterEpidemicApiController {
                     epidemicRegisterData.setRemark(epidemicRegisterDataAddVo.getRemark());
 
                     Channel channel = channelService.findByChannelName(Workbook.channel.API.name());
-                    epidemicRegisterData.setChannelId(channel.getChannelId());
+                    if(Objects.nonNull(channel) && channel.getChannelId() > 0){
+                        epidemicRegisterData.setChannelId(channel.getChannelId());
+                    }
 
                     UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
                     if (Objects.nonNull(usersType)) {

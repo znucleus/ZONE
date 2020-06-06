@@ -166,7 +166,7 @@ public class InternshipApplyRestController {
     @GetMapping("/web/internship/apply/download/{id}")
     public void download(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
         Files files = filesService.findById(id);
-        if (Objects.nonNull(files)) {
+        if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId()))  {
             uploadService.download(files.getOriginalFileName(), files.getRelativePath(), response, request);
         }
     }
@@ -479,8 +479,10 @@ public class InternshipApplyRestController {
                     for (FileBean fileBean : fileBeens) {
                         if (StringUtils.isNotBlank(internshipApply.getFileId())) {
                             Files oldFile = filesService.findById(internshipApply.getFileId());
-                            FilesUtil.deleteFile(RequestUtil.getRealPath(request) + oldFile.getRelativePath());
-                            filesService.deleteById(oldFile.getFileId());
+                            if (Objects.nonNull(oldFile) && StringUtils.isNotBlank(oldFile.getFileId())){
+                                FilesUtil.deleteFile(RequestUtil.getRealPath(request) + oldFile.getRelativePath());
+                                filesService.deleteById(oldFile.getFileId());
+                            }
                         }
                         String fileId = UUIDUtil.getUUID();
                         Files files = new Files();
@@ -528,11 +530,15 @@ public class InternshipApplyRestController {
                 if (StringUtils.isNotBlank(internshipApply.getFileId())) {
                     String fileId = internshipApply.getFileId();
                     Files files = filesService.findById(fileId);
-                    internshipApply.setFileId("");
-                    internshipApplyService.update(internshipApply);
-                    FilesUtil.deleteFile(RequestUtil.getRealPath(request) + files.getRelativePath());
-                    filesService.deleteById(fileId);
-                    ajaxUtil.success().msg("删除成功");
+                    if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())) {
+                        internshipApply.setFileId("");
+                        internshipApplyService.update(internshipApply);
+                        FilesUtil.deleteFile(RequestUtil.getRealPath(request) + files.getRelativePath());
+                        filesService.deleteById(fileId);
+                        ajaxUtil.success().msg("删除成功");
+                    } else {
+                        ajaxUtil.fail().msg("未查询到文件信息");
+                    }
                 } else {
                     ajaxUtil.fail().msg("未查询到实习申请文件信息");
                 }

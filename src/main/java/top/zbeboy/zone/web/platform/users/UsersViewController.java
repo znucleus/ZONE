@@ -129,7 +129,7 @@ public class UsersViewController {
         // avatar.
         if (StringUtils.isNotBlank(users.getAvatar())) {
             Files files = filesService.findById(users.getAvatar());
-            if (Objects.nonNull(files)) {
+            if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())){
                 modelMap.addAttribute("avatar", Workbook.DIRECTORY_SPLIT + files.getRelativePath());
             }
         }
@@ -180,7 +180,7 @@ public class UsersViewController {
         // avatar.
         if (StringUtils.isNotBlank(users.getAvatar())) {
             Files files = filesService.findById(users.getAvatar());
-            if (Objects.nonNull(files)) {
+            if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())){
                 modelMap.addAttribute("avatar", Workbook.DIRECTORY_SPLIT + files.getRelativePath());
             }
         }
