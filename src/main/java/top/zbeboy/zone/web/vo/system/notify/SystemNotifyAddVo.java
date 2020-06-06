@@ -16,6 +16,9 @@ public class SystemNotifyAddVo {
     private String expireDate;
     @NotBlank(message = "类型不能为空")
     private String notifyType;
+    @NotBlank(message = "发送账号不能为空")
+    @Size(max = 64, message = "发送账号不正确")
+    private String sendUser;
 
     public String getNotifyTitle() {
         return notifyTitle;
@@ -55,5 +58,13 @@ public class SystemNotifyAddVo {
 
     public void setNotifyType(String notifyType) {
         this.notifyType = notifyType;
+    }
+
+    public String getSendUser() {
+        return sendUser;
+    }
+
+    public void setSendUser(String sendUser) {
+        this.sendUser = sendUser;
     }
 }

@@ -1,17 +1,17 @@
 package top.zbeboy.zone.web.notify;
 
-import org.jooq.Record;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import top.zbeboy.zone.service.notify.SystemNotifyService;
+import top.zbeboy.zone.feign.notify.SystemNotifyService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.web.bean.notify.SystemNotifyBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 
 import javax.annotation.Resource;
-import java.util.Optional;
+import java.util.Objects;
 
 @Controller
 public class SystemNotifyViewController {
@@ -50,9 +50,8 @@ public class SystemNotifyViewController {
     public String edit(@PathVariable("id") String id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        Optional<Record> record = systemNotifyService.findByIdRelation(id);
-        if (record.isPresent()) {
-            SystemNotifyBean bean = record.get().into(SystemNotifyBean.class);
+        SystemNotifyBean bean = systemNotifyService.findByIdRelation(id);
+        if (Objects.nonNull(bean) && StringUtils.isNotBlank(bean.getSystemNotifyId())) {
             bean.setValidDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getValidDate()));
             bean.setExpireDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getExpireDate()));
             modelMap.addAttribute("systemNotify", bean);
