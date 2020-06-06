@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.domain.tables.pojos.Channel;
-import top.zbeboy.zone.service.data.ChannelService;
+import top.zbeboy.zone.feign.data.ChannelService;
 import top.zbeboy.zone.web.plugin.select2.Select2Data;
 
 import javax.annotation.Resource;
@@ -27,7 +27,7 @@ public class ChannelRestController {
     @GetMapping("/users/data/channel")
     public ResponseEntity<Map<String, Object>> usersData() {
         Select2Data select2Data = Select2Data.of();
-        List<Channel> channels = channelService.findAll();
+        List<Channel> channels = channelService.usersData();
         if (Objects.nonNull(channels) && !channels.isEmpty()) {
             channels.forEach(channel -> select2Data.add(channel.getChannelId().toString(), channel.getChannelName()));
         }

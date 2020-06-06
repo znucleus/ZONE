@@ -12,11 +12,10 @@ import top.zbeboy.zone.domain.tables.pojos.EpidemicRegisterData;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.domain.tables.records.EpidemicRegisterDataRecord;
+import top.zbeboy.zone.feign.data.ChannelService;
 import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.data.StudentService;
-import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
-import top.zbeboy.zone.service.data.ChannelService;
 import top.zbeboy.zone.service.register.EpidemicRegisterDataService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
@@ -38,9 +37,6 @@ public class RegisterEpidemicApiController {
 
     @Resource
     private EpidemicRegisterDataService epidemicRegisterDataService;
-
-    @Resource
-    private UsersService usersService;
 
     @Resource
     private ChannelService channelService;
