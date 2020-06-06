@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.Files;
-import top.zbeboy.zone.service.system.FilesService;
+import top.zbeboy.zone.feign.system.FilesService;
 import top.zbeboy.zone.service.training.TrainingSpecialDocumentService;
 import top.zbeboy.zone.service.training.TrainingSpecialService;
 import top.zbeboy.zone.service.util.DateTimeUtil;

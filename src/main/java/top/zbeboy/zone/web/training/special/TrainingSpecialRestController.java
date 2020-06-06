@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.domain.tables.records.TrainingSpecialFileTypeRecord;
-import top.zbeboy.zone.feign.platform.UsersService;
-import top.zbeboy.zone.service.system.FilesService;
+import top.zbeboy.zone.feign.system.FilesService;
 import top.zbeboy.zone.service.training.*;
 import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
@@ -67,9 +66,6 @@ public class TrainingSpecialRestController {
 
     @Resource
     private UploadService uploadService;
-
-    @Resource
-    private UsersService usersService;
 
     /**
      * 数据

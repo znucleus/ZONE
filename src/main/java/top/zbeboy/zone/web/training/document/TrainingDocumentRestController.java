@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
-import top.zbeboy.zone.service.system.FilesService;
+import top.zbeboy.zone.feign.system.FilesService;
 import top.zbeboy.zone.service.training.TrainingDocumentContentService;
 import top.zbeboy.zone.service.training.TrainingDocumentFileService;
 import top.zbeboy.zone.service.training.TrainingDocumentService;

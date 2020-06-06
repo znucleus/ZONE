@@ -13,8 +13,8 @@ import top.zbeboy.zone.annotation.logging.LoggingRecord;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.Files;
 import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zone.feign.system.FilesService;
 import top.zbeboy.zone.service.platform.MenuService;
-import top.zbeboy.zone.service.system.FilesService;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;

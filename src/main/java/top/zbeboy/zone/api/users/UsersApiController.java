@@ -9,8 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.Files;
 import top.zbeboy.zone.domain.tables.pojos.Users;
-import top.zbeboy.zone.feign.platform.UsersService;
-import top.zbeboy.zone.service.system.FilesService;
+import top.zbeboy.zone.feign.system.FilesService;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.SessionUtil;
 
@@ -22,9 +21,6 @@ import java.util.Objects;
 
 @RestController
 public class UsersApiController {
-
-    @Resource
-    private UsersService usersService;
 
     @Resource
     private FilesService filesService;
