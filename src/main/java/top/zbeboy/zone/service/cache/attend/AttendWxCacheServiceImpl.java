@@ -17,10 +17,10 @@ import top.zbeboy.zone.config.CacheBook;
 import top.zbeboy.zone.config.WeiXinAppBook;
 import top.zbeboy.zone.domain.tables.pojos.AttendRelease;
 import top.zbeboy.zone.domain.tables.pojos.AttendSubscribeLog;
+import top.zbeboy.zone.feign.data.WeiXinService;
 import top.zbeboy.zone.service.attend.AttendSubscribeLogService;
 import top.zbeboy.zone.service.attend.AttendWxStudentSubscribeService;
 import top.zbeboy.zone.service.cache.weixin.WeiXinCacheService;
-import top.zbeboy.zone.service.data.WeiXinService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.HttpClientUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
@@ -91,9 +91,8 @@ public class AttendWxCacheServiceImpl implements AttendWxCacheService {
         if (subRecord.isNotEmpty()) {
             List<AttendReleaseSubBean> beans = subRecord.into(AttendReleaseSubBean.class);
             for (AttendReleaseSubBean bean : beans) {
-                Optional<Record> weiXinRecord = weiXinService.findByStudentIdAndAppId(bean.getStudentId(), WeiXinAppBook.ATTEND_APP_ID);
-                if (weiXinRecord.isPresent()) {
-                    WeiXinBean weiXinBean = weiXinRecord.get().into(WeiXinBean.class);
+                WeiXinBean weiXinBean = weiXinService.findByStudentIdAndAppId(bean.getStudentId(), WeiXinAppBook.ATTEND_APP_ID);
+                if (Objects.nonNull(weiXinBean) && weiXinBean.getWeiXinId() > 0) {
                     Map<String, Object> map = new HashMap<>();
                     map.put("touser", weiXinBean.getOpenId());
                     map.put("template_id", bean.getTemplateId());

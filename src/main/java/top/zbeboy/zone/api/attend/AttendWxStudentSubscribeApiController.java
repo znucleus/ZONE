@@ -19,11 +19,10 @@ import top.zbeboy.zone.domain.tables.pojos.AttendWxStudentSubscribe;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.WeiXin;
 import top.zbeboy.zone.domain.tables.records.AttendWxStudentSubscribeRecord;
-import top.zbeboy.zone.domain.tables.records.WeiXinRecord;
 import top.zbeboy.zone.feign.data.StudentService;
+import top.zbeboy.zone.feign.data.WeiXinService;
 import top.zbeboy.zone.service.attend.AttendWxStudentSubscribeService;
 import top.zbeboy.zone.service.cache.attend.AttendWxCacheService;
-import top.zbeboy.zone.service.data.WeiXinService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.HttpClientUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
@@ -85,9 +84,8 @@ public class AttendWxStudentSubscribeApiController {
                 if (StringUtils.isNotBlank(openId)) {
                     Users users = SessionUtil.getUserFromOauth(principal);
                     if (Objects.nonNull(users)) {
-                        Optional<WeiXinRecord> record = weiXinService.findByUsernameAndAppId(users.getUsername(), appId);
-                        if (record.isPresent()) {
-                            WeiXin weiXin = record.get().into(WeiXin.class);
+                        WeiXin weiXin = weiXinService.findByUsernameAndAppId(users.getUsername(), appId);
+                        if (Objects.nonNull(weiXin) && weiXin.getWeiXinId() > 0) {
                             weiXin.setOpenId(params.getString("openid"));
                             weiXin.setSessionKey(params.getString("session_key"));
                             weiXin.setUnionId(params.getString("unionid"));
@@ -97,17 +95,17 @@ public class AttendWxStudentSubscribeApiController {
 
                             weiXinService.update(weiXin);
                         } else {
-                            WeiXin weiXin = new WeiXin();
-                            weiXin.setUsername(users.getUsername());
-                            weiXin.setOpenId(params.getString("openid"));
-                            weiXin.setSessionKey(params.getString("session_key"));
-                            weiXin.setUnionId(params.getString("unionid"));
-                            weiXin.setAppId(appId);
-                            weiXin.setResult(result);
-                            weiXin.setResCode(resCode);
-                            weiXin.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                            WeiXin bean = new WeiXin();
+                            bean.setUsername(users.getUsername());
+                            bean.setOpenId(params.getString("openid"));
+                            bean.setSessionKey(params.getString("session_key"));
+                            bean.setUnionId(params.getString("unionid"));
+                            bean.setAppId(appId);
+                            bean.setResult(result);
+                            bean.setResCode(resCode);
+                            bean.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
 
-                            weiXinService.save(weiXin);
+                            weiXinService.save(bean);
                         }
 
                         ajaxUtil.success().msg("保存成功");
