@@ -34,7 +34,7 @@ public class PoliticsRestController {
     @GetMapping("/anyone/data/politics")
     public ResponseEntity<Map<String, Object>> anyoneData() {
         Select2Data select2Data = Select2Data.of();
-        List<PoliticalLandscape> politicalLandscapes = politicalLandscapeFeignService.anyoneData();
+        List<PoliticalLandscape> politicalLandscapes = politicalLandscapeFeignService.findAll();
         politicalLandscapes.forEach(politicalLandscape -> select2Data.add(politicalLandscape.getPoliticalLandscapeId().toString(), politicalLandscape.getPoliticalLandscapeName()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }

@@ -29,8 +29,8 @@ public interface SchoolService {
      *
      * @return 学校数据
      */
-    @GetMapping("/base/anyone/data/school/all")
-    List<School> anyoneData();
+    @GetMapping("/base/data/schools_normal")
+    List<School> findNormal();
 
     /**
      * 数据
@@ -38,7 +38,7 @@ public interface SchoolService {
      * @param dataTablesUtil 请求
      * @return 数据
      */
-    @PostMapping("/base/data/school/data")
+    @PostMapping("/base/data/schools/paging")
     DataTablesUtil data(@RequestBody DataTablesUtil dataTablesUtil);
 
     /**
@@ -85,6 +85,6 @@ public interface SchoolService {
      * @param isDel     is_del
      * @return true注销成功
      */
-    @PostMapping("/base/data/school/status")
+    @PostMapping("/base/data/schools/status")
     AjaxUtil<Map<String, Object>> status(@RequestParam(value = "schoolIds", required = false) String schoolIds, @RequestParam("isDel") Byte isDel);
 }

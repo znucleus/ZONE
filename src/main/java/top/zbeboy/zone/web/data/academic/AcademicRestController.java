@@ -34,7 +34,7 @@ public class AcademicRestController {
     @GetMapping("/anyone/data/academic")
     public ResponseEntity<Map<String, Object>> anyoneData() {
         Select2Data select2Data = Select2Data.of();
-        List<AcademicTitle> academicTitles = academicTitleService.anyoneData();
+        List<AcademicTitle> academicTitles = academicTitleService.findAll();
         academicTitles.forEach(academicTitle -> select2Data.add(academicTitle.getAcademicTitleId().toString(), academicTitle.getAcademicTitleName()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }

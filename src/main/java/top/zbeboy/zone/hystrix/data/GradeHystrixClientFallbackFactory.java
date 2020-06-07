@@ -21,7 +21,7 @@ public class GradeHystrixClientFallbackFactory implements GradeService {
     }
 
     @Override
-    public List<Grade> anyoneData(GradeSearchVo gradeSearchVo) {
+    public List<Grade> findByScienceIdAndGradeIsDel(GradeSearchVo gradeSearchVo) {
         return new ArrayList<>();
     }
 

@@ -29,7 +29,7 @@ public class CollegeHystrixClientFallbackFactory implements CollegeService {
     }
 
     @Override
-    public List<College> anyoneData(CollegeSearchVo collegeSearchVo) {
+    public List<College> findBySchoolIdAndCollegeIsDel(CollegeSearchVo collegeSearchVo) {
         return new ArrayList<>();
     }
 
@@ -75,7 +75,7 @@ public class CollegeHystrixClientFallbackFactory implements CollegeService {
     }
 
     @Override
-    public List<TreeViewData> applicationJson() {
+    public List<TreeViewData> collegeApplicationJson() {
         return new ArrayList<>();
     }
 
@@ -85,7 +85,7 @@ public class CollegeHystrixClientFallbackFactory implements CollegeService {
     }
 
     @Override
-    public AjaxUtil<Map<String, Object>> mount(int collegeId, String applicationIds) {
+    public AjaxUtil<Map<String, Object>> collegeApplicationMount(int collegeId, String applicationIds) {
         return AjaxUtil.of();
     }
 }

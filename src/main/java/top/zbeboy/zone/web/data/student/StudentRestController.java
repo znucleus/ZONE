@@ -120,7 +120,7 @@ public class StudentRestController {
                 studentAddVo.setMailboxVerifyValid(DateTimeUtil.utilDateToSqlTimestamp(dateTime.toDate()));
                 studentAddVo.setLangKey(request.getLocale().toLanguageTag());
                 studentAddVo.setJoinDate(DateTimeUtil.getNowSqlDate());
-                ajaxUtil = studentService.anyoneDataRegisterStudent(studentAddVo);
+                ajaxUtil = studentService.save(studentAddVo);
                 if (ajaxUtil.getState()) {
                     Users users = new Users();
                     users.setUsername(studentAddVo.getUsername());

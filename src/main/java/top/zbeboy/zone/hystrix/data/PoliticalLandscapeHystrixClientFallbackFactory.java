@@ -15,7 +15,7 @@ import java.util.Map;
 @Component
 public class PoliticalLandscapeHystrixClientFallbackFactory implements PoliticalLandscapeFeignService {
     @Override
-    public List<PoliticalLandscape> anyoneData() {
+    public List<PoliticalLandscape> findAll() {
         return new ArrayList<>();
     }
 

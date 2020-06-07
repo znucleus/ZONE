@@ -36,7 +36,7 @@ public class ScienceRestController {
     @GetMapping("/anyone/data/science")
     public ResponseEntity<Map<String, Object>> anyoneData(ScienceSearchVo scienceSearchVo) {
         Select2Data select2Data = Select2Data.of();
-        List<Science> sciences = scienceService.anyoneData(scienceSearchVo);
+        List<Science> sciences = scienceService.findByDepartmentIdAndScienceIsDel(scienceSearchVo);
         sciences.forEach(science -> select2Data.add(science.getScienceId().toString(), science.getScienceName()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }

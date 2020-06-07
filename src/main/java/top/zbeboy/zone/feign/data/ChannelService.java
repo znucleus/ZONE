@@ -16,7 +16,7 @@ public interface ChannelService {
      * @param id 主键
      * @return 数据
      */
-    @GetMapping("/base/data/channel/id/{id}")
+    @GetMapping("/base/data/channel/{id}")
     Channel findById(@PathVariable("id") int id);
 
     /**
@@ -25,7 +25,7 @@ public interface ChannelService {
      * @param name 名
      * @return 数据
      */
-    @GetMapping("/base/data/channel/name/{name}")
+    @GetMapping("/base/data/channel_name/{name}")
     Channel findByChannelName(@PathVariable("name") String name);
 
     /**
@@ -33,6 +33,6 @@ public interface ChannelService {
      *
      * @return 渠道数据
      */
-    @GetMapping("/base/users/data/channel/all")
-    List<Channel> usersData();
+    @GetMapping("/base/data/channels")
+    List<Channel> findAll();
 }

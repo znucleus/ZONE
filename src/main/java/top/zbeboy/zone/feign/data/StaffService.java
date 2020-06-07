@@ -4,7 +4,6 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.domain.tables.pojos.Role;
 import top.zbeboy.zone.domain.tables.pojos.Users;
-import top.zbeboy.zone.hystrix.data.ScienceHystrixClientFallbackFactory;
 import top.zbeboy.zone.hystrix.data.StaffHystrixClientFallbackFactory;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
@@ -24,7 +23,7 @@ public interface StaffService {
      * @param username 教职工账号
      * @return 教职工数据
      */
-    @GetMapping("/base/staff/username/{username}")
+    @GetMapping("/base/staff_username/{username}")
     StaffBean findByUsername(@PathVariable("username") String username);
 
     /**
@@ -33,7 +32,7 @@ public interface StaffService {
      * @param id 教职工主键
      * @return 教职工数据
      */
-    @GetMapping("/base/staff/relation/{id}")
+    @GetMapping("/base/staff_relation/{id}")
     StaffBean findByIdRelation(@PathVariable("id") int id);
 
     /**
@@ -42,7 +41,7 @@ public interface StaffService {
      * @param username 教职工账号
      * @return 教职工数据
      */
-    @GetMapping("/base/staff/username/relation/{username}")
+    @GetMapping("/base/staff_username_relation/{username}")
     StaffBean findByUsernameRelation(@PathVariable("username") String username);
 
     /**
@@ -51,7 +50,7 @@ public interface StaffService {
      * @param param 教职工账号或工号
      * @return 教职工数据
      */
-    @GetMapping("/base/staff/username/or/staff_number/{param}")
+    @GetMapping("/base/staff_username_or_staff_number/{param}")
     StaffBean findByUsernameOrStaffNumberRelation(@PathVariable("param") String param);
 
     /**
@@ -60,7 +59,7 @@ public interface StaffService {
      * @param departmentId 教职工主键
      * @return 教职工数据
      */
-    @GetMapping("/base/staff/normal/department_id/relation/{departmentId}")
+    @GetMapping("/base/staffs_normal_department_id_relation/{departmentId}")
     List<StaffBean> findNormalByDepartmentIdRelation(@PathVariable("departmentId") int departmentId);
 
     /**
@@ -70,7 +69,7 @@ public interface StaffService {
      * @param collegeId 院id
      * @return 教职工数据
      */
-    @GetMapping("/base/staff/authority/college_id/{authority}/{collegeId}")
+    @GetMapping("/base/staff_authority_college_id/{authority}/{collegeId}")
     List<Users> findByAuthorityAndCollegeId(@PathVariable("authority") String authority, @PathVariable("collegeId") int collegeId);
 
     /**
@@ -79,7 +78,7 @@ public interface StaffService {
      * @param staffNumber 工号
      * @return 是否被注册
      */
-    @PostMapping("/base/anyone/check/staff/number")
+    @PostMapping("/base/staff/anyone_check_staff_number")
     AjaxUtil<Map<String, Object>> anyoneCheckStaffNumber(@RequestParam("staffNumber") String staffNumber);
 
     /**
@@ -89,7 +88,7 @@ public interface StaffService {
      * @param staffNumber 工号
      * @return 是否被注册
      */
-    @PostMapping("/base/users/check/staff/number")
+    @PostMapping("/base/staff/user_check_staff_number")
     AjaxUtil<Map<String, Object>> userCheckStaffNumber(@RequestParam("username") String username, @RequestParam("staffNumber") String staffNumber);
 
     /**
@@ -98,8 +97,8 @@ public interface StaffService {
      * @param staffAddVo 教职工数据
      * @return 注册
      */
-    @PostMapping("/base/anyone/data/register/staff")
-    AjaxUtil<Map<String, Object>> anyoneDataRegisterStaff(@RequestBody StaffAddVo staffAddVo);
+    @PostMapping("/base/staff/save")
+    AjaxUtil<Map<String, Object>> save(@RequestBody StaffAddVo staffAddVo);
 
     /**
      * 教职工信息更新
@@ -107,7 +106,7 @@ public interface StaffService {
      * @param staffEditVo 数据
      * @return 成功与否
      */
-    @PostMapping("/base/staff/update/school")
+    @PostMapping("/base/staff/update_school")
     AjaxUtil<Map<String, Object>> userStaffUpdateSchool(@RequestBody StaffEditVo staffEditVo);
 
     /**
@@ -116,7 +115,7 @@ public interface StaffService {
      * @param staffEditVo 数据
      * @return 更新信息
      */
-    @PostMapping("/base/staff/update/info")
+    @PostMapping("/base/staff/update_info")
     AjaxUtil<Map<String, Object>> userStaffUpdateInfo(@RequestBody StaffEditVo staffEditVo);
 
     /**
@@ -125,7 +124,7 @@ public interface StaffService {
      * @param dataTablesUtil 请求
      * @return 数据
      */
-    @PostMapping("/base/data/staff/data")
+    @PostMapping("/base/data/staffs/paging")
     DataTablesUtil data(@RequestBody DataTablesUtil dataTablesUtil);
 
     /**
@@ -135,7 +134,7 @@ public interface StaffService {
      * @param targetUsername 目标用户
      * @return 数据
      */
-    @PostMapping("/base/data/staff/role/data")
+    @PostMapping("/base/data/staff/roles")
     List<Role> roleData(@RequestParam("username") String username, @RequestParam("targetUsername") String targetUsername);
 
 
@@ -157,7 +156,7 @@ public interface StaffService {
      * @param enabled 状态
      * @return 是否成功
      */
-    @PostMapping("/base/data/staff/update/enabled")
+    @PostMapping("/base/data/staff/update_enabled")
     AjaxUtil<Map<String, Object>> updateEnabled(@RequestParam("username") String username, @RequestParam(value = "userIds", required = false) String userIds, @RequestParam("enabled") Byte enabled);
 
     /**
@@ -167,7 +166,7 @@ public interface StaffService {
      * @param locked  锁定
      * @return 是否成功
      */
-    @PostMapping("/base/data/staff/update/locked")
+    @PostMapping("/base/data/staff/update_locked")
     AjaxUtil<Map<String, Object>> updateLocked(@RequestParam("username") String username, @RequestParam(value = "userIds", required = false) String userIds, @RequestParam("locked") Byte locked);
 
     /**
@@ -177,7 +176,7 @@ public interface StaffService {
      * @param targetUsername 目标用户
      * @return success or fail
      */
-    @PostMapping("/base/data/staff/update/password")
+    @PostMapping("/base/data/staff/update_password")
     AjaxUtil<Map<String, Object>> updatePassword(@RequestParam("username") String username, @RequestParam("targetUsername") String targetUsername);
 
     /**

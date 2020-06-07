@@ -28,7 +28,7 @@ public class GradeRestController {
     @GetMapping("/anyone/data/grade")
     public ResponseEntity<Map<String, Object>> anyoneData(GradeSearchVo gradeSearchVo) {
         Select2Data select2Data = Select2Data.of();
-        List<Grade> grades = gradeService.anyoneData(gradeSearchVo);
+        List<Grade> grades = gradeService.findByScienceIdAndGradeIsDel(gradeSearchVo);
         grades.forEach(grade -> select2Data.add(grade.getGradeId().toString(), grade.getGrade().toString()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }

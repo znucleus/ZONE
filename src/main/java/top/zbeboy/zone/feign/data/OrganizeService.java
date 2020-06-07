@@ -32,7 +32,7 @@ public interface OrganizeService {
      * @param id 班级主键
      * @return 数量
      */
-    @GetMapping("/base/data/count/organize/{id}")
+    @GetMapping("/base/data/organize_count/{id}")
     int countById(@PathVariable("id") int id);
 
     /**
@@ -41,7 +41,7 @@ public interface OrganizeService {
      * @param id 班级主键
      * @return 班级数据
      */
-    @GetMapping("/base/data/organize/relation/{id}")
+    @GetMapping("/base/data/organize_relation/{id}")
     OrganizeBean findByIdRelation(@PathVariable("id") int id);
 
     /**
@@ -50,7 +50,7 @@ public interface OrganizeService {
      * @param scienceId 专业id
      * @return 数据
      */
-    @GetMapping("/base/data/organize/normal/science_id/relation/{scienceId}")
+    @GetMapping("/base/data/organizes_normal/science_id/{scienceId}")
     List<OrganizeBean> findNormalByScienceId(@PathVariable("scienceId") int scienceId);
 
     /**
@@ -59,8 +59,8 @@ public interface OrganizeService {
      * @param organizeSearchVo 查询参数
      * @return 班级数据
      */
-    @GetMapping("/base/anyone/data/organize/all")
-    List<Organize> anyoneData(@RequestBody OrganizeSearchVo organizeSearchVo);
+    @GetMapping("/base/data/organizes/search")
+    List<Organize> findByGradeIdAndOrganizeIsDel(@RequestBody OrganizeSearchVo organizeSearchVo);
 
     /**
      * 数据
@@ -68,7 +68,7 @@ public interface OrganizeService {
      * @param dataTablesUtil 请求
      * @return 数据
      */
-    @PostMapping("/base/data/organize/data")
+    @PostMapping("/base/data/organizes/paging")
     DataTablesUtil data(@RequestBody DataTablesUtil dataTablesUtil);
 
     /**
@@ -126,6 +126,6 @@ public interface OrganizeService {
      * @param isDel       is_del
      * @return true注销成功
      */
-    @PostMapping("/base/data/organize/status")
+    @PostMapping("/base/data/organizes/status")
     AjaxUtil<Map<String, Object>> status(@RequestParam(value = "organizeIds", required = false) String organizeIds, @RequestParam("isDel") Byte isDel);
 }

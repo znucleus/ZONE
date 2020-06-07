@@ -4,7 +4,6 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.domain.tables.pojos.College;
 import top.zbeboy.zone.domain.tables.pojos.CollegeApplication;
-import top.zbeboy.zone.domain.tables.pojos.School;
 import top.zbeboy.zone.hystrix.data.CollegeHystrixClientFallbackFactory;
 import top.zbeboy.zone.web.bean.data.college.CollegeBean;
 import top.zbeboy.zone.web.plugin.treeview.TreeViewData;
@@ -35,7 +34,7 @@ public interface CollegeService {
      * @param id 院主键
      * @return 院数据
      */
-    @GetMapping("/base/data/college/relation/{id}")
+    @GetMapping("/base/data/college_relation/{id}")
     CollegeBean findByIdRelation(@PathVariable("id") int id);
 
     /**
@@ -44,8 +43,8 @@ public interface CollegeService {
      * @param collegeSearchVo 查询参数
      * @return 院数据
      */
-    @PostMapping("/base/anyone/data/college/all")
-    List<College> anyoneData(@RequestBody CollegeSearchVo collegeSearchVo);
+    @PostMapping("/base/data/colleges/search")
+    List<College> findBySchoolIdAndCollegeIsDel(@RequestBody CollegeSearchVo collegeSearchVo);
 
     /**
      * 数据
@@ -53,7 +52,7 @@ public interface CollegeService {
      * @param dataTablesUtil 请求
      * @return 数据
      */
-    @PostMapping("/base/data/college/data")
+    @PostMapping("/base/data/colleges/paging")
     DataTablesUtil data(@RequestBody DataTablesUtil dataTablesUtil);
 
     /**
@@ -121,7 +120,7 @@ public interface CollegeService {
      * @param isDel      is_del
      * @return true注销成功
      */
-    @PostMapping("/base/data/college/status")
+    @PostMapping("/base/data/colleges/status")
     AjaxUtil<Map<String, Object>> status(@RequestParam(value = "collegeIds", required = false) String collegeIds, @RequestParam("isDel") Byte isDel);
 
     /**
@@ -129,8 +128,8 @@ public interface CollegeService {
      *
      * @return json
      */
-    @GetMapping("/base/data/college/application/json")
-    List<TreeViewData> applicationJson();
+    @GetMapping("/base/data/college_application/json")
+    List<TreeViewData> collegeApplicationJson();
 
     /**
      * 院与应用数据
@@ -138,7 +137,7 @@ public interface CollegeService {
      * @param collegeId 院id
      * @return 数据
      */
-    @PostMapping("/base/data/college/application/data")
+    @PostMapping("/base/data/college_application/data")
     List<CollegeApplication> collegeApplicationData(@RequestParam("collegeId") int collegeId);
 
     /**
@@ -148,6 +147,6 @@ public interface CollegeService {
      * @param applicationIds 应用ids
      * @return true 更新成功
      */
-    @PostMapping("/base/data/college/mount")
-    AjaxUtil<Map<String, Object>> mount(@RequestParam("collegeId") int collegeId, @RequestParam(value = "applicationIds", required = false) String applicationIds);
+    @PostMapping("/base/data/college_application/mount")
+    AjaxUtil<Map<String, Object>> collegeApplicationMount(@RequestParam("collegeId") int collegeId, @RequestParam(value = "applicationIds", required = false) String applicationIds);
 }

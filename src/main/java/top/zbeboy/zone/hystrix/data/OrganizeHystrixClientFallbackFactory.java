@@ -37,7 +37,7 @@ public class OrganizeHystrixClientFallbackFactory implements OrganizeService {
     }
 
     @Override
-    public List<Organize> anyoneData(OrganizeSearchVo organizeSearchVo) {
+    public List<Organize> findByGradeIdAndOrganizeIsDel(OrganizeSearchVo organizeSearchVo) {
         return new ArrayList<>();
     }
 

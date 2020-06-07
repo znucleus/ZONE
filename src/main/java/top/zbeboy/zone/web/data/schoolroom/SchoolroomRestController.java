@@ -36,7 +36,7 @@ public class SchoolroomRestController {
     @GetMapping("/users/data/schoolroom")
     public ResponseEntity<Map<String, Object>> usersData(SchoolroomSearchVo schoolroomSearchVo) {
         Select2Data select2Data = Select2Data.of();
-        List<Schoolroom> schoolrooms = schoolroomService.usersData(schoolroomSearchVo);
+        List<Schoolroom> schoolrooms = schoolroomService.findByBuildingIdAndSchoolroomIsDel(schoolroomSearchVo);
         schoolrooms.forEach(schoolroom -> select2Data.add(schoolroom.getSchoolroomId().toString(), schoolroom.getBuildingCode()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }

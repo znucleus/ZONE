@@ -38,7 +38,7 @@ public class CollegeRestController {
     @GetMapping("/anyone/data/college")
     public ResponseEntity<Map<String, Object>> anyoneData(CollegeSearchVo collegeSearchVo) {
         Select2Data select2Data = Select2Data.of();
-        List<College> colleges = collegeService.anyoneData(collegeSearchVo);
+        List<College> colleges = collegeService.findBySchoolIdAndCollegeIsDel(collegeSearchVo);
         colleges.forEach(college -> select2Data.add(college.getCollegeId().toString(), college.getCollegeName()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
@@ -167,7 +167,7 @@ public class CollegeRestController {
     @GetMapping("/web/data/college/application/json")
     public ResponseEntity<Map<String, Object>> applicationJson() {
         AjaxUtil<TreeViewData> ajaxUtil = AjaxUtil.of();
-        ajaxUtil.success().list(collegeService.applicationJson()).msg("获取数据成功");
+        ajaxUtil.success().list(collegeService.collegeApplicationJson()).msg("获取数据成功");
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -193,7 +193,7 @@ public class CollegeRestController {
      */
     @PostMapping("/web/data/college/mount")
     public ResponseEntity<Map<String, Object>> mount(@RequestParam("collegeId") int collegeId, String applicationIds) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = collegeService.mount(collegeId, applicationIds);
+        AjaxUtil<Map<String, Object>> ajaxUtil = collegeService.collegeApplicationMount(collegeId, applicationIds);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

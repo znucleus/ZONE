@@ -24,8 +24,8 @@ public interface AcademicTitleService {
      *
      * @return 职称数据
      */
-    @GetMapping("/base/anyone/data/academic/all")
-    List<AcademicTitle> anyoneData();
+    @GetMapping("/base/data/academics")
+    List<AcademicTitle> findAll();
 
     /**
      * 数据
@@ -33,7 +33,7 @@ public interface AcademicTitleService {
      * @param dataTablesUtil 请求
      * @return 数据
      */
-    @PostMapping("/base/data/academic/data")
+    @PostMapping("/base/data/academics/paging")
     DataTablesUtil data(@RequestBody DataTablesUtil dataTablesUtil);
 
     /**

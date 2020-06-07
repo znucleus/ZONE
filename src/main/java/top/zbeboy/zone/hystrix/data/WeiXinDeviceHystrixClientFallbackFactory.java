@@ -3,6 +3,9 @@ package top.zbeboy.zone.hystrix.data;
 import org.springframework.stereotype.Component;
 import top.zbeboy.zone.domain.tables.pojos.WeiXinDevice;
 import top.zbeboy.zone.feign.data.WeiXinDeviceService;
+import top.zbeboy.zone.web.util.AjaxUtil;
+
+import java.util.Map;
 
 @Component
 public class WeiXinDeviceHystrixClientFallbackFactory implements WeiXinDeviceService {
@@ -12,12 +15,12 @@ public class WeiXinDeviceHystrixClientFallbackFactory implements WeiXinDeviceSer
     }
 
     @Override
-    public void save(WeiXinDevice weiXinDevice) {
-
+    public AjaxUtil<Map<String, Object>> save(WeiXinDevice weiXinDevice) {
+        return AjaxUtil.of();
     }
 
     @Override
-    public void update(WeiXinDevice weiXinDevice) {
-
+    public AjaxUtil<Map<String, Object>> update(WeiXinDevice weiXinDevice) {
+        return AjaxUtil.of();
     }
 }

@@ -22,7 +22,7 @@ public class SchoolroomHystrixClientFallbackFactory implements SchoolroomService
     }
 
     @Override
-    public List<Schoolroom> usersData(SchoolroomSearchVo schoolroomSearchVo) {
+    public List<Schoolroom> findByBuildingIdAndSchoolroomIsDel(SchoolroomSearchVo schoolroomSearchVo) {
         return new ArrayList<>();
     }
 

@@ -25,7 +25,7 @@ public interface StudentService {
      * @param id 学生主键
      * @return 学生数据
      */
-    @GetMapping("/base/student/relation/{id}")
+    @GetMapping("/base/student_relation/{id}")
     StudentBean findByIdRelation(@PathVariable("id") int id);
 
     /**
@@ -34,7 +34,7 @@ public interface StudentService {
      * @param username 学生账号
      * @return 学生数据
      */
-    @GetMapping("/base/student/username/{username}")
+    @GetMapping("/base/student_username/{username}")
     StudentBean findByUsername(@PathVariable("username") String username);
 
     /**
@@ -43,7 +43,7 @@ public interface StudentService {
      * @param studentNumber 学号
      * @return 学生数据
      */
-    @GetMapping("/base/student/student_number/{studentNumber}")
+    @GetMapping("/base/student_number/{studentNumber}")
     Student findByStudentNumber(@PathVariable("studentNumber") String studentNumber);
 
     /**
@@ -52,17 +52,9 @@ public interface StudentService {
      * @param username 学生账号
      * @return 学生数据
      */
-    @GetMapping("/base/student/username/relation/{username}")
+    @GetMapping("/base/student_username_relation/{username}")
     StudentBean findByUsernameRelation(@PathVariable("username") String username);
 
-    /**
-     * 根据班级id获取正常学生
-     *
-     * @param organizeId 班级id
-     * @return 学生数据
-     */
-    @GetMapping("/base/student/normal/organize_id/relation/{organizeId}")
-    List<StudentBean> findNormalByOrganizeIdRelation(@PathVariable("organizeId") int organizeId);
 
     /**
      * 根据班级id获取正常学生
@@ -70,8 +62,17 @@ public interface StudentService {
      * @param organizeIds 班级id
      * @return 学生数据
      */
-    @PostMapping("/base/student/normal/organize_ids/relation")
-    public List<StudentBean> findNormalInOrganizeIds(@RequestBody  List<Integer> organizeIds);
+    @PostMapping("/base/students_normal_in_organize_ids")
+    List<StudentBean> findNormalInOrganizeIds(@RequestBody List<Integer> organizeIds);
+
+    /**
+     * 根据班级id获取正常学生
+     *
+     * @param organizeId 班级id
+     * @return 学生数据
+     */
+    @GetMapping("/base/students_normal_organize_id/{organizeId}")
+    List<StudentBean> findNormalByOrganizeId(@PathVariable("organizeId") int organizeId);
 
     /**
      * 根据学号获取正常学生
@@ -79,7 +80,7 @@ public interface StudentService {
      * @param studentNumber 学号
      * @return 学生数据
      */
-    @GetMapping("/base/student/normal/student_number/relation/{studentNumber}")
+    @GetMapping("/base/students_normal_number_relation/{studentNumber}")
     StudentBean findNormalByStudentNumberRelation(@PathVariable("studentNumber") String studentNumber);
 
     /**
@@ -89,7 +90,7 @@ public interface StudentService {
      * @param departmentId 系id
      * @return 学生数据
      */
-    @GetMapping("/base/student/normal/username/department_id/relation/{username}/{departmentId}")
+    @GetMapping("/base/students_normal_username_department_id/{username}/{departmentId}")
     StudentBean findNormalByUsernameAndDepartmentId(@PathVariable("username") String username, @PathVariable("departmentId") int departmentId);
 
     /**
@@ -99,7 +100,7 @@ public interface StudentService {
      * @param departmentId  系id
      * @return 学生数据
      */
-    @GetMapping("/base/student/normal/student_number/department_id/relation/{studentNumber}/{departmentId}")
+    @GetMapping("/base/students_normal_number_department_id/{studentNumber}/{departmentId}")
     StudentBean findNormalByStudentNumberAndDepartmentId(@PathVariable("studentNumber") String studentNumber, @PathVariable("departmentId") int departmentId);
 
     /**
@@ -109,7 +110,7 @@ public interface StudentService {
      * @param collegeId 院id
      * @return 教职工数据
      */
-    @GetMapping("/base/student/authority/college_id/{authority}/{collegeId}")
+    @GetMapping("/base/student_authority_college_id/{authority}/{collegeId}")
     List<Users> findByAuthorityAndCollegeId(@PathVariable("authority") String authority, @PathVariable("collegeId") int collegeId);
 
     /**
@@ -118,7 +119,7 @@ public interface StudentService {
      * @param studentNumber 学号
      * @return 是否被注册
      */
-    @PostMapping("/base/anyone/check/student/number")
+    @PostMapping("/base/student/anyone_check_student_number")
     AjaxUtil<Map<String, Object>> anyoneCheckStudentNumber(@RequestParam("studentNumber") String studentNumber);
 
     /**
@@ -127,7 +128,7 @@ public interface StudentService {
      * @param studentNumber 学号
      * @return 是否被注册
      */
-    @PostMapping("/base/users/check/student/number")
+    @PostMapping("/base/student/user_check_student_number")
     AjaxUtil<Map<String, Object>> userCheckStudentNumber(@RequestParam("username") String username, @RequestParam("studentNumber") String studentNumber);
 
     /**
@@ -136,7 +137,7 @@ public interface StudentService {
      * @param studentNumber 学号
      * @return 是否存在以及该用户状态是否正常
      */
-    @PostMapping("/base/users/check/student/status")
+    @PostMapping("/base/student/user_check_student_status")
     AjaxUtil<Map<String, Object>> userCheckStatusByStudentNumber(@RequestParam("studentNumber") String studentNumber);
 
     /**
@@ -145,8 +146,8 @@ public interface StudentService {
      * @param studentAddVo 学生数据
      * @return 注册
      */
-    @PostMapping("/base/anyone/data/register/student")
-    AjaxUtil<Map<String, Object>> anyoneDataRegisterStudent(@RequestBody StudentAddVo studentAddVo);
+    @PostMapping("/base/student/save")
+    AjaxUtil<Map<String, Object>> save(@RequestBody StudentAddVo studentAddVo);
 
     /**
      * 学生班级更新
@@ -154,7 +155,7 @@ public interface StudentService {
      * @param studentEditVo 数据
      * @return 成功与否
      */
-    @PostMapping("/base/student/update/school")
+    @PostMapping("/base/student/update_school")
     AjaxUtil<Map<String, Object>> userStudentUpdateSchool(@RequestBody StudentEditVo studentEditVo);
 
     /**
@@ -163,7 +164,7 @@ public interface StudentService {
      * @param studentEditVo 数据
      * @return 更新信息
      */
-    @PostMapping("/base/student/update/info")
+    @PostMapping("/base/student/update_info")
     AjaxUtil<Map<String, Object>> userStudentUpdateInfo(@RequestBody @Valid StudentEditVo studentEditVo);
 
     /**
@@ -172,7 +173,7 @@ public interface StudentService {
      * @param dataTablesUtil 请求
      * @return 数据
      */
-    @PostMapping("/base/data/student/data")
+    @PostMapping("/base/data/students/paging")
     DataTablesUtil data(@RequestBody DataTablesUtil dataTablesUtil);
 
     /**
@@ -182,7 +183,7 @@ public interface StudentService {
      * @param targetUsername 目标账号
      * @return 数据
      */
-    @PostMapping("/base/data/student/role/data")
+    @PostMapping("/base/data/student/roles")
     List<Role> roleData(@RequestParam("username") String username, @RequestParam("targetUsername") String targetUsername);
 
     /**
@@ -202,7 +203,7 @@ public interface StudentService {
      * @param enabled 状态
      * @return 是否成功
      */
-    @PostMapping("/base/data/student/update/enabled")
+    @PostMapping("/base/data/student/update_enabled")
     AjaxUtil<Map<String, Object>> updateEnabled(@RequestParam("username") String username, @RequestParam(value = "userIds", required = false) String userIds, @RequestParam("enabled") Byte enabled);
 
     /**
@@ -212,7 +213,7 @@ public interface StudentService {
      * @param locked  锁定
      * @return 是否成功
      */
-    @PostMapping("/base/data/student/update/locked")
+    @PostMapping("/base/data/student/update_locked")
     AjaxUtil<Map<String, Object>> updateLocked(@RequestParam("username") String username, @RequestParam(value = "userIds", required = false) String userIds, @RequestParam("locked") Byte locked);
 
     /**
@@ -222,7 +223,7 @@ public interface StudentService {
      * @param targetUsername 目标账号
      * @return success or fail
      */
-    @PostMapping("/base/data/student/update/password")
+    @PostMapping("/base/data/student/update_password")
     AjaxUtil<Map<String, Object>> updatePassword(@RequestParam("username") String username, @RequestParam("targetUsername") String targetUsername);
 
     /**

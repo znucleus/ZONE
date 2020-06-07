@@ -20,7 +20,7 @@ public class SchoolHystrixClientFallbackFactory implements SchoolService {
     }
 
     @Override
-    public List<School> anyoneData() {
+    public List<School> findNormal() {
         return new ArrayList<>();
     }
 

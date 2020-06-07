@@ -7,9 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.domain.tables.pojos.Organize;
-import top.zbeboy.zone.feign.data.GradeService;
 import top.zbeboy.zone.feign.data.OrganizeService;
-import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.web.plugin.select2.Select2Data;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
@@ -27,13 +25,7 @@ import java.util.Map;
 public class OrganizeRestController {
 
     @Resource
-    private GradeService gradeService;
-
-    @Resource
     private OrganizeService organizeService;
-
-    @Resource
-    private StaffService staffService;
 
     /**
      * 获取年级下全部有效班级
@@ -44,7 +36,7 @@ public class OrganizeRestController {
     @GetMapping("/anyone/data/organize")
     public ResponseEntity<Map<String, Object>> anyoneData(OrganizeSearchVo organizeSearchVo) {
         Select2Data select2Data = Select2Data.of();
-        List<Organize> organizes = organizeService.anyoneData(organizeSearchVo);
+        List<Organize> organizes = organizeService.findByGradeIdAndOrganizeIsDel(organizeSearchVo);
         organizes.forEach(organize -> select2Data.add(organize.getOrganizeId().toString(), organize.getOrganizeName()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }

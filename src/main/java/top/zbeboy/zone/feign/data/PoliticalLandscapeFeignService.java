@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import top.zbeboy.zone.domain.tables.pojos.PoliticalLandscape;
-import top.zbeboy.zone.hystrix.data.NationHystrixClientFallbackFactory;
 import top.zbeboy.zone.hystrix.data.PoliticalLandscapeHystrixClientFallbackFactory;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
@@ -24,8 +23,8 @@ public interface PoliticalLandscapeFeignService {
      *
      * @return 政治面貌数据
      */
-    @GetMapping("/base/anyone/data/politics/all")
-    List<PoliticalLandscape> anyoneData();
+    @GetMapping("/base/data/politicses")
+    List<PoliticalLandscape> findAll();
 
     /**
      * 数据
@@ -33,7 +32,7 @@ public interface PoliticalLandscapeFeignService {
      * @param dataTablesUtil 请求
      * @return 数据
      */
-    @PostMapping("/base/data/politics/data")
+    @PostMapping("/base/data/politicses/paging")
     DataTablesUtil data(@RequestBody DataTablesUtil dataTablesUtil);
 
     /**

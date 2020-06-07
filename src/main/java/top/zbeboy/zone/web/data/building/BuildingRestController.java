@@ -36,7 +36,7 @@ public class BuildingRestController {
     @GetMapping("/users/data/building")
     public ResponseEntity<Map<String, Object>> usersData(BuildingSearchVo buildingSearchVo) {
         Select2Data select2Data = Select2Data.of();
-        List<Building> buildings = buildingService.usersData(buildingSearchVo);
+        List<Building> buildings = buildingService.findByCollegeIdAndBuildingIsDel(buildingSearchVo);
         buildings.forEach(building -> select2Data.add(building.getBuildingId().toString(), building.getBuildingName()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
@@ -109,7 +109,6 @@ public class BuildingRestController {
      * 保存楼更改
      *
      * @param buildingEditVo 楼
-     * @param bindingResult  检验
      * @return true 更改成功 false 更改失败
      */
 

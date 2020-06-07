@@ -39,7 +39,7 @@ public class StudentHystrixClientFallbackFactory implements StudentService {
     }
 
     @Override
-    public List<StudentBean> findNormalByOrganizeIdRelation(int organizeId) {
+    public List<StudentBean> findNormalByOrganizeId(int organizeId) {
         return new ArrayList<>();
     }
 
@@ -84,7 +84,7 @@ public class StudentHystrixClientFallbackFactory implements StudentService {
     }
 
     @Override
-    public AjaxUtil<Map<String, Object>> anyoneDataRegisterStudent(StudentAddVo studentAddVo) {
+    public AjaxUtil<Map<String, Object>> save(StudentAddVo studentAddVo) {
         return AjaxUtil.of();
     }
 

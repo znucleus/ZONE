@@ -22,7 +22,7 @@ public class CourseHystrixClientFallbackFactory implements CourseService {
     }
 
     @Override
-    public List<Course> usersData(CourseSearchVo courseSearchVo) {
+    public List<Course> findByCollegeIdAndCourseIsDel(CourseSearchVo courseSearchVo) {
         return new ArrayList<>();
     }
 

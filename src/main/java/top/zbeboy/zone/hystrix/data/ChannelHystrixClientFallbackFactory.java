@@ -20,7 +20,7 @@ public class ChannelHystrixClientFallbackFactory implements ChannelService {
     }
 
     @Override
-    public List<Channel> usersData() {
+    public List<Channel> findAll() {
         return new ArrayList<>();
     }
 }

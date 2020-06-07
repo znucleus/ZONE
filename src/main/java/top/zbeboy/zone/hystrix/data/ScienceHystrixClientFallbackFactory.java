@@ -27,7 +27,7 @@ public class ScienceHystrixClientFallbackFactory implements ScienceService {
     }
 
     @Override
-    public List<Science> anyoneData(ScienceSearchVo scienceSearchVo) {
+    public List<Science> findByDepartmentIdAndScienceIsDel(ScienceSearchVo scienceSearchVo) {
         return new ArrayList<>();
     }
 

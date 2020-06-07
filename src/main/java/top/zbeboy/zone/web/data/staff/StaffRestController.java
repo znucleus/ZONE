@@ -109,7 +109,7 @@ public class StaffRestController {
                 staffAddVo.setJoinDate(DateTimeUtil.getNowSqlDate());
                 staffAddVo.setLangKey(request.getLocale().toLanguageTag());
                 staffAddVo.setBaseUrl(RequestUtil.getBaseUrl(request));
-                ajaxUtil = staffService.anyoneDataRegisterStaff(staffAddVo);
+                ajaxUtil = staffService.save(staffAddVo);
 
                 if (ajaxUtil.getState()) {
                     Users users = new Users();

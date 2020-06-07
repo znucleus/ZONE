@@ -57,7 +57,7 @@ public class StaffHystrixClientFallbackFactory implements StaffService {
     }
 
     @Override
-    public AjaxUtil<Map<String, Object>> anyoneDataRegisterStaff(StaffAddVo staffAddVo) {
+    public AjaxUtil<Map<String, Object>> save(StaffAddVo staffAddVo) {
         return AjaxUtil.of();
     }
 

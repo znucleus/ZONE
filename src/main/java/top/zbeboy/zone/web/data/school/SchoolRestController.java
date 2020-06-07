@@ -34,7 +34,7 @@ public class SchoolRestController {
     @GetMapping("/anyone/data/school")
     public ResponseEntity<Map<String, Object>> anyoneData() {
         Select2Data select2Data = Select2Data.of();
-        List<School> schools = schoolService.anyoneData();
+        List<School> schools = schoolService.findNormal();
         schools.forEach(school -> select2Data.add(school.getSchoolId().toString(), school.getSchoolName()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
@@ -74,7 +74,7 @@ public class SchoolRestController {
     /**
      * 保存学校信息
      *
-     * @param schoolAddVo   学校
+     * @param schoolAddVo 学校
      * @return true 保存成功 false 保存失败
      */
     @PostMapping("/web/data/school/save")
@@ -100,7 +100,7 @@ public class SchoolRestController {
     /**
      * 保存学校更改
      *
-     * @param schoolEditVo  学校
+     * @param schoolEditVo 学校
      * @return true 更改成功 false 更改失败
      */
     @PostMapping("/web/data/school/update")

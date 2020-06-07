@@ -2,11 +2,8 @@ package top.zbeboy.zone.feign.data;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
-import top.zbeboy.zone.domain.tables.pojos.Department;
 import top.zbeboy.zone.domain.tables.pojos.Science;
-import top.zbeboy.zone.hystrix.data.DepartmentHystrixClientFallbackFactory;
 import top.zbeboy.zone.hystrix.data.ScienceHystrixClientFallbackFactory;
-import top.zbeboy.zone.web.bean.data.department.DepartmentBean;
 import top.zbeboy.zone.web.bean.data.science.ScienceBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
@@ -35,7 +32,7 @@ public interface ScienceService {
      * @param id 专业主键
      * @return 专业数据
      */
-    @GetMapping("/base/data/science/relation/{id}")
+    @GetMapping("/base/data/science_relation/{id}")
     ScienceBean findByIdRelation(@PathVariable("id") int id);
 
     /**
@@ -44,8 +41,8 @@ public interface ScienceService {
      * @param scienceSearchVo 查询参数
      * @return 专业数据
      */
-    @PostMapping("/base/anyone/data/science/all")
-    List<Science> anyoneData(@RequestBody ScienceSearchVo scienceSearchVo);
+    @PostMapping("/base/data/sciences/search")
+    List<Science> findByDepartmentIdAndScienceIsDel(@RequestBody ScienceSearchVo scienceSearchVo);
 
     /**
      * 数据
@@ -53,7 +50,7 @@ public interface ScienceService {
      * @param dataTablesUtil 请求
      * @return 数据
      */
-    @PostMapping("/base/data/science/data")
+    @PostMapping("/base/data/sciences/paging")
     DataTablesUtil data(@RequestBody DataTablesUtil dataTablesUtil);
 
     /**
@@ -121,6 +118,6 @@ public interface ScienceService {
      * @param isDel      is_del
      * @return true注销成功
      */
-    @PostMapping("/base/data/science/status")
+    @PostMapping("/base/data/sciences/status")
     AjaxUtil<Map<String, Object>> status(@RequestParam(value = "scienceIds", required = false) String scienceIds, @RequestParam("isDel") Byte isDel);
 }

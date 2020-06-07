@@ -4,7 +4,6 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.domain.tables.pojos.Course;
 import top.zbeboy.zone.hystrix.data.CourseHystrixClientFallbackFactory;
-import top.zbeboy.zone.hystrix.data.GradeHystrixClientFallbackFactory;
 import top.zbeboy.zone.web.bean.data.course.CourseBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
@@ -24,7 +23,7 @@ public interface CourseService {
      * @param id 课程主键
      * @return 课程数据
      */
-    @GetMapping("/base/data/course/relation/{id}")
+    @GetMapping("/base/data/course_relation/{id}")
     CourseBean findByIdRelation(@PathVariable("id") int id);
 
     /**
@@ -32,8 +31,8 @@ public interface CourseService {
      *
      * @return 课程数据
      */
-    @PostMapping("/base/users/data/course/all")
-    List<Course> usersData(@RequestBody CourseSearchVo courseSearchVo);
+    @PostMapping("/base/data/courses/search")
+    List<Course> findByCollegeIdAndCourseIsDel(@RequestBody CourseSearchVo courseSearchVo);
 
     /**
      * 数据
@@ -41,7 +40,7 @@ public interface CourseService {
      * @param dataTablesUtil 请求
      * @return 数据
      */
-    @PostMapping("/base/data/course/data")
+    @PostMapping("/base/data/courses/paging")
     DataTablesUtil data(@RequestBody DataTablesUtil dataTablesUtil);
 
     /**
@@ -90,6 +89,6 @@ public interface CourseService {
      * @param isDel     is_del
      * @return true注销成功
      */
-    @PostMapping("/base/data/course/status")
+    @PostMapping("/base/data/courses/status")
     AjaxUtil<Map<String, Object>> status(@RequestParam(value = "courseIds", required = false) String courseIds, @RequestParam("isDel") Byte isDel);
 }

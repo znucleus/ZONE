@@ -27,7 +27,7 @@ public class DepartmentHystrixClientFallbackFactory implements DepartmentService
     }
 
     @Override
-    public List<Department> anyoneData(DepartmentSearchVo departmentSearchVo) {
+    public List<Department> findByCollegeIdAndDepartmentIsDel(DepartmentSearchVo departmentSearchVo) {
         return new ArrayList<>();
     }
 

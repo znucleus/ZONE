@@ -4,7 +4,6 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.domain.tables.pojos.Building;
 import top.zbeboy.zone.hystrix.data.BuildingHystrixClientFallbackFactory;
-import top.zbeboy.zone.hystrix.data.CourseHystrixClientFallbackFactory;
 import top.zbeboy.zone.web.bean.data.building.BuildingBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
@@ -24,7 +23,7 @@ public interface BuildingService {
      * @param id 楼主键
      * @return 楼数据
      */
-    @GetMapping("/base/data/building/relation/{id}")
+    @GetMapping("/base/data/building_relation/{id}")
     BuildingBean findByIdRelation(@PathVariable("id") int id);
 
     /**
@@ -33,8 +32,8 @@ public interface BuildingService {
      * @param buildingSearchVo 院id
      * @return 楼数据
      */
-    @PostMapping("/base/data/building/all")
-    List<Building> usersData(@RequestBody BuildingSearchVo buildingSearchVo);
+    @PostMapping("/base/data/buildings/search")
+    List<Building> findByCollegeIdAndBuildingIsDel(@RequestBody BuildingSearchVo buildingSearchVo);
 
     /**
      * 数据
@@ -42,7 +41,7 @@ public interface BuildingService {
      * @param dataTablesUtil 请求
      * @return 数据
      */
-    @PostMapping("/base/data/building/data")
+    @PostMapping("/base/data/buildings/paging")
     DataTablesUtil data(@RequestBody DataTablesUtil dataTablesUtil);
 
     /**
@@ -91,6 +90,6 @@ public interface BuildingService {
      * @param isDel       is_del
      * @return true注销成功
      */
-    @PostMapping("/base/data/building/status")
+    @PostMapping("/base/data/buildings/status")
     AjaxUtil<Map<String, Object>> status(@RequestParam(value = "buildingIds", required = false) String buildingIds, @RequestParam("isDel") Byte isDel);
 }

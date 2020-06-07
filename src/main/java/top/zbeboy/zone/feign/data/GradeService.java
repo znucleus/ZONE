@@ -1,13 +1,9 @@
 package top.zbeboy.zone.feign.data;
 
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.domain.tables.pojos.Grade;
 import top.zbeboy.zone.hystrix.data.GradeHystrixClientFallbackFactory;
-import top.zbeboy.zone.hystrix.data.ScienceHystrixClientFallbackFactory;
 import top.zbeboy.zone.web.vo.data.grade.GradeSearchVo;
 
 import java.util.List;
@@ -31,8 +27,8 @@ public interface GradeService {
      * @param grade     年级
      * @return 数据
      */
-    @GetMapping("/base/data/grade/science_id/grade/{scienceId}/{grade}")
-    Grade findByScienceIdAndGrade(@PathVariable("scienceId") int scienceId, @PathVariable("grade") int grade);
+    @PostMapping("/base/data/grade/science_id_and_grade")
+    Grade findByScienceIdAndGrade(@RequestParam("scienceId") int scienceId, @RequestParam("grade") int grade);
 
     /**
      * 获取专业下全部有效年级
@@ -40,8 +36,8 @@ public interface GradeService {
      * @param gradeSearchVo 查询参数
      * @return 年级数据
      */
-    @PostMapping("/base/anyone/data/grade/all")
-    List<Grade> anyoneData(@RequestBody GradeSearchVo gradeSearchVo);
+    @PostMapping("/base/data/grades/search")
+    List<Grade> findByScienceIdAndGradeIsDel(@RequestBody GradeSearchVo gradeSearchVo);
 
     /**
      * 保存

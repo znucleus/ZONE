@@ -15,7 +15,7 @@ import java.util.Map;
 @Component
 public class NationHystrixClientFallbackFactory implements NationService {
     @Override
-    public List<Nation> anyoneData() {
+    public List<Nation> findAll() {
         return new ArrayList<>();
     }
 

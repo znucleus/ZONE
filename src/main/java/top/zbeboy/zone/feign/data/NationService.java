@@ -24,8 +24,8 @@ public interface NationService {
      *
      * @return 民族数据
      */
-    @GetMapping("/base/anyone/data/nation/all")
-    List<Nation> anyoneData();
+    @GetMapping("/base/data/nations")
+    List<Nation> findAll();
 
     /**
      * 数据
@@ -33,7 +33,7 @@ public interface NationService {
      * @param dataTablesUtil 请求
      * @return 数据
      */
-    @PostMapping("/base/data/nation/data")
+    @PostMapping("/base/data/nations/paging")
     DataTablesUtil data(@RequestBody DataTablesUtil dataTablesUtil);
 
     /**

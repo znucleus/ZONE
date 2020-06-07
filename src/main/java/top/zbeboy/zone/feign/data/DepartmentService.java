@@ -32,7 +32,7 @@ public interface DepartmentService {
      * @param id 系主键
      * @return 系数据
      */
-    @GetMapping("/base/data/department/relation/{id}")
+    @GetMapping("/base/data/department_relation/{id}")
     DepartmentBean findByIdRelation(@PathVariable("id") int id);
 
     /**
@@ -41,8 +41,8 @@ public interface DepartmentService {
      * @param departmentSearchVo 查询参数
      * @return 系数据
      */
-    @PostMapping("/base/anyone/data/department/all")
-    List<Department> anyoneData(@RequestBody DepartmentSearchVo departmentSearchVo);
+    @PostMapping("/base/data/departments/search")
+    List<Department> findByCollegeIdAndDepartmentIsDel(@RequestBody DepartmentSearchVo departmentSearchVo);
 
     /**
      * 数据
@@ -50,7 +50,7 @@ public interface DepartmentService {
      * @param dataTablesUtil 请求
      * @return 数据
      */
-    @PostMapping("/base/data/department/data")
+    @PostMapping("/base/data/departments/paging")
     DataTablesUtil data(@RequestBody DataTablesUtil dataTablesUtil);
 
     /**
@@ -99,6 +99,6 @@ public interface DepartmentService {
      * @param isDel         is_del
      * @return true注销成功
      */
-    @PostMapping("/base/data/department/status")
+    @PostMapping("/base/data/departments/status")
     AjaxUtil<Map<String, Object>> status(@RequestParam(value = "departmentIds", required = false) String departmentIds, @RequestParam("isDel") Byte isDel);
 }

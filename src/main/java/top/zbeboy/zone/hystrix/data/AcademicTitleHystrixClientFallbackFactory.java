@@ -15,7 +15,7 @@ import java.util.Map;
 @Component
 public class AcademicTitleHystrixClientFallbackFactory implements AcademicTitleService {
     @Override
-    public List<AcademicTitle> anyoneData() {
+    public List<AcademicTitle> findAll() {
         return new ArrayList<>();
     }
 

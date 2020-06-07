@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import top.zbeboy.zone.domain.tables.pojos.WeiXinDevice;
 import top.zbeboy.zone.hystrix.data.WeiXinDeviceHystrixClientFallbackFactory;
+import top.zbeboy.zone.web.util.AjaxUtil;
+
+import java.util.Map;
 
 @FeignClient(value = "base-server", fallback = WeiXinDeviceHystrixClientFallbackFactory.class)
 public interface WeiXinDeviceService {
@@ -17,7 +20,7 @@ public interface WeiXinDeviceService {
      * @param username 账号
      * @return 数据
      */
-    @GetMapping("/base/data/wei_xin_device/username/{username}")
+    @GetMapping("/base/data/wei_xin_device_username/{username}")
     WeiXinDevice findByUsername(@PathVariable("username") String username);
 
     /**
@@ -26,7 +29,7 @@ public interface WeiXinDeviceService {
      * @param weiXinDevice 数据
      */
     @PostMapping("/base/data/wei_xin_device/save")
-    void save(@RequestBody WeiXinDevice weiXinDevice);
+    AjaxUtil<Map<String, Object>> save(@RequestBody WeiXinDevice weiXinDevice);
 
     /**
      * 更新
@@ -34,5 +37,5 @@ public interface WeiXinDeviceService {
      * @param weiXinDevice 数据
      */
     @PostMapping("/base/data/wei_xin_device/update")
-    void update(@RequestBody WeiXinDevice weiXinDevice);
+    AjaxUtil<Map<String, Object>> update(@RequestBody WeiXinDevice weiXinDevice);
 }

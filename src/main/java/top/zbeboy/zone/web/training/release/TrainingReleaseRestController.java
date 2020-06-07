@@ -106,7 +106,7 @@ public class TrainingReleaseRestController {
             trainingReleaseService.save(trainingRelease);
 
             // 生成名单
-            List<StudentBean> studentBeans = studentService.findNormalByOrganizeIdRelation(trainingReleaseAddVo.getOrganizeId());
+            List<StudentBean> studentBeans = studentService.findNormalByOrganizeId(trainingReleaseAddVo.getOrganizeId());
             if (Objects.nonNull(studentBeans) && studentBeans.size() > 0) {
                 List<TrainingUsers> trainingUsers = new ArrayList<>();
                 for (StudentBean student : studentBeans) {

@@ -27,7 +27,7 @@ public class ChannelRestController {
     @GetMapping("/users/data/channel")
     public ResponseEntity<Map<String, Object>> usersData() {
         Select2Data select2Data = Select2Data.of();
-        List<Channel> channels = channelService.usersData();
+        List<Channel> channels = channelService.findAll();
         if (Objects.nonNull(channels) && !channels.isEmpty()) {
             channels.forEach(channel -> select2Data.add(channel.getChannelId().toString(), channel.getChannelName()));
         }

@@ -34,7 +34,7 @@ public class NationRestController {
     @GetMapping("/anyone/data/nation")
     public ResponseEntity<Map<String, Object>> anyoneData() {
         Select2Data select2Data = Select2Data.of();
-        List<Nation> nations = nationService.anyoneData();
+        List<Nation> nations = nationService.findAll();
         nations.forEach(nation -> select2Data.add(nation.getNationId().toString(), nation.getNationName()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }

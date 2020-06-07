@@ -3,7 +3,6 @@ package top.zbeboy.zone.feign.data;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.domain.tables.pojos.Schoolroom;
-import top.zbeboy.zone.hystrix.data.OrganizeHystrixClientFallbackFactory;
 import top.zbeboy.zone.hystrix.data.SchoolroomHystrixClientFallbackFactory;
 import top.zbeboy.zone.web.bean.data.schoolroom.SchoolroomBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
@@ -14,6 +13,7 @@ import top.zbeboy.zone.web.vo.data.schoolroom.SchoolroomSearchVo;
 
 import java.util.List;
 import java.util.Map;
+
 @FeignClient(value = "base-server", fallback = SchoolroomHystrixClientFallbackFactory.class)
 public interface SchoolroomService {
 
@@ -23,7 +23,7 @@ public interface SchoolroomService {
      * @param id 教室主键
      * @return 教室数据
      */
-    @GetMapping("/base/data/schoolroom/relation/{id}")
+    @GetMapping("/base/data/schoolroom_relation/{id}")
     SchoolroomBean findByIdRelation(@PathVariable("id") int id);
 
     /**
@@ -32,8 +32,8 @@ public interface SchoolroomService {
      * @param schoolroomSearchVo 查询参数
      * @return 教室数据
      */
-    @PostMapping("/base/data/schoolroom/all")
-    List<Schoolroom> usersData(@RequestBody SchoolroomSearchVo schoolroomSearchVo);
+    @PostMapping("/base/data/schoolrooms/search")
+    List<Schoolroom> findByBuildingIdAndSchoolroomIsDel(@RequestBody SchoolroomSearchVo schoolroomSearchVo);
 
     /**
      * 数据
@@ -41,7 +41,7 @@ public interface SchoolroomService {
      * @param dataTablesUtil 请求
      * @return 数据
      */
-    @PostMapping("/base/data/schoolroom/data")
+    @PostMapping("/base/data/schoolrooms/paging")
     DataTablesUtil data(@RequestBody DataTablesUtil dataTablesUtil);
 
     /**
@@ -90,6 +90,6 @@ public interface SchoolroomService {
      * @param isDel         is_del
      * @return true注销成功
      */
-    @PostMapping("/base/data/schoolroom/status")
+    @PostMapping("/base/data/schoolrooms/status")
     AjaxUtil<Map<String, Object>> status(@RequestParam(value = "schoolroomIds", required = false) String schoolroomIds, @RequestParam("isDel") Byte isDel);
 }

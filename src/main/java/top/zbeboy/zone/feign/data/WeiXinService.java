@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import top.zbeboy.zone.domain.tables.pojos.WeiXin;
 import top.zbeboy.zone.hystrix.data.WeiXinHystrixClientFallbackFactory;
 import top.zbeboy.zone.web.bean.data.weixin.WeiXinBean;
+import top.zbeboy.zone.web.util.AjaxUtil;
+
+import java.util.Map;
 
 @FeignClient(value = "base-server", fallback = WeiXinHystrixClientFallbackFactory.class)
 public interface WeiXinService {
@@ -19,7 +22,7 @@ public interface WeiXinService {
      * @param appId    id
      * @return 数据
      */
-    @GetMapping("/base/data/wei_xin/username/app_id/{username}/{appId}")
+    @GetMapping("/base/data/wei_xin_username_and_app_id/{username}/{appId}")
     WeiXin findByUsernameAndAppId(@PathVariable("username") String username, @PathVariable("appId") String appId);
 
     /**
@@ -29,7 +32,7 @@ public interface WeiXinService {
      * @param appId     id
      * @return 数据
      */
-    @GetMapping("/base/data/wei_xin/student_id/app_id/{studentId}/{appId}")
+    @GetMapping("/base/data/wei_xin_student_id_and_app_id/{studentId}/{appId}")
     WeiXinBean findByStudentIdAndAppId(@PathVariable("studentId") int studentId, @PathVariable("appId") String appId);
 
     /**
@@ -38,7 +41,7 @@ public interface WeiXinService {
      * @param weiXin 数据
      */
     @PostMapping("/base/data/wei_xin/save")
-    void save(@RequestBody WeiXin weiXin);
+    AjaxUtil<Map<String, Object>> save(@RequestBody WeiXin weiXin);
 
     /**
      * 更新
@@ -46,5 +49,5 @@ public interface WeiXinService {
      * @param weiXin 数据
      */
     @PostMapping("/base/data/wei_xin/update")
-    void update(@RequestBody WeiXin weiXin);
+    AjaxUtil<Map<String, Object>> update(@RequestBody WeiXin weiXin);
 }

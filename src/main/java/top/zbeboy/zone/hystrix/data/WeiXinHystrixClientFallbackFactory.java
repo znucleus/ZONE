@@ -4,6 +4,9 @@ import org.springframework.stereotype.Component;
 import top.zbeboy.zone.domain.tables.pojos.WeiXin;
 import top.zbeboy.zone.feign.data.WeiXinService;
 import top.zbeboy.zone.web.bean.data.weixin.WeiXinBean;
+import top.zbeboy.zone.web.util.AjaxUtil;
+
+import java.util.Map;
 
 @Component
 public class WeiXinHystrixClientFallbackFactory implements WeiXinService {
@@ -18,12 +21,12 @@ public class WeiXinHystrixClientFallbackFactory implements WeiXinService {
     }
 
     @Override
-    public void save(WeiXin weiXin) {
-
+    public AjaxUtil<Map<String, Object>> save(WeiXin weiXin) {
+        return AjaxUtil.of();
     }
 
     @Override
-    public void update(WeiXin weiXin) {
-
+    public AjaxUtil<Map<String, Object>> update(WeiXin weiXin) {
+        return AjaxUtil.of();
     }
 }

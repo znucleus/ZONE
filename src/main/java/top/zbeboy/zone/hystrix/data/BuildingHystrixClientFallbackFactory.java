@@ -22,7 +22,7 @@ public class BuildingHystrixClientFallbackFactory implements BuildingService {
     }
 
     @Override
-    public List<Building> usersData(BuildingSearchVo buildingSearchVo) {
+    public List<Building> findByCollegeIdAndBuildingIsDel(BuildingSearchVo buildingSearchVo) {
         return new ArrayList<>();
     }
 
