@@ -273,7 +273,7 @@ public class UsersRestController {
             }
 
             if (StringUtils.equals("username", name)) {
-                ajaxUtil = checkUsername(value);
+                ajaxUtil = usersService.checkUsername(value);
                 if (BooleanUtils.isTrue(ajaxUtil.getState())) {
                     if (!StringUtils.equals(own.getUsername(), value)) {
                         List<Users> users = usersService.findByUsernameNeOwn(value, own.getUsername());
@@ -628,37 +628,5 @@ public class UsersRestController {
             session.setAttribute(SessionBook.DYNAMIC_PASSWORD_USERNAME, username);
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
-    }
-
-    /**
-     * 账号校验
-     *
-     * @param username 账号
-     * @return 是否正常
-     */
-    private AjaxUtil<Map<String, Object>> checkUsername(String username) {
-        String param = StringUtils.deleteWhitespace(username);
-        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        // 禁止注册系统账号
-        SystemConfigure systemConfigure = systemConfigureService
-                .findByDataKey(Workbook.SystemConfigure.FORBIDDEN_REGISTER.name());
-        String[] forbiddenRegister = systemConfigure.getDataValue().split(",");
-        boolean isForbidden = false;
-        for (String fr : forbiddenRegister) {
-            if (fr.equalsIgnoreCase(param)) {
-                isForbidden = true;
-                break;
-            }
-        }
-        // 只能是英文或数字
-        String regex = Workbook.USERNAME_REGEX;
-        if (isForbidden) {
-            ajaxUtil.fail().msg("账号已被注册");
-        } else if (!Pattern.matches(regex, username)) {
-            ajaxUtil.fail().msg("账号1~20位英文或数字");
-        } else {
-            ajaxUtil.success();
-        }
-        return ajaxUtil;
     }
 }

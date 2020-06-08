@@ -21,7 +21,7 @@ public interface UsersService {
      * @param username 账号
      * @return 数据
      */
-    @GetMapping("/base/users/username/{username}")
+    @GetMapping("/base/users/{username}")
     Users findByUsername(@PathVariable("username") String username);
 
     /**
@@ -30,7 +30,7 @@ public interface UsersService {
      * @param email 邮箱
      * @return 数据
      */
-    @GetMapping("/base/users/email/{email}")
+    @GetMapping("/base/users_email/{email}")
     Users findByEmail(@PathVariable("email") String email);
 
     /**
@@ -39,7 +39,7 @@ public interface UsersService {
      * @param mobile 手机号
      * @return 数据
      */
-    @GetMapping("/base/users/mobile/{mobile}")
+    @GetMapping("/base/users_mobile/{mobile}")
     Users findByMobile(@PathVariable("mobile") String mobile);
 
     /**
@@ -58,7 +58,7 @@ public interface UsersService {
      * @param own      当前账号
      * @return 数据
      */
-    @GetMapping("/base/users/username/ne/own/{username}/{own}")
+    @GetMapping("/base/users_username_ne_own/{username}/{own}")
     List<Users> findByUsernameNeOwn(@PathVariable("username") String username, @PathVariable("own") String own);
 
     /**
@@ -68,7 +68,7 @@ public interface UsersService {
      * @param own   当前账号
      * @return 数据
      */
-    @GetMapping("/base/users/email/ne/own/{email}/{own}")
+    @GetMapping("/base/users_email_ne_own/{email}/{own}")
     List<Users> findByEmailNeOwn(@PathVariable("email") String email, @PathVariable("own") String own);
 
     /**
@@ -78,7 +78,7 @@ public interface UsersService {
      * @param own    当前账号
      * @return 数据
      */
-    @GetMapping("/base/users/mobile/ne/own/{mobile}/{own}")
+    @GetMapping("/base/users_mobile_ne_own/{mobile}/{own}")
     List<Users> findByMobileNeOwn(@PathVariable("mobile") String mobile, @PathVariable("own") String own);
 
     /**
@@ -88,7 +88,7 @@ public interface UsersService {
      * @param own    当前账号
      * @return 数据
      */
-    @GetMapping("/base/users/id_card/ne/own/{idCard}/{own}")
+    @GetMapping("/base/users_id_card_ne_own/{idCard}/{own}")
     List<Users> findByIdCardNeOwn(@PathVariable("idCard") String idCard, @PathVariable("own") String own);
 
     /**
@@ -98,7 +98,7 @@ public interface UsersService {
      * @param verifyMailbox 是否验证邮箱
      * @return 数据
      */
-    @PostMapping("/base/users/join_date/verify_mailbox")
+    @PostMapping("/base/users_join_date_and_verify_mailbox")
     List<Users> findByJoinDateAndVerifyMailbox(@RequestBody java.sql.Date joinDate, @RequestParam("verifyMailbox") Byte verifyMailbox);
 
     /**
@@ -205,24 +205,6 @@ public interface UsersService {
     AjaxUtil<Map<String, Object>> userPasswordUpdate(@RequestParam("username") String username, @RequestParam("oldPassword") String oldPassword, @RequestParam("newPassword") String newPassword, @RequestParam("confirmPassword") String confirmPassword);
 
     /**
-     * upload users avatar.
-     *
-     * @param file     base64 file.
-     * @param fileName name.
-     * @return success or fail.
-     */
-    @PostMapping("/base/users/avatar/upload")
-    AjaxUtil<Map<String, Object>> userAvatarUpload(@RequestParam("username") String username, @RequestParam("file") String file, @RequestParam("fileName") String fileName);
-
-    /**
-     * delete avatar.
-     *
-     * @return success or false
-     */
-    @GetMapping("/base/users/avatar/delete/{username}")
-    AjaxUtil<Map<String, Object>> userAvatarDelete(@PathVariable("username") String username);
-
-    /**
      * 数据
      *
      * @param dataTablesUtil 请求
@@ -258,7 +240,7 @@ public interface UsersService {
      * @param enabled 状态
      * @return 是否成功
      */
-    @PostMapping("/base/platform/users/update/enabled")
+    @PostMapping("/base/platform/users/update_enabled")
     AjaxUtil<Map<String, Object>> updateEnabled(@RequestParam(value = "userIds", required = false) String userIds, @RequestParam("enabled") Byte enabled);
 
     /**
@@ -268,7 +250,7 @@ public interface UsersService {
      * @param locked  锁定
      * @return 是否成功
      */
-    @PostMapping("/base/platform/users/update/locked")
+    @PostMapping("/base/platform/users/update_locked")
     AjaxUtil<Map<String, Object>> updateLocked(@RequestParam(value = "userIds", required = false) String userIds, @RequestParam("locked") Byte locked);
 
     /**
@@ -277,7 +259,7 @@ public interface UsersService {
      * @param username 账号
      * @return success or fail
      */
-    @PostMapping("/base/platform/users/update/password")
+    @PostMapping("/base/platform/users/update_password")
     AjaxUtil<Map<String, Object>> updatePassword(@RequestParam("username") String username);
 
     /**
@@ -300,12 +282,21 @@ public interface UsersService {
     AjaxUtil<Map<String, Object>> forgetPassword(@RequestParam("username") String username, @RequestParam("dynamicPassword") String dynamicPassword);
 
     /**
+     * 账号校验
+     *
+     * @param username 账号
+     * @return 是否正常
+     */
+    @PostMapping("/base/users/check/username")
+    AjaxUtil<Map<String, Object>> checkUsername(@RequestParam("username") String username);
+
+    /**
      * 更新
      *
      * @param users 用户
      */
     @PostMapping("/base/users/update")
-    void update(@RequestBody Users users);
+    AjaxUtil<Map<String,Object>> update(@RequestBody Users users);
 
     /**
      * 更新
@@ -313,8 +304,8 @@ public interface UsersService {
      * @param username       用户
      * @param targetUsername 目标用户
      */
-    @PostMapping("/base/users/update/username")
-    void updateUsername(@RequestParam("username") String username, @RequestParam("targetUsername") String targetUsername);
+    @PostMapping("/base/users/update_username")
+    AjaxUtil<Map<String,Object>> updateUsername(@RequestParam("username") String username, @RequestParam("targetUsername") String targetUsername);
 
     /**
      * 删除
@@ -322,11 +313,11 @@ public interface UsersService {
      * @param users 用户
      */
     @PostMapping("/base/users/delete")
-    void delete(@RequestBody List<Users> users);
+    AjaxUtil<Map<String,Object>> delete(@RequestBody List<Users> users);
 
     /**
      * 解锁
      */
     @GetMapping("/base/users/unlock")
-    void unlockUsers();
+    AjaxUtil<Map<String,Object>> unlockUsers();
 }

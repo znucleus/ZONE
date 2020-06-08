@@ -105,7 +105,7 @@ public class AuthorizeRestController {
     @GetMapping("/web/platform/authorize/role/{id}")
     public ResponseEntity<Map<String, Object>> roleData(@PathVariable("id") int collegeId) {
         Select2Data select2Data = Select2Data.of();
-        List<Role> roles = authorizeService.roleData(collegeId);
+        List<Role> roles = authorizeService.findCollegeRoleByCollegeIdRelation(collegeId);
         roles.forEach(role -> select2Data.add(role.getRoleId(), role.getRoleName()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }

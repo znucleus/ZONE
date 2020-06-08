@@ -30,7 +30,7 @@ public interface AppService {
      * @param id 主键
      * @return 数据
      */
-    @PostMapping("/base/platform/app/oauth_client_users/id/username/relation")
+    @PostMapping("/base/platform/app/oauth_client_users/id_and_username_relation")
     OauthClientUsersBean findOauthClientUsersByIdAndUsernameRelation(@RequestParam("id") String id, @RequestParam("username") String username);
 
     /**

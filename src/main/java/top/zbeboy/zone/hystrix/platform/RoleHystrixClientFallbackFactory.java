@@ -45,7 +45,7 @@ public class RoleHystrixClientFallbackFactory implements RoleService
     }
 
     @Override
-    public RoleBean findByRoleIdRelation(String roleId) {
+    public RoleBean findCollegeRoleByRoleIdRelation(String roleId) {
         return new RoleBean();
     }
 

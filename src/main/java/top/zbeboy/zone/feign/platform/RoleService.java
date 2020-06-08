@@ -34,7 +34,7 @@ public interface RoleService {
      * @param roleEnName 角色英文名
      * @return 数据
      */
-    @GetMapping("/base/platform/role/role_en_name/{roleEnName}")
+    @GetMapping("/base/platform/role_role_en_name/{roleEnName}")
     Role findByRoleEnName(@PathVariable("roleEnName") String roleEnName);
 
     /**
@@ -43,7 +43,7 @@ public interface RoleService {
      * @param username 账号
      * @return 数据
      */
-    @GetMapping("/base/platform/role/username/{username}")
+    @GetMapping("/base/platform/role_username/{username}")
     List<Role> findByUsername(@PathVariable("username") String username);
 
     /**
@@ -53,7 +53,7 @@ public interface RoleService {
      * @param applicationPid 父id
      * @return 数据
      */
-    @PostMapping("/base/platform/role/role_en_names/application_pid/relation")
+    @PostMapping("/base/platform/role_in_role_en_names_and_application_pid_relation")
     List<Application> findInRoleEnNamesAndApplicationPidRelation(@RequestBody List<String> roles, @RequestParam("applicationPid") String applicationPid);
 
     /**
@@ -63,7 +63,7 @@ public interface RoleService {
      * @param username 账号
      * @return 数据
      */
-    @PostMapping("/base/platform/role/role_en_names/relation")
+    @PostMapping("/base/platform/role_role_en_names_relation")
     List<Application> findInRoleEnNamesRelation(@RequestBody List<String> roles, @RequestParam("username") String username);
 
     /**
@@ -72,8 +72,8 @@ public interface RoleService {
      * @param roleId 角色id
      * @return 数据
      */
-    @GetMapping("/base/platform/role/college_role/role_id/{roleId}")
-    RoleBean findByRoleIdRelation(@PathVariable("roleId") String roleId);
+    @GetMapping("/base/platform/role/college_role_role_id/{roleId}")
+    RoleBean findCollegeRoleByRoleIdRelation(@PathVariable("roleId") String roleId);
 
     /**
      * 数据

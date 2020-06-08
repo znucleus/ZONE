@@ -50,7 +50,7 @@ public class AuthorizeHystrixClientFallbackFactory implements AuthorizeService {
     }
 
     @Override
-    public List<Role> roleData(int collegeId) {
+    public List<Role> findCollegeRoleByCollegeIdRelation(int collegeId) {
         return new ArrayList<>();
     }
 

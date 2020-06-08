@@ -34,17 +34,8 @@ public interface AuthorizeService {
      * @param id 主键
      * @return 数据
      */
-    @GetMapping("/base/platform/authorize/role_apply/relation/{id}")
+    @GetMapping("/base/platform/authorize/role_apply_relation/{id}")
     RoleApplyBean findRoleApplyByIdRelation(@PathVariable("id") String id);
-
-    /**
-     * 根据用户账号查询权限
-     *
-     * @param username 账号
-     * @return 用户权限
-     */
-    @GetMapping("/base/platform/authorize/username/{username}")
-    List<Authorities> findByUsername(@PathVariable("username") String username);
 
     /**
      * 通过账号和权限查询
@@ -53,8 +44,17 @@ public interface AuthorizeService {
      * @param authorities 权限
      * @return 数据
      */
-    @PostMapping("/base/platform/authorize/username/authorities")
+    @PostMapping("/base/platform/authorize/username_and_in_authorities")
     List<Authorities> findByUsernameAndInAuthorities(@RequestParam("username") String username, @RequestBody List<String> authorities);
+
+    /**
+     * 根据用户账号查询权限
+     *
+     * @param username 账号
+     * @return 用户权限
+     */
+    @GetMapping("/base/platform/authorize_username/{username}")
+    List<Authorities> findByUsername(@PathVariable("username") String username);
 
     /**
      * 数据
@@ -70,7 +70,7 @@ public interface AuthorizeService {
      *
      * @return 数据
      */
-    @GetMapping("/base/platform/authorize/type")
+    @GetMapping("/base/platform/authorize_type")
     List<AuthorizeType> authorizeTypeData();
 
     /**
@@ -79,8 +79,8 @@ public interface AuthorizeService {
      * @param collegeId 院id
      * @return 数据
      */
-    @GetMapping("/base/platform/authorize/role/{id}")
-    List<Role> roleData(@PathVariable("id") int collegeId);
+    @GetMapping("/base/platform/authorize/college_role_college_id/{id}")
+    List<Role> findCollegeRoleByCollegeIdRelation(@PathVariable("id") int collegeId);
 
     /**
      * 检验账号是否符合规则

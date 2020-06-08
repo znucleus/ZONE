@@ -116,16 +116,6 @@ public class UsersHystrixClientFallbackFactory implements UsersService {
     }
 
     @Override
-    public AjaxUtil<Map<String, Object>> userAvatarUpload(String username, String file, String fileName) {
-        return AjaxUtil.of();
-    }
-
-    @Override
-    public AjaxUtil<Map<String, Object>> userAvatarDelete(String username) {
-        return AjaxUtil.of();
-    }
-
-    @Override
     public DataTablesUtil data(DataTablesUtil dataTablesUtil) {
         dataTablesUtil.setData(new ArrayList<>());
         return dataTablesUtil;
@@ -167,22 +157,27 @@ public class UsersHystrixClientFallbackFactory implements UsersService {
     }
 
     @Override
-    public void update(Users users) {
-
+    public AjaxUtil<Map<String, Object>> checkUsername(String username) {
+        return AjaxUtil.of();
     }
 
     @Override
-    public void updateUsername(String username, String targetUsername) {
-
+    public AjaxUtil<Map<String, Object>> update(Users users) {
+        return AjaxUtil.of();
     }
 
     @Override
-    public void delete(List<Users> users) {
-
+    public AjaxUtil<Map<String, Object>> updateUsername(String username, String targetUsername) {
+        return AjaxUtil.of();
     }
 
     @Override
-    public void unlockUsers() {
+    public AjaxUtil<Map<String, Object>> delete(List<Users> users) {
+        return AjaxUtil.of();
+    }
 
+    @Override
+    public AjaxUtil<Map<String, Object>> unlockUsers() {
+        return AjaxUtil.of();
     }
 }

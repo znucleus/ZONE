@@ -116,7 +116,7 @@ public class RoleViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
-            RoleBean role = roleService.findByRoleIdRelation(id);
+            RoleBean role = roleService.findCollegeRoleByRoleIdRelation(id);
             if (Objects.nonNull(role) && StringUtils.isNotBlank(role.getRoleId())) {
                 modelMap.addAttribute("role", role);
                 page = "web/platform/role/role_edit::#page-wrapper";
@@ -143,7 +143,7 @@ public class RoleViewController {
                     }
                 }
                 if (collegeId > 0) {
-                    RoleBean role = roleService.findByRoleIdRelation(id);
+                    RoleBean role = roleService.findCollegeRoleByRoleIdRelation(id);
                     if (Objects.nonNull(role) && StringUtils.isNotBlank(role.getRoleId())) {
                         if (collegeId == role.getCollegeId()) {
                             modelMap.addAttribute("role", role);
@@ -187,7 +187,7 @@ public class RoleViewController {
     public String see(@PathVariable("id") String id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        RoleBean role = roleService.findByRoleIdRelation(id);
+        RoleBean role = roleService.findCollegeRoleByRoleIdRelation(id);
         if (Objects.nonNull(role) && StringUtils.isNotBlank(role.getRoleId())) {
             modelMap.addAttribute("role", role);
             page = "web/platform/role/role_see::#page-wrapper";

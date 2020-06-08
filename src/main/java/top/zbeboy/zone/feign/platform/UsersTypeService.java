@@ -24,6 +24,6 @@ public interface UsersTypeService {
      * @param usersTypeName 类型名
      * @return 用户类型
      */
-    @GetMapping("/base/platform/users_type/name/{usersTypeName}")
+    @GetMapping("/base/platform/users_type_name/{usersTypeName}")
     UsersType findByUsersTypeName(@PathVariable("usersTypeName") String usersTypeName);
 }
