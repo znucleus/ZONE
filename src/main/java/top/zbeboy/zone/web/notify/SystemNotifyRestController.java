@@ -34,7 +34,7 @@ public class SystemNotifyRestController {
     @GetMapping("/users/system/notify")
     public ResponseEntity<Map<String, Object>> userSystemNotify() {
         AjaxUtil<SystemNotify> ajaxUtil = AjaxUtil.of();
-        ajaxUtil.success().list(systemNotifyService.userSystemNotify()).msg("获取数据成功");
+        ajaxUtil.success().list(systemNotifyService.findByEffective()).msg("获取数据成功");
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 

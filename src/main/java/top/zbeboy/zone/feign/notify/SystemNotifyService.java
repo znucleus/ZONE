@@ -22,7 +22,7 @@ public interface SystemNotifyService {
      * @param id 主键
      * @return 数据
      */
-    @GetMapping("/base/system/notify/relation/{id}")
+    @GetMapping("/base/system/notify_relation/{id}")
     SystemNotifyBean findByIdRelation(@PathVariable("id") String id);
 
     /**
@@ -32,14 +32,6 @@ public interface SystemNotifyService {
      */
     @GetMapping("/base/system/notify/effective")
     List<SystemNotify> findByEffective();
-
-    /**
-     * 获取数据
-     *
-     * @return 数据
-     */
-    @GetMapping("/base/users/system/notify")
-    List<SystemNotify> userSystemNotify();
 
     /**
      * 数据

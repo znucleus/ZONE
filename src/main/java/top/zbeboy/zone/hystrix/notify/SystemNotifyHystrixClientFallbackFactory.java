@@ -26,11 +26,6 @@ public class SystemNotifyHystrixClientFallbackFactory implements SystemNotifySer
     }
 
     @Override
-    public List<SystemNotify> userSystemNotify() {
-        return new ArrayList<>();
-    }
-
-    @Override
     public DataTablesUtil data(DataTablesUtil dataTablesUtil) {
         dataTablesUtil.setData(new ArrayList<>());
         return dataTablesUtil;
