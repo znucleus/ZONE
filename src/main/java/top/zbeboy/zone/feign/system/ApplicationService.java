@@ -38,7 +38,7 @@ public interface ApplicationService {
      *
      * @return 数据
      */
-    @GetMapping("/base/system/application/pids")
+    @GetMapping("/base/system/application_pids")
     List<Application> pids();
 
     /**
