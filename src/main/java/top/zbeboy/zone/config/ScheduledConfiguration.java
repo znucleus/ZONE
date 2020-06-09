@@ -1,6 +1,5 @@
 package top.zbeboy.zone.config;
 
-import org.joda.time.DateTime;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.slf4j.Logger;
@@ -12,8 +11,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.domain.tables.records.AttendReleaseRecord;
-import top.zbeboy.zone.feign.platform.UsersService;
-import top.zbeboy.zone.feign.system.SystemLogService;
 import top.zbeboy.zone.service.attend.AttendReleaseService;
 import top.zbeboy.zone.service.attend.AttendReleaseSubService;
 import top.zbeboy.zone.service.attend.AttendWxStudentSubscribeService;
@@ -67,12 +64,6 @@ public class ScheduledConfiguration {
     private Environment env;
 
     @Resource
-    private UsersService usersService;
-
-    @Resource
-    private SystemLogService systemLogService;
-
-    @Resource
     private AttendReleaseService attendReleaseService;
 
     @Resource
@@ -98,42 +89,6 @@ public class ScheduledConfiguration {
 
     @Resource
     private TrainingAttendUsersService trainingAttendUsersService;
-
-    /**
-     * 清理未验证用户信息
-     * 每月2号 晚间1点15分
-     */
-    @Scheduled(cron = "0 15 01 02 * ?")
-    public void cleanUsers() {
-        if (env.acceptsProfiles(Profiles.of(Workbook.SPRING_PROFILE_DEVELOPMENT, Workbook.SPRING_PROFILE_PRODUCTION))) {
-            // 清理
-            DateTime dateTime = DateTime.now();
-            DateTime oldTime = dateTime.minusDays(30);
-            Byte b = 0;
-            // 查询未验证用户
-            List<Users> users = this.usersService.findByJoinDateAndVerifyMailbox(DateTimeUtil.utilDateToSqlDate(oldTime.toDate()), b);
-            if (Objects.nonNull(users) && users.size() > 0) {
-                this.usersService.delete(users);
-                users.forEach(user -> {
-                    SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(), "删除未验证用户:" + user.getUsername(), DateTimeUtil.getNowSqlTimestamp(), "actuator", "127.0.0.1");
-                    systemLogService.save(systemLog);
-                });
-            }
-            log.info(">>>>>>>>>>>>> scheduled ... clean users ");
-        }
-
-    }
-
-    /**
-     * 解锁用户
-     */
-    @Scheduled(cron = "0 15 00 * * ?") // 每天 晚间12点15分
-    public void unlockUsers() {
-        if (env.acceptsProfiles(Profiles.of(Workbook.SPRING_PROFILE_DEVELOPMENT, Workbook.SPRING_PROFILE_PRODUCTION))) {
-            this.usersService.unlockUsers();
-            log.info(">>>>>>>>>>>>> scheduled ... unlock users ");
-        }
-    }
 
     /**
      * 自动生成签到数据
