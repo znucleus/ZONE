@@ -45,6 +45,8 @@ public class RegisterLeaverRestController {
      */
     @GetMapping("/web/register/leaver/data")
     public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil) {
+        Users users = SessionUtil.getUserFromSession();
+        simplePaginationUtil.setUsername(users.getUsername());
         AjaxUtil<LeaverRegisterReleaseBean> ajaxUtil = registerLeaverService.data(simplePaginationUtil);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }

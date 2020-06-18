@@ -59,7 +59,7 @@ public interface OrganizeService {
      * @param organizeSearchVo 查询参数
      * @return 班级数据
      */
-    @GetMapping("/base/data/organizes/search")
+    @PostMapping("/base/data/organizes/search")
     List<Organize> findByGradeIdAndOrganizeIsDel(@RequestBody OrganizeSearchVo organizeSearchVo);
 
     /**
