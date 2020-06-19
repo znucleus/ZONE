@@ -11,6 +11,9 @@ public class AttendUsersAddVo {
     @Size(max = 64, message = "签到发布主表ID不正确")
     private String attendReleaseId;
     private String remark;
+    @NotBlank(message = "当前用户账号不能为空")
+    @Size(max = 64, message = "当前用户账号不正确")
+    private String username;
 
     public String getStudentNumber() {
         return studentNumber;
@@ -34,5 +37,13 @@ public class AttendUsersAddVo {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

@@ -20,6 +20,9 @@ public class AttendReleaseEditVo {
     private Byte isAuto;
     private String validDate;
     private String expireDate;
+    @NotBlank(message = "当前用户账号不能为空")
+    @Size(max = 64, message = "当前用户账号不正确")
+    private String username;
 
     public int getAttendReleaseSubId() {
         return attendReleaseSubId;
@@ -75,5 +78,13 @@ public class AttendReleaseEditVo {
 
     public void setExpireDate(String expireDate) {
         this.expireDate = expireDate;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

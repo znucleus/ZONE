@@ -9,12 +9,10 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-import top.zbeboy.zone.domain.tables.pojos.*;
-import top.zbeboy.zone.domain.tables.records.AttendReleaseRecord;
-import top.zbeboy.zone.service.attend.AttendReleaseService;
-import top.zbeboy.zone.service.attend.AttendReleaseSubService;
-import top.zbeboy.zone.service.attend.AttendWxStudentSubscribeService;
-import top.zbeboy.zone.service.cache.attend.AttendWxCacheService;
+import top.zbeboy.zone.domain.tables.pojos.TrainingAttend;
+import top.zbeboy.zone.domain.tables.pojos.TrainingAttendUsers;
+import top.zbeboy.zone.domain.tables.pojos.TrainingConfigure;
+import top.zbeboy.zone.domain.tables.pojos.TrainingUsers;
 import top.zbeboy.zone.service.internship.InternshipApplyService;
 import top.zbeboy.zone.service.training.TrainingAttendService;
 import top.zbeboy.zone.service.training.TrainingAttendUsersService;
@@ -64,18 +62,6 @@ public class ScheduledConfiguration {
     private Environment env;
 
     @Resource
-    private AttendReleaseService attendReleaseService;
-
-    @Resource
-    private AttendReleaseSubService attendReleaseSubService;
-
-    @Resource
-    private AttendWxStudentSubscribeService attendWxStudentSubscribeService;
-
-    @Resource
-    private AttendWxCacheService attendWxCacheService;
-
-    @Resource
     private InternshipApplyService internshipApplyService;
 
     @Resource
@@ -89,61 +75,6 @@ public class ScheduledConfiguration {
 
     @Resource
     private TrainingAttendUsersService trainingAttendUsersService;
-
-    /**
-     * 自动生成签到数据
-     */
-    @Scheduled(cron = "0 5 00 * * ?") // 每天 晚间12点05分
-    public void generateAttend() {
-        if (env.acceptsProfiles(Profiles.of(Workbook.SPRING_PROFILE_DEVELOPMENT, Workbook.SPRING_PROFILE_PRODUCTION))) {
-            Result<AttendReleaseRecord> releaseRecords = attendReleaseService.findIsAuto();
-            if (releaseRecords.isNotEmpty()) {
-                List<AttendRelease> attendReleases = releaseRecords.into(AttendRelease.class);
-                List<AttendReleaseSub> attendReleaseSubs = new ArrayList<>();
-
-                String timePrefix = DateTimeUtil.getLocalDateTime(DateTimeUtil.YEAR_MONTH_DAY_FORMAT);
-                for (AttendRelease releaseRecord : attendReleases) {
-                    String attendStartTime = DateTimeUtil.defaultFormatSqlTimestamp(releaseRecord.getAttendStartTime());
-                    String attendEndTime = DateTimeUtil.defaultFormatSqlTimestamp(releaseRecord.getAttendEndTime());
-                    String attendStartTimeSuffix = attendStartTime.split(" ")[1];
-                    String attendEndTimeSuffix = attendEndTime.split(" ")[1];
-                    AttendReleaseSub attendReleaseSub = new AttendReleaseSub();
-                    attendReleaseSub.setTitle(releaseRecord.getTitle());
-                    attendReleaseSub.setAttendStartTime(DateTimeUtil.defaultParseSqlTimestamp(timePrefix + " " + attendStartTimeSuffix));
-                    attendReleaseSub.setAttendEndTime(DateTimeUtil.defaultParseSqlTimestamp(timePrefix + " " + attendEndTimeSuffix));
-                    attendReleaseSub.setIsAuto(releaseRecord.getIsAuto());
-                    attendReleaseSub.setValidDate(releaseRecord.getValidDate());
-                    attendReleaseSub.setExpireDate(releaseRecord.getExpireDate());
-                    attendReleaseSub.setOrganizeId(releaseRecord.getOrganizeId());
-                    attendReleaseSub.setUsername(releaseRecord.getUsername());
-                    attendReleaseSub.setAttendReleaseId(releaseRecord.getAttendReleaseId());
-                    attendReleaseSub.setReleaseTime(DateTimeUtil.getNowSqlTimestamp());
-
-                    attendReleaseSubs.add(attendReleaseSub);
-                }
-
-                attendReleaseSubService.batchSave(attendReleaseSubs);
-            }
-            log.info(">>>>>>>>>>>>> scheduled ... generate attend ");
-        }
-    }
-
-    /**
-     * 下发订阅记录
-     */
-    @Scheduled(cron = "0 5 07 * * ?") // 每天 晚间07点05分
-    public void sendAttendWxSubscribe() {
-        if (env.acceptsProfiles(Profiles.of(Workbook.SPRING_PROFILE_DEVELOPMENT, Workbook.SPRING_PROFILE_PRODUCTION))) {
-            // 思路将要下发的订阅存入redis，等redis过期时触发数据下发
-            // 1.删除过期订阅记录
-            attendWxStudentSubscribeService.deleteOverdueRecord();
-            // 2.查询要下发的子表数据
-            Result<Record> records = attendWxStudentSubscribeService.findSubscribe();
-            // 3.存入缓存
-            attendWxCacheService.saveAttendWxSubscribe(records);
-        }
-
-    }
 
     /**
      * 更改实习状态为申请中
