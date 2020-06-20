@@ -62,7 +62,7 @@ public class OrganizeViewController {
         if (!SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
             Users users = SessionUtil.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-            if (Objects.nonNull(usersType)) {
+            if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
                 int collegeId = 0;
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                     StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
@@ -108,7 +108,7 @@ public class OrganizeViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         OrganizeBean organizeBean= organizeService.findByIdRelation(id);
-        if (Objects.nonNull(organizeBean) && organizeBean.getOrganizeId() > 0) {
+        if (Objects.nonNull(organizeBean.getOrganizeId()) && organizeBean.getOrganizeId() > 0) {
             if (Objects.nonNull(organizeBean.getStaffId())) {
                 StaffBean bean = staffService.findByIdRelation(organizeBean.getStaffId());
                 if (Objects.nonNull(bean.getStaffId()) && bean.getStaffId() > 0) {

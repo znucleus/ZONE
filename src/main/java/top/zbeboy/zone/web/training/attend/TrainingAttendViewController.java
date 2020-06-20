@@ -65,7 +65,7 @@ public class TrainingAttendViewController {
             boolean isStudent = false;
             Users users = SessionUtil.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-            if (Objects.nonNull(usersType)) {
+            if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
                 if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
                     isStudent = true;
                 }
@@ -182,7 +182,7 @@ public class TrainingAttendViewController {
         String page;
         Users users = SessionUtil.getUserFromSession();
         UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-        if (Objects.nonNull(usersType)) {
+        if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
             if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
                 TrainingRelease trainingRelease = trainingReleaseService.findById(id);
                 if (Objects.nonNull(trainingRelease)) {

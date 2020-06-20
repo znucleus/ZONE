@@ -49,7 +49,7 @@ public class SchoolViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         School school = schoolService.findById(id);
-        if (Objects.nonNull(school)) {
+        if (Objects.nonNull(school.getSchoolId())) {
             modelMap.addAttribute("school", school);
             page = "web/data/school/school_edit::#page-wrapper";
         } else {

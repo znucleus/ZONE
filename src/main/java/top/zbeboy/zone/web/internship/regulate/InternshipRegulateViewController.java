@@ -62,7 +62,7 @@ public class InternshipRegulateViewController {
 
         Users users = SessionUtil.getUserFromSession();
         UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-        if (Objects.nonNull(usersType)) {
+        if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
             if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                 StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
                 if (Objects.nonNull(bean.getStaffId()) && bean.getStaffId() > 0) {

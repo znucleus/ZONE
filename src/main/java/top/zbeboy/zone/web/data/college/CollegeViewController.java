@@ -50,7 +50,7 @@ public class CollegeViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         College college = collegeService.findById(id);
-        if (Objects.nonNull(college) && college.getCollegeId() > 0) {
+        if (Objects.nonNull(college.getCollegeId()) && college.getCollegeId() > 0) {
             modelMap.addAttribute("college", college);
             page = "web/data/college/college_edit::#page-wrapper";
         } else {
@@ -71,7 +71,7 @@ public class CollegeViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         CollegeBean bean = collegeService.findByIdRelation(id);
-        if (Objects.nonNull(bean) && bean.getCollegeId() > 0) {
+        if (Objects.nonNull(bean.getCollegeId()) && bean.getCollegeId() > 0) {
             modelMap.addAttribute("college", bean);
             page = "web/data/college/college_mount::#page-wrapper";
         } else {

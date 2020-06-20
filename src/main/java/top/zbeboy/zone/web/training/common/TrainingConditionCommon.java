@@ -61,11 +61,11 @@ public class TrainingConditionCommon {
 
                 Users users = SessionUtil.getUserFromSession();
                 UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-                if (Objects.nonNull(usersType)) {
+                if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
                     int collegeId = 0;
                     if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                         StaffBean staffBean  = staffService.findByUsernameRelation(users.getUsername());
-                        if (Objects.nonNull(staffBean.getStaffId()) && staffBean.getStaffId() > 0) {
+                        if (Objects.nonNull(staffBean) && Objects.nonNull(staffBean.getStaffId()) && staffBean.getStaffId() > 0) {
                             collegeId = staffBean.getCollegeId();
                         }
                     } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
@@ -123,7 +123,7 @@ public class TrainingConditionCommon {
         } else {
             Users users = SessionUtil.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-            if (Objects.nonNull(usersType)) {
+            if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                     canOperator = true;
                 }

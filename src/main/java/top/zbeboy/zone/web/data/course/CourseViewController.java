@@ -59,7 +59,7 @@ public class CourseViewController {
         if (!SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
             Users users = SessionUtil.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-            if (Objects.nonNull(usersType)) {
+            if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
                 int collegeId = 0;
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                     StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
@@ -105,7 +105,7 @@ public class CourseViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         CourseBean courseBean = courseService.findByIdRelation(id);
-        if (Objects.nonNull(courseBean) && courseBean.getCourseId() > 0) {
+        if (Objects.nonNull(courseBean.getCourseId()) && courseBean.getCourseId() > 0) {
             modelMap.addAttribute("course", courseBean);
             if (!SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
                 modelMap.addAttribute("collegeId", courseBean.getCollegeId());

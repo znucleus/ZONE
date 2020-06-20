@@ -170,7 +170,7 @@ public class InternshipReleaseRestController {
             Users users = SessionUtil.getUserFromSession();
 
             ScienceBean scienceBean = scienceService.findByIdRelation(internshipReleaseAddVo.getScienceId());
-            if (Objects.nonNull(scienceBean) && scienceBean.getScienceId() > 0) {
+            if (Objects.nonNull(scienceBean.getScienceId()) && scienceBean.getScienceId() > 0) {
                 title = scienceBean.getSchoolName()
                         + "-" + scienceBean.getCollegeName()
                         + "-" + scienceBean.getDepartmentName()

@@ -165,10 +165,10 @@ public class InternshipRegulateRestController {
         if (internshipConditionCommon.basicCondition(id)) {
             Users users = SessionUtil.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-            if (Objects.nonNull(usersType)) {
+            if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                     StaffBean staffBean = staffService.findByUsernameRelation(users.getUsername());
-                    if (Objects.nonNull(staffBean.getStaffId()) && staffBean.getStaffId() > 0) {
+                    if (Objects.nonNull(staffBean) && Objects.nonNull(staffBean.getStaffId()) && staffBean.getStaffId() > 0) {
                         Result<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStaffId(id, staffBean.getStaffId());
                         if (internshipTeacherDistributionRecord.isNotEmpty()) {
                             List<InternshipTeacherDistribution> beans = internshipTeacherDistributionRecord.into(InternshipTeacherDistribution.class);
@@ -219,10 +219,10 @@ public class InternshipRegulateRestController {
             if (internshipConditionCommon.regulateCondition(internshipRegulateAddVo.getInternshipReleaseId())) {
                 Users users = SessionUtil.getUserFromSession();
                 UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-                if (Objects.nonNull(usersType)) {
+                if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
                     if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                         StaffBean staffBean = staffService.findByUsernameRelation(users.getUsername());
-                        if (Objects.nonNull(staffBean.getStaffId()) && staffBean.getStaffId() > 0) {
+                        if (Objects.nonNull(staffBean) && Objects.nonNull(staffBean.getStaffId()) && staffBean.getStaffId() > 0) {
                             InternshipRegulate internshipRegulate = new InternshipRegulate();
                             internshipRegulate.setInternshipRegulateId(UUIDUtil.getUUID());
                             internshipRegulate.setStudentName(internshipRegulateAddVo.getStudentName());

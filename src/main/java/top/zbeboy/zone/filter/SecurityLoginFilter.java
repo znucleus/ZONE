@@ -131,7 +131,7 @@ public class SecurityLoginFilter implements Filter {
                     if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
                         OrganizeService organizeService = SpringBootUtil.getBean(OrganizeService.class);
                         OrganizeBean organizeBean = organizeService.findByIdRelation(studentBean.getOrganizeId());
-                        if (Objects.nonNull(organizeBean) && organizeBean.getOrganizeId() > 0) {
+                        if (Objects.nonNull(organizeBean.getOrganizeId()) && organizeBean.getOrganizeId() > 0) {
                             schoolIsNotDel = !BooleanUtil.toBoolean(organizeBean.getSchoolIsDel()) && !BooleanUtil.toBoolean(organizeBean.getCollegeIsDel()) &&
                                     !BooleanUtil.toBoolean(organizeBean.getDepartmentIsDel()) && !BooleanUtil.toBoolean(organizeBean.getScienceIsDel()) &&
                                     !BooleanUtil.toBoolean(organizeBean.getGradeIsDel()) && !BooleanUtil.toBoolean(organizeBean.getOrganizeIsDel());
@@ -142,10 +142,10 @@ public class SecurityLoginFilter implements Filter {
 
                     StaffService staffService = SpringBootUtil.getBean(StaffService.class);
                     StaffBean staffBean = staffService.findByUsername(users.getUsername());
-                    if (Objects.nonNull(staffBean.getStaffId()) && staffBean.getStaffId() > 0) {
+                    if (Objects.nonNull(staffBean) && Objects.nonNull(staffBean.getStaffId()) && staffBean.getStaffId() > 0) {
                         DepartmentService departmentService = SpringBootUtil.getBean(DepartmentService.class);
                         DepartmentBean departmentBean = departmentService.findByIdRelation(staffBean.getDepartmentId());
-                        if (Objects.nonNull(departmentBean) && departmentBean.getDepartmentId() > 0) {
+                        if (Objects.nonNull(departmentBean.getDepartmentId()) && departmentBean.getDepartmentId() > 0) {
                             schoolIsNotDel = !BooleanUtil.toBoolean(departmentBean.getSchoolIsDel()) && !BooleanUtil.toBoolean(departmentBean.getCollegeIsDel()) &&
                                     !BooleanUtil.toBoolean(departmentBean.getDepartmentIsDel());
                         }

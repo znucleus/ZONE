@@ -59,7 +59,7 @@ public class SchoolroomViewController {
         if (!SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
             Users users = SessionUtil.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-            if (Objects.nonNull(usersType)) {
+            if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
                 int collegeId = 0;
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                     StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
@@ -106,7 +106,7 @@ public class SchoolroomViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         SchoolroomBean schoolroomBean = schoolroomService.findByIdRelation(id);
-        if (Objects.nonNull(schoolroomBean) && schoolroomBean.getSchoolroomId() > 0) {
+        if (Objects.nonNull(schoolroomBean.getSchoolroomId()) && schoolroomBean.getSchoolroomId() > 0) {
             modelMap.addAttribute("schoolroom", schoolroomBean);
             if (!SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
                 modelMap.addAttribute("collegeId", schoolroomBean.getCollegeId());

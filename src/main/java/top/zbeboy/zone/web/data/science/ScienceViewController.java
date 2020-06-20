@@ -58,7 +58,7 @@ public class ScienceViewController {
         if (!SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
             Users users = SessionUtil.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-            if (Objects.nonNull(usersType)) {
+            if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
                 int collegeId = 0;
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                     StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
@@ -104,7 +104,7 @@ public class ScienceViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         ScienceBean scienceBean = scienceService.findByIdRelation(id);
-        if (Objects.nonNull(scienceBean) && scienceBean.getScienceId() > 0) {
+        if (Objects.nonNull(scienceBean.getScienceId()) && scienceBean.getScienceId() > 0) {
             modelMap.addAttribute("science", scienceBean);
             if (!SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
                 modelMap.addAttribute("collegeId", scienceBean.getCollegeId());

@@ -61,7 +61,7 @@ public class InternshipApplyViewController {
     public String index(ModelMap modelMap) {
         Users users = SessionUtil.getUserFromSession();
         UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-        if (Objects.nonNull(usersType)) {
+        if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
             modelMap.put("usersType", usersType.getUsersTypeName());
         }
         return "web/internship/apply/internship_apply::#page-wrapper";
@@ -90,7 +90,7 @@ public class InternshipApplyViewController {
                 modelMap.addAttribute("student", studentBean);
 
                 Organize organize = organizeService.findById(studentBean.getOrganizeId());
-                if (Objects.nonNull(organize) && Objects.nonNull(organize.getStaffId())) {
+                if (Objects.nonNull(organize.getStaffId())) {
                     StaffBean bean = staffService.findByIdRelation(organize.getStaffId());
                     if (Objects.nonNull(bean.getStaffId()) && bean.getStaffId() > 0) {
                         modelMap.addAttribute("headmaster", bean.getRealName());
@@ -131,7 +131,7 @@ public class InternshipApplyViewController {
         String page;
         Users users = SessionUtil.getUserFromSession();
         UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-        if (Objects.nonNull(usersType)) {
+        if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
             if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
                 page = "web/internship/apply/internship_apply_my::#page-wrapper";
             } else {

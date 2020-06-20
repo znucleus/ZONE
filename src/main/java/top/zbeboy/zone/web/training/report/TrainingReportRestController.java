@@ -185,10 +185,10 @@ public class TrainingReportRestController {
         bean.setAcademicTitleName("");
 
         UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-        if (Objects.nonNull(usersType)) {
+        if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
             if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                 StaffBean staffBean = staffService.findByUsernameRelation(users.getUsername());
-                if (Objects.nonNull(staffBean.getStaffId()) && staffBean.getStaffId() > 0) {
+                if (Objects.nonNull(staffBean) && Objects.nonNull(staffBean.getStaffId()) && staffBean.getStaffId() > 0) {
                     bean.setSex(StringUtils.defaultIfBlank(staffBean.getSex(), ""));
                     bean.setAcademicTitleName(StringUtils.defaultIfBlank(staffBean.getAcademicTitleName(), ""));
                     if (Objects.nonNull(staffBean.getBirthday())) {
@@ -200,7 +200,7 @@ public class TrainingReportRestController {
 
             } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
                 StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
-                if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
+                if (Objects.nonNull(studentBean) && Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
                     bean.setSex(StringUtils.defaultIfBlank(studentBean.getSex(), ""));
                     if (Objects.nonNull(studentBean.getBirthday())) {
                         DateTime now = DateTime.now();
@@ -236,10 +236,10 @@ public class TrainingReportRestController {
             bean.setAcademicTitleName("");
 
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-            if (Objects.nonNull(usersType)) {
+            if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                     StaffBean staffBean = staffService.findByUsernameRelation(users.getUsername());
-                    if (Objects.nonNull(staffBean.getStaffId()) && staffBean.getStaffId() > 0) {
+                    if (Objects.nonNull(staffBean) && Objects.nonNull(staffBean.getStaffId()) && staffBean.getStaffId() > 0) {
                         bean.setSex(StringUtils.defaultIfBlank(staffBean.getSex(), ""));
                         bean.setAcademicTitleName(StringUtils.defaultIfBlank(staffBean.getAcademicTitleName(), ""));
                         if (Objects.nonNull(staffBean.getBirthday())) {
@@ -312,7 +312,7 @@ public class TrainingReportRestController {
         bean.setStudentName("");
 
         UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-        if (Objects.nonNull(usersType)) {
+        if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
             if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
                 StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
                 if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
@@ -350,7 +350,7 @@ public class TrainingReportRestController {
             bean.setStudentName("");
 
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-            if (Objects.nonNull(usersType)) {
+            if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
                 if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
                     StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
                     if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {

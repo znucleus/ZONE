@@ -59,7 +59,7 @@ public class DepartmentViewController {
         if (!SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
             Users users = SessionUtil.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-            if (Objects.nonNull(usersType)) {
+            if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
                 int collegeId = 0;
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                     StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
@@ -105,7 +105,7 @@ public class DepartmentViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         DepartmentBean departmentBean = departmentService.findByIdRelation(id);
-        if (Objects.nonNull(departmentBean) && departmentBean.getDepartmentId() > 0) {
+        if (Objects.nonNull(departmentBean.getDepartmentId()) && departmentBean.getDepartmentId() > 0) {
             modelMap.addAttribute("department", departmentBean);
             if (!SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
                 modelMap.addAttribute("collegeId", departmentBean.getCollegeId());

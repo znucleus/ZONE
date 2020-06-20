@@ -80,7 +80,7 @@ public class AuthorizeViewController {
         if (!SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
             Users users = SessionUtil.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-            if (Objects.nonNull(usersType)) {
+            if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
                 int collegeId = 0;
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                     StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
@@ -146,10 +146,10 @@ public class AuthorizeViewController {
             Byte status = roleApplyBean.getApplyStatus();
             if (status != 1) {
                 Users users = usersService.findByUsername(roleApplyBean.getUsername());
-                if (Objects.nonNull(users)) {
+                if (Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername())) {
                     int collegeId = 0;
                     UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-                    if (Objects.nonNull(usersType)) {
+                    if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
                         if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                             StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
                             if (Objects.nonNull(bean.getStaffId()) && bean.getStaffId() > 0) {
@@ -168,22 +168,22 @@ public class AuthorizeViewController {
                         roleApplyBean.setDurationInt(getDuration(roleApplyBean.getDuration()));
                         if (roleApplyBean.getDataScope() == 1) {
                             Department department = departmentService.findById(roleApplyBean.getDataId());
-                            if (Objects.nonNull(department)) {
+                            if (Objects.nonNull(department.getDepartmentId())) {
                                 roleApplyBean.setDataName(department.getDepartmentName());
                             }
                         } else if (roleApplyBean.getDataScope() == 2) {
                             Science science = scienceService.findById(roleApplyBean.getDataId());
-                            if (Objects.nonNull(science)) {
+                            if (Objects.nonNull(science.getScienceId())) {
                                 roleApplyBean.setDataName(science.getScienceName());
                             }
                         } else if (roleApplyBean.getDataScope() == 3) {
                             Grade grade = gradeService.findById(roleApplyBean.getDataId());
-                            if (Objects.nonNull(grade) && grade.getGradeId() > 0) {
+                            if (Objects.nonNull(grade.getGradeId())) {
                                 roleApplyBean.setDataName(grade.getGrade() + "");
                             }
                         } else if (roleApplyBean.getDataScope() == 4) {
                             Organize organize = organizeService.findById(roleApplyBean.getDataId());
-                            if (Objects.nonNull(organize) && organize.getOrganizeId() > 0) {
+                            if (Objects.nonNull(organize.getOrganizeId())) {
                                 roleApplyBean.setDataName(organize.getOrganizeName());
                             }
                         }

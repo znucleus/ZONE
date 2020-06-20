@@ -1,5 +1,6 @@
 package top.zbeboy.zone.web.system.application;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,7 +50,7 @@ public class SystemApplicationViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         Application application = applicationService.findById(id);
-        if (Objects.nonNull(application)) {
+        if (Objects.nonNull(application) && StringUtils.isNotBlank(application.getApplicationId())) {
             modelMap.addAttribute("systemApplication", application);
             page = "web/system/application/system_application_edit::#page-wrapper";
         } else {
