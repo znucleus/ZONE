@@ -65,12 +65,12 @@ public class TrainingConditionCommon {
                     int collegeId = 0;
                     if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                         StaffBean staffBean  = staffService.findByUsernameRelation(users.getUsername());
-                        if (Objects.nonNull(staffBean) && staffBean.getStaffId() > 0) {
+                        if (Objects.nonNull(staffBean.getStaffId()) && staffBean.getStaffId() > 0) {
                             collegeId = staffBean.getCollegeId();
                         }
                     } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
                         StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
-                        if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                        if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
                             collegeId = studentBean.getCollegeId();
                         }
                     }

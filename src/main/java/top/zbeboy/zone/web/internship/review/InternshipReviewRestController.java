@@ -352,7 +352,7 @@ public class InternshipReviewRestController {
                     if (Objects.nonNull(internshipRelease)) {
                         Users sendUser = SessionUtil.getUserFromSession();
                         StudentBean studentBean = studentService.findByIdRelation(internshipReviewBean.getStudentId());
-                        if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                        if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
                             Users acceptUsers = new Users();
                             acceptUsers.setUsername(studentBean.getUsername());
                             acceptUsers.setRealName(studentBean.getRealName());
@@ -424,7 +424,7 @@ public class InternshipReviewRestController {
                 if (Objects.nonNull(internshipRelease)) {
                     Users sendUser = SessionUtil.getUserFromSession();
                     StudentBean studentBean = studentService.findByIdRelation(studentId);
-                    if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                    if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
                         Users acceptUsers = new Users();
                         acceptUsers.setUsername(studentBean.getUsername());
                         acceptUsers.setRealName(studentBean.getRealName());
@@ -486,7 +486,7 @@ public class InternshipReviewRestController {
             if (Objects.nonNull(internshipRelease)) {
                 Users sendUser = SessionUtil.getUserFromSession();
                 StudentBean studentBean= studentService.findByIdRelation(studentId);
-                if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
                     Users acceptUsers = new Users();
                     acceptUsers.setUsername(studentBean.getUsername());
                     acceptUsers.setRealName(studentBean.getRealName());
@@ -597,7 +597,7 @@ public class InternshipReviewRestController {
                     if (Objects.nonNull(internshipRelease)) {
                         Users sendUser = SessionUtil.getUserFromSession();
                         StudentBean studentBean = studentService.findByIdRelation(studentId);
-                        if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                        if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
                             Users acceptUsers = new Users();
                             acceptUsers.setUsername(studentBean.getUsername());
                             acceptUsers.setRealName(studentBean.getRealName());
@@ -667,7 +667,7 @@ public class InternshipReviewRestController {
                     if (Objects.nonNull(internshipRelease)) {
                         Users sendUser = SessionUtil.getUserFromSession();
                         StudentBean studentBean = studentService.findByIdRelation(studentId);
-                        if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                        if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
                             Users acceptUsers = new Users();
                             acceptUsers.setUsername(studentBean.getUsername());
                             acceptUsers.setRealName(studentBean.getRealName());

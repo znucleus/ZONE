@@ -81,7 +81,7 @@ public class InternshipApplyViewController {
         if (internshipConditionCommon.applyCondition(id)) {
             Users users = SessionUtil.getUserFromSession();
             StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
-            if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+            if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
                 String qqMail = "";
                 if (studentBean.getEmail().toLowerCase().contains("@qq.com")) {
                     qqMail = studentBean.getEmail();
@@ -92,7 +92,7 @@ public class InternshipApplyViewController {
                 Organize organize = organizeService.findById(studentBean.getOrganizeId());
                 if (Objects.nonNull(organize) && Objects.nonNull(organize.getStaffId())) {
                     StaffBean bean = staffService.findByIdRelation(organize.getStaffId());
-                    if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+                    if (Objects.nonNull(bean.getStaffId()) && bean.getStaffId() > 0) {
                         modelMap.addAttribute("headmaster", bean.getRealName());
                         modelMap.addAttribute("headmasterTel", bean.getMobile());
                     }
@@ -103,7 +103,7 @@ public class InternshipApplyViewController {
                 if (internshipTeacherDistributionRecord.isPresent()) {
                     InternshipTeacherDistribution internshipTeacherDistribution = internshipTeacherDistributionRecord.get().into(InternshipTeacherDistribution.class);
                     StaffBean bean = staffService.findByIdRelation(internshipTeacherDistribution.getStaffId());
-                    if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+                    if (Objects.nonNull(bean.getStaffId()) && bean.getStaffId() > 0) {
                         modelMap.put("internshipTeacherName", bean.getRealName());
                         modelMap.put("internshipTeacherMobile", bean.getMobile());
                         modelMap.put("internshipTeacher", bean.getRealName() + " " + bean.getMobile());
@@ -161,7 +161,7 @@ public class InternshipApplyViewController {
         if (internshipConditionCommon.applyEditCondition(id)) {
             Users users = SessionUtil.getUserFromSession();
             StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
-            if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+            if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
                 Optional<Record> internshipInfoRecord = internshipInfoService.findByInternshipReleaseIdAndStudentId(id, studentBean.getStudentId());
                 if (internshipInfoRecord.isPresent()) {
                     InternshipInfo internshipInfo = internshipInfoRecord.get().into(InternshipInfo.class);
@@ -207,7 +207,7 @@ public class InternshipApplyViewController {
         String page;
         Users users = SessionUtil.getUserFromSession();
         StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
-        if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+        if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
             Optional<Record> internshipInfoRecord = internshipInfoService.findByInternshipReleaseIdAndStudentId(id, studentBean.getStudentId());
             if (internshipInfoRecord.isPresent()) {
                 InternshipInfo internshipInfo = internshipInfoRecord.get().into(InternshipInfo.class);

@@ -65,7 +65,7 @@ public class InternshipRegulateViewController {
         if (Objects.nonNull(usersType)) {
             if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                 StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
-                if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+                if (Objects.nonNull(bean.getStaffId()) && bean.getStaffId() > 0) {
                     modelMap.addAttribute("staffId", bean.getStaffId());
                 }
             }

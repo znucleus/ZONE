@@ -173,7 +173,7 @@ public class InternshipApplyServiceImpl implements InternshipApplyService, Pagin
         if (Objects.nonNull(usersType)) {
             if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
                 StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
-                if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
                     int studentId = studentBean.getStudentId();
                     a = STUDENT.STUDENT_ID.eq(studentId);
                 }

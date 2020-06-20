@@ -503,7 +503,7 @@ public class TrainingAttendRestController {
         if (Objects.nonNull(usersType)) {
             if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
                 StudentBean studentBean = studentService.findByUsername(users.getUsername());
-                if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
                     int studentId = studentBean.getStudentId();
                     tableSawUtil.setSearch("studentId", studentId);
                     Result<Record> records = trainingAttendMyService.findAll(tableSawUtil);

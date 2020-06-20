@@ -125,7 +125,7 @@ public class TrainingUsersRestController {
         if (trainingConditionCommon.usersCondition(trainingReleaseId)) {
             String param = StringUtils.deleteWhitespace(studentNumber);
             StudentBean studentBean = studentService.findNormalByStudentNumberRelation(param);
-            if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+            if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
                 Optional<TrainingUsersRecord> trainingUsersRecord = trainingUsersService.findByTrainingReleaseIdAndStudentId(trainingReleaseId, studentBean.getStudentId());
                 if (!trainingUsersRecord.isPresent()) {
                     TrainingUsers trainingUsers = new TrainingUsers();

@@ -38,7 +38,7 @@ public class StaffApiController {
         Users users = SessionUtil.getUserFromOauth(principal);
         if (Objects.nonNull(users)) {
             StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
-            if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+            if (Objects.nonNull(bean.getStaffId()) && bean.getStaffId() > 0) {
                 Map<String, Object> outPut = new HashMap<>();
                 outPut.put("staffId", bean.getStaffId());
                 outPut.put("staffNumber", bean.getStaffNumber());

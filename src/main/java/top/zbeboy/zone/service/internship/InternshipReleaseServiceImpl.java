@@ -168,13 +168,13 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService, P
                 if (Objects.nonNull(usersType)) {
                     if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                         StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
-                        if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+                        if (Objects.nonNull(bean.getStaffId()) && bean.getStaffId() > 0) {
                             int departmentId = bean.getDepartmentId();
                             a = a.or(DEPARTMENT.DEPARTMENT_ID.eq(departmentId));
                         }
                     } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
                         StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
-                        if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                        if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
                             int scienceId = studentBean.getScienceId();
                             a = a.or(SCIENCE.SCIENCE_ID.eq(scienceId));
                         }
@@ -188,12 +188,12 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService, P
                         int collegeId = 0;
                         if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                             StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
-                            if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+                            if (Objects.nonNull(bean.getStaffId()) && bean.getStaffId() > 0) {
                                 collegeId = bean.getCollegeId();
                             }
                         } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
                             StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
-                            if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                            if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
                                 collegeId = studentBean.getCollegeId();
                             }
                         }

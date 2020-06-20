@@ -80,12 +80,12 @@ public class InternshipJournalViewController {
 
             if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                 StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
-                if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+                if (Objects.nonNull(bean.getStaffId()) && bean.getStaffId() > 0) {
                     modelMap.addAttribute("staffId", bean.getStaffId());
                 }
             } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
                 StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
-                if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
                     modelMap.addAttribute("studentId", studentBean.getStudentId());
                 }
             }
@@ -210,7 +210,7 @@ public class InternshipJournalViewController {
         modelMap.addAttribute("internshipReleaseId", id);
         modelMap.addAttribute("staffId", staffId);
         StaffBean bean = staffService.findByIdRelation(staffId);
-        if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+        if (Objects.nonNull(bean.getStaffId()) && bean.getStaffId() > 0) {
             modelMap.addAttribute("realName", bean.getRealName());
         }
         return "web/internship/journal/internship_journal_statistical::#page-wrapper";
@@ -228,7 +228,7 @@ public class InternshipJournalViewController {
         if (internshipConditionCommon.journalLookMyCondition(id)) {
             Users users = SessionUtil.getUserFromSession();
             StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
-            if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+            if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
                 modelMap.addAttribute("internshipReleaseId", id);
                 modelMap.addAttribute("studentId", studentBean.getStudentId());
                 page = "web/internship/journal/internship_journal_my::#page-wrapper";

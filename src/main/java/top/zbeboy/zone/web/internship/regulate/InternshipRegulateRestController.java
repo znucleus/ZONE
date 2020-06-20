@@ -168,7 +168,7 @@ public class InternshipRegulateRestController {
             if (Objects.nonNull(usersType)) {
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                     StaffBean staffBean = staffService.findByUsernameRelation(users.getUsername());
-                    if (Objects.nonNull(staffBean) && staffBean.getStaffId() > 0) {
+                    if (Objects.nonNull(staffBean.getStaffId()) && staffBean.getStaffId() > 0) {
                         Result<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStaffId(id, staffBean.getStaffId());
                         if (internshipTeacherDistributionRecord.isNotEmpty()) {
                             List<InternshipTeacherDistribution> beans = internshipTeacherDistributionRecord.into(InternshipTeacherDistribution.class);
@@ -222,7 +222,7 @@ public class InternshipRegulateRestController {
                 if (Objects.nonNull(usersType)) {
                     if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                         StaffBean staffBean = staffService.findByUsernameRelation(users.getUsername());
-                        if (Objects.nonNull(staffBean) && staffBean.getStaffId() > 0) {
+                        if (Objects.nonNull(staffBean.getStaffId()) && staffBean.getStaffId() > 0) {
                             InternshipRegulate internshipRegulate = new InternshipRegulate();
                             internshipRegulate.setInternshipRegulateId(UUIDUtil.getUUID());
                             internshipRegulate.setStudentName(internshipRegulateAddVo.getStudentName());

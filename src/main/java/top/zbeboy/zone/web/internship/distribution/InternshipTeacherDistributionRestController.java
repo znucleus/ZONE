@@ -173,7 +173,7 @@ public class InternshipTeacherDistributionRestController {
             } else if (type == 1) {
                 studentBean = studentService.findNormalByStudentNumberAndDepartmentId(param, department.getDepartmentId());
             }
-            if (studentBean.getStudentId() > 0) {
+            if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
                 Optional<Record> distribution = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
                 if (distribution.isPresent()) {
                     ajaxUtil.fail().msg("该学生账号已分配指导教师");
@@ -213,7 +213,7 @@ public class InternshipTeacherDistributionRestController {
                 } else if (type == 1) {
                     studentBean = studentService.findNormalByStudentNumberAndDepartmentId(param, department.getDepartmentId());
                 }
-                if (studentBean.getStudentId() > 0) {
+                if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
                     Users users = SessionUtil.getUserFromSession();
                     InternshipTeacherDistribution internshipTeacherDistribution = new InternshipTeacherDistribution(staffId, studentBean.getStudentId(), internshipReleaseId, users.getUsername(), studentBean.getRealName(), users.getUsername());
                     internshipTeacherDistributionService.save(internshipTeacherDistribution);

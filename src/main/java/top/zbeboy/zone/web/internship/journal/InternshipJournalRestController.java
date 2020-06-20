@@ -168,7 +168,7 @@ public class InternshipJournalRestController {
             if (internshipConditionCommon.journalCondition(internshipJournalAddVo.getInternshipReleaseId())) {
                 Users users = SessionUtil.getUserFromSession();
                 StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
-                if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
                     Optional<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipJournalAddVo.getInternshipReleaseId(), studentBean.getStudentId());
                     if (internshipTeacherDistributionRecord.isPresent()) {
                         InternshipTeacherDistribution internshipTeacherDistribution = internshipTeacherDistributionRecord.get().into(InternshipTeacherDistribution.class);
@@ -253,7 +253,7 @@ public class InternshipJournalRestController {
 
                         // 异步保存word
                         StudentBean studentBean  = studentService.findByIdRelation(internshipJournal.getStudentId());
-                        if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                        if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
                             internshipJournalService.saveWord(internshipJournal, internshipJournalContent, studentBean.getUsername(), request);
                             ajaxUtil.success().msg("保存成功");
                         } else {
@@ -372,7 +372,7 @@ public class InternshipJournalRestController {
         if (internshipConditionCommon.journalLookMyCondition(internshipReleaseId)) {
             Users users = SessionUtil.getUserFromSession();
             StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
-            if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+            if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
                 Result<InternshipJournalRecord> records = internshipJournalService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
                 if (records.isNotEmpty()) {
                     List<String> fileName = new ArrayList<>();

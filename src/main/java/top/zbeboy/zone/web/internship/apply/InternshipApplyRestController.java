@@ -186,7 +186,7 @@ public class InternshipApplyRestController {
                 InternshipRelease internshipRelease = internshipReleaseService.findById(internshipApplyAddVo.getInternshipReleaseId());
                 if (Objects.nonNull(internshipRelease)) {
                     StaffBean bean = staffService.findByIdRelation(internshipApplyAddVo.getStaffId());
-                    if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+                    if (Objects.nonNull(bean.getStaffId()) && bean.getStaffId() > 0) {
                         internshipApplyAddVo.setHeadmaster(bean.getRealName());
                         internshipApplyAddVo.setHeadmasterTel(bean.getMobile());
 
@@ -244,7 +244,7 @@ public class InternshipApplyRestController {
                                 internshipApply.getInternshipApplyState() == 3 ||
                                 internshipApply.getInternshipApplyState() == 0) {
                             StaffBean bean = staffService.findByIdRelation(internshipApplyEditVo.getStaffId());
-                            if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+                            if (Objects.nonNull(bean.getStaffId()) && bean.getStaffId() > 0) {
                                 internshipApplyEditVo.setHeadmaster(bean.getRealName());
                                 internshipApplyEditVo.setHeadmasterTel(bean.getMobile());
 
@@ -359,7 +359,7 @@ public class InternshipApplyRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         Users users = SessionUtil.getUserFromSession();
         StudentBean studentBean = studentService.findByUsername(users.getUsername());
-        if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+        if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
             Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
             if (internshipApplyRecord.isPresent()) {
                 InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
@@ -420,7 +420,7 @@ public class InternshipApplyRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         Users users = SessionUtil.getUserFromSession();
         StudentBean studentBean = studentService.findByUsername(users.getUsername());
-        if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+        if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
             Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
             if (internshipApplyRecord.isPresent()) {
                 InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
@@ -469,7 +469,7 @@ public class InternshipApplyRestController {
         try {
             Users users = SessionUtil.getUserFromSession();
             StudentBean studentBean = studentService.findByUsername(users.getUsername());
-            if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+            if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
                 Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
                 if (internshipApplyRecord.isPresent()) {
                     InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
@@ -523,7 +523,7 @@ public class InternshipApplyRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         Users users = SessionUtil.getUserFromSession();
         StudentBean studentBean = studentService.findByUsername(users.getUsername());
-        if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+        if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
             Optional<Record> internshipApplyRecord = internshipApplyService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
             if (internshipApplyRecord.isPresent()) {
                 InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);

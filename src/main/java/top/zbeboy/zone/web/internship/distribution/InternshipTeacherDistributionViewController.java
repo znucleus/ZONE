@@ -141,7 +141,7 @@ public class InternshipTeacherDistributionViewController {
             if (internshipTeacherDistributionRecord.isPresent()) {
                 InternshipTeacherDistribution internshipTeacherDistribution = internshipTeacherDistributionRecord.get().into(InternshipTeacherDistribution.class);
                 StudentBean studentBean = studentService.findByIdRelation(studentId);
-                if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
                     modelMap.addAttribute("internshipReleaseId", internshipTeacherDistribution.getInternshipReleaseId());
                     modelMap.addAttribute("staffId", internshipTeacherDistribution.getStaffId());
                     modelMap.addAttribute("studentRealName", studentBean.getRealName());

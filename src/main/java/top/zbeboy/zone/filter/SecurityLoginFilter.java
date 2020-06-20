@@ -128,7 +128,7 @@ public class SecurityLoginFilter implements Filter {
                 case Workbook.STUDENT_USERS_TYPE:
                     StudentService studentService = SpringBootUtil.getBean(StudentService.class);
                     StudentBean studentBean = studentService.findByUsername(users.getUsername());
-                    if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                    if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
                         OrganizeService organizeService = SpringBootUtil.getBean(OrganizeService.class);
                         OrganizeBean organizeBean = organizeService.findByIdRelation(studentBean.getOrganizeId());
                         if (Objects.nonNull(organizeBean) && organizeBean.getOrganizeId() > 0) {
@@ -142,7 +142,7 @@ public class SecurityLoginFilter implements Filter {
 
                     StaffService staffService = SpringBootUtil.getBean(StaffService.class);
                     StaffBean staffBean = staffService.findByUsername(users.getUsername());
-                    if (Objects.nonNull(staffBean) && staffBean.getStaffId() > 0) {
+                    if (Objects.nonNull(staffBean.getStaffId()) && staffBean.getStaffId() > 0) {
                         DepartmentService departmentService = SpringBootUtil.getBean(DepartmentService.class);
                         DepartmentBean departmentBean = departmentService.findByIdRelation(staffBean.getDepartmentId());
                         if (Objects.nonNull(departmentBean) && departmentBean.getDepartmentId() > 0) {
