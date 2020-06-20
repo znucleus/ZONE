@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.Map;
 
 public class AjaxUtil<T> {
-    private Boolean state;
+    private Boolean state = false;
     private String msg;
     private Map<String, T> mapResult = new HashMap<>();
     private List<T> listResult = new ArrayList<>();
-    private Map<String, Object> result = new HashMap<>();
+    private final Map<String, Object> result = new HashMap<>();
     private PaginationUtil paginationUtil;
 
     public static <T> AjaxUtil<T> of() {
@@ -53,9 +53,9 @@ public class AjaxUtil<T> {
 
     public AjaxUtil<T> page(PaginationUtil paginationUtil) {
         if (paginationUtil instanceof SimplePaginationUtil) {
-            this.result.put("page", (SimplePaginationUtil) paginationUtil);
+            this.result.put("page", paginationUtil);
         } else if (paginationUtil instanceof TableSawUtil) {
-            this.result.put("page", (TableSawUtil) paginationUtil);
+            this.result.put("page", paginationUtil);
         } else {
             this.result.put("page", paginationUtil);
         }
