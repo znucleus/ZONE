@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.SystemConfigure;
-import top.zbeboy.zone.service.system.SystemConfigureService;
+import top.zbeboy.zone.feign.system.SystemConfigureService;
 
 import javax.annotation.Resource;
 import java.util.Objects;

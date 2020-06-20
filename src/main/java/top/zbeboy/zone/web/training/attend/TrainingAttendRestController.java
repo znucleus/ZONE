@@ -10,26 +10,23 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
-import top.zbeboy.zone.domain.tables.records.StudentRecord;
-import top.zbeboy.zone.service.data.StudentService;
+import top.zbeboy.zone.feign.data.StudentService;
+import top.zbeboy.zone.feign.platform.UsersService;
+import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.export.TrainingAttendSituationExport;
 import top.zbeboy.zone.service.export.TrainingAttendUsersExport;
-import top.zbeboy.zone.service.platform.UsersService;
-import top.zbeboy.zone.service.platform.UsersTypeService;
 import top.zbeboy.zone.service.training.*;
 import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
+import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.bean.training.attend.TrainingAttendBean;
 import top.zbeboy.zone.web.bean.training.attend.TrainingAttendUsersBean;
 import top.zbeboy.zone.web.bean.training.release.TrainingConfigureBean;
 import top.zbeboy.zone.web.bean.training.release.TrainingReleaseBean;
 import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
 import top.zbeboy.zone.web.training.common.TrainingControllerCommon;
-import top.zbeboy.zone.web.util.AjaxUtil;
-import top.zbeboy.zone.web.util.BooleanUtil;
-import top.zbeboy.zone.web.util.ByteUtil;
-import top.zbeboy.zone.web.util.SmallPropsUtil;
+import top.zbeboy.zone.web.util.*;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.util.pagination.ExportInfo;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
@@ -158,7 +155,7 @@ public class TrainingAttendRestController {
                 trainingAttend.setPublishDate(DateTimeUtil.getNowSqlTimestamp());
                 trainingAttendService.save(trainingAttend);
 
-                Users user = usersService.getUserFromSession();
+                Users user = SessionUtil.getUserFromSession();
                 List<TrainingUsers> trainingUsers = trainingUsersService.findByTrainingReleaseId(trainingConfigure.getTrainingReleaseId());
                 if (Objects.nonNull(trainingUsers)) {
                     List<TrainingAttendUsers> trainingAttendUsers = new ArrayList<>();
@@ -211,7 +208,7 @@ public class TrainingAttendRestController {
                 trainingAttend.setRemark(trainingAttendAddVo.getRemark());
                 trainingAttendService.save(trainingAttend);
 
-                Users user = usersService.getUserFromSession();
+                Users user = SessionUtil.getUserFromSession();
                 List<TrainingUsers> trainingUsers = trainingUsersService.findByTrainingReleaseId(trainingAttendAddVo.getTrainingReleaseId());
                 if (Objects.nonNull(trainingUsers)) {
                     List<TrainingAttendUsers> trainingAttendUsers = new ArrayList<>();
@@ -346,7 +343,7 @@ public class TrainingAttendRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
 
         if (trainingConditionCommon.usersCondition(trainingReleaseId)) {
-            Users users = usersService.getUserFromSession();
+            Users users = SessionUtil.getUserFromSession();
             TrainingAttendUsers trainingAttendUsers = trainingAttendUsersService.findById(attendUsersId);
             trainingAttendUsers.setOperate(operate);
             trainingAttendUsers.setOperateUser(users.getUsername());
@@ -438,7 +435,7 @@ public class TrainingAttendRestController {
         if (trainingConditionCommon.usersCondition(trainingReleaseId)) {
             Result<Record> records = trainingAttendUsersService.findStudentNotExistsUsers(trainingReleaseId, trainingAttendId);
             if (records.isNotEmpty()) {
-                Users user = usersService.getUserFromSession();
+                Users user = SessionUtil.getUserFromSession();
                 List<TrainingUsers> trainingUsers = records.into(TrainingUsers.class);
                 List<TrainingAttendUsers> trainingAttendUsers = new ArrayList<>();
                 for (TrainingUsers users : trainingUsers) {
@@ -501,13 +498,13 @@ public class TrainingAttendRestController {
     public ResponseEntity<Map<String, Object>> myData(TableSawUtil tableSawUtil) {
         AjaxUtil<TrainingAttendUsersBean> ajaxUtil = AjaxUtil.of();
         List<TrainingAttendUsersBean> beans = new ArrayList<>();
-        Users users = usersService.getUserFromSession();
+        Users users = SessionUtil.getUserFromSession();
         UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
         if (Objects.nonNull(usersType)) {
             if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                Optional<StudentRecord> record = studentService.findByUsername(users.getUsername());
-                if (record.isPresent()) {
-                    int studentId = record.get().getStudentId();
+                StudentBean studentBean = studentService.findByUsername(users.getUsername());
+                if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                    int studentId = studentBean.getStudentId();
                     tableSawUtil.setSearch("studentId", studentId);
                     Result<Record> records = trainingAttendMyService.findAll(tableSawUtil);
                     if (records.isNotEmpty()) {

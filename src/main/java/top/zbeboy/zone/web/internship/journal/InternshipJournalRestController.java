@@ -17,10 +17,10 @@ import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
 import top.zbeboy.zone.domain.tables.records.InternshipJournalContentRecord;
 import top.zbeboy.zone.domain.tables.records.InternshipJournalRecord;
-import top.zbeboy.zone.service.data.StudentService;
+import top.zbeboy.zone.feign.data.StudentService;
+import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.service.export.InternshipJournalExport;
 import top.zbeboy.zone.service.internship.*;
-import top.zbeboy.zone.service.platform.UsersService;
 import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.FilesUtil;
@@ -31,10 +31,7 @@ import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.bean.internship.journal.InternshipJournalBean;
 import top.zbeboy.zone.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
-import top.zbeboy.zone.web.util.AjaxUtil;
-import top.zbeboy.zone.web.util.BooleanUtil;
-import top.zbeboy.zone.web.util.ByteUtil;
-import top.zbeboy.zone.web.util.SmallPropsUtil;
+import top.zbeboy.zone.web.util.*;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zone.web.vo.internship.journal.InternshipJournalAddVo;
@@ -169,10 +166,9 @@ public class InternshipJournalRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
             if (internshipConditionCommon.journalCondition(internshipJournalAddVo.getInternshipReleaseId())) {
-                Users users = usersService.getUserFromSession();
-                Optional<Record> studentRecord = studentService.findByUsernameRelation(users.getUsername());
-                if (studentRecord.isPresent()) {
-                    StudentBean studentBean = studentRecord.get().into(StudentBean.class);
+                Users users = SessionUtil.getUserFromSession();
+                StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+                if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
                     Optional<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipJournalAddVo.getInternshipReleaseId(), studentBean.getStudentId());
                     if (internshipTeacherDistributionRecord.isPresent()) {
                         InternshipTeacherDistribution internshipTeacherDistribution = internshipTeacherDistributionRecord.get().into(InternshipTeacherDistribution.class);
@@ -203,7 +199,7 @@ public class InternshipJournalRestController {
 
                             internshipJournalContentService.save(internshipJournalContent);
                             // 异步保存word
-                            internshipJournalService.saveWord(internshipJournal, internshipJournalContent, users, request);
+                            internshipJournalService.saveWord(internshipJournal, internshipJournalContent, users.getUsername(), request);
 
                             ajaxUtil.success().msg("保存成功");
                         } else {
@@ -256,10 +252,9 @@ public class InternshipJournalRestController {
                         }
 
                         // 异步保存word
-                        Optional<Record> studentRecord = studentService.findByIdRelation(internshipJournal.getStudentId());
-                        if (studentRecord.isPresent()) {
-                            Users users = studentRecord.get().into(Users.class);
-                            internshipJournalService.saveWord(internshipJournal, internshipJournalContent, users, request);
+                        StudentBean studentBean  = studentService.findByIdRelation(internshipJournal.getStudentId());
+                        if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                            internshipJournalService.saveWord(internshipJournal, internshipJournalContent, studentBean.getUsername(), request);
                             ajaxUtil.success().msg("保存成功");
                         } else {
                             ajaxUtil.fail().msg("未查询到学生信息");
@@ -375,10 +370,9 @@ public class InternshipJournalRestController {
     @GetMapping("/web/internship/journal/my/downloads/{id}")
     public void myDownloads(@PathVariable("id") String internshipReleaseId, HttpServletRequest request, HttpServletResponse response) throws Exception {
         if (internshipConditionCommon.journalLookMyCondition(internshipReleaseId)) {
-            Users users = usersService.getUserFromSession();
-            Optional<Record> studentRecord = studentService.findByUsernameRelation(users.getUsername());
-            if (studentRecord.isPresent()) {
-                StudentBean studentBean = studentRecord.get().into(StudentBean.class);
+            Users users = SessionUtil.getUserFromSession();
+            StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+            if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
                 Result<InternshipJournalRecord> records = internshipJournalService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
                 if (records.isNotEmpty()) {
                     List<String> fileName = new ArrayList<>();

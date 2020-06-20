@@ -5,26 +5,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.domain.tables.pojos.Users;
-import top.zbeboy.zone.domain.tables.pojos.WeiXinDevice;
-import top.zbeboy.zone.domain.tables.records.WeiXinDeviceRecord;
-import top.zbeboy.zone.service.data.WeiXinDeviceService;
-import top.zbeboy.zone.service.platform.UsersService;
+import top.zbeboy.zone.feign.attend.AttendWxDeviceService;
 import top.zbeboy.zone.web.util.AjaxUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import java.security.Principal;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
 
 @RestController
 public class AttendWxDeviceApiController {
 
     @Resource
-    private UsersService usersService;
-
-    @Resource
-    private WeiXinDeviceService weiXinDeviceService;
+    private AttendWxDeviceService attendWxDeviceService;
 
     /**
      * 查询
@@ -34,19 +27,8 @@ public class AttendWxDeviceApiController {
      */
     @PostMapping("/api/attend/weixin/device/query")
     public ResponseEntity<Map<String, Object>> query(Principal principal) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        Users users = usersService.getUserFromOauth(principal);
-        if (Objects.nonNull(users)) {
-            Optional<WeiXinDeviceRecord> record = weiXinDeviceService.findByUsername(users.getUsername());
-            if (record.isPresent()) {
-                WeiXinDevice weiXinDevice = record.get().into(WeiXinDevice.class);
-                ajaxUtil.success().msg("查询信息成功").put("device", weiXinDevice);
-            } else {
-                ajaxUtil.fail().msg("未查询到设备信息");
-            }
-        } else {
-            ajaxUtil.fail().msg("查询用户信息失败");
-        }
+        Users users = SessionUtil.getUserFromOauth(principal);
+        AjaxUtil<Map<String, Object>> ajaxUtil = attendWxDeviceService.query(users.getUsername());
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

@@ -1,30 +1,27 @@
 package top.zbeboy.zone.web.platform.authorize;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jooq.Record;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
-import top.zbeboy.zone.service.data.*;
-import top.zbeboy.zone.service.platform.RoleApplyService;
-import top.zbeboy.zone.service.platform.RoleService;
-import top.zbeboy.zone.service.platform.UsersService;
-import top.zbeboy.zone.service.platform.UsersTypeService;
+import top.zbeboy.zone.feign.data.*;
+import top.zbeboy.zone.feign.platform.AuthorizeService;
+import top.zbeboy.zone.feign.platform.UsersService;
+import top.zbeboy.zone.feign.platform.UsersTypeService;
+import top.zbeboy.zone.web.bean.data.staff.StaffBean;
+import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.bean.platform.authorize.RoleApplyBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import java.util.Objects;
-import java.util.Optional;
 
 @Controller
 public class AuthorizeViewController {
-
-    @Resource
-    private RoleService roleService;
 
     @Resource
     private UsersService usersService;
@@ -39,7 +36,7 @@ public class AuthorizeViewController {
     private StudentService studentService;
 
     @Resource
-    private RoleApplyService roleApplyService;
+    private AuthorizeService authorizeService;
 
     @Resource
     private DepartmentService departmentService;
@@ -60,13 +57,13 @@ public class AuthorizeViewController {
      */
     @GetMapping("/web/menu/platform/authorize")
     public String index(ModelMap modelMap) {
-        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
             modelMap.addAttribute("authorities", Workbook.authorities.ROLE_SYSTEM.name());
-        } else if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+        } else if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
             modelMap.addAttribute("authorities", Workbook.authorities.ROLE_ADMIN.name());
         }
 
-        Users users = usersService.getUserFromSession();
+        Users users = SessionUtil.getUserFromSession();
         modelMap.addAttribute("username", users.getUsername());
         return "web/platform/authorize/authorize_data::#page-wrapper";
     }
@@ -80,19 +77,25 @@ public class AuthorizeViewController {
     public String add(ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
-            Users users = usersService.getUserFromSession();
+        if (!SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+            Users users = SessionUtil.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType)) {
-                Optional<Record> record = Optional.empty();
+                int collegeId = 0;
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                    record = staffService.findByUsernameRelation(users.getUsername());
+                    StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
+                    if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+                        collegeId = bean.getCollegeId();
+                    }
                 } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                    record = studentService.findByUsernameRelation(users.getUsername());
+                    StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+                    if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                        collegeId = studentBean.getCollegeId();
+                    }
                 }
 
-                if (record.isPresent()) {
-                    modelMap.addAttribute("collegeId", record.get().into(College.class).getCollegeId());
+                if (collegeId > 0) {
+                    modelMap.addAttribute("collegeId", collegeId);
                     page = "web/platform/authorize/authorize_add::#page-wrapper";
                 } else {
                     config.buildDangerTip("查询错误", "未查询到您的院ID或暂不支持您的注册类型");
@@ -123,18 +126,16 @@ public class AuthorizeViewController {
 
         boolean canEdit = false;
         RoleApplyBean roleApplyBean = null;
-        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
-                roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
-            Optional<Record> roleApplyRecord = roleApplyService.findByIdRelation(roleUsersId);
-            if (roleApplyRecord.isPresent()) {
-                roleApplyBean = roleApplyRecord.get().into(RoleApplyBean.class);
+        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
+                SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+            roleApplyBean = authorizeService.findRoleApplyByIdRelation(roleUsersId);
+            if (Objects.nonNull(roleApplyBean) && StringUtils.isNotBlank(roleApplyBean.getRoleApplyId())) {
                 canEdit = true;
             }
         } else {
-            Optional<Record> roleApplyRecord = roleApplyService.findByIdRelation(roleUsersId);
-            if (roleApplyRecord.isPresent()) {
-                roleApplyBean = roleApplyRecord.get().into(RoleApplyBean.class);
-                Users users = usersService.getUserFromSession();
+            roleApplyBean = authorizeService.findRoleApplyByIdRelation(roleUsersId);
+            if (Objects.nonNull(roleApplyBean) && StringUtils.isNotBlank(roleApplyBean.getRoleApplyId())) {
+                Users users = SessionUtil.getUserFromSession();
                 if (StringUtils.equals(users.getUsername(), roleApplyBean.getUsername())) {
                     canEdit = true;
                 }
@@ -149,15 +150,16 @@ public class AuthorizeViewController {
                     int collegeId = 0;
                     UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
                     if (Objects.nonNull(usersType)) {
-                        Optional<Record> record = Optional.empty();
                         if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                            record = staffService.findByUsernameRelation(users.getUsername());
+                            StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
+                            if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+                                collegeId = bean.getCollegeId();
+                            }
                         } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                            record = studentService.findByUsernameRelation(users.getUsername());
-                        }
-
-                        if (record.isPresent()) {
-                            collegeId = record.get().into(College.class).getCollegeId();
+                            StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+                            if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                                collegeId = studentBean.getCollegeId();
+                            }
                         }
                     }
 
@@ -176,12 +178,12 @@ public class AuthorizeViewController {
                             }
                         } else if (roleApplyBean.getDataScope() == 3) {
                             Grade grade = gradeService.findById(roleApplyBean.getDataId());
-                            if (Objects.nonNull(grade)) {
+                            if (Objects.nonNull(grade) && grade.getGradeId() > 0) {
                                 roleApplyBean.setDataName(grade.getGrade() + "");
                             }
                         } else if (roleApplyBean.getDataScope() == 4) {
                             Organize organize = organizeService.findById(roleApplyBean.getDataId());
-                            if (Objects.nonNull(organize)) {
+                            if (Objects.nonNull(organize) && organize.getOrganizeId() > 0) {
                                 roleApplyBean.setDataName(organize.getOrganizeName());
                             }
                         }

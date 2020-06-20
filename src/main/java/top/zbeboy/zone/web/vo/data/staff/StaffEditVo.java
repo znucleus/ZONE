@@ -1,6 +1,7 @@
 package top.zbeboy.zone.web.vo.data.staff;
 
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 public class StaffEditVo {
@@ -20,6 +21,9 @@ public class StaffEditVo {
     @Min(value = 1, message = "职称不正确")
     private Integer academicTitleId;
     private Integer departmentId;
+    @NotBlank(message = "当前用户账号不能为空")
+    @Size(max = 64, message = "当前用户账号不正确")
+    private String username;
 
     public String getStaffNumber() {
         return staffNumber;
@@ -91,5 +95,13 @@ public class StaffEditVo {
 
     public void setDepartmentId(Integer departmentId) {
         this.departmentId = departmentId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

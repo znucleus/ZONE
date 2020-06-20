@@ -1,18 +1,13 @@
 package top.zbeboy.zone.web.data.politics;
 
-import org.apache.commons.lang3.StringUtils;
-import org.jooq.Record;
-import org.jooq.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.domain.tables.pojos.PoliticalLandscape;
-import top.zbeboy.zone.domain.tables.records.PoliticalLandscapeRecord;
-import top.zbeboy.zone.service.data.PoliticalLandscapeService;
+import top.zbeboy.zone.feign.data.PoliticalLandscapeFeignService;
 import top.zbeboy.zone.web.plugin.select2.Select2Data;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
@@ -21,17 +16,15 @@ import top.zbeboy.zone.web.vo.data.politics.PoliticsEditVo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @RestController
 public class PoliticsRestController {
 
     @Resource
-    private PoliticalLandscapeService politicalLandscapeService;
+    private PoliticalLandscapeFeignService politicalLandscapeFeignService;
 
     /**
      * 获取全部政治面貌
@@ -41,7 +34,7 @@ public class PoliticsRestController {
     @GetMapping("/anyone/data/politics")
     public ResponseEntity<Map<String, Object>> anyoneData() {
         Select2Data select2Data = Select2Data.of();
-        List<PoliticalLandscape> politicalLandscapes = politicalLandscapeService.findAll();
+        List<PoliticalLandscape> politicalLandscapes = politicalLandscapeFeignService.findAll();
         politicalLandscapes.forEach(politicalLandscape -> select2Data.add(politicalLandscape.getPoliticalLandscapeId().toString(), politicalLandscape.getPoliticalLandscapeName()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
@@ -60,15 +53,7 @@ public class PoliticsRestController {
         headers.add("politicalLandscapeName");
         headers.add("operator");
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
-        Result<Record> records = politicalLandscapeService.findAllByPage(dataTablesUtil);
-        List<PoliticalLandscape> beans = new ArrayList<>();
-        if (Objects.nonNull(records) && records.isNotEmpty()) {
-            beans = records.into(PoliticalLandscape.class);
-        }
-        dataTablesUtil.setData(beans);
-        dataTablesUtil.setiTotalRecords(politicalLandscapeService.countAll());
-        dataTablesUtil.setiTotalDisplayRecords(politicalLandscapeService.countByCondition(dataTablesUtil));
-        return new ResponseEntity<>(dataTablesUtil, HttpStatus.OK);
+        return new ResponseEntity<>(politicalLandscapeFeignService.data(dataTablesUtil), HttpStatus.OK);
     }
 
     /**
@@ -79,14 +64,7 @@ public class PoliticsRestController {
      */
     @PostMapping("/web/data/politics/check/add/name")
     public ResponseEntity<Map<String, Object>> checkAddName(@RequestParam("politicalLandscapeName") String politicalLandscapeName) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        String param = StringUtils.deleteWhitespace(politicalLandscapeName);
-        List<PoliticalLandscape> politicalLandscapes = politicalLandscapeService.findByPoliticalLandscapeName(param);
-        if (Objects.isNull(politicalLandscapes) || politicalLandscapes.isEmpty()) {
-            ajaxUtil.success().msg("政治面貌不重复");
-        } else {
-            ajaxUtil.fail().msg("政治面貌重复");
-        }
+        AjaxUtil<Map<String, Object>> ajaxUtil = politicalLandscapeFeignService.checkAddName(politicalLandscapeName);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -94,20 +72,11 @@ public class PoliticsRestController {
      * 保存
      *
      * @param politicsAddVo 政治面貌
-     * @param bindingResult 检验
      * @return true 保存成功 false 保存失败
      */
     @PostMapping("/web/data/politics/save")
-    public ResponseEntity<Map<String, Object>> save(@Valid PoliticsAddVo politicsAddVo, BindingResult bindingResult) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        if (!bindingResult.hasErrors()) {
-            PoliticalLandscape politicalLandscape = new PoliticalLandscape();
-            politicalLandscape.setPoliticalLandscapeName(politicsAddVo.getPoliticalLandscapeName());
-            politicalLandscapeService.save(politicalLandscape);
-            ajaxUtil.success().msg("保存成功");
-        } else {
-            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
-        }
+    public ResponseEntity<Map<String, Object>> save(PoliticsAddVo politicsAddVo) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = politicalLandscapeFeignService.save(politicsAddVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -121,14 +90,7 @@ public class PoliticsRestController {
     @PostMapping("/web/data/politics/check/edit/name")
     public ResponseEntity<Map<String, Object>> checkEditName(@RequestParam("politicalLandscapeId") int politicalLandscapeId,
                                                              @RequestParam("politicalLandscapeName") String politicalLandscapeName) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        String param = StringUtils.deleteWhitespace(politicalLandscapeName);
-        Result<PoliticalLandscapeRecord> records = politicalLandscapeService.findByPoliticalLandscapeNameNePoliticalLandscapeId(param, politicalLandscapeId);
-        if (records.isEmpty()) {
-            ajaxUtil.success().msg("政治面貌不重复");
-        } else {
-            ajaxUtil.fail().msg("政治面貌重复");
-        }
+        AjaxUtil<Map<String, Object>> ajaxUtil = politicalLandscapeFeignService.checkEditName(politicalLandscapeId, politicalLandscapeName);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -137,24 +99,11 @@ public class PoliticsRestController {
      * 保存更改
      *
      * @param politicsEditVo 政治面貌
-     * @param bindingResult  检验
      * @return true 更改成功 false 更改失败
      */
     @PostMapping("/web/data/politics/update")
-    public ResponseEntity<Map<String, Object>> save(@Valid PoliticsEditVo politicsEditVo, BindingResult bindingResult) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        if (!bindingResult.hasErrors()) {
-            PoliticalLandscape politicalLandscape = politicalLandscapeService.findById(politicsEditVo.getPoliticalLandscapeId());
-            if (Objects.nonNull(politicalLandscape)) {
-                politicalLandscape.setPoliticalLandscapeName(politicsEditVo.getPoliticalLandscapeName());
-                politicalLandscapeService.update(politicalLandscape);
-                ajaxUtil.success().msg("更新成功");
-            } else {
-                ajaxUtil.fail().msg("根据政治面貌ID未查询到政治面貌数据");
-            }
-        } else {
-            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
-        }
+    public ResponseEntity<Map<String, Object>> update(PoliticsEditVo politicsEditVo) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = politicalLandscapeFeignService.update(politicsEditVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

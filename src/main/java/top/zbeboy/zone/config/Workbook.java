@@ -1,7 +1,5 @@
 package top.zbeboy.zone.config;
 
-import top.zbeboy.zone.domain.tables.pojos.Users;
-
 /**
  * Application constants.
  * 开发环境配置常量
@@ -180,11 +178,11 @@ public final class Workbook {
     /**
      * 头像路径
      *
-     * @param users 用户
+     * @param username 用户
      * @return 路径
      */
-    public static String avatarPath(Users users) {
-        return USERS_PORTFOLIOS + users.getUsername() + DIRECTORY_SPLIT + "avatar" + DIRECTORY_SPLIT;
+    public static String avatarPath(String username) {
+        return USERS_PORTFOLIOS + username + DIRECTORY_SPLIT + "avatar" + DIRECTORY_SPLIT;
     }
 
     /**
@@ -199,11 +197,11 @@ public final class Workbook {
     /**
      * 保存实习日志路径
      *
-     * @param users 用户
+     * @param username 用户
      * @return 路径
      */
-    public static String internshipJournalPath(Users users) {
-        return USERS_PORTFOLIOS + users.getUsername() + DIRECTORY_SPLIT + "internship" + DIRECTORY_SPLIT + "journal" + DIRECTORY_SPLIT;
+    public static String internshipJournalPath(String username) {
+        return USERS_PORTFOLIOS + username + DIRECTORY_SPLIT + "internship" + DIRECTORY_SPLIT + "journal" + DIRECTORY_SPLIT;
     }
 
     /**

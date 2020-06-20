@@ -1,18 +1,13 @@
 package top.zbeboy.zone.web.data.academic;
 
-import org.apache.commons.lang3.StringUtils;
-import org.jooq.Record;
-import org.jooq.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.domain.tables.pojos.AcademicTitle;
-import top.zbeboy.zone.domain.tables.records.AcademicTitleRecord;
-import top.zbeboy.zone.service.data.AcademicTitleService;
+import top.zbeboy.zone.feign.data.AcademicTitleService;
 import top.zbeboy.zone.web.plugin.select2.Select2Data;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
@@ -21,11 +16,9 @@ import top.zbeboy.zone.web.vo.data.academic.AcademicEditVo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @RestController
 public class AcademicRestController {
@@ -60,15 +53,7 @@ public class AcademicRestController {
         headers.add("academicTitleName");
         headers.add("operator");
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
-        Result<Record> records = academicTitleService.findAllByPage(dataTablesUtil);
-        List<AcademicTitle> beans = new ArrayList<>();
-        if (Objects.nonNull(records) && records.isNotEmpty()) {
-            beans = records.into(AcademicTitle.class);
-        }
-        dataTablesUtil.setData(beans);
-        dataTablesUtil.setiTotalRecords(academicTitleService.countAll());
-        dataTablesUtil.setiTotalDisplayRecords(academicTitleService.countByCondition(dataTablesUtil));
-        return new ResponseEntity<>(dataTablesUtil, HttpStatus.OK);
+        return new ResponseEntity<>(academicTitleService.data(dataTablesUtil), HttpStatus.OK);
     }
 
     /**
@@ -79,14 +64,7 @@ public class AcademicRestController {
      */
     @PostMapping("/web/data/academic/check/add/name")
     public ResponseEntity<Map<String, Object>> checkAddName(@RequestParam("academicTitleName") String academicTitleName) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        String param = StringUtils.deleteWhitespace(academicTitleName);
-        List<AcademicTitle> academicTitles = academicTitleService.findByAcademicTitleName(param);
-        if (Objects.isNull(academicTitles) || academicTitles.isEmpty()) {
-            ajaxUtil.success().msg("职称不重复");
-        } else {
-            ajaxUtil.fail().msg("职称重复");
-        }
+        AjaxUtil<Map<String, Object>> ajaxUtil = academicTitleService.checkAddName(academicTitleName);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -94,20 +72,11 @@ public class AcademicRestController {
      * 保存职称信息
      *
      * @param academicAddVo 职称
-     * @param bindingResult 检验
      * @return true 保存成功 false 保存失败
      */
     @PostMapping("/web/data/academic/save")
-    public ResponseEntity<Map<String, Object>> save(@Valid AcademicAddVo academicAddVo, BindingResult bindingResult) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        if (!bindingResult.hasErrors()) {
-            AcademicTitle academic = new AcademicTitle();
-            academic.setAcademicTitleName(academicAddVo.getAcademicTitleName());
-            academicTitleService.save(academic);
-            ajaxUtil.success().msg("保存成功");
-        } else {
-            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
-        }
+    public ResponseEntity<Map<String, Object>> save(AcademicAddVo academicAddVo) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = academicTitleService.save(academicAddVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -121,14 +90,7 @@ public class AcademicRestController {
     @PostMapping("/web/data/academic/check/edit/name")
     public ResponseEntity<Map<String, Object>> checkEditName(@RequestParam("academicTitleId") int academicTitleId,
                                                              @RequestParam("academicTitleName") String academicTitleName) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        String param = StringUtils.deleteWhitespace(academicTitleName);
-        Result<AcademicTitleRecord> records = academicTitleService.findByAcademicTitleNameNeAcademicTitleId(param, academicTitleId);
-        if (records.isEmpty()) {
-            ajaxUtil.success().msg("职称不重复");
-        } else {
-            ajaxUtil.fail().msg("职称重复");
-        }
+        AjaxUtil<Map<String, Object>> ajaxUtil = academicTitleService.checkEditName(academicTitleId, academicTitleName);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -137,24 +99,11 @@ public class AcademicRestController {
      * 保存更改
      *
      * @param academicEditVo 职称
-     * @param bindingResult  检验
      * @return true 更改成功 false 更改失败
      */
     @PostMapping("/web/data/academic/update")
-    public ResponseEntity<Map<String, Object>> save(@Valid AcademicEditVo academicEditVo, BindingResult bindingResult) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        if (!bindingResult.hasErrors()) {
-            AcademicTitle academic = academicTitleService.findById(academicEditVo.getAcademicTitleId());
-            if (Objects.nonNull(academic)) {
-                academic.setAcademicTitleName(academicEditVo.getAcademicTitleName());
-                academicTitleService.update(academic);
-                ajaxUtil.success().msg("更新成功");
-            } else {
-                ajaxUtil.fail().msg("根据职称ID未查询到职称数据");
-            }
-        } else {
-            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
-        }
+    public ResponseEntity<Map<String, Object>> update(AcademicEditVo academicEditVo) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = academicTitleService.update(academicEditVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

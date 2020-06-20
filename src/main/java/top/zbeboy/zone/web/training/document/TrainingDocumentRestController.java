@@ -1,5 +1,6 @@
 package top.zbeboy.zone.web.training.document;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.slf4j.Logger;
@@ -11,8 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
-import top.zbeboy.zone.service.platform.UsersService;
-import top.zbeboy.zone.service.system.FilesService;
+import top.zbeboy.zone.feign.system.FilesService;
 import top.zbeboy.zone.service.training.TrainingDocumentContentService;
 import top.zbeboy.zone.service.training.TrainingDocumentFileService;
 import top.zbeboy.zone.service.training.TrainingDocumentService;
@@ -30,6 +30,7 @@ import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
 import top.zbeboy.zone.web.training.common.TrainingControllerCommon;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zone.web.vo.training.document.TrainingDocumentAddVo;
 import top.zbeboy.zone.web.vo.training.document.TrainingDocumentEditVo;
@@ -65,9 +66,6 @@ public class TrainingDocumentRestController {
 
     @Resource
     private TrainingReleaseService trainingReleaseService;
-
-    @Resource
-    private UsersService usersService;
 
     @Resource
     private UploadService uploadService;
@@ -142,7 +140,7 @@ public class TrainingDocumentRestController {
             if (trainingConditionCommon.canOperator(trainingDocumentAddVo.getTrainingReleaseId())) {
                 TrainingRelease trainingRelease = trainingReleaseService.findById(trainingDocumentAddVo.getTrainingReleaseId());
                 if (Objects.nonNull(trainingRelease)) {
-                    Users users = usersService.getUserFromSession();
+                    Users users = SessionUtil.getUserFromSession();
                     TrainingDocument trainingDocument = new TrainingDocument();
                     String trainingDocumentId = UUIDUtil.getUUID();
                     trainingDocument.setTrainingDocumentId(trainingDocumentId);
@@ -252,7 +250,7 @@ public class TrainingDocumentRestController {
             if (trainingConditionCommon.canOperator(trainingReleaseId)) {
                 TrainingRelease trainingRelease = trainingReleaseService.findById(trainingReleaseId);
                 if (Objects.nonNull(trainingRelease)) {
-                    Users users = usersService.getUserFromSession();
+                    Users users = SessionUtil.getUserFromSession();
                     String path = Workbook.trainingDocumentFilePath(trainingReleaseId);
                     List<FileBean> fileBeens = uploadService.upload(request,
                             RequestUtil.getRealPath(request) + path, request.getRemoteAddr());
@@ -310,7 +308,7 @@ public class TrainingDocumentRestController {
             if (trainingConditionCommon.canOperator(trainingDocumentFile.getTrainingReleaseId())) {
                 trainingDocumentFileService.deleteById(trainingDocumentFileId);
                 Files files = filesService.findById(trainingDocumentFile.getFileId());
-                if (Objects.nonNull(files)) {
+                if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())){
                     FilesUtil.deleteFile(RequestUtil.getRealPath(request) + files.getRelativePath());
                     filesService.delete(files);
                 }
@@ -337,7 +335,7 @@ public class TrainingDocumentRestController {
         if (Objects.nonNull(trainingDocumentFile)) {
             trainingDocumentFileService.updateDownloads(id);
             Files files = filesService.findById(trainingDocumentFile.getFileId());
-            if (Objects.nonNull(files)) {
+            if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())){
                 uploadService.download(files.getOriginalFileName(), files.getRelativePath(), response, request);
             }
         }

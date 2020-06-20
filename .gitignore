@@ -1,8 +1,9 @@
-/.idea/*
-/logs/
-/target/*
-/root/*
-/settings/*
+.idea
+*.iml
+logs/
+target/
+root/
+settings/
 *.pfx
 /node_modules/
 /src/main/resources/application-secrecy.yml

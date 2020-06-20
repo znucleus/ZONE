@@ -10,8 +10,7 @@ import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.TrainingRelease;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
-import top.zbeboy.zone.service.platform.UsersService;
-import top.zbeboy.zone.service.platform.UsersTypeService;
+import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.training.TrainingAttendService;
 import top.zbeboy.zone.service.training.TrainingReleaseService;
 import top.zbeboy.zone.web.bean.training.attend.TrainingAttendBean;
@@ -19,6 +18,7 @@ import top.zbeboy.zone.web.bean.training.release.TrainingReleaseBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
 import top.zbeboy.zone.web.util.BooleanUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import java.util.Objects;
@@ -35,9 +35,6 @@ public class TrainingAttendViewController {
 
     @Resource
     private TrainingAttendService trainingAttendService;
-
-    @Resource
-    private UsersService usersService;
 
     @Resource
     private UsersTypeService usersTypeService;
@@ -66,7 +63,7 @@ public class TrainingAttendViewController {
         Optional<Record> record = trainingReleaseService.findByIdRelation(id);
         if (record.isPresent()) {
             boolean isStudent = false;
-            Users users = usersService.getUserFromSession();
+            Users users = SessionUtil.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType)) {
                 if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
@@ -183,7 +180,7 @@ public class TrainingAttendViewController {
     public String my(@PathVariable("id") String id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        Users users = usersService.getUserFromSession();
+        Users users = SessionUtil.getUserFromSession();
         UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
         if (Objects.nonNull(usersType)) {
             if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {

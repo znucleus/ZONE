@@ -51,6 +51,8 @@ public class StaffAddVo {
     private String okPassword;
     @NotNull(message = "未同意入站协议")
     private Byte agreeProtocol;
+    @NotBlank(message = "网站链接不能为空")
+    private String baseUrl;
 
     // 组装数据提交到事务后台保存
     private Byte enabled;
@@ -238,5 +240,13 @@ public class StaffAddVo {
 
     public void setJoinDate(Date joinDate) {
         this.joinDate = joinDate;
+    }
+
+    public String getBaseUrl() {
+        return baseUrl;
+    }
+
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
     }
 }

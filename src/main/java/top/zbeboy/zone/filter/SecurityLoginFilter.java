@@ -1,22 +1,19 @@
 package top.zbeboy.zone.filter;
 
 
-import org.jooq.Record;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
-import org.springframework.util.StringUtils;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
-import top.zbeboy.zone.domain.tables.records.StaffRecord;
-import top.zbeboy.zone.domain.tables.records.StudentRecord;
+import top.zbeboy.zone.feign.data.DepartmentService;
+import top.zbeboy.zone.feign.data.OrganizeService;
+import top.zbeboy.zone.feign.data.StaffService;
+import top.zbeboy.zone.feign.data.StudentService;
+import top.zbeboy.zone.feign.platform.UsersService;
+import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.security.AjaxAuthenticationCode;
-import top.zbeboy.zone.service.data.DepartmentService;
-import top.zbeboy.zone.service.data.OrganizeService;
-import top.zbeboy.zone.service.data.StaffService;
-import top.zbeboy.zone.service.data.StudentService;
-import top.zbeboy.zone.service.platform.UsersService;
-import top.zbeboy.zone.service.platform.UsersTypeService;
 import top.zbeboy.zone.web.bean.data.department.DepartmentBean;
 import top.zbeboy.zone.web.bean.data.organize.OrganizeBean;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
@@ -24,13 +21,13 @@ import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.system.mail.SystemMailConfig;
 import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
 import top.zbeboy.zone.web.util.BooleanUtil;
+import top.zbeboy.zone.web.util.SpringBootUtil;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.regex.Pattern;
 
 /**
@@ -49,15 +46,15 @@ public class SecurityLoginFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         if ("POST".equalsIgnoreCase(request.getMethod()) && request.getRequestURI().endsWith("/login")) {
-            String username = StringUtils.trimWhitespace(request.getParameter("username"));
-            String password = StringUtils.trimWhitespace(request.getParameter("password"));
+            String username = StringUtils.deleteWhitespace(request.getParameter("username"));
+            String password = StringUtils.deleteWhitespace(request.getParameter("password"));
 
-            if (!StringUtils.hasLength(username)) {// 账号/邮箱/手机号为空
+            if (StringUtils.isBlank(username)) {// 账号/邮箱/手机号为空
                 response.getWriter().print(AjaxAuthenticationCode.USERNAME_IS_BLANK);
                 return;
             }
 
-            if (!StringUtils.hasLength(password)) {// 密码为空
+            if (StringUtils.isBlank(password)) {// 密码为空
                 response.getWriter().print(AjaxAuthenticationCode.PASSWORD_IS_BLANK);
                 return;
             }
@@ -69,24 +66,24 @@ public class SecurityLoginFilter implements Filter {
                 response.getWriter().print(AjaxAuthenticationCode.INIT_SERVE_ERROR);
                 return;
             }
-            UsersService usersService = (UsersService) ctx
-                    .getBean("usersService");
+
+            UsersService usersService = SpringBootUtil.getBean(UsersService.class);
 
             Users users = null;
             boolean hasUser = false;
             if (Pattern.matches(SystemMailConfig.MAIL_REGEX, username)) {
                 users = usersService.findByEmail(username);
-                hasUser = Objects.nonNull(users);
+                hasUser = Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername());
             }
 
             if (!hasUser && Pattern.matches(SystemMobileConfig.MOBILE_REGEX, username)) {
                 users = usersService.findByMobile(username);
-                hasUser = Objects.nonNull(users);
+                hasUser = Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername());
             }
 
             if (!hasUser) {
                 users = usersService.findByUsername(username);
-                hasUser = Objects.nonNull(users);
+                hasUser = Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername());
             }
 
             if (!hasUser) {
@@ -119,8 +116,7 @@ public class SecurityLoginFilter implements Filter {
                 return;
             }
 
-            UsersTypeService usersTypeService = (UsersTypeService) ctx
-                    .getBean("usersTypeService");
+            UsersTypeService usersTypeService = SpringBootUtil.getBean(UsersTypeService.class);
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.isNull(usersType)) {
                 response.getWriter().print(AjaxAuthenticationCode.USER_TYPE_IS_BLANK);
@@ -130,16 +126,12 @@ public class SecurityLoginFilter implements Filter {
             boolean schoolIsNotDel = false;
             switch (usersType.getUsersTypeName()) {
                 case Workbook.STUDENT_USERS_TYPE:
-                    StudentService studentService = (StudentService) ctx
-                            .getBean("studentService");
-                    Optional<StudentRecord> studentData = studentService.findByUsername(users.getUsername());
-                    if (studentData.isPresent()) {
-                        StudentBean studentBean = studentData.get().into(StudentBean.class);
-                        OrganizeService organizeService = (OrganizeService) ctx
-                                .getBean("organizeService");
-                        Optional<Record> organizeData = organizeService.findByIdRelation(studentBean.getOrganizeId());
-                        if (organizeData.isPresent()) {
-                            OrganizeBean organizeBean = organizeData.get().into(OrganizeBean.class);
+                    StudentService studentService = SpringBootUtil.getBean(StudentService.class);
+                    StudentBean studentBean = studentService.findByUsername(users.getUsername());
+                    if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                        OrganizeService organizeService = SpringBootUtil.getBean(OrganizeService.class);
+                        OrganizeBean organizeBean = organizeService.findByIdRelation(studentBean.getOrganizeId());
+                        if (Objects.nonNull(organizeBean) && organizeBean.getOrganizeId() > 0) {
                             schoolIsNotDel = !BooleanUtil.toBoolean(organizeBean.getSchoolIsDel()) && !BooleanUtil.toBoolean(organizeBean.getCollegeIsDel()) &&
                                     !BooleanUtil.toBoolean(organizeBean.getDepartmentIsDel()) && !BooleanUtil.toBoolean(organizeBean.getScienceIsDel()) &&
                                     !BooleanUtil.toBoolean(organizeBean.getGradeIsDel()) && !BooleanUtil.toBoolean(organizeBean.getOrganizeIsDel());
@@ -147,16 +139,13 @@ public class SecurityLoginFilter implements Filter {
                     }
                     break;
                 case Workbook.STAFF_USERS_TYPE:
-                    StaffService staffService = (StaffService) ctx
-                            .getBean("staffService");
-                    Optional<StaffRecord> staffData = staffService.findByUsername(users.getUsername());
-                    if (staffData.isPresent()) {
-                        StaffBean staffBean = staffData.get().into(StaffBean.class);
-                        DepartmentService departmentService = (DepartmentService) ctx
-                                .getBean("departmentService");
-                        Optional<Record> departmentData = departmentService.findByIdRelation(staffBean.getDepartmentId());
-                        if (departmentData.isPresent()) {
-                            DepartmentBean departmentBean = departmentData.get().into(DepartmentBean.class);
+
+                    StaffService staffService = SpringBootUtil.getBean(StaffService.class);
+                    StaffBean staffBean = staffService.findByUsername(users.getUsername());
+                    if (Objects.nonNull(staffBean) && staffBean.getStaffId() > 0) {
+                        DepartmentService departmentService = SpringBootUtil.getBean(DepartmentService.class);
+                        DepartmentBean departmentBean = departmentService.findByIdRelation(staffBean.getDepartmentId());
+                        if (Objects.nonNull(departmentBean) && departmentBean.getDepartmentId() > 0) {
                             schoolIsNotDel = !BooleanUtil.toBoolean(departmentBean.getSchoolIsDel()) && !BooleanUtil.toBoolean(departmentBean.getCollegeIsDel()) &&
                                     !BooleanUtil.toBoolean(departmentBean.getDepartmentIsDel());
                         }

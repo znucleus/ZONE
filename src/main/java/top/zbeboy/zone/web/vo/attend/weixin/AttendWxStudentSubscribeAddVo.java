@@ -14,6 +14,9 @@ public class AttendWxStudentSubscribeAddVo {
     private String data;
     private String miniProgramState;
     private String lang;
+    @NotBlank(message = "当前用户账号不能为空")
+    @Size(max = 64, message = "当前用户账号不正确")
+    private String username;
 
     public String getTemplateId() {
         return templateId;
@@ -61,5 +64,13 @@ public class AttendWxStudentSubscribeAddVo {
 
     public void setLang(String lang) {
         this.lang = lang;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

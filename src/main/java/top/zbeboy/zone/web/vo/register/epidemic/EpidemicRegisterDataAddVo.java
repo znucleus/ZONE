@@ -15,6 +15,12 @@ public class EpidemicRegisterDataAddVo {
     private String epidemicStatus;
     private String remark;
     private String epidemicRegisterDataId;
+    @NotBlank(message = "当前用户账号不能为空")
+    @Size(max = 64, message = "当前用户账号不正确")
+    private String username;
+    @NotBlank(message = "渠道不能为空")
+    @Size(max = 100, message = "渠道不正确")
+    private String  channelName;
 
     public String getEpidemicRegisterReleaseId() {
         return epidemicRegisterReleaseId;
@@ -62,5 +68,21 @@ public class EpidemicRegisterDataAddVo {
 
     public void setEpidemicRegisterDataId(String epidemicRegisterDataId) {
         this.epidemicRegisterDataId = epidemicRegisterDataId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getChannelName() {
+        return channelName;
+    }
+
+    public void setChannelName(String channelName) {
+        this.channelName = channelName;
     }
 }

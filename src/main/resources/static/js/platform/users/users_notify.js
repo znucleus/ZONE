@@ -109,7 +109,7 @@ require(["jquery", "tools", "handlebars", "moment-with-locales", "bootstrap",
          * @param data 数据
          */
         function listData(data) {
-            var template = Handlebars.compile($("#users-notify-template").html());
+            var template = Handlebars.compile($("#user-notify-template").html());
 
             tableData.html(template(data));
         }

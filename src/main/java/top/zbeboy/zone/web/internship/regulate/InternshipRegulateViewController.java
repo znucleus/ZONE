@@ -1,43 +1,34 @@
 package top.zbeboy.zone.web.internship.regulate;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jooq.Record;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.InternshipRegulate;
-import top.zbeboy.zone.domain.tables.pojos.Staff;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
-import top.zbeboy.zone.service.data.StaffService;
+import top.zbeboy.zone.feign.data.StaffService;
+import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.internship.InternshipRegulateService;
-import top.zbeboy.zone.service.platform.RoleService;
-import top.zbeboy.zone.service.platform.UsersService;
-import top.zbeboy.zone.service.platform.UsersTypeService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
+import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import java.util.Objects;
-import java.util.Optional;
 
 @Controller
 public class InternshipRegulateViewController {
-
-    @Resource
-    private UsersService usersService;
 
     @Resource
     private UsersTypeService usersTypeService;
 
     @Resource
     private StaffService staffService;
-
-    @Resource
-    private RoleService roleService;
 
     @Resource
     private InternshipConditionCommon internshipConditionCommon;
@@ -63,20 +54,19 @@ public class InternshipRegulateViewController {
     @GetMapping("/web/internship/regulate/list/{id}")
     public String list(@PathVariable("id") String id, ModelMap modelMap) {
         modelMap.addAttribute("internshipReleaseId", id);
-        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
             modelMap.addAttribute("authorities", Workbook.authorities.ROLE_SYSTEM.name());
-        } else if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+        } else if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
             modelMap.addAttribute("authorities", Workbook.authorities.ROLE_ADMIN.name());
         }
 
-        Users users = usersService.getUserFromSession();
+        Users users = SessionUtil.getUserFromSession();
         UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
         if (Objects.nonNull(usersType)) {
             if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                Optional<Record> record = staffService.findByUsernameRelation(users.getUsername());
-                if (record.isPresent()) {
-                    Staff staff = record.get().into(Staff.class);
-                    modelMap.addAttribute("staffId", staff.getStaffId());
+                StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
+                if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+                    modelMap.addAttribute("staffId", bean.getStaffId());
                 }
             }
         }

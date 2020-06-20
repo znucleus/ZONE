@@ -1,37 +1,32 @@
 package top.zbeboy.zone.web.data.organize;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jooq.Record;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zone.config.Workbook;
-import top.zbeboy.zone.domain.tables.pojos.College;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
-import top.zbeboy.zone.service.data.OrganizeService;
-import top.zbeboy.zone.service.data.StaffService;
-import top.zbeboy.zone.service.data.StudentService;
-import top.zbeboy.zone.service.platform.RoleService;
-import top.zbeboy.zone.service.platform.UsersService;
-import top.zbeboy.zone.service.platform.UsersTypeService;
+import top.zbeboy.zone.feign.data.OrganizeService;
+import top.zbeboy.zone.feign.data.StaffService;
+import top.zbeboy.zone.feign.data.StudentService;
+import top.zbeboy.zone.feign.platform.RoleService;
+import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.web.bean.data.organize.OrganizeBean;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
+import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import java.util.Objects;
-import java.util.Optional;
 
 @Controller
 public class OrganizeViewController {
 
     @Resource
     private RoleService roleService;
-
-    @Resource
-    private UsersService usersService;
 
     @Resource
     private UsersTypeService usersTypeService;
@@ -64,22 +59,20 @@ public class OrganizeViewController {
     public String add(ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
-            Users users = usersService.getUserFromSession();
+        if (!SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+            Users users = SessionUtil.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType)) {
                 int collegeId = 0;
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                    Optional<Record> record = staffService.findByUsernameRelation(users.getUsername());
-                    if (record.isPresent()) {
-                        College college = record.get().into(College.class);
-                        collegeId = college.getCollegeId();
+                    StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
+                    if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+                        collegeId = bean.getCollegeId();
                     }
                 } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                    Optional<Record> record = studentService.findByUsernameRelation(users.getUsername());
-                    if (record.isPresent()) {
-                        College college = record.get().into(College.class);
-                        collegeId = college.getCollegeId();
+                    StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+                    if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                        collegeId = studentBean.getCollegeId();
                     }
                 }
 
@@ -114,20 +107,18 @@ public class OrganizeViewController {
     public String edit(@PathVariable("id") int id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        Optional<Record> record = organizeService.findByIdRelation(id);
-        if (record.isPresent()) {
-            OrganizeBean organizeBean = record.get().into(OrganizeBean.class);
+        OrganizeBean organizeBean= organizeService.findByIdRelation(id);
+        if (Objects.nonNull(organizeBean) && organizeBean.getOrganizeId() > 0) {
             if (Objects.nonNull(organizeBean.getStaffId())) {
-                Optional<Record> staffRecord = staffService.findByIdRelation(organizeBean.getStaffId());
-                if (staffRecord.isPresent()) {
-                    StaffBean staffBean = staffRecord.get().into(StaffBean.class);
-                    modelMap.addAttribute("username", staffBean.getUsername());
-                    modelMap.addAttribute("realName", staffBean.getRealName());
-                    modelMap.addAttribute("mobile", staffBean.getMobile());
+                StaffBean bean = staffService.findByIdRelation(organizeBean.getStaffId());
+                if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+                    modelMap.addAttribute("username", bean.getUsername());
+                    modelMap.addAttribute("realName", bean.getRealName());
+                    modelMap.addAttribute("mobile", bean.getMobile());
                 }
             }
             modelMap.addAttribute("organize", organizeBean);
-            if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+            if (!SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
                 modelMap.addAttribute("collegeId", organizeBean.getCollegeId());
             } else {
                 modelMap.addAttribute("collegeId", 0);

@@ -1,22 +1,21 @@
 package top.zbeboy.zone.api.staff;
 
-import org.jooq.Record;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.domain.tables.pojos.Users;
-import top.zbeboy.zone.service.data.StaffService;
-import top.zbeboy.zone.service.platform.UsersService;
+import top.zbeboy.zone.feign.data.StaffService;
+import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.util.AjaxUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 @RestController
 public class StaffApiController {
@@ -36,16 +35,15 @@ public class StaffApiController {
     @GetMapping("/api/staff")
     public ResponseEntity<Map<String, Object>> users(Principal principal) {
         AjaxUtil<Object> ajaxUtil = AjaxUtil.of();
-        Users users = usersService.getUserFromOauth(principal);
+        Users users = SessionUtil.getUserFromOauth(principal);
         if (Objects.nonNull(users)) {
-            Optional<Record> record = staffService.findByUsernameRelation(users.getUsername());
-            if (record.isPresent()) {
+            StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
+            if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
                 Map<String, Object> outPut = new HashMap<>();
-                StaffBean staff = record.get().into(StaffBean.class);
-                outPut.put("staffId", staff.getStaffId());
-                outPut.put("staffNumber", staff.getStaffNumber());
-                outPut.put("departmentId", staff.getDepartmentId());
-                outPut.put("schoolId", staff.getSchoolId());
+                outPut.put("staffId", bean.getStaffId());
+                outPut.put("staffNumber", bean.getStaffNumber());
+                outPut.put("departmentId", bean.getDepartmentId());
+                outPut.put("schoolId", bean.getSchoolId());
                 ajaxUtil.success().msg("获取用户信息成功").map(outPut);
             } else {
                 ajaxUtil.fail().msg("未查询到教职工信息");

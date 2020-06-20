@@ -16,6 +16,9 @@ public class LeaverRegisterReleaseEditVo {
     private int dataScope;
     @NotBlank(message = "数据不能为空")
     private String dataId;
+    @NotBlank(message = "当前用户账号不能为空")
+    @Size(max = 64, message = "当前用户账号不正确")
+    private String username;
 
     public String getLeaverRegisterReleaseId() {
         return leaverRegisterReleaseId;
@@ -55,5 +58,13 @@ public class LeaverRegisterReleaseEditVo {
 
     public void setDataId(String dataId) {
         this.dataId = dataId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

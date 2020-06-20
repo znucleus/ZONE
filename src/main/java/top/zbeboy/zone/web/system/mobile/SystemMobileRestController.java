@@ -12,8 +12,8 @@ import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.config.ZoneProperties;
 import top.zbeboy.zone.domain.tables.pojos.SystemConfigure;
 import top.zbeboy.zone.domain.tables.pojos.Users;
-import top.zbeboy.zone.service.platform.UsersService;
-import top.zbeboy.zone.service.system.SystemConfigureService;
+import top.zbeboy.zone.feign.platform.UsersService;
+import top.zbeboy.zone.feign.system.SystemConfigureService;
 import top.zbeboy.zone.service.system.SystemMobileService;
 import top.zbeboy.zone.service.util.RandomUtil;
 import top.zbeboy.zone.web.util.AjaxUtil;
@@ -213,6 +213,49 @@ public class SystemMobileRestController {
             ajaxUtil.fail().msg("手机号不能为空");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /*
+     * @param url
+     * ：必填--发送连接地址URL——http://sms.kingtto.com:9999/sms.aspx
+     * @param userId
+     * ：必填--用户ID，为数字
+     * @param account
+     * ：必填--用户帐号
+     * @param password
+     * ：必填--用户密码
+     * @param mobile
+     * ：必填--发送的手机号码，多个可以用逗号隔比如>130xxxxxxxx,131xxxxxxxx
+     * @param content
+     * ：必填--实际发送内容，
+     * @param action
+     * ：选填--访问的事件，默认为send
+     * @param sendType
+     * ：选填--发送方式，默认为POST
+     * @param codingType
+     * ：选填--发送内容编码方式，默认为UTF-8
+     * @param backEncodeType
+     * ：选填--返回内容编码方式，默认为UTF-8
+     * @return 返回发送之后收到的信息
+     */
+    @PostMapping("/anyone/system/mobile/send")
+    public void sendShortMessage(@RequestParam("mobile") String mobile, @RequestParam("content") String content,
+                                 @RequestParam(value = "action", required = false) String action,
+                                 @RequestParam(value = "sendType", required = false) String sendType,
+                                 @RequestParam(value = "codingType", required = false) String codingType,
+                                 @RequestParam(value = "backEncodeType", required = false) String backEncodeType) {
+        systemMobileService.sendShortMessage(mobile, content, action, sendType, codingType, backEncodeType);
+    }
+
+    /**
+     * 发送短信验证码
+     *
+     * @param mobile           手机号
+     * @param verificationCode 验证码
+     */
+    @PostMapping("/anyone/system/mobile/valid")
+    public void sendValidMobileShortMessage(@RequestParam("mobile") String mobile, @RequestParam("verificationCode") String verificationCode) {
+        systemMobileService.sendValidMobileShortMessage(mobile, verificationCode);
     }
 
     /**

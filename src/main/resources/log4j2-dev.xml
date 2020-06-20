@@ -18,6 +18,8 @@
 
         <logger name="org.springframework.web" level="debug"/>
 
+        <logger name="io.github.openfeign" level="debug"/>
+
         <Root level="error">
             <AppenderRef ref="CONSOLE"/>
         </Root>

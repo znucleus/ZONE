@@ -1,5 +1,6 @@
 package top.zbeboy.zone.web.oauth;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.common.util.OAuth2Utils;
 import org.springframework.security.oauth2.provider.AuthorizationRequest;
@@ -11,8 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import top.zbeboy.zone.domain.tables.records.OauthClientUsersRecord;
-import top.zbeboy.zone.service.platform.OauthClientUsersService;
+import top.zbeboy.zone.domain.tables.pojos.OauthClientUsers;
+import top.zbeboy.zone.feign.platform.AppService;
 import top.zbeboy.zone.web.system.tip.SystemTipConfig;
 
 import javax.annotation.Resource;
@@ -20,7 +21,6 @@ import java.security.Principal;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 @Controller
 @SessionAttributes("authorizationRequest")
@@ -30,7 +30,7 @@ public class OauthViewController {
     private ClientDetailsService clientDetailsService;
 
     @Resource
-    private OauthClientUsersService oauthClientUsersService;
+    private AppService appService;
 
     @Autowired
     private ApprovalStore approvalStore;
@@ -45,8 +45,10 @@ public class OauthViewController {
             model.put("auth_request", clientAuth);
             model.put("client", client);
 
-            Optional<OauthClientUsersRecord> oauthClientUsersRecord = oauthClientUsersService.findById(clientAuth.getClientId());
-            oauthClientUsersRecord.ifPresent(oauthClientUsersRecord1 -> model.put("appName", oauthClientUsersRecord1.getAppName()));
+            OauthClientUsers oauthClientUsers = appService.findOauthClientUsersById(clientAuth.getClientId());
+            if(Objects.nonNull(oauthClientUsers) && StringUtils.isNotBlank(oauthClientUsers.getClientId())){
+                model.put("appName", oauthClientUsers.getAppName());
+            }
             Map<String, String> scopes = new LinkedHashMap<>();
             for (String scope : clientAuth.getScope()) {
                 scopes.put(OAuth2Utils.SCOPE_PREFIX + scope, "false");

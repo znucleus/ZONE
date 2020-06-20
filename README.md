@@ -17,9 +17,10 @@
 # 启动
 1.Intellij IDEA Run Application.class 或 Maven .  
 # 参与条件
-1.Known Spring boot 2.2.6;  
-2.Known Git;  
-2.Known Maven;  
-3.Known RequireJs;  
-4.Known Thymeleaf;  
-5.Known Nodejs -> gulp.
+1.Known Spring boot 2.2.8;  
+2.Known Spring cloud Hoxton.SR5;  
+3.Known Git;  
+4.Known Maven;  
+5.Known RequireJs;  
+6.Known Thymeleaf;  
+7.Known Nodejs -> gulp.

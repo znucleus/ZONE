@@ -1,5 +1,6 @@
 package top.zbeboy.zone.web.training.special;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jooq.Record;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -7,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.Files;
-import top.zbeboy.zone.service.system.FilesService;
+import top.zbeboy.zone.feign.system.FilesService;
 import top.zbeboy.zone.service.training.TrainingSpecialDocumentService;
 import top.zbeboy.zone.service.training.TrainingSpecialService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
@@ -57,7 +58,7 @@ public class TrainingSpecialViewController {
         String page;
         if (trainingConditionCommon.specialCondition()) {
             Files files = filesService.findById(Workbook.SYSTEM_COVER);
-            if (Objects.nonNull(files)) {
+            if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())){
                 modelMap.addAttribute("cover", Workbook.DIRECTORY_SPLIT + files.getRelativePath());
             }
             page = "web/training/special/training_special_add::#page-wrapper";

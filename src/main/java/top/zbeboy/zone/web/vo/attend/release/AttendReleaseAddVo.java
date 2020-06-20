@@ -20,6 +20,9 @@ public class AttendReleaseAddVo {
     @NotNull(message = "班级ID不能为空")
     @Min(value = 1, message = "班级不正确")
     private int organizeId;
+    @NotBlank(message = "当前用户账号不能为空")
+    @Size(max = 64, message = "当前用户账号不正确")
+    private String username;
 
     public String getTitle() {
         return title;
@@ -75,5 +78,13 @@ public class AttendReleaseAddVo {
 
     public void setOrganizeId(int organizeId) {
         this.organizeId = organizeId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

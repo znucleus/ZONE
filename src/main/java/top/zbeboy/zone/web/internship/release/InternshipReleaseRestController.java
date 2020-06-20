@@ -16,12 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.*;
-import top.zbeboy.zone.service.data.ScienceService;
+import top.zbeboy.zone.feign.data.ScienceService;
+import top.zbeboy.zone.feign.system.FilesService;
 import top.zbeboy.zone.service.internship.InternshipFileService;
 import top.zbeboy.zone.service.internship.InternshipReleaseService;
 import top.zbeboy.zone.service.internship.InternshipTypeService;
-import top.zbeboy.zone.service.platform.UsersService;
-import top.zbeboy.zone.service.system.FilesService;
 import top.zbeboy.zone.service.upload.FileBean;
 import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
@@ -34,6 +33,7 @@ import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
 import top.zbeboy.zone.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.ByteUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zone.web.vo.internship.release.InternshipReleaseAddVo;
 import top.zbeboy.zone.web.vo.internship.release.InternshipReleaseEditVo;
@@ -41,7 +41,10 @@ import top.zbeboy.zone.web.vo.internship.release.InternshipReleaseEditVo;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @RestController
 public class InternshipReleaseRestController {
@@ -69,9 +72,6 @@ public class InternshipReleaseRestController {
     @Resource
     private ScienceService scienceService;
 
-    @Resource
-    private UsersService usersService;
-
     /**
      * 数据
      *
@@ -85,8 +85,8 @@ public class InternshipReleaseRestController {
         Result<Record> records = internshipReleaseService.findAllByPage(simplePaginationUtil);
         if (records.isNotEmpty()) {
             beans = records.into(InternshipReleaseBean.class);
-            beans.forEach(bean->{
-                if(BooleanUtil.toBoolean(bean.getIsTimeLimit())){
+            beans.forEach(bean -> {
+                if (BooleanUtil.toBoolean(bean.getIsTimeLimit())) {
                     bean.setTeacherDistributionStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionStartTime()));
                     bean.setTeacherDistributionEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionEndTime()));
                     bean.setStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getStartTime()));
@@ -167,11 +167,10 @@ public class InternshipReleaseRestController {
             String time = internshipReleaseAddVo.getTime();
             String files = internshipReleaseAddVo.getFiles();
             String title = "";
-            Users users = usersService.getUserFromSession();
+            Users users = SessionUtil.getUserFromSession();
 
-            Optional<Record> scienceRecord = scienceService.findByIdRelation(internshipReleaseAddVo.getScienceId());
-            if (scienceRecord.isPresent()) {
-                ScienceBean scienceBean = scienceRecord.get().into(ScienceBean.class);
+            ScienceBean scienceBean = scienceService.findByIdRelation(internshipReleaseAddVo.getScienceId());
+            if (Objects.nonNull(scienceBean) && scienceBean.getScienceId() > 0) {
                 title = scienceBean.getSchoolName()
                         + "-" + scienceBean.getCollegeName()
                         + "-" + scienceBean.getDepartmentName()

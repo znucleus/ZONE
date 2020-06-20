@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.Files;
 import top.zbeboy.zone.domain.tables.pojos.Users;
-import top.zbeboy.zone.service.platform.UsersService;
-import top.zbeboy.zone.service.system.FilesService;
+import top.zbeboy.zone.feign.system.FilesService;
 import top.zbeboy.zone.web.util.AjaxUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import java.security.Principal;
@@ -21,9 +21,6 @@ import java.util.Objects;
 
 @RestController
 public class UsersApiController {
-
-    @Resource
-    private UsersService usersService;
 
     @Resource
     private FilesService filesService;
@@ -37,7 +34,7 @@ public class UsersApiController {
     @GetMapping("/api/users")
     public ResponseEntity<Map<String, Object>> users(Principal principal) {
         AjaxUtil<Object> ajaxUtil = AjaxUtil.of();
-        Users users = usersService.getUserFromOauth(principal);
+        Users users = SessionUtil.getUserFromOauth(principal);
         if (Objects.nonNull(users)) {
             Map<String, Object> outPut = new HashMap<>();
             outPut.put("realName", users.getRealName());
@@ -48,7 +45,7 @@ public class UsersApiController {
             outPut.put("accountNonLocked", users.getAccountNonLocked());
             if (StringUtils.isNotBlank(users.getAvatar())) {
                 Files files = filesService.findById(users.getAvatar());
-                if (Objects.nonNull(files)) {
+                if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())) {
                     outPut.put("avatar", Workbook.DIRECTORY_SPLIT + files.getRelativePath());
                 }
             }

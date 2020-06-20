@@ -91,10 +91,10 @@ public interface InternshipJournalService {
      *
      * @param internshipJournal        数据
      * @param internshipJournalContent 内容
-     * @param users                    用户
+     * @param username                    用户
      * @param request                  请求
      */
-    void saveWord(InternshipJournal internshipJournal, InternshipJournalContent internshipJournalContent, Users users, HttpServletRequest request);
+    void saveWord(InternshipJournal internshipJournal, InternshipJournalContent internshipJournalContent, String username, HttpServletRequest request);
 
     /**
      * 更新

@@ -13,12 +13,13 @@ import top.zbeboy.zone.domain.tables.pojos.InternshipApply;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.domain.tables.records.InternshipReleaseRecord;
-import top.zbeboy.zone.service.data.StudentService;
-import top.zbeboy.zone.service.platform.UsersService;
-import top.zbeboy.zone.service.platform.UsersTypeService;
+import top.zbeboy.zone.feign.data.StudentService;
+import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zone.service.util.SQLQueryUtil;
+import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.util.BooleanUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
 
 import javax.annotation.Resource;
@@ -37,9 +38,6 @@ public class InternshipApplyServiceImpl implements InternshipApplyService, Pagin
 
     @Resource
     private InternshipApplyDao internshipApplyDao;
-
-    @Resource
-    private UsersService usersService;
 
     @Resource
     private UsersTypeService usersTypeService;
@@ -133,7 +131,7 @@ public class InternshipApplyServiceImpl implements InternshipApplyService, Pagin
     public void updateState(int curState, int updateState) {
         Select<InternshipReleaseRecord> select = create.selectFrom(INTERNSHIP_RELEASE)
                 .where(INTERNSHIP_RELEASE.END_TIME.le(now()).and(INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_ID.eq(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID))
-                .and(INTERNSHIP_RELEASE.IS_TIME_LIMIT.eq(BooleanUtil.toByte(true))));
+                        .and(INTERNSHIP_RELEASE.IS_TIME_LIMIT.eq(BooleanUtil.toByte(true))));
         create.update(INTERNSHIP_APPLY)
                 .set(INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE, updateState)
                 .where(INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE.eq(curState).andExists(select))
@@ -170,13 +168,13 @@ public class InternshipApplyServiceImpl implements InternshipApplyService, Pagin
     @Override
     public Condition extraCondition(SimplePaginationUtil paginationUtil) {
         Condition a = null;
-        Users users = usersService.getUserFromSession();
+        Users users = SessionUtil.getUserFromSession();
         UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
         if (Objects.nonNull(usersType)) {
             if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                Optional<Record> record = studentService.findByUsernameRelation(users.getUsername());
-                if (record.isPresent()) {
-                    int studentId = record.get().get(STUDENT.STUDENT_ID);
+                StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+                if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                    int studentId = studentBean.getStudentId();
                     a = STUDENT.STUDENT_ID.eq(studentId);
                 }
             }

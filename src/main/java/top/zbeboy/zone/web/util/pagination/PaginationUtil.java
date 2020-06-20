@@ -1,6 +1,11 @@
 package top.zbeboy.zone.web.util.pagination;
 
-public class PaginationUtil {
+import java.io.Serializable;
+
+public class PaginationUtil implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private int start = 0;
     private int length = 10;
     private String orderColumnName;

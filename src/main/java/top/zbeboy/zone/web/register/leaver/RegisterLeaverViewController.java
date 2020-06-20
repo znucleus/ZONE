@@ -1,38 +1,28 @@
 package top.zbeboy.zone.web.register.leaver;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jooq.Record;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zone.config.Workbook;
 import top.zbeboy.zone.domain.tables.pojos.LeaverRegisterRelease;
-import top.zbeboy.zone.domain.tables.pojos.School;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
-import top.zbeboy.zone.service.data.StaffService;
-import top.zbeboy.zone.service.data.StudentService;
-import top.zbeboy.zone.service.platform.RoleService;
-import top.zbeboy.zone.service.platform.UsersService;
-import top.zbeboy.zone.service.platform.UsersTypeService;
-import top.zbeboy.zone.service.register.LeaverRegisterReleaseService;
-import top.zbeboy.zone.web.register.common.RegisterConditionCommon;
-import top.zbeboy.zone.web.register.common.RegisterControllerCommon;
+import top.zbeboy.zone.feign.data.StaffService;
+import top.zbeboy.zone.feign.data.StudentService;
+import top.zbeboy.zone.feign.platform.UsersTypeService;
+import top.zbeboy.zone.feign.register.RegisterLeaverService;
+import top.zbeboy.zone.web.bean.data.staff.StaffBean;
+import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import java.util.Objects;
-import java.util.Optional;
 
 @Controller
 public class RegisterLeaverViewController {
-
-    @Resource
-    private RoleService roleService;
-
-    @Resource
-    private UsersService usersService;
 
     @Resource
     private UsersTypeService usersTypeService;
@@ -44,13 +34,7 @@ public class RegisterLeaverViewController {
     private StudentService studentService;
 
     @Resource
-    private RegisterConditionCommon registerConditionCommon;
-
-    @Resource
-    private LeaverRegisterReleaseService leaverRegisterReleaseService;
-
-    @Resource
-    private RegisterControllerCommon registerControllerCommon;
+    private RegisterLeaverService registerLeaverService;
 
     /**
      * 离校登记
@@ -71,19 +55,25 @@ public class RegisterLeaverViewController {
     public String add(ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
-            Users users = usersService.getUserFromSession();
+        if (!SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+            Users users = SessionUtil.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType)) {
-                Optional<Record> record = Optional.empty();
+                int schoolId = 0;
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                    record = staffService.findByUsernameRelation(users.getUsername());
+                    StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
+                    if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+                        schoolId = bean.getSchoolId();
+                    }
                 } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                    record = studentService.findByUsernameRelation(users.getUsername());
+                    StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+                    if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                        schoolId = studentBean.getSchoolId();
+                    }
                 }
 
-                if (record.isPresent()) {
-                    modelMap.addAttribute("schoolId", record.get().into(School.class).getSchoolId());
+                if (schoolId > 0) {
+                    modelMap.addAttribute("schoolId", schoolId);
                     page = "web/register/leaver/leaver_release_add::#page-wrapper";
                 } else {
                     config.buildDangerTip("查询错误", "未查询到您的学校ID或暂不支持您的注册类型");
@@ -111,23 +101,28 @@ public class RegisterLeaverViewController {
     public String edit(@PathVariable("id") String id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        String channel = Workbook.channel.WEB.name();
-        if (registerConditionCommon.leaverOperator(id, channel, null)) {
+        Users users = SessionUtil.getUserFromSession();
+        if (registerLeaverService.leaverOperator(users.getUsername(), id)) {
             boolean canAccess = false;
-            if (!roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
-                Users users = usersService.getUserFromSession();
+            if (!SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
                 UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
                 if (Objects.nonNull(usersType)) {
-                    Optional<Record> record = Optional.empty();
+                    int schoolId = 0;
                     if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                        record = staffService.findByUsernameRelation(users.getUsername());
+                        StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
+                        if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+                            schoolId = bean.getSchoolId();
+                        }
                     } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                        record = studentService.findByUsernameRelation(users.getUsername());
+                        StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+                        if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                            schoolId = studentBean.getSchoolId();
+                        }
                     }
 
-                    if (record.isPresent()) {
+                    if (schoolId > 0) {
                         canAccess = true;
-                        modelMap.addAttribute("schoolId", record.get().into(School.class).getSchoolId());
+                        modelMap.addAttribute("schoolId", schoolId);
                         page = "web/register/leaver/leaver_release_edit::#page-wrapper";
                     } else {
                         config.buildDangerTip("查询错误", "未查询到您的学校ID或暂不支持您的注册类型");
@@ -146,12 +141,12 @@ public class RegisterLeaverViewController {
             }
 
             if (canAccess) {
-                LeaverRegisterRelease leaverRegisterRelease = leaverRegisterReleaseService.findById(id);
-                if (Objects.nonNull(leaverRegisterRelease)) {
+                LeaverRegisterRelease leaverRegisterRelease = registerLeaverService.release(id);
+                if (Objects.nonNull(leaverRegisterRelease) && StringUtils.isNotBlank(leaverRegisterRelease.getLeaverRegisterReleaseId())) {
                     modelMap.addAttribute("leaverRegisterRelease", leaverRegisterRelease);
-                    modelMap.addAttribute("leaverRegisterOptions", registerControllerCommon.leaverRegisterOptions(id));
+                    modelMap.addAttribute("leaverRegisterOptions", registerLeaverService.leaverRegisterOptions(id));
                     modelMap.addAttribute("leaverRegisterScopes",
-                            registerControllerCommon.leaverRegisterScopes(id, leaverRegisterRelease.getDataScope()));
+                            registerLeaverService.leaverRegisterScopes(id));
                 } else {
                     config.buildDangerTip("查询错误", "未查询到离校登记发布数据");
                     config.dataMerging(modelMap);
@@ -176,9 +171,9 @@ public class RegisterLeaverViewController {
     public String dataAdd(@PathVariable("id") String id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        String channel = Workbook.channel.WEB.name();
-        if (registerConditionCommon.leaverRegister(id, channel, null)) {
-            modelMap.addAttribute("leaverRegisterOptions", registerControllerCommon.leaverRegisterOptions(id));
+        Users users = SessionUtil.getUserFromSession();
+        if (registerLeaverService.leaverRegister(users.getUsername(), id)) {
+            modelMap.addAttribute("leaverRegisterOptions", registerLeaverService.leaverRegisterOptions(id));
             modelMap.addAttribute("leaverRegisterReleaseId", id);
             page = "web/register/leaver/leaver_data_add::#page-wrapper";
         } else {
@@ -200,8 +195,8 @@ public class RegisterLeaverViewController {
     public String dataReview(@PathVariable("id") String id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        String channel = Workbook.channel.WEB.name();
-        if (registerConditionCommon.leaverReview(id, channel, null)) {
+        Users users = SessionUtil.getUserFromSession();
+        if (registerLeaverService.leaverReview(users.getUsername(), id)) {
             modelMap.addAttribute("leaverRegisterReleaseId", id);
             page = "web/register/leaver/leaver_data_review::#page-wrapper";
         } else {

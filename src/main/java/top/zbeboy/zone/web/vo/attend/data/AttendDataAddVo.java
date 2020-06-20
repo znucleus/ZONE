@@ -1,6 +1,7 @@
 package top.zbeboy.zone.web.vo.attend.data;
 
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -24,6 +25,9 @@ public class AttendDataAddVo {
     private String platform;
     private Byte locationAuthorized;
     private Byte notificationAuthorized;
+    @NotBlank(message = "当前用户账号不能为空")
+    @Size(max = 64, message = "当前用户账号不正确")
+    private String username;
 
     public int getAttendReleaseSubId() {
         return attendReleaseSubId;
@@ -119,5 +123,13 @@ public class AttendDataAddVo {
 
     public void setNotificationAuthorized(Byte notificationAuthorized) {
         this.notificationAuthorized = notificationAuthorized;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

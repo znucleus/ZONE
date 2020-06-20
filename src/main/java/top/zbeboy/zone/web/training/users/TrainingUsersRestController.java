@@ -14,13 +14,14 @@ import top.zbeboy.zone.domain.tables.pojos.Student;
 import top.zbeboy.zone.domain.tables.pojos.TrainingRelease;
 import top.zbeboy.zone.domain.tables.pojos.TrainingUsers;
 import top.zbeboy.zone.domain.tables.records.TrainingUsersRecord;
-import top.zbeboy.zone.service.data.StudentService;
+import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.service.export.TrainingUsersExport;
 import top.zbeboy.zone.service.training.TrainingReleaseService;
 import top.zbeboy.zone.service.training.TrainingUsersService;
 import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zone.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.util.UUIDUtil;
+import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.bean.training.release.TrainingReleaseBean;
 import top.zbeboy.zone.web.bean.training.users.TrainingUsersBean;
 import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
@@ -123,15 +124,14 @@ public class TrainingUsersRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (trainingConditionCommon.usersCondition(trainingReleaseId)) {
             String param = StringUtils.deleteWhitespace(studentNumber);
-            Optional<Record> studentRecord = studentService.findNormalByStudentNumberRelation(param);
-            if (studentRecord.isPresent()) {
-                Student student = studentRecord.get().into(Student.class);
-                Optional<TrainingUsersRecord> trainingUsersRecord = trainingUsersService.findByTrainingReleaseIdAndStudentId(trainingReleaseId, student.getStudentId());
+            StudentBean studentBean = studentService.findNormalByStudentNumberRelation(param);
+            if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                Optional<TrainingUsersRecord> trainingUsersRecord = trainingUsersService.findByTrainingReleaseIdAndStudentId(trainingReleaseId, studentBean.getStudentId());
                 if (!trainingUsersRecord.isPresent()) {
                     TrainingUsers trainingUsers = new TrainingUsers();
                     trainingUsers.setTrainingUsersId(UUIDUtil.getUUID());
                     trainingUsers.setTrainingReleaseId(trainingReleaseId);
-                    trainingUsers.setStudentId(student.getStudentId());
+                    trainingUsers.setStudentId(studentBean.getStudentId());
                     trainingUsers.setRemark(remark);
                     trainingUsers.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
                     trainingUsersService.save(trainingUsers);

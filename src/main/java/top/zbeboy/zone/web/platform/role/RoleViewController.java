@@ -1,36 +1,28 @@
 package top.zbeboy.zone.web.platform.role;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jooq.Record;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zone.config.Workbook;
-import top.zbeboy.zone.domain.tables.pojos.College;
 import top.zbeboy.zone.domain.tables.pojos.Users;
 import top.zbeboy.zone.domain.tables.pojos.UsersType;
-import top.zbeboy.zone.service.data.StaffService;
-import top.zbeboy.zone.service.data.StudentService;
-import top.zbeboy.zone.service.platform.CollegeRoleService;
-import top.zbeboy.zone.service.platform.RoleService;
-import top.zbeboy.zone.service.platform.UsersService;
-import top.zbeboy.zone.service.platform.UsersTypeService;
+import top.zbeboy.zone.feign.data.StaffService;
+import top.zbeboy.zone.feign.data.StudentService;
+import top.zbeboy.zone.feign.platform.RoleService;
+import top.zbeboy.zone.feign.platform.UsersTypeService;
+import top.zbeboy.zone.web.bean.data.staff.StaffBean;
+import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.bean.platform.role.RoleBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import java.util.Objects;
-import java.util.Optional;
 
 @Controller
 public class RoleViewController {
-
-    @Resource
-    private RoleService roleService;
-
-    @Resource
-    private UsersService usersService;
 
     @Resource
     private UsersTypeService usersTypeService;
@@ -42,7 +34,7 @@ public class RoleViewController {
     private StudentService studentService;
 
     @Resource
-    private CollegeRoleService collegeRoleService;
+    private RoleService roleService;
 
     /**
      * 平台角色
@@ -51,9 +43,9 @@ public class RoleViewController {
      */
     @GetMapping("/web/menu/platform/role")
     public String index(ModelMap modelMap) {
-        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
             modelMap.addAttribute("authorities", Workbook.authorities.ROLE_SYSTEM.name());
-        } else if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+        } else if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
             modelMap.addAttribute("authorities", Workbook.authorities.ROLE_ADMIN.name());
         }
         return "web/platform/role/role_data::#page-wrapper";
@@ -70,22 +62,28 @@ public class RoleViewController {
     public String add(ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
             modelMap.addAttribute("collegeId", 0);
             page = "web/platform/role/role_add::#page-wrapper";
-        } else if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
-            Users users = usersService.getUserFromSession();
+        } else if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+            Users users = SessionUtil.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType)) {
-                Optional<Record> record = Optional.empty();
+                int collegeId = 0;
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                    record = staffService.findByUsernameRelation(users.getUsername());
+                    StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
+                    if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+                        collegeId = bean.getCollegeId();
+                    }
                 } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                    record = studentService.findByUsernameRelation(users.getUsername());
+                    StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+                    if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                        collegeId = studentBean.getCollegeId();
+                    }
                 }
 
-                if (record.isPresent()) {
-                    modelMap.addAttribute("collegeId", record.get().into(College.class).getCollegeId());
+                if (collegeId > 0) {
+                    modelMap.addAttribute("collegeId", collegeId);
                     page = "web/platform/role/role_add::#page-wrapper";
                 } else {
                     config.buildDangerTip("查询错误", "未查询到您的院ID或暂不支持您的注册类型");
@@ -117,10 +115,9 @@ public class RoleViewController {
     public String edit(@PathVariable("id") String id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
-            Optional<Record> record = collegeRoleService.findByRoleIdRelation(id);
-            if (record.isPresent()) {
-                RoleBean role = record.get().into(RoleBean.class);
+        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+            RoleBean role = roleService.findCollegeRoleByRoleIdRelation(id);
+            if (Objects.nonNull(role) && StringUtils.isNotBlank(role.getRoleId())) {
                 modelMap.addAttribute("role", role);
                 page = "web/platform/role/role_edit::#page-wrapper";
             } else {
@@ -128,22 +125,26 @@ public class RoleViewController {
                 config.dataMerging(modelMap);
                 page = "inline_tip::#page-wrapper";
             }
-        } else if (roleService.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+        } else if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
             // 判断是否同一个院
-            Users users = usersService.getUserFromSession();
+            Users users = SessionUtil.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType)) {
-                Optional<Record> record = Optional.empty();
+                int collegeId = 0;
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                    record = staffService.findByUsernameRelation(users.getUsername());
+                    StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
+                    if (Objects.nonNull(bean) && bean.getStaffId() > 0) {
+                        collegeId = bean.getCollegeId();
+                    }
                 } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                    record = studentService.findByUsernameRelation(users.getUsername());
+                    StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+                    if (Objects.nonNull(studentBean) && studentBean.getStudentId() > 0) {
+                        collegeId = studentBean.getCollegeId();
+                    }
                 }
-                if (record.isPresent()) {
-                    int collegeId = record.get().into(College.class).getCollegeId();
-                    Optional<Record> collegeRoleRecord = collegeRoleService.findByRoleIdRelation(id);
-                    if (collegeRoleRecord.isPresent()) {
-                        RoleBean role = collegeRoleRecord.get().into(RoleBean.class);
+                if (collegeId > 0) {
+                    RoleBean role = roleService.findCollegeRoleByRoleIdRelation(id);
+                    if (Objects.nonNull(role) && StringUtils.isNotBlank(role.getRoleId())) {
                         if (collegeId == role.getCollegeId()) {
                             modelMap.addAttribute("role", role);
                             page = "web/platform/role/role_edit::#page-wrapper";
@@ -186,9 +187,8 @@ public class RoleViewController {
     public String see(@PathVariable("id") String id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        Optional<Record> record = collegeRoleService.findByRoleIdRelation(id);
-        if (record.isPresent()) {
-            RoleBean role = record.get().into(RoleBean.class);
+        RoleBean role = roleService.findCollegeRoleByRoleIdRelation(id);
+        if (Objects.nonNull(role) && StringUtils.isNotBlank(role.getRoleId())) {
             modelMap.addAttribute("role", role);
             page = "web/platform/role/role_see::#page-wrapper";
         } else {

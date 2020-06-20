@@ -12,9 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zone.config.CacheBook;
 import top.zbeboy.zone.domain.tables.daos.TrainingUsersDao;
 import top.zbeboy.zone.domain.tables.pojos.TrainingUsers;
+import top.zbeboy.zone.domain.tables.records.AuthoritiesRecord;
 import top.zbeboy.zone.domain.tables.records.TrainingUsersRecord;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
-import top.zbeboy.zone.service.system.AuthoritiesService;
 import top.zbeboy.zone.service.util.SQLQueryUtil;
 import top.zbeboy.zone.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
@@ -34,9 +34,6 @@ public class TrainingUsersServiceImpl implements TrainingUsersService, Paginatio
 
     @Resource
     private TrainingUsersDao trainingUsersDao;
-
-    @Resource
-    private AuthoritiesService authoritiesService;
 
     @Autowired
     TrainingUsersServiceImpl(DSLContext dslContext) {
@@ -66,12 +63,14 @@ public class TrainingUsersServiceImpl implements TrainingUsersService, Paginatio
     public Result<Record> findStudentNotExistsUsers(String trainingReleaseId, int organizeId) {
         Select<TrainingUsersRecord> select = create.selectFrom(TRAINING_USERS)
                 .where(TRAINING_USERS.STUDENT_ID.eq(STUDENT.STUDENT_ID).and(TRAINING_USERS.TRAINING_RELEASE_ID.eq(trainingReleaseId)));
+        Select<AuthoritiesRecord> existsAuthoritiesSelect = create.selectFrom(AUTHORITIES)
+                .where(AUTHORITIES.USERNAME.eq(USERS.USERNAME));
         return create.select()
                 .from(STUDENT)
                 .leftJoin(USERS)
                 .on(STUDENT.USERNAME.eq(USERS.USERNAME))
                 .where(STUDENT.ORGANIZE_ID.eq(organizeId).andNotExists(select)
-                        .and(USERS.VERIFY_MAILBOX.eq(BooleanUtil.toByte(true))).andExists(authoritiesService.existsAuthoritiesSelect()))
+                        .and(USERS.VERIFY_MAILBOX.eq(BooleanUtil.toByte(true))).andExists(existsAuthoritiesSelect))
                 .fetch();
     }
 

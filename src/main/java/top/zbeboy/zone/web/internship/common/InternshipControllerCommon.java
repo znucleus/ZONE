@@ -6,7 +6,7 @@ import org.jooq.Result;
 import org.springframework.stereotype.Component;
 import top.zbeboy.zone.domain.tables.pojos.Department;
 import top.zbeboy.zone.domain.tables.pojos.Organize;
-import top.zbeboy.zone.service.data.StaffService;
+import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.service.internship.InternshipApplyService;
 import top.zbeboy.zone.service.internship.InternshipReleaseService;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
@@ -39,10 +39,7 @@ public class InternshipControllerCommon {
         Optional<Record> record = internshipReleaseService.findByIdRelation(id);
         if (record.isPresent()) {
             Department department = record.get().into(Department.class);
-            Result<Record> staffRecord = staffService.findNormalByDepartmentIdRelation(department.getDepartmentId());
-            if (staffRecord.isNotEmpty()) {
-                beans = staffRecord.into(StaffBean.class);
-            }
+            beans = staffService.findNormalByDepartmentIdRelation(department.getDepartmentId());
         }
 
         return beans;
