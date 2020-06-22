@@ -4,7 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
-import top.zbeboy.zone.feign.platform.UsersService;
+import top.zbeboy.zbase.feign.platform.UsersService;
 import top.zbeboy.zone.web.system.tip.SystemTipConfig;
 
 import javax.annotation.Resource;

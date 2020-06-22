@@ -8,22 +8,21 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import top.zbeboy.zbase.bean.data.student.StudentBean;
+import top.zbeboy.zbase.bean.training.attend.TrainingAttendBean;
+import top.zbeboy.zbase.bean.training.attend.TrainingAttendUsersBean;
+import top.zbeboy.zbase.bean.training.release.TrainingConfigureBean;
+import top.zbeboy.zbase.bean.training.release.TrainingReleaseBean;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.*;
-import top.zbeboy.zone.feign.data.StudentService;
-import top.zbeboy.zone.feign.platform.UsersService;
-import top.zbeboy.zone.feign.platform.UsersTypeService;
+import top.zbeboy.zbase.feign.data.StudentService;
+import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.export.TrainingAttendSituationExport;
 import top.zbeboy.zone.service.export.TrainingAttendUsersExport;
 import top.zbeboy.zone.service.training.*;
 import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.service.util.UUIDUtil;
-import top.zbeboy.zone.web.bean.data.student.StudentBean;
-import top.zbeboy.zone.web.bean.training.attend.TrainingAttendBean;
-import top.zbeboy.zone.web.bean.training.attend.TrainingAttendUsersBean;
-import top.zbeboy.zone.web.bean.training.release.TrainingConfigureBean;
-import top.zbeboy.zone.web.bean.training.release.TrainingReleaseBean;
 import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
 import top.zbeboy.zone.web.training.common.TrainingControllerCommon;
 import top.zbeboy.zbase.tools.web.util.*;
@@ -68,9 +67,6 @@ public class TrainingAttendRestController {
 
     @Resource
     private TrainingControllerCommon trainingControllerCommon;
-
-    @Resource
-    private UsersService usersService;
 
     @Resource
     private UploadService uploadService;

@@ -4,13 +4,13 @@ import org.jooq.Record;
 import org.jooq.Record2;
 import org.jooq.Result;
 import org.springframework.stereotype.Component;
+import top.zbeboy.zbase.bean.data.staff.StaffBean;
 import top.zbeboy.zbase.domain.tables.pojos.Department;
 import top.zbeboy.zbase.domain.tables.pojos.Organize;
-import top.zbeboy.zone.feign.data.StaffService;
+import top.zbeboy.zbase.feign.data.StaffService;
+import top.zbeboy.zbase.tools.web.plugin.select2.Select2Data;
 import top.zbeboy.zone.service.internship.InternshipApplyService;
 import top.zbeboy.zone.service.internship.InternshipReleaseService;
-import top.zbeboy.zone.web.bean.data.staff.StaffBean;
-import top.zbeboy.zone.web.plugin.select2.Select2Data;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;

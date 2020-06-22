@@ -6,14 +6,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import top.zbeboy.zbase.bean.training.special.TrainingSpecialBean;
+import top.zbeboy.zbase.bean.training.special.TrainingSpecialDocumentBean;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.Files;
-import top.zbeboy.zone.feign.system.FilesService;
+import top.zbeboy.zbase.feign.system.FilesService;
 import top.zbeboy.zone.service.training.TrainingSpecialDocumentService;
 import top.zbeboy.zone.service.training.TrainingSpecialService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
-import top.zbeboy.zone.web.bean.training.special.TrainingSpecialBean;
-import top.zbeboy.zone.web.bean.training.special.TrainingSpecialDocumentBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
 

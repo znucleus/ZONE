@@ -5,8 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.domain.tables.pojos.InternshipType;
+import top.zbeboy.zbase.tools.web.plugin.select2.Select2Data;
 import top.zbeboy.zone.service.internship.InternshipTypeService;
-import top.zbeboy.zone.web.plugin.select2.Select2Data;
 
 import javax.annotation.Resource;
 import java.util.List;

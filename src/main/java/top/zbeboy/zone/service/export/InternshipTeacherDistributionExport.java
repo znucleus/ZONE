@@ -1,8 +1,8 @@
 package top.zbeboy.zone.service.export;
 
 import org.apache.poi.ss.usermodel.Row;
+import top.zbeboy.zbase.bean.internship.distribution.InternshipTeacherDistributionBean;
 import top.zbeboy.zbase.tools.service.util.ExportUtil;
-import top.zbeboy.zone.web.bean.internship.distribution.InternshipTeacherDistributionBean;
 
 import java.util.List;
 

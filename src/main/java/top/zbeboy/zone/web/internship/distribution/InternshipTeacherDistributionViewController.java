@@ -5,10 +5,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import top.zbeboy.zbase.bean.data.student.StudentBean;
 import top.zbeboy.zbase.domain.tables.pojos.InternshipTeacherDistribution;
-import top.zbeboy.zone.feign.data.StudentService;
+import top.zbeboy.zbase.feign.data.StudentService;
 import top.zbeboy.zone.service.internship.InternshipTeacherDistributionService;
-import top.zbeboy.zone.web.bean.data.student.StudentBean;
 import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zbase.domain.tables.pojos.EpidemicRegisterData;
 import top.zbeboy.zbase.domain.tables.pojos.EpidemicRegisterRelease;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
-import top.zbeboy.zone.feign.register.RegisterEpidemicService;
+import top.zbeboy.zbase.feign.register.RegisterEpidemicService;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 import top.zbeboy.zone.web.util.SessionUtil;
 

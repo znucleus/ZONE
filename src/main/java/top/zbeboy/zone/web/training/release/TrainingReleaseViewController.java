@@ -5,14 +5,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import top.zbeboy.zbase.bean.training.release.TrainingAuthoritiesBean;
+import top.zbeboy.zbase.bean.training.release.TrainingConfigureBean;
+import top.zbeboy.zbase.bean.training.release.TrainingReleaseBean;
 import top.zbeboy.zbase.domain.tables.pojos.TrainingRelease;
 import top.zbeboy.zone.service.training.TrainingAuthoritiesService;
 import top.zbeboy.zone.service.training.TrainingConfigureService;
 import top.zbeboy.zone.service.training.TrainingReleaseService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
-import top.zbeboy.zone.web.bean.training.release.TrainingAuthoritiesBean;
-import top.zbeboy.zone.web.bean.training.release.TrainingConfigureBean;
-import top.zbeboy.zone.web.bean.training.release.TrainingReleaseBean;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
 

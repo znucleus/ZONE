@@ -4,8 +4,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import top.zbeboy.zbase.bean.training.report.TrainingReportBean;
 import top.zbeboy.zone.service.training.TrainingReportService;
-import top.zbeboy.zone.web.bean.training.report.TrainingReportBean;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
-import top.zbeboy.zone.feign.attend.AttendDataService;
+import top.zbeboy.zbase.feign.attend.AttendDataService;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zbase.vo.attend.data.AttendDataAddVo;
@@ -17,7 +17,6 @@ import java.util.Map;
 
 @RestController
 public class AttendDataApiController {
-
 
     @Resource
     private AttendDataService attendDataService;

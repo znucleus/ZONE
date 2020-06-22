@@ -17,7 +17,7 @@ import top.zbeboy.zbase.tools.web.util.SpringBootUtil;
 @Import(SpringBootUtil.class)
 @EnableConfigurationProperties(ZoneProperties.class)
 @EnableDiscoveryClient
-@EnableFeignClients
+@EnableFeignClients(basePackages = {"top.zbeboy.zone", "top.zbeboy.zbase"})
 public class Application {
 
     public static void main(String[] args) {

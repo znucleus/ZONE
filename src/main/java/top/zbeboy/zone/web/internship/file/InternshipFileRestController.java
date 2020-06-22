@@ -7,8 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import top.zbeboy.zbase.bean.internship.release.InternshipFileBean;
 import top.zbeboy.zone.service.internship.InternshipFileService;
-import top.zbeboy.zone.web.bean.internship.release.InternshipFileBean;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 
 import javax.annotation.Resource;

@@ -5,7 +5,7 @@ import org.springframework.security.core.Authentication;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.Application;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
-import top.zbeboy.zone.feign.platform.RoleService;
+import top.zbeboy.zbase.feign.platform.RoleService;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;

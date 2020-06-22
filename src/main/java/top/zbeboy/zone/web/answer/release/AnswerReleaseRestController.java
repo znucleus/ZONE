@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import top.zbeboy.zbase.bean.answer.release.AnswerReleaseBean;
 import top.zbeboy.zbase.domain.tables.pojos.AnswerRelease;
 import top.zbeboy.zone.service.answer.AnswerReleaseService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
-import top.zbeboy.zone.web.bean.answer.release.AnswerReleaseBean;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 
 import javax.annotation.Resource;

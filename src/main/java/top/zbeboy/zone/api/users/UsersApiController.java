@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.Files;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
-import top.zbeboy.zone.feign.system.FilesService;
+import top.zbeboy.zbase.feign.system.FilesService;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.SessionUtil;
 

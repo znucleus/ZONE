@@ -1,6 +1,6 @@
 package top.zbeboy.zone.service.training;
 
-import top.zbeboy.zone.web.bean.training.report.TrainingReportBean;
+import top.zbeboy.zbase.bean.training.report.TrainingReportBean;
 
 import javax.servlet.http.HttpServletRequest;
 

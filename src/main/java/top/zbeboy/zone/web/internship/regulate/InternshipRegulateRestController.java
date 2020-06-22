@@ -7,11 +7,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import top.zbeboy.zbase.bean.data.staff.StaffBean;
+import top.zbeboy.zbase.bean.internship.regulate.InternshipRegulateBean;
+import top.zbeboy.zbase.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.*;
-import top.zbeboy.zone.feign.data.StaffService;
-import top.zbeboy.zone.feign.platform.UsersService;
-import top.zbeboy.zone.feign.platform.UsersTypeService;
+import top.zbeboy.zbase.feign.data.StaffService;
+import top.zbeboy.zbase.feign.platform.UsersTypeService;
+import top.zbeboy.zbase.tools.web.plugin.select2.Select2Data;
 import top.zbeboy.zone.service.export.InternshipRegulateExport;
 import top.zbeboy.zone.service.internship.InternshipInfoService;
 import top.zbeboy.zone.service.internship.InternshipRegulateService;
@@ -20,11 +23,7 @@ import top.zbeboy.zone.service.internship.InternshipTeacherDistributionService;
 import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.service.util.UUIDUtil;
-import top.zbeboy.zone.web.bean.data.staff.StaffBean;
-import top.zbeboy.zone.web.bean.internship.regulate.InternshipRegulateBean;
-import top.zbeboy.zone.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
-import top.zbeboy.zone.web.plugin.select2.Select2Data;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.SessionUtil;
@@ -59,9 +58,6 @@ public class InternshipRegulateRestController {
 
     @Resource
     private InternshipInfoService internshipInfoService;
-
-    @Resource
-    private UsersService usersService;
 
     @Resource
     private UsersTypeService usersTypeService;

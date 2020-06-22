@@ -13,12 +13,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.zbeboy.zbase.bean.data.staff.StaffBean;
+import top.zbeboy.zbase.bean.data.student.StudentBean;
+import top.zbeboy.zbase.bean.internship.journal.InternshipJournalBean;
+import top.zbeboy.zbase.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.*;
 import top.zbeboy.zbase.domain.tables.records.InternshipJournalContentRecord;
 import top.zbeboy.zbase.domain.tables.records.InternshipJournalRecord;
-import top.zbeboy.zone.feign.data.StudentService;
-import top.zbeboy.zone.feign.platform.UsersService;
+import top.zbeboy.zbase.feign.data.StudentService;
 import top.zbeboy.zone.service.export.InternshipJournalExport;
 import top.zbeboy.zone.service.internship.*;
 import top.zbeboy.zone.service.upload.UploadService;
@@ -26,10 +29,6 @@ import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.service.util.FilesUtil;
 import top.zbeboy.zbase.tools.service.util.RequestUtil;
 import top.zbeboy.zbase.tools.service.util.UUIDUtil;
-import top.zbeboy.zone.web.bean.data.staff.StaffBean;
-import top.zbeboy.zone.web.bean.data.student.StudentBean;
-import top.zbeboy.zone.web.bean.internship.journal.InternshipJournalBean;
-import top.zbeboy.zone.web.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
 import top.zbeboy.zbase.tools.web.util.*;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
@@ -65,9 +64,6 @@ public class InternshipJournalRestController {
 
     @Resource
     private InternshipJournalContentService internshipJournalContentService;
-
-    @Resource
-    private UsersService usersService;
 
     @Resource
     private StudentService studentService;

@@ -5,17 +5,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import top.zbeboy.zbase.bean.data.organize.OrganizeBean;
+import top.zbeboy.zbase.bean.data.staff.StaffBean;
+import top.zbeboy.zbase.bean.data.student.StudentBean;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.domain.tables.pojos.UsersType;
-import top.zbeboy.zone.feign.data.OrganizeService;
-import top.zbeboy.zone.feign.data.StaffService;
-import top.zbeboy.zone.feign.data.StudentService;
-import top.zbeboy.zone.feign.platform.RoleService;
-import top.zbeboy.zone.feign.platform.UsersTypeService;
-import top.zbeboy.zone.web.bean.data.organize.OrganizeBean;
-import top.zbeboy.zone.web.bean.data.staff.StaffBean;
-import top.zbeboy.zone.web.bean.data.student.StudentBean;
+import top.zbeboy.zbase.feign.data.OrganizeService;
+import top.zbeboy.zbase.feign.data.StaffService;
+import top.zbeboy.zbase.feign.data.StudentService;
+import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 import top.zbeboy.zone.web.util.SessionUtil;
 
@@ -24,9 +23,6 @@ import java.util.Objects;
 
 @Controller
 public class OrganizeViewController {
-
-    @Resource
-    private RoleService roleService;
 
     @Resource
     private UsersTypeService usersTypeService;
@@ -107,7 +103,7 @@ public class OrganizeViewController {
     public String edit(@PathVariable("id") int id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        OrganizeBean organizeBean= organizeService.findByIdRelation(id);
+        OrganizeBean organizeBean = organizeService.findByIdRelation(id);
         if (Objects.nonNull(organizeBean.getOrganizeId()) && organizeBean.getOrganizeId() > 0) {
             if (Objects.nonNull(organizeBean.getStaffId())) {
                 StaffBean bean = staffService.findByIdRelation(organizeBean.getStaffId());

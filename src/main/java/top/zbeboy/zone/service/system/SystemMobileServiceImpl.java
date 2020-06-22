@@ -13,8 +13,8 @@ import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.config.ZoneProperties;
 import top.zbeboy.zbase.domain.tables.pojos.SystemConfigure;
 import top.zbeboy.zbase.domain.tables.pojos.SystemSmsLog;
-import top.zbeboy.zone.feign.system.SystemConfigureService;
-import top.zbeboy.zone.feign.system.SystemSmsLogService;
+import top.zbeboy.zbase.feign.system.SystemConfigureService;
+import top.zbeboy.zbase.feign.system.SystemSmsLogService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.service.util.UUIDUtil;
 

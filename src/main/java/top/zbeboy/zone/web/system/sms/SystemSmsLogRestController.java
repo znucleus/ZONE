@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.zbeboy.zone.feign.system.SystemSmsLogService;
+import top.zbeboy.zbase.feign.system.SystemSmsLogService;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 
 import javax.annotation.Resource;

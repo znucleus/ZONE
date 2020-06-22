@@ -4,9 +4,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import top.zbeboy.zbase.bean.data.college.CollegeBean;
 import top.zbeboy.zbase.domain.tables.pojos.College;
-import top.zbeboy.zone.feign.data.CollegeService;
-import top.zbeboy.zone.web.bean.data.college.CollegeBean;
+import top.zbeboy.zbase.feign.data.CollegeService;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 
 import javax.annotation.Resource;

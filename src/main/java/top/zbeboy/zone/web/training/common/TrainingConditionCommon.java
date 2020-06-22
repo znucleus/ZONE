@@ -4,19 +4,18 @@ import org.apache.commons.lang3.StringUtils;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.springframework.stereotype.Component;
+import top.zbeboy.zbase.bean.data.staff.StaffBean;
+import top.zbeboy.zbase.bean.data.student.StudentBean;
+import top.zbeboy.zbase.bean.training.release.TrainingReleaseBean;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.domain.tables.pojos.UsersType;
 import top.zbeboy.zbase.domain.tables.records.TrainingAuthoritiesRecord;
-import top.zbeboy.zone.feign.data.StaffService;
-import top.zbeboy.zone.feign.data.StudentService;
-import top.zbeboy.zone.feign.platform.RoleService;
-import top.zbeboy.zone.feign.platform.UsersTypeService;
+import top.zbeboy.zbase.feign.data.StaffService;
+import top.zbeboy.zbase.feign.data.StudentService;
+import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.training.TrainingAuthoritiesService;
 import top.zbeboy.zone.service.training.TrainingReleaseService;
-import top.zbeboy.zone.web.bean.data.staff.StaffBean;
-import top.zbeboy.zone.web.bean.data.student.StudentBean;
-import top.zbeboy.zone.web.bean.training.release.TrainingReleaseBean;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
@@ -31,9 +30,6 @@ public class TrainingConditionCommon {
 
     @Resource
     private TrainingAuthoritiesService trainingAuthoritiesService;
-
-    @Resource
-    private RoleService roleService;
 
     @Resource
     private UsersTypeService usersTypeService;

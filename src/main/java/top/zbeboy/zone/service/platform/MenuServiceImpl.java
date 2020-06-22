@@ -4,7 +4,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import top.zbeboy.zbase.config.CacheBook;
 import top.zbeboy.zbase.domain.tables.pojos.Application;
-import top.zbeboy.zone.feign.platform.RoleService;
+import top.zbeboy.zbase.feign.platform.RoleService;
 
 import javax.annotation.Resource;
 import java.util.List;

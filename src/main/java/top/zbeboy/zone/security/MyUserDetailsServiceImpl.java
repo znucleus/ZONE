@@ -11,8 +11,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import top.zbeboy.zbase.domain.tables.pojos.Authorities;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
-import top.zbeboy.zone.feign.platform.AuthorizeService;
-import top.zbeboy.zone.feign.platform.UsersService;
+import top.zbeboy.zbase.feign.platform.AuthorizeService;
+import top.zbeboy.zbase.feign.platform.UsersService;
 import top.zbeboy.zone.web.system.mail.SystemMailConfig;
 import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
 

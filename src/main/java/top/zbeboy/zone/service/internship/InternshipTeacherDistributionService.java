@@ -3,8 +3,8 @@ package top.zbeboy.zone.service.internship;
 import org.jooq.Record;
 import org.jooq.Record2;
 import org.jooq.Result;
+import top.zbeboy.zbase.bean.internship.distribution.InternshipTeacherDistributionBean;
 import top.zbeboy.zbase.domain.tables.pojos.InternshipTeacherDistribution;
-import top.zbeboy.zone.web.bean.internship.distribution.InternshipTeacherDistributionBean;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 
 import java.util.List;

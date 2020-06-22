@@ -1,9 +1,9 @@
 package top.zbeboy.zone.service.export;
 
 import org.apache.poi.ss.usermodel.Row;
+import top.zbeboy.zbase.bean.training.attend.TrainingAttendUsersBean;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.service.util.ExportUtil;
-import top.zbeboy.zone.web.bean.training.attend.TrainingAttendUsersBean;
 
 import java.util.List;
 import java.util.Objects;

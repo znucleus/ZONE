@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
-import top.zbeboy.zone.feign.attend.AttendWxStudentSubscribeService;
+import top.zbeboy.zbase.feign.attend.AttendWxStudentSubscribeService;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zbase.vo.attend.weixin.AttendWxStudentSubscribeAddVo;
