@@ -7,12 +7,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.domain.tables.pojos.PoliticalLandscape;
+import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.data.PoliticalLandscapeFeignService;
 import top.zbeboy.zbase.tools.web.plugin.select2.Select2Data;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zbase.vo.data.politics.PoliticsAddVo;
 import top.zbeboy.zbase.vo.data.politics.PoliticsEditVo;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -53,6 +55,8 @@ public class PoliticsRestController {
         headers.add("politicalLandscapeName");
         headers.add("operator");
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
+        Users users = SessionUtil.getUserFromSession();
+        dataTablesUtil.setUsername(users.getUsername());
         return new ResponseEntity<>(politicalLandscapeFeignService.data(dataTablesUtil), HttpStatus.OK);
     }
 

@@ -7,11 +7,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.domain.tables.pojos.Application;
+import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.system.ApplicationService;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zbase.vo.system.application.ApplicationAddVo;
 import top.zbeboy.zbase.vo.system.application.ApplicationEditVo;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -45,8 +47,9 @@ public class SystemApplicationRestController {
         headers.add("applicationCode");
         headers.add("applicationDataUrlStartWith");
         headers.add("operator");
-
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
+        Users users = SessionUtil.getUserFromSession();
+        dataTablesUtil.setUsername(users.getUsername());
         return new ResponseEntity<>(applicationService.data(dataTablesUtil), HttpStatus.OK);
     }
 

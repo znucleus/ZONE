@@ -116,6 +116,8 @@ public class InternshipRegulateRestController {
         headers.add("createDateStr");
         headers.add("operator");
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
+        Users users = SessionUtil.getUserFromSession();
+        dataTablesUtil.setUsername(users.getUsername());
         Result<Record> records = internshipRegulateService.findAllByPage(dataTablesUtil);
         List<InternshipRegulateBean> beans = new ArrayList<>();
         if (Objects.nonNull(records) && records.isNotEmpty()) {

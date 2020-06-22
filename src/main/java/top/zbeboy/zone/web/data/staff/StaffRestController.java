@@ -192,9 +192,9 @@ public class StaffRestController {
         headers.add("langKey");
         headers.add("joinDate");
         headers.add("operator");
-
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
-
+        Users users = SessionUtil.getUserFromSession();
+        dataTablesUtil.setUsername(users.getUsername());
         return new ResponseEntity<>(staffService.data(dataTablesUtil), HttpStatus.OK);
     }
 

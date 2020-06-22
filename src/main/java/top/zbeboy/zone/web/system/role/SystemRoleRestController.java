@@ -7,10 +7,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.domain.tables.pojos.RoleApplication;
+import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.system.SystemRoleService;
 import top.zbeboy.zbase.tools.web.plugin.treeview.TreeViewData;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +39,8 @@ public class SystemRoleRestController {
         headers.add("roleEnName");
         headers.add("operator");
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
-
+        Users users = SessionUtil.getUserFromSession();
+        dataTablesUtil.setUsername(users.getUsername());
         return new ResponseEntity<>(systemRoleService.data(dataTablesUtil), HttpStatus.OK);
     }
 

@@ -120,6 +120,8 @@ public class InternshipJournalRestController {
         headers.add("createDateStr");
         headers.add("operator");
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
+        Users users = SessionUtil.getUserFromSession();
+        dataTablesUtil.setUsername(users.getUsername());
         Result<Record> records = internshipJournalService.findAllByPage(dataTablesUtil);
         List<InternshipJournalBean> beans = new ArrayList<>();
         if (Objects.nonNull(records) && records.isNotEmpty()) {

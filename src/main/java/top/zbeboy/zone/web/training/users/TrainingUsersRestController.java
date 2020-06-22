@@ -16,6 +16,7 @@ import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.Student;
 import top.zbeboy.zbase.domain.tables.pojos.TrainingRelease;
 import top.zbeboy.zbase.domain.tables.pojos.TrainingUsers;
+import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.domain.tables.records.TrainingUsersRecord;
 import top.zbeboy.zbase.feign.data.StudentService;
 import top.zbeboy.zone.service.export.TrainingUsersExport;
@@ -31,6 +32,7 @@ import top.zbeboy.zbase.tools.web.util.SmallPropsUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.ExportInfo;
 import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -93,6 +95,8 @@ public class TrainingUsersRestController {
         headers.add("createDateStr");
         headers.add("operator");
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
+        Users users = SessionUtil.getUserFromSession();
+        dataTablesUtil.setUsername(users.getUsername());
         Result<Record> records = trainingUsersService.findAllByPage(dataTablesUtil);
         List<TrainingUsersBean> beans = new ArrayList<>();
         if (Objects.nonNull(records) && records.isNotEmpty()) {

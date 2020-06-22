@@ -308,6 +308,8 @@ public class TrainingAttendRestController {
         headers.add("operateUser");
         headers.add("operator");
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
+        Users users = SessionUtil.getUserFromSession();
+        dataTablesUtil.setUsername(users.getUsername());
         Result<Record11<String, String, Byte, String, String, String, String, String, String, String, String>>
                 records = trainingAttendUsersService.findAllByPage(dataTablesUtil);
         List<TrainingAttendUsersBean> beans = new ArrayList<>();
@@ -534,6 +536,8 @@ public class TrainingAttendRestController {
         headers.add("operate");
         headers.add("remark");
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
+        Users users = SessionUtil.getUserFromSession();
+        dataTablesUtil.setUsername(users.getUsername());
         Result<Record>
                 records = trainingAttendSituationService.findAllByPage(dataTablesUtil);
         List<TrainingAttendUsersBean> beans = new ArrayList<>();

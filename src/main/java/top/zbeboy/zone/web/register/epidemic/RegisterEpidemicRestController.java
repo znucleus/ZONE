@@ -130,6 +130,8 @@ public class RegisterEpidemicRestController {
         headers.add("registerDateStr");
         headers.add("operator");
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
+        Users users = SessionUtil.getUserFromSession();
+        dataTablesUtil.setUsername(users.getUsername());
         return new ResponseEntity<>(registerEpidemicService.data(dataTablesUtil), HttpStatus.OK);
     }
 

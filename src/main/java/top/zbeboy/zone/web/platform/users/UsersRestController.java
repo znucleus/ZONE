@@ -519,9 +519,9 @@ public class UsersRestController {
         headers.add("langKey");
         headers.add("joinDate");
         headers.add("operator");
-
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
-
+        Users users = SessionUtil.getUserFromSession();
+        dataTablesUtil.setUsername(users.getUsername());
         return new ResponseEntity<>(usersService.data(dataTablesUtil), HttpStatus.OK);
     }
 

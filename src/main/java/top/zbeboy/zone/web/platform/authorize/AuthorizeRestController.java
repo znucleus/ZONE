@@ -80,6 +80,8 @@ public class AuthorizeRestController {
         headers.add("refuse");
         headers.add("operator");
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
+        Users users = SessionUtil.getUserFromSession();
+        dataTablesUtil.setUsername(users.getUsername());
         return new ResponseEntity<>(authorizeService.data(dataTablesUtil), HttpStatus.OK);
     }
 

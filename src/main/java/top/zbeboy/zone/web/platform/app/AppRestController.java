@@ -46,6 +46,8 @@ public class AppRestController {
         headers.add("createDate");
         headers.add("operator");
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
+        Users users = SessionUtil.getUserFromSession();
+        dataTablesUtil.setUsername(users.getUsername());
         return new ResponseEntity<>(appService.data(dataTablesUtil), HttpStatus.OK);
     }
 

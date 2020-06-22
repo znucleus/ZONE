@@ -44,6 +44,8 @@ public class RoleRestController {
         headers.add("roleEnName");
         headers.add("operator");
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
+        Users users = SessionUtil.getUserFromSession();
+        dataTablesUtil.setUsername(users.getUsername());
         return new ResponseEntity<>(roleService.data(dataTablesUtil), HttpStatus.OK);
     }
 

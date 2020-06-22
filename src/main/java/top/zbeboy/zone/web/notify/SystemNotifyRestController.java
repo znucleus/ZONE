@@ -59,6 +59,8 @@ public class SystemNotifyRestController {
         headers.add("createDateStr");
         headers.add("operator");
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
+        Users users = SessionUtil.getUserFromSession();
+        dataTablesUtil.setUsername(users.getUsername());
         return new ResponseEntity<>(systemNotifyService.data(dataTablesUtil), HttpStatus.OK);
     }
 

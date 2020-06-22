@@ -13,6 +13,7 @@ import top.zbeboy.zbase.bean.internship.statistical.InternshipChangeHistoryBean;
 import top.zbeboy.zbase.bean.internship.statistical.InternshipStatisticalBean;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.InternshipInfo;
+import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.tools.web.plugin.select2.Select2Data;
 import top.zbeboy.zone.service.export.InternshipInfoExport;
 import top.zbeboy.zone.service.internship.*;
@@ -25,6 +26,7 @@ import top.zbeboy.zbase.tools.web.util.BooleanUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.ExportInfo;
 import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -115,6 +117,8 @@ public class InternshipStatisticalRestController {
         headers.add("internshipApplyState");
         headers.add("operator");
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
+        Users users = SessionUtil.getUserFromSession();
+        dataTablesUtil.setUsername(users.getUsername());
         Result<Record> records = internshipStatisticalService.findAllByPage(dataTablesUtil);
         List<InternshipStatisticalBean> beans = new ArrayList<>();
         if (Objects.nonNull(records) && records.isNotEmpty()) {
@@ -223,6 +227,8 @@ public class InternshipStatisticalRestController {
         headers.add("securityEducationAgreement");
         headers.add("parentalConsent");
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
+        Users users = SessionUtil.getUserFromSession();
+        dataTablesUtil.setUsername(users.getUsername());
         Result<Record> records = internshipInfoService.findAllByPage(dataTablesUtil);
         List<InternshipInfo> beans = new ArrayList<>();
         if (Objects.nonNull(records) && records.isNotEmpty()) {
