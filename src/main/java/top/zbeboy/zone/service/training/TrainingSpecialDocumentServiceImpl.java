@@ -9,19 +9,19 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import top.zbeboy.zone.config.CacheBook;
-import top.zbeboy.zone.domain.tables.daos.TrainingSpecialDocumentDao;
-import top.zbeboy.zone.domain.tables.pojos.TrainingSpecialDocument;
+import top.zbeboy.zbase.config.CacheBook;
+import top.zbeboy.zbase.domain.tables.daos.TrainingSpecialDocumentDao;
+import top.zbeboy.zbase.domain.tables.pojos.TrainingSpecialDocument;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
-import top.zbeboy.zone.service.util.SQLQueryUtil;
-import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
+import top.zbeboy.zbase.tools.service.util.SQLQueryUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
 
 import javax.annotation.Resource;
 import java.util.Objects;
 import java.util.Optional;
 
-import static top.zbeboy.zone.domain.Tables.TRAINING_SPECIAL_DOCUMENT;
-import static top.zbeboy.zone.domain.Tables.TRAINING_SPECIAL_DOCUMENT_CONTENT;
+import static top.zbeboy.zbase.domain.Tables.TRAINING_SPECIAL_DOCUMENT;
+import static top.zbeboy.zbase.domain.Tables.TRAINING_SPECIAL_DOCUMENT_CONTENT;
 
 @Service("trainingSpecialDocumentService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

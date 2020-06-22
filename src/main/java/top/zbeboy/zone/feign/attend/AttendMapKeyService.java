@@ -3,7 +3,7 @@ package top.zbeboy.zone.feign.attend;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import top.zbeboy.zone.hystrix.attend.AttendMapKeyHystrixClientFallbackFactory;
-import top.zbeboy.zone.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 
 import java.util.Map;
 

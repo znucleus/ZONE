@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.data.course;
 
-import top.zbeboy.zone.domain.tables.pojos.Course;
+import top.zbeboy.zbase.domain.tables.pojos.Course;
 
 public class CourseBean extends Course {
     private Byte schoolIsDel;

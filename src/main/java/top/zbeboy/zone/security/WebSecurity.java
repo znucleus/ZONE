@@ -2,9 +2,9 @@ package top.zbeboy.zone.security;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.Authentication;
-import top.zbeboy.zone.config.Workbook;
-import top.zbeboy.zone.domain.tables.pojos.Application;
-import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zbase.config.Workbook;
+import top.zbeboy.zbase.domain.tables.pojos.Application;
+import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zone.feign.platform.RoleService;
 import top.zbeboy.zone.web.util.SessionUtil;
 

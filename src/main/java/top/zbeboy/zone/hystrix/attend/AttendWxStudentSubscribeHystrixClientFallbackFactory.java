@@ -2,8 +2,8 @@ package top.zbeboy.zone.hystrix.attend;
 
 import org.springframework.stereotype.Component;
 import top.zbeboy.zone.feign.attend.AttendWxStudentSubscribeService;
-import top.zbeboy.zone.web.util.AjaxUtil;
-import top.zbeboy.zone.web.vo.attend.weixin.AttendWxStudentSubscribeAddVo;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.vo.attend.weixin.AttendWxStudentSubscribeAddVo;
 
 import java.io.IOException;
 import java.util.Map;

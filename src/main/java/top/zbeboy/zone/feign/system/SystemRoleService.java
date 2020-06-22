@@ -5,11 +5,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import top.zbeboy.zone.domain.tables.pojos.RoleApplication;
+import top.zbeboy.zbase.domain.tables.pojos.RoleApplication;
 import top.zbeboy.zone.hystrix.system.SystemRoleHystrixClientFallbackFactory;
 import top.zbeboy.zone.web.plugin.treeview.TreeViewData;
-import top.zbeboy.zone.web.util.AjaxUtil;
-import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 
 import java.util.List;
 import java.util.Map;

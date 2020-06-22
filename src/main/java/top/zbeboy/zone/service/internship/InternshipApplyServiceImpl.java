@@ -7,20 +7,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import top.zbeboy.zone.config.Workbook;
-import top.zbeboy.zone.domain.tables.daos.InternshipApplyDao;
-import top.zbeboy.zone.domain.tables.pojos.InternshipApply;
-import top.zbeboy.zone.domain.tables.pojos.Users;
-import top.zbeboy.zone.domain.tables.pojos.UsersType;
-import top.zbeboy.zone.domain.tables.records.InternshipReleaseRecord;
+import top.zbeboy.zbase.config.Workbook;
+import top.zbeboy.zbase.domain.tables.daos.InternshipApplyDao;
+import top.zbeboy.zbase.domain.tables.pojos.InternshipApply;
+import top.zbeboy.zbase.domain.tables.pojos.Users;
+import top.zbeboy.zbase.domain.tables.pojos.UsersType;
+import top.zbeboy.zbase.domain.tables.records.InternshipReleaseRecord;
 import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
-import top.zbeboy.zone.service.util.SQLQueryUtil;
+import top.zbeboy.zbase.tools.service.util.SQLQueryUtil;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
-import top.zbeboy.zone.web.util.BooleanUtil;
+import top.zbeboy.zbase.tools.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.SessionUtil;
-import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -28,7 +28,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static org.jooq.impl.DSL.now;
-import static top.zbeboy.zone.domain.Tables.*;
+import static top.zbeboy.zbase.domain.Tables.*;
 
 @Service("internshipApplyService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

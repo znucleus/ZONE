@@ -1,7 +1,7 @@
 package top.zbeboy.zone.service.answer;
 
 import org.jooq.Result;
-import top.zbeboy.zone.domain.tables.records.AnswerOptionRecord;
+import top.zbeboy.zbase.domain.tables.records.AnswerOptionRecord;
 
 public interface AnswerOptionService {
 

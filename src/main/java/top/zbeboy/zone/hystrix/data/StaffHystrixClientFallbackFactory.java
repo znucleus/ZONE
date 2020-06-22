@@ -1,14 +1,14 @@
 package top.zbeboy.zone.hystrix.data;
 
 import org.springframework.stereotype.Component;
-import top.zbeboy.zone.domain.tables.pojos.Role;
-import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zbase.domain.tables.pojos.Role;
+import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
-import top.zbeboy.zone.web.util.AjaxUtil;
-import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
-import top.zbeboy.zone.web.vo.data.staff.StaffAddVo;
-import top.zbeboy.zone.web.vo.data.staff.StaffEditVo;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zbase.vo.data.staff.StaffAddVo;
+import top.zbeboy.zbase.vo.data.staff.StaffEditVo;
 
 import java.util.ArrayList;
 import java.util.List;

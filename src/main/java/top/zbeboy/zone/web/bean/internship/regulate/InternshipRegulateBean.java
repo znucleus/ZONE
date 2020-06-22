@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.internship.regulate;
 
-import top.zbeboy.zone.domain.tables.pojos.InternshipRegulate;
+import top.zbeboy.zbase.domain.tables.pojos.InternshipRegulate;
 
 public class InternshipRegulateBean extends InternshipRegulate {
     private String createDateStr;

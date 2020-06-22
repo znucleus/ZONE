@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.feign.system.SystemConfigureService;
-import top.zbeboy.zone.web.util.AjaxUtil;
-import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
-import top.zbeboy.zone.web.vo.system.config.SystemConfigureEditVo;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zbase.vo.system.config.SystemConfigureEditVo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;

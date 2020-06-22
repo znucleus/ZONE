@@ -4,7 +4,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import top.zbeboy.zone.hystrix.attend.AttendWxDeviceHystrixClientFallbackFactory;
-import top.zbeboy.zone.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 
 import java.util.Map;
 

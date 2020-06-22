@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.platform.authorize;
 
-import top.zbeboy.zone.domain.tables.pojos.RoleApply;
+import top.zbeboy.zbase.domain.tables.pojos.RoleApply;
 
 public class RoleApplyBean extends RoleApply {
     private String authorizeTypeName;

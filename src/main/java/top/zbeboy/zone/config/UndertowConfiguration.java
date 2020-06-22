@@ -4,6 +4,7 @@ import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.autoconfigure.web.servlet.UndertowServletWebServerFactoryCustomizer;
 import org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory;
 import org.springframework.stereotype.Component;
+import top.zbeboy.zbase.config.ZoneProperties;
 
 import javax.annotation.Resource;
 import java.io.File;

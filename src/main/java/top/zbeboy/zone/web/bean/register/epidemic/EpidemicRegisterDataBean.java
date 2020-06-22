@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.register.epidemic;
 
-import top.zbeboy.zone.domain.tables.pojos.EpidemicRegisterData;
+import top.zbeboy.zbase.domain.tables.pojos.EpidemicRegisterData;
 
 public class EpidemicRegisterDataBean extends EpidemicRegisterData {
     private String channelName;

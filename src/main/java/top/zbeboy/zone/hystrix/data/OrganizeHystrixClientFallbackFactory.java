@@ -1,14 +1,14 @@
 package top.zbeboy.zone.hystrix.data;
 
 import org.springframework.stereotype.Component;
-import top.zbeboy.zone.domain.tables.pojos.Organize;
+import top.zbeboy.zbase.domain.tables.pojos.Organize;
 import top.zbeboy.zone.feign.data.OrganizeService;
 import top.zbeboy.zone.web.bean.data.organize.OrganizeBean;
-import top.zbeboy.zone.web.util.AjaxUtil;
-import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
-import top.zbeboy.zone.web.vo.data.organize.OrganizeAddVo;
-import top.zbeboy.zone.web.vo.data.organize.OrganizeEditVo;
-import top.zbeboy.zone.web.vo.data.organize.OrganizeSearchVo;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zbase.vo.data.organize.OrganizeAddVo;
+import top.zbeboy.zbase.vo.data.organize.OrganizeEditVo;
+import top.zbeboy.zbase.vo.data.organize.OrganizeSearchVo;
 
 import java.util.ArrayList;
 import java.util.List;

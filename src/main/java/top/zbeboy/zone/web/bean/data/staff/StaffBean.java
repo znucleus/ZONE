@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.data.staff;
 
-import top.zbeboy.zone.domain.tables.pojos.Staff;
+import top.zbeboy.zbase.domain.tables.pojos.Staff;
 
 import java.sql.Date;
 

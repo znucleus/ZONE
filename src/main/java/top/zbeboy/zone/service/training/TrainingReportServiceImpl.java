@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import top.zbeboy.zone.config.Workbook;
-import top.zbeboy.zone.service.util.RequestUtil;
+import top.zbeboy.zbase.config.Workbook;
+import top.zbeboy.zbase.tools.service.util.RequestUtil;
 import top.zbeboy.zone.web.bean.training.report.TrainingReportBean;
 
 import javax.servlet.http.HttpServletRequest;

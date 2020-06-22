@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.notify;
 
-import top.zbeboy.zone.domain.tables.pojos.UserNotify;
+import top.zbeboy.zbase.domain.tables.pojos.UserNotify;
 
 public class UserNotifyBean extends UserNotify {
     private String createDateStr;

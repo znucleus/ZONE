@@ -2,12 +2,12 @@ package top.zbeboy.zone.feign.system;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
-import top.zbeboy.zone.domain.tables.pojos.Application;
+import top.zbeboy.zbase.domain.tables.pojos.Application;
 import top.zbeboy.zone.hystrix.system.ApplicationHystrixClientFallbackFactory;
-import top.zbeboy.zone.web.util.AjaxUtil;
-import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
-import top.zbeboy.zone.web.vo.system.application.ApplicationAddVo;
-import top.zbeboy.zone.web.vo.system.application.ApplicationEditVo;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zbase.vo.system.application.ApplicationAddVo;
+import top.zbeboy.zbase.vo.system.application.ApplicationEditVo;
 
 import java.util.List;
 import java.util.Map;

@@ -1,14 +1,14 @@
 package top.zbeboy.zone.hystrix.data;
 
 import org.springframework.stereotype.Component;
-import top.zbeboy.zone.domain.tables.pojos.Course;
+import top.zbeboy.zbase.domain.tables.pojos.Course;
 import top.zbeboy.zone.feign.data.CourseService;
 import top.zbeboy.zone.web.bean.data.course.CourseBean;
-import top.zbeboy.zone.web.util.AjaxUtil;
-import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
-import top.zbeboy.zone.web.vo.data.course.CourseAddVo;
-import top.zbeboy.zone.web.vo.data.course.CourseEditVo;
-import top.zbeboy.zone.web.vo.data.course.CourseSearchVo;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zbase.vo.data.course.CourseAddVo;
+import top.zbeboy.zbase.vo.data.course.CourseEditVo;
+import top.zbeboy.zbase.vo.data.course.CourseSearchVo;
 
 import java.util.ArrayList;
 import java.util.List;

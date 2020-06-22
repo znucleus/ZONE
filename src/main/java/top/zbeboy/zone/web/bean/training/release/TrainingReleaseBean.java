@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.training.release;
 
-import top.zbeboy.zone.domain.tables.pojos.TrainingRelease;
+import top.zbeboy.zbase.domain.tables.pojos.TrainingRelease;
 
 public class TrainingReleaseBean extends TrainingRelease {
     private String organizeName;

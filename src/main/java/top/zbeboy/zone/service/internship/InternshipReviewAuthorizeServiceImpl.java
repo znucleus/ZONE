@@ -7,17 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import top.zbeboy.zone.domain.tables.daos.InternshipReviewAuthorizeDao;
-import top.zbeboy.zone.domain.tables.pojos.InternshipReviewAuthorize;
+import top.zbeboy.zbase.domain.tables.daos.InternshipReviewAuthorizeDao;
+import top.zbeboy.zbase.domain.tables.pojos.InternshipReviewAuthorize;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
-import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
 
 import javax.annotation.Resource;
 import java.util.Objects;
 import java.util.Optional;
 
-import static top.zbeboy.zone.domain.Tables.INTERNSHIP_REVIEW_AUTHORIZE;
-import static top.zbeboy.zone.domain.Tables.USERS;
+import static top.zbeboy.zbase.domain.Tables.INTERNSHIP_REVIEW_AUTHORIZE;
+import static top.zbeboy.zbase.domain.Tables.USERS;
 
 @Service("internshipReviewAuthorizeService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

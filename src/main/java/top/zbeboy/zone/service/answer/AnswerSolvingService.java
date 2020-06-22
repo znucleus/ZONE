@@ -1,6 +1,6 @@
 package top.zbeboy.zone.service.answer;
 
-import top.zbeboy.zone.domain.tables.pojos.AnswerSolving;
+import top.zbeboy.zbase.domain.tables.pojos.AnswerSolving;
 
 import java.util.List;
 

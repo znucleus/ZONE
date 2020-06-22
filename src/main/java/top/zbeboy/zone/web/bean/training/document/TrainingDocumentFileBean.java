@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.training.document;
 
-import top.zbeboy.zone.domain.tables.pojos.TrainingDocumentFile;
+import top.zbeboy.zbase.domain.tables.pojos.TrainingDocumentFile;
 
 public class TrainingDocumentFileBean extends TrainingDocumentFile {
     private String createDateStr;

@@ -4,9 +4,9 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import top.zbeboy.zone.config.CacheBook;
-import top.zbeboy.zone.domain.tables.daos.InternshipTypeDao;
-import top.zbeboy.zone.domain.tables.pojos.InternshipType;
+import top.zbeboy.zbase.config.CacheBook;
+import top.zbeboy.zbase.domain.tables.daos.InternshipTypeDao;
+import top.zbeboy.zbase.domain.tables.pojos.InternshipType;
 
 import javax.annotation.Resource;
 import java.util.List;

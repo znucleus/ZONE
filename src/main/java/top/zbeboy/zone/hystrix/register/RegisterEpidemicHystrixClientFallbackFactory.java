@@ -1,17 +1,17 @@
 package top.zbeboy.zone.hystrix.register;
 
 import org.springframework.stereotype.Component;
-import top.zbeboy.zone.domain.tables.pojos.EpidemicRegisterData;
-import top.zbeboy.zone.domain.tables.pojos.EpidemicRegisterRelease;
+import top.zbeboy.zbase.domain.tables.pojos.EpidemicRegisterData;
+import top.zbeboy.zbase.domain.tables.pojos.EpidemicRegisterRelease;
 import top.zbeboy.zone.feign.register.RegisterEpidemicService;
 import top.zbeboy.zone.web.bean.register.epidemic.EpidemicRegisterDataBean;
 import top.zbeboy.zone.web.bean.register.epidemic.EpidemicRegisterReleaseBean;
-import top.zbeboy.zone.web.util.AjaxUtil;
-import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
-import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
-import top.zbeboy.zone.web.vo.register.epidemic.EpidemicRegisterDataAddVo;
-import top.zbeboy.zone.web.vo.register.epidemic.EpidemicRegisterReleaseAddVo;
-import top.zbeboy.zone.web.vo.register.epidemic.EpidemicRegisterReleaseEditVo;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
+import top.zbeboy.zbase.vo.register.epidemic.EpidemicRegisterDataAddVo;
+import top.zbeboy.zbase.vo.register.epidemic.EpidemicRegisterReleaseAddVo;
+import top.zbeboy.zbase.vo.register.epidemic.EpidemicRegisterReleaseEditVo;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zone.service.internship.InternshipFileService;
 import top.zbeboy.zone.web.bean.internship.release.InternshipFileBean;
-import top.zbeboy.zone.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
 package top.zbeboy.zone.service.answer;
 
-import top.zbeboy.zone.domain.tables.pojos.AnswerRelease;
+import top.zbeboy.zbase.domain.tables.pojos.AnswerRelease;
 
 public interface AnswerReleaseService {
 

@@ -1,12 +1,12 @@
 package top.zbeboy.zone.hystrix.data;
 
 import org.springframework.stereotype.Component;
-import top.zbeboy.zone.domain.tables.pojos.PoliticalLandscape;
+import top.zbeboy.zbase.domain.tables.pojos.PoliticalLandscape;
 import top.zbeboy.zone.feign.data.PoliticalLandscapeFeignService;
-import top.zbeboy.zone.web.util.AjaxUtil;
-import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
-import top.zbeboy.zone.web.vo.data.politics.PoliticsAddVo;
-import top.zbeboy.zone.web.vo.data.politics.PoliticsEditVo;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zbase.vo.data.politics.PoliticsAddVo;
+import top.zbeboy.zbase.vo.data.politics.PoliticsEditVo;
 
 import java.util.ArrayList;
 import java.util.List;

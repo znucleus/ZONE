@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.internship.release;
 
-import top.zbeboy.zone.domain.tables.pojos.InternshipRelease;
+import top.zbeboy.zbase.domain.tables.pojos.InternshipRelease;
 
 public class InternshipReleaseBean extends InternshipRelease {
     private String scienceName;

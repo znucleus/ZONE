@@ -9,8 +9,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.util.ObjectUtils;
-import top.zbeboy.zone.config.Workbook;
-import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zbase.config.Workbook;
+import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zone.security.MyUserImpl;
 
 import java.security.Principal;

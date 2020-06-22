@@ -1,7 +1,7 @@
 package top.zbeboy.zone.hystrix.data;
 
 import org.springframework.stereotype.Component;
-import top.zbeboy.zone.domain.tables.pojos.Channel;
+import top.zbeboy.zbase.domain.tables.pojos.Channel;
 import top.zbeboy.zone.feign.data.ChannelService;
 
 import java.util.ArrayList;

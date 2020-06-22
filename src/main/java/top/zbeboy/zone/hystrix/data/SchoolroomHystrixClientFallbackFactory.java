@@ -1,14 +1,14 @@
 package top.zbeboy.zone.hystrix.data;
 
 import org.springframework.stereotype.Component;
-import top.zbeboy.zone.domain.tables.pojos.Schoolroom;
+import top.zbeboy.zbase.domain.tables.pojos.Schoolroom;
 import top.zbeboy.zone.feign.data.SchoolroomService;
 import top.zbeboy.zone.web.bean.data.schoolroom.SchoolroomBean;
-import top.zbeboy.zone.web.util.AjaxUtil;
-import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
-import top.zbeboy.zone.web.vo.data.schoolroom.SchoolroomAddVo;
-import top.zbeboy.zone.web.vo.data.schoolroom.SchoolroomEditVo;
-import top.zbeboy.zone.web.vo.data.schoolroom.SchoolroomSearchVo;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zbase.vo.data.schoolroom.SchoolroomAddVo;
+import top.zbeboy.zbase.vo.data.schoolroom.SchoolroomEditVo;
+import top.zbeboy.zbase.vo.data.schoolroom.SchoolroomSearchVo;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,11 +1,11 @@
 package top.zbeboy.zone.hystrix.system;
 
 import org.springframework.stereotype.Component;
-import top.zbeboy.zone.domain.tables.pojos.RoleApplication;
+import top.zbeboy.zbase.domain.tables.pojos.RoleApplication;
 import top.zbeboy.zone.feign.system.SystemRoleService;
 import top.zbeboy.zone.web.plugin.treeview.TreeViewData;
-import top.zbeboy.zone.web.util.AjaxUtil;
-import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 
 import java.util.ArrayList;
 import java.util.List;

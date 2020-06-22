@@ -10,12 +10,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
-import top.zbeboy.zone.service.util.DateTimeUtil;
-import top.zbeboy.zone.web.util.pagination.TableSawUtil;
+import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.TableSawUtil;
 
 import java.util.Objects;
 
-import static top.zbeboy.zone.domain.Tables.*;
+import static top.zbeboy.zbase.domain.Tables.*;
 
 @Service("trainingAttendMyService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

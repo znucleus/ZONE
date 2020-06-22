@@ -2,7 +2,7 @@ package top.zbeboy.zone.service.training;
 
 import org.jooq.Record;
 import org.jooq.Result;
-import top.zbeboy.zone.domain.tables.pojos.TrainingConfigure;
+import top.zbeboy.zbase.domain.tables.pojos.TrainingConfigure;
 
 import java.util.Optional;
 

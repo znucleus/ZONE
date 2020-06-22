@@ -9,14 +9,14 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import top.zbeboy.zone.config.CacheBook;
-import top.zbeboy.zone.domain.tables.daos.InternshipFileDao;
-import top.zbeboy.zone.domain.tables.pojos.InternshipFile;
+import top.zbeboy.zbase.config.CacheBook;
+import top.zbeboy.zbase.domain.tables.daos.InternshipFileDao;
+import top.zbeboy.zbase.domain.tables.pojos.InternshipFile;
 
 import javax.annotation.Resource;
 
-import static top.zbeboy.zone.domain.Tables.FILES;
-import static top.zbeboy.zone.domain.Tables.INTERNSHIP_FILE;
+import static top.zbeboy.zbase.domain.Tables.FILES;
+import static top.zbeboy.zbase.domain.Tables.INTERNSHIP_FILE;
 
 @Service("internshipFileService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

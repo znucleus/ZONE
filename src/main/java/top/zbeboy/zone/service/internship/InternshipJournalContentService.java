@@ -1,7 +1,7 @@
 package top.zbeboy.zone.service.internship;
 
-import top.zbeboy.zone.domain.tables.pojos.InternshipJournalContent;
-import top.zbeboy.zone.domain.tables.records.InternshipJournalContentRecord;
+import top.zbeboy.zbase.domain.tables.pojos.InternshipJournalContent;
+import top.zbeboy.zbase.domain.tables.records.InternshipJournalContentRecord;
 
 import java.util.Optional;
 

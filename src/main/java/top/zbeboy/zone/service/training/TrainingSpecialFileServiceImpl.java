@@ -11,19 +11,19 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import top.zbeboy.zone.config.CacheBook;
-import top.zbeboy.zone.domain.tables.daos.TrainingSpecialFileDao;
-import top.zbeboy.zone.domain.tables.pojos.TrainingSpecialFile;
-import top.zbeboy.zone.service.util.SQLQueryUtil;
-import top.zbeboy.zone.web.vo.training.special.TrainingSpecialFileSearchVo;
+import top.zbeboy.zbase.config.CacheBook;
+import top.zbeboy.zbase.domain.tables.daos.TrainingSpecialFileDao;
+import top.zbeboy.zbase.domain.tables.pojos.TrainingSpecialFile;
+import top.zbeboy.zbase.tools.service.util.SQLQueryUtil;
+import top.zbeboy.zbase.vo.training.special.TrainingSpecialFileSearchVo;
 
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static top.zbeboy.zone.domain.Tables.FILES;
-import static top.zbeboy.zone.domain.Tables.TRAINING_SPECIAL_FILE;
+import static top.zbeboy.zbase.domain.Tables.FILES;
+import static top.zbeboy.zbase.domain.Tables.TRAINING_SPECIAL_FILE;
 
 @Service("trainingSpecialFileService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.register.epidemic;
 
-import top.zbeboy.zone.domain.tables.pojos.EpidemicRegisterRelease;
+import top.zbeboy.zbase.domain.tables.pojos.EpidemicRegisterRelease;
 
 public class EpidemicRegisterReleaseBean extends EpidemicRegisterRelease {
     private String releaseTimeStr;

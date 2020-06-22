@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.internship.distribution;
 
-import top.zbeboy.zone.domain.tables.pojos.InternshipTeacherDistribution;
+import top.zbeboy.zbase.domain.tables.pojos.InternshipTeacherDistribution;
 
 public class InternshipTeacherDistributionBean extends InternshipTeacherDistribution {
     private String internshipTitle;

@@ -1,6 +1,6 @@
 package top.zbeboy.zone.service.training;
 
-import top.zbeboy.zone.domain.tables.pojos.TrainingSpecialDocumentContent;
+import top.zbeboy.zbase.domain.tables.pojos.TrainingSpecialDocumentContent;
 
 public interface TrainingSpecialDocumentContentService {
 

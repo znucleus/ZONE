@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.training.special;
 
-import top.zbeboy.zone.domain.tables.pojos.TrainingSpecialFileType;
+import top.zbeboy.zbase.domain.tables.pojos.TrainingSpecialFileType;
 
 public class TrainingSpecialFileTypeBean extends TrainingSpecialFileType {
     private Byte canOperator;

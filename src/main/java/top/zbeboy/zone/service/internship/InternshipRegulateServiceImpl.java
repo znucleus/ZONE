@@ -8,25 +8,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import top.zbeboy.zone.config.Workbook;
-import top.zbeboy.zone.domain.tables.daos.InternshipRegulateDao;
-import top.zbeboy.zone.domain.tables.pojos.InternshipRegulate;
-import top.zbeboy.zone.domain.tables.pojos.Users;
-import top.zbeboy.zone.domain.tables.pojos.UsersType;
+import top.zbeboy.zbase.config.Workbook;
+import top.zbeboy.zbase.domain.tables.daos.InternshipRegulateDao;
+import top.zbeboy.zbase.domain.tables.pojos.InternshipRegulate;
+import top.zbeboy.zbase.domain.tables.pojos.Users;
+import top.zbeboy.zbase.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
-import top.zbeboy.zone.service.util.DateTimeUtil;
-import top.zbeboy.zone.service.util.SQLQueryUtil;
+import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
+import top.zbeboy.zbase.tools.service.util.SQLQueryUtil;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
 import top.zbeboy.zone.web.util.SessionUtil;
-import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
 import java.util.Objects;
 
-import static top.zbeboy.zone.domain.Tables.INTERNSHIP_REGULATE;
+import static top.zbeboy.zbase.domain.Tables.INTERNSHIP_REGULATE;
 
 @Service("internshipRegulateService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

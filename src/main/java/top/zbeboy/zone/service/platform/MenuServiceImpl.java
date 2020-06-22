@@ -2,8 +2,8 @@ package top.zbeboy.zone.service.platform;
 
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import top.zbeboy.zone.config.CacheBook;
-import top.zbeboy.zone.domain.tables.pojos.Application;
+import top.zbeboy.zbase.config.CacheBook;
+import top.zbeboy.zbase.domain.tables.pojos.Application;
 import top.zbeboy.zone.feign.platform.RoleService;
 
 import javax.annotation.Resource;

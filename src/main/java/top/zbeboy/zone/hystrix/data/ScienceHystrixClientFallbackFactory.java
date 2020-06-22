@@ -1,14 +1,14 @@
 package top.zbeboy.zone.hystrix.data;
 
 import org.springframework.stereotype.Component;
-import top.zbeboy.zone.domain.tables.pojos.Science;
+import top.zbeboy.zbase.domain.tables.pojos.Science;
 import top.zbeboy.zone.feign.data.ScienceService;
 import top.zbeboy.zone.web.bean.data.science.ScienceBean;
-import top.zbeboy.zone.web.util.AjaxUtil;
-import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
-import top.zbeboy.zone.web.vo.data.science.ScienceAddVo;
-import top.zbeboy.zone.web.vo.data.science.ScienceEditVo;
-import top.zbeboy.zone.web.vo.data.science.ScienceSearchVo;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zbase.vo.data.science.ScienceAddVo;
+import top.zbeboy.zbase.vo.data.science.ScienceEditVo;
+import top.zbeboy.zbase.vo.data.science.ScienceSearchVo;
 
 import java.util.ArrayList;
 import java.util.List;

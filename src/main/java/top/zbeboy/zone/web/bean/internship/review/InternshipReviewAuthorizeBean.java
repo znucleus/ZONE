@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.internship.review;
 
-import top.zbeboy.zone.domain.tables.pojos.InternshipReviewAuthorize;
+import top.zbeboy.zbase.domain.tables.pojos.InternshipReviewAuthorize;
 
 public class InternshipReviewAuthorizeBean extends InternshipReviewAuthorize {
     private String realName;

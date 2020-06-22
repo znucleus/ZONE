@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
-import top.zbeboy.zone.config.Workbook;
+import top.zbeboy.zbase.config.Workbook;
 
 import javax.inject.Inject;
 import java.util.Arrays;

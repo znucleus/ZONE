@@ -4,10 +4,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.zbeboy.zone.domain.tables.pojos.Grade;
+import top.zbeboy.zbase.domain.tables.pojos.Grade;
 import top.zbeboy.zone.feign.data.GradeService;
 import top.zbeboy.zone.web.plugin.select2.Select2Data;
-import top.zbeboy.zone.web.vo.data.grade.GradeSearchVo;
+import top.zbeboy.zbase.vo.data.grade.GradeSearchVo;
 
 import javax.annotation.Resource;
 import java.util.List;

@@ -8,18 +8,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import top.zbeboy.zone.domain.tables.daos.TrainingAttendUsersDao;
-import top.zbeboy.zone.domain.tables.pojos.TrainingAttendUsers;
-import top.zbeboy.zone.domain.tables.records.TrainingAttendUsersRecord;
+import top.zbeboy.zbase.domain.tables.daos.TrainingAttendUsersDao;
+import top.zbeboy.zbase.domain.tables.pojos.TrainingAttendUsers;
+import top.zbeboy.zbase.domain.tables.records.TrainingAttendUsersRecord;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
-import top.zbeboy.zone.service.util.SQLQueryUtil;
-import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zbase.tools.service.util.SQLQueryUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Objects;
 
-import static top.zbeboy.zone.domain.Tables.*;
+import static top.zbeboy.zbase.domain.Tables.*;
 
 @Service("trainingAttendUsersService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

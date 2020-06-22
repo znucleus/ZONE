@@ -1,7 +1,7 @@
 package top.zbeboy.zone.web.bean.answer.subject;
 
-import top.zbeboy.zone.domain.tables.pojos.AnswerOption;
-import top.zbeboy.zone.domain.tables.pojos.AnswerSubject;
+import top.zbeboy.zbase.domain.tables.pojos.AnswerOption;
+import top.zbeboy.zbase.domain.tables.pojos.AnswerSubject;
 
 import java.util.List;
 

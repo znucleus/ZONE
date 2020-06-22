@@ -4,11 +4,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zone.feign.data.StaffService;
 import top.zbeboy.zone.feign.platform.UsersService;
 import top.zbeboy.zone.web.bean.data.staff.StaffBean;
-import top.zbeboy.zone.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;

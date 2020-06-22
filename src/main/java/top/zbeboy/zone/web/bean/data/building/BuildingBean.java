@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.data.building;
 
-import top.zbeboy.zone.domain.tables.pojos.Building;
+import top.zbeboy.zbase.domain.tables.pojos.Building;
 
 public class BuildingBean extends Building {
     private Byte schoolIsDel;

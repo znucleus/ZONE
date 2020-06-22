@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.system.log;
 
-import top.zbeboy.zone.domain.tables.pojos.SystemOperatorLog;
+import top.zbeboy.zbase.domain.tables.pojos.SystemOperatorLog;
 
 public class SystemOperatorLogBean extends SystemOperatorLog {
 

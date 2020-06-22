@@ -3,8 +3,8 @@ package top.zbeboy.zone.hystrix.attend;
 import org.springframework.stereotype.Component;
 import top.zbeboy.zone.feign.attend.AttendUsersService;
 import top.zbeboy.zone.web.bean.attend.AttendUsersBean;
-import top.zbeboy.zone.web.util.AjaxUtil;
-import top.zbeboy.zone.web.vo.attend.users.AttendUsersAddVo;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.vo.attend.users.AttendUsersAddVo;
 
 import java.util.Map;
 

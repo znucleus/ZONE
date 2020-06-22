@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.platform.role;
 
-import top.zbeboy.zone.domain.tables.pojos.Role;
+import top.zbeboy.zbase.domain.tables.pojos.Role;
 
 public class RoleBean extends Role {
     private String collegeName;

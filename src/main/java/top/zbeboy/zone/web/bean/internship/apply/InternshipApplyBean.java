@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.internship.apply;
 
-import top.zbeboy.zone.domain.tables.pojos.InternshipApply;
+import top.zbeboy.zbase.domain.tables.pojos.InternshipApply;
 
 import java.sql.Timestamp;
 

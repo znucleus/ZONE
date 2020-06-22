@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.answer.release;
 
-import top.zbeboy.zone.domain.tables.pojos.AnswerRelease;
+import top.zbeboy.zbase.domain.tables.pojos.AnswerRelease;
 
 public class AnswerReleaseBean extends AnswerRelease {
     private String startTimeStr;

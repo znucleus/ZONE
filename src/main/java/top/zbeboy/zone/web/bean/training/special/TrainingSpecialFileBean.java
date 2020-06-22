@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.training.special;
 
-import top.zbeboy.zone.domain.tables.pojos.TrainingSpecialFile;
+import top.zbeboy.zbase.domain.tables.pojos.TrainingSpecialFile;
 
 public class TrainingSpecialFileBean extends TrainingSpecialFile {
     private String originalFileName;

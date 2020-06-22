@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.register.leaver;
 
-import top.zbeboy.zone.domain.tables.pojos.LeaverRegisterData;
+import top.zbeboy.zbase.domain.tables.pojos.LeaverRegisterData;
 
 import java.util.List;
 

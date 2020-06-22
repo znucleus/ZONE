@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.training.users;
 
-import top.zbeboy.zone.domain.tables.pojos.TrainingUsers;
+import top.zbeboy.zbase.domain.tables.pojos.TrainingUsers;
 
 public class TrainingUsersBean extends TrainingUsers {
     private String realName;

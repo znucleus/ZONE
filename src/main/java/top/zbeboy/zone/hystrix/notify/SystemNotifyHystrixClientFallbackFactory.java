@@ -1,13 +1,13 @@
 package top.zbeboy.zone.hystrix.notify;
 
 import org.springframework.stereotype.Component;
-import top.zbeboy.zone.domain.tables.pojos.SystemNotify;
+import top.zbeboy.zbase.domain.tables.pojos.SystemNotify;
 import top.zbeboy.zone.feign.notify.SystemNotifyService;
 import top.zbeboy.zone.web.bean.notify.SystemNotifyBean;
-import top.zbeboy.zone.web.util.AjaxUtil;
-import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
-import top.zbeboy.zone.web.vo.system.notify.SystemNotifyAddVo;
-import top.zbeboy.zone.web.vo.system.notify.SystemNotifyEditVo;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zbase.vo.system.notify.SystemNotifyAddVo;
+import top.zbeboy.zbase.vo.system.notify.SystemNotifyEditVo;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,6 +1,6 @@
 package top.zbeboy.zone.service.internship;
 
-import top.zbeboy.zone.domain.tables.pojos.InternshipType;
+import top.zbeboy.zbase.domain.tables.pojos.InternshipType;
 
 import java.util.List;
 

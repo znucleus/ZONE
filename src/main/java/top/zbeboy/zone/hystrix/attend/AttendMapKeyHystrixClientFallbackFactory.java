@@ -2,7 +2,7 @@ package top.zbeboy.zone.hystrix.attend;
 
 import org.springframework.stereotype.Component;
 import top.zbeboy.zone.feign.attend.AttendMapKeyService;
-import top.zbeboy.zone.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 
 import java.util.Map;
 

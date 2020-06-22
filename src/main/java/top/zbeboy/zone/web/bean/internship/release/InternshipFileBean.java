@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.internship.release;
 
-import top.zbeboy.zone.domain.tables.pojos.InternshipFile;
+import top.zbeboy.zbase.domain.tables.pojos.InternshipFile;
 
 public class InternshipFileBean extends InternshipFile {
     private Long fileSize;

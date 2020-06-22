@@ -1,7 +1,7 @@
 package top.zbeboy.zone.test;
 
 import org.junit.Test;
-import top.zbeboy.zone.service.util.UUIDUtil;
+import top.zbeboy.zbase.tools.service.util.UUIDUtil;
 
 public class TestUuid {
 

@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.data.department;
 
-import top.zbeboy.zone.domain.tables.pojos.Department;
+import top.zbeboy.zbase.domain.tables.pojos.Department;
 
 public class DepartmentBean extends Department {
     private Byte schoolIsDel;

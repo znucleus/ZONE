@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.training.release;
 
-import top.zbeboy.zone.domain.tables.pojos.TrainingConfigure;
+import top.zbeboy.zbase.domain.tables.pojos.TrainingConfigure;
 
 public class TrainingConfigureBean extends TrainingConfigure {
     private String buildingCode;

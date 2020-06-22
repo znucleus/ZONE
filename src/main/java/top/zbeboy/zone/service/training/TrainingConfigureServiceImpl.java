@@ -9,15 +9,15 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import top.zbeboy.zone.config.CacheBook;
-import top.zbeboy.zone.domain.tables.daos.TrainingConfigureDao;
-import top.zbeboy.zone.domain.tables.pojos.TrainingConfigure;
+import top.zbeboy.zbase.config.CacheBook;
+import top.zbeboy.zbase.domain.tables.daos.TrainingConfigureDao;
+import top.zbeboy.zbase.domain.tables.pojos.TrainingConfigure;
 
 import javax.annotation.Resource;
 import java.util.Optional;
 
 import static org.jooq.impl.DSL.currentDate;
-import static top.zbeboy.zone.domain.Tables.*;
+import static top.zbeboy.zbase.domain.Tables.*;
 
 @Service("trainingConfigureService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

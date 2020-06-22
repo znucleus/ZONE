@@ -2,13 +2,13 @@ package top.zbeboy.zone.feign.platform;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
-import top.zbeboy.zone.domain.tables.pojos.OauthClientUsers;
+import top.zbeboy.zbase.domain.tables.pojos.OauthClientUsers;
 import top.zbeboy.zone.hystrix.platform.AppHystrixClientFallbackFactory;
 import top.zbeboy.zone.web.bean.platform.app.OauthClientUsersBean;
-import top.zbeboy.zone.web.util.AjaxUtil;
-import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
-import top.zbeboy.zone.web.vo.platform.app.AppAddVo;
-import top.zbeboy.zone.web.vo.platform.app.AppEditVo;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zbase.vo.platform.app.AppAddVo;
+import top.zbeboy.zbase.vo.platform.app.AppEditVo;
 
 import java.util.Map;
 

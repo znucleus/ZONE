@@ -9,17 +9,17 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import top.zbeboy.zone.config.CacheBook;
-import top.zbeboy.zone.domain.tables.daos.TrainingAuthoritiesDao;
-import top.zbeboy.zone.domain.tables.pojos.TrainingAuthorities;
-import top.zbeboy.zone.domain.tables.records.TrainingAuthoritiesRecord;
+import top.zbeboy.zbase.config.CacheBook;
+import top.zbeboy.zbase.domain.tables.daos.TrainingAuthoritiesDao;
+import top.zbeboy.zbase.domain.tables.pojos.TrainingAuthorities;
+import top.zbeboy.zbase.domain.tables.records.TrainingAuthoritiesRecord;
 
 import javax.annotation.Resource;
 import java.util.Optional;
 
 import static org.jooq.impl.DSL.now;
-import static top.zbeboy.zone.domain.Tables.TRAINING_AUTHORITIES;
-import static top.zbeboy.zone.domain.Tables.USERS;
+import static top.zbeboy.zbase.domain.Tables.TRAINING_AUTHORITIES;
+import static top.zbeboy.zbase.domain.Tables.USERS;
 
 @Service("trainingAuthoritiesService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

@@ -3,8 +3,8 @@ package top.zbeboy.zone.test;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.junit.Test;
-import top.zbeboy.zone.service.util.DateTimeUtil;
-import top.zbeboy.zone.service.util.HttpClientUtil;
+import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
+import top.zbeboy.zbase.tools.service.util.HttpClientUtil;
 
 import java.io.IOException;
 import java.util.HashMap;

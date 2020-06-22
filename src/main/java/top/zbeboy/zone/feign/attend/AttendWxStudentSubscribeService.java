@@ -3,8 +3,8 @@ package top.zbeboy.zone.feign.attend;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zone.hystrix.attend.AttendWxStudentSubscribeHystrixClientFallbackFactory;
-import top.zbeboy.zone.web.util.AjaxUtil;
-import top.zbeboy.zone.web.vo.attend.weixin.AttendWxStudentSubscribeAddVo;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.vo.attend.weixin.AttendWxStudentSubscribeAddVo;
 
 import java.io.IOException;
 import java.util.Map;

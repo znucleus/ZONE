@@ -9,19 +9,19 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import top.zbeboy.zone.config.CacheBook;
-import top.zbeboy.zone.domain.tables.daos.TrainingSpecialDao;
-import top.zbeboy.zone.domain.tables.pojos.TrainingSpecial;
+import top.zbeboy.zbase.config.CacheBook;
+import top.zbeboy.zbase.domain.tables.daos.TrainingSpecialDao;
+import top.zbeboy.zbase.domain.tables.pojos.TrainingSpecial;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
-import top.zbeboy.zone.service.util.SQLQueryUtil;
-import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
+import top.zbeboy.zbase.tools.service.util.SQLQueryUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
 
 import javax.annotation.Resource;
 import java.util.Objects;
 import java.util.Optional;
 
-import static top.zbeboy.zone.domain.Tables.FILES;
-import static top.zbeboy.zone.domain.Tables.TRAINING_SPECIAL;
+import static top.zbeboy.zbase.domain.Tables.FILES;
+import static top.zbeboy.zbase.domain.Tables.TRAINING_SPECIAL;
 
 @Service("trainingSpecialService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

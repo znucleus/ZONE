@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.register.leaver;
 
-import top.zbeboy.zone.domain.tables.pojos.LeaverRegisterOption;
+import top.zbeboy.zbase.domain.tables.pojos.LeaverRegisterOption;
 
 public class LeaverRegisterOptionBean extends LeaverRegisterOption {
     private Byte isChecked;

@@ -2,14 +2,14 @@ package top.zbeboy.zone.feign.data;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
-import top.zbeboy.zone.domain.tables.pojos.Science;
+import top.zbeboy.zbase.domain.tables.pojos.Science;
 import top.zbeboy.zone.hystrix.data.ScienceHystrixClientFallbackFactory;
 import top.zbeboy.zone.web.bean.data.science.ScienceBean;
-import top.zbeboy.zone.web.util.AjaxUtil;
-import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
-import top.zbeboy.zone.web.vo.data.science.ScienceAddVo;
-import top.zbeboy.zone.web.vo.data.science.ScienceEditVo;
-import top.zbeboy.zone.web.vo.data.science.ScienceSearchVo;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zbase.vo.data.science.ScienceAddVo;
+import top.zbeboy.zbase.vo.data.science.ScienceEditVo;
+import top.zbeboy.zbase.vo.data.science.ScienceSearchVo;
 
 import java.util.List;
 import java.util.Map;

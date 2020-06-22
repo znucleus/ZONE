@@ -1,6 +1,6 @@
 package top.zbeboy.zone.service.system;
 
-import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zbase.domain.tables.pojos.Users;
 
 public interface SystemMailService {
     /**

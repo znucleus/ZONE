@@ -3,9 +3,9 @@ package top.zbeboy.zone.feign.system;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import top.zbeboy.zone.domain.tables.pojos.SystemOperatorLog;
+import top.zbeboy.zbase.domain.tables.pojos.SystemOperatorLog;
 import top.zbeboy.zone.hystrix.system.SystemLogHystrixClientFallbackFactory;
-import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 
 @FeignClient(value = "base-server", fallback = SystemLogHystrixClientFallbackFactory.class)
 public interface SystemLogService {

@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.register.leaver;
 
-import top.zbeboy.zone.domain.tables.pojos.LeaverRegisterScope;
+import top.zbeboy.zbase.domain.tables.pojos.LeaverRegisterScope;
 
 public class LeaverRegisterScopeBean extends LeaverRegisterScope {
     private String dataName;

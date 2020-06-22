@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.training.special;
 
-import top.zbeboy.zone.domain.tables.pojos.TrainingSpecial;
+import top.zbeboy.zbase.domain.tables.pojos.TrainingSpecial;
 
 public class TrainingSpecialBean extends TrainingSpecial {
     private String relativePath;

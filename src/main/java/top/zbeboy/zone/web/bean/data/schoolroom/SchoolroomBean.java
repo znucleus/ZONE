@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.data.schoolroom;
 
-import top.zbeboy.zone.domain.tables.pojos.Schoolroom;
+import top.zbeboy.zbase.domain.tables.pojos.Schoolroom;
 
 public class SchoolroomBean extends Schoolroom {
     private Byte schoolIsDel;

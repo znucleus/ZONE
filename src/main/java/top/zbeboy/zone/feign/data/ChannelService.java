@@ -3,7 +3,7 @@ package top.zbeboy.zone.feign.data;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import top.zbeboy.zone.domain.tables.pojos.Channel;
+import top.zbeboy.zbase.domain.tables.pojos.Channel;
 import top.zbeboy.zone.hystrix.data.ChannelHystrixClientFallbackFactory;
 
 import java.util.List;

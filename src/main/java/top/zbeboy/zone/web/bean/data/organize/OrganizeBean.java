@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.data.organize;
 
-import top.zbeboy.zone.domain.tables.pojos.Organize;
+import top.zbeboy.zbase.domain.tables.pojos.Organize;
 
 public class OrganizeBean extends Organize {
     private Byte schoolIsDel;

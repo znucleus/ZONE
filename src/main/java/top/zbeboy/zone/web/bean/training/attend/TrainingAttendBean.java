@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.training.attend;
 
-import top.zbeboy.zone.domain.tables.pojos.TrainingAttend;
+import top.zbeboy.zbase.domain.tables.pojos.TrainingAttend;
 
 public class TrainingAttendBean extends TrainingAttend {
     private String buildingName;

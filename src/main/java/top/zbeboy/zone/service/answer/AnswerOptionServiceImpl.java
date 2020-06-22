@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import top.zbeboy.zone.domain.tables.records.AnswerOptionRecord;
+import top.zbeboy.zbase.domain.tables.records.AnswerOptionRecord;
 
-import static top.zbeboy.zone.domain.Tables.ANSWER_OPTION;
+import static top.zbeboy.zbase.domain.Tables.ANSWER_OPTION;
 
 @Service("answerOptionService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

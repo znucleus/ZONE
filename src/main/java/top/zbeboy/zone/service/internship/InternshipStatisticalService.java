@@ -2,7 +2,7 @@ package top.zbeboy.zone.service.internship;
 
 import org.jooq.Record;
 import org.jooq.Result;
-import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 
 public interface InternshipStatisticalService {
 

@@ -1,8 +1,8 @@
 package top.zbeboy.zone.service.training;
 
 import org.jooq.Result;
-import top.zbeboy.zone.domain.tables.pojos.TrainingSpecialFileType;
-import top.zbeboy.zone.domain.tables.records.TrainingSpecialFileTypeRecord;
+import top.zbeboy.zbase.domain.tables.pojos.TrainingSpecialFileType;
+import top.zbeboy.zbase.domain.tables.records.TrainingSpecialFileTypeRecord;
 
 public interface TrainingSpecialFileTypeService {
 

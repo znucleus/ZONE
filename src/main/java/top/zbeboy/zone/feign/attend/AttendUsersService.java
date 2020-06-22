@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import top.zbeboy.zone.hystrix.attend.AttendUsersHystrixClientFallbackFactory;
 import top.zbeboy.zone.web.bean.attend.AttendUsersBean;
-import top.zbeboy.zone.web.util.AjaxUtil;
-import top.zbeboy.zone.web.vo.attend.users.AttendUsersAddVo;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.vo.attend.users.AttendUsersAddVo;
 
 import java.util.Map;
 

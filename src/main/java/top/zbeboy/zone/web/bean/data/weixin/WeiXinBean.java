@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.data.weixin;
 
-import top.zbeboy.zone.domain.tables.pojos.WeiXin;
+import top.zbeboy.zbase.domain.tables.pojos.WeiXin;
 
 public class WeiXinBean extends WeiXin {
     private String realName;

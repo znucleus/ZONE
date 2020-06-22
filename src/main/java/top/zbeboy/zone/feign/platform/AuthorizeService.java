@@ -2,16 +2,16 @@ package top.zbeboy.zone.feign.platform;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
-import top.zbeboy.zone.domain.tables.pojos.Authorities;
-import top.zbeboy.zone.domain.tables.pojos.AuthorizeType;
-import top.zbeboy.zone.domain.tables.pojos.Role;
-import top.zbeboy.zone.domain.tables.pojos.RoleApply;
+import top.zbeboy.zbase.domain.tables.pojos.Authorities;
+import top.zbeboy.zbase.domain.tables.pojos.AuthorizeType;
+import top.zbeboy.zbase.domain.tables.pojos.Role;
+import top.zbeboy.zbase.domain.tables.pojos.RoleApply;
 import top.zbeboy.zone.hystrix.platform.AuthorizeHystrixClientFallbackFactory;
 import top.zbeboy.zone.web.bean.platform.authorize.RoleApplyBean;
-import top.zbeboy.zone.web.util.AjaxUtil;
-import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
-import top.zbeboy.zone.web.vo.platform.authorize.AuthorizeAddVo;
-import top.zbeboy.zone.web.vo.platform.authorize.AuthorizeEditVo;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zbase.vo.platform.authorize.AuthorizeAddVo;
+import top.zbeboy.zbase.vo.platform.authorize.AuthorizeEditVo;
 
 import java.util.List;
 import java.util.Map;

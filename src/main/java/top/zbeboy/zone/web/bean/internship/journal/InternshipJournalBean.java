@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.internship.journal;
 
-import top.zbeboy.zone.domain.tables.pojos.InternshipJournal;
+import top.zbeboy.zbase.domain.tables.pojos.InternshipJournal;
 
 public class InternshipJournalBean extends InternshipJournal {
     private String createDateStr;

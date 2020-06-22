@@ -2,8 +2,8 @@ package top.zbeboy.zone.service.training;
 
 import org.jooq.Record;
 import org.jooq.Result;
-import top.zbeboy.zone.domain.tables.pojos.TrainingAuthorities;
-import top.zbeboy.zone.domain.tables.records.TrainingAuthoritiesRecord;
+import top.zbeboy.zbase.domain.tables.pojos.TrainingAuthorities;
+import top.zbeboy.zbase.domain.tables.records.TrainingAuthoritiesRecord;
 
 import java.util.Optional;
 

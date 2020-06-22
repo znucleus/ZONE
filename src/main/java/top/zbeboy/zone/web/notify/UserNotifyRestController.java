@@ -3,12 +3,12 @@ package top.zbeboy.zone.web.notify;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zone.feign.notify.UserNotifyService;
 import top.zbeboy.zone.web.bean.notify.UserNotifyBean;
-import top.zbeboy.zone.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.SessionUtil;
-import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
 
 import javax.annotation.Resource;
 import java.util.Map;

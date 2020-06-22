@@ -3,11 +3,11 @@ package top.zbeboy.zone.service.internship;
 import org.jooq.Record;
 import org.jooq.Record3;
 import org.jooq.Result;
-import top.zbeboy.zone.domain.tables.pojos.InternshipJournal;
-import top.zbeboy.zone.domain.tables.pojos.InternshipJournalContent;
-import top.zbeboy.zone.domain.tables.pojos.Users;
-import top.zbeboy.zone.domain.tables.records.InternshipJournalRecord;
-import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zbase.domain.tables.pojos.InternshipJournal;
+import top.zbeboy.zbase.domain.tables.pojos.InternshipJournalContent;
+import top.zbeboy.zbase.domain.tables.pojos.Users;
+import top.zbeboy.zbase.domain.tables.records.InternshipJournalRecord;
+import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 
 import javax.servlet.http.HttpServletRequest;
 

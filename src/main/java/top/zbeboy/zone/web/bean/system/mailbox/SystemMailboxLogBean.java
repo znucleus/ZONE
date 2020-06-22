@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.system.mailbox;
 
-import top.zbeboy.zone.domain.tables.pojos.SystemMailboxLog;
+import top.zbeboy.zbase.domain.tables.pojos.SystemMailboxLog;
 
 public class SystemMailboxLogBean extends SystemMailboxLog {
 

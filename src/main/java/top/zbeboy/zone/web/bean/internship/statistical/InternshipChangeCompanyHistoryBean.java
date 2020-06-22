@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.internship.statistical;
 
-import top.zbeboy.zone.domain.tables.pojos.InternshipChangeCompanyHistory;
+import top.zbeboy.zbase.domain.tables.pojos.InternshipChangeCompanyHistory;
 
 public class InternshipChangeCompanyHistoryBean extends InternshipChangeCompanyHistory {
     private String internshipTitle;

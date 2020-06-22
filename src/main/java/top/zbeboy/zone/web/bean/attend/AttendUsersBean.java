@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.attend;
 
-import top.zbeboy.zone.domain.tables.pojos.AttendUsers;
+import top.zbeboy.zbase.domain.tables.pojos.AttendUsers;
 
 import java.sql.Timestamp;
 

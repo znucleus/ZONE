@@ -6,13 +6,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zone.feign.platform.AppService;
-import top.zbeboy.zone.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.SessionUtil;
-import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
-import top.zbeboy.zone.web.vo.platform.app.AppAddVo;
-import top.zbeboy.zone.web.vo.platform.app.AppEditVo;
+import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zbase.vo.platform.app.AppAddVo;
+import top.zbeboy.zbase.vo.platform.app.AppEditVo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;

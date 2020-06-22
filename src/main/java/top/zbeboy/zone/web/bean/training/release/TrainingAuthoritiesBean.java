@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.training.release;
 
-import top.zbeboy.zone.domain.tables.pojos.TrainingAuthorities;
+import top.zbeboy.zbase.domain.tables.pojos.TrainingAuthorities;
 
 public class TrainingAuthoritiesBean extends TrainingAuthorities {
     private String validDateStr;

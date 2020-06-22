@@ -2,7 +2,7 @@ package top.zbeboy.zone.service.plugin;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.jooq.*;
-import top.zbeboy.zone.web.util.pagination.PaginationUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.PaginationUtil;
 
 import java.util.List;
 import java.util.Objects;

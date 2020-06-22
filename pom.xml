@@ -7,6 +7,18 @@
     <groupId>top.zbeboy.zone</groupId>
     <artifactId>ZONE</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     <name>The Parent Project</name>
     <url>https://www.zbeboy.top</url>
     <licenses>
@@ -22,19 +34,17 @@
         <url>https://www.zbeboy.top</url>
     </organization>
 
-    <!-- Inherit defaults from Spring Boot -->
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.2.8.RELEASE</version>
+        <groupId>top.zbeboy</groupId>
+        <artifactId>ZBASE</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../ZBASE/pom.xml</relativePath>
     </parent>
 
     <properties>
         <org.springframework.webflow.version>2.0.5.RELEASE</org.springframework.webflow.version>
         <spring-security-oauth2.version>2.3.8.RELEASE</spring-security-oauth2.version>
         <spring-security-oauth2-autoconfigure.version>2.2.1.RELEASE</spring-security-oauth2-autoconfigure.version>
-
-        <spring-cloud.version>Hoxton.SR5</spring-cloud.version>
 
         <org.apache.poi.version>4.1.0</org.apache.poi.version>
         <ooxml-schemas.version>1.4</ooxml-schemas.version>
@@ -64,20 +74,29 @@
         <webjars.lodash.version>4.17.15</webjars.lodash.version>
     </properties>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring-cloud.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
     <!-- Add typical dependencies for a web application -->
     <dependencies>
+
+        <dependency>
+            <groupId>top.zbeboy</groupId>
+            <artifactId>persist</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>top.zbeboy</groupId>
+            <artifactId>config</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>top.zbeboy</groupId>
+            <artifactId>tools</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -149,11 +168,6 @@
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-rest</artifactId>
             <exclusions>
                 <exclusion>
@@ -206,16 +220,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.zaxxer</groupId>
-            <artifactId>HikariCP</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-core</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
@@ -233,23 +237,6 @@
             <version>${org.springframework.webflow.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-        </dependency>
-
-        <!-- jooq -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jooq</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jooq</groupId>
-            <artifactId>jooq-codegen</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
         <!-- Developer tools -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -260,13 +247,6 @@
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
-        </dependency>
-
-        <!-- alibaba fastjson -->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>${fastJson.version}</version>
         </dependency>
 
         <!-- jsoup -->
@@ -294,59 +274,6 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>
             <version>${commons-collections4.version}</version>
-        </dependency>
-
-
-        <!-- dom4j -->
-        <dependency>
-            <groupId>org.dom4j</groupId>
-            <artifactId>dom4j</artifactId>
-            <version>${org.dom4j.version}</version>
-        </dependency>
-
-        <!-- poi -->
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi</artifactId>
-            <version>${org.apache.poi.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>ooxml-schemas</artifactId>
-            <version>${ooxml-schemas.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml</artifactId>
-            <version>${org.apache.poi.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-scratchpad</artifactId>
-            <version>${org.apache.poi.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-excelant</artifactId>
-            <version>${org.apache.poi.version}</version>
-        </dependency>
-
-        <!-- xmlbeans -->
-        <dependency>
-            <groupId>org.apache.xmlbeans</groupId>
-            <artifactId>xmlbeans</artifactId>
-            <version>${xmlbeans.version}</version>
-        </dependency>
-
-        <!-- httpclient -->
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>${httpclient.version}</version>
         </dependency>
 
         <!-- compress -->
@@ -476,48 +403,6 @@
                         </configuration>
                     </plugin>
 
-                    <plugin>
-                        <groupId>org.jooq</groupId>
-                        <artifactId>jooq-codegen-maven</artifactId>
-                        <!-- The jOOQ code generation plugin is also executed in the generate-sources phase, prior to compilation -->
-                        <executions>
-                            <execution>
-                                <phase>generate-sources</phase>
-                                <goals>
-                                    <goal>generate</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <!-- This is a minimal working configuration. See the manual's section about the code generator for more details -->
-                        <configuration>
-                            <jdbc>
-                                <driver>com.mysql.cj.jdbc.Driver</driver>
-                                <url>jdbc:mysql://localhost/zone?useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false&amp;serverTimezone=GMT%2B8</url>
-                                <user>root</user>
-                                <password>123456</password>
-                            </jdbc>
-                            <generator>
-                                <generate>
-                                    <daos>true</daos>
-                                    <validationAnnotations>true</validationAnnotations>
-                                    <springAnnotations>true</springAnnotations>
-                                </generate>
-                                <database>
-                                    <name>org.jooq.meta.mysql.MySQLDatabase</name>
-                                    <includes>.*</includes>
-                                    <excludes>
-                                        flyway_schema_history
-                                    </excludes>
-                                    <inputSchema>zone</inputSchema>
-                                </database>
-                                <target>
-                                    <packageName>top.zbeboy.zone.domain</packageName>
-                                    <directory>${basedir}/src/main/java</directory>
-                                </target>
-                            </generator>
-                        </configuration>
-                    </plugin>
-
                     <!-- support git info -->
                     <plugin>
                         <groupId>pl.project13.maven</groupId>
@@ -576,27 +461,5 @@
             </build>
         </profile>
     </profiles>
-
-    <repositories>
-        <repository>
-            <id>spring-milestone</id>
-            <url>https://repo.spring.io/libs-release</url>
-        </repository>
-        <repository>
-            <id>nexus-aliyun</id>
-            <url>http://maven.aliyun.com/nexus/content/groups/public</url>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>spring-milestone</id>
-            <url>https://repo.spring.io/libs-release</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>nexus-aliyun</id>
-            <url>http://maven.aliyun.com/nexus/content/groups/public</url>
-        </pluginRepository>
-    </pluginRepositories>
 
 </project>

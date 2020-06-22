@@ -1,9 +1,9 @@
 package top.zbeboy.zone.hystrix.data;
 
 import org.springframework.stereotype.Component;
-import top.zbeboy.zone.domain.tables.pojos.Grade;
+import top.zbeboy.zbase.domain.tables.pojos.Grade;
 import top.zbeboy.zone.feign.data.GradeService;
-import top.zbeboy.zone.web.vo.data.grade.GradeSearchVo;
+import top.zbeboy.zbase.vo.data.grade.GradeSearchVo;
 
 import java.util.ArrayList;
 import java.util.List;

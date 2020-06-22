@@ -1,16 +1,16 @@
 package top.zbeboy.zone.hystrix.platform;
 
 import org.springframework.stereotype.Component;
-import top.zbeboy.zone.domain.tables.pojos.Authorities;
-import top.zbeboy.zone.domain.tables.pojos.AuthorizeType;
-import top.zbeboy.zone.domain.tables.pojos.Role;
-import top.zbeboy.zone.domain.tables.pojos.RoleApply;
+import top.zbeboy.zbase.domain.tables.pojos.Authorities;
+import top.zbeboy.zbase.domain.tables.pojos.AuthorizeType;
+import top.zbeboy.zbase.domain.tables.pojos.Role;
+import top.zbeboy.zbase.domain.tables.pojos.RoleApply;
 import top.zbeboy.zone.feign.platform.AuthorizeService;
 import top.zbeboy.zone.web.bean.platform.authorize.RoleApplyBean;
-import top.zbeboy.zone.web.util.AjaxUtil;
-import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
-import top.zbeboy.zone.web.vo.platform.authorize.AuthorizeAddVo;
-import top.zbeboy.zone.web.vo.platform.authorize.AuthorizeEditVo;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zbase.vo.platform.authorize.AuthorizeAddVo;
+import top.zbeboy.zbase.vo.platform.authorize.AuthorizeEditVo;
 
 import java.util.ArrayList;
 import java.util.List;

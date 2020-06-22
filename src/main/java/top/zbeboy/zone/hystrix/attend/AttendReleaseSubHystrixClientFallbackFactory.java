@@ -3,8 +3,8 @@ package top.zbeboy.zone.hystrix.attend;
 import org.springframework.stereotype.Component;
 import top.zbeboy.zone.feign.attend.AttendReleaseSubService;
 import top.zbeboy.zone.web.bean.attend.AttendReleaseSubBean;
-import top.zbeboy.zone.web.util.AjaxUtil;
-import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
 
 import java.util.Map;
 

@@ -2,8 +2,8 @@ package top.zbeboy.zone.service.training;
 
 import org.jooq.Record;
 import org.jooq.Result;
-import top.zbeboy.zone.domain.tables.pojos.TrainingSpecialFile;
-import top.zbeboy.zone.web.vo.training.special.TrainingSpecialFileSearchVo;
+import top.zbeboy.zbase.domain.tables.pojos.TrainingSpecialFile;
+import top.zbeboy.zbase.vo.training.special.TrainingSpecialFileSearchVo;
 
 import java.util.List;
 import java.util.Optional;

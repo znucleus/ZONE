@@ -2,7 +2,7 @@ package top.zbeboy.zone.feign.system;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
-import top.zbeboy.zone.domain.tables.pojos.Files;
+import top.zbeboy.zbase.domain.tables.pojos.Files;
 import top.zbeboy.zone.hystrix.system.FilesHystrixClientFallbackFactory;
 
 @FeignClient(value = "base-server", fallback = FilesHystrixClientFallbackFactory.class)

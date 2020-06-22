@@ -2,8 +2,8 @@ package top.zbeboy.zone.hystrix.attend;
 
 import org.springframework.stereotype.Component;
 import top.zbeboy.zone.feign.attend.AttendDataService;
-import top.zbeboy.zone.web.util.AjaxUtil;
-import top.zbeboy.zone.web.vo.attend.data.AttendDataAddVo;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.vo.attend.data.AttendDataAddVo;
 
 import java.util.Map;
 

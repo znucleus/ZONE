@@ -1,11 +1,11 @@
 package top.zbeboy.zone.hystrix.notify;
 
 import org.springframework.stereotype.Component;
-import top.zbeboy.zone.domain.tables.pojos.UserNotify;
+import top.zbeboy.zbase.domain.tables.pojos.UserNotify;
 import top.zbeboy.zone.feign.notify.UserNotifyService;
 import top.zbeboy.zone.web.bean.notify.UserNotifyBean;
-import top.zbeboy.zone.web.util.AjaxUtil;
-import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
 
 import java.util.Map;
 

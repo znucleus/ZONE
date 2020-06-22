@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.training.attend;
 
-import top.zbeboy.zone.domain.tables.pojos.TrainingAttendUsers;
+import top.zbeboy.zbase.domain.tables.pojos.TrainingAttendUsers;
 
 import java.sql.Date;
 

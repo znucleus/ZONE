@@ -10,18 +10,18 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import top.zbeboy.zone.config.CacheBook;
-import top.zbeboy.zone.domain.tables.daos.TrainingDocumentDao;
-import top.zbeboy.zone.domain.tables.pojos.TrainingDocument;
+import top.zbeboy.zbase.config.CacheBook;
+import top.zbeboy.zbase.domain.tables.daos.TrainingDocumentDao;
+import top.zbeboy.zbase.domain.tables.pojos.TrainingDocument;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
-import top.zbeboy.zone.service.util.SQLQueryUtil;
-import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
+import top.zbeboy.zbase.tools.service.util.SQLQueryUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
 
 import javax.annotation.Resource;
 import java.util.Objects;
 import java.util.Optional;
 
-import static top.zbeboy.zone.domain.Tables.*;
+import static top.zbeboy.zbase.domain.Tables.*;
 
 @Service("trainingDocumentService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

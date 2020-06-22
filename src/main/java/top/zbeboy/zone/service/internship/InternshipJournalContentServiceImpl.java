@@ -7,13 +7,13 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import top.zbeboy.zone.config.CacheBook;
-import top.zbeboy.zone.domain.tables.pojos.InternshipJournalContent;
-import top.zbeboy.zone.domain.tables.records.InternshipJournalContentRecord;
+import top.zbeboy.zbase.config.CacheBook;
+import top.zbeboy.zbase.domain.tables.pojos.InternshipJournalContent;
+import top.zbeboy.zbase.domain.tables.records.InternshipJournalContentRecord;
 
 import java.util.Optional;
 
-import static top.zbeboy.zone.domain.Tables.INTERNSHIP_JOURNAL_CONTENT;
+import static top.zbeboy.zbase.domain.Tables.INTERNSHIP_JOURNAL_CONTENT;
 
 @Service("internshipJournalContentService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.data.science;
 
-import top.zbeboy.zone.domain.tables.pojos.Science;
+import top.zbeboy.zbase.domain.tables.pojos.Science;
 
 public class ScienceBean extends Science {
     private String departmentName;

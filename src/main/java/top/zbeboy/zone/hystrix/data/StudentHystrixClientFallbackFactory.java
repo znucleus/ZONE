@@ -1,15 +1,15 @@
 package top.zbeboy.zone.hystrix.data;
 
 import org.springframework.stereotype.Component;
-import top.zbeboy.zone.domain.tables.pojos.Role;
-import top.zbeboy.zone.domain.tables.pojos.Student;
-import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zbase.domain.tables.pojos.Role;
+import top.zbeboy.zbase.domain.tables.pojos.Student;
+import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zone.feign.data.StudentService;
 import top.zbeboy.zone.web.bean.data.student.StudentBean;
-import top.zbeboy.zone.web.util.AjaxUtil;
-import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
-import top.zbeboy.zone.web.vo.data.student.StudentAddVo;
-import top.zbeboy.zone.web.vo.data.student.StudentEditVo;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zbase.vo.data.student.StudentAddVo;
+import top.zbeboy.zbase.vo.data.student.StudentEditVo;
 
 import javax.validation.Valid;
 import java.util.ArrayList;

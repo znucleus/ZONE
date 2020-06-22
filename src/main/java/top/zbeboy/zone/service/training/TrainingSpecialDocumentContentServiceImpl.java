@@ -5,9 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import top.zbeboy.zone.domain.tables.pojos.TrainingSpecialDocumentContent;
+import top.zbeboy.zbase.domain.tables.pojos.TrainingSpecialDocumentContent;
 
-import static top.zbeboy.zone.domain.Tables.TRAINING_SPECIAL_DOCUMENT_CONTENT;
+import static top.zbeboy.zbase.domain.Tables.TRAINING_SPECIAL_DOCUMENT_CONTENT;
 
 @Service("trainingSpecialDocumentContentService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

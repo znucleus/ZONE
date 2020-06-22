@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.platform.app;
 
-import top.zbeboy.zone.domain.tables.pojos.OauthClientUsers;
+import top.zbeboy.zbase.domain.tables.pojos.OauthClientUsers;
 
 public class OauthClientUsersBean extends OauthClientUsers {
     private String realName;

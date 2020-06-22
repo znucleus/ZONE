@@ -2,7 +2,7 @@ package top.zbeboy.zone.service.training;
 
 import org.jooq.Record;
 import org.jooq.Result;
-import top.zbeboy.zone.web.util.pagination.TableSawUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.TableSawUtil;
 
 public interface TrainingAttendMyService {
 

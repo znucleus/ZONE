@@ -1,14 +1,14 @@
 package top.zbeboy.zone.hystrix.data;
 
 import org.springframework.stereotype.Component;
-import top.zbeboy.zone.domain.tables.pojos.Department;
+import top.zbeboy.zbase.domain.tables.pojos.Department;
 import top.zbeboy.zone.feign.data.DepartmentService;
 import top.zbeboy.zone.web.bean.data.department.DepartmentBean;
-import top.zbeboy.zone.web.util.AjaxUtil;
-import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
-import top.zbeboy.zone.web.vo.data.department.DepartmentAddVo;
-import top.zbeboy.zone.web.vo.data.department.DepartmentEditVo;
-import top.zbeboy.zone.web.vo.data.department.DepartmentSearchVo;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zbase.vo.data.department.DepartmentAddVo;
+import top.zbeboy.zbase.vo.data.department.DepartmentEditVo;
+import top.zbeboy.zbase.vo.data.department.DepartmentSearchVo;
 
 import java.util.ArrayList;
 import java.util.List;

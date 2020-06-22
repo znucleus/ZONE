@@ -2,16 +2,16 @@ package top.zbeboy.zone.feign.platform;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
-import top.zbeboy.zone.domain.tables.pojos.Application;
-import top.zbeboy.zone.domain.tables.pojos.Role;
-import top.zbeboy.zone.domain.tables.pojos.RoleApplication;
+import top.zbeboy.zbase.domain.tables.pojos.Application;
+import top.zbeboy.zbase.domain.tables.pojos.Role;
+import top.zbeboy.zbase.domain.tables.pojos.RoleApplication;
 import top.zbeboy.zone.hystrix.platform.RoleHystrixClientFallbackFactory;
 import top.zbeboy.zone.web.bean.platform.role.RoleBean;
 import top.zbeboy.zone.web.plugin.treeview.TreeViewData;
-import top.zbeboy.zone.web.util.AjaxUtil;
-import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
-import top.zbeboy.zone.web.vo.platform.role.RoleAddVo;
-import top.zbeboy.zone.web.vo.platform.role.RoleEditVo;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zbase.vo.platform.role.RoleAddVo;
+import top.zbeboy.zbase.vo.platform.role.RoleEditVo;
 
 import java.util.List;
 import java.util.Map;

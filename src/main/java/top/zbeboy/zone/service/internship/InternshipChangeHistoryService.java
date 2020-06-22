@@ -2,7 +2,7 @@ package top.zbeboy.zone.service.internship;
 
 import org.jooq.Record;
 import org.jooq.Result;
-import top.zbeboy.zone.domain.tables.pojos.InternshipChangeHistory;
+import top.zbeboy.zbase.domain.tables.pojos.InternshipChangeHistory;
 
 public interface InternshipChangeHistoryService {
 

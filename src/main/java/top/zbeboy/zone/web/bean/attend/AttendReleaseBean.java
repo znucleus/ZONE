@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.attend;
 
-import top.zbeboy.zone.domain.tables.pojos.AttendRelease;
+import top.zbeboy.zbase.domain.tables.pojos.AttendRelease;
 
 public class AttendReleaseBean extends AttendRelease {
     private String realName;

@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.system.sms;
 
-import top.zbeboy.zone.domain.tables.pojos.SystemSmsLog;
+import top.zbeboy.zbase.domain.tables.pojos.SystemSmsLog;
 
 public class SystemSmsLogBean extends SystemSmsLog {
 

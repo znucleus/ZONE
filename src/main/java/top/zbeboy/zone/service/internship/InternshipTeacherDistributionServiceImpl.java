@@ -9,14 +9,14 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import top.zbeboy.zone.config.CacheBook;
-import top.zbeboy.zone.domain.tables.daos.InternshipTeacherDistributionDao;
-import top.zbeboy.zone.domain.tables.pojos.InternshipTeacherDistribution;
-import top.zbeboy.zone.domain.tables.records.InternshipApplyRecord;
+import top.zbeboy.zbase.config.CacheBook;
+import top.zbeboy.zbase.domain.tables.daos.InternshipTeacherDistributionDao;
+import top.zbeboy.zbase.domain.tables.pojos.InternshipTeacherDistribution;
+import top.zbeboy.zbase.domain.tables.records.InternshipApplyRecord;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
-import top.zbeboy.zone.service.util.SQLQueryUtil;
+import top.zbeboy.zbase.tools.service.util.SQLQueryUtil;
 import top.zbeboy.zone.web.bean.internship.distribution.InternshipTeacherDistributionBean;
-import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static top.zbeboy.zone.domain.Tables.*;
+import static top.zbeboy.zbase.domain.Tables.*;
 
 @Service("internshipTeacherDistributionService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

@@ -7,12 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import top.zbeboy.zone.domain.tables.daos.InternshipChangeHistoryDao;
-import top.zbeboy.zone.domain.tables.pojos.InternshipChangeHistory;
+import top.zbeboy.zbase.domain.tables.daos.InternshipChangeHistoryDao;
+import top.zbeboy.zbase.domain.tables.pojos.InternshipChangeHistory;
 
 import javax.annotation.Resource;
 
-import static top.zbeboy.zone.domain.Tables.*;
+import static top.zbeboy.zbase.domain.Tables.*;
 
 @Service("internshipChangeHistoryService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

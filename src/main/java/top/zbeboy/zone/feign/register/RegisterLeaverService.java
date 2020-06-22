@@ -2,17 +2,17 @@ package top.zbeboy.zone.feign.register;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
-import top.zbeboy.zone.domain.tables.pojos.LeaverRegisterOption;
-import top.zbeboy.zone.domain.tables.pojos.LeaverRegisterRelease;
+import top.zbeboy.zbase.domain.tables.pojos.LeaverRegisterOption;
+import top.zbeboy.zbase.domain.tables.pojos.LeaverRegisterRelease;
 import top.zbeboy.zone.hystrix.register.RegisterLeaverHystrixClientFallbackFactory;
 import top.zbeboy.zone.web.bean.register.leaver.LeaverRegisterDataBean;
 import top.zbeboy.zone.web.bean.register.leaver.LeaverRegisterReleaseBean;
 import top.zbeboy.zone.web.bean.register.leaver.LeaverRegisterScopeBean;
-import top.zbeboy.zone.web.util.AjaxUtil;
-import top.zbeboy.zone.web.util.pagination.SimplePaginationUtil;
-import top.zbeboy.zone.web.vo.register.leaver.LeaverRegisterDataVo;
-import top.zbeboy.zone.web.vo.register.leaver.LeaverRegisterReleaseAddVo;
-import top.zbeboy.zone.web.vo.register.leaver.LeaverRegisterReleaseEditVo;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
+import top.zbeboy.zbase.vo.register.leaver.LeaverRegisterDataVo;
+import top.zbeboy.zbase.vo.register.leaver.LeaverRegisterReleaseAddVo;
+import top.zbeboy.zbase.vo.register.leaver.LeaverRegisterReleaseEditVo;
 
 import java.util.List;
 import java.util.Map;

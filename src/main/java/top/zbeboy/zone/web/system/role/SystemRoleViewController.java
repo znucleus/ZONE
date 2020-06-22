@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import top.zbeboy.zone.domain.tables.pojos.Role;
+import top.zbeboy.zbase.domain.tables.pojos.Role;
 import top.zbeboy.zone.feign.platform.RoleService;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 

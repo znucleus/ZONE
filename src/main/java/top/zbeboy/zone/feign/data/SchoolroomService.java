@@ -2,14 +2,14 @@ package top.zbeboy.zone.feign.data;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
-import top.zbeboy.zone.domain.tables.pojos.Schoolroom;
+import top.zbeboy.zbase.domain.tables.pojos.Schoolroom;
 import top.zbeboy.zone.hystrix.data.SchoolroomHystrixClientFallbackFactory;
 import top.zbeboy.zone.web.bean.data.schoolroom.SchoolroomBean;
-import top.zbeboy.zone.web.util.AjaxUtil;
-import top.zbeboy.zone.web.util.pagination.DataTablesUtil;
-import top.zbeboy.zone.web.vo.data.schoolroom.SchoolroomAddVo;
-import top.zbeboy.zone.web.vo.data.schoolroom.SchoolroomEditVo;
-import top.zbeboy.zone.web.vo.data.schoolroom.SchoolroomSearchVo;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zbase.vo.data.schoolroom.SchoolroomAddVo;
+import top.zbeboy.zbase.vo.data.schoolroom.SchoolroomEditVo;
+import top.zbeboy.zbase.vo.data.schoolroom.SchoolroomSearchVo;
 
 import java.util.List;
 import java.util.Map;

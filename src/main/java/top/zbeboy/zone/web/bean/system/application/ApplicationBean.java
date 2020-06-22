@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.system.application;
 
-import top.zbeboy.zone.domain.tables.pojos.Application;
+import top.zbeboy.zbase.domain.tables.pojos.Application;
 
 public class ApplicationBean extends Application {
     private String applicationPidName;

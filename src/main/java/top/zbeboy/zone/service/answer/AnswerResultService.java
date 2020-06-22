@@ -1,7 +1,7 @@
 package top.zbeboy.zone.service.answer;
 
-import top.zbeboy.zone.domain.tables.pojos.AnswerResult;
-import top.zbeboy.zone.domain.tables.records.AnswerResultRecord;
+import top.zbeboy.zbase.domain.tables.pojos.AnswerResult;
+import top.zbeboy.zbase.domain.tables.records.AnswerResultRecord;
 
 import java.util.Optional;
 

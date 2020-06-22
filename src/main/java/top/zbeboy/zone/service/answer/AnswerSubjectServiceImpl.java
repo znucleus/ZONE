@@ -5,14 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import top.zbeboy.zone.domain.tables.daos.AnswerSubjectDao;
-import top.zbeboy.zone.domain.tables.pojos.AnswerSubject;
-import top.zbeboy.zone.domain.tables.records.AnswerSubjectRecord;
+import top.zbeboy.zbase.domain.tables.daos.AnswerSubjectDao;
+import top.zbeboy.zbase.domain.tables.pojos.AnswerSubject;
+import top.zbeboy.zbase.domain.tables.records.AnswerSubjectRecord;
 
 import javax.annotation.Resource;
 import java.util.Optional;
 
-import static top.zbeboy.zone.domain.Tables.ANSWER_SUBJECT;
+import static top.zbeboy.zbase.domain.Tables.ANSWER_SUBJECT;
 
 @Service("answerSubjectService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

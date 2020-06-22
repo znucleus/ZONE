@@ -5,11 +5,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import top.zbeboy.zone.domain.tables.pojos.Users;
+import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zone.feign.attend.AttendDataService;
-import top.zbeboy.zone.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zone.web.util.SessionUtil;
-import top.zbeboy.zone.web.vo.attend.data.AttendDataAddVo;
+import top.zbeboy.zbase.vo.attend.data.AttendDataAddVo;
 
 import javax.annotation.Resource;
 import java.security.Principal;

@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Profile;
+import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zone.aop.logging.LoggingAspect;
 import top.zbeboy.zone.aop.logging.LoggingRecordAspect;
 

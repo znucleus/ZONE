@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.notify;
 
-import top.zbeboy.zone.domain.tables.pojos.SystemNotify;
+import top.zbeboy.zbase.domain.tables.pojos.SystemNotify;
 
 public class SystemNotifyBean extends SystemNotify {
     private String validDateStr;

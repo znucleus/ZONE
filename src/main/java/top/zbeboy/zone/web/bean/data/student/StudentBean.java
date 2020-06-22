@@ -1,6 +1,6 @@
 package top.zbeboy.zone.web.bean.data.student;
 
-import top.zbeboy.zone.domain.tables.pojos.Student;
+import top.zbeboy.zbase.domain.tables.pojos.Student;
 
 import java.sql.Date;
 

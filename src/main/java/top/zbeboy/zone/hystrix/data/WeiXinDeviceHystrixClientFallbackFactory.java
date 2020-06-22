@@ -1,9 +1,9 @@
 package top.zbeboy.zone.hystrix.data;
 
 import org.springframework.stereotype.Component;
-import top.zbeboy.zone.domain.tables.pojos.WeiXinDevice;
+import top.zbeboy.zbase.domain.tables.pojos.WeiXinDevice;
 import top.zbeboy.zone.feign.data.WeiXinDeviceService;
-import top.zbeboy.zone.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 
 import java.util.Map;
 

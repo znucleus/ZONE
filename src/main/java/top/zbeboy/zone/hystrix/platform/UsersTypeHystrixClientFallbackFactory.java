@@ -1,7 +1,7 @@
 package top.zbeboy.zone.hystrix.platform;
 
 import org.springframework.stereotype.Component;
-import top.zbeboy.zone.domain.tables.pojos.UsersType;
+import top.zbeboy.zbase.domain.tables.pojos.UsersType;
 import top.zbeboy.zone.feign.platform.UsersTypeService;
 
 @Component

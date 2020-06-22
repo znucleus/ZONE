@@ -3,8 +3,8 @@ package top.zbeboy.zone.service.answer;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import top.zbeboy.zone.domain.tables.daos.AnswerSolvingDao;
-import top.zbeboy.zone.domain.tables.pojos.AnswerSolving;
+import top.zbeboy.zbase.domain.tables.daos.AnswerSolvingDao;
+import top.zbeboy.zbase.domain.tables.pojos.AnswerSolving;
 
 import javax.annotation.Resource;
 import java.util.List;

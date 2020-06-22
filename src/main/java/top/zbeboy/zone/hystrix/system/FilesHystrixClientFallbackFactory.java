@@ -1,7 +1,7 @@
 package top.zbeboy.zone.hystrix.system;
 
 import org.springframework.stereotype.Component;
-import top.zbeboy.zone.domain.tables.pojos.Files;
+import top.zbeboy.zbase.domain.tables.pojos.Files;
 import top.zbeboy.zone.feign.system.FilesService;
 
 @Component

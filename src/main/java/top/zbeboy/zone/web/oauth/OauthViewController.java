@@ -12,7 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import top.zbeboy.zone.domain.tables.pojos.OauthClientUsers;
+import top.zbeboy.zbase.domain.tables.pojos.OauthClientUsers;
 import top.zbeboy.zone.feign.platform.AppService;
 import top.zbeboy.zone.web.system.tip.SystemTipConfig;
 
