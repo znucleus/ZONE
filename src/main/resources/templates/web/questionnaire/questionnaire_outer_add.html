@@ -14,94 +14,20 @@
 
 <div class="d-flex align-items-center justify-content-center bg-br-primary">
 
-    <div class="login-wrapper wd-300 wd-xs-600 pd-25 pd-xs-40 bg-white rounded shadow-base mg-t-20 mg-b-20">
+    <div class="login-wrapper wd-300 wd-xs-600 pd-25 pd-xs-40 bg-white rounded shadow-base mg-t-20 mg-b-20" >
         <div class="signin-logo tx-center tx-28 tx-bold tx-inverse"><span class="tx-normal">[</span> <span
-                th:text="#{web.app.name}"></span> <span class="tx-normal">]</span></div>
-        <div class="tx-center mg-b-40">问卷调查</div>
-
-        <div class="form-group">
-            <label>01 (选填)您目前最常使用的校园软件是？</label>
-            <label class="ckbox">
-                <input type="checkbox"><span>我在校园</span>
-            </label>
-            <label class="ckbox">
-                <input type="checkbox"><span>雨课堂</span>
-            </label>
-            <label class="ckbox">
-                <input type="checkbox"><span>到梦空间</span>
-            </label>
-            <label class="ckbox">
-                <input type="checkbox" id="test">
-                <span>其它</span>
-                <input style=" border:none;border-bottom: 1px solid #000;outline:none;box-shadow: none;" />
-            </label>
-
-            <div class="invalid-feedback"></div>
+                th:text="${questionnaireRelease.title}"></span> <span class="tx-normal">]</span></div>
+        <div class="tx-center mg-b-40">Z.核校园是一个由城院学生及教师组成的校园团队，拥有多年信息技术经验。未来我们将为学生及教师带来更多实用功能，不断创新，成就未来。
         </div>
-
-        <div class="form-group">
-            <label>02 (选填)在您最常使用的校园软件里，经常使用的功能有哪些？</label>
-            <label class="ckbox">
-                <input type="checkbox"><span>校园考勤打卡</span>
-            </label>
-            <label class="ckbox">
-                <input type="checkbox"><span>校园二手交易平台</span>
-            </label>
-            <label class="ckbox">
-                <input type="checkbox"><span>校园招聘</span>
-            </label>
-            <label class="ckbox">
-                <input type="checkbox"><span>校园课表</span>
-            </label>
-            <label class="ckbox">
-                <input type="checkbox"><span>表白墙</span>
-            </label>
-            <label class="ckbox">
-                <input type="checkbox">
-                <span>其它</span>
-                <input style=" border:none;border-bottom: 1px solid #000;outline:none;box-shadow: none;" />
-            </label>
-            <div class="invalid-feedback"></div>
+        <div id="dataTable">
         </div>
-
-        <div class="form-group">
-            <label>03 (选填) 您觉得当前使用的校园管理app质量如何？</label>
-            <label class="rdiobox">
-                <input type="radio"><span>满意</span>
-            </label>
-            <label class="rdiobox">
-                <input type="radio"><span>一般</span>
-            </label>
-            <label class="rdiobox">
-                <input type="radio"><span>不满意</span>
-            </label>
-            <div class="invalid-feedback"></div>
-        </div>
-
-
-        <div class="form-group">
-            <label>04 对于校园网站，您现在最希望拥有的功能是？</label>
-            <input type="email" class="form-control" placeholder="name@example.com">
-        </div>
-
-        <div class="form-group">
-            <label>05 专业班级</label>
-            <input type="email" class="form-control" placeholder="name@example.com">
-        </div>
-
-        <div class="form-group">
-            <label>06 电话联系方式</label>
-            <input type="email" class="form-control" placeholder="name@example.com">
-        </div>
-
-        <div class="form-group">
-            <label>07 最后，您是否还有什么建议想要对我们说？</label>
-            <input type="email" class="form-control" placeholder="name@example.com">
-        </div>
-
-        <button type="button" class="btn btn-info btn-block" id="register">提 交</button>
+        <div class="form-group text-danger" id="globalError"></div>
+        <button type="button" class="btn btn-info btn-block" id="save">提 交</button>
     </div><!-- login-wrapper -->
 </div><!-- d-flex -->
+
+<input type="hidden" th:value="${questionnaireRelease.questionnaireReleaseId}"
+       id="questionnaireReleaseId"/>
 
 <script src="webjarsjs" th:src="@{/webjarsjs}"></script>
 <script src="webjars/requirejs/require.min.js" th:src="@{/webjars/requirejs/require.min.js}"
