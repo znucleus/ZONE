@@ -64,3 +64,11 @@ feign:
   hystrix:
     enabled: true
 
+hystrix:
+  command:
+    # 全局默认的熔断设置
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 11000
