@@ -24,7 +24,7 @@ public class QuestionnaireRestController {
      *
      * @return 问题数据
      */
-    @GetMapping("/anyone/questionnaire_subjects/{id}")
+    @GetMapping("/anyone/questionnaire/subjects/{id}")
     public ResponseEntity<Map<String, Object>> subjects(@PathVariable("id") String id) {
         List<QuestionnaireSubjectBean> subjectBeans = questionnaireService.subjects(id);
         AjaxUtil<QuestionnaireSubjectBean> ajaxUtil = AjaxUtil.of();
@@ -37,7 +37,7 @@ public class QuestionnaireRestController {
      *
      * @return 保存
      */
-    @PostMapping("/anyone/questionnaire/save")
+    @PostMapping("/anyone/questionnaire/result/save")
     public ResponseEntity<Map<String, Object>> save(@RequestParam("data") String data) {
         List<QuestionnaireResultAddVo> questionnaireResultAddVos = JSON.parseArray(data, QuestionnaireResultAddVo.class);
         AjaxUtil<Map<String, Object>> ajaxUtil = questionnaireService.save(questionnaireResultAddVos);

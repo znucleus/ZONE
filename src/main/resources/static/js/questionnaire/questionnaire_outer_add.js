@@ -40,9 +40,9 @@ require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf"]
             //It will be safe to query the DOM and manipulate
             //DOM nodes in this function.
             var ajax_url = {
-                obtain_questionnaire_subjects: web_path + '/anyone/questionnaire_subjects',
-                save: web_path + '/anyone/questionnaire/save',
-                success: web_path + '/anyone/questionnaire/save/success'
+                obtain_questionnaire_subjects: web_path + '/anyone/questionnaire/subjects',
+                save: web_path + '/anyone/questionnaire/result/save',
+                success: web_path + '/anyone/questionnaire/result/save/success'
             };
 
             var button_id = {
@@ -135,9 +135,9 @@ require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf"]
             }
 
             function isNull(d) {
-                var text = '选填';
+                var text = '<span class="text-primary">选填</span>';
                 if (d.isNull === 0) {
-                    text = '必填';
+                    text = '<span class="text-danger">必填</span>';
                 }
                 return text;
             }

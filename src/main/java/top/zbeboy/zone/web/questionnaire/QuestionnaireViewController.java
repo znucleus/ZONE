@@ -24,7 +24,7 @@ public class QuestionnaireViewController {
      *
      * @return 外链添加页
      */
-    @GetMapping("/anyone/questionnaire/add/{id}")
+    @GetMapping("/anyone/questionnaire/result/add/{id}")
     public String anyoneQuestionnaireAdd(@PathVariable("id") String id, ModelMap modelMap) {
         SystemTipConfig config = new SystemTipConfig();
         QuestionnaireRelease questionnaireRelease = questionnaireService.findById(id);
@@ -58,7 +58,7 @@ public class QuestionnaireViewController {
      * @param modelMap 页面数据
      * @return 成功
      */
-    @GetMapping("/anyone/questionnaire/save/success")
+    @GetMapping("/anyone/questionnaire/result/save/success")
     public String questionnaireSaveSuccess(ModelMap modelMap) {
         SystemTipConfig config = new SystemTipConfig(
                 "感谢您参与本次问卷调查。",
