@@ -21,7 +21,7 @@ import top.zbeboy.zone.security.AjaxAuthenticationCode;
 import top.zbeboy.zone.web.system.mail.SystemMailConfig;
 import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
 import top.zbeboy.zbase.tools.web.util.BooleanUtil;
-import top.zbeboy.zbase.tools.web.util.SpringBootUtil;
+import top.zbeboy.zone.web.util.SpringBootUtil;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;

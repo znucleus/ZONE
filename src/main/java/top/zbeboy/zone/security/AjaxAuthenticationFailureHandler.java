@@ -17,7 +17,7 @@ import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.service.util.RequestUtil;
 import top.zbeboy.zbase.tools.service.util.UUIDUtil;
 import top.zbeboy.zbase.tools.web.util.BooleanUtil;
-import top.zbeboy.zbase.tools.web.util.SpringBootUtil;
+import top.zbeboy.zone.web.util.SpringBootUtil;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
