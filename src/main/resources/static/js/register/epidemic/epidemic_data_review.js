@@ -229,7 +229,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
         var channelSelect2 = null;
 
         /**
-         * 初始化班级数据
+         * 初始化渠道数据
          */
         function initSearchChannel() {
             $.get(getAjaxUrl().obtain_channel_data, function (data) {
@@ -392,13 +392,6 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
         });
 
         $(getParamId().registerType).keyup(function (event) {
-            if (event.keyCode === 13) {
-                initParam();
-                myTable.ajax.reload();
-            }
-        });
-
-        $(getParamId().channelId).keyup(function (event) {
             if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();
