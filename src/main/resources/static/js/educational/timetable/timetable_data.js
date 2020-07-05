@@ -223,11 +223,13 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 }
 
                 initSearchContent();
-                initData();
-                initCourseName();
-                initAttendClass();
-                initClassroom();
-                initTeacherName();
+                if(data.listResult && data.listResult.length > 0){
+                    initData();
+                    initCourseName();
+                    initAttendClass();
+                    initClassroom();
+                    initTeacherName();
+                }
                 initSelect2();
                 initLabelauty();
             });
