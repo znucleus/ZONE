@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="pd-30">
+        <h4 class="tx-gray-800 mg-b-5">课表</h4>
+        <p class="mg-b-0">查看课表。</p>
+    </div><!-- d-flex -->
+
+    <div class="br-pagebody mg-t-5 pd-x-30">
+        <div class="br-section-wrapper">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-6 mt-2">
+                            <select class="form-control select2-show-search" id="search_course_name" name="courseName"
+                                    data-placeholder="请选择课程">
+                                <option label="请选择课程"></option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mt-2">
+                            <select class="form-control select2-show-search" id="search_attend_class" name="attendClass"
+                                    data-placeholder="请选择班级">
+                                <option label="请选择班级"></option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mt-2">
+                            <select class="form-control select2-show-search" id="search_classroom" name="classroom"
+                                    data-placeholder="请选择教室">
+                                <option label="请选择教室"></option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mt-2">
+                            <select class="form-control select2-show-search" id="search_teacher_name" name="teacherName"
+                                    data-placeholder="请选择教师">
+                                <option label="请选择教师"></option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mt-2">
+                            <input type="text" id="search_teacher_number" class="form-control" placeholder="教师工号"/>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button type="button" id="search" class="btn btn-outline-secondary"><i
+                                class="fa fa-search"></i>搜索
+                        </button>
+                        <button type="button" id="reset_search" class="btn btn-outline-secondary"><i
+                                class="fa fa-repeat"></i>重置
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="float-right mg-t-5">
+                        <button type="button" class="btn btn-outline-primary" id="sync"><i class="fa fa-superpowers"
+                                                                                           sec:authorize="hasRole('ROLE_SYSTEM')"></i>
+                            同步
+                        </button>
+                        <button type="button" class="btn btn-light" id="refresh"><i class="fa fa-refresh"></i> 刷新
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-12 mt-2">
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>节次</th>
+                                        <th>星期一</th>
+                                        <th>星期二</th>
+                                        <th>星期三</th>
+                                        <th>星期四</th>
+                                        <th>星期五</th>
+                                        <th>星期六</th>
+                                        <th>星期天</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <th scope="row">
+                                            第一大节<br/>
+                                            8:00-10:00
+                                        </th>
+                                        <td id="week_1_1" class="text-center">
+                                            <div class="row" style="border-bottom:1px dashed #000;">
+                                                <div class="col-12 tx-black">
+                                                    计算机科学技术理论实践与社会学习
+                                                </div>
+                                                <div class="col-12 tx-warning">
+                                                    明轩楼304
+                                                </div>
+                                                <div class="col-12 tx-teal">
+                                                    电信1411
+                                                </div>
+                                                <div class="col-12 tx-primary">
+                                                    胡寅
+                                                </div>
+                                                <div class="col-12 tx-danger">
+                                                    5-12周上(2学时)
+                                                </div>
+                                            </div>
+                                            <div class="row" style="border-bottom:1px dashed #000;">
+                                                <div class="col-12 tx-black">
+                                                    计算机科学
+                                                </div>
+                                                <div class="col-12 tx-warning">
+                                                    明轩楼304
+                                                </div>
+                                                <div class="col-12 tx-teal">
+                                                    电信1411
+                                                </div>
+                                                <div class="col-12 tx-primary">
+                                                    胡寅
+                                                </div>
+                                                <div class="col-12 tx-danger">
+                                                    5-12周上(2学时)
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td id="week_2_1" class="text-center">
+                                            <div class="row" style="border-bottom:1px dashed #000;">
+                                                <div class="col-12 tx-black">
+                                                    计算机科学
+                                                </div>
+                                                <div class="col-12 tx-warning">
+                                                    明轩楼304
+                                                </div>
+                                                <div class="col-12 tx-teal">
+                                                    电信1411
+                                                </div>
+                                                <div class="col-12 tx-primary">
+                                                    胡寅
+                                                </div>
+                                                <div class="col-12 tx-danger">
+                                                    5-12周上(2学时)
+                                                </div>
+                                            </div>
+                                            <div class="row" style="border-bottom:1px dashed #000;">
+                                                <div class="col-12 tx-black">
+                                                    计算机科学
+                                                </div>
+                                                <div class="col-12 tx-warning">
+                                                    明轩楼304
+                                                </div>
+                                                <div class="col-12 tx-teal">
+                                                    电信1411
+                                                </div>
+                                                <div class="col-12 tx-primary">
+                                                    胡寅
+                                                </div>
+                                                <div class="col-12 tx-danger">
+                                                    5-12周上(2学时)
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td id="week_3_1" class="text-center">
+                                            <div class="row" style="border-bottom:1px dashed #000;">
+                                                <div class="col-12 tx-black">
+                                                    计算机科学
+                                                </div>
+                                                <div class="col-12 tx-warning">
+                                                    明轩楼304
+                                                </div>
+                                                <div class="col-12 tx-teal">
+                                                    电信1411
+                                                </div>
+                                                <div class="col-12 tx-primary">
+                                                    胡寅
+                                                </div>
+                                                <div class="col-12 tx-danger">
+                                                    5-12周上(2学时)
+                                                </div>
+                                            </div>
+                                            <div class="row" style="border-bottom:1px dashed #000;">
+                                                <div class="col-12 tx-black">
+                                                    计算机科学
+                                                </div>
+                                                <div class="col-12 tx-warning">
+                                                    明轩楼304
+                                                </div>
+                                                <div class="col-12 tx-teal">
+                                                    电信1411
+                                                </div>
+                                                <div class="col-12 tx-primary">
+                                                    胡寅
+                                                </div>
+                                                <div class="col-12 tx-danger">
+                                                    5-12周上(2学时)
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td id="week_4_1" class="text-center">
+                                            <div class="row" style="border-bottom:1px dashed #000;">
+                                                <div class="col-12 tx-black">
+                                                    计算机科学
+                                                </div>
+                                                <div class="col-12 tx-warning">
+                                                    明轩楼304
+                                                </div>
+                                                <div class="col-12 tx-teal">
+                                                    电信1411
+                                                </div>
+                                                <div class="col-12 tx-primary">
+                                                    胡寅
+                                                </div>
+                                                <div class="col-12 tx-danger">
+                                                    5-12周上(2学时)
+                                                </div>
+                                            </div>
+                                            <div class="row" style="border-bottom:1px dashed #000;">
+                                                <div class="col-12 tx-black">
+                                                    计算机科学
+                                                </div>
+                                                <div class="col-12 tx-warning">
+                                                    明轩楼304
+                                                </div>
+                                                <div class="col-12 tx-teal">
+                                                    电信1411
+                                                </div>
+                                                <div class="col-12 tx-primary">
+                                                    胡寅
+                                                </div>
+                                                <div class="col-12 tx-danger">
+                                                    5-12周上(2学时)
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td id="week_5_1" class="text-center">
+                                            <div class="row" style="border-bottom:1px dashed #000;">
+                                                <div class="col-12 tx-black">
+                                                    计算机科学
+                                                </div>
+                                                <div class="col-12 tx-warning">
+                                                    明轩楼304
+                                                </div>
+                                                <div class="col-12 tx-teal">
+                                                    电信1411
+                                                </div>
+                                                <div class="col-12 tx-primary">
+                                                    胡寅
+                                                </div>
+                                                <div class="col-12 tx-danger">
+                                                    5-12周上(2学时)
+                                                </div>
+                                            </div>
+                                            <div class="row" style="border-bottom:1px dashed #000;">
+                                                <div class="col-12 tx-black">
+                                                    计算机科学
+                                                </div>
+                                                <div class="col-12 tx-warning">
+                                                    明轩楼304
+                                                </div>
+                                                <div class="col-12 tx-teal">
+                                                    电信1411
+                                                </div>
+                                                <div class="col-12 tx-primary">
+                                                    胡寅
+                                                </div>
+                                                <div class="col-12 tx-danger">
+                                                    5-12周上(2学时)
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td id="week_6_1" class="text-center">
+                                            <div class="row" style="border-bottom:1px dashed #000;">
+                                                <div class="col-12 tx-black">
+                                                    计算机科学
+                                                </div>
+                                                <div class="col-12 tx-warning">
+                                                    明轩楼304
+                                                </div>
+                                                <div class="col-12 tx-teal">
+                                                    电信1411
+                                                </div>
+                                                <div class="col-12 tx-primary">
+                                                    胡寅
+                                                </div>
+                                                <div class="col-12 tx-danger">
+                                                    5-12周上(2学时)
+                                                </div>
+                                            </div>
+                                            <div class="row" style="border-bottom:1px dashed #000;">
+                                                <div class="col-12 tx-black">
+                                                    计算机科学
+                                                </div>
+                                                <div class="col-12 tx-warning">
+                                                    明轩楼304
+                                                </div>
+                                                <div class="col-12 tx-teal">
+                                                    电信1411
+                                                </div>
+                                                <div class="col-12 tx-primary">
+                                                    胡寅
+                                                </div>
+                                                <div class="col-12 tx-danger">
+                                                    5-12周上(2学时)
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td id="week_7_1" class="text-center">
+                                            <div class="row" style="border-bottom:1px dashed #000;">
+                                                <div class="col-12 tx-black">
+                                                    计算机科学
+                                                </div>
+                                                <div class="col-12 tx-warning">
+                                                    明轩楼304
+                                                </div>
+                                                <div class="col-12 tx-teal">
+                                                    电信1411
+                                                </div>
+                                                <div class="col-12 tx-primary">
+                                                    胡寅
+                                                </div>
+                                                <div class="col-12 tx-danger">
+                                                    5-12周上(2学时)
+                                                </div>
+                                            </div>
+                                            <div class="row" style="border-bottom:1px dashed #000;">
+                                                <div class="col-12 tx-black">
+                                                    计算机科学
+                                                </div>
+                                                <div class="col-12 tx-warning">
+                                                    明轩楼304
+                                                </div>
+                                                <div class="col-12 tx-teal">
+                                                    电信1411
+                                                </div>
+                                                <div class="col-12 tx-primary">
+                                                    胡寅
+                                                </div>
+                                                <div class="col-12 tx-danger">
+                                                    5-12周上(2学时)
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">
+                                            第二大节<br/>
+                                            10:00-12:00
+                                        </th>
+                                        <td id="week_1_2" class="text-center">
+                                            <div class="row" style="border-bottom:1px dashed #000;">
+                                                <div class="col-12 tx-black">
+                                                    计算机科学
+                                                </div>
+                                                <div class="col-12 tx-warning">
+                                                    明轩楼304
+                                                </div>
+                                                <div class="col-12 tx-teal">
+                                                    电信1411
+                                                </div>
+                                                <div class="col-12 tx-primary">
+                                                    胡寅
+                                                </div>
+                                                <div class="col-12 tx-danger">
+                                                    5-12周上(2学时)
+                                                </div>
+                                            </div>
+                                            <div class="row" style="border-bottom:1px dashed #000;">
+                                                <div class="col-12 tx-black">
+                                                    计算机科学
+                                                </div>
+                                                <div class="col-12 tx-warning">
+                                                    明轩楼304
+                                                </div>
+                                                <div class="col-12 tx-teal">
+                                                    电信1411
+                                                </div>
+                                                <div class="col-12 tx-primary">
+                                                    胡寅
+                                                </div>
+                                                <div class="col-12 tx-danger">
+                                                    5-12周上(2学时)
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td id="week_2_2" class="text-center">Accountant</td>
+                                        <td id="week_3_2" class="text-center">$170,750</td>
+                                        <td id="week_4_2" class="text-center">$320,800</td>
+                                        <td id="week_5_2" class="text-center">$320,800</td>
+                                        <td id="week_6_2" class="text-center">$320,800</td>
+                                        <td id="week_7_2" class="text-center">$320,800</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">
+                                            第三大节<br/>
+                                            14:00-16:00
+                                        </th>
+                                        <td id="week_1_3" class="text-center">Garrett Winters</td>
+                                        <td id="week_2_3" class="text-center">Accountant</td>
+                                        <td id="week_3_3" class="text-center">$170,750</td>
+                                        <td id="week_4_3" class="text-center">$320,800</td>
+                                        <td id="week_5_3" class="text-center">$320,800</td>
+                                        <td id="week_6_3" class="text-center">$320,800</td>
+                                        <td id="week_7_3" class="text-center">$320,800</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">
+                                            第四大节<br/>
+                                            16:00-18:00
+                                        </th>
+                                        <td id="week_1_4" class="text-center">Garrett Winters</td>
+                                        <td id="week_2_4" class="text-center">Accountant</td>
+                                        <td id="week_3_4" class="text-center">$170,750</td>
+                                        <td id="week_4_4" class="text-center">$320,800</td>
+                                        <td id="week_5_4" class="text-center">$320,800</td>
+                                        <td id="week_6_4" class="text-center">$320,800</td>
+                                        <td id="week_7_4" class="text-center">$320,800</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">
+                                            第五大节<br/>
+                                            18:00-22:00
+                                        </th>
+                                        <td id="week_1_5" class="text-center">Garrett Winters</td>
+                                        <td id="week_2_5" class="text-center">Accountant</td>
+                                        <td id="week_3_5" class="text-center">$170,750</td>
+                                        <td id="week_4_5" class="text-center">$320,800</td>
+                                        <td id="week_5_5" class="text-center">$320,800</td>
+                                        <td id="week_6_5" class="text-center">$320,800</td>
+                                        <td id="week_7_5" class="text-center">$320,800</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">
+                                            其它<br/>
+                                        </th>
+                                        <td id="week_1_6" class="text-center">Garrett Winters</td>
+                                        <td id="week_2_6" class="text-center">Accountant</td>
+                                        <td id="week_3_6" class="text-center">$170,750</td>
+                                        <td id="week_4_6" class="text-center">$320,800</td>
+                                        <td id="week_5_6" class="text-center">$320,800</td>
+                                        <td id="week_6_6" class="text-center">$320,800</td>
+                                        <td id="week_7_6" class="text-center">$320,800</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bd-0">
+                                <div class="card-header tx-medium bd-0 tx-white bg-primary">
+                                    学年学期
+                                </div><!-- card-header -->
+                                <div class="card-body bd bd-t-0 rounded-bottom" style="overflow: auto;height: 500px;" id="dataTime">
+
+                                </div><!-- card-body -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script id="timetable-template" type="text/x-handlebars-template">
+        {{#each list}}
+        <div class="row" style="border-bottom:1px dashed #000;">
+            <div class="col-12 tx-black">
+                {{courseName}}
+            </div>
+            <div class="col-12 tx-warning">
+                {{classroom}}
+            </div>
+            <div class="col-12 tx-teal">
+                {{attendClass}}
+            </div>
+            <div class="col-12 tx-primary">
+                {{teacherName}}
+            </div>
+            <div class="col-12 tx-danger">
+                {{openDate}}-{{closeDate}}周上(总学时{{totalHours}} 总学分{{totalCredits}})
+            </div>
+        </div>
+        {{/each}}
+    </script>
+
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/educational/timetable/timetable_data.js')}"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>
