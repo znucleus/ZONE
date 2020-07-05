@@ -7,11 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.elastic.*;
 import top.zbeboy.zbase.feign.city.TimetableService;
 import top.zbeboy.zbase.tools.web.plugin.select2.Select2Data;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.ElasticUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -23,6 +25,22 @@ public class TimetableRestController {
     private TimetableService timetableService;
 
     /**
+     * 同步数据
+     *
+     * @return 数据
+     */
+    @GetMapping("/web/educational/timetable/sync")
+    public ResponseEntity<Map<String, Object>> sync() {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if(SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())){
+            ajaxUtil = timetableService.sync();
+        } else {
+            ajaxUtil.fail().msg("您无权限操作");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
      * 标识数据
      *
      * @return 数据
@@ -32,7 +50,9 @@ public class TimetableRestController {
         AjaxUtil<TimetableUniqueElastic> ajaxUtil = AjaxUtil.of();
         // 排序
         List<TimetableUniqueElastic> list = timetableService.uniques();
-        list.sort((o1, o2) -> o2.getIdentification().compareTo(o1.getIdentification()));
+        if(Objects.nonNull(list) && !list.isEmpty()){
+            list.sort((o1, o2) -> o2.getIdentification().compareTo(o1.getIdentification()));
+        }
         ajaxUtil.success().msg("获取数据成功").list(list);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }

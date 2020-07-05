@@ -1,6 +1,6 @@
 //# sourceURL=timetable_data.js
-require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "select2-zh-CN", "jquery-labelauty"],
-    function ($, tools, Handlebars, navActive, Swal) {
+require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2", "select2-zh-CN", "jquery-labelauty"],
+    function ($, _, tools, Handlebars, navActive, Swal) {
         /*
          ajax url.
         */
@@ -11,6 +11,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "select2-
             classroom: web_path + '/web/educational/timetable/classroom',
             teacher_name: web_path + '/web/educational/timetable/teacher_name',
             uniques: web_path + '/web/educational/timetable/uniques',
+            sync_data: web_path + '/web/educational/timetable/sync',
             page: '/web/menu/educational/timetable'
         };
 
@@ -184,7 +185,9 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "select2-
         }
 
         function initDataTime() {
+            tools.dataLoading();
             $.get(ajax_url.uniques, function (data) {
+                tools.dataEndLoading();
                 $.each(data.listResult, function (i, val) {
                     var startYear = val.startYear;
                     var endYear = val.endYear;
@@ -429,6 +432,27 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "select2-
             $(".labelauty").labelauty();
         }
 
+        $('#sync').click(function () {
+            Swal.fire({
+                title: "确定全量同步吗？",
+                text: "课表全量同步！",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#dcbc46',
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                preConfirm: function () {
+                    syncData();
+                }
+            });
+        });
+
+        function syncData() {
+            $.get(ajax_url.sync_data, function (data) {
+                Swal.fire(data.state ? '正在同步' : '同步失败', data.msg, data.state ? 'success' : 'error');
+            });
+        }
+
         function cleanData() {
             // 清空之前的数据
             for (var i = 1; i <= 7; i++) {
@@ -442,31 +466,31 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "select2-
             cleanData();
             $.each(data.listResult, function (i, v) {
                 var w = 0;
-                if (v.week === '星期一') {
+                if (_.trim(v.week) === '星期一') {
                     w = 1;
                 }
 
-                if (v.week === '星期二') {
+                if (_.trim(v.week) === '星期二') {
                     w = 2;
                 }
 
-                if (v.week === '星期三') {
+                if (_.trim(v.week) === '星期三') {
                     w = 3;
                 }
 
-                if (v.week === '星期四') {
+                if (_.trim(v.week) === '星期四') {
                     w = 4;
                 }
 
-                if (v.week === '星期五') {
+                if (_.trim(v.week) === '星期五') {
                     w = 5;
                 }
 
-                if (v.week === '星期六') {
+                if (_.trim(v.week) === '星期六') {
                     w = 6;
                 }
 
-                if (v.week === '星期天') {
+                if (_.trim(v.week) === '星期天') {
                     w = 7;
                 }
 
