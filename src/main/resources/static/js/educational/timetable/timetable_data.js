@@ -5,7 +5,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "select2-
          ajax url.
         */
         var ajax_url = {
-            data: web_path + '/web/educational/timetable/data',
+            data: web_path + '/web/educational/timetable/search',
             course_name: web_path + '/web/educational/timetable/course_name',
             attend_class: web_path + '/web/educational/timetable/attend_class',
             classroom: web_path + '/web/educational/timetable/classroom',
@@ -82,8 +82,8 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "select2-
 
             var dataTime = $("input[name='dataTime']:checked").val();
             if (dataTime && dataTime !== '') {
-                var dt = dataTime.split('\\|');
-                param.startYear = dt[0];
+                var dt = dataTime.split('|');
+                param.startYear = dt[0]
                 param.endYear = dt[1];
                 param.semester = dt[2];
                 param.identification = dt[3];
@@ -121,7 +121,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "select2-
         */
         $('#search').click(function () {
             refreshSearch();
-            init();
+            initData();
         });
 
         /*
@@ -130,43 +130,47 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "select2-
         $('#reset_search').click(function () {
             cleanParam();
             refreshSearch();
-            init();
+            initData();
         });
 
         $('#refresh').click(function () {
-            init();
+            initData();
         });
 
         $(param_id.courseName).on('select2:select', function (e) {
             refreshSearch();
-            init();
+            initData();
         });
 
         $(param_id.attendClass).on('select2:select', function (e) {
             refreshSearch();
-            init();
+            initData();
         });
 
         $(param_id.classroom).on('select2:select', function (e) {
             refreshSearch();
-            init();
+            initData();
         });
 
         $(param_id.teacherName).on('select2:select', function (e) {
             refreshSearch();
-            init();
+            initData();
         });
 
         $(param_id.teacherNumber).keyup(function (event) {
             if (event.keyCode === 13) {
                 refreshSearch();
-                init();
+                initData();
             }
         });
 
-        $(".labelauty").click(function () {
-            var v = $(this).val();
-            console.log(v);
+        $('#dataTime').delegate('.labelauty', "click", function () {
+            refreshSearch();
+            initData();
+            initCourseName();
+            initAttendClass();
+            initClassroom();
+            initTeacherName();
         });
 
         init();
@@ -177,13 +181,6 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "select2-
          */
         function init() {
             initDataTime();
-            initSearchContent();
-            initData();
-            initCourseName();
-            initAttendClass();
-            initClassroom();
-            initTeacherName();
-            initSelect2();
         }
 
         function initDataTime() {
@@ -200,33 +197,44 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "select2-
                         se = '上学期';
                     }
 
-                    if (!init_configure.init_uniques) {
-                        if (typeof (Storage) !== "undefined") {
-                            var id = sessionStorage.getItem(webStorageKey.IDENTIFICATION);
-                            if (id === identification) {
-                                $('#dataTime').append('<input class="labelauty" name="dataTime" value="' + groupData + '" type="radio" data-labelauty="' + startYear + ' ' + se + '" checked/>');
+                    $('#dataTime').append('<input class="labelauty" name="dataTime" value="' + groupData + '" type="radio" data-labelauty="' + startYear + ' ' + se + '"/>');
+                });
+
+                if (!init_configure.init_uniques) {
+                    if (typeof (Storage) !== "undefined") {
+                        var id = sessionStorage.getItem(webStorageKey.IDENTIFICATION);
+                        var dcs = $('#dataTime').children();
+                        for(var i = 0;i<dcs.length;i++){
+                            var v = $(dcs[i]).val();
+                            if (id === v.split('|')[3]) {
+                                $(dcs[i]).prop('checked',true);
                                 init_configure.init_uniques = true;
                             }
                         }
+
                     }
-
-                    $('#dataTime').append('<input class="labelauty" name="dataTime" value="' + groupData + '" type="radio" data-labelauty="' + startYear + ' ' + se + '"/>');
-
-                });
+                }
 
                 if (!init_configure.init_uniques) {
                     $($('#dataTime').children()[0]).prop('checked', true);
                 }
 
+                initSearchContent();
+                initData();
+                initCourseName();
+                initAttendClass();
+                initClassroom();
+                initTeacherName();
+                initSelect2();
                 initLabelauty();
             });
         }
 
         function initData() {
             tools.dataLoading();
-            $.get(ajax_url.data, param, function (data) {
+            $.get(ajax_url.data, {extraSearch: JSON.stringify(param)}, function (data) {
                 tools.dataEndLoading();
-                listData(data);
+                // listData(data);
             });
         }
 
@@ -300,6 +308,8 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "select2-
         初始化搜索内容
        */
         function initSearchContent() {
+            initParam();
+
             var courseName = null;
             var attendClass = null;
             var classroom = null;
@@ -322,56 +332,38 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "select2-
             }
             if (courseName !== null) {
                 param.courseName = courseName;
-            } else {
-                initParam();
             }
 
             if (attendClass !== null) {
                 param.attendClass = attendClass;
-            } else {
-                initParam();
             }
 
             if (classroom !== null) {
                 param.classroom = classroom;
-            } else {
-                initParam();
             }
 
             if (teacherName !== null) {
                 param.teacherName = teacherName;
-            } else {
-                initParam();
             }
 
             if (teacherNumber !== null) {
                 param.teacherNumber = teacherNumber;
-            } else {
-                initParam();
             }
 
             if (startYear !== null) {
                 param.startYear = startYear;
-            } else {
-                initParam();
             }
 
             if (endYear !== null) {
                 param.endYear = endYear;
-            } else {
-                initParam();
             }
 
             if (semester !== null) {
                 param.semester = semester;
-            } else {
-                initParam();
             }
 
             if (identification !== null) {
                 param.identification = identification;
-            } else {
-                initParam();
             }
 
         }
