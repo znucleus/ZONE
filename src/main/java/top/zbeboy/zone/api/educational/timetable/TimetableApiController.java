@@ -87,6 +87,7 @@ public class TimetableApiController {
                 timetableElastics = timetableService.search(elasticUtil);
             }
         }
+        timetableElastics.forEach(timetableElastic -> timetableElastic.setTeacherNumber(""));
         ajaxUtil.success().msg("获取数据成功").list(timetableElastics);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
