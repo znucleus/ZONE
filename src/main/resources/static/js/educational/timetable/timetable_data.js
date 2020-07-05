@@ -204,10 +204,10 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "select2-
                     if (typeof (Storage) !== "undefined") {
                         var id = sessionStorage.getItem(webStorageKey.IDENTIFICATION);
                         var dcs = $('#dataTime').children();
-                        for(var i = 0;i<dcs.length;i++){
+                        for (var i = 0; i < dcs.length; i++) {
                             var v = $(dcs[i]).val();
                             if (id === v.split('|')[3]) {
-                                $(dcs[i]).prop('checked',true);
+                                $(dcs[i]).prop('checked', true);
                                 init_configure.init_uniques = true;
                             }
                         }
@@ -234,7 +234,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "select2-
             tools.dataLoading();
             $.get(ajax_url.data, {extraSearch: JSON.stringify(param)}, function (data) {
                 tools.dataEndLoading();
-                // listData(data);
+                generateData(data);
             });
         }
 
@@ -427,5 +427,191 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "select2-
 
         function initLabelauty() {
             $(".labelauty").labelauty();
+        }
+
+        function cleanData() {
+            // 清空之前的数据
+            for (var i = 1; i <= 7; i++) {
+                for (var j = 1; j <= 6; j++) {
+                    $('#week_' + i + '_' + j).empty();
+                }
+            }
+        }
+
+        function generateData(data) {
+            cleanData();
+            $.each(data.listResult, function (i, v) {
+                var w = 0;
+                if (v.week === '星期一') {
+                    w = 1;
+                }
+
+                if (v.week === '星期二') {
+                    w = 2;
+                }
+
+                if (v.week === '星期三') {
+                    w = 3;
+                }
+
+                if (v.week === '星期四') {
+                    w = 4;
+                }
+
+                if (v.week === '星期五') {
+                    w = 5;
+                }
+
+                if (v.week === '星期六') {
+                    w = 6;
+                }
+
+                if (v.week === '星期天') {
+                    w = 7;
+                }
+
+                for (var j = 1; j <= 6; j++) {
+                    week(w, j, v);
+                }
+            })
+        }
+
+        function week(w, j, timetableElastic) {
+            var classTime = timetableElastic.classTime;
+            var overTime = timetableElastic.overTime;
+            var classTimePrefix = Number(classTime.split(':')[0]);
+            var overTimePrefix = Number(overTime.split(':')[0]);
+            var isRight = false;
+            switch (j) {
+                case 1:
+                    isRight = check1(classTimePrefix, overTimePrefix);
+                    break;
+                case 2:
+                    isRight = check2(classTimePrefix, overTimePrefix);
+                    break;
+                case 3:
+                    isRight = check3(classTimePrefix, overTimePrefix);
+                    break;
+                case 4:
+                    isRight = check4(classTimePrefix, overTimePrefix);
+                    break;
+                case 5:
+                    isRight = check5(classTimePrefix, overTimePrefix);
+                    break;
+                case 6:
+                    isRight = check6(classTimePrefix, overTimePrefix);
+                    break;
+            }
+            if (isRight) {
+                generateDataHtml('#week_' + w + '_' + j, timetableElastic);
+            }
+        }
+
+        /**
+         * 第一节区间判断
+         * @param classTimePrefix
+         * @param overTimePrefix
+         * @returns {boolean}
+         */
+        function check1(classTimePrefix, overTimePrefix) {
+            var isRight = false;
+
+            if (classTimePrefix < 8 || (classTimePrefix >= 8 && classTimePrefix < 10)) {
+                if (overTimePrefix > 10 || (overTimePrefix >= 8 && overTimePrefix <= 10)) {
+                    isRight = true;
+                }
+            }
+
+            return isRight;
+        }
+
+        /**
+         * 第二节区间判断
+         * @param classTimePrefix
+         * @param overTimePrefix
+         * @returns {boolean}
+         */
+        function check2(classTimePrefix, overTimePrefix) {
+            var isRight = false;
+
+            if (classTimePrefix < 10 || (classTimePrefix >= 10 && classTimePrefix < 12)) {
+                if (overTimePrefix > 12 || (overTimePrefix >= 10 && overTimePrefix <= 12)) {
+                    isRight = true;
+                }
+            }
+
+            return isRight;
+        }
+
+        /**
+         * 第三节区间判断
+         * @param classTimePrefix
+         * @param overTimePrefix
+         * @returns {boolean}
+         */
+        function check3(classTimePrefix, overTimePrefix) {
+            var isRight = false;
+            if (classTimePrefix < 14 || (classTimePrefix >= 14 && classTimePrefix < 16)) {
+                if (overTimePrefix > 16 || (overTimePrefix >= 14 && overTimePrefix <= 16)) {
+                    isRight = true;
+                }
+            }
+
+            return isRight;
+        }
+
+        /**
+         * 第四节区间判断
+         * @param classTimePrefix
+         * @param overTimePrefix
+         * @returns {boolean}
+         */
+        function check4(classTimePrefix, overTimePrefix) {
+            var isRight = false;
+            if (classTimePrefix < 16 || (classTimePrefix >= 16 && classTimePrefix < 18)) {
+                if (overTimePrefix > 18 || (overTimePrefix >= 16 && overTimePrefix <= 18)) {
+                    isRight = true;
+                }
+            }
+
+            return isRight;
+        }
+
+        /**
+         * 第五节区间判断
+         * @param classTimePrefix
+         * @param overTimePrefix
+         * @returns {boolean}
+         */
+        function check5(classTimePrefix, overTimePrefix) {
+            var isRight = false;
+            if (classTimePrefix < 18 || (classTimePrefix >= 18 && classTimePrefix < 22)) {
+                if (overTimePrefix > 22 || (overTimePrefix >= 18 && overTimePrefix <= 22)) {
+                    isRight = true;
+                }
+            }
+
+
+            return isRight;
+        }
+
+        /**
+         * 异常区间判断
+         * @param classTimePrefix
+         * @param overTimePrefix
+         * @returns {boolean}
+         */
+        function check6(classTimePrefix, overTimePrefix) {
+            var isRight = false;
+            if (classTimePrefix >= 22 || (classTimePrefix > overTimePrefix)) {
+                isRight = true;
+            }
+
+            return isRight;
+        }
+
+        function generateDataHtml(target, timetableElastic) {
+            var template = Handlebars.compile($("#timetable-template").html());
+            $(target).html(template(timetableElastic));
         }
     });
