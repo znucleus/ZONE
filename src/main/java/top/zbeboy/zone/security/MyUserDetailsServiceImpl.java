@@ -70,7 +70,9 @@ public class MyUserDetailsServiceImpl implements UserDetailsService {
      */
     private List<GrantedAuthority> buildUserAuthority(List<Authorities> authorities) {
         Set<GrantedAuthority> setAuths = new HashSet<>();
-        authorities.forEach(auth -> setAuths.add(new SimpleGrantedAuthority(auth.getAuthority())));
+        if (Objects.nonNull(authorities) && !authorities.isEmpty()) {
+            authorities.forEach(auth -> setAuths.add(new SimpleGrantedAuthority(auth.getAuthority())));
+        }
         return new ArrayList<>(setAuths);
     }
 
