@@ -55,8 +55,7 @@
                 </div>
                 <div class="col-md-12">
                     <div class="float-right mg-t-5">
-                        <button type="button" class="btn btn-outline-primary" id="sync"><i class="fa fa-superpowers"
-                                                                                           sec:authorize="hasRole('ROLE_SYSTEM')"></i>
+                        <button type="button" class="btn btn-outline-primary" id="sync" sec:authorize="hasRole('ROLE_SYSTEM')"><i class="fa fa-superpowers"></i>
                             同步
                         </button>
                         <button type="button" class="btn btn-light" id="refresh"><i class="fa fa-refresh"></i> 刷新
