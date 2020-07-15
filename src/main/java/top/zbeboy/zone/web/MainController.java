@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.feign.system.FilesService;
-import top.zbeboy.zone.annotation.logging.LoggingRecord;
+import top.zbeboy.zone.annotation.logging.LoginLoggingRecord;
 import top.zbeboy.zbase.domain.tables.pojos.Files;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zone.service.platform.MenuService;
@@ -103,7 +103,7 @@ public class MainController {
      *
      * @return 后台页.
      */
-    @LoggingRecord(module = "Main", methods = "backstage", description = "访问系统主页")
+    @LoginLoggingRecord(module = "Main", methods = "backstage", description = "访问系统主页")
     @GetMapping(Workbook.WEB_BACKSTAGE)
     public String backstage(ModelMap modelMap, HttpServletRequest request) {
         List<String> roles = SessionUtil.getAuthoritiesFromSession();

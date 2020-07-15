@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.School;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.data.SchoolService;
@@ -14,6 +15,8 @@ import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zbase.vo.data.school.SchoolAddVo;
 import top.zbeboy.zbase.vo.data.school.SchoolEditVo;
+import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
+import top.zbeboy.zone.annotation.logging.LoginLoggingRecord;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
@@ -33,8 +36,9 @@ public class SchoolRestController {
      *
      * @return 学校数据
      */
+    @ApiLoggingRecord(remark = "学校数据", channel = Workbook.channel.WEB)
     @GetMapping("/anyone/data/school")
-    public ResponseEntity<Map<String, Object>> anyoneData() {
+    public ResponseEntity<Map<String, Object>> anyoneData(HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
         List<School> schools = schoolService.findNormal();
         schools.forEach(school -> select2Data.add(school.getSchoolId().toString(), school.getSchoolName()));

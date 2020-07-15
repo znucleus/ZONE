@@ -9,6 +9,7 @@ import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import top.zbeboy.zbase.config.Workbook;
+import top.zbeboy.zbase.domain.tables.pojos.SystemLoginLog;
 import top.zbeboy.zbase.domain.tables.pojos.SystemOperatorLog;
 import top.zbeboy.zbase.feign.system.SystemLogService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
@@ -50,7 +51,7 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
             ServletContext context = request.getSession().getServletContext();
             ApplicationContext ctx = WebApplicationContextUtils
                     .getWebApplicationContext(context);
-            SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(), "登录系统成功", DateTimeUtil.getNowSqlTimestamp(), username, RequestUtil.getIpAddress(request));
+            SystemLoginLog systemLog = new SystemLoginLog(UUIDUtil.getUUID(), "登录系统成功", DateTimeUtil.getNowSqlTimestamp(), username, RequestUtil.getIpAddress(request));
             SystemLogService systemLogService = SpringBootUtil.getBean(SystemLogService.class);
             systemLogService.save(systemLog);
             String key = username + "_login_error_count";
@@ -64,7 +65,7 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
             ServletContext context = request.getSession().getServletContext();
             ApplicationContext ctx = WebApplicationContextUtils
                     .getWebApplicationContext(context);
-            SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(), "授权登录成功", DateTimeUtil.getNowSqlTimestamp(), username, RequestUtil.getIpAddress(request));
+            SystemLoginLog systemLog = new SystemLoginLog(UUIDUtil.getUUID(), "授权登录成功", DateTimeUtil.getNowSqlTimestamp(), username, RequestUtil.getIpAddress(request));
             SystemLogService systemLogService = SpringBootUtil.getBean(SystemLogService.class);
             systemLogService.save(systemLog);
             // 会帮我们跳转到上一次请求的页面上

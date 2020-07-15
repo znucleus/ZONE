@@ -9,6 +9,7 @@ import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import top.zbeboy.zbase.config.Workbook;
+import top.zbeboy.zbase.domain.tables.pojos.SystemLoginLog;
 import top.zbeboy.zbase.domain.tables.pojos.SystemOperatorLog;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.platform.UsersService;
@@ -52,7 +53,7 @@ public class AjaxAuthenticationFailureHandler extends ExceptionMappingAuthentica
             ServletContext context = request.getSession().getServletContext();
             ApplicationContext ctx = WebApplicationContextUtils
                     .getWebApplicationContext(context);
-            SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(), "登录系统失败", DateTimeUtil.getNowSqlTimestamp(), username, RequestUtil.getIpAddress(request));
+            SystemLoginLog systemLog = new SystemLoginLog(UUIDUtil.getUUID(), "登录系统失败", DateTimeUtil.getNowSqlTimestamp(), username, RequestUtil.getIpAddress(request));
             SystemLogService systemLogService = SpringBootUtil.getBean(SystemLogService.class);
             systemLogService.save(systemLog);
             int code = AjaxAuthenticationCode.AU_ERROR_CODE;
@@ -67,7 +68,7 @@ public class AjaxAuthenticationFailureHandler extends ExceptionMappingAuthentica
                     users.setAccountNonLocked(BooleanUtil.toByte(false));
                     usersService.update(users);
 
-                    systemLog = new SystemOperatorLog(UUIDUtil.getUUID(), "账号锁定", DateTimeUtil.getNowSqlTimestamp(), username, RequestUtil.getIpAddress(request));
+                    systemLog = new SystemLoginLog(UUIDUtil.getUUID(), "账号锁定", DateTimeUtil.getNowSqlTimestamp(), username, RequestUtil.getIpAddress(request));
                     systemLogService.save(systemLog);
 
                     session.removeAttribute(key);
@@ -84,7 +85,7 @@ public class AjaxAuthenticationFailureHandler extends ExceptionMappingAuthentica
             ServletContext context = request.getSession().getServletContext();
             ApplicationContext ctx = WebApplicationContextUtils
                     .getWebApplicationContext(context);
-            SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(), "授权登录失败", DateTimeUtil.getNowSqlTimestamp(), username, RequestUtil.getIpAddress(request));
+            SystemLoginLog systemLog = new SystemLoginLog(UUIDUtil.getUUID(), "授权登录失败", DateTimeUtil.getNowSqlTimestamp(), username, RequestUtil.getIpAddress(request));
             SystemLogService systemLogService = SpringBootUtil.getBean(SystemLogService.class);
             systemLogService.save(systemLog);
             // 会帮我们跳转到上一次请求的页面上
