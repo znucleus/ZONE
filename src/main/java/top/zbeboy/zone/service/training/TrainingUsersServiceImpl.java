@@ -120,6 +120,15 @@ public class TrainingUsersServiceImpl implements TrainingUsersService, Paginatio
         return countAll(selectOnConditionStep, dataTablesUtil, false);
     }
 
+    @Override
+    public int countByTrainingReleaseId(String trainingReleaseId) {
+        Record1<Integer> count = create.selectCount()
+                .from(TRAINING_USERS)
+                .where(TRAINING_USERS.TRAINING_RELEASE_ID.eq(trainingReleaseId))
+                .fetchOne();
+        return count.value1();
+    }
+
     @CacheEvict(cacheNames = CacheBook.TRAINING_USERS, allEntries = true)
     @Transactional(propagation = Propagation.REQUIRED)
     @Override

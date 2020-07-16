@@ -25,6 +25,7 @@ import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.training.TrainingConfigureService;
 import top.zbeboy.zone.service.training.TrainingReleaseService;
 import top.zbeboy.zone.service.training.TrainingReportService;
+import top.zbeboy.zone.service.training.TrainingUsersService;
 import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
@@ -58,6 +59,9 @@ public class TrainingReportRestController {
 
     @Resource
     private TrainingConfigureService trainingConfigureService;
+
+    @Resource
+    private TrainingUsersService trainingUsersService;
 
     @Resource
     private UploadService uploadService;
@@ -278,7 +282,7 @@ public class TrainingReportRestController {
             bean.setScienceName(releaseBean.getScienceName());
             bean.setClassRoom(getClassRoom(trainingReleaseId));
 
-            int organizeNum = organizeService.countById(releaseBean.getOrganizeId());
+            int organizeNum = trainingUsersService.countByTrainingReleaseId(releaseBean.getTrainingReleaseId());
             bean.setOrganizeNum(organizeNum + "");
 
             if (releaseBean.getCourseType() == 0) {
