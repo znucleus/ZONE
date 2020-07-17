@@ -50,7 +50,7 @@ require(["jquery", "nav.active", "responsive.bootstrap4"],
             "columns": [
                 {"data": "username"},
                 {"data": "behavior"},
-                {"data": "operatingTimeNew"},
+                {"data": "createTimeStr"},
                 {"data": "ipAddress"}
             ],
             "language": {

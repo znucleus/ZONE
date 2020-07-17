@@ -31,7 +31,7 @@ public class SystemLogRestController {
         List<String> headers = new ArrayList<>();
         headers.add("username");
         headers.add("behavior");
-        headers.add("operatingTimeNew");
+        headers.add("createTime");
         headers.add("ipAddress");
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
         Users users = SessionUtil.getUserFromSession();
