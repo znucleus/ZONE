@@ -59,6 +59,7 @@ public class BuildingRestController {
         headers.add("schoolName");
         headers.add("collegeName");
         headers.add("buildingName");
+        headers.add("coordinate");
         headers.add("buildingIsDel");
         headers.add("operator");
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);

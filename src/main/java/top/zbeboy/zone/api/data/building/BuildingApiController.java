@@ -1,0 +1,35 @@
+package top.zbeboy.zone.api.data.building;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+import top.zbeboy.zbase.domain.tables.pojos.Building;
+import top.zbeboy.zbase.feign.data.BuildingService;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.vo.data.building.BuildingSearchVo;
+
+import javax.annotation.Resource;
+import java.util.List;
+import java.util.Map;
+
+@RestController
+public class BuildingApiController {
+
+    @Resource
+    private BuildingService buildingService;
+
+    /**
+     * 根据院获取全部有效楼
+     *
+     * @param buildingSearchVo 院id
+     * @return 楼数据
+     */
+    @GetMapping("/api/data/building")
+    public ResponseEntity<Map<String, Object>> data(BuildingSearchVo buildingSearchVo) {
+        AjaxUtil<Building> ajaxUtil = AjaxUtil.of();
+        List<Building> buildings = buildingService.findByCollegeIdAndBuildingIsDel(buildingSearchVo);
+        ajaxUtil.success().msg("获取数据成功").list(buildings);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+}

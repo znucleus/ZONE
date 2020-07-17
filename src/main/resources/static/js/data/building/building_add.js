@@ -22,7 +22,8 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
         var param_id = {
             school: '#school',
             college: '#college',
-            buildingName: '#buildingName'
+            buildingName: '#buildingName',
+            coordinate:'#coordinate'
         };
 
         var button_id = {
@@ -40,6 +41,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             schoolId: '',
             collegeId: '',
             buildingName: '',
+            coordinate:'',
             buildingIsDel: ''
         };
 
@@ -58,6 +60,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
                 param.collegeId = page_param.collegeId;
             }
             param.buildingName = _.trim($(param_id.buildingName).val());
+            param.coordinate = _.trim($(param_id.coordinate).val());
             var buildingIsDel = $('input[name="buildingIsDel"]:checked').val();
             param.buildingIsDel = _.isUndefined(buildingIsDel) ? 0 : buildingIsDel;
         }
@@ -113,6 +116,13 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
                 warningClass: "text-success",
                 limitReachedClass: "text-danger"
             });
+
+            $(param_id.coordinate).maxlength({
+                alwaysShow: true,
+                threshold: 10,
+                warningClass: "text-success",
+                limitReachedClass: "text-danger"
+            });
         }
 
         $(param_id.school).change(function () {
@@ -145,6 +155,16 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
                         tools.validErrorDom(param_id.buildingName, data.msg);
                     }
                 });
+            }
+        });
+
+        $(param_id.coordinate).blur(function () {
+            initParam();
+            var coordinate = param.coordinate;
+            if (coordinate.length > 1000) {
+                tools.validErrorDom(param_id.coordinate, '坐标1000个字符以内');
+            } else {
+                tools.validSuccessDom(param_id.coordinate);
             }
         });
 
@@ -198,11 +218,21 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
                 $.post(ajax_url.check_name, param, function (data) {
                     if (data.state) {
                         tools.validSuccessDom(param_id.buildingName);
-                        sendAjax();
+                        validCoordinate();
                     } else {
                         tools.validErrorDom(param_id.buildingName, data.msg);
                     }
                 });
+            }
+        }
+
+        function validCoordinate() {
+            var coordinate = param.coordinate;
+            if (coordinate.length > 1000) {
+                tools.validErrorDom(param_id.coordinate, '坐标1000个字符以内');
+            } else {
+                tools.validSuccessDom(param_id.coordinate);
+                sendAjax();
             }
         }
 
