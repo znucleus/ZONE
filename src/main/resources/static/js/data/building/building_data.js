@@ -8,7 +8,8 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
         var param = {
             schoolName: '',
             collegeName: '',
-            buildingName: ''
+            buildingName: '',
+            coordinate:''
         };
 
         /*
@@ -17,7 +18,8 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
         var webStorageKey = {
             SCHOOL_NAME: 'DATA_BUILDING_SCHOOL_NAME_SEARCH',
             COLLEGE_NAME: 'DATA_BUILDING_COLLEGE_NAME_SEARCH',
-            BUILDING_NAME: 'DATA_BUILDING_BUILDING_NAME_SEARCH'
+            BUILDING_NAME: 'DATA_BUILDING_BUILDING_NAME_SEARCH',
+            COORDINATE: 'DATA_BUILDING_COORDINATE_SEARCH',
         };
 
         /*
@@ -68,6 +70,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
                 {"data": "schoolName"},
                 {"data": "collegeName"},
                 {"data": "buildingName"},
+                {"data": "coordinate"},
                 {"data": "buildingIsDel"},
                 {"data": null}
             ],
@@ -87,7 +90,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
                     }
                 },
                 {
-                    targets: 7,
+                    targets: 8,
                     orderable: false,
                     render: function (a, b, c, d) {
 
@@ -125,7 +128,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
                     }
                 },
                 {
-                    targets: 6,
+                    targets: 7,
                     render: function (a, b, c, d) {
                         if (c.buildingIsDel === 0 || c.buildingIsDel == null) {
                             return "<span class='text-info'>正常</span>";
@@ -194,7 +197,8 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
             return {
                 schoolName: '#search_school',
                 collegeName: '#search_college',
-                buildingName: '#search_building'
+                buildingName: '#search_building',
+                coordinate:'#search_coordinate'
             };
         }
 
@@ -212,10 +216,12 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
             param.schoolName = $(getParamId().schoolName).val();
             param.collegeName = $(getParamId().collegeName).val();
             param.buildingName = $(getParamId().buildingName).val();
+            param.coordinate = $(getParamId().coordinate).val();
             if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.SCHOOL_NAME, DP.defaultUndefinedValue(param.schoolName, ''));
                 sessionStorage.setItem(webStorageKey.COLLEGE_NAME, DP.defaultUndefinedValue(param.collegeName, ''));
                 sessionStorage.setItem(webStorageKey.BUILDING_NAME, param.buildingName);
+                sessionStorage.setItem(webStorageKey.COORDINATE, param.coordinate);
             }
         }
 
@@ -226,10 +232,12 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
             var schoolName = null;
             var collegeName = null;
             var buildingName = null;
+            var coordinate = null;
             if (typeof (Storage) !== "undefined") {
                 schoolName = sessionStorage.getItem(webStorageKey.SCHOOL_NAME);
                 collegeName = sessionStorage.getItem(webStorageKey.COLLEGE_NAME);
                 buildingName = sessionStorage.getItem(webStorageKey.BUILDING_NAME);
+                coordinate = sessionStorage.getItem(webStorageKey.COORDINATE);
             }
             if (schoolName !== null) {
                 param.schoolName = schoolName;
@@ -242,6 +250,10 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
             if (buildingName !== null) {
                 param.buildingName = buildingName;
             }
+
+            if (coordinate !== null) {
+                param.coordinate = coordinate;
+            }
         }
 
         /*
@@ -251,10 +263,12 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
             var schoolName = null;
             var collegeName = null;
             var buildingName = null;
+            var coordinate = null;
             if (typeof (Storage) !== "undefined") {
                 schoolName = sessionStorage.getItem(webStorageKey.SCHOOL_NAME);
                 collegeName = sessionStorage.getItem(webStorageKey.COLLEGE_NAME);
                 buildingName = sessionStorage.getItem(webStorageKey.BUILDING_NAME);
+                coordinate = sessionStorage.getItem(webStorageKey.COORDINATE);
             }
             if (schoolName !== null) {
                 $(getParamId().schoolName).val(schoolName);
@@ -267,6 +281,10 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
             if (buildingName !== null) {
                 $(getParamId().buildingName).val(buildingName);
             }
+
+            if (coordinate !== null) {
+                $(getParamId().coordinate).val(coordinate);
+            }
         }
 
         /*
@@ -276,6 +294,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
             $(getParamId().schoolName).val('');
             $(getParamId().collegeName).val('');
             $(getParamId().buildingName).val('');
+            $(getParamId().coordinate).val('');
         }
 
         $(getParamId().schoolName).keyup(function (event) {
@@ -293,6 +312,13 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
         });
 
         $(getParamId().buildingName).keyup(function (event) {
+            if (event.keyCode === 13) {
+                initParam();
+                myTable.ajax.reload();
+            }
+        });
+
+        $(getParamId().coordinate).keyup(function (event) {
             if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();

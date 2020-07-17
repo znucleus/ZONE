@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import top.zbeboy.zbase.domain.tables.pojos.SystemLoginLog;
 import top.zbeboy.zbase.domain.tables.pojos.SystemOperatorLog;
 import top.zbeboy.zbase.feign.system.SystemLogService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
@@ -40,7 +41,7 @@ public class AuthenticationSuccessEventListener implements ApplicationListener<A
                     RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
                     HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(requestAttributes)).getRequest();
 
-                    SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(), "OAUTH登录[" + grantType + "][" + scope + "]", DateTimeUtil.getNowSqlTimestamp(), username, RequestUtil.getIpAddress(request));
+                    SystemLoginLog systemLog = new SystemLoginLog(UUIDUtil.getUUID(), "OAUTH登录[" + grantType + "][" + scope + "]", DateTimeUtil.getNowSqlTimestamp(), username, RequestUtil.getIpAddress(request));
                     systemLogService.save(systemLog);
                 }
             }

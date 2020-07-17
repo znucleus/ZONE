@@ -42,6 +42,12 @@
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
+                            <label>坐标</label>
+                            <input class="form-control" name="coordinate" id="coordinate" maxlength="1000"
+                                   placeholder="坐标" th:value="${building.coordinate}"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
                             <label class="ckbox">
                                 <input type="checkbox" name="buildingIsDel" value="1"
                                        th:if="${building.buildingIsDel == 0 || building.buildingIsDel == null}"/>

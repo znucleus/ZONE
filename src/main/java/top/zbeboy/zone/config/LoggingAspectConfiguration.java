@@ -6,8 +6,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Profile;
 import top.zbeboy.zbase.config.Workbook;
+import top.zbeboy.zone.aop.logging.ApiLoggingAspect;
 import top.zbeboy.zone.aop.logging.LoggingAspect;
-import top.zbeboy.zone.aop.logging.LoggingRecordAspect;
+import top.zbeboy.zone.aop.logging.LoginLoggingAspect;
 
 /**
  * 日志切面环境配置.
@@ -38,7 +39,18 @@ public class LoggingAspectConfiguration {
      */
     @Bean
     @Profile({Workbook.SPRING_PROFILE_DEVELOPMENT, Workbook.SPRING_PROFILE_PRODUCTION, Workbook.SPRING_PROFILE_CLUSTER})
-    public LoggingRecordAspect loggingRecordAspect() {
-        return new LoggingRecordAspect();
+    public LoginLoggingAspect loginLoggingAspect() {
+        return new LoginLoggingAspect();
+    }
+
+    /**
+     * 保存日志
+     *
+     * @return
+     */
+    @Bean
+    @Profile({Workbook.SPRING_PROFILE_DEVELOPMENT, Workbook.SPRING_PROFILE_PRODUCTION, Workbook.SPRING_PROFILE_CLUSTER})
+    public ApiLoggingAspect apiLoggingAspect() {
+        return new ApiLoggingAspect();
     }
 }

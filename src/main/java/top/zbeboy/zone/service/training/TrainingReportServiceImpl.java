@@ -147,10 +147,14 @@ public class TrainingReportServiceImpl implements TrainingReportService {
                                 cellTextString = cellTextString.replace(e.getKey(),
                                         e.getValue());
                                 cell.removeParagraph(0);
-                                XWPFParagraph paragraph = document.createParagraph();
+                                XWPFParagraph paragraph = cell.addParagraph();
                                 XWPFRun paragraphRun = paragraph.createRun();
                                 paragraphRun.setFontSize(14);// 设置字体大小
                                 paragraphRun.setText(cellTextString);
+                                /*XWPFParagraph paragraph = document.createParagraph();
+                                XWPFRun paragraphRun = paragraph.createRun();
+                                paragraphRun.setFontSize(14);// 设置字体大小
+                                paragraphRun.setText(cellTextString);*/
                                 cell.setParagraph(paragraph);
                             }
                         }

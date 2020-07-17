@@ -6,9 +6,9 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.zbeboy.zbase.domain.tables.pojos.SystemLoginLog;
 import top.zbeboy.zbase.feign.system.SystemLogService;
-import top.zbeboy.zone.annotation.logging.LoggingRecord;
-import top.zbeboy.zbase.domain.tables.pojos.SystemOperatorLog;
+import top.zbeboy.zone.annotation.logging.LoginLoggingRecord;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.service.util.RequestUtil;
@@ -20,9 +20,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 
 @Aspect
-public class LoggingRecordAspect {
+public class LoginLoggingAspect {
 
-    private final Logger log = LoggerFactory.getLogger(LoggingRecordAspect.class);
+    private final Logger log = LoggerFactory.getLogger(LoginLoggingAspect.class);
 
     @Resource
     private SystemLogService systemLogService;
@@ -30,8 +30,8 @@ public class LoggingRecordAspect {
     /**
      * 日志记录切面
      */
-    @Pointcut("@annotation(top.zbeboy.zone.annotation.logging.LoggingRecord)")
-    public void loggingRecordPointcut() {
+    @Pointcut("@annotation(top.zbeboy.zone.annotation.logging.LoginLoggingRecord)")
+    public void loginLoggingRecordPointcut() {
     }
 
     /**
@@ -41,7 +41,7 @@ public class LoggingRecordAspect {
      * @return
      * @throws Throwable
      */
-    @Around("loggingRecordPointcut()")
+    @Around("loginLoggingRecordPointcut()")
     public Object doRecord(ProceedingJoinPoint point) throws Throwable {
         String targetName = point.getTarget().getClass().getName();
         String methodName = point.getSignature().getName();
@@ -56,9 +56,9 @@ public class LoggingRecordAspect {
                         if (o instanceof HttpServletRequest) {
                             HttpServletRequest request = (HttpServletRequest) o;
                             Users users = SessionUtil.getUserFromSession();
-                            SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(), String.valueOf(method.getAnnotation(LoggingRecord.class).description()), DateTimeUtil.getNowSqlTimestamp(), users.getUsername(), RequestUtil.getIpAddress(request));
+                            SystemLoginLog systemLog = new SystemLoginLog(UUIDUtil.getUUID(), method.getAnnotation(LoginLoggingRecord.class).description(), DateTimeUtil.getNowSqlTimestamp(), users.getUsername(), RequestUtil.getIpAddress(request));
                             systemLogService.save(systemLog);
-                            log.info(" Record operator logging to database , the module is {} , the method is {} ", method.getAnnotation(LoggingRecord.class).module(), method.getAnnotation(LoggingRecord.class).methods());
+                            log.info(" Record operator logging to database , the module is {} , the method is {} ", method.getAnnotation(LoginLoggingRecord.class).module(), method.getAnnotation(LoginLoggingRecord.class).methods());
                             break;
                         }
                     }

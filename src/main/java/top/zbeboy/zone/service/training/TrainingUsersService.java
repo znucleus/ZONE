@@ -75,6 +75,14 @@ public interface TrainingUsersService {
     int countByCondition(DataTablesUtil dataTablesUtil);
 
     /**
+     * 根据实训发布id统计
+     *
+     * @param trainingReleaseId 实训发布id
+     * @return 数据
+     */
+    int countByTrainingReleaseId(String trainingReleaseId);
+
+    /**
      * 批量保存
      *
      * @param trainingUsers 数据
