@@ -69,6 +69,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
                 {"data": "buildingId"},
                 {"data": "schoolName"},
                 {"data": "collegeName"},
+                {"data": "buildingClassifyName"},
                 {"data": "buildingName"},
                 {"data": "coordinate"},
                 {"data": "buildingIsDel"},
@@ -90,7 +91,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
                     }
                 },
                 {
-                    targets: 8,
+                    targets: 9,
                     orderable: false,
                     render: function (a, b, c, d) {
 
@@ -128,7 +129,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
                     }
                 },
                 {
-                    targets: 7,
+                    targets: 8,
                     render: function (a, b, c, d) {
                         if (c.buildingIsDel === 0 || c.buildingIsDel == null) {
                             return "<span class='text-info'>正常</span>";

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.domain.tables.pojos.Building;
+import top.zbeboy.zbase.domain.tables.pojos.BuildingClassify;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.data.BuildingService;
 import top.zbeboy.zbase.tools.web.plugin.select2.Select2Data;
@@ -28,6 +29,19 @@ public class BuildingRestController {
 
     @Resource
     private BuildingService buildingService;
+
+    /**
+     * 全部楼类型
+     *
+     * @return 数据
+     */
+    @GetMapping("/users/data/building_classifies")
+    public ResponseEntity<Map<String, Object>> classifies() {
+        Select2Data select2Data = Select2Data.of();
+        List<BuildingClassify> classifies = buildingService.classifies();
+        classifies.forEach(classify -> select2Data.add(classify.getBuildingClassifyId().toString(), classify.getBuildingClassifyName()));
+        return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
+    }
 
     /**
      * 根据院获取全部有效楼
@@ -58,6 +72,7 @@ public class BuildingRestController {
         headers.add("buildingId");
         headers.add("schoolName");
         headers.add("collegeName");
+        headers.add("buildingClassifyName");
         headers.add("buildingName");
         headers.add("coordinate");
         headers.add("buildingIsDel");

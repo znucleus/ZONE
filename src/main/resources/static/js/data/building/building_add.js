@@ -8,6 +8,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
         var ajax_url = {
             obtain_school_data: web_path + '/anyone/data/school',
             obtain_college_data: web_path + '/anyone/data/college',
+            obtain_building_classifies_data: web_path + '/users/data/building_classifies',
             save: web_path + '/web/data/building/save',
             check_name: web_path + '/web/data/building/check/add/name',
             page: '/web/menu/data/building'
@@ -22,6 +23,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
         var param_id = {
             school: '#school',
             college: '#college',
+            buildingClassify:'#buildingClassify',
             buildingName: '#buildingName',
             coordinate:'#coordinate'
         };
@@ -40,6 +42,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
         var param = {
             schoolId: '',
             collegeId: '',
+            buildingClassifyId:'',
             buildingName: '',
             coordinate:'',
             buildingIsDel: ''
@@ -59,6 +62,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             } else {
                 param.collegeId = page_param.collegeId;
             }
+            param.buildingClassifyId = $(param_id.buildingClassify).val();
             param.buildingName = _.trim($(param_id.buildingName).val());
             param.coordinate = _.trim($(param_id.coordinate).val());
             var buildingIsDel = $('input[name="buildingIsDel"]:checked').val();
@@ -76,6 +80,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
         function init() {
             if (Number(page_param.collegeId) === 0) {
                 initSchool();
+                initBuildingClassifies();
                 initSelect2();
             }
             initMaxLength();
@@ -98,6 +103,14 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             } else {
                 $(param_id.college).html('<option label="请选择院"></option>');
             }
+        }
+
+        function initBuildingClassifies() {
+            $.get(ajax_url.obtain_building_classifies_data, function (data) {
+                $(param_id.buildingClassify).select2({
+                    data: data.results
+                });
+            });
         }
 
         function initSelect2() {
@@ -142,6 +155,14 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             }
         });
 
+        $(param_id.buildingClassify).change(function () {
+            var v = $(this).val();
+
+            if (Number(v) > 0) {
+                tools.validSelect2SuccessDom(param_id.buildingClassify);
+            }
+        });
+
         $(param_id.buildingName).blur(function () {
             initParam();
             var buildingName = param.buildingName;
@@ -176,7 +197,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             if (Number(page_param.collegeId) === 0) {
                 validSchoolId();
             } else {
-                validBuildingName();
+                validBuildingClassifyId();
             }
 
         });
@@ -203,6 +224,19 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
                 tools.validSelect2ErrorDom(param_id.college, '请选择院');
             } else {
                 tools.validSelect2SuccessDom(param_id.college);
+                validBuildingClassifyId();
+            }
+        }
+
+        /**
+         * 检验楼类型
+         */
+        function validBuildingClassifyId() {
+            var buildingClassifyId = param.buildingClassifyId;
+            if (Number(buildingClassifyId) <= 0) {
+                tools.validSelect2ErrorDom(param_id.buildingClassify, '请选择类型');
+            } else {
+                tools.validSelect2SuccessDom(param_id.buildingClassify);
                 validBuildingName();
             }
         }
