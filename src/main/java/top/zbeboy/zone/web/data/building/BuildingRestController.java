@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import top.zbeboy.zbase.domain.tables.pojos.Building;
+import top.zbeboy.zbase.bean.data.building.BuildingBean;
 import top.zbeboy.zbase.domain.tables.pojos.BuildingClassify;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.data.BuildingService;
@@ -50,9 +50,9 @@ public class BuildingRestController {
      * @return 楼数据
      */
     @GetMapping("/users/data/building")
-    public ResponseEntity<Map<String, Object>> usersData(BuildingSearchVo buildingSearchVo) {
+    public ResponseEntity<Map<String, Object>> search(BuildingSearchVo buildingSearchVo) {
         Select2Data select2Data = Select2Data.of();
-        List<Building> buildings = buildingService.findByCollegeIdAndBuildingIsDel(buildingSearchVo);
+        List<BuildingBean> buildings = buildingService.search(buildingSearchVo);
         buildings.forEach(building -> select2Data.add(building.getBuildingId().toString(), building.getBuildingName()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }

@@ -81,7 +81,10 @@ require(["jquery", "tools", "moment-with-locales", "handlebars", "sweetalert2",
         }
 
         function initBuilding() {
-            $.get(ajax_url.obtain_building_data, {collegeId: page_param.paramCollegeId}, function (data) {
+            $.get(ajax_url.obtain_building_data, {
+                collegeId: page_param.paramCollegeId,
+                buildingClassifyId: 1
+            }, function (data) {
                 $(param_id.building).select2({
                     data: data.results
                 });
