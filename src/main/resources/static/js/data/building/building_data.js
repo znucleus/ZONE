@@ -1,5 +1,5 @@
 //# sourceURL=building_data.js
-require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "responsive.bootstrap4", "check.all", "jquery.address", "messenger"],
+require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "responsive.bootstrap4", "check.all","select2-zh-CN", "jquery.address", "messenger"],
     function ($, DP, Handlebars, navActive, Swal) {
 
         /*
@@ -8,6 +8,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
         var param = {
             schoolName: '',
             collegeName: '',
+            buildingClassifyId:'',
             buildingName: '',
             coordinate:''
         };
@@ -18,6 +19,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
         var webStorageKey = {
             SCHOOL_NAME: 'DATA_BUILDING_SCHOOL_NAME_SEARCH',
             COLLEGE_NAME: 'DATA_BUILDING_COLLEGE_NAME_SEARCH',
+            BUILDING_CLASSIFY_ID: 'DATA_BUILDING_CLASSIFY_ID_SEARCH',
             BUILDING_NAME: 'DATA_BUILDING_BUILDING_NAME_SEARCH',
             COORDINATE: 'DATA_BUILDING_COORDINATE_SEARCH',
         };
@@ -28,6 +30,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
         function getAjaxUrl() {
             return {
                 data: web_path + '/web/data/building/data',
+                obtain_building_classifies_data: web_path + '/users/data/building_classifies',
                 status: web_path + '/web/data/building/status',
                 add: '/web/data/building/add',
                 edit: '/web/data/building/edit',
@@ -198,6 +201,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
             return {
                 schoolName: '#search_school',
                 collegeName: '#search_college',
+                buildingClassifyId: '#search_building_classify_id',
                 buildingName: '#search_building',
                 coordinate:'#search_coordinate'
             };
@@ -210,20 +214,59 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
             return param;
         }
 
+        var init_configure = {
+            init_building_classify_id: false
+        };
+
         /*
          初始化参数
          */
         function initParam() {
             param.schoolName = $(getParamId().schoolName).val();
             param.collegeName = $(getParamId().collegeName).val();
+            param.buildingClassifyId = $(getParamId().buildingClassifyId).val();
             param.buildingName = $(getParamId().buildingName).val();
             param.coordinate = $(getParamId().coordinate).val();
             if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.SCHOOL_NAME, DP.defaultUndefinedValue(param.schoolName, ''));
                 sessionStorage.setItem(webStorageKey.COLLEGE_NAME, DP.defaultUndefinedValue(param.collegeName, ''));
+                sessionStorage.setItem(webStorageKey.BUILDING_CLASSIFY_ID, param.buildingClassifyId != null ? param.buildingClassifyId : '');
                 sessionStorage.setItem(webStorageKey.BUILDING_NAME, param.buildingName);
                 sessionStorage.setItem(webStorageKey.COORDINATE, param.coordinate);
             }
+        }
+
+        init();
+
+        function init() {
+            initSearchBuildingClassifyId();
+            initSelect2();
+        }
+
+        var buildingClassifySelect2 = null;
+
+        /**
+         * 初始化类型
+         */
+        function initSearchBuildingClassifyId() {
+            $.get(getAjaxUrl().obtain_building_classifies_data, function (data) {
+                $(getParamId().buildingClassifyId).html('<option label="请选择类型"></option>');
+                buildingClassifySelect2 = $(getParamId().buildingClassifyId).select2({data: data.results});
+
+                if (!init_configure.init_building_classify_id) {
+                    if (typeof (Storage) !== "undefined") {
+                        var buildingClassifyId = sessionStorage.getItem(webStorageKey.BUILDING_CLASSIFY_ID);
+                        buildingClassifySelect2.val(Number(buildingClassifyId)).trigger("change");
+                    }
+                    init_configure.init_building_classify_id = true;
+                }
+            });
+        }
+
+        function initSelect2() {
+            $('.select2-show-search').select2({
+                language: "zh-CN"
+            });
         }
 
         /*
@@ -233,10 +276,12 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
             var schoolName = null;
             var collegeName = null;
             var buildingName = null;
+            var buildingClassifyId = null;
             var coordinate = null;
             if (typeof (Storage) !== "undefined") {
                 schoolName = sessionStorage.getItem(webStorageKey.SCHOOL_NAME);
                 collegeName = sessionStorage.getItem(webStorageKey.COLLEGE_NAME);
+                buildingClassifyId = sessionStorage.getItem(webStorageKey.BUILDING_CLASSIFY_ID);
                 buildingName = sessionStorage.getItem(webStorageKey.BUILDING_NAME);
                 coordinate = sessionStorage.getItem(webStorageKey.COORDINATE);
             }
@@ -246,6 +291,10 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
 
             if (collegeName !== null) {
                 param.collegeName = collegeName;
+            }
+
+            if (buildingClassifyId !== null) {
+                param.buildingClassifyId = buildingClassifyId;
             }
 
             if (buildingName !== null) {
@@ -263,11 +312,13 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
         function initSearchInput() {
             var schoolName = null;
             var collegeName = null;
+            var buildingClassifyId = null;
             var buildingName = null;
             var coordinate = null;
             if (typeof (Storage) !== "undefined") {
                 schoolName = sessionStorage.getItem(webStorageKey.SCHOOL_NAME);
                 collegeName = sessionStorage.getItem(webStorageKey.COLLEGE_NAME);
+                buildingClassifyId = sessionStorage.getItem(webStorageKey.BUILDING_CLASSIFY_ID);
                 buildingName = sessionStorage.getItem(webStorageKey.BUILDING_NAME);
                 coordinate = sessionStorage.getItem(webStorageKey.COORDINATE);
             }
@@ -277,6 +328,10 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
 
             if (collegeName !== null) {
                 $(getParamId().collegeName).val(collegeName);
+            }
+
+            if (buildingClassifyId !== null) {
+                $(getParamId().buildingClassifyId).val(buildingClassifyId);
             }
 
             if (buildingName !== null) {
@@ -296,6 +351,8 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
             $(getParamId().collegeName).val('');
             $(getParamId().buildingName).val('');
             $(getParamId().coordinate).val('');
+
+            buildingClassifySelect2.val('').trigger("change");
         }
 
         $(getParamId().schoolName).keyup(function (event) {
@@ -310,6 +367,11 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
                 initParam();
                 myTable.ajax.reload();
             }
+        });
+
+        $(getParamId().buildingClassifyId).on('select2:select', function (e) {
+            initParam();
+            myTable.ajax.reload();
         });
 
         $(getParamId().buildingName).keyup(function (event) {
