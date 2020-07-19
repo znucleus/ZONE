@@ -12,9 +12,11 @@ import top.zbeboy.zbase.elastic.*;
 import top.zbeboy.zbase.feign.city.TimetableService;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.ElasticUtil;
+import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +34,9 @@ public class TimetableApiController {
      *
      * @return 数据
      */
+    @ApiLoggingRecord(remark = "教务课表同步", channel = Workbook.channel.API, needLogin = true)
     @GetMapping("/api/educational/timetable/sync")
-    public ResponseEntity<Map<String, Object>> sync(Principal principal) {
+    public ResponseEntity<Map<String, Object>> sync(Principal principal, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (SessionUtil.isOauthUserInRole(Workbook.authorities.ROLE_SYSTEM.name(), principal)) {
             ajaxUtil = timetableService.sync();
@@ -48,8 +51,9 @@ public class TimetableApiController {
      *
      * @return 数据
      */
+    @ApiLoggingRecord(remark = "教务课表标识数据", channel = Workbook.channel.API, needLogin = true)
     @GetMapping("/api/educational/timetable/uniques")
-    public ResponseEntity<Map<String, Object>> uniques() {
+    public ResponseEntity<Map<String, Object>> uniques(Principal principal, HttpServletRequest request) {
         AjaxUtil<TimetableUniqueElastic> ajaxUtil = AjaxUtil.of();
         // 排序
         List<TimetableUniqueElastic> list = timetableService.uniques();
@@ -65,8 +69,10 @@ public class TimetableApiController {
      *
      * @return 数据
      */
+    @ApiLoggingRecord(remark = "教务课表搜索", channel = Workbook.channel.API, needLogin = true)
     @GetMapping("/api/educational/timetable/search")
-    public ResponseEntity<Map<String, Object>> search(ElasticUtil elasticUtil) {
+    public ResponseEntity<Map<String, Object>> search(ElasticUtil elasticUtil,
+                                                      Principal principal, HttpServletRequest request) {
         AjaxUtil<TimetableElastic> ajaxUtil = AjaxUtil.of();
         List<TimetableElastic> timetableElastics = new ArrayList<>();
         JSONObject search = elasticUtil.getSearch();
@@ -97,8 +103,10 @@ public class TimetableApiController {
      *
      * @return 数据
      */
+    @ApiLoggingRecord(remark = "教务课表教室", channel = Workbook.channel.API, needLogin = true)
     @GetMapping("/api/educational/timetable/classroom/{identification}")
-    public ResponseEntity<Map<String, Object>> classroom(@PathVariable("identification") String identification) {
+    public ResponseEntity<Map<String, Object>> classroom(@PathVariable("identification") String identification,
+                                                         Principal principal, HttpServletRequest request) {
         AjaxUtil<TimetableClassroomElastic> ajaxUtil = AjaxUtil.of();
         List<TimetableClassroomElastic> timetableClassroomElastics = timetableService.classrooms(identification);
         ajaxUtil.success().msg("获取数据成功").list(timetableClassroomElastics);
@@ -110,8 +118,10 @@ public class TimetableApiController {
      *
      * @return 数据
      */
+    @ApiLoggingRecord(remark = "教务课表班级", channel = Workbook.channel.API, needLogin = true)
     @GetMapping("/api/educational/timetable/attend_class/{identification}")
-    public ResponseEntity<Map<String, Object>> attendClass(@PathVariable("identification") String identification) {
+    public ResponseEntity<Map<String, Object>> attendClass(@PathVariable("identification") String identification,
+                                                           Principal principal, HttpServletRequest request) {
         AjaxUtil<TimetableAttendClassElastic> ajaxUtil = AjaxUtil.of();
         List<TimetableAttendClassElastic> timetableAttendClassElastics = timetableService.attendClasses(identification);
         ajaxUtil.success().msg("获取数据成功").list(timetableAttendClassElastics);
@@ -123,8 +133,10 @@ public class TimetableApiController {
      *
      * @return 数据
      */
+    @ApiLoggingRecord(remark = "教务课表课程", channel = Workbook.channel.API, needLogin = true)
     @GetMapping("/api/educational/timetable/course_name/{identification}")
-    public ResponseEntity<Map<String, Object>> courseName(@PathVariable("identification") String identification) {
+    public ResponseEntity<Map<String, Object>> courseName(@PathVariable("identification") String identification,
+                                                          Principal principal, HttpServletRequest request) {
         AjaxUtil<TimetableCourseNameElastic> ajaxUtil = AjaxUtil.of();
         List<TimetableCourseNameElastic> timetableCourseNameElastics = timetableService.courseNames(identification);
         ajaxUtil.success().msg("获取数据成功").list(timetableCourseNameElastics);
@@ -136,8 +148,10 @@ public class TimetableApiController {
      *
      * @return 数据
      */
+    @ApiLoggingRecord(remark = "教务课表教师", channel = Workbook.channel.API, needLogin = true)
     @GetMapping("/api/educational/timetable/teacher_name/{identification}")
-    public ResponseEntity<Map<String, Object>> teacherName(@PathVariable("identification") String identification) {
+    public ResponseEntity<Map<String, Object>> teacherName(@PathVariable("identification") String identification,
+                                                           Principal principal, HttpServletRequest request) {
         AjaxUtil<TimetableTeacherNameElastic> ajaxUtil = AjaxUtil.of();
         List<TimetableTeacherNameElastic> timetableTeacherNameElastics = timetableService.teacherNames(identification);
         ajaxUtil.success().msg("获取数据成功").list(timetableTeacherNameElastics);

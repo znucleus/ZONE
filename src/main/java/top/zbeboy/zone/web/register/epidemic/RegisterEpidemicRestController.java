@@ -11,6 +11,7 @@ import top.zbeboy.zbase.bean.register.epidemic.EpidemicRegisterReleaseBean;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.register.RegisterEpidemicService;
+import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
 import top.zbeboy.zone.service.export.EpidemicRegisterDataExport;
 import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
@@ -45,8 +46,9 @@ public class RegisterEpidemicRestController {
      * @param simplePaginationUtil 请求
      * @return 数据
      */
+    @ApiLoggingRecord(remark = "疫情登记数据", channel = Workbook.channel.WEB, needLogin = true)
     @GetMapping("/web/register/epidemic/data")
-    public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil) {
+    public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
         simplePaginationUtil.setUsername(users.getUsername());
         AjaxUtil<EpidemicRegisterReleaseBean> ajaxUtil = registerEpidemicService.data(simplePaginationUtil);
@@ -59,8 +61,9 @@ public class RegisterEpidemicRestController {
      * @param epidemicRegisterReleaseAddVo 数据
      * @return true or false
      */
+    @ApiLoggingRecord(remark = "疫情登记发布", channel = Workbook.channel.WEB, needLogin = true)
     @PostMapping("/web/register/epidemic/release/save")
-    public ResponseEntity<Map<String, Object>> save(EpidemicRegisterReleaseAddVo epidemicRegisterReleaseAddVo) {
+    public ResponseEntity<Map<String, Object>> save(EpidemicRegisterReleaseAddVo epidemicRegisterReleaseAddVo, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
         epidemicRegisterReleaseAddVo.setUsername(users.getUsername());
         AjaxUtil<Map<String, Object>> ajaxUtil = registerEpidemicService.save(epidemicRegisterReleaseAddVo);
@@ -73,8 +76,9 @@ public class RegisterEpidemicRestController {
      * @param epidemicRegisterReleaseEditVo 数据
      * @return true or false
      */
+    @ApiLoggingRecord(remark = "疫情登记发布编辑", channel = Workbook.channel.WEB, needLogin = true)
     @PostMapping("/web/register/epidemic/release/update")
-    public ResponseEntity<Map<String, Object>> update(EpidemicRegisterReleaseEditVo epidemicRegisterReleaseEditVo) {
+    public ResponseEntity<Map<String, Object>> update(EpidemicRegisterReleaseEditVo epidemicRegisterReleaseEditVo, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
         epidemicRegisterReleaseEditVo.setUsername(users.getUsername());
         AjaxUtil<Map<String, Object>> ajaxUtil = registerEpidemicService.update(epidemicRegisterReleaseEditVo);
@@ -87,8 +91,9 @@ public class RegisterEpidemicRestController {
      * @param epidemicRegisterReleaseId id
      * @return true or false
      */
+    @ApiLoggingRecord(remark = "疫情登记发布删除", channel = Workbook.channel.WEB, needLogin = true)
     @PostMapping("/web/register/epidemic/release/delete")
-    public ResponseEntity<Map<String, Object>> delete(@RequestParam("epidemicRegisterReleaseId") String epidemicRegisterReleaseId) {
+    public ResponseEntity<Map<String, Object>> delete(@RequestParam("epidemicRegisterReleaseId") String epidemicRegisterReleaseId, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Map<String, Object>> ajaxUtil = registerEpidemicService.delete(users.getUsername(), epidemicRegisterReleaseId);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -100,8 +105,9 @@ public class RegisterEpidemicRestController {
      * @param epidemicRegisterDataAddVo 数据
      * @return true or false
      */
+    @ApiLoggingRecord(remark = "疫情登记登记", channel = Workbook.channel.WEB, needLogin = true)
     @PostMapping("/web/register/epidemic/data/save")
-    public ResponseEntity<Map<String, Object>> dataSave(EpidemicRegisterDataAddVo epidemicRegisterDataAddVo) {
+    public ResponseEntity<Map<String, Object>> dataSave(EpidemicRegisterDataAddVo epidemicRegisterDataAddVo, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
         epidemicRegisterDataAddVo.setUsername(users.getUsername());
         epidemicRegisterDataAddVo.setChannelName(Workbook.channel.WEB.name());
@@ -115,6 +121,7 @@ public class RegisterEpidemicRestController {
      * @param request 请求
      * @return 数据
      */
+    @ApiLoggingRecord(remark = "疫情登记列表", channel = Workbook.channel.WEB, needLogin = true)
     @GetMapping("/web/register/epidemic/data/list")
     public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
@@ -141,8 +148,9 @@ public class RegisterEpidemicRestController {
      * @param epidemicRegisterDataId 发布id
      * @return true or false
      */
+    @ApiLoggingRecord(remark = "疫情登记删除", channel = Workbook.channel.WEB, needLogin = true)
     @PostMapping("/web/register/epidemic/data/delete")
-    public ResponseEntity<Map<String, Object>> dataDelete(@RequestParam("epidemicRegisterDataId") String epidemicRegisterDataId) {
+    public ResponseEntity<Map<String, Object>> dataDelete(@RequestParam("epidemicRegisterDataId") String epidemicRegisterDataId, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Map<String, Object>> ajaxUtil = registerEpidemicService.dataDelete(users.getUsername(), epidemicRegisterDataId);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -153,6 +161,7 @@ public class RegisterEpidemicRestController {
      *
      * @param request 请求
      */
+    @ApiLoggingRecord(remark = "疫情登记导出", channel = Workbook.channel.WEB, needLogin = true)
     @GetMapping("/web/register/epidemic/data/export")
     public void export(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, "registerDateStr", "desc",

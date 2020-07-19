@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.bean.data.building.BuildingBean;
+import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.BuildingClassify;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.data.BuildingService;
@@ -16,6 +17,7 @@ import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zbase.vo.data.building.BuildingAddVo;
 import top.zbeboy.zbase.vo.data.building.BuildingEditVo;
 import top.zbeboy.zbase.vo.data.building.BuildingSearchVo;
+import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
@@ -49,8 +51,9 @@ public class BuildingRestController {
      * @param buildingSearchVo 院id
      * @return 楼数据
      */
+    @ApiLoggingRecord(remark = "楼数据", channel = Workbook.channel.WEB, needLogin = true)
     @GetMapping("/users/data/building")
-    public ResponseEntity<Map<String, Object>> search(BuildingSearchVo buildingSearchVo) {
+    public ResponseEntity<Map<String, Object>> search(BuildingSearchVo buildingSearchVo, HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
         List<BuildingBean> buildings = buildingService.search(buildingSearchVo);
         buildings.forEach(building -> select2Data.add(building.getBuildingId().toString(), building.getBuildingName()));

@@ -7,13 +7,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.bean.data.student.StudentBean;
+import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.Student;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.data.StudentService;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,8 +34,9 @@ public class StudentApiController {
      * @param principal 用户
      * @return 数据
      */
+    @ApiLoggingRecord(remark = "学生数据", channel = Workbook.channel.API, needLogin = true)
     @GetMapping("/api/student")
-    public ResponseEntity<Map<String, Object>> users(Principal principal) {
+    public ResponseEntity<Map<String, Object>> users(Principal principal, HttpServletRequest request) {
         AjaxUtil<Object> ajaxUtil = AjaxUtil.of();
         Users users = SessionUtil.getUserFromOauth(principal);
         if (Objects.nonNull(users)) {

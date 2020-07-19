@@ -5,12 +5,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.bean.data.staff.StaffBean;
+import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.data.StaffService;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,8 +31,9 @@ public class StaffApiController {
      * @param principal 用户
      * @return 数据
      */
+    @ApiLoggingRecord(remark = "教职工数据", channel = Workbook.channel.API, needLogin = true)
     @GetMapping("/api/staff")
-    public ResponseEntity<Map<String, Object>> users(Principal principal) {
+    public ResponseEntity<Map<String, Object>> users(Principal principal, HttpServletRequest request) {
         AjaxUtil<Object> ajaxUtil = AjaxUtil.of();
         Users users = SessionUtil.getUserFromOauth(principal);
         if (Objects.nonNull(users)) {

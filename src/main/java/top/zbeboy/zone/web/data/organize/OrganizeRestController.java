@@ -6,15 +6,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.Organize;
+import top.zbeboy.zbase.domain.tables.pojos.SystemOperatorLog;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.data.OrganizeService;
+import top.zbeboy.zbase.feign.system.SystemLogService;
+import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
+import top.zbeboy.zbase.tools.service.util.RequestUtil;
+import top.zbeboy.zbase.tools.service.util.UUIDUtil;
 import top.zbeboy.zbase.tools.web.plugin.select2.Select2Data;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zbase.vo.data.organize.OrganizeAddVo;
 import top.zbeboy.zbase.vo.data.organize.OrganizeEditVo;
 import top.zbeboy.zbase.vo.data.organize.OrganizeSearchVo;
+import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
@@ -29,14 +36,18 @@ public class OrganizeRestController {
     @Resource
     private OrganizeService organizeService;
 
+    @Resource
+    private SystemLogService systemLogService;
+
     /**
      * 获取年级下全部有效班级
      *
      * @param organizeSearchVo 查询参数
      * @return 班级数据
      */
+    @ApiLoggingRecord(remark = "班级数据", channel = Workbook.channel.WEB)
     @GetMapping("/anyone/data/organize")
-    public ResponseEntity<Map<String, Object>> anyoneData(OrganizeSearchVo organizeSearchVo) {
+    public ResponseEntity<Map<String, Object>> anyoneData(OrganizeSearchVo organizeSearchVo, HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
         List<Organize> organizes = organizeService.findByGradeIdAndOrganizeIsDel(organizeSearchVo);
         organizes.forEach(organize -> select2Data.add(organize.getOrganizeId().toString(), organize.getOrganizeName()));
@@ -104,8 +115,14 @@ public class OrganizeRestController {
      * @return true 保存成功 false 保存失败
      */
     @PostMapping("/web/data/organize/save")
-    public ResponseEntity<Map<String, Object>> save(OrganizeAddVo organizeAddVo) {
+    public ResponseEntity<Map<String, Object>> save(OrganizeAddVo organizeAddVo, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = organizeService.save(organizeAddVo);
+        Users users = SessionUtil.getUserFromSession();
+        SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(),
+                "添加班级[" + organizeAddVo.getOrganizeName() + "]",
+                DateTimeUtil.getNowSqlTimestamp(), users.getUsername(),
+                RequestUtil.getIpAddress(request));
+        systemLogService.save(systemLog);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -132,8 +149,13 @@ public class OrganizeRestController {
      * @return true 保存成功 false 保存失败
      */
     @PostMapping("/web/data/organize/update")
-    public ResponseEntity<Map<String, Object>> update(OrganizeEditVo organizeEditVo) {
+    public ResponseEntity<Map<String, Object>> update(OrganizeEditVo organizeEditVo, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = organizeService.update(organizeEditVo);
+        Users users = SessionUtil.getUserFromSession();
+        SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(),
+                "更新班级"+organizeEditVo.getOrganizeId()+"[" + organizeEditVo.getOrganizeName() + "]",
+                DateTimeUtil.getNowSqlTimestamp(), users.getUsername(), RequestUtil.getIpAddress(request));
+        systemLogService.save(systemLog);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -145,8 +167,13 @@ public class OrganizeRestController {
      * @return true注销成功
      */
     @PostMapping("/web/data/organize/status")
-    public ResponseEntity<Map<String, Object>> status(String organizeIds, Byte isDel) {
+    public ResponseEntity<Map<String, Object>> status(String organizeIds, Byte isDel, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = organizeService.status(organizeIds, isDel);
+        Users users = SessionUtil.getUserFromSession();
+        SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(),
+                "修改班级状态[" + organizeIds + "]" + isDel,
+                DateTimeUtil.getNowSqlTimestamp(), users.getUsername(), RequestUtil.getIpAddress(request));
+        systemLogService.save(systemLog);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

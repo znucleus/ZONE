@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.College;
 import top.zbeboy.zbase.domain.tables.pojos.CollegeApplication;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
@@ -17,6 +18,7 @@ import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zbase.vo.data.college.CollegeAddVo;
 import top.zbeboy.zbase.vo.data.college.CollegeEditVo;
 import top.zbeboy.zbase.vo.data.college.CollegeSearchVo;
+import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
@@ -37,8 +39,9 @@ public class CollegeRestController {
      * @param collegeSearchVo 查询参数
      * @return 院数据
      */
+    @ApiLoggingRecord(remark = "院数据", channel = Workbook.channel.WEB)
     @GetMapping("/anyone/data/college")
-    public ResponseEntity<Map<String, Object>> anyoneData(CollegeSearchVo collegeSearchVo) {
+    public ResponseEntity<Map<String, Object>> anyoneData(CollegeSearchVo collegeSearchVo, HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
         List<College> colleges = collegeService.findBySchoolIdAndCollegeIsDel(collegeSearchVo);
         colleges.forEach(college -> select2Data.add(college.getCollegeId().toString(), college.getCollegeName()));

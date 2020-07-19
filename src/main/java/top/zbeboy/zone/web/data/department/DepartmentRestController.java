@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.Department;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.data.DepartmentService;
@@ -15,6 +16,7 @@ import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zbase.vo.data.department.DepartmentAddVo;
 import top.zbeboy.zbase.vo.data.department.DepartmentEditVo;
 import top.zbeboy.zbase.vo.data.department.DepartmentSearchVo;
+import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
@@ -35,8 +37,9 @@ public class DepartmentRestController {
      * @param departmentSearchVo 查询参数
      * @return 系数据
      */
+    @ApiLoggingRecord(remark = "系数据", channel = Workbook.channel.WEB)
     @GetMapping("/anyone/data/department")
-    public ResponseEntity<Map<String, Object>> anyoneData(DepartmentSearchVo departmentSearchVo) {
+    public ResponseEntity<Map<String, Object>> anyoneData(DepartmentSearchVo departmentSearchVo, HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
         List<Department> departments = departmentService.findByCollegeIdAndDepartmentIsDel(departmentSearchVo);
         departments.forEach(department -> select2Data.add(department.getDepartmentId().toString(), department.getDepartmentName()));

@@ -11,9 +11,11 @@ import top.zbeboy.zbase.domain.tables.pojos.Files;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.system.FilesService;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,8 +33,9 @@ public class UsersApiController {
      * @param principal 用户
      * @return 数据
      */
+    @ApiLoggingRecord(remark = "用户数据", channel = Workbook.channel.API, needLogin = true)
     @GetMapping("/api/users")
-    public ResponseEntity<Map<String, Object>> users(Principal principal) {
+    public ResponseEntity<Map<String, Object>> users(Principal principal, HttpServletRequest request) {
         AjaxUtil<Object> ajaxUtil = AjaxUtil.of();
         Users users = SessionUtil.getUserFromOauth(principal);
         if (Objects.nonNull(users)) {

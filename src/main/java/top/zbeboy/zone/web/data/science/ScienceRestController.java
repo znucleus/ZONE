@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.Science;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.data.ScienceService;
@@ -15,6 +16,7 @@ import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zbase.vo.data.science.ScienceAddVo;
 import top.zbeboy.zbase.vo.data.science.ScienceEditVo;
 import top.zbeboy.zbase.vo.data.science.ScienceSearchVo;
+import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
@@ -35,8 +37,9 @@ public class ScienceRestController {
      * @param scienceSearchVo 查询参数
      * @return 专业数据
      */
+    @ApiLoggingRecord(remark = "专业数据", channel = Workbook.channel.WEB)
     @GetMapping("/anyone/data/science")
-    public ResponseEntity<Map<String, Object>> anyoneData(ScienceSearchVo scienceSearchVo) {
+    public ResponseEntity<Map<String, Object>> anyoneData(ScienceSearchVo scienceSearchVo, HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
         List<Science> sciences = scienceService.findByDepartmentIdAndScienceIsDel(scienceSearchVo);
         sciences.forEach(science -> select2Data.add(science.getScienceId().toString(), science.getScienceName()));

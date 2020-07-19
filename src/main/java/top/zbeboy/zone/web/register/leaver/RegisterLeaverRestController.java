@@ -11,6 +11,7 @@ import top.zbeboy.zbase.bean.register.leaver.LeaverRegisterReleaseBean;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.register.RegisterLeaverService;
+import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
 import top.zbeboy.zone.service.export.LeaverRegisterDataExport;
 import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
@@ -43,8 +44,9 @@ public class RegisterLeaverRestController {
      * @param simplePaginationUtil 请求
      * @return 数据
      */
+    @ApiLoggingRecord(remark = "离校登记数据", channel = Workbook.channel.WEB, needLogin = true)
     @GetMapping("/web/register/leaver/data")
-    public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil) {
+    public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
         simplePaginationUtil.setUsername(users.getUsername());
         AjaxUtil<LeaverRegisterReleaseBean> ajaxUtil = registerLeaverService.data(simplePaginationUtil);
@@ -57,8 +59,9 @@ public class RegisterLeaverRestController {
      * @param leaverRegisterReleaseAddVo 数据
      * @return true or false
      */
+    @ApiLoggingRecord(remark = "离校登记发布", channel = Workbook.channel.WEB, needLogin = true)
     @PostMapping("/web/register/leaver/release/save")
-    public ResponseEntity<Map<String, Object>> save(LeaverRegisterReleaseAddVo leaverRegisterReleaseAddVo) {
+    public ResponseEntity<Map<String, Object>> save(LeaverRegisterReleaseAddVo leaverRegisterReleaseAddVo, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
         leaverRegisterReleaseAddVo.setUsername(users.getUsername());
         AjaxUtil<Map<String, Object>> ajaxUtil = registerLeaverService.save(leaverRegisterReleaseAddVo);
@@ -71,9 +74,11 @@ public class RegisterLeaverRestController {
      * @param leaverRegisterOptionId 选项id
      * @return true or false
      */
+    @ApiLoggingRecord(remark = "离校登记选项删除", channel = Workbook.channel.WEB, needLogin = true)
     @PostMapping("/web/register/leaver/option/delete")
     public ResponseEntity<Map<String, Object>> optionDelete(@RequestParam("leaverRegisterOptionId") String leaverRegisterOptionId,
-                                                            @RequestParam("leaverRegisterReleaseId") String leaverRegisterReleaseId) {
+                                                            @RequestParam("leaverRegisterReleaseId") String leaverRegisterReleaseId,
+                                                            HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Map<String, Object>> ajaxUtil = registerLeaverService.optionDelete(leaverRegisterOptionId, leaverRegisterReleaseId, users.getUsername());
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -87,10 +92,12 @@ public class RegisterLeaverRestController {
      * @param optionContent           选项内容
      * @return true or false
      */
+    @ApiLoggingRecord(remark = "离校登记选项更新", channel = Workbook.channel.WEB, needLogin = true)
     @PostMapping("/web/register/leaver/option/update")
     public ResponseEntity<Map<String, Object>> optionUpdate(@RequestParam("leaverRegisterOptionId") String leaverRegisterOptionId,
                                                             @RequestParam("leaverRegisterReleaseId") String leaverRegisterReleaseId,
-                                                            @RequestParam("optionContent") String optionContent) {
+                                                            @RequestParam("optionContent") String optionContent,
+                                                            HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Map<String, Object>> ajaxUtil =
                 registerLeaverService.optionUpdate(leaverRegisterOptionId, leaverRegisterReleaseId, optionContent, users.getUsername());
@@ -103,8 +110,10 @@ public class RegisterLeaverRestController {
      * @param leaverRegisterReleaseEditVo 数据
      * @return true or false
      */
+    @ApiLoggingRecord(remark = "离校登记发布更新", channel = Workbook.channel.WEB, needLogin = true)
     @PostMapping("/web/register/leaver/release/update")
-    public ResponseEntity<Map<String, Object>> update(LeaverRegisterReleaseEditVo leaverRegisterReleaseEditVo) {
+    public ResponseEntity<Map<String, Object>> update(LeaverRegisterReleaseEditVo leaverRegisterReleaseEditVo,
+                                                      HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
         leaverRegisterReleaseEditVo.setUsername(users.getUsername());
         AjaxUtil<Map<String, Object>> ajaxUtil =
@@ -118,8 +127,10 @@ public class RegisterLeaverRestController {
      * @param leaverRegisterReleaseId 发布id
      * @return true or false
      */
+    @ApiLoggingRecord(remark = "离校登记发布删除", channel = Workbook.channel.WEB, needLogin = true)
     @PostMapping("/web/register/leaver/release/delete")
-    public ResponseEntity<Map<String, Object>> delete(@RequestParam("leaverRegisterReleaseId") String leaverRegisterReleaseId) {
+    public ResponseEntity<Map<String, Object>> delete(@RequestParam("leaverRegisterReleaseId") String leaverRegisterReleaseId,
+                                                      HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Map<String, Object>> ajaxUtil = registerLeaverService.delete(leaverRegisterReleaseId, users.getUsername());
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -131,8 +142,9 @@ public class RegisterLeaverRestController {
      * @param leaverRegisterDataVo 数据
      * @return true or false
      */
+    @ApiLoggingRecord(remark = "离校登记数据保存", channel = Workbook.channel.WEB, needLogin = true)
     @PostMapping("/web/register/leaver/data/save")
-    public ResponseEntity<Map<String, Object>> dataSave(LeaverRegisterDataVo leaverRegisterDataVo) {
+    public ResponseEntity<Map<String, Object>> dataSave(LeaverRegisterDataVo leaverRegisterDataVo, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
         leaverRegisterDataVo.setUsername(users.getUsername());
         AjaxUtil<Map<String, Object>> ajaxUtil =
@@ -146,8 +158,9 @@ public class RegisterLeaverRestController {
      * @param leaverRegisterReleaseId 发布id
      * @return true or false
      */
+    @ApiLoggingRecord(remark = "离校登记数据删除", channel = Workbook.channel.WEB, needLogin = true)
     @PostMapping("/web/register/leaver/data/delete")
-    public ResponseEntity<Map<String, Object>> dataDelete(@RequestParam("leaverRegisterReleaseId") String leaverRegisterReleaseId) {
+    public ResponseEntity<Map<String, Object>> dataDelete(@RequestParam("leaverRegisterReleaseId") String leaverRegisterReleaseId, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Map<String, Object>> ajaxUtil = registerLeaverService.dataDelete(leaverRegisterReleaseId, users.getUsername());
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -159,9 +172,11 @@ public class RegisterLeaverRestController {
      * @param leaverRegisterReleaseId 发布id
      * @return true or false
      */
+    @ApiLoggingRecord(remark = "离校登记删除登记", channel = Workbook.channel.WEB, needLogin = true)
     @PostMapping("/web/register/leaver/data/list/delete")
     public ResponseEntity<Map<String, Object>> dataListDelete(@RequestParam("leaverRegisterReleaseId") String leaverRegisterReleaseId,
-                                                              @RequestParam("leaverRegisterDataId") String leaverRegisterDataId) {
+                                                              @RequestParam("leaverRegisterDataId") String leaverRegisterDataId,
+                                                              HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Map<String, Object>> ajaxUtil =
                 registerLeaverService.dataListDelete(leaverRegisterReleaseId, leaverRegisterDataId, users.getUsername());
@@ -174,8 +189,9 @@ public class RegisterLeaverRestController {
      * @param simplePaginationUtil 请求
      * @return 数据
      */
+    @ApiLoggingRecord(remark = "离校登记列表数据", channel = Workbook.channel.WEB, needLogin = true)
     @GetMapping("/web/register/leaver/data/list")
-    public ResponseEntity<Map<String, Object>> dataList(SimplePaginationUtil simplePaginationUtil) {
+    public ResponseEntity<Map<String, Object>> dataList(SimplePaginationUtil simplePaginationUtil, HttpServletRequest request) {
         AjaxUtil<LeaverRegisterDataBean> ajaxUtil = registerLeaverService.dataList(simplePaginationUtil);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
@@ -185,6 +201,7 @@ public class RegisterLeaverRestController {
      *
      * @param request 请求
      */
+    @ApiLoggingRecord(remark = "离校登记导出", channel = Workbook.channel.WEB, needLogin = true)
     @GetMapping("/web/register/leaver/data/export")
     public void export(HttpServletRequest request, HttpServletResponse response) throws IOException {
         SimplePaginationUtil simplePaginationUtil = new SimplePaginationUtil(request, "studentNumber", "asc",

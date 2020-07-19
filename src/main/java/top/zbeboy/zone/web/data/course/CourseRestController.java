@@ -7,14 +7,21 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.domain.tables.pojos.Course;
+import top.zbeboy.zbase.domain.tables.pojos.SystemLoginLog;
+import top.zbeboy.zbase.domain.tables.pojos.SystemOperatorLog;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.data.CourseService;
+import top.zbeboy.zbase.feign.system.SystemLogService;
+import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
+import top.zbeboy.zbase.tools.service.util.RequestUtil;
+import top.zbeboy.zbase.tools.service.util.UUIDUtil;
 import top.zbeboy.zbase.tools.web.plugin.select2.Select2Data;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zbase.vo.data.course.CourseAddVo;
 import top.zbeboy.zbase.vo.data.course.CourseEditVo;
 import top.zbeboy.zbase.vo.data.course.CourseSearchVo;
+import top.zbeboy.zone.annotation.logging.LoginLoggingRecord;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
@@ -28,6 +35,9 @@ public class CourseRestController {
 
     @Resource
     private CourseService courseService;
+
+    @Resource
+    private SystemLogService systemLogService;
 
     /**
      * 获取全部有效课程
@@ -93,8 +103,14 @@ public class CourseRestController {
      * @return true 保存成功 false 保存失败
      */
     @PostMapping("/web/data/course/save")
-    public ResponseEntity<Map<String, Object>> save(CourseAddVo courseAddVo) {
+    public ResponseEntity<Map<String, Object>> save(CourseAddVo courseAddVo, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = courseService.save(courseAddVo);
+        Users users = SessionUtil.getUserFromSession();
+        SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(),
+                "添加课程[" + courseAddVo.getCourseName() + "]",
+                DateTimeUtil.getNowSqlTimestamp(), users.getUsername(),
+                RequestUtil.getIpAddress(request));
+        systemLogService.save(systemLog);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -121,8 +137,13 @@ public class CourseRestController {
      * @return true 更改成功 false 更改失败
      */
     @PostMapping("/web/data/course/update")
-    public ResponseEntity<Map<String, Object>> update(CourseEditVo courseEditVo) {
+    public ResponseEntity<Map<String, Object>> update(CourseEditVo courseEditVo, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = courseService.update(courseEditVo);
+        Users users = SessionUtil.getUserFromSession();
+        SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(),
+                "更新课程"+courseEditVo.getCourseId()+"[" + courseEditVo.getCourseName() + "]",
+                DateTimeUtil.getNowSqlTimestamp(), users.getUsername(), RequestUtil.getIpAddress(request));
+        systemLogService.save(systemLog);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -134,8 +155,13 @@ public class CourseRestController {
      * @return true注销成功
      */
     @PostMapping("/web/data/course/status")
-    public ResponseEntity<Map<String, Object>> status(String courseIds, Byte isDel) {
+    public ResponseEntity<Map<String, Object>> status(String courseIds, Byte isDel, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = courseService.status(courseIds, isDel);
+        Users users = SessionUtil.getUserFromSession();
+        SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(),
+                "修改课程状态[" + courseIds + "]" + isDel,
+                DateTimeUtil.getNowSqlTimestamp(), users.getUsername(), RequestUtil.getIpAddress(request));
+        systemLogService.save(systemLog);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

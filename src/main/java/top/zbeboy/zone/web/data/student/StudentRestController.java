@@ -13,22 +13,25 @@ import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.config.ZoneProperties;
 import top.zbeboy.zbase.domain.tables.pojos.Role;
 import top.zbeboy.zbase.domain.tables.pojos.SystemConfigure;
+import top.zbeboy.zbase.domain.tables.pojos.SystemOperatorLog;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.data.StudentService;
 import top.zbeboy.zbase.feign.platform.UsersService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zbase.feign.system.SystemConfigureService;
-import top.zbeboy.zone.service.system.SystemMailService;
+import top.zbeboy.zbase.feign.system.SystemLogService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.service.util.RandomUtil;
 import top.zbeboy.zbase.tools.service.util.RequestUtil;
-import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
+import top.zbeboy.zbase.tools.service.util.UUIDUtil;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.BooleanUtil;
-import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zbase.vo.data.student.StudentAddVo;
 import top.zbeboy.zbase.vo.data.student.StudentEditVo;
+import top.zbeboy.zone.service.system.SystemMailService;
+import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -57,6 +60,9 @@ public class StudentRestController {
 
     @Resource
     private UsersTypeService usersTypeService;
+
+    @Resource
+    private SystemLogService systemLogService;
 
     /**
      * 检验学号是否被注册
@@ -249,6 +255,12 @@ public class StudentRestController {
             if (StringUtils.equals("1", mailConfigure.getDataValue())) {
                 systemMailService.sendNotifyMail(usersService.findByUsername(username), RequestUtil.getBaseUrl(request), notify);
             }
+
+            SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(),
+                    users.getUsername() + "更改学生: " + username + " 角色为[" + roles + "]",
+                    DateTimeUtil.getNowSqlTimestamp(), users.getUsername(),
+                    RequestUtil.getIpAddress(request));
+            systemLogService.save(systemLog);
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
@@ -261,9 +273,14 @@ public class StudentRestController {
      * @return 是否成功
      */
     @PostMapping("/web/data/student/update/enabled")
-    public ResponseEntity<Map<String, Object>> updateEnabled(String userIds, Byte enabled) {
+    public ResponseEntity<Map<String, Object>> updateEnabled(String userIds, Byte enabled, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Map<String, Object>> ajaxUtil = studentService.updateEnabled(users.getUsername(), userIds, enabled);
+        SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(),
+                users.getUsername() + "更改学生: " + userIds + " 状态为[" + enabled + "]",
+                DateTimeUtil.getNowSqlTimestamp(), users.getUsername(),
+                RequestUtil.getIpAddress(request));
+        systemLogService.save(systemLog);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -275,9 +292,14 @@ public class StudentRestController {
      * @return 是否成功
      */
     @PostMapping("/web/data/student/update/locked")
-    public ResponseEntity<Map<String, Object>> updateLocked(String userIds, Byte locked) {
+    public ResponseEntity<Map<String, Object>> updateLocked(String userIds, Byte locked, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Map<String, Object>> ajaxUtil = studentService.updateLocked(users.getUsername(), userIds, locked);
+        SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(),
+                users.getUsername() + "更改学生: " + userIds + " 锁定为[" + locked + "]",
+                DateTimeUtil.getNowSqlTimestamp(), users.getUsername(),
+                RequestUtil.getIpAddress(request));
+        systemLogService.save(systemLog);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -288,9 +310,14 @@ public class StudentRestController {
      * @return success or fail
      */
     @PostMapping("/web/data/student/update/password")
-    public ResponseEntity<Map<String, Object>> updatePassword(@RequestParam("username") String username) {
+    public ResponseEntity<Map<String, Object>> updatePassword(@RequestParam("username") String username, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Map<String, Object>> ajaxUtil = studentService.updatePassword(users.getUsername(), username);
+        SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(),
+                users.getUsername() + "更改学生: " + username + " 密码",
+                DateTimeUtil.getNowSqlTimestamp(), users.getUsername(),
+                RequestUtil.getIpAddress(request));
+        systemLogService.save(systemLog);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -301,9 +328,14 @@ public class StudentRestController {
      * @return true 成功 false 失败
      */
     @PostMapping("/web/data/student/delete")
-    public ResponseEntity<Map<String, Object>> delete(String userIds) {
+    public ResponseEntity<Map<String, Object>> delete(String userIds, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Map<String, Object>> ajaxUtil = studentService.delete(users.getUsername(), userIds);
+        SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(),
+                users.getUsername() + "删除学生: " + userIds,
+                DateTimeUtil.getNowSqlTimestamp(), users.getUsername(),
+                RequestUtil.getIpAddress(request));
+        systemLogService.save(systemLog);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }
