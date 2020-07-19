@@ -8,7 +8,8 @@ require(["jquery", "nav.active", "responsive.bootstrap4", "flatpickr-zh"],
         var param = {
             title: '',
             organizeName: '',
-            releaseTime: ''
+            releaseTime: '',
+            dataRange: 2
         };
 
         /*
