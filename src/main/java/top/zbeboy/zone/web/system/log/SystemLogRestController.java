@@ -26,8 +26,8 @@ public class SystemLogRestController {
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/system/log/data")
-    public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
+    @GetMapping("/web/system/log/login/data")
+    public ResponseEntity<DataTablesUtil> loginData(HttpServletRequest request) {
         List<String> headers = new ArrayList<>();
         headers.add("username");
         headers.add("behavior");
@@ -36,6 +36,46 @@ public class SystemLogRestController {
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
         Users users = SessionUtil.getUserFromSession();
         dataTablesUtil.setUsername(users.getUsername());
-        return new ResponseEntity<>(systemLogService.data(dataTablesUtil), HttpStatus.OK);
+        return new ResponseEntity<>(systemLogService.loginData(dataTablesUtil), HttpStatus.OK);
+    }
+
+    /**
+     * 数据
+     *
+     * @param request 请求
+     * @return 数据
+     */
+    @GetMapping("/web/system/log/api/data")
+    public ResponseEntity<DataTablesUtil> apiData(HttpServletRequest request) {
+        List<String> headers = new ArrayList<>();
+        headers.add("username");
+        headers.add("channelName");
+        headers.add("url");
+        headers.add("remark");
+        headers.add("createTime");
+        headers.add("ipAddress");
+        DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
+        Users users = SessionUtil.getUserFromSession();
+        dataTablesUtil.setUsername(users.getUsername());
+        return new ResponseEntity<>(systemLogService.apiData(dataTablesUtil), HttpStatus.OK);
+    }
+
+    /**
+     * 数据
+     *
+     * @param request 请求
+     * @return 数据
+     */
+    @GetMapping("/web/system/log/operator/data")
+    public ResponseEntity<DataTablesUtil> operatorData(HttpServletRequest request) {
+        List<String> headers = new ArrayList<>();
+        headers.add("username");
+        headers.add("behavior");
+        headers.add("operatingTime");
+        headers.add("ipAddress");
+        DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
+        Users users = SessionUtil.getUserFromSession();
+        dataTablesUtil.setUsername(users.getUsername());
+        return new ResponseEntity<>(systemLogService.operatorData(dataTablesUtil), HttpStatus.OK);
     }
 }
