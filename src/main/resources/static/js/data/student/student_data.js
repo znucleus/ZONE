@@ -90,7 +90,7 @@ require(["jquery", "lodash_plugin", "tools", "handlebars", "nav.active", "sweeta
         searching: false,
         "processing": true, // 打开数据加载时的等待效果
         "serverSide": true,// 打开后台分页
-        "aaSorting": [[22, 'desc']],// 排序
+        "aaSorting": [[27, 'desc']],// 排序
         "ajax": {
             "url": getAjaxUrl().data,
             "dataSrc": "data",
