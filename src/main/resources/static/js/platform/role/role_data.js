@@ -34,6 +34,7 @@ require(["jquery", "lodash_plugin", "sweetalert2", "handlebars", "nav.active", "
                 add: '/web/platform/role/add',
                 edit: '/web/platform/role/edit',
                 see: '/web/platform/role/see',
+                auto: '/web/platform/role/auto',
                 page: '/web/menu/platform/role'
             };
         }
@@ -101,6 +102,13 @@ require(["jquery", "lodash_plugin", "sweetalert2", "handlebars", "nav.active", "
                                     "type": "danger",
                                     "id": c.roleId,
                                     "role": c.roleName
+                                },
+                                {
+                                    "name": "自动化",
+                                    "css": "auto",
+                                    "type": "purple",
+                                    "id": c.roleId,
+                                    "role": c.roleName
                                 });
                         }
 
@@ -144,6 +152,10 @@ require(["jquery", "lodash_plugin", "sweetalert2", "handlebars", "nav.active", "
 
                 tableElement.delegate('.del', "click", function () {
                     role_del($(this).attr('data-id'), $(this).attr('data-role'));
+                });
+
+                tableElement.delegate('.auto', "click", function () {
+                    auto($(this).attr('data-id'));
                 });
 
                 tableElement.delegate('.see', "click", function () {
@@ -307,6 +319,13 @@ require(["jquery", "lodash_plugin", "sweetalert2", "handlebars", "nav.active", "
         */
         function see(roleId) {
             $.address.value(getAjaxUrl().see + '/' + roleId);
+        }
+
+        /*
+        默认角色
+        */
+        function auto(roleId) {
+            $.address.value(getAjaxUrl().auto + '/' + roleId);
         }
 
         /*

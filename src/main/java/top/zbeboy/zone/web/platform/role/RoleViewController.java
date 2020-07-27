@@ -9,6 +9,7 @@ import top.zbeboy.zbase.bean.data.staff.StaffBean;
 import top.zbeboy.zbase.bean.data.student.StudentBean;
 import top.zbeboy.zbase.bean.platform.role.RoleBean;
 import top.zbeboy.zbase.config.Workbook;
+import top.zbeboy.zbase.domain.tables.pojos.DefaultRole;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.domain.tables.pojos.UsersType;
 import top.zbeboy.zbase.feign.data.StaffService;
@@ -19,6 +20,8 @@ import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Controller
@@ -148,6 +151,90 @@ public class RoleViewController {
                         if (collegeId == role.getCollegeId()) {
                             modelMap.addAttribute("role", role);
                             page = "web/platform/role/role_edit::#page-wrapper";
+                        } else {
+                            config.buildDangerTip("操作错误", "该角色不在您所属院下，不允许操作");
+                            config.dataMerging(modelMap);
+                            page = "inline_tip::#page-wrapper";
+                        }
+                    } else {
+                        config.buildDangerTip("查询错误", "未查询到角色数据");
+                        config.dataMerging(modelMap);
+                        page = "inline_tip::#page-wrapper";
+                    }
+                } else {
+                    config.buildDangerTip("查询错误", "未查询到当前用户所属院信息");
+                    config.dataMerging(modelMap);
+                    page = "inline_tip::#page-wrapper";
+                }
+            } else {
+                config.buildDangerTip("查询错误", "未查询到当前用户类型");
+                config.dataMerging(modelMap);
+                page = "inline_tip::#page-wrapper";
+            }
+        } else {
+            config.buildDangerTip("权限错误", "您无权限进行操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
+
+    /**
+     * 角色自动化
+     *
+     * @param id       角色id
+     * @param modelMap 页面对象
+     * @return 编辑页面
+     */
+    @GetMapping("/web/platform/role/auto/{id}")
+    public String auto(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+            RoleBean role = roleService.findCollegeRoleByRoleIdRelation(id);
+            if (Objects.nonNull(role) && StringUtils.isNotBlank(role.getRoleId())) {
+                List<DefaultRole> defaultRoles = roleService.findDefaultRoleByRoleId(role.getRoleId());
+                List<Integer> usersTypeIds = new ArrayList<>();
+                defaultRoles.forEach(defaultRole -> {
+                    usersTypeIds.add(defaultRole.getUsersTypeId());
+                });
+                modelMap.addAttribute("usersTypeIds", StringUtils.join(usersTypeIds, ","));
+                modelMap.addAttribute("role", role);
+                page = "web/platform/role/role_auto::#page-wrapper";
+            } else {
+                config.buildDangerTip("查询错误", "未查询到角色数据");
+                config.dataMerging(modelMap);
+                page = "inline_tip::#page-wrapper";
+            }
+        } else if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+            // 判断是否同一个院
+            Users users = SessionUtil.getUserFromSession();
+            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
+            if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+                int collegeId = 0;
+                if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
+                    StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
+                    if (Objects.nonNull(bean.getStaffId()) && bean.getStaffId() > 0) {
+                        collegeId = bean.getCollegeId();
+                    }
+                } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
+                    StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+                    if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
+                        collegeId = studentBean.getCollegeId();
+                    }
+                }
+                if (collegeId > 0) {
+                    RoleBean role = roleService.findCollegeRoleByRoleIdRelation(id);
+                    if (Objects.nonNull(role) && StringUtils.isNotBlank(role.getRoleId())) {
+                        if (collegeId == role.getCollegeId()) {
+                            List<DefaultRole> defaultRoles = roleService.findDefaultRoleByRoleId(role.getRoleId());
+                            List<Integer> usersTypeIds = new ArrayList<>();
+                            defaultRoles.forEach(defaultRole -> {
+                                usersTypeIds.add(defaultRole.getUsersTypeId());
+                            });
+                            modelMap.addAttribute("usersTypeIds", StringUtils.join(usersTypeIds, ","));
+                            modelMap.addAttribute("role", role);
+                            page = "web/platform/role/role_auto::#page-wrapper";
                         } else {
                             config.buildDangerTip("操作错误", "该角色不在您所属院下，不允许操作");
                             config.dataMerging(modelMap);

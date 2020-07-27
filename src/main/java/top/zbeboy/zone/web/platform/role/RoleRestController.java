@@ -11,10 +11,11 @@ import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.platform.RoleService;
 import top.zbeboy.zbase.tools.web.plugin.treeview.TreeViewData;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
-import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zbase.vo.platform.role.DefaultRoleAddVo;
 import top.zbeboy.zbase.vo.platform.role.RoleAddVo;
 import top.zbeboy.zbase.vo.platform.role.RoleEditVo;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -119,6 +120,20 @@ public class RoleRestController {
     public ResponseEntity<Map<String, Object>> delete(@RequestParam("roleId") String roleId) {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Map<String, Object>> ajaxUtil = roleService.delete(users.getUsername(), roleId);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 更新
+     *
+     * @param defaultRoleAddVo 数据
+     * @return true 更新成功 false 更新失败
+     */
+    @PostMapping("/web/platform/role/auto/save")
+    public ResponseEntity<Map<String, Object>> autoSave(DefaultRoleAddVo defaultRoleAddVo) {
+        Users users = SessionUtil.getUserFromSession();
+        defaultRoleAddVo.setUsername(users.getUsername());
+        AjaxUtil<Map<String, Object>> ajaxUtil = roleService.autoSave(defaultRoleAddVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
