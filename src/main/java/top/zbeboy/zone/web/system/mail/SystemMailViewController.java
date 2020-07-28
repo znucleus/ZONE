@@ -7,11 +7,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import top.zbeboy.zbase.bean.data.potential.PotentialBean;
+import top.zbeboy.zbase.bean.data.staff.StaffBean;
+import top.zbeboy.zbase.bean.data.student.StudentBean;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.config.ZoneProperties;
-import top.zbeboy.zbase.domain.tables.pojos.SystemConfigure;
-import top.zbeboy.zbase.domain.tables.pojos.Users;
+import top.zbeboy.zbase.domain.tables.pojos.*;
+import top.zbeboy.zbase.feign.data.PotentialService;
+import top.zbeboy.zbase.feign.data.StaffService;
+import top.zbeboy.zbase.feign.data.StudentService;
+import top.zbeboy.zbase.feign.platform.AuthorizeService;
+import top.zbeboy.zbase.feign.platform.RoleService;
 import top.zbeboy.zbase.feign.platform.UsersService;
+import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zbase.feign.system.SystemConfigureService;
 import top.zbeboy.zone.service.system.SystemMailService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
@@ -23,6 +31,8 @@ import top.zbeboy.zbase.tools.web.util.BooleanUtil;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Controller
@@ -35,10 +45,28 @@ public class SystemMailViewController {
     private UsersService usersService;
 
     @Resource
+    private UsersTypeService usersTypeService;
+
+    @Resource
     private SystemConfigureService systemConfigureService;
 
     @Resource
     private SystemMailService systemMailService;
+
+    @Resource
+    private RoleService roleService;
+
+    @Resource
+    private StaffService staffService;
+
+    @Resource
+    private StudentService studentService;
+
+    @Resource
+    private PotentialService potentialService;
+
+    @Resource
+    private AuthorizeService authorizeService;
 
     /**
      * 用户验证邮箱
@@ -60,6 +88,37 @@ public class SystemMailViewController {
                 if (StringUtils.equals(mailboxVerifyCode, users.getMailboxVerifyCode())) {
                     users.setVerifyMailbox(BooleanUtil.toByte(true));
                     usersService.update(users);
+                    // 检查是否有默认角色
+                    UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
+                    if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+                        int collegeId = 0;
+                        if (StringUtils.equals(usersType.getUsersTypeName(), Workbook.STAFF_USERS_TYPE)) {
+                            StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
+                            if (Objects.nonNull(bean.getCollegeId())) {
+                                collegeId = bean.getCollegeId();
+                            }
+                        } else if (StringUtils.equals(usersType.getUsersTypeName(), Workbook.STUDENT_USERS_TYPE)) {
+                            StudentBean bean = studentService.findByUsernameRelation(users.getUsername());
+                            if (Objects.nonNull(bean.getCollegeId())) {
+                                collegeId = bean.getCollegeId();
+                            }
+                        } else if (StringUtils.equals(usersType.getUsersTypeName(), Workbook.POTENTIAL_USERS_TYPE)) {
+                            PotentialBean bean = potentialService.findByUsernameRelation(users.getUsername());
+                            if (Objects.nonNull(bean.getCollegeId())) {
+                                collegeId = bean.getCollegeId();
+                            }
+                        }
+                        if (collegeId > 0) {
+                            List<Role> roles = roleService.findDefaultRoleByCollegeIdAndUsersTypeId(collegeId, usersType.getUsersTypeId());
+                            if (Objects.nonNull(roles) && !roles.isEmpty()) {
+                                List<Authorities> authorities = new ArrayList<>();
+                                roles.forEach(role -> authorities.add(new Authorities(username, role.getRoleEnName())));
+                                authorizeService.authoritiesBatchSave(authorities);
+                            }
+                        }
+
+                    }
+
                     config.buildSuccessTip(
                             "您的邮箱已验证成功。",
                             "您可以登录系统进行资料完善，耐心等待管理员审核您的角色权限，审核结果会发致您的邮箱，请注意查收。");
