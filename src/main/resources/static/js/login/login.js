@@ -43,6 +43,7 @@ require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf"]
             var ajax_url = {
                 login: web_path + '/login',
                 backstage: web_path + '/web/menu/backstage',
+                potential_register: web_path + '/register/potential',
                 student_register: web_path + '/register/student',
                 staff_register: web_path + '/register/staff'
             };
@@ -191,6 +192,10 @@ require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf"]
                     }
                 });
             }
+
+            $('#potential').click(function () {
+                window.location.href = ajax_url.potential_register;
+            });
 
             $('#student').click(function () {
                 window.location.href = ajax_url.student_register;

@@ -84,6 +84,8 @@ public class MainController {
             page = "student_register";
         } else if (StringUtils.equals(type, Workbook.REGISTER_STAFF)) {
             page = "staff_register";
+        } else if(StringUtils.equals(type,Workbook.POTENTIAL_STUDENT)){
+            page = "potential_register";
         }
         return page;
     }
