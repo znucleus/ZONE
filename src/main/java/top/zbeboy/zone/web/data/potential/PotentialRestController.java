@@ -20,6 +20,7 @@ import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.BooleanUtil;
 import top.zbeboy.zbase.vo.data.potential.PotentialAddVo;
 import top.zbeboy.zbase.vo.data.potential.PotentialEditVo;
+import top.zbeboy.zbase.vo.data.potential.PotentialUpgradeStaffVo;
 import top.zbeboy.zbase.vo.data.potential.PotentialUpgradeStudentVo;
 import top.zbeboy.zbase.vo.data.staff.StaffEditVo;
 import top.zbeboy.zone.service.system.SystemMailService;
@@ -138,6 +139,20 @@ public class PotentialRestController {
         Users users = SessionUtil.getUserFromSession();
         potentialUpgradeStudentVo.setUsername(users.getUsername());
         AjaxUtil<Map<String, Object>> ajaxUtil = potentialService.upgradeStudent(potentialUpgradeStudentVo);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 类型升级
+     *
+     * @param potentialUpgradeStaffVo 数据
+     * @return 升级信息
+     */
+    @PostMapping("/users/type/upgrade/staff")
+    public ResponseEntity<Map<String, Object>> upgradeStaff(PotentialUpgradeStaffVo potentialUpgradeStaffVo) {
+        Users users = SessionUtil.getUserFromSession();
+        potentialUpgradeStaffVo.setUsername(users.getUsername());
+        AjaxUtil<Map<String, Object>> ajaxUtil = potentialService.upgradeStaff(potentialUpgradeStaffVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }
