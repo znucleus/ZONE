@@ -118,6 +118,7 @@ public class MainController {
             }
         }
 
+        modelMap.addAttribute("usersTypeId", users.getUsersTypeId());
         modelMap.addAttribute("realName", users.getRealName());
         modelMap.addAttribute("menu", menuService.getMenu(roles, users.getUsername()));
 
