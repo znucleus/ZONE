@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="br-profile-page">
+        <div class="card shadow-base bd-0 rounded-0 widget-4">
+            <div class="card-header ht-75">
+                <div class="hidden-xs-down text-white">
+                    用户资料
+                </div>
+            </div><!-- card-header -->
+            <div class="card-body">
+                <div class="card-profile-img">
+                    <img th:src="@{${avatar}}" alt="头像">
+                </div><!-- card-profile-img -->
+                <h4 class="tx-normal tx-roboto tx-white" th:text="${realName}"></h4>
+                <p class="mg-b-25">加入时间：<span th:text="${joinDate}"></span></p>
+
+                <p class="wd-md-500 mg-md-l-auto mg-md-r-auto mg-b-25" th:text="${roles}"></p>
+
+                <p class="mg-b-0 tx-15">
+                    <a href="#/users/profile/edit" class="tx-white-8 mg-r-5 pull-right dy_href btn btn-info"><i
+                            class="fa fa-pencil"></i>编辑</a>
+                </p>
+            </div><!-- card-body -->
+        </div><!-- card -->
+
+        <div class="ht-70 bg-gray-100 pd-x-20 d-flex align-items-center justify-content-center shadow-base">
+            <ul class="nav nav-outline active-info align-items-center flex-row" role="tablist">
+                <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#schoolTab" role="tab">学校</a>
+                </li>
+                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#personTab" role="tab">个人</a></li>
+            </ul>
+        </div>
+
+        <div class="tab-content br-profile-body">
+            <div class="tab-pane fade active show" id="schoolTab">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card pd-20 pd-xs-30 shadow-base bd-0 mg-t-30">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <select class="form-control select2-show-search" id="school"
+                                                data-placeholder="请选择学校">
+                                            <option label="请选择学校"></option>
+                                        </select>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div><!-- col-4 -->
+                                <div class="col-lg-6 mg-t-20 mg-lg-t-0">
+                                    <div class="form-group">
+                                        <select class="form-control select2-show-search" id="college"
+                                                data-placeholder="请选择院">
+                                            <option label="请选择院"></option>
+                                        </select>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div><!-- col-4 -->
+                                <div class="col-lg-12 mg-t-20 mg-lg-t-0 text-center">
+                                    <button type="button" class="btn btn-primary" id="saveSchool">保存</button>
+                                </div>
+                            </div>
+
+                        </div><!-- card -->
+                    </div><!-- col-lg-12 -->
+                </div><!-- row -->
+            </div><!-- tab-pane -->
+            <div class="tab-pane fade" id="personTab">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card pd-20 pd-xs-30 shadow-base bd-0 mg-t-30">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="form-group row">
+                                        <label for="sex" class="col-sm-3 col-form-label">性别:</label>
+                                        <div class="col-sm-9">
+                                            <select id="sex" name="sex" class="form-control">
+                                                <option value="">请选择性别</option>
+                                                <option value="男">男</option>
+                                                <option value="女">女</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group row">
+                                        <label for="nation" class="col-sm-3 col-form-label">民族:</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control select2-show-search" id="nation" name="nationId"
+                                                    data-placeholder="请选择民族" style="width: 100%">
+                                                <option label="请选择民族"></option>
+                                            </select>
+                                            <div class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group row">
+                                        <label for="birthday" class="col-sm-3 col-form-label">生日:</label>
+                                        <div class="col-sm-9">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i
+                                                        class="icon ion-calendar tx-16 lh-0 op-6"></i></span>
+                                                <input type="text" th:value="${potential.birthday}"
+                                                       class="form-control" id="birthday" name="birthday"
+                                                       placeholder="YYYY-MM-DD">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group row">
+                                        <label for="politicalLandscape" class="col-sm-3 col-form-label">面貌:</label>
+                                        <div class="col-sm-9">
+                                            <select id="politicalLandscape" name="politicalLandscapeId"
+                                                    class="form-control">
+                                                <option value="">请选择政治面貌</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-8">
+                                    <div class="form-group row">
+                                        <label for="familyResidence" class="col-sm-3 col-form-label">家庭居住地:</label>
+                                        <div class="col-sm-9">
+                                            <input class="form-control" id="familyResidence" name="familyResidence"
+                                                   placeholder="家庭居住地"
+                                                   th:value="${potential.familyResidence}">
+                                            <div class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 mg-t-20 mg-lg-t-0 text-center">
+                                    <button type="button" class="btn btn-primary" id="updateInfo">保存</button>
+                                </div>
+                            </div><!-- row -->
+                        </div><!-- card -->
+                    </div><!-- col-lg-12 -->
+                </div><!-- row -->
+            </div><!-- tab-pane -->
+        </div><!-- br-pagebody -->
+    </div>
+
+    <input type="hidden" id="schoolIdParam" th:value="${potential.schoolId}"/>
+    <input type="hidden" id="collegeIdParam" th:value="${potential.collegeId}"/>
+    <input type="hidden" id="sexParam" th:value="${potential.sex}"/>
+    <input type="hidden" id="nationParam" th:value="${potential.nationId}"/>
+    <input type="hidden" id="politicalLandscapeParam" th:value="${potential.politicalLandscapeId}"/>
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/platform/users/users_profile_potential.js')}"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>

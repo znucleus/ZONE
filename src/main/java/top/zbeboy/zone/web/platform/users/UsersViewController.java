@@ -4,11 +4,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import top.zbeboy.zbase.bean.data.potential.PotentialBean;
 import top.zbeboy.zbase.bean.data.staff.StaffBean;
 import top.zbeboy.zbase.bean.data.student.StudentBean;
 import top.zbeboy.zbase.config.SessionBook;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.*;
+import top.zbeboy.zbase.feign.data.PotentialService;
 import top.zbeboy.zbase.feign.data.StaffService;
 import top.zbeboy.zbase.feign.data.StudentService;
 import top.zbeboy.zbase.feign.platform.RoleService;
@@ -42,6 +44,9 @@ public class UsersViewController {
 
     @Resource
     private StaffService staffService;
+
+    @Resource
+    private PotentialService potentialService;
 
     @Resource
     private RoleService roleService;
@@ -143,6 +148,10 @@ public class UsersViewController {
                 StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
                 modelMap.addAttribute("staff", bean);
                 page = "web/platform/users/users_profile_staff::#page-wrapper";
+            } else if(StringUtils.equals(Workbook.POTENTIAL_USERS_TYPE, usersType.getUsersTypeName())){
+                PotentialBean bean = potentialService.findByUsernameRelation(users.getUsername());
+                modelMap.addAttribute("potential", bean);
+                page = "web/platform/users/users_profile_potential::#page-wrapper";
             } else {
                 config.buildDangerTip("数据错误", "暂不支持您的用户类型进行修改");
                 config.dataMerging(modelMap);

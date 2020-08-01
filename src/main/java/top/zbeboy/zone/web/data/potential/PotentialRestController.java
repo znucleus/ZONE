@@ -19,8 +19,11 @@ import top.zbeboy.zbase.tools.service.util.RequestUtil;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.BooleanUtil;
 import top.zbeboy.zbase.vo.data.potential.PotentialAddVo;
+import top.zbeboy.zbase.vo.data.potential.PotentialEditVo;
+import top.zbeboy.zbase.vo.data.staff.StaffEditVo;
 import top.zbeboy.zone.service.system.SystemMailService;
 import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -92,6 +95,34 @@ public class PotentialRestController {
         } else {
             ajaxUtil.fail().msg("请重新验证手机号");
         }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 临时用户信息更新
+     *
+     * @param potentialEditVo 数据
+     * @return 成功与否
+     */
+    @PostMapping("/users/potential/update/school")
+    public ResponseEntity<Map<String, Object>> userPotentialUpdateSchool(PotentialEditVo potentialEditVo) {
+        Users users = SessionUtil.getUserFromSession();
+        potentialEditVo.setUsername(users.getUsername());
+        AjaxUtil<Map<String, Object>> ajaxUtil = potentialService.userPotentialUpdateSchool(potentialEditVo);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 更新信息
+     *
+     * @param potentialEditVo 数据
+     * @return 更新信息
+     */
+    @PostMapping("/users/potential/update/info")
+    public ResponseEntity<Map<String, Object>> userPotentialUpdateInfo(PotentialEditVo potentialEditVo) {
+        Users users = SessionUtil.getUserFromSession();
+        potentialEditVo.setUsername(users.getUsername());
+        AjaxUtil<Map<String, Object>> ajaxUtil = potentialService.userPotentialUpdateInfo(potentialEditVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }
