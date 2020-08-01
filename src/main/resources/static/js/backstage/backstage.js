@@ -229,7 +229,9 @@ require(["jquery", "requirejs-domready", "moment-with-locales", "handlebars", "a
                 user_notify: web_path + '/users/data/notify',
                 user_notify_detail: web_path + '/users/notify/detail',
                 user_notify_reads: web_path + '/users/notify/reads',
-                system_notify: web_path + '/users/system/notify'
+                system_notify: web_path + '/users/system/notify',
+                upgrade_student: '/users/upgrade/student',
+                upgrade_staff:'/users/upgrade/staff'
             };
 
             var user_notify_param_id = {
@@ -370,5 +372,15 @@ require(["jquery", "requirejs-domready", "moment-with-locales", "handlebars", "a
                 var template = Handlebars.compile($("#system-notify-template").html());
                 $(system_notify_param_id.systemNotifyData).html(template(data));
             }
+
+            $('#upgradeStudent').click(function () {
+                $('#upgradeModal').modal('hide');
+                $.address.value(ajax_url.upgrade_student);
+            });
+
+            $('#upgradeStaff').click(function () {
+                $('#upgradeModal').modal('hide');
+                $.address.value(ajax_url.upgrade_staff);
+            });
         });
     });

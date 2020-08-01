@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.zbase.config.Workbook;
+import top.zbeboy.zbase.domain.tables.pojos.UsersType;
+import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zbase.feign.system.FilesService;
 import top.zbeboy.zone.annotation.logging.LoginLoggingRecord;
 import top.zbeboy.zbase.domain.tables.pojos.Files;
@@ -31,6 +33,9 @@ public class MainController {
 
     @Resource
     private FilesService filesService;
+
+    @Resource
+    private UsersTypeService usersTypeService;
 
     private final RequestCache requestCache = new HttpSessionRequestCache();
 
@@ -84,7 +89,7 @@ public class MainController {
             page = "student_register";
         } else if (StringUtils.equals(type, Workbook.REGISTER_STAFF)) {
             page = "staff_register";
-        } else if(StringUtils.equals(type,Workbook.POTENTIAL_STUDENT)){
+        } else if(StringUtils.equals(type,Workbook.REGISTER_POTENTIAL)){
             page = "potential_register";
         }
         return page;
@@ -118,7 +123,15 @@ public class MainController {
             }
         }
 
-        modelMap.addAttribute("usersTypeId", users.getUsersTypeId());
+        boolean isPotential = false;
+        if(Objects.nonNull(users.getUsersTypeId()) && users.getUsersTypeId() > 0){
+            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
+            if(StringUtils.equals(usersType.getUsersTypeName(), Workbook.POTENTIAL_USERS_TYPE)){
+                isPotential = true;
+            }
+        }
+
+        modelMap.addAttribute("isPotential", isPotential);
         modelMap.addAttribute("realName", users.getRealName());
         modelMap.addAttribute("menu", menuService.getMenu(roles, users.getUsername()));
 
