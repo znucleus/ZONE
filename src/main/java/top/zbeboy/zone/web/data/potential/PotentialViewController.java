@@ -27,6 +27,16 @@ public class PotentialViewController {
     private PotentialService potentialService;
 
     /**
+     * 临时用户数据
+     *
+     * @return 页面
+     */
+    @GetMapping("/web/menu/data/potential")
+    public String index() {
+        return "web/data/potential/potential_data::#page-wrapper";
+    }
+
+    /**
      * 升级学生
      *
      * @return 页面
