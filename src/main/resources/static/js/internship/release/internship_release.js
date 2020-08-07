@@ -35,7 +35,8 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         */
         var webStorageKey = {
             INTERNSHIP_TITLE: 'INTERNSHIP_RELEASE_INTERNSHIP_TITLE_SEARCH',
-            DATA_RANGE: 'INTERNSHIP_RELEASE_DATA_RANGE_SEARCH'
+            DATA_RANGE: 'INTERNSHIP_RELEASE_DATA_RANGE_SEARCH',
+            PAGE_NUM: 'INTERNSHIP_RELEASE_PAGE_NUM'
         };
 
         /*
@@ -62,6 +63,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.INTERNSHIP_TITLE, $(param_id.internshipTitle).val());
                 sessionStorage.setItem(webStorageKey.DATA_RANGE, _.isUndefined($("input[name='dataRange']:checked").val()) ? '0' : '1');
+                sessionStorage.setItem(webStorageKey.PAGE_NUM, "0");
             }
         }
 
@@ -245,6 +247,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         function initSearchContent() {
             var internshipTitle = null;
             var dataRange = null;
+            var pageNum = null;
             var params = {
                 internshipTitle: '',
                 dataRange: 0
@@ -252,6 +255,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             if (typeof (Storage) !== "undefined") {
                 internshipTitle = sessionStorage.getItem(webStorageKey.INTERNSHIP_TITLE);
                 dataRange = sessionStorage.getItem(webStorageKey.DATA_RANGE);
+                pageNum = sessionStorage.getItem(webStorageKey.PAGE_NUM);
             }
             if (internshipTitle !== null) {
                 params.internshipTitle = internshipTitle;
@@ -264,7 +268,12 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             } else {
                 params.dataRange = _.isUndefined($("input[name='dataRange']:checked").val()) ? 0 : 1;
             }
-            param.pageNum = 0;
+
+            if (pageNum !== null) {
+                param.pageNum = pageNum;
+            } else {
+                param.pageNum = 0;
+            }
             param.extraSearch = JSON.stringify(params);
         }
 
@@ -299,6 +308,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             $('#pagination').pagination({
                 pages: data.page.totalPages,
                 displayedPages: data.page.displayedPages,
+                currentPage: data.page.pageNum,
                 hrefTextPrefix: '',
                 prevText: '<',
                 nextText: '>',
@@ -307,6 +317,9 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 onPageClick: function (pageNumber, event) {
                     // Callback triggered when a page is clicked
                     // Page number is given as an optional parameter
+                    if (typeof (Storage) !== "undefined") {
+                        sessionStorage.setItem(webStorageKey.PAGE_NUM, pageNumber);
+                    }
                     nextPage(pageNumber);
                 }
             });

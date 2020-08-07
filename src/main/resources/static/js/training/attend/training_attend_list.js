@@ -43,7 +43,8 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "messenge
         web storage key.
         */
         var webStorageKey = {
-            ATTEND_DATE: 'TRAINING_ATTEND_DATE_SEARCH' + page_param.paramTrainingReleaseId
+            ATTEND_DATE: 'TRAINING_ATTEND_DATE_SEARCH_' + page_param.paramTrainingReleaseId,
+            PAGE_NUM: 'TRAINING_ATTEND_PAGE_NUM_' + page_param.paramTrainingReleaseId,
         };
 
         /*
@@ -68,6 +69,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "messenge
         function refreshSearch() {
             if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.ATTEND_DATE, $(param_id.attendDate).val());
+                sessionStorage.setItem(webStorageKey.PAGE_NUM, "0");
             }
         }
 
@@ -156,12 +158,14 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "messenge
        */
         function initSearchContent() {
             var attendDate = null;
+            var pageNum = null;
             var params = {
                 attendDate: '',
                 trainingReleaseId: page_param.paramTrainingReleaseId
             };
             if (typeof (Storage) !== "undefined") {
                 attendDate = sessionStorage.getItem(webStorageKey.ATTEND_DATE);
+                pageNum = sessionStorage.getItem(webStorageKey.PAGE_NUM);
             }
             if (attendDate !== null) {
                 params.attendDate = attendDate;
@@ -169,7 +173,11 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "messenge
                 params.attendDate = $(param_id.attendDate).val();
             }
 
-            param.pageNum = 0;
+            if (pageNum !== null) {
+                param.pageNum = pageNum;
+            } else {
+                param.pageNum = 0;
+            }
             param.extraSearch = JSON.stringify(params);
         }
 
@@ -194,6 +202,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "messenge
             $('#pagination').pagination({
                 pages: data.page.totalPages,
                 displayedPages: data.page.displayedPages,
+                currentPage: data.page.pageNum,
                 hrefTextPrefix: '',
                 prevText: '<',
                 nextText: '>',
@@ -202,6 +211,9 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "messenge
                 onPageClick: function (pageNumber, event) {
                     // Callback triggered when a page is clicked
                     // Page number is given as an optional parameter
+                    if (typeof (Storage) !== "undefined") {
+                        sessionStorage.setItem(webStorageKey.PAGE_NUM, pageNumber);
+                    }
                     nextPage(pageNumber);
                 }
             });

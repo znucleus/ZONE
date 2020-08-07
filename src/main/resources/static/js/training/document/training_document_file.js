@@ -35,7 +35,8 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         web storage key.
         */
         var webStorageKey = {
-            DOCUMENT_FILE: 'TRAINING_DOCUMENT_RELATION_FILE_SEARCH' + page_param.paramTrainingReleaseId
+            DOCUMENT_FILE: 'TRAINING_DOCUMENT_RELATION_FILE_SEARCH_' + page_param.paramTrainingReleaseId,
+            PAGE_NUM: 'TRAINING_DOCUMENT_FILE_PAGE_NUM_' + page_param.paramTrainingReleaseId
         };
 
         /*
@@ -60,6 +61,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         function refreshDocumentFileSearch() {
             if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.DOCUMENT_FILE, $(param_id.documentFile).val());
+                sessionStorage.setItem(webStorageKey.PAGE_NUM, "0");
             }
         }
 
@@ -124,12 +126,14 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
        */
         function initDocumentFileSearchContent() {
             var documentFile = null;
+            var documentPageNum = null;
             var params = {
                 originalFileName: '',
                 trainingReleaseId: page_param.paramTrainingReleaseId,
             };
             if (typeof (Storage) !== "undefined") {
                 documentFile = sessionStorage.getItem(webStorageKey.DOCUMENT_FILE);
+                documentPageNum = sessionStorage.getItem(webStorageKey.PAGE_NUM);
             }
             if (documentFile !== null) {
                 params.originalFileName = documentFile;
@@ -137,7 +141,11 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 params.originalFileName = $(param_id.documentFile).val();
             }
 
-            document_file_param.pageNum = 0;
+            if (documentPageNum !== null) {
+                document_file_param.pageNum = documentPageNum;
+            } else {
+                document_file_param.pageNum = 0;
+            }
             document_file_param.extraSearch = JSON.stringify(params);
         }
 
@@ -162,6 +170,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             $('#documentFilePagination').pagination({
                 pages: data.page.totalPages,
                 displayedPages: data.page.displayedPages,
+                currentPage: data.page.pageNum,
                 hrefTextPrefix: '',
                 prevText: '<',
                 nextText: '>',
@@ -170,6 +179,9 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 onPageClick: function (pageNumber, event) {
                     // Callback triggered when a page is clicked
                     // Page number is given as an optional parameter
+                    if (typeof (Storage) !== "undefined") {
+                        sessionStorage.setItem(webStorageKey.PAGE_NUM, pageNumber);
+                    }
                     nextDocumentFilePage(pageNumber);
                 }
             });

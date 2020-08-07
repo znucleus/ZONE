@@ -38,7 +38,8 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         web storage key.
         */
         var webStorageKey = {
-            INTERNSHIP_TITLE: 'INTERNSHIP_APPLY_MY_INTERNSHIP_TITLE_SEARCH'
+            INTERNSHIP_TITLE: 'INTERNSHIP_APPLY_MY_INTERNSHIP_TITLE_SEARCH',
+            PAGE_NUM: 'INTERNSHIP_APPLY_MY_INTERNSHIP_PAGE_NUM',
         };
 
         /*
@@ -63,6 +64,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         function refreshSearch() {
             if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.INTERNSHIP_TITLE, $(param_id.internshipTitle).val());
+                sessionStorage.setItem(webStorageKey.PAGE_NUM, "0");
             }
         }
 
@@ -483,18 +485,24 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
        */
         function initSearchContent() {
             var internshipTitle = null;
+            var pageNum = null;
             var params = {
                 internshipTitle: ''
             };
             if (typeof (Storage) !== "undefined") {
                 internshipTitle = sessionStorage.getItem(webStorageKey.INTERNSHIP_TITLE);
+                pageNum = sessionStorage.getItem(webStorageKey.PAGE_NUM);
             }
             if (internshipTitle !== null) {
                 params.internshipTitle = internshipTitle;
             } else {
                 params.internshipTitle = $(param_id.internshipTitle).val();
             }
-            param.pageNum = 0;
+            if (pageNum !== null) {
+                param.pageNum = pageNum;
+            } else {
+                param.pageNum = 0;
+            }
             param.extraSearch = JSON.stringify(params);
         }
 
@@ -519,6 +527,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             $('#pagination').pagination({
                 pages: data.page.totalPages,
                 displayedPages: data.page.displayedPages,
+                currentPage: data.page.pageNum,
                 hrefTextPrefix: '',
                 prevText: '<',
                 nextText: '>',
@@ -527,6 +536,9 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 onPageClick: function (pageNumber, event) {
                     // Callback triggered when a page is clicked
                     // Page number is given as an optional parameter
+                    if (typeof (Storage) !== "undefined") {
+                        sessionStorage.setItem(webStorageKey.PAGE_NUM, pageNumber);
+                    }
                     nextPage(pageNumber);
                 }
             });

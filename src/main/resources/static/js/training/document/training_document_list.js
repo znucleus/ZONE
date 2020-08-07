@@ -56,8 +56,10 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         web storage key.
         */
         var webStorageKey = {
-            DOCUMENT_TITLE: 'TRAINING_DOCUMENT_LIST_TITLE_SEARCH' + page_param.paramTrainingReleaseId,
-            DOCUMENT_FILE: 'TRAINING_DOCUMENT_LIST_FILE_SEARCH' + page_param.paramTrainingReleaseId
+            DOCUMENT_TITLE: 'TRAINING_DOCUMENT_LIST_TITLE_SEARCH_' + page_param.paramTrainingReleaseId,
+            DOCUMENT_FILE: 'TRAINING_DOCUMENT_LIST_FILE_SEARCH_' + page_param.paramTrainingReleaseId,
+            DOCUMENT_PAGE_NUM: 'TRAINING_DOCUMENT_LIST_DOCUMENT_PAGE_NUM_' + page_param.paramTrainingReleaseId,
+            DOCUMENT_FILE_PAGE_NUM: 'TRAINING_DOCUMENT_LIST_FILE_PAGE_NUM_' + page_param.paramTrainingReleaseId
         };
 
         /*
@@ -88,12 +90,15 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         function refreshDocumentSearch() {
             if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.DOCUMENT_TITLE, $(param_id.documentTitle).val());
+                sessionStorage.setItem(webStorageKey.DOCUMENT_PAGE_NUM, "0");
             }
         }
 
         function refreshDocumentFileSearch() {
             if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.DOCUMENT_FILE, $(param_id.documentFile).val());
+                sessionStorage.setItem(webStorageKey.DOCUMENT_FILE_PAGE_NUM, "0");
+
             }
         }
 
@@ -266,12 +271,14 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
        */
         function initDocumentSearchContent() {
             var documentTitle = null;
+            var pageNum = null;
             var params = {
                 documentTitle: '',
                 trainingReleaseId: page_param.paramTrainingReleaseId,
             };
             if (typeof (Storage) !== "undefined") {
                 documentTitle = sessionStorage.getItem(webStorageKey.DOCUMENT_TITLE);
+                pageNum = sessionStorage.getItem(webStorageKey.DOCUMENT_PAGE_NUM);
             }
             if (documentTitle !== null) {
                 params.documentTitle = documentTitle;
@@ -279,18 +286,24 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 params.documentTitle = $(param_id.documentTitle).val();
             }
 
-            document_param.pageNum = 0;
+            if (pageNum !== null) {
+                document_param.pageNum = pageNum;
+            } else {
+                document_param.pageNum = 0;
+            }
             document_param.extraSearch = JSON.stringify(params);
         }
 
         function initDocumentFileSearchContent() {
             var documentFile = null;
+            var pageNum = null;
             var params = {
                 originalFileName: '',
                 trainingReleaseId: page_param.paramTrainingReleaseId,
             };
             if (typeof (Storage) !== "undefined") {
                 documentFile = sessionStorage.getItem(webStorageKey.DOCUMENT_FILE);
+                pageNum = sessionStorage.getItem(webStorageKey.DOCUMENT_FILE_PAGE_NUM);
             }
             if (documentFile !== null) {
                 params.originalFileName = documentFile;
@@ -298,7 +311,11 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 params.originalFileName = $(param_id.documentFile).val();
             }
 
-            document_file_param.pageNum = 0;
+            if (pageNum !== null) {
+                document_file_param.pageNum = pageNum;
+            } else {
+                document_file_param.pageNum = 0;
+            }
             document_file_param.extraSearch = JSON.stringify(params);
         }
 
@@ -333,6 +350,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             $('#documentPagination').pagination({
                 pages: data.page.totalPages,
                 displayedPages: data.page.displayedPages,
+                currentPage: data.page.pageNum,
                 hrefTextPrefix: '',
                 prevText: '<',
                 nextText: '>',
@@ -341,6 +359,9 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 onPageClick: function (pageNumber, event) {
                     // Callback triggered when a page is clicked
                     // Page number is given as an optional parameter
+                    if (typeof (Storage) !== "undefined") {
+                        sessionStorage.setItem(webStorageKey.DOCUMENT_PAGE_NUM, pageNumber);
+                    }
                     nextDocumentPage(pageNumber);
                 }
             });
@@ -350,6 +371,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             $('#documentFilePagination').pagination({
                 pages: data.page.totalPages,
                 displayedPages: data.page.displayedPages,
+                currentPage: data.page.pageNum,
                 hrefTextPrefix: '',
                 prevText: '<',
                 nextText: '>',
@@ -358,6 +380,9 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 onPageClick: function (pageNumber, event) {
                     // Callback triggered when a page is clicked
                     // Page number is given as an optional parameter
+                    if (typeof (Storage) !== "undefined") {
+                        sessionStorage.setItem(webStorageKey.DOCUMENT_FILE_PAGE_NUM, pageNumber);
+                    }
                     nextDocumentFilePage(pageNumber);
                 }
             });

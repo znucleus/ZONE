@@ -35,7 +35,8 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         web storage key.
         */
         var webStorageKey = {
-            TITLE: 'REGISTER_EPIDEMIC_TITLE_SEARCH'
+            TITLE: 'REGISTER_EPIDEMIC_TITLE_SEARCH',
+            PAGE_NUM: 'REGISTER_EPIDEMIC_PAGE_NUM',
         };
 
         /*
@@ -60,6 +61,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         function refreshSearch() {
             if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.TITLE, $(param_id.title).val());
+                sessionStorage.setItem(webStorageKey.PAGE_NUM, "0");
             }
         }
 
@@ -214,11 +216,13 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
        */
         function initSearchContent() {
             var title = null;
+            var pageNum = null;
             var params = {
                 title: ''
             };
             if (typeof (Storage) !== "undefined") {
                 title = sessionStorage.getItem(webStorageKey.TITLE);
+                pageNum = sessionStorage.getItem(webStorageKey.PAGE_NUM);
             }
             if (title !== null) {
                 params.title = title;
@@ -226,7 +230,11 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 params.title = $(param_id.title).val();
             }
 
-            param.pageNum = 0;
+            if (pageNum !== null) {
+                param.pageNum = pageNum;
+            } else {
+                param.pageNum = 0;
+            }
             param.extraSearch = JSON.stringify(params);
         }
 
@@ -251,6 +259,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             $('#pagination').pagination({
                 pages: data.page.totalPages,
                 displayedPages: data.page.displayedPages,
+                currentPage: data.page.pageNum,
                 hrefTextPrefix: '',
                 prevText: '<',
                 nextText: '>',
@@ -259,6 +268,9 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 onPageClick: function (pageNumber, event) {
                     // Callback triggered when a page is clicked
                     // Page number is given as an optional parameter
+                    if (typeof (Storage) !== "undefined") {
+                        sessionStorage.setItem(webStorageKey.PAGE_NUM, pageNumber);
+                    }
                     nextPage(pageNumber);
                 }
             });

@@ -61,7 +61,8 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
         var webStorageKey = {
             REAL_NAME: 'INTERNSHIP_REVIEW_BASE_FILL_REAL_NAME_SEARCH_' + page_param.paramInternshipReleaseId,
             STUDENT_NUMBER: 'INTERNSHIP_REVIEW_BASE_FILL_STUDENT_NUMBER_SEARCH_' + page_param.paramInternshipReleaseId,
-            ORGANIZE_ID: 'INTERNSHIP_REVIEW_BASE_FILL_ORGANIZE_ID_SEARCH_' + page_param.paramInternshipReleaseId
+            ORGANIZE_ID: 'INTERNSHIP_REVIEW_BASE_FILL_ORGANIZE_ID_SEARCH_' + page_param.paramInternshipReleaseId,
+            PAGE_NUM: 'INTERNSHIP_REVIEW_BASE_FILL_PAGE_NUM_' + page_param.paramInternshipReleaseId
         };
 
         var tableData = '#tableData';
@@ -83,6 +84,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
                 sessionStorage.setItem(webStorageKey.REAL_NAME, $(param_id.realName).val());
                 sessionStorage.setItem(webStorageKey.STUDENT_NUMBER, $(param_id.studentNumber).val());
                 sessionStorage.setItem(webStorageKey.ORGANIZE_ID, $(param_id.organize).val() != null ? $(param_id.organize).val() : '');
+                sessionStorage.setItem(webStorageKey.PAGE_NUM, "0");
             }
         }
 
@@ -527,6 +529,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
             var realName = null;
             var studentNumber = null;
             var organizeId = null;
+            var pageNum = null;
             var params = {
                 realName: '',
                 studentNumber: '',
@@ -538,6 +541,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
                 realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
                 studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
                 organizeId = sessionStorage.getItem(webStorageKey.ORGANIZE_ID);
+                pageNum = sessionStorage.getItem(webStorageKey.PAGE_NUM);
             }
             if (realName !== null) {
                 params.realName = realName;
@@ -556,7 +560,12 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
             } else {
                 params.organizeId = $(param_id.organize).val();
             }
-            param.pageNum = 0;
+
+            if (pageNum !== null) {
+                param.pageNum = pageNum;
+            } else {
+                param.pageNum = 0;
+            }
             param.extraSearch = JSON.stringify(params);
         }
 
@@ -587,6 +596,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
             $('#pagination').pagination({
                 pages: data.page.totalPages,
                 displayedPages: data.page.displayedPages,
+                currentPage: data.page.pageNum,
                 hrefTextPrefix: '',
                 prevText: '<',
                 nextText: '>',
@@ -595,6 +605,9 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
                 onPageClick: function (pageNumber, event) {
                     // Callback triggered when a page is clicked
                     // Page number is given as an optional parameter
+                    if (typeof (Storage) !== "undefined") {
+                        sessionStorage.setItem(webStorageKey.PAGE_NUM, pageNumber);
+                    }
                     nextPage(pageNumber);
                 }
             });

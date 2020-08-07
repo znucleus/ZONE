@@ -39,9 +39,10 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         web storage key.
         */
         var webStorageKey = {
-            REAL_NAME: 'REGISTER_LEAVER_DATA_REVIEW_REAL_NAME_SEARCH' + page_param.paramLeaverRegisterReleaseId,
-            STUDENT_NUMBER: 'REGISTER_LEAVER_DATA_REVIEW_STUDENT_NUMBER_SEARCH' + page_param.paramLeaverRegisterReleaseId,
-            ORGANIZE_NAME: 'REGISTER_LEAVER_DATA_REVIEW_ORGANIZE_NAME_SEARCH' + page_param.paramLeaverRegisterReleaseId,
+            REAL_NAME: 'REGISTER_LEAVER_DATA_REVIEW_REAL_NAME_SEARCH_' + page_param.paramLeaverRegisterReleaseId,
+            STUDENT_NUMBER: 'REGISTER_LEAVER_DATA_REVIEW_STUDENT_NUMBER_SEARCH_' + page_param.paramLeaverRegisterReleaseId,
+            ORGANIZE_NAME: 'REGISTER_LEAVER_DATA_REVIEW_ORGANIZE_NAME_SEARCH_' + page_param.paramLeaverRegisterReleaseId,
+            PAGE_NUM: 'REGISTER_LEAVER_DATA_REVIEW_PAGE_NUM_' + page_param.paramLeaverRegisterReleaseId,
         };
 
         /*
@@ -72,6 +73,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 sessionStorage.setItem(webStorageKey.REAL_NAME, $(param_id.realName).val());
                 sessionStorage.setItem(webStorageKey.STUDENT_NUMBER, $(param_id.studentNumber).val());
                 sessionStorage.setItem(webStorageKey.ORGANIZE_NAME, $(param_id.organizeName).val());
+                sessionStorage.setItem(webStorageKey.PAGE_NUM, "0");
             }
         }
 
@@ -217,6 +219,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             var realName = null;
             var studentNumber = null;
             var organizeName = null;
+            var pageNum = null;
             var params = {
                 realName: '',
                 studentNumber: '',
@@ -227,6 +230,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 realName = sessionStorage.getItem(webStorageKey.REAL_NAME);
                 studentNumber = sessionStorage.getItem(webStorageKey.STUDENT_NUMBER);
                 organizeName = sessionStorage.getItem(webStorageKey.ORGANIZE_NAME);
+                pageNum = sessionStorage.getItem(webStorageKey.PAGE_NUM);
             }
             if (realName !== null) {
                 params.realName = realName;
@@ -245,7 +249,12 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             } else {
                 params.organizeName = $(param_id.organizeName).val();
             }
-            param.pageNum = 0;
+
+            if (pageNum !== null) {
+                param.pageNum = pageNum;
+            } else {
+                param.pageNum = 0;
+            }
             param.extraSearch = JSON.stringify(params);
         }
 
@@ -282,6 +291,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             $('#pagination').pagination({
                 pages: data.page.totalPages,
                 displayedPages: data.page.displayedPages,
+                currentPage: data.page.pageNum,
                 hrefTextPrefix: '',
                 prevText: '<',
                 nextText: '>',
@@ -290,6 +300,9 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 onPageClick: function (pageNumber, event) {
                     // Callback triggered when a page is clicked
                     // Page number is given as an optional parameter
+                    if (typeof (Storage) !== "undefined") {
+                        sessionStorage.setItem(webStorageKey.PAGE_NUM, pageNumber);
+                    }
                     nextPage(pageNumber);
                 }
             });
