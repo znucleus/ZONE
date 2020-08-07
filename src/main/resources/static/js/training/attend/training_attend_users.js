@@ -23,9 +23,9 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         web storage key.
         */
         var webStorageKey = {
-            REAL_NAME: 'TRAINING_ATTEND_USERS_REAL_NAME_SEARCH' + page_param.paramTrainingReleaseId,
-            STUDENT_NUMBER: 'TRAINING_ATTEND_USERS_STUDENT_NUMBER_SEARCH' + page_param.paramTrainingReleaseId,
-            OPERATE: 'TRAINING_ATTEND_USERS_OPERATE_SEARCH' + page_param.paramTrainingReleaseId
+            REAL_NAME: 'TRAINING_ATTEND_USERS_REAL_NAME_SEARCH_' + page_param.paramTrainingReleaseId,
+            STUDENT_NUMBER: 'TRAINING_ATTEND_USERS_STUDENT_NUMBER_SEARCH_' + page_param.paramTrainingReleaseId,
+            OPERATE: 'TRAINING_ATTEND_USERS_OPERATE_SEARCH_' + page_param.paramTrainingReleaseId
         };
 
         /*
@@ -67,6 +67,13 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 $.fn.check({checkall_name: "checkall", checkbox_name: "check"});
             },
             searching: false,
+            stateSave: true,// 打开客户端状态记录功能。这个数据是记录在cookies中的，打开了这个记录后，即使刷新一次页面，或重新打开浏览器，之前的状态都是保存下来的
+            stateSaveCallback: function (settings, data) {
+                localStorage.setItem('TRAINING_ATTEND_USERS_' + page_param.paramTrainingReleaseId + settings.sInstance, JSON.stringify(data))
+            },
+            stateLoadCallback: function (settings) {
+                return JSON.parse(localStorage.getItem('TRAINING_ATTEND_USERS_' + page_param.paramTrainingReleaseId + settings.sInstance))
+            },
             "processing": true, // 打开数据加载时的等待效果
             "serverSide": true,// 打开后台分页
             "aaSorting": [[3, 'asc']],// 排序

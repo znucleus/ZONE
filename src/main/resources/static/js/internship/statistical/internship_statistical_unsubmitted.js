@@ -48,6 +48,13 @@ require(["jquery", "nav.active", "responsive.bootstrap4", "jquery.address", "mes
         var myTable = tableElement.DataTable({
             autoWidth: false,
             searching: false,
+            stateSave: true,// 打开客户端状态记录功能。这个数据是记录在cookies中的，打开了这个记录后，即使刷新一次页面，或重新打开浏览器，之前的状态都是保存下来的
+            stateSaveCallback: function (settings, data) {
+                localStorage.setItem('INTERNSHIP_STATISTICAL_UNSUBMITTED_' + page_param.paramInternshipReleaseId + settings.sInstance, JSON.stringify(data))
+            },
+            stateLoadCallback: function (settings) {
+                return JSON.parse(localStorage.getItem('INTERNSHIP_STATISTICAL_UNSUBMITTED_' + page_param.paramInternshipReleaseId + settings.sInstance))
+            },
             "processing": true, // 打开数据加载时的等待效果
             "serverSide": true,// 打开后台分页
             "aaSorting": [[1, 'asc']],// 排序
