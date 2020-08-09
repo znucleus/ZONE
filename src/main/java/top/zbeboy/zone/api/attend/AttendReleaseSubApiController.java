@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zbase.bean.attend.AttendReleaseSubBean;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
-import top.zbeboy.zbase.feign.attend.AttendReleaseSubService;
+import top.zbeboy.zbase.feign.campus.attend.AttendReleaseSubService;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
 import top.zbeboy.zone.web.util.SessionUtil;
