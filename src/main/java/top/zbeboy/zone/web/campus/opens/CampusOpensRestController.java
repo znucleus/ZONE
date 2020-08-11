@@ -3,6 +3,7 @@ package top.zbeboy.zone.web.campus.opens;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.bean.opens.SchoolOpensBean;
 import top.zbeboy.zbase.config.Workbook;
@@ -10,6 +11,7 @@ import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.campus.opens.SchoolOpensService;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
+import top.zbeboy.zbase.vo.campus.opens.SchoolOpensAddVo;
 import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
 import top.zbeboy.zone.web.util.SessionUtil;
 
@@ -35,6 +37,21 @@ public class CampusOpensRestController {
         Users users = SessionUtil.getUserFromSession();
         simplePaginationUtil.setUsername(users.getUsername());
         AjaxUtil<SchoolOpensBean> ajaxUtil = schoolOpensService.data(simplePaginationUtil);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 保存
+     *
+     * @param schoolOpensAddVo 数据
+     * @return true or false
+     */
+    @ApiLoggingRecord(remark = "校园开学保存", channel = Workbook.channel.WEB, needLogin = true)
+    @PostMapping("/web/campus/opens/save")
+    public ResponseEntity<Map<String, Object>> save(SchoolOpensAddVo schoolOpensAddVo) {
+        Users users = SessionUtil.getUserFromSession();
+        schoolOpensAddVo.setUsername(users.getUsername());
+        AjaxUtil<Map<String, Object>> ajaxUtil = schoolOpensService.save(schoolOpensAddVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

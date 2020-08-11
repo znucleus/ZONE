@@ -13,8 +13,8 @@ import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
 import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
-import top.zbeboy.zbase.vo.attend.release.AttendReleaseAddVo;
-import top.zbeboy.zbase.vo.attend.release.AttendReleaseEditVo;
+import top.zbeboy.zbase.vo.campus.attend.release.AttendReleaseAddVo;
+import top.zbeboy.zbase.vo.campus.attend.release.AttendReleaseEditVo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;

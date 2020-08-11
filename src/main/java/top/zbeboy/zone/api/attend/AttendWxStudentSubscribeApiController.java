@@ -14,7 +14,7 @@ import top.zbeboy.zbase.feign.campus.attend.AttendWxStudentSubscribeService;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
 import top.zbeboy.zone.web.util.SessionUtil;
-import top.zbeboy.zbase.vo.attend.weixin.AttendWxStudentSubscribeAddVo;
+import top.zbeboy.zbase.vo.campus.attend.weixin.AttendWxStudentSubscribeAddVo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
