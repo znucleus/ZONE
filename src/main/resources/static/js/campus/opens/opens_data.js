@@ -10,6 +10,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             add: '/web/campus/opens/add',
             edit: '/web/campus/opens/edit',
             del: web_path + '/web/campus/opens/delete',
+            look: '/web/campus/opens/look',
             page: '/web/menu/campus/opens'
         };
 
@@ -119,6 +120,13 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
          */
         $(tableData).delegate('.del', "click", function () {
             del($(this).attr('data-id'), $(this).attr('data-name'));
+        });
+
+        /*
+         查看
+        */
+        $(tableData).delegate('.look', "click", function () {
+            $.address.value(ajax_url.look + '/' + $(this).attr('data-id'));
         });
 
         /**
