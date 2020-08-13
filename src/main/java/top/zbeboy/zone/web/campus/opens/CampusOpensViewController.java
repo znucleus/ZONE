@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zbase.bean.data.staff.StaffBean;
 import top.zbeboy.zbase.bean.data.student.StudentBean;
 import top.zbeboy.zbase.config.Workbook;
@@ -84,6 +85,29 @@ public class CampusOpensViewController {
                 config.dataMerging(modelMap);
                 page = "inline_tip::#page-wrapper";
             }
+        } else {
+            config.buildWarningTip("操作警告", "您无权限操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
+
+    /**
+     * 编辑页面
+     *
+     * @param modelMap 页面对象
+     * @return 添加页面
+     */
+    @GetMapping("/web/campus/opens/edit/{id}")
+    public String edit(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        Users users = SessionUtil.getUserFromSession();
+        if (schoolOpensService.opensConditionOperator(users.getUsername(), id)) {
+            modelMap.addAttribute("schoolOpens", schoolOpensService.findById(id));
+            modelMap.addAttribute("schoolOpensContent", schoolOpensService.content(id));
+            page = "web/campus/opens/opens_edit::#page-wrapper";
         } else {
             config.buildWarningTip("操作警告", "您无权限操作");
             config.dataMerging(modelMap);

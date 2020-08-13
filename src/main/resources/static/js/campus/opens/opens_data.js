@@ -124,8 +124,9 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         /**
          * 删除
          * @param id
+         * @param name
          */
-        function del(id) {
+        function del(id, name) {
             Swal.fire({
                 title: "确定删除 '" + name + "' 吗？",
                 text: "开学删除！",

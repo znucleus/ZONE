@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.bean.opens.SchoolOpensBean;
 import top.zbeboy.zbase.config.Workbook;
@@ -12,6 +13,7 @@ import top.zbeboy.zbase.feign.campus.opens.SchoolOpensService;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zbase.vo.campus.opens.SchoolOpensAddVo;
+import top.zbeboy.zbase.vo.campus.opens.SchoolOpensEditVo;
 import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
 import top.zbeboy.zone.web.util.SessionUtil;
 
@@ -46,12 +48,38 @@ public class CampusOpensRestController {
      * @param schoolOpensAddVo 数据
      * @return true or false
      */
-    @ApiLoggingRecord(remark = "校园开学保存", channel = Workbook.channel.WEB, needLogin = true)
     @PostMapping("/web/campus/opens/save")
     public ResponseEntity<Map<String, Object>> save(SchoolOpensAddVo schoolOpensAddVo) {
         Users users = SessionUtil.getUserFromSession();
         schoolOpensAddVo.setUsername(users.getUsername());
         AjaxUtil<Map<String, Object>> ajaxUtil = schoolOpensService.save(schoolOpensAddVo);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 更新
+     *
+     * @param schoolOpensEditVo 数据
+     * @return true or false
+     */
+    @PostMapping("/web/campus/opens/update")
+    public ResponseEntity<Map<String, Object>> update(SchoolOpensEditVo schoolOpensEditVo) {
+        Users users = SessionUtil.getUserFromSession();
+        schoolOpensEditVo.setUsername(users.getUsername());
+        AjaxUtil<Map<String, Object>> ajaxUtil = schoolOpensService.update(schoolOpensEditVo);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 删除
+     *
+     * @param id 发布id
+     * @return true or false
+     */
+    @PostMapping("/web/campus/opens/delete")
+    public ResponseEntity<Map<String, Object>> delete(@RequestParam("id") String id) {
+        Users users = SessionUtil.getUserFromSession();
+        AjaxUtil<Map<String, Object>> ajaxUtil = schoolOpensService.delete(users.getUsername(), id);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }
