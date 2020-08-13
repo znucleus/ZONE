@@ -50,7 +50,8 @@ require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf"]
 
             var param_id = {
                 username: '#username',
-                password: '#password'
+                password: '#password',
+                showPassword: '#showPassword'
             };
 
             var button_id = {
@@ -83,6 +84,17 @@ require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf"]
                 }
             });
 
+            $(param_id.showPassword).click(function () {
+                var iElement = $(param_id.showPassword + '> i');
+                if (iElement.hasClass('fa-eye')) {
+                    $(param_id.password).attr('type', 'text');
+                    iElement.removeClass('fa-eye').addClass('fa-eye-slash');
+                } else {
+                    $(param_id.password).attr('type', 'password');
+                    iElement.addClass('fa-eye').removeClass('fa-eye-slash');
+                }
+            });
+
             $(button_id.login.id).click(function () {
                 validUsername();
             });
@@ -103,13 +115,13 @@ require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf"]
                 var password = param.password;
                 if (password !== '') {
                     if (tools.regex.password.test(password)) {
-                        tools.validSuccessDom(param_id.password);
+                        tools.validCustomerSingleSuccessDom(param_id.password);
                         sendAjax();
                     } else {
-                        tools.validErrorDom(param_id.password, "密码格式不正确");
+                        tools.validCustomerSingleErrorDom(param_id.password, "密码格式不正确");
                     }
                 } else {
-                    tools.validErrorDom(param_id.password, "您的密码？");
+                    tools.validCustomerSingleErrorDom(param_id.password, "您的密码？");
                 }
 
             }

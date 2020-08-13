@@ -29,10 +29,10 @@ define(["jquery"], function ($) {
                 $(errorId).prev().children(':input').css('border-color', '#dc3545');
             },
             validCustomerSingleSuccessDom: function (validId) {
-                $(validId).parents('.form-group').children('.invalid-feedback').hide().text('');
+                $(validId).removeClass('is-invalid').parents('.form-group').children('.invalid-feedback').hide().text('');
             },
             validCustomerSingleErrorDom: function (validId, msg) {
-                $(validId).parents('.form-group').children('.invalid-feedback').show().text(msg);
+                $(validId).addClass('is-invalid').parents('.form-group').children('.invalid-feedback').show().text(msg);
             },
             buttonLoading: function (btnId, msg) {
                 $(btnId).prop('disabled', true).text(msg);
