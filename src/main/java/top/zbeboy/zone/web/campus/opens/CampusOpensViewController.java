@@ -98,7 +98,7 @@ public class CampusOpensViewController {
      * 编辑页面
      *
      * @param modelMap 页面对象
-     * @return 添加页面
+     * @return 编辑页面
      */
     @GetMapping("/web/campus/opens/edit/{id}")
     public String edit(@PathVariable("id") String id, ModelMap modelMap) {
@@ -118,10 +118,10 @@ public class CampusOpensViewController {
     }
 
     /**
-     * 编辑页面
+     * 查看页面
      *
      * @param modelMap 页面对象
-     * @return 添加页面
+     * @return 查看页面
      */
     @GetMapping("/web/campus/opens/look/{id}")
     public String look(@PathVariable("id") String id, ModelMap modelMap) {
@@ -129,7 +129,7 @@ public class CampusOpensViewController {
         String page;
         SchoolOpens schoolOpens = schoolOpensService.findById(id);
         if(StringUtils.isNotBlank(schoolOpens.getOpenId())){
-            modelMap.addAttribute("schoolOpens", schoolOpensService.findById(id));
+            modelMap.addAttribute("schoolOpens", schoolOpens);
             modelMap.addAttribute("schoolOpensContent", schoolOpensService.content(id));
             page = "web/campus/opens/opens_look::#page-wrapper";
         } else {

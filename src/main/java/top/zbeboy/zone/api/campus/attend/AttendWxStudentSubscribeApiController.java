@@ -1,4 +1,4 @@
-package top.zbeboy.zone.api.attend;
+package top.zbeboy.zone.api.campus.attend;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
