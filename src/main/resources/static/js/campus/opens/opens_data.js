@@ -11,6 +11,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             edit: '/web/campus/opens/edit',
             del: web_path + '/web/campus/opens/delete',
             look: '/web/campus/opens/look',
+            authorize: '/web/campus/opens/authorize/add',
             page: '/web/menu/campus/opens'
         };
 
@@ -97,6 +98,13 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
          */
         $('#release').click(function () {
             $.address.value(ajax_url.add);
+        });
+
+        /*
+        权限分配
+        */
+        $('#authorize').click(function () {
+            $.address.value(ajax_url.authorize);
         });
 
         /**
