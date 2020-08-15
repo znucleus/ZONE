@@ -3,7 +3,7 @@ package top.zbeboy.zone.api.campus.attend;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import top.zbeboy.zbase.bean.attend.AttendReleaseSubBean;
+import top.zbeboy.zbase.bean.campus.attend.AttendReleaseSubBean;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.campus.attend.AttendReleaseSubService;

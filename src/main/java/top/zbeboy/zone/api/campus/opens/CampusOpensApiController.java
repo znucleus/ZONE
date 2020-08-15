@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-import top.zbeboy.zbase.bean.opens.SchoolOpensBean;
+import top.zbeboy.zbase.bean.campus.opens.SchoolOpensBean;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.SchoolOpens;
 import top.zbeboy.zbase.domain.tables.pojos.Users;

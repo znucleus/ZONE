@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="pd-30">
+        <h4 class="tx-gray-800 mg-b-5">校园花名册</h4>
+        <p class="mg-b-0">管理校园花名册。</p>
+    </div><!-- d-flex -->
+
+    <div class="br-pagebody mg-t-5 pd-x-30">
+        <div class="br-section-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12 mt-2">
+                            <input type="text" id="search_title" class="form-control"
+                                   placeholder="标题"/>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button type="button" id="search" class="btn btn-outline-secondary"><i
+                                class="fa fa-search"></i>搜索
+                        </button>
+                        <button type="button" id="reset_search" class="btn btn-outline-secondary"><i
+                                class="fa fa-repeat"></i>重置
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="float-right mg-t-5">
+                        <button type="button" class="btn btn-outline-primary" id="release" th:if="${canRelease}"><i class="fa fa-edit"></i> 发布
+                        </button>
+                        <button type="button" class="btn btn-purple" id="authorize" sec:authorize="hasAnyRole('ROLE_SYSTEM','ROLE_ADMIN')"><i class="fa fa-user-o"></i> 分配权限
+                        </button>
+                        <button type="button" class="btn btn-light" id="refresh"><i class="fa fa-refresh"></i> 刷新
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-12" id="tableData">
+
+                </div>
+                <div class="col-md-12 mg-t-20">
+                    <div class="ht-80 bd d-flex align-items-center justify-content-center">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination" id="pagination"></ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script id="roster-template" type="text/x-handlebars-template">
+        {{#each listResult}}
+        <div class="card mg-t-10 text-dark border-info" >
+            <div class="row no-gutters">
+                <div class="col-md-4">
+                    <img src="{{qrCodeUrl}}" class="card-img" alt="花名册二维码">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body text-dark mg-t-10">
+                        <h5 class="card-title">{{title}}</h5>
+                        <div class="row">
+                            <div class="col-md-4 mg-t-15"><span>学校：</span><span>{{schoolName}}</span></div>
+                            <div class="col-md-4 mg-t-15"><span>院：</span><span>{{collegeName}}</span></div>
+                            <div class="col-md-4 mg-t-15"><span>年级：</span><span>{{grade}}</span></div>
+                            <div class="col-md-6 mg-t-15"><span>开始填写时间：</span><span>{{startTimeStr}}</span></div>
+                            <div class="col-md-6 mg-t-15"><span>结束填写时间：</span><span>{{endTimeStr}}</span></div>
+                            <div class="col-md-12 mg-t-15"><span>公链: </span><a class="text-secondary" href="{{publicLink}}">{{publicLink}}</a></div>
+                            <div class="col-md-12 mg-t-15"><span>备注: </span><span>{{remark}}</span></div>
+                        </div>
+                        <p class="text-right font-italic m-t-10">
+                            <small><em><span>发布人：</span><span>{{publisher}}</span> <span>{{releaseTimeStr}}</span></em>
+                            </small>
+                        </p>
+                    </div>
+                    <div class="card-footer text-right">
+                        <div class="btn-group" role="group">
+                            {{#if canOperator}}
+                            <button type="button" class="btn btn-primary edit" data-id="{{rosterReleaseId}}">编辑</button>
+                            <button type="button" class="btn btn-outline-danger del" data-id="{{rosterReleaseId}}"
+                                    data-name="{{title}}">删除
+                            </button>
+                            {{/if}}
+                            {{#if canReview}}
+                            <button type="button" class="btn btn-teal review" data-id="{{rosterReleaseId}}">统计
+                            </button>
+                            {{/if}}
+                            {{#if canRegister}}
+                            <button type="button" class="btn btn-info register" data-id="{{rosterReleaseId}}">登记
+                            </button>
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </script>
+
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/campus/roster/roster_data.js')}"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>

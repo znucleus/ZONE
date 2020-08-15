@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.zbeboy.zbase.bean.attend.AttendReleaseBean;
+import top.zbeboy.zbase.bean.campus.attend.AttendReleaseBean;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.campus.attend.AttendReleaseService;
