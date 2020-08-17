@@ -14,7 +14,6 @@ import top.zbeboy.zbase.domain.tables.pojos.UsersType;
 import top.zbeboy.zbase.feign.campus.opens.SchoolOpensService;
 import top.zbeboy.zbase.feign.data.StaffService;
 import top.zbeboy.zbase.feign.data.StudentService;
-import top.zbeboy.zbase.feign.platform.RoleService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 import top.zbeboy.zone.web.util.SessionUtil;
@@ -36,9 +35,6 @@ public class CampusOpensViewController {
 
     @Resource
     private StaffService staffService;
-
-    @Resource
-    private RoleService roleService;
 
     /**
      * 校园开学
