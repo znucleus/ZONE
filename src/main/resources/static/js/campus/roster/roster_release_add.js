@@ -1,4 +1,4 @@
-//# sourceURL=roster_add.js
+//# sourceURL=roster_release_add.js
 require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", "messenger", "select2-zh-CN", "jquery.address", "bootstrap-maxlength", "flatpickr-zh"],
     function ($, tools, moment, Swal, navActive) {
 

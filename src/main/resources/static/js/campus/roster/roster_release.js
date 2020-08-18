@@ -1,4 +1,4 @@
-//# sourceURL=roster_data.js
+//# sourceURL=roster_release.js
 require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2", "messenger", "jquery.address", "jquery.simple-pagination"],
     function ($, _, tools, Handlebars, navActive, Swal) {
 

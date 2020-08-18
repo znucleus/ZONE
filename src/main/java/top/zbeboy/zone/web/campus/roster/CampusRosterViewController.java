@@ -43,7 +43,7 @@ public class CampusRosterViewController {
     public String index(ModelMap modelMap) {
         Users users = SessionUtil.getUserFromSession();
         modelMap.addAttribute("canRelease", rosterReleaseService.canRelease(users.getUsername()));
-        return "web/campus/roster/roster_data::#page-wrapper";
+        return "web/campus/roster/roster_release::#page-wrapper";
     }
 
     /**
@@ -74,7 +74,7 @@ public class CampusRosterViewController {
                 }
 
                 modelMap.addAttribute("collegeId", collegeId);
-                page = "web/campus/roster/roster_add::#page-wrapper";
+                page = "web/campus/roster/roster_release_add::#page-wrapper";
             } else {
                 config.buildDangerTip("查询错误", "未查询到用户类型");
                 config.dataMerging(modelMap);
