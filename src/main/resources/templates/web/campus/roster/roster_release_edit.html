@@ -8,12 +8,12 @@
     <div class="br-pageheader pd-y-15 pd-l-20">
         <nav class="breadcrumb pd-0 mg-0 tx-12">
             <a class="breadcrumb-item dy_href" href="#/web/menu/campus/roster">列表</a>
-            <span class="breadcrumb-item active">发布</span>
+            <span class="breadcrumb-item active">编辑</span>
         </nav>
     </div><!-- br-pageheader -->
     <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
         <h4 class="tx-gray-800 mg-b-5">校园花名册</h4>
-        <p class="mg-b-0">发布花名册。</p>
+        <p class="mg-b-0">编辑花名册。</p>
     </div>
 
     <div class="br-pagebody">
@@ -21,48 +21,27 @@
             <div class="row">
                 <div class="col-md-12">
                     <form id="app_form">
-                        <div class="form-group" style="display: none">
-                            <select class="form-control select2-show-search" id="school"
-                                    data-placeholder="请选择学校">
-                                <option label="请选择学校"></option>
-                            </select>
-                            <div class="invalid-feedback"></div>
-                        </div>
-                        <div class="form-group" style="display: none">
-                            <select class="form-control select2-show-search" id="college"
-                                    data-placeholder="请选择院">
-                                <option label="请选择院"></option>
-                            </select>
-                            <div class="invalid-feedback"></div>
-                        </div>
-                        <div class="form-group">
-                            <select class="form-control select2-show-search" name="gradeId" id="grade"
-                                    data-placeholder="请选择年级">
-                                <option label="请选择年级"></option>
-                            </select>
-                            <div class="invalid-feedback"></div>
-                        </div>
                         <div class="form-group">
                             <label>标题</label>
                             <input class="form-control" name="title"
-                                   id="title" placeholder="标题" maxlength="100"/>
+                                   id="title" placeholder="标题" maxlength="100" th:value="${rosterRelease.title}"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>开始填写时间</label>
                             <input class="form-control" name="startTime"
-                                   id="startTime" placeholder="开始填写时间"/>
+                                   id="startTime" placeholder="开始填写时间" th:value="${startTimeStr}"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>结束填写时间</label>
                             <input class="form-control" name="endTime"
-                                   id="endTime" placeholder="结束填写时间"/>
+                                   id="endTime" placeholder="结束填写时间" th:value="${endTimeStr}"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>备注</label>
-                            <textarea class="form-control" id="remark" rows="3" name="remark" maxlength="200"></textarea>
+                            <textarea class="form-control" id="remark" rows="3" name="remark" maxlength="200" th:text="${rosterRelease.remark}"></textarea>
                         </div>
                         <div class="form-group text-center">
                             <button type="button" class="btn btn-primary text-center" id="save">保存</button>
@@ -73,9 +52,9 @@
             </div>
         </div>
     </div>
-    <input type="hidden" id="collegeId" th:value="${collegeId}"/>
+    <input type="hidden" id="rosterReleaseId" th:value="${rosterRelease.rosterReleaseId}"/>
     <input type="hidden" class="dy_script"
-           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/campus/roster/roster_release_add.js')}"/>
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/campus/roster/roster_release_edit.js')}"/>
 </div>
 <!-- /#page-wrapper -->
 </body>

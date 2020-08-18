@@ -1,31 +1,23 @@
-//# sourceURL=roster_release_add.js
-require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", "messenger", "select2-zh-CN", "jquery.address", "bootstrap-maxlength", "flatpickr-zh"],
+//# sourceURL=roster_release_edit.js
+require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", "messenger", "jquery.address", "bootstrap-maxlength", "flatpickr-zh"],
     function ($, tools, moment, Swal, navActive) {
 
         /*
          ajax url.
          */
         var ajax_url = {
-            obtain_school_data: web_path + '/anyone/data/school',
-            obtain_college_data: web_path + '/anyone/data/college',
-            save: web_path + '/web/campus/roster/save',
+            update: web_path + '/web/campus/roster/update',
             page: '/web/menu/campus/roster'
         };
 
         // 刷新时选中菜单
         navActive(ajax_url.page);
 
-        var page_param = {
-            collegeId: $('#collegeId').val()
-        };
-
         /*
          参数id
          */
         var param_id = {
-            school: '#school',
-            college: '#college',
-            grade: '#grade',
+            rosterReleaseId:'#rosterReleaseId',
             title: '#title',
             startTime: '#startTime',
             endTime: '#endTime',
@@ -44,9 +36,7 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
          参数
          */
         var param = {
-            schoolId: '',
-            collegeId: '',
-            gradeId: '',
+            rosterReleaseId:'',
             title: '',
             startTime: '',
             endTime: '',
@@ -57,16 +47,8 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
          * 初始化参数
          */
         function initParam() {
+            param.rosterReleaseId = $(param_id.rosterReleaseId).val();
             param.title = $(param_id.title).val();
-            if (Number(page_param.collegeId) === 0) {
-                param.schoolId = $(param_id.school).val();
-                param.collegeId = $(param_id.college).val();
-            } else {
-                param.collegeId = page_param.collegeId;
-            }
-
-            param.gradeId = $(param_id.grade).val();
-
             var startTime = $(param_id.startTime).val();
             if (startTime.length > 0) {
                 param.startTime = startTime + ":00";
@@ -93,54 +75,7 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
          * 初始化界面
          */
         function init() {
-            if (Number(page_param.collegeId) === 0) {
-                initSchool();
-                $(param_id.school).parent().css('display', '');
-                $(param_id.college).parent().css('display', '');
-            }
-            initGrade();
-            initSelect2();
             initMaxLength();
-        }
-
-        function initSchool() {
-            $.get(ajax_url.obtain_school_data, function (data) {
-                $(param_id.school).select2({
-                    data: data.results
-                });
-            });
-        }
-
-        function initCollege(schoolId) {
-            if (Number(schoolId) > 0) {
-                $.get(ajax_url.obtain_college_data, {schoolId: schoolId}, function (data) {
-                    $(param_id.college).html('<option label="请选择院"></option>');
-                    $(param_id.college).select2({data: data.results});
-                });
-            } else {
-                $(param_id.college).html('<option label="请选择院"></option>');
-            }
-        }
-
-        function initGrade() {
-            $(param_id.grade).html('<option label="请选择年级"></option>');
-            var date = new Date();
-            var year = date.getFullYear();
-            var yearArr = [];
-            for (var i = year + 1; i >= year - 4; i--) {
-                yearArr.push({
-                    id: i,
-                    text: i + '级'
-                });
-            }
-
-            $(param_id.grade).select2({data: yearArr});
-        }
-
-        function initSelect2() {
-            $('.select2-show-search').select2({
-                language: "zh-CN"
-            });
         }
 
         /**
@@ -172,31 +107,6 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
             locale: "zh",
             enableTime: true,
             dateFormat: "Y-m-d H:i"
-        });
-
-        $(param_id.school).change(function () {
-            var v = $(this).val();
-            initCollege(v);
-
-            if (Number(v) > 0) {
-                tools.validSelect2SuccessDom(param_id.school);
-            }
-        });
-
-        $(param_id.college).change(function () {
-            var v = $(this).val();
-
-            if (Number(v) > 0) {
-                tools.validSelect2SuccessDom(param_id.college);
-            }
-        });
-
-        $(param_id.grade).change(function () {
-            var v = $(this).val();
-
-            if (Number(v) > 0) {
-                tools.validSelect2SuccessDom(param_id.grade);
-            }
         });
 
         $(param_id.remark).change(function () {
@@ -232,48 +142,8 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
          */
         $(button_id.save.id).click(function () {
             initParam();
-            if (Number(page_param.collegeId) === 0) {
-                validSchoolId();
-            } else {
-                validGradeId();
-            }
+            validTitle();
         });
-
-        /**
-         * 检验学校id
-         */
-        function validSchoolId() {
-            var schoolId = param.schoolId;
-            if (Number(schoolId) <= 0) {
-                tools.validSelect2ErrorDom(param_id.school, '请选择学校');
-            } else {
-                tools.validSelect2SuccessDom(param_id.school);
-                validCollegeId();
-            }
-        }
-
-        /**
-         * 检验院id
-         */
-        function validCollegeId() {
-            var collegeId = param.collegeId;
-            if (Number(collegeId) <= 0) {
-                tools.validSelect2ErrorDom(param_id.college, '请选择院');
-            } else {
-                tools.validSelect2SuccessDom(param_id.college);
-                validGradeId();
-            }
-        }
-
-        function validGradeId() {
-            var gradeId = param.gradeId;
-            if (Number(gradeId) <= 0) {
-                tools.validSelect2ErrorDom(param_id.grade, '请选择年级');
-            } else {
-                tools.validSelect2SuccessDom(param_id.grade);
-                validTitle();
-            }
-        }
 
         function validTitle() {
             var title = param.title;
@@ -327,7 +197,7 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
             tools.buttonLoading(button_id.save.id, button_id.save.tip);
             $.ajax({
                 type: 'POST',
-                url: ajax_url.save,
+                url: ajax_url.update,
                 data: param,
                 success: function (data) {
                     tools.buttonEndLoading(button_id.save.id, button_id.save.text);

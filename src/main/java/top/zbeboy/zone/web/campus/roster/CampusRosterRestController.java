@@ -4,17 +4,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.bean.campus.roster.RosterReleaseBean;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.campus.roster.RosterReleaseService;
+import top.zbeboy.zbase.tools.service.util.FilesUtil;
 import top.zbeboy.zbase.tools.service.util.RequestUtil;
 import top.zbeboy.zbase.tools.service.util.UUIDUtil;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.QRCodeUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zbase.vo.campus.roster.RosterReleaseAddVo;
+import top.zbeboy.zbase.vo.campus.roster.RosterReleaseEditVo;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
@@ -41,8 +44,8 @@ public class CampusRosterRestController {
         Users users = SessionUtil.getUserFromSession();
         simplePaginationUtil.setUsername(users.getUsername());
         AjaxUtil<RosterReleaseBean> ajaxUtil = rosterReleaseService.data(simplePaginationUtil);
-        if(Objects.nonNull(ajaxUtil.getListResult())){
-            for(RosterReleaseBean bean : ajaxUtil.getListResult()){
+        if (Objects.nonNull(ajaxUtil.getListResult())) {
+            for (RosterReleaseBean bean : ajaxUtil.getListResult()) {
                 bean.setPublicLink(RequestUtil.getBaseUrl(request) + ANYONE_DATE_ADD_URL + bean.getRosterReleaseId());
             }
         }
@@ -75,6 +78,39 @@ public class CampusRosterRestController {
             ajaxUtil.fail().msg("保存失败: 异常: " + e.getMessage());
         }
 
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 更新
+     *
+     * @param rosterReleaseEditVo 数据
+     * @return true or false
+     */
+    @PostMapping("/web/campus/roster/update")
+    public ResponseEntity<Map<String, Object>> update(RosterReleaseEditVo rosterReleaseEditVo) {
+        Users users = SessionUtil.getUserFromSession();
+        rosterReleaseEditVo.setUsername(users.getUsername());
+        AjaxUtil<Map<String, Object>> ajaxUtil = rosterReleaseService.update(rosterReleaseEditVo);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 删除
+     *
+     * @param id 发布id
+     * @return true or false
+     */
+    @PostMapping("/web/campus/roster/delete")
+    public ResponseEntity<Map<String, Object>> delete(@RequestParam("id") String id, HttpServletRequest request) {
+        Users users = SessionUtil.getUserFromSession();
+        AjaxUtil<Map<String, Object>> ajaxUtil = rosterReleaseService.delete(users.getUsername(), id);
+        if (ajaxUtil.getState()) {
+            // 删除文件
+            String realPath = RequestUtil.getRealPath(request);
+            String path = Workbook.campusRosterQrCodeFilePath() + id + ".jpg";
+            FilesUtil.deleteFile(realPath + path);
+        }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }
