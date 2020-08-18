@@ -20,4 +20,14 @@ public class TestQRCode {
         // 打印出解析出的内容
         System.out.println(str);
     }
+
+    @Test
+    public void testDecode() throws Exception {
+        // 生成的二维码的路径及名称
+        String destPath = "D:\\project\\code\\IntellijPro\\ZONE\\root\\goods\\campus\\roster\\qr_code_c00a493029cd4c8f98cfc17c43b4c81a.jpg";
+        // 解析二维码
+        String str = QRCodeUtil.decode(destPath);
+        // 打印出解析出的内容
+        System.out.println(str);
+    }
 }
