@@ -1,6 +1,8 @@
 //# sourceURL=open_authorize.js
-require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active", "tablesaw", "messenger", "flatpickr-zh"],
-    function ($, _, tools, Handlebars, Swal, navActive) {
+require(["jquery", "lodash", "tools", "moment-with-locales", "handlebars", "sweetalert2", "nav.active", "tablesaw", "messenger", "flatpickr-zh"],
+    function ($, _, tools, moment, Handlebars, Swal, navActive) {
+
+        moment.locale('zh-cn');
 
         /*
          ajax url
@@ -82,7 +84,6 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
         $('#save').click(function () {
             validUsername();
         });
-        
 
 
         function validUsername() {
@@ -113,8 +114,13 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             if (expireDate.length <= 0) {
                 tools.validErrorDom(param_id, '请选择失效时间');
             } else {
-                tools.validSuccessDom(param_id);
-                sendAjax();
+                var validDate = _.trim($('#validDate').val() + ":00");
+                if (moment(expireDate + ":00", 'YYYY-MM-DD HH:mm:ss').isSameOrAfter(moment(validDate, 'YYYY-MM-DD HH:mm:ss'))) {
+                    tools.validSuccessDom(param_id);
+                    sendAjax();
+                } else {
+                    tools.validErrorDom(param_id, '失效时间应大于或等于生效时间');
+                }
             }
         }
 
@@ -122,7 +128,11 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             $.ajax({
                 type: 'POST',
                 url: getAjaxUrl().save,
-                data: $('#app_form').serialize(),
+                data: {
+                    'targetUsername': $('#targetUsername').val(),
+                    'validDate': $('#validDate').val() + ":00",
+                    'expireDate': $('#expireDate').val() + ":00"
+                },
                 success: function (data) {
                     Messenger().post({
                         message: data.msg,

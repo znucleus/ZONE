@@ -114,6 +114,9 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
          */
         function listData(data) {
             var template = Handlebars.compile($("#roster-template").html());
+            Handlebars.registerHelper('qrCodeUrl', function () {
+                return new Handlebars.SafeString(Handlebars.escapeExpression(web_path + '/' + this.qrCodeUrl));
+            });
             $(tableData).html(template(data));
         }
 
