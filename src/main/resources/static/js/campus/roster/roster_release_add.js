@@ -46,7 +46,7 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
         var param = {
             schoolId: '',
             collegeId: '',
-            gradeId: '',
+            grade: '',
             title: '',
             startTime: '',
             endTime: '',
@@ -65,7 +65,7 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
                 param.collegeId = page_param.collegeId;
             }
 
-            param.gradeId = $(param_id.grade).val();
+            param.grade = $(param_id.grade).val();
 
             var startTime = $(param_id.startTime).val();
             if (startTime.length > 0) {
@@ -266,8 +266,8 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
         }
 
         function validGradeId() {
-            var gradeId = param.gradeId;
-            if (Number(gradeId) <= 0) {
+            var grade = param.grade;
+            if (Number(grade) <= 0) {
                 tools.validSelect2ErrorDom(param_id.grade, '请选择年级');
             } else {
                 tools.validSelect2SuccessDom(param_id.grade);
