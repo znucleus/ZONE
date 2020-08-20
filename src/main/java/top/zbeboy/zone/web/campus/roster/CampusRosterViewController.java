@@ -16,6 +16,7 @@ import top.zbeboy.zbase.feign.data.StaffService;
 import top.zbeboy.zbase.feign.data.StudentService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
+import top.zbeboy.zbase.tools.web.util.PinYinUtil;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 import top.zbeboy.zone.web.util.SessionUtil;
 
@@ -108,6 +109,43 @@ public class CampusRosterViewController {
             modelMap.addAttribute("startTimeStr", DateTimeUtil.defaultFormatSqlTimestamp(rosterRelease.getStartTime()));
             modelMap.addAttribute("endTimeStr", DateTimeUtil.defaultFormatSqlTimestamp(rosterRelease.getEndTime()));
             page = "web/campus/roster/roster_release_edit::#page-wrapper";
+        } else {
+            config.buildWarningTip("操作警告", "您无权限操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
+
+    /**
+     * 数据添加页面
+     *
+     * @param modelMap 页面对象
+     * @return 编辑页面
+     */
+    @GetMapping("/web/campus/roster/data/add/{id}")
+    public String dataAdd(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        Users users = SessionUtil.getUserFromSession();
+        if (rosterReleaseService.canRegister(users.getUsername(), id)) {
+            if(rosterReleaseService.canDataEdit(users.getUsername(),id)){
+                // 修改
+                page = "web/campus/roster/roster_date_inside_edit::#page-wrapper";
+            } else {
+                // 添加
+                StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+                if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
+                    studentBean.setNamePinyin(PinYinUtil.changeToUpper(studentBean.getRealName()));
+                    modelMap.addAttribute("student", studentBean);
+                    modelMap.addAttribute("rosterReleaseId", id);
+                    page = "web/campus/roster/roster_date_inside_add::#page-wrapper";
+                } else {
+                    config.buildDangerTip("查询错误", "未查询到学生信息");
+                    config.dataMerging(modelMap);
+                    page = "inline_tip::#page-wrapper";
+                }
+            }
         } else {
             config.buildWarningTip("操作警告", "您无权限操作");
             config.dataMerging(modelMap);

@@ -144,7 +144,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         /*
          登记
         */
-        $(tableData).delegate('.register', "click", function () {
+        $(tableData).delegate('.data_add', "click", function () {
             $.address.value(ajax_url.register + '/' + $(this).attr('data-id'));
         });
 

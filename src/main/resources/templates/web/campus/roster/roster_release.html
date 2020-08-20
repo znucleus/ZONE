@@ -71,7 +71,7 @@
                             <div class="col-md-4 mg-t-15"><span>年级：</span><span>{{grade}}</span></div>
                             <div class="col-md-6 mg-t-15"><span>开始填写时间：</span><span>{{startTimeStr}}</span></div>
                             <div class="col-md-6 mg-t-15"><span>结束填写时间：</span><span>{{endTimeStr}}</span></div>
-                            <div class="col-md-12 mg-t-15"><span>公链: </span><a class="text-secondary"
+                            <div class="col-md-12 mg-t-15"><span>外链: </span><a class="text-secondary"
                                                                                href="{{publicLink}}">{{publicLink}}</a>
                             </div>
                             <div class="col-md-12 mg-t-15"><span>备注: </span><span>{{remark}}</span></div>
@@ -104,14 +104,11 @@
                                 {{#if canRegister}}
                                 <div class="btn-group mr-2 mt-2" role="group" aria-label="Third group">
                                     {{#if canDataEdit}}
-                                    <button type="button" class="btn btn-indigo data_edit"
-                                            data-id="{{rosterReleaseId}}">修改
-                                    </button>
                                     <button type="button" class="btn btn-danger data_del" data-id="{{rosterReleaseId}}">
                                         删除
                                     </button>
                                     {{else}}
-                                    <button type="button" class="btn btn-info data_add" data-id="{{rosterReleaseId}}">登记
+                                    <button type="button" class="btn btn-info data_add" data-id="{{rosterReleaseId}}">登记|修改
                                     </button>
                                     {{/if}}
                                 </div>

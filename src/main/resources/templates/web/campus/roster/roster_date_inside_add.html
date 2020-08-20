@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="br-pageheader pd-y-15 pd-l-20">
+        <nav class="breadcrumb pd-0 mg-0 tx-12">
+            <a class="breadcrumb-item dy_href" href="#/web/menu/campus/roster">列表</a>
+            <span class="breadcrumb-item active">添加</span>
+        </nav>
+    </div><!-- br-pageheader -->
+    <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
+        <h4 class="tx-gray-800 mg-b-5">校园花名册</h4>
+        <p class="mg-b-0">添加花名册。</p>
+    </div>
+
+    <div class="br-pagebody">
+        <div class="br-section-wrapper">
+            <p class="mg-b-10 mg-lg-b-20">说明：此信息表作为学校“学生信息库”及“学生证”信息依据，请认真核对填写！</p>
+            <p class="mg-b-10 mg-lg-b-20">1、请每位同学仔细核对个人信息。</p>
+            <p class="mg-b-10 mg-lg-b-20">2、请认真填写空栏信息，“乘车区间”所填写的一定是：乘火车回家最终到站的站名，学生证一经办理不再修改，请同学们慎重清楚的填写。</p>
+            <p class="mg-b-10 mg-lg-b-20">3、请各系按核对后的本表填写、修改电子版表格，完成后将纸质原件和电子版表格一同交教学教务中心。</p>
+            <div class="row">
+                <div class="col-md-12">
+                    <form id="app_form">
+                        <div class="form-group">
+                            <label>学号</label>
+                            <input class="form-control" name="studentNumber"
+                                   id="studentNumber" placeholder="学号" th:value="${student.studentNumber}" readonly="readonly"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>姓名</label>
+                            <input class="form-control" name="realName"
+                                   id="realName" placeholder="姓名" th:value="${student.realName}"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>姓名拼音</label>
+                            <input class="form-control" name="namePinyin"
+                                   id="namePinyin" placeholder="姓名拼音" th:value="${student.namePinyin}"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>性别</label>
+                            <select id="sex" name="sex" class="form-control">
+                                <option value="">请选择性别</option>
+                                <option value="男">男</option>
+                                <option value="女">女</option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>生日</label>
+                            <input class="form-control"
+                                   id="birthday" name="birthday" placeholder="生日" th:value="${student.birthday}">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>身份证号</label>
+                            <input class="form-control"
+                                   id="idCard" name="idCard" placeholder="身份证号" th:value="${student.idCard}">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>政治面貌</label>
+                            <select id="politicalLandscape" name="politicalLandscapeId"
+                                    class="form-control">
+                                <option value="">请选择政治面貌</option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>民族</label>
+                            <select class="form-control select2-show-search" id="nation" name="nationId"
+                                    data-placeholder="请选择民族">
+                                <option label="请选择民族"></option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>班级</label>
+                            <input class="form-control" name="organize"
+                                   id="organizeName" placeholder="班级" th:value="${student.organizeName}" readonly="readonly"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>省份</label>
+                            <input class="form-control" name="province"
+                                   id="province" placeholder="省份" aria-describedby="provinceHelp"/>
+                            <div class="invalid-feedback"></div>
+                            <small id="provinceHelp" class="form-text text-muted">如：云南省
+                            </small>
+                        </div>
+                        <div class="form-group">
+                            <label>所属地区</label>
+                            <input class="form-control" name="region"
+                                   id="region" placeholder="所属地区" aria-describedby="regionHelp"/>
+                            <div class="invalid-feedback"></div>
+                            <small id="regionHelp" class="form-text text-muted">如：昆明市
+                            </small>
+                        </div>
+                        <div class="form-group">
+                            <label>乘车区间</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">昆明——</span>
+                                <input class="form-control" name="busSection"
+                                       id="busSection" placeholder="乘车区间" aria-describedby="busSectionHelp"/>
+                            </div>
+                            <div class="invalid-feedback"></div>
+                            <small id="busSectionHelp" class="form-text text-muted">“乘车区间”所填写的一定是：乘火车回家最终到站的站名，学生证一经办理不再修改，请同学们慎重清楚的填写。
+                            </small>
+                        </div>
+                        <div class="form-group">
+                            <label>家长姓名</label>
+                            <input class="form-control" name="parentName"
+                                   id="parentName" placeholder="家长姓名" th:value="${student.parentName}"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>家长联系电话</label>
+                            <input class="form-control" name="parentContactPhone"
+                                   id="parentContactPhone" placeholder="家长联系电话" th:value="${student.parentContactPhone}"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>家长联系地址</label>
+                            <input class="form-control" name="parentContactAddress"
+                                   id="parentContactAddress" placeholder="家长联系地址"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>邮政编码</label>
+                            <input class="form-control" name="zipCode"
+                                   id="zipCode" placeholder="邮政编码"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>本人联系电话</label>
+                            <input class="form-control" name="phoneNumber"
+                                   id="phoneNumber" placeholder="本人联系电话" th:value="${student.mobile}" readonly="readonly"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>宿舍号</label>
+                            <input class="form-control" id="dormitoryNumber" name="dormitoryNumber"
+                                   placeholder="宿舍号" aria-describedby="dormitoryNumberHelp" data-mask="99-999" th:value="${student.dormitoryNumber}">
+                            <div class="invalid-feedback"></div>
+                            <small id="dormitoryNumberHelp" class="form-text text-muted">如：06-603，6栋603室
+                            </small>
+                        </div>
+                        <div class="form-group text-center">
+                            <button type="button" class="btn btn-primary text-center" id="save">保存</button>
+                            <button type="reset" class="btn btn-default">重置</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="rosterReleaseId" th:value="${rosterReleaseId}"/>
+    <input type="hidden" id="sexParam" th:value="${student.sex}"/>
+    <input type="hidden" id="politicalLandscapeParam" th:value="${student.politicalLandscapeId}"/>
+    <input type="hidden" id="nationParam" th:value="${student.nationId}"/>
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/campus/roster/roster_date_inside_add.js')}"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>

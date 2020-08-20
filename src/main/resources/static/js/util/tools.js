@@ -80,7 +80,8 @@ define(["jquery"], function ($) {
                 idCard: /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/,
                 dormitoryNumber: /^\d{2}-\d{3}$/,
                 year: /^\d{4}$/,
-                multiNumber: /^\d+$/
+                multiNumber: /^\d+$/,
+                zipCode: /^[1-9][0-9]{5}$/
             },
             moment: {
                 releaseTime: 'YYYY.MM.DD HH:mm:ss',
