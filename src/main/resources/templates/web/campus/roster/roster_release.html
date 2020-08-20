@@ -31,9 +31,11 @@
                 </div>
                 <div class="col-md-12">
                     <div class="float-right mg-t-5">
-                        <button type="button" class="btn btn-outline-primary" id="release" th:if="${canRelease}"><i class="fa fa-edit"></i> 发布
+                        <button type="button" class="btn btn-outline-primary" id="release" th:if="${canRelease}"><i
+                                class="fa fa-edit"></i> 发布
                         </button>
-                        <button type="button" class="btn btn-purple" id="authorize" sec:authorize="hasAnyRole('ROLE_SYSTEM','ROLE_ADMIN')"><i class="fa fa-user-o"></i> 分配权限
+                        <button type="button" class="btn btn-purple" id="authorize"
+                                sec:authorize="hasAnyRole('ROLE_SYSTEM','ROLE_ADMIN')"><i class="fa fa-user-o"></i> 分配权限
                         </button>
                         <button type="button" class="btn btn-light" id="refresh"><i class="fa fa-refresh"></i> 刷新
                         </button>
@@ -55,7 +57,7 @@
 
     <script id="roster-template" type="text/x-handlebars-template">
         {{#each listResult}}
-        <div class="card mg-t-10 text-dark border-info" >
+        <div class="card mg-t-10 text-dark border-info">
             <div class="row no-gutters">
                 <div class="col-md-4">
                     <img src="{{qrCodeUrl}}" class="card-img" alt="花名册二维码">
@@ -69,7 +71,9 @@
                             <div class="col-md-4 mg-t-15"><span>年级：</span><span>{{grade}}</span></div>
                             <div class="col-md-6 mg-t-15"><span>开始填写时间：</span><span>{{startTimeStr}}</span></div>
                             <div class="col-md-6 mg-t-15"><span>结束填写时间：</span><span>{{endTimeStr}}</span></div>
-                            <div class="col-md-12 mg-t-15"><span>公链: </span><a class="text-secondary" href="{{publicLink}}">{{publicLink}}</a></div>
+                            <div class="col-md-12 mg-t-15"><span>公链: </span><a class="text-secondary"
+                                                                               href="{{publicLink}}">{{publicLink}}</a>
+                            </div>
                             <div class="col-md-12 mg-t-15"><span>备注: </span><span>{{remark}}</span></div>
                         </div>
                         <p class="text-right font-italic m-t-10">
@@ -79,20 +83,48 @@
                     </div>
                     <div class="card-footer text-right">
                         <div class="btn-group" role="group">
-                            {{#if canOperator}}
-                            <button type="button" class="btn btn-primary edit" data-id="{{rosterReleaseId}}">编辑</button>
-                            <button type="button" class="btn btn-outline-danger del" data-id="{{rosterReleaseId}}"
-                                    data-name="{{title}}">删除
-                            </button>
-                            {{/if}}
-                            {{#if canReview}}
-                            <button type="button" class="btn btn-teal review" data-id="{{rosterReleaseId}}">统计
-                            </button>
-                            {{/if}}
-                            {{#if canRegister}}
-                            <button type="button" class="btn btn-info register" data-id="{{rosterReleaseId}}">登记
-                            </button>
-                            {{/if}}
+                            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                                {{#if canOperator}}
+                                <div class="btn-group mr-2 mt-2" role="group" aria-label="First group">
+                                    <button type="button" class="btn btn-primary edit" data-id="{{rosterReleaseId}}">
+                                        编辑
+                                    </button>
+                                    <button type="button" class="btn btn-outline-danger del"
+                                            data-id="{{rosterReleaseId}}"
+                                            data-name="{{title}}">删除
+                                    </button>
+                                </div>
+                                {{/if}}
+                                {{#if canReview}}
+                                <div class="btn-group mr-2 mt-2" role="group" aria-label="Second group">
+                                    <button type="button" class="btn btn-teal review" data-id="{{rosterReleaseId}}">统计
+                                    </button>
+                                </div>
+                                {{/if}}
+                                {{#if canRegister}}
+                                <div class="btn-group mr-2 mt-2" role="group" aria-label="Third group">
+                                    {{#if canDataEdit}}
+                                    <button type="button" class="btn btn-indigo data_edit"
+                                            data-id="{{rosterReleaseId}}">修改
+                                    </button>
+                                    <button type="button" class="btn btn-danger data_del" data-id="{{rosterReleaseId}}">
+                                        删除
+                                    </button>
+                                    {{else}}
+                                    <button type="button" class="btn btn-info data_add" data-id="{{rosterReleaseId}}">登记
+                                    </button>
+                                    {{/if}}
+                                </div>
+                                {{/if}}
+                                {{#if canDataLook}}
+                                <div class="btn-group mr-2 mt-2" role="group" aria-label="Fourth group">
+                                    <button type="button" class="btn btn-success data_look"
+                                            data-id="{{rosterReleaseId}}">
+                                        查看
+                                    </button>
+                                </div>
+                                {{/if}}
+                            </div>
                         </div>
                     </div>
                 </div>
