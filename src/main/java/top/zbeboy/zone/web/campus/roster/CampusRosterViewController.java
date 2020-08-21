@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import top.zbeboy.zbase.bean.campus.roster.RosterDataBean;
 import top.zbeboy.zbase.bean.data.staff.StaffBean;
 import top.zbeboy.zbase.bean.data.student.StudentBean;
 import top.zbeboy.zbase.config.Workbook;
@@ -128,23 +129,81 @@ public class CampusRosterViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         Users users = SessionUtil.getUserFromSession();
-        if (rosterReleaseService.canRegister(users.getUsername(), id)) {
-            if(rosterReleaseService.canDataEdit(users.getUsername(),id)){
-                // 修改
-                page = "web/campus/roster/roster_date_inside_edit::#page-wrapper";
+        if (rosterReleaseService.canRegister(users.getUsername(), id) &&
+                !rosterReleaseService.canDataEdit(users.getUsername(), id)) {
+            // 添加
+            StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+            if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
+                studentBean.setNamePinyin(PinYinUtil.changeToUpper(studentBean.getRealName()));
+                modelMap.addAttribute("student", studentBean);
+                modelMap.addAttribute("rosterReleaseId", id);
+                page = "web/campus/roster/roster_date_inside_add::#page-wrapper";
             } else {
-                // 添加
-                StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
-                if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
-                    studentBean.setNamePinyin(PinYinUtil.changeToUpper(studentBean.getRealName()));
-                    modelMap.addAttribute("student", studentBean);
-                    modelMap.addAttribute("rosterReleaseId", id);
-                    page = "web/campus/roster/roster_date_inside_add::#page-wrapper";
-                } else {
-                    config.buildDangerTip("查询错误", "未查询到学生信息");
-                    config.dataMerging(modelMap);
-                    page = "inline_tip::#page-wrapper";
-                }
+                config.buildDangerTip("查询错误", "未查询到学生信息");
+                config.dataMerging(modelMap);
+                page = "inline_tip::#page-wrapper";
+            }
+        } else {
+            config.buildWarningTip("操作警告", "您无权限操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
+
+    /**
+     * 数据编辑页面
+     *
+     * @param modelMap 页面对象
+     * @return 编辑页面
+     */
+    @GetMapping("/web/campus/roster/data/edit/{id}")
+    public String dataEdit(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        Users users = SessionUtil.getUserFromSession();
+        if (rosterReleaseService.canDataEdit(users.getUsername(), id)) {
+            StudentBean studentBean = studentService.findByUsername(users.getUsername());
+            if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
+                RosterDataBean bean = rosterReleaseService.findRosterDataByStudentNumberAndRosterReleaseIdRelation(studentBean.getStudentNumber(), id);
+                bean.setBusSection(bean.getBusSection().substring(bean.getBusSection().indexOf("-") + 1));
+                modelMap.addAttribute("rosterData", bean);
+                page = "web/campus/roster/roster_date_edit::#page-wrapper";
+            } else {
+                config.buildDangerTip("查询错误", "未查询到学生信息");
+                config.dataMerging(modelMap);
+                page = "inline_tip::#page-wrapper";
+            }
+        } else {
+            config.buildWarningTip("操作警告", "您无权限操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
+
+    /**
+     * 数据查看页面
+     *
+     * @param modelMap 页面对象
+     * @return 查看页面
+     */
+    @GetMapping("/web/campus/roster/data/look/{id}")
+    public String dataLook(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        Users users = SessionUtil.getUserFromSession();
+        if (rosterReleaseService.canDataLook(users.getUsername(), id)) {
+            StudentBean studentBean = studentService.findByUsername(users.getUsername());
+            if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
+                RosterDataBean bean = rosterReleaseService.findRosterDataByStudentNumberAndRosterReleaseIdRelation(studentBean.getStudentNumber(), id);
+                bean.setBusSection(bean.getBusSection().substring(bean.getBusSection().indexOf("-") + 1));
+                modelMap.addAttribute("rosterData", bean);
+                page = "web/campus/roster/roster_date_look::#page-wrapper";
+            } else {
+                config.buildDangerTip("查询错误", "未查询到学生信息");
+                config.dataMerging(modelMap);
+                page = "inline_tip::#page-wrapper";
             }
         } else {
             config.buildWarningTip("操作警告", "您无权限操作");

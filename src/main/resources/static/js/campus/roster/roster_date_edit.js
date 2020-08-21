@@ -1,4 +1,4 @@
-//# sourceURL=roster_date_inside_add.js
+//# sourceURL=roster_date_edit.js
 require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav.active", "bootstrap", "messenger",
         "csrf", "select2-zh-CN", "flatpickr-zh", "bootstrap-inputmask", "jquery.address"],
     function ($, _, tools, Swal, moment, navActive) {
@@ -8,7 +8,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
         var ajax_url = {
             obtain_nation_data: web_path + '/anyone/data/nation',
             obtain_political_landscape_data: web_path + '/anyone/data/politics',
-            save: web_path + '/web/campus/roster/data/save',
+            update: web_path + '/web/campus/roster/data/update',
             page: '/web/menu/campus/roster'
         };
 
@@ -42,14 +42,14 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
         };
 
         var page_param = {
-            rosterReleaseId: $('#rosterReleaseId').val(),
+            rosterDataId: $('#rosterDataId').val(),
             sex: $('#sexParam').val(),
             politicalLandscapeId: $('#politicalLandscapeParam').val(),
             nationId: $('#nationParam').val()
         };
 
         var param = {
-            rosterReleaseId: '',
+            rosterDataId: '',
             realName: '',
             namePinyin: '',
             sex: '',
@@ -68,7 +68,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
         };
 
         function initParam() {
-            param.rosterReleaseId = page_param.rosterReleaseId;
+            param.rosterDataId = page_param.rosterDataId;
             param.realName = _.trim($(param_id.realName).val());
             param.namePinyin = _.trim($(param_id.namePinyin).val());
             param.sex = $(param_id.sex).val();
@@ -331,7 +331,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
             tools.buttonLoading(button_id.save.id, button_id.save.tip);
             $.ajax({
                 type: 'POST',
-                url: ajax_url.save,
+                url: ajax_url.update,
                 data: param,
                 success: function (data) {
                     tools.buttonEndLoading(button_id.save.id, button_id.save.text);

@@ -12,6 +12,9 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             del: web_path + '/web/campus/roster/delete',
             review: '/web/campus/roster/data/list',
             register: '/web/campus/roster/data/add',
+            data_edit: '/web/campus/roster/data/edit',
+            data_del: web_path + '/web/campus/roster/data/delete',
+            data_look: '/web/campus/roster/data/look',
             authorize: '/web/campus/roster/authorize/add',
             page: '/web/menu/campus/roster'
         };
@@ -148,6 +151,27 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             $.address.value(ajax_url.register + '/' + $(this).attr('data-id'));
         });
 
+        /*
+         数据编辑
+        */
+        $(tableData).delegate('.data_edit', "click", function () {
+            $.address.value(ajax_url.data_edit + '/' + $(this).attr('data-id'));
+        });
+
+        /*
+         数据删除
+        */
+        $(tableData).delegate('.data_del', "click", function () {
+            dataDel($(this).attr('data-id'));
+        });
+
+        /*
+        数据查看
+        */
+        $(tableData).delegate('.data_look', "click", function () {
+            $.address.value(ajax_url.data_look + '/' + $(this).attr('data-id'));
+        });
+
         /**
          * 删除
          * @param id
@@ -163,7 +187,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
                 preConfirm: function () {
-                    sendDelAjax(id, 1);
+                    sendDelAjax(id);
                 }
             });
 
@@ -177,6 +201,56 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             $.ajax({
                 type: 'POST',
                 url: ajax_url.del,
+                data: {id: id},
+                success: function (data) {
+                    Messenger().post({
+                        message: data.msg,
+                        type: data.state ? 'success' : 'error',
+                        showCloseButton: true
+                    });
+
+                    if (data.state) {
+                        init();
+                    }
+                },
+                error: function (XMLHttpRequest) {
+                    Messenger().post({
+                        message: 'Request error : ' + XMLHttpRequest.status + " " + XMLHttpRequest.statusText,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        }
+
+        /**
+         * 删除
+         * @param id
+         */
+        function dataDel(id) {
+            Swal.fire({
+                title: "确定删除登记吗？",
+                text: "花名册登记删除！",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                preConfirm: function () {
+                    sendDataDelAjax(id);
+                }
+            });
+
+        }
+
+        /**
+         * 删除ajax
+         * @param id
+         */
+        function sendDataDelAjax(id) {
+            $.ajax({
+                type: 'POST',
+                url: ajax_url.data_del,
                 data: {id: id},
                 success: function (data) {
                     Messenger().post({

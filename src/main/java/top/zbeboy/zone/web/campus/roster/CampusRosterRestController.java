@@ -16,6 +16,7 @@ import top.zbeboy.zbase.tools.service.util.UUIDUtil;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.QRCodeUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
+import top.zbeboy.zbase.vo.campus.roster.RosterDataEditVo;
 import top.zbeboy.zbase.vo.campus.roster.RosterDataInsideAddVo;
 import top.zbeboy.zbase.vo.campus.roster.RosterReleaseAddVo;
 import top.zbeboy.zbase.vo.campus.roster.RosterReleaseEditVo;
@@ -126,6 +127,33 @@ public class CampusRosterRestController {
         Users users = SessionUtil.getUserFromSession();
         rosterDataInsideAddVo.setUsername(users.getUsername());
         AjaxUtil<Map<String, Object>> ajaxUtil = rosterReleaseService.dataSave(rosterDataInsideAddVo);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 数据保存
+     *
+     * @param rosterDataEditVo 数据
+     * @return true or false
+     */
+    @PostMapping("/web/campus/roster/data/update")
+    public ResponseEntity<Map<String, Object>> dataUpdate(RosterDataEditVo rosterDataEditVo) {
+        Users users = SessionUtil.getUserFromSession();
+        rosterDataEditVo.setUsername(users.getUsername());
+        AjaxUtil<Map<String, Object>> ajaxUtil = rosterReleaseService.dataUpdate(rosterDataEditVo);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 数据删除
+     *
+     * @param id 发布id
+     * @return true or false
+     */
+    @PostMapping("/web/campus/roster/data/delete")
+    public ResponseEntity<Map<String, Object>> dataDelete(@RequestParam("id") String id) {
+        Users users = SessionUtil.getUserFromSession();
+        AjaxUtil<Map<String, Object>> ajaxUtil = rosterReleaseService.dataDelete(users.getUsername(), id);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }
