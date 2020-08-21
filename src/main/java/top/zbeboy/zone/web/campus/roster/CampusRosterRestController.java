@@ -16,6 +16,7 @@ import top.zbeboy.zbase.tools.service.util.UUIDUtil;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.QRCodeUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
+import top.zbeboy.zbase.vo.campus.roster.RosterDataInsideAddVo;
 import top.zbeboy.zbase.vo.campus.roster.RosterReleaseAddVo;
 import top.zbeboy.zbase.vo.campus.roster.RosterReleaseEditVo;
 import top.zbeboy.zone.web.util.SessionUtil;
@@ -111,6 +112,20 @@ public class CampusRosterRestController {
             String path = Workbook.campusRosterQrCodeFilePath() + id + ".jpg";
             FilesUtil.deleteFile(realPath + path);
         }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 数据保存
+     *
+     * @param rosterDataInsideAddVo 数据
+     * @return true or false
+     */
+    @PostMapping("/web/campus/roster/data/save")
+    public ResponseEntity<Map<String, Object>> dataSave(RosterDataInsideAddVo rosterDataInsideAddVo) {
+        Users users = SessionUtil.getUserFromSession();
+        rosterDataInsideAddVo.setUsername(users.getUsername());
+        AjaxUtil<Map<String, Object>> ajaxUtil = rosterReleaseService.dataSave(rosterDataInsideAddVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

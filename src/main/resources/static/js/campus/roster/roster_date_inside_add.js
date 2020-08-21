@@ -8,7 +8,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
         var ajax_url = {
             obtain_nation_data: web_path + '/anyone/data/nation',
             obtain_political_landscape_data: web_path + '/anyone/data/politics',
-            update: web_path + '/web/campus/roster/data/update',
+            save: web_path + '/web/campus/roster/data/save',
             page: '/web/menu/campus/roster'
         };
 
@@ -303,7 +303,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
                     errorTip('宿舍号格式不正确');
                 } else {
                     tools.validSuccessDom(param_id.dormitoryNumber);
-                    sendAjax();
+                    lastInitParam();
                 }
             }
         }
@@ -316,6 +316,11 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
             });
         }
 
+        function lastInitParam() {
+            param.busSection = "昆明-" + param.busSection;
+            sendAjax();
+        }
+
         /**
          * 发送数据到后台
          */
@@ -323,7 +328,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
             tools.buttonLoading(button_id.save.id, button_id.save.tip);
             $.ajax({
                 type: 'POST',
-                url: ajax_url.update,
+                url: ajax_url.save,
                 data: param,
                 success: function (data) {
                     tools.buttonEndLoading(button_id.save.id, button_id.save.text);
