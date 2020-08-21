@@ -26,7 +26,6 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
             school: '#school',
             college: '#college',
             grade: '#grade',
-            title: '#title',
             startTime: '#startTime',
             endTime: '#endTime',
             remark: '#remark'
@@ -57,7 +56,6 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
          * 初始化参数
          */
         function initParam() {
-            param.title = $(param_id.title).val();
             if (Number(page_param.collegeId) === 0) {
                 param.schoolId = $(param_id.school).val();
                 param.collegeId = $(param_id.college).val();
@@ -66,6 +64,8 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
             }
 
             param.grade = $(param_id.grade).val();
+
+            param.title = $(param_id.school).find("option:selected").text() + $(param_id.college).find("option:selected").text() + $(param_id.grade).find("option:selected").text() + '花名册';
 
             var startTime = $(param_id.startTime).val();
             if (startTime.length > 0) {
@@ -147,13 +147,6 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
          * 初始化Input max length
          */
         function initMaxLength() {
-            $(param_id.title).maxlength({
-                alwaysShow: true,
-                threshold: 10,
-                warningClass: "text-success",
-                limitReachedClass: "text-danger"
-            });
-
             $(param_id.remark).maxlength({
                 alwaysShow: true,
                 threshold: 10,
@@ -204,16 +197,6 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
 
             if (Number(v) > 0) {
                 tools.validSelect2SuccessDom(param_id.remark);
-            }
-        });
-
-        $(param_id.title).blur(function () {
-            initParam();
-            var title = param.title;
-            if (title.length <= 0 || title.length > 100) {
-                tools.validErrorDom(param_id.title, '标题100个字符以内');
-            } else {
-                tools.validSuccessDom(param_id.title);
             }
         });
 
@@ -271,16 +254,6 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
                 tools.validSelect2ErrorDom(param_id.grade, '请选择年级');
             } else {
                 tools.validSelect2SuccessDom(param_id.grade);
-                validTitle();
-            }
-        }
-
-        function validTitle() {
-            var title = param.title;
-            if (title.length <= 0 || title.length > 100) {
-                tools.validErrorDom(param_id.title, '标题100个字符以内');
-            } else {
-                tools.validSuccessDom(param_id.title);
                 validStartTime();
             }
         }
