@@ -233,4 +233,26 @@ public class CampusRosterViewController {
         }
         return page;
     }
+
+    /**
+     * 统计页面
+     *
+     * @param modelMap 页面对象
+     * @return 统计页面
+     */
+    @GetMapping("/web/campus/roster/review/list/{id}")
+    public String review(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        Users users = SessionUtil.getUserFromSession();
+        if (rosterReleaseService.canReview(users.getUsername(), id)) {
+            modelMap.addAttribute("rosterReleaseId", id);
+            page = "web/campus/roster/roster_review::#page-wrapper";
+        } else {
+            config.buildWarningTip("操作警告", "您无权限操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
 }
