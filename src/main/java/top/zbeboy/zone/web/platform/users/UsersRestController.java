@@ -18,7 +18,10 @@ import top.zbeboy.zbase.config.SessionBook;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.config.ZoneProperties;
 import top.zbeboy.zbase.domain.tables.pojos.*;
+import top.zbeboy.zbase.feign.campus.roster.RosterReleaseService;
+import top.zbeboy.zbase.feign.data.StudentService;
 import top.zbeboy.zbase.feign.platform.UsersService;
+import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zbase.feign.system.FilesService;
 import top.zbeboy.zbase.feign.system.SystemConfigureService;
 import top.zbeboy.zone.web.util.SessionUtil;
@@ -54,6 +57,15 @@ public class UsersRestController {
 
     @Resource
     private UsersService usersService;
+
+    @Resource
+    private UsersTypeService usersTypeService;
+
+    @Resource
+    private StudentService studentService;
+
+    @Resource
+    private RosterReleaseService rosterReleaseService;
 
     @Resource
     private FilesService filesService;
@@ -292,11 +304,22 @@ public class UsersRestController {
                     }
                 }
             } else if (StringUtils.equals("realName", name)) {
-                Users users = SessionUtil.getUserFromSession();
-                if (!StringUtils.equals(users.getRealName(), value)) {
-                    users.setRealName(value);
-                    usersService.update(users);
+                if (!StringUtils.equals(own.getRealName(), value)) {
+                    own.setRealName(value);
+                    usersService.update(own);
                     ajaxUtil.success().msg("姓名更新成功");
+
+                    // 学生需要同步花名册
+                    UsersType usersType = usersTypeService.findById(own.getUsersTypeId());
+                    if(Objects.nonNull(usersType) && StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())){
+                        Student student = studentService.findByUsername(own.getUsername());
+                        RosterData rosterData = rosterReleaseService.findRosterByStudentNumber(student.getStudentNumber());
+                        if (Objects.nonNull(rosterData) && StringUtils.isNotBlank(rosterData.getRosterDataId())){
+                            rosterData.setRealName(value);
+                            rosterData.setNamePinyin(PinYinUtil.changeToUpper(value));
+                            rosterReleaseService.dataSync(rosterData);
+                        }
+                    }
                 } else {
                     ajaxUtil.fail().msg("姓名未改变");
                 }
@@ -372,6 +395,17 @@ public class UsersRestController {
                             own.setIdCard(value);
                             usersService.update(own);
                             ajaxUtil.success().msg("身份证号更新成功");
+
+                            // 学生需要同步花名册
+                            UsersType usersType = usersTypeService.findById(own.getUsersTypeId());
+                            if(Objects.nonNull(usersType) && StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())){
+                                Student student = studentService.findByUsername(own.getUsername());
+                                RosterData rosterData = rosterReleaseService.findRosterByStudentNumber(student.getStudentNumber());
+                                if (Objects.nonNull(rosterData) && StringUtils.isNotBlank(rosterData.getRosterDataId())){
+                                    rosterData.setIdCard(value);
+                                    rosterReleaseService.dataSync(rosterData);
+                                }
+                            }
                         } else {
                             ajaxUtil.fail().msg("身份证号已经存在");
                         }

@@ -11,10 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.config.ZoneProperties;
-import top.zbeboy.zbase.domain.tables.pojos.Role;
-import top.zbeboy.zbase.domain.tables.pojos.SystemConfigure;
-import top.zbeboy.zbase.domain.tables.pojos.SystemOperatorLog;
-import top.zbeboy.zbase.domain.tables.pojos.Users;
+import top.zbeboy.zbase.domain.tables.pojos.*;
+import top.zbeboy.zbase.feign.campus.roster.RosterReleaseService;
 import top.zbeboy.zbase.feign.data.StudentService;
 import top.zbeboy.zbase.feign.platform.UsersService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
@@ -39,6 +37,7 @@ import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 public class StudentRestController {
@@ -51,6 +50,9 @@ public class StudentRestController {
 
     @Resource
     private UsersService usersService;
+
+    @Resource
+    private RosterReleaseService rosterReleaseService;
 
     @Resource
     private SystemConfigureService systemConfigureService;
@@ -126,6 +128,19 @@ public class StudentRestController {
                 studentAddVo.setMailboxVerifyValid(DateTimeUtil.utilDateToSqlTimestamp(dateTime.toDate()));
                 studentAddVo.setLangKey(request.getLocale().toLanguageTag());
                 studentAddVo.setJoinDate(DateTimeUtil.getNowSqlDate());
+
+                // 同步花名册
+                RosterData rosterData = rosterReleaseService.findRosterByStudentNumber(studentAddVo.getStudentNumber());
+                if (Objects.nonNull(rosterData) && StringUtils.isNotBlank(rosterData.getRosterDataId())){
+                    studentAddVo.setBirthday(rosterData.getBirthday());
+                    studentAddVo.setSex(rosterData.getSex());
+                    studentAddVo.setPoliticalLandscapeId(rosterData.getPoliticalLandscapeId());
+                    studentAddVo.setNationId(rosterData.getNationId());
+                    studentAddVo.setDormitoryNumber(rosterData.getDormitoryNumber());
+                    studentAddVo.setParentName(rosterData.getParentName());
+                    studentAddVo.setParentContactPhone(rosterData.getParentContactPhone());
+                }
+
                 ajaxUtil = studentService.save(studentAddVo);
                 if (ajaxUtil.getState()) {
                     Users users = new Users();
