@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import top.zbeboy.zbase.bean.campus.roster.RosterAuthoritiesBean;
 import top.zbeboy.zbase.bean.campus.roster.RosterReleaseBean;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
@@ -16,10 +17,8 @@ import top.zbeboy.zbase.tools.service.util.UUIDUtil;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.QRCodeUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
-import top.zbeboy.zbase.vo.campus.roster.RosterDataEditVo;
-import top.zbeboy.zbase.vo.campus.roster.RosterDataAddVo;
-import top.zbeboy.zbase.vo.campus.roster.RosterReleaseAddVo;
-import top.zbeboy.zbase.vo.campus.roster.RosterReleaseEditVo;
+import top.zbeboy.zbase.tools.web.util.pagination.TableSawUtil;
+import top.zbeboy.zbase.vo.campus.roster.*;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
@@ -154,6 +153,47 @@ public class CampusRosterRestController {
     public ResponseEntity<Map<String, Object>> dataDelete(@RequestParam("id") String id) {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Map<String, Object>> ajaxUtil = rosterReleaseService.dataDelete(users.getUsername(), id);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 权限数据
+     *
+     * @param tableSawUtil 请求
+     * @return 数据
+     */
+    @GetMapping("/web/campus/roster/authorize/data")
+    public ResponseEntity<Map<String, Object>> authorizeData(TableSawUtil tableSawUtil) {
+        Users users = SessionUtil.getUserFromSession();
+        tableSawUtil.setUsername(users.getUsername());
+        AjaxUtil<RosterAuthoritiesBean> ajaxUtil = rosterReleaseService.authorizeData(tableSawUtil);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 保存
+     *
+     * @param rosterAuthoritiesAddVo 数据
+     * @return true or false
+     */
+    @PostMapping("/web/campus/roster/authorize/save")
+    public ResponseEntity<Map<String, Object>> authorizeSave(RosterAuthoritiesAddVo rosterAuthoritiesAddVo) {
+        Users users = SessionUtil.getUserFromSession();
+        rosterAuthoritiesAddVo.setUsername(users.getUsername());
+        AjaxUtil<Map<String, Object>> ajaxUtil = rosterReleaseService.authorizeSave(rosterAuthoritiesAddVo);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 删除
+     *
+     * @param id 权限id
+     * @return true or false
+     */
+    @PostMapping("/web/campus/roster/authorize/delete")
+    public ResponseEntity<Map<String, Object>> authorizeDelete(@RequestParam("id") String id) {
+        Users users = SessionUtil.getUserFromSession();
+        AjaxUtil<Map<String, Object>> ajaxUtil = rosterReleaseService.authorizeDelete(users.getUsername(), id);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }
