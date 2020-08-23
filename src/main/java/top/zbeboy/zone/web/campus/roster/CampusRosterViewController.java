@@ -18,7 +18,9 @@ import top.zbeboy.zbase.feign.data.StudentService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.web.util.PinYinUtil;
+import top.zbeboy.zone.web.campus.common.CampusRosterUrlCommon;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
+import top.zbeboy.zone.web.system.tip.SystemTipConfig;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
@@ -149,6 +151,42 @@ public class CampusRosterViewController {
             page = "inline_tip::#page-wrapper";
         }
         return page;
+    }
+
+    /**
+     * 数据添加页面
+     *
+     * @param modelMap 页面对象
+     * @return 编辑页面
+     */
+    @GetMapping(CampusRosterUrlCommon.ANYONE_DATE_ADD_URL + "{id}")
+    public String dataOuterAdd(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemTipConfig config = new SystemTipConfig();
+        RosterRelease rosterRelease = rosterReleaseService.findById(id);
+        if(Objects.nonNull(rosterRelease) && StringUtils.isNotBlank(rosterRelease.getRosterReleaseId())){
+            // 时间范围
+            if (DateTimeUtil.nowAfterSqlTimestamp(rosterRelease.getStartTime()) &&
+                    DateTimeUtil.nowBeforeSqlTimestamp(rosterRelease.getEndTime())) {
+                modelMap.addAttribute("rosterRelease", rosterRelease);
+                return "web/campus/roster/roster_data_outer_add";
+            } else {
+
+                config.buildWarningTip(
+                        "进入花名册失败。",
+                        "不在花名册填写时间范围。");
+                config.addLoginButton();
+                config.addHomeButton();
+                config.dataMerging(modelMap);
+            }
+        } else {
+            config.buildDangerTip(
+                    "进入花名册失败。",
+                    "未查询到花名册信息。");
+            config.addLoginButton();
+            config.addHomeButton();
+            config.dataMerging(modelMap);
+        }
+        return "tip";
     }
 
     /**

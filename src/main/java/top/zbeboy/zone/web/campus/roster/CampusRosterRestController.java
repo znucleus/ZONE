@@ -26,6 +26,7 @@ import top.zbeboy.zbase.tools.web.util.pagination.TableSawUtil;
 import top.zbeboy.zbase.vo.campus.roster.*;
 import top.zbeboy.zone.service.export.RosterDataExport;
 import top.zbeboy.zone.service.upload.UploadService;
+import top.zbeboy.zone.web.campus.common.CampusRosterUrlCommon;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
@@ -46,8 +47,6 @@ public class CampusRosterRestController {
     @Resource
     private UploadService uploadService;
 
-    private final String ANYONE_DATE_ADD_URL = "/anyone/campus/roster/data/add/";
-
     /**
      * 数据
      *
@@ -61,7 +60,7 @@ public class CampusRosterRestController {
         AjaxUtil<RosterReleaseBean> ajaxUtil = rosterReleaseService.data(simplePaginationUtil);
         if (Objects.nonNull(ajaxUtil.getListResult())) {
             for (RosterReleaseBean bean : ajaxUtil.getListResult()) {
-                bean.setPublicLink(RequestUtil.getBaseUrl(request) + ANYONE_DATE_ADD_URL + bean.getRosterReleaseId());
+                bean.setPublicLink(RequestUtil.getBaseUrl(request) + CampusRosterUrlCommon.ANYONE_DATE_ADD_URL + bean.getRosterReleaseId());
             }
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -85,7 +84,7 @@ public class CampusRosterRestController {
             String path = Workbook.campusRosterQrCodeFilePath() + id + ".jpg";
             String logoPath = Workbook.SYSTEM_LOGO_PATH;
             //生成二维码
-            String text = RequestUtil.getBaseUrl(request) + ANYONE_DATE_ADD_URL + id;
+            String text = RequestUtil.getBaseUrl(request) + CampusRosterUrlCommon.ANYONE_DATE_ADD_URL + id;
             QRCodeUtil.encode(text, logoPath, realPath + path, true);
             rosterReleaseAddVo.setQrCodeUrl(path);
             ajaxUtil = rosterReleaseService.save(rosterReleaseAddVo);
