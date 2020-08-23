@@ -38,6 +38,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
             return {
                 data: web_path + '/web/campus/roster/review/data',
                 del: web_path + '/web/campus/roster/review/delete',
+                export_data: web_path + '/web/campus/roster/review/data/export',
                 page: '/web/menu/campus/roster'
             };
         }
@@ -419,19 +420,18 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
         }
 
         function del(rosterDataId) {
-            sendDelAjax(rosterDataId, 1);
+            sendDelAjax(rosterDataId);
         }
 
         function dels(rosterDataIds) {
-            sendDelAjax(rosterDataIds.join(","), 1);
+            sendDelAjax(rosterDataIds.join(","));
         }
 
         /**
          * 删除ajax
          * @param rosterDataId
-         * @param isDel
          */
-        function sendDelAjax(rosterDataId, isDel) {
+        function sendDelAjax(rosterDataId) {
             $.ajax({
                 type: 'POST',
                 url: getAjaxUrl().del,
@@ -456,4 +456,24 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                 }
             });
         }
+
+        $('#export_xls').click(function () {
+            initParam();
+            var searchParam = JSON.stringify(getParam());
+            var exportFile = {
+                fileName: $('#export_file_name').val(),
+                ext: 'xls'
+            };
+            window.location.href = encodeURI(getAjaxUrl().export_data + "?extra_search=" + searchParam + "&export_info=" + JSON.stringify(exportFile));
+        });
+
+        $('#export_xlsx').click(function () {
+            initParam();
+            var searchParam = JSON.stringify(getParam());
+            var exportFile = {
+                fileName: $('#export_file_name').val(),
+                ext: 'xlsx'
+            };
+            window.location.href = encodeURI(getAjaxUrl().export_data + "?extra_search=" + searchParam + "&export_info=" + JSON.stringify(exportFile));
+        });
     });

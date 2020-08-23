@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.bean.campus.roster.RosterAuthoritiesBean;
+import top.zbeboy.zbase.bean.campus.roster.RosterDataBean;
 import top.zbeboy.zbase.bean.campus.roster.RosterReleaseBean;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
@@ -19,13 +20,18 @@ import top.zbeboy.zbase.tools.service.util.UUIDUtil;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.QRCodeUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.ExportInfo;
 import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.TableSawUtil;
 import top.zbeboy.zbase.vo.campus.roster.*;
+import top.zbeboy.zone.service.export.RosterDataExport;
+import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +42,9 @@ public class CampusRosterRestController {
 
     @Resource
     private RosterReleaseService rosterReleaseService;
+
+    @Resource
+    private UploadService uploadService;
 
     private final String ANYONE_DATE_ADD_URL = "/anyone/campus/roster/data/add/";
 
@@ -261,5 +270,33 @@ public class CampusRosterRestController {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Map<String, Object>> ajaxUtil = rosterReleaseService.reviewDelete(users.getUsername(), rosterDataIds, rosterReleaseId);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 导出 分配列表 数据
+     *
+     * @param request 请求
+     */
+    @GetMapping("/web/campus/roster/review/data/export")
+    public void reviewDataExport(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        DataTablesUtil dataTablesUtil = new DataTablesUtil(request, "studentNumber", "asc",
+                "花名册数据", Workbook.campusRosterFilePath());
+        Users users = SessionUtil.getUserFromSession();
+        dataTablesUtil.setUsername(users.getUsername());
+        JSONObject search = dataTablesUtil.getSearch();
+        String rosterReleaseId = search.getString("rosterReleaseId");
+        if (StringUtils.isNotBlank(rosterReleaseId) &&
+                rosterReleaseService.canReview(users.getUsername(), rosterReleaseId)) {
+            dataTablesUtil = rosterReleaseService.reviewData(dataTablesUtil);
+
+            List<RosterDataBean> rosterDataBeans = rosterReleaseService.reviewDataExport(dataTablesUtil);
+            RosterDataExport export = new RosterDataExport(rosterDataBeans);
+            ExportInfo exportInfo = dataTablesUtil.getExportInfo();
+            if (export.exportExcel(exportInfo.getLastPath(), exportInfo.getFileName(), exportInfo.getExt())) {
+                uploadService.download(exportInfo.getFileName(), exportInfo.getFilePath(), response, request);
+            }
+        }
+
+
     }
 }
