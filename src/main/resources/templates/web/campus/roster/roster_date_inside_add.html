@@ -84,6 +84,8 @@
                             <label>班级</label>
                             <input class="form-control" name="organize"
                                    id="organizeName" placeholder="班级" th:value="${student.organizeName}" readonly="readonly"/>
+                            <input type="hidden" class="form-control" name="organize"
+                                   id="organizeId" placeholder="班级ID" th:value="${student.organizeId}"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">

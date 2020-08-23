@@ -17,7 +17,7 @@ import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.QRCodeUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zbase.vo.campus.roster.RosterDataEditVo;
-import top.zbeboy.zbase.vo.campus.roster.RosterDataInsideAddVo;
+import top.zbeboy.zbase.vo.campus.roster.RosterDataAddVo;
 import top.zbeboy.zbase.vo.campus.roster.RosterReleaseAddVo;
 import top.zbeboy.zbase.vo.campus.roster.RosterReleaseEditVo;
 import top.zbeboy.zone.web.util.SessionUtil;
@@ -119,14 +119,14 @@ public class CampusRosterRestController {
     /**
      * 数据保存
      *
-     * @param rosterDataInsideAddVo 数据
+     * @param rosterDataAddVo 数据
      * @return true or false
      */
     @PostMapping("/web/campus/roster/data/save")
-    public ResponseEntity<Map<String, Object>> dataSave(RosterDataInsideAddVo rosterDataInsideAddVo) {
+    public ResponseEntity<Map<String, Object>> dataSave(RosterDataAddVo rosterDataAddVo) {
         Users users = SessionUtil.getUserFromSession();
-        rosterDataInsideAddVo.setUsername(users.getUsername());
-        AjaxUtil<Map<String, Object>> ajaxUtil = rosterReleaseService.dataSave(rosterDataInsideAddVo);
+        rosterDataAddVo.setUsername(users.getUsername());
+        AjaxUtil<Map<String, Object>> ajaxUtil = rosterReleaseService.dataSave(rosterDataAddVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 

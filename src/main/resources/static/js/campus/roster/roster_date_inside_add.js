@@ -16,6 +16,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
         navActive(ajax_url.page);
 
         var param_id = {
+            studentNumber:'#studentNumber',
             realName: '#realName',
             namePinyin: '#namePinyin',
             sex: '#sex',
@@ -23,6 +24,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
             idCard: '#idCard',
             politicalLandscapeId: '#politicalLandscape',
             nationId: '#nation',
+            organizeId:'#organizeId',
             province: '#province',
             region: '#region',
             busSection: '#busSection',
@@ -30,6 +32,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
             parentContactPhone: '#parentContactPhone',
             parentContactAddress: '#parentContactAddress',
             zipCode: '#zipCode',
+            phoneNumber:'#phoneNumber',
             dormitoryNumber: '#dormitoryNumber'
         };
 
@@ -50,6 +53,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
 
         var param = {
             rosterReleaseId: '',
+            studentNumber:'',
             realName: '',
             namePinyin: '',
             sex: '',
@@ -57,6 +61,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
             idCard: '',
             politicalLandscapeId: '',
             nationId: '',
+            organizeId:'',
             province: '',
             region: '',
             busSection: '',
@@ -64,11 +69,13 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
             parentContactPhone: '',
             parentContactAddress: '',
             zipCode: '',
+            phoneNumber:'',
             dormitoryNumber: ''
         };
 
         function initParam() {
             param.rosterReleaseId = page_param.rosterReleaseId;
+            param.studentNumber = _.trim($(param_id.studentNumber).val());
             param.realName = _.trim($(param_id.realName).val());
             param.namePinyin = _.trim($(param_id.namePinyin).val());
             param.sex = $(param_id.sex).val();
@@ -76,6 +83,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
             param.idCard = _.trim($(param_id.idCard).val());
             param.politicalLandscapeId = $(param_id.politicalLandscapeId).val();
             param.nationId = $(param_id.nationId).val();
+            param.organizeId = $(param_id.organizeId).val();
             param.province = _.trim($(param_id.province).val());
             param.region = _.trim($(param_id.region).val());
             param.busSection = _.trim($(param_id.busSection).val());
@@ -83,6 +91,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
             param.parentContactPhone = _.trim($(param_id.parentContactPhone).val());
             param.parentContactAddress = _.trim($(param_id.parentContactAddress).val());
             param.zipCode = _.trim($(param_id.zipCode).val());
+            param.phoneNumber = _.trim($(param_id.phoneNumber).val());
             param.dormitoryNumber = _.trim($(param_id.dormitoryNumber).val());
         }
 
