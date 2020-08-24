@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.zbase.config.Workbook;
+import top.zbeboy.zbase.domain.tables.pojos.Role;
 import top.zbeboy.zbase.domain.tables.pojos.UsersType;
+import top.zbeboy.zbase.feign.platform.RoleService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zbase.feign.system.FilesService;
 import top.zbeboy.zone.annotation.logging.LoginLoggingRecord;
@@ -22,6 +24,7 @@ import top.zbeboy.zone.web.util.SessionUtil;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,6 +39,9 @@ public class MainController {
 
     @Resource
     private UsersTypeService usersTypeService;
+
+    @Resource
+    private RoleService roleService;
 
     private final RequestCache requestCache = new HttpSessionRequestCache();
 
@@ -89,7 +95,7 @@ public class MainController {
             page = "student_register";
         } else if (StringUtils.equals(type, Workbook.REGISTER_STAFF)) {
             page = "staff_register";
-        } else if(StringUtils.equals(type,Workbook.REGISTER_POTENTIAL)){
+        } else if (StringUtils.equals(type, Workbook.REGISTER_POTENTIAL)) {
             page = "potential_register";
         }
         return page;
@@ -113,27 +119,33 @@ public class MainController {
     @LoginLoggingRecord(module = "Main", methods = "backstage", description = "访问系统主页")
     @GetMapping(Workbook.WEB_BACKSTAGE)
     public String backstage(ModelMap modelMap, HttpServletRequest request) {
-        List<String> roles = SessionUtil.getAuthoritiesFromSession();
+
         // avatar.
         Users users = SessionUtil.getUserFromSession();
         if (StringUtils.isNotBlank(users.getAvatar())) {
             Files files = filesService.findById(users.getAvatar());
-            if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())){
+            if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())) {
                 modelMap.addAttribute("avatar", Workbook.DIRECTORY_SPLIT + files.getRelativePath());
             }
         }
 
         boolean isPotential = false;
-        if(Objects.nonNull(users.getUsersTypeId()) && users.getUsersTypeId() > 0){
+        if (Objects.nonNull(users.getUsersTypeId()) && users.getUsersTypeId() > 0) {
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-            if(StringUtils.equals(usersType.getUsersTypeName(), Workbook.POTENTIAL_USERS_TYPE)){
+            if (StringUtils.equals(usersType.getUsersTypeName(), Workbook.POTENTIAL_USERS_TYPE)) {
                 isPotential = true;
             }
         }
 
         modelMap.addAttribute("isPotential", isPotential);
         modelMap.addAttribute("realName", users.getRealName());
-        modelMap.addAttribute("menu", menuService.getMenu(roles, users.getUsername()));
+
+        List<Role> roleList = roleService.findByUsername(users.getUsername());
+        if (Objects.nonNull(roleList) && !roleList.isEmpty()) {
+            List<String> roles = new ArrayList<>();
+            roleList.forEach(r -> roles.add(r.getRoleEnName()));
+            modelMap.addAttribute("menu", menuService.getMenu(roles, users.getUsername()));
+        }
 
         return "backstage";
     }
