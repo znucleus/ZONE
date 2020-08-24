@@ -487,7 +487,7 @@ require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf",
                         tools.validErrorDom(param_id.password, '密码为6-16位任意字母、数字或下划线');
                     } else {
                         if (global_param.password_strong < 55) {
-                            tools.validErrorDom(param_id.password, '密码过于简单');
+                            tools.validErrorDom(param_id.password, '密码过于简单，请更换密码');
                         } else {
                             tools.validSuccessDom(param_id.password);
                         }
@@ -507,7 +507,7 @@ require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf",
                         tools.validErrorDom(param_id.password, '密码为6-16位任意字母、数字或下划线');
                     } else {
                         if (global_param.password_strong < 55) {
-                            tools.validErrorDom(param_id.password, '密码过于简单');
+                            tools.validErrorDom(param_id.password, '密码过于简单，请更换密码');
                         } else {
                             if (okPassword !== password) {
                                 tools.validErrorDom(param_id.okPassword, '密码不一致');
@@ -729,7 +729,7 @@ require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf",
                         tools.validErrorDom(param_id.password, '密码为6-16位任意字母、数字或下划线');
                     } else {
                         if (global_param.password_strong < 55) {
-                            tools.validErrorDom(param_id.password, '密码过于简单');
+                            tools.validErrorDom(param_id.password, '密码过于简单，请更换密码');
                         } else {
                             tools.validSuccessDom(param_id.password);
                             validOkPassword();
@@ -749,7 +749,7 @@ require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf",
                         tools.validErrorDom(param_id.password, '密码为6-16位任意字母、数字或下划线');
                     } else {
                         if (global_param.password_strong < 55) {
-                            tools.validErrorDom(param_id.password, '密码过于简单');
+                            tools.validErrorDom(param_id.password, '密码过于简单，请更换密码');
                         } else {
                             if (okPassword !== password) {
                                 tools.validErrorDom(param_id.okPassword, '密码不一致');
