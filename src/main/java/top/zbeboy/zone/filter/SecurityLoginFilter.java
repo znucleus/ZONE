@@ -118,7 +118,7 @@ public class SecurityLoginFilter implements Filter {
 
             UsersTypeService usersTypeService = SpringBootUtil.getBean(UsersTypeService.class);
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-            if (Objects.isNull(usersType)) {
+            if (Objects.isNull(usersType) || Objects.isNull(usersType.getUsersTypeId()) || usersType.getUsersTypeId() <= 0) {
                 response.getWriter().print(AjaxAuthenticationCode.USER_TYPE_IS_BLANK);
                 return;
             }
@@ -128,10 +128,10 @@ public class SecurityLoginFilter implements Filter {
                 case Workbook.STUDENT_USERS_TYPE:
                     StudentService studentService = SpringBootUtil.getBean(StudentService.class);
                     StudentBean studentBean = studentService.findByUsername(users.getUsername());
-                    if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
+                    if (Objects.nonNull(studentBean) && Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
                         OrganizeService organizeService = SpringBootUtil.getBean(OrganizeService.class);
                         OrganizeBean organizeBean = organizeService.findByIdRelation(studentBean.getOrganizeId());
-                        if (Objects.nonNull(organizeBean.getOrganizeId()) && organizeBean.getOrganizeId() > 0) {
+                        if (Objects.nonNull(organizeBean) && Objects.nonNull(organizeBean.getOrganizeId()) && organizeBean.getOrganizeId() > 0) {
                             schoolIsNotDel = !BooleanUtil.toBoolean(organizeBean.getSchoolIsDel()) && !BooleanUtil.toBoolean(organizeBean.getCollegeIsDel()) &&
                                     !BooleanUtil.toBoolean(organizeBean.getDepartmentIsDel()) && !BooleanUtil.toBoolean(organizeBean.getScienceIsDel()) &&
                                     !BooleanUtil.toBoolean(organizeBean.getGradeIsDel()) && !BooleanUtil.toBoolean(organizeBean.getOrganizeIsDel());
@@ -145,7 +145,7 @@ public class SecurityLoginFilter implements Filter {
                     if (Objects.nonNull(staffBean) && Objects.nonNull(staffBean.getStaffId()) && staffBean.getStaffId() > 0) {
                         DepartmentService departmentService = SpringBootUtil.getBean(DepartmentService.class);
                         DepartmentBean departmentBean = departmentService.findByIdRelation(staffBean.getDepartmentId());
-                        if (Objects.nonNull(departmentBean.getDepartmentId()) && departmentBean.getDepartmentId() > 0) {
+                        if (Objects.nonNull(departmentBean) && Objects.nonNull(departmentBean.getDepartmentId()) && departmentBean.getDepartmentId() > 0) {
                             schoolIsNotDel = !BooleanUtil.toBoolean(departmentBean.getSchoolIsDel()) && !BooleanUtil.toBoolean(departmentBean.getCollegeIsDel()) &&
                                     !BooleanUtil.toBoolean(departmentBean.getDepartmentIsDel());
                         }
