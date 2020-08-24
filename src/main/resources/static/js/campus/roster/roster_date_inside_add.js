@@ -282,8 +282,19 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
                     errorTip('家长联系电话格式不正确');
                 } else {
                     tools.validSuccessDom(param_id.parentContactPhone);
-                    validZipCode();
+                    validParentContactAddress();
                 }
+            }
+        }
+
+        function validParentContactAddress() {
+            var parentContactAddress = param.parentContactAddress;
+            if (parentContactAddress.length <= 0 || parentContactAddress.length > 200) {
+                tools.validErrorDom(param_id.parentContactAddress, '家长联系地址200个字符以内');
+                errorTip('家长联系地址200个字符以内');
+            } else {
+                tools.validSuccessDom(param_id.parentContactAddress);
+                validZipCode();
             }
         }
 

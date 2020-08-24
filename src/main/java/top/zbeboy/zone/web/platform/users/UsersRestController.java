@@ -313,7 +313,7 @@ public class UsersRestController {
                     UsersType usersType = usersTypeService.findById(own.getUsersTypeId());
                     if(Objects.nonNull(usersType) && StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())){
                         Student student = studentService.findByUsername(own.getUsername());
-                        RosterData rosterData = rosterReleaseService.findRosterByStudentNumber(student.getStudentNumber());
+                        RosterData rosterData = rosterReleaseService.findRosterDataByStudentNumber(student.getStudentNumber());
                         if (Objects.nonNull(rosterData) && StringUtils.isNotBlank(rosterData.getRosterDataId())){
                             rosterData.setRealName(value);
                             rosterData.setNamePinyin(PinYinUtil.changeToUpper(value));
@@ -400,7 +400,7 @@ public class UsersRestController {
                             UsersType usersType = usersTypeService.findById(own.getUsersTypeId());
                             if(Objects.nonNull(usersType) && StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())){
                                 Student student = studentService.findByUsername(own.getUsername());
-                                RosterData rosterData = rosterReleaseService.findRosterByStudentNumber(student.getStudentNumber());
+                                RosterData rosterData = rosterReleaseService.findRosterDataByStudentNumber(student.getStudentNumber());
                                 if (Objects.nonNull(rosterData) && StringUtils.isNotBlank(rosterData.getRosterDataId())){
                                     rosterData.setIdCard(value);
                                     rosterReleaseService.dataSync(rosterData);

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,12 +13,14 @@ import top.zbeboy.zbase.bean.campus.roster.RosterAuthoritiesBean;
 import top.zbeboy.zbase.bean.campus.roster.RosterDataBean;
 import top.zbeboy.zbase.bean.campus.roster.RosterReleaseBean;
 import top.zbeboy.zbase.config.Workbook;
+import top.zbeboy.zbase.domain.tables.pojos.RosterData;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.campus.roster.RosterReleaseService;
 import top.zbeboy.zbase.tools.service.util.FilesUtil;
 import top.zbeboy.zbase.tools.service.util.RequestUtil;
 import top.zbeboy.zbase.tools.service.util.UUIDUtil;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.PinYinUtil;
 import top.zbeboy.zbase.tools.web.util.QRCodeUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.ExportInfo;
@@ -32,6 +35,7 @@ import top.zbeboy.zone.web.util.SessionUtil;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +50,37 @@ public class CampusRosterRestController {
 
     @Resource
     private UploadService uploadService;
+
+    /**
+     * 检验学号是否已填写
+     *
+     * @param studentNumber 学号
+     * @return 是否填写
+     */
+    @PostMapping("/anyone/campus/roster/check/student/number")
+    public ResponseEntity<Map<String, Object>> checkStudentNumber(@RequestParam("studentNumber") String studentNumber) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        RosterData rosterData = rosterReleaseService.findRosterDataByStudentNumber(studentNumber);
+        if (Objects.nonNull(rosterData) && StringUtils.isNotBlank(rosterData.getRosterDataId())) {
+            ajaxUtil.success().msg("已填写");
+        } else {
+            ajaxUtil.fail().msg("未填写");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 转换姓名至拼音
+     *
+     * @param realName 姓名
+     * @return 拼音
+     */
+    @PostMapping("/anyone/campus/roster/convert_name")
+    public ResponseEntity<Map<String, Object>> convertName(@RequestParam("realName") String realName) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        ajaxUtil.success().msg("转换成功").put("pinyin", PinYinUtil.changeToUpper(realName));
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
 
     /**
      * 数据
@@ -135,10 +170,41 @@ public class CampusRosterRestController {
      * @return true or false
      */
     @PostMapping("/web/campus/roster/data/save")
-    public ResponseEntity<Map<String, Object>> dataSave(RosterDataAddVo rosterDataAddVo) {
+    public ResponseEntity<Map<String, Object>> dataInsideSave(@Valid RosterDataAddVo rosterDataAddVo, BindingResult bindingResult) {
         Users users = SessionUtil.getUserFromSession();
-        rosterDataAddVo.setUsername(users.getUsername());
-        AjaxUtil<Map<String, Object>> ajaxUtil = rosterReleaseService.dataSave(rosterDataAddVo);
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (!bindingResult.hasErrors()) {
+            if (rosterReleaseService.canRegister(users.getUsername(), rosterDataAddVo.getRosterReleaseId()) &&
+                    !rosterReleaseService.canDataEdit(users.getUsername(), rosterDataAddVo.getRosterReleaseId())) {
+                ajaxUtil = rosterReleaseService.dataSave(rosterDataAddVo);
+            } else {
+                ajaxUtil.fail().msg("保存失败，无权限操作");
+            }
+        } else {
+            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 数据保存
+     *
+     * @param rosterDataAddVo 数据
+     * @return true or false
+     */
+    @PostMapping("/anyone/campus/roster/data/save")
+    public ResponseEntity<Map<String, Object>> dataOuterSave(@Valid RosterDataAddVo rosterDataAddVo, BindingResult bindingResult) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (!bindingResult.hasErrors()) {
+            RosterData rosterData = rosterReleaseService.findRosterDataByStudentNumber(rosterDataAddVo.getStudentNumber());
+            if (Objects.isNull(rosterData) || StringUtils.isBlank(rosterData.getRosterDataId())) {
+                ajaxUtil = rosterReleaseService.dataSave(rosterDataAddVo);
+            } else {
+                ajaxUtil.fail().msg("保存失败，该学号已登记，若需要修改请登录。");
+            }
+        } else {
+            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 

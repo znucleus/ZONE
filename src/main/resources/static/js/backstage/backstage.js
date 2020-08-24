@@ -92,8 +92,11 @@ requirejs.config({
         "select2-zh-CN": {
             deps: ["jquery", "select2"]
         },
+        "flatpickr": {
+            deps: ["jquery", "css!" + web_path + "/plugins/flatpickr/css/flatpickr.min"]
+        },
         "flatpickr-zh": {
-            deps: ["jquery", "flatpickr", "css!" + web_path + "/plugins/flatpickr/css/flatpickr.min"]
+            deps: ["flatpickr"]
         },
         "jquery.entropizer": {
             deps: ["jquery", "css!" + web_path + "/plugins/jquery-entropizer/css/jquery-entropizer.min"]

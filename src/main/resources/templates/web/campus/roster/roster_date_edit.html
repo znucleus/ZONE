@@ -18,18 +18,20 @@
 
     <div class="br-pagebody">
         <div class="br-section-wrapper">
-            <p class="mg-b-10 mg-lg-b-20">说明：此信息表作为学校“学生信息库”及“学生证”信息依据，请认真核对填写！</p>
-            <p class="mg-b-10 mg-lg-b-20">1、请每位同学仔细核对个人信息。</p>
-            <p class="mg-b-10 mg-lg-b-20">2、请认真填写空栏信息，“乘车区间”所填写的一定是：乘火车回家最终到站的站名，学生证一经办理不再修改，请同学们慎重清楚的填写。</p>
-            <p class="mg-b-10 mg-lg-b-20">3、请各系按核对后的本表填写、修改电子版表格，完成后将纸质原件和电子版表格一同交教学教务中心。</p>
+            <p class="mg-b-10 mg-lg-b-20 text-info">说明：此信息表作为学校“学生信息库”及“学生证”信息依据，请认真核对填写！</p>
+            <p class="mg-b-10 mg-lg-b-20 text-info">1、请每位同学仔细核对个人信息。</p>
+            <p class="mg-b-10 mg-lg-b-20 text-info">2、请认真填写空栏信息，“乘车区间”所填写的一定是：乘火车回家最终到站的站名，学生证一经办理不再修改，请同学们慎重清楚的填写。</p>
+            <p class="mg-b-10 mg-lg-b-20 text-info">3、请各系按核对后的本表填写、修改电子版表格，完成后将纸质原件和电子版表格一同交教学教务中心。</p>
             <div class="row">
                 <div class="col-md-12">
                     <form id="app_form">
                         <div class="form-group">
                             <label>学号</label>
                             <input class="form-control" name="studentNumber"
-                                   id="studentNumber" placeholder="学号" th:value="${rosterData.studentNumber}" readonly="readonly"/>
+                                   id="studentNumber" placeholder="学号" th:value="${rosterData.studentNumber}" readonly="readonly" aria-describedby="studentNumberHelp"/>
                             <div class="invalid-feedback"></div>
+                            <small id="studentNumberHelp" class="form-text text-muted">请在系统资料中修改
+                            </small>
                         </div>
                         <div class="form-group">
                             <label>姓名</label>
@@ -83,8 +85,10 @@
                         <div class="form-group">
                             <label>班级</label>
                             <input class="form-control" name="organize"
-                                   id="organizeName" placeholder="班级" th:value="${rosterData.organizeName}" readonly="readonly"/>
+                                   id="organizeName" placeholder="班级" th:value="${rosterData.organizeName}" readonly="readonly" aria-describedby="organizeHelp"/>
                             <div class="invalid-feedback"></div>
+                            <small id="organizeHelp" class="form-text text-muted">请在系统资料中修改
+                            </small>
                         </div>
                         <div class="form-group">
                             <label>省份</label>
@@ -140,8 +144,10 @@
                         <div class="form-group">
                             <label>本人联系电话</label>
                             <input class="form-control" name="phoneNumber"
-                                   id="phoneNumber" placeholder="本人联系电话" th:value="${rosterData.phoneNumber}" readonly="readonly"/>
+                                   id="phoneNumber" placeholder="本人联系电话" th:value="${rosterData.phoneNumber}" readonly="readonly" aria-describedby="phoneNumberHelp"/>
                             <div class="invalid-feedback"></div>
+                            <small id="phoneNumberHelp" class="form-text text-muted">请在系统资料中修改
+                            </small>
                         </div>
                         <div class="form-group">
                             <label>宿舍号</label>

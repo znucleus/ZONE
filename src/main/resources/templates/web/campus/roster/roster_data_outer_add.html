@@ -7,21 +7,41 @@
     <meta name="_csrf_header" content="" th:content="${_csrf.headerName}"/>
     <title th:text="'花名册-' + #{ web.title}">ZHE</title>
 
+    <link rel="stylesheet" href="plugins/select2/css/select2.min.css"
+          th:href="@{/plugins/select2/css/select2.min.css}"/>
     <!-- Bracket CSS -->
     <link rel="stylesheet" href="plugins/css/bracket.css" th:href="@{/plugins/bracket/css/bracket.min.css}"/>
+    <!-- Loading CSS -->
+    <link href="/plugins/loading/css/showLoading.min.css" rel="stylesheet"
+          th:href="@{/plugins/loading/css/showLoading.min.css}"/>
+    <!-- messenger CSS -->
+    <link href="/plugins/messenger/messenger.css" th:href="@{/webjars/messenger/build/css/messenger.css}"
+          rel="stylesheet"/>
+    <link href="/plugins/messenger/messenger-theme-flat.css"
+          th:href="@{/webjars/messenger/build/css/messenger-theme-flat.css}" rel="stylesheet"/>
 </head>
 <body>
 
 <div class="d-flex align-items-center justify-content-center bg-br-primary">
 
-    <div class="login-wrapper wd-300 wd-xs-600 pd-25 pd-xs-40 bg-white rounded shadow-base mg-t-20 mg-b-20" >
+    <div class="login-wrapper wd-300 wd-xs-600 pd-25 pd-xs-40 bg-white rounded shadow-base mg-t-20 mg-b-20" id="page-wrapper">
         <div class="signin-logo tx-center tx-28 tx-bold tx-inverse"><span class="tx-normal">[</span> <span
                 th:text="${rosterRelease.title}"></span> <span class="tx-normal">]</span></div>
-
-        <p class="mg-b-10 mg-lg-b-20">说明：此信息表作为学校“学生信息库”及“学生证”信息依据，请认真核对填写！</p>
-        <p class="mg-b-10 mg-lg-b-20">1、请每位同学仔细核对个人信息。</p>
-        <p class="mg-b-10 mg-lg-b-20">2、请认真填写空栏信息，“乘车区间”所填写的一定是：乘火车回家最终到站的站名，学生证一经办理不再修改，请同学们慎重清楚的填写。</p>
-        <p class="mg-b-10 mg-lg-b-20">3、请各系按核对后的本表填写、修改电子版表格，完成后将纸质原件和电子版表格一同交教学教务中心。</p>
+        <p class="mg-b-10 mg-lg-b-20 text-info">说明：此信息表作为学校“学生信息库”及“学生证”信息依据，请认真核对填写！</p>
+        <p class="mg-b-10 mg-lg-b-20 text-info">1、请每位同学仔细核对个人信息。</p>
+        <p class="mg-b-10 mg-lg-b-20 text-info">2、请认真填写空栏信息，“乘车区间”所填写的一定是：乘火车回家最终到站的站名，学生证一经办理不再修改，请同学们慎重清楚的填写。</p>
+        <p class="mg-b-10 mg-lg-b-20 text-info">3、请各系按核对后的本表填写、修改电子版表格，完成后将纸质原件和电子版表格一同交教学教务中心。</p>
+        <div class="row mg-b-10 mg-lg-b-20 text-success">
+            <div class="col-md-6">
+                <span>开始填写时间：</span><span th:text="${startTimeStr}"></span>
+            </div>
+            <div class="col-md-6">
+                <span>结束填写时间：</span><span th:text="${endTimeStr}"></span>
+            </div>
+            <div class="col-md-12">
+                <span>备注：</span><span th:text="${rosterRelease.title}"></span>
+            </div>
+        </div>
         <div class="row">
             <div class="col-md-12">
                 <form id="app_form">
@@ -77,20 +97,6 @@
                         <select class="form-control select2-show-search" id="nation" name="nationId"
                                 data-placeholder="请选择民族">
                             <option label="请选择民族"></option>
-                        </select>
-                        <div class="invalid-feedback"></div>
-                    </div>
-                    <div class="form-group">
-                        <label>系</label>
-                        <select class="form-control select2-show-search" id="department" data-placeholder="请选择系">
-                            <option label="请选择系"></option>
-                        </select>
-                        <div class="invalid-feedback"></div>
-                    </div>
-                    <div class="form-group">
-                        <label>专业</label>
-                        <select class="form-control select2-show-search" id="science" data-placeholder="请选择专业">
-                            <option label="请选择专业"></option>
                         </select>
                         <div class="invalid-feedback"></div>
                     </div>
@@ -169,10 +175,14 @@
                 </form>
             </div>
         </div>
-        <div class="form-group text-danger" id="globalError"></div>
         <button type="button" class="btn btn-info btn-block" id="save">提 交</button>
     </div><!-- login-wrapper -->
 </div><!-- d-flex -->
+
+<input type="hidden" id="rosterReleaseId" th:value="${rosterRelease.rosterReleaseId}"/>
+<input type="hidden" id="collegeId" th:value="${rosterRelease.collegeId}"/>
+<input type="hidden" id="grade" th:value="${rosterRelease.grade}"/>
+
 <script src="webjarsjs" th:src="@{/webjarsjs}"></script>
 <script src="webjars/requirejs/require.min.js" th:src="@{/webjars/requirejs/require.min.js}"
         data-main="/roster_data_outer_add"></script>

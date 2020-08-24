@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 public class OrganizeRestController {
@@ -49,7 +50,13 @@ public class OrganizeRestController {
     @GetMapping("/anyone/data/organize")
     public ResponseEntity<Map<String, Object>> anyoneData(OrganizeSearchVo organizeSearchVo, HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
-        List<Organize> organizes = organizeService.findByGradeIdAndOrganizeIsDel(organizeSearchVo);
+        List<Organize> organizes = new ArrayList<>();
+        if(Objects.nonNull(organizeSearchVo.getGradeId()) && organizeSearchVo.getGradeId() > 0){
+            organizes = organizeService.findByGradeIdAndOrganizeIsDel(organizeSearchVo);
+        } else if(Objects.nonNull(organizeSearchVo.getGrade()) && organizeSearchVo.getGrade() > 0 &&
+        Objects.nonNull(organizeSearchVo.getCollegeId()) && organizeSearchVo.getCollegeId() > 0){
+            organizes = organizeService.findByGradeAndCollegeIdAndOrganizeIsDel(organizeSearchVo);
+        }
         organizes.forEach(organize -> select2Data.add(organize.getOrganizeId().toString(), organize.getOrganizeName()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }

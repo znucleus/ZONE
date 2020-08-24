@@ -168,6 +168,8 @@ public class CampusRosterViewController {
             if (DateTimeUtil.nowAfterSqlTimestamp(rosterRelease.getStartTime()) &&
                     DateTimeUtil.nowBeforeSqlTimestamp(rosterRelease.getEndTime())) {
                 modelMap.addAttribute("rosterRelease", rosterRelease);
+                modelMap.addAttribute("startTimeStr", DateTimeUtil.defaultFormatSqlTimestamp(rosterRelease.getStartTime()));
+                modelMap.addAttribute("endTimeStr", DateTimeUtil.defaultFormatSqlTimestamp(rosterRelease.getEndTime()));
                 return "web/campus/roster/roster_data_outer_add";
             } else {
 
@@ -292,5 +294,22 @@ public class CampusRosterViewController {
             page = "inline_tip::#page-wrapper";
         }
         return page;
+    }
+
+    /**
+     * 数据保存成功
+     *
+     * @param modelMap 页面数据
+     * @return 成功
+     */
+    @GetMapping("/anyone/campus/roster/data/save/success")
+    public String dataSaveSuccess(ModelMap modelMap) {
+        SystemTipConfig config = new SystemTipConfig(
+                "花名册数据保存成功",
+                "您的数据已保存成功，请尽快注册并登录系统，可在花名册菜单下对您的数据进行修改，感谢您的使用。");
+        config.addLoginButton();
+        config.addHomeButton();
+        config.dataMerging(modelMap);
+        return "tip";
     }
 }
