@@ -145,6 +145,8 @@ public class MainController {
             List<String> roles = new ArrayList<>();
             roleList.forEach(r -> roles.add(r.getRoleEnName()));
             modelMap.addAttribute("menu", menuService.getMenu(roles, users.getUsername()));
+        } else {
+            modelMap.addAttribute("menu", "");
         }
 
         return "backstage";

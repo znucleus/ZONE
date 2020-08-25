@@ -14,55 +14,59 @@
         <div class="br-section-wrapper">
 
             <div class="row">
-                <div class="col-md-8">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="row">
-                                <div class="col-md-6 mt-2">
-                                    <input type="text" id="search_user" class="form-control"
-                                           placeholder="用户"/>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div class="col-md-6 mt-2">
+                                        <input type="text" id="search_user" class="form-control"
+                                               placeholder="用户"/>
+                                    </div>
+                                    <div class="col-md-6 mt-2">
+                                        <input type="text" id="search_behavior" class="form-control"
+                                               placeholder="行为"/>
+                                    </div>
+                                    <div class="col-md-12 mt-2">
+                                        <input type="text" id="search_ip" class="form-control"
+                                               placeholder="IP"/>
+                                    </div>
                                 </div>
-                                <div class="col-md-6 mt-2">
-                                    <input type="text" id="search_behavior" class="form-control"
-                                           placeholder="行为"/>
-                                </div>
-                                <div class="col-md-12 mt-2">
-                                    <input type="text" id="search_ip" class="form-control"
-                                           placeholder="IP"/>
+                                <div class="text-center mt-4">
+                                    <button type="button" id="search" class="btn btn-outline-secondary"><i
+                                            class="fa fa-search"></i>搜索
+                                    </button>
+                                    <button type="button" id="reset_search" class="btn btn-outline-secondary"><i
+                                            class="fa fa-repeat"></i>重置
+                                    </button>
                                 </div>
                             </div>
-                            <div class="text-center mt-4">
-                                <button type="button" id="search" class="btn btn-outline-secondary"><i
-                                        class="fa fa-search"></i>搜索
-                                </button>
-                                <button type="button" id="reset_search" class="btn btn-outline-secondary"><i
-                                        class="fa fa-repeat"></i>重置
-                                </button>
+                            <div class="col-md-4 mt-2">
+                                <div class="list-group" id="list-tab" role="tablist">
+                                    <a class="list-group-item list-group-item-action dy_href"
+                                       href="#/web/menu/system/log">登录日志</a>
+                                    <a class="list-group-item list-group-item-action dy_href active"
+                                       href="#/web/system/log/operator">操作日志</a>
+                                    <a class="list-group-item list-group-item-action dy_href"
+                                       href="#/web/system/log/api">API日志</a>
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="col-md-12 mt-2">
-                            <table id="dataTable" class="table table-striped table-bordered dt-responsive nowrap"
-                                   cellspacing="0" width="100%">
-                                <thead>
-                                <tr>
-                                    <th>用户</th>
-                                    <th>操作行为</th>
-                                    <th>时间</th>
-                                    <th>IP</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-4 mt-2">
-                    <div class="list-group" id="list-tab" role="tablist">
-                        <a class="list-group-item list-group-item-action dy_href" href="#/web/menu/system/log">登录日志</a>
-                        <a class="list-group-item list-group-item-action dy_href active" href="#/web/system/log/operator">操作日志</a>
-                        <a class="list-group-item list-group-item-action dy_href" href="#/web/system/log/api">API日志</a>
+                    <div class="col-md-12 mt-2">
+                        <table id="dataTable" class="table table-striped table-bordered dt-responsive nowrap"
+                               cellspacing="0" width="100%">
+                            <thead>
+                            <tr>
+                                <th>用户</th>
+                                <th>操作行为</th>
+                                <th>时间</th>
+                                <th>IP</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

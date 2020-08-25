@@ -95,7 +95,7 @@ require(["jquery", "nav.active", "responsive.bootstrap4", "select2-zh-CN"],
                     "sSortDescending": ": 以降序排列此列"
                 }
             },
-            "dom": "<'row'<'col-lg-4 col-md-12'l><'#global_button.col-lg-8 col-md-12'>r>" +
+            "dom": "<'row'<'col-lg-2 col-md-12'l><'#global_button.col-lg-10 col-md-12'>r>" +
                 "t" +
                 "<'row'<'col-sm-5'i><'col-sm-7'p>>",
             initComplete: function () {
