@@ -1,7 +1,6 @@
 package top.zbeboy.zone.web.training.attend;
 
 import org.apache.commons.lang3.StringUtils;
-import org.joda.time.DateTime;
 import org.jooq.Record;
 import org.jooq.Record11;
 import org.jooq.Result;
@@ -19,21 +18,24 @@ import top.zbeboy.zbase.domain.tables.pojos.*;
 import top.zbeboy.zbase.domain.tables.records.TrainingAttendRecord;
 import top.zbeboy.zbase.feign.data.StudentService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
-import top.zbeboy.zone.service.export.TrainingAttendSituationExport;
-import top.zbeboy.zone.service.export.TrainingAttendUsersExport;
-import top.zbeboy.zone.service.training.*;
-import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.service.util.UUIDUtil;
-import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
-import top.zbeboy.zone.web.training.common.TrainingControllerCommon;
-import top.zbeboy.zbase.tools.web.util.*;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.BooleanUtil;
+import top.zbeboy.zbase.tools.web.util.ByteUtil;
+import top.zbeboy.zbase.tools.web.util.SmallPropsUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.ExportInfo;
 import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.TableSawUtil;
 import top.zbeboy.zbase.vo.training.attend.TrainingAttendAddVo;
 import top.zbeboy.zbase.vo.training.attend.TrainingAttendEditVo;
+import top.zbeboy.zone.service.export.TrainingAttendSituationExport;
+import top.zbeboy.zone.service.export.TrainingAttendUsersExport;
+import top.zbeboy.zone.service.training.*;
+import top.zbeboy.zone.service.upload.UploadService;
+import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
+import top.zbeboy.zone.web.training.common.TrainingControllerCommon;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
@@ -41,7 +43,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @RestController
 public class TrainingAttendRestController {
@@ -152,14 +157,10 @@ public class TrainingAttendRestController {
 
                 // 生成考勤日期
                 TrainingAttendRecord trainingAttendRecord = trainingAttendService.findByTrainingReleaseIdWithRecentlyAttendDate(trainingConfigure.getTrainingReleaseId());
-                if(Objects.nonNull(trainingAttendRecord)){
-                    DateTime time = new DateTime(trainingAttendRecord.getAttendDate());
-                    time = time.withDayOfWeek(trainingConfigure.getWeekDay());
-                    trainingAttend.setAttendDate(DateTimeUtil.parseSqlDate(time.toDate()));
+                if (Objects.nonNull(trainingAttendRecord)) {
+                    trainingAttend.setAttendDate(DateTimeUtil.calculationSqlNextWeekDay(trainingAttendRecord.getAttendDate(), trainingConfigure.getWeekDay()));
                 } else {
-                    DateTime time = DateTime.now();
-                    time = time.withDayOfWeek(trainingConfigure.getWeekDay());
-                    trainingAttend.setAttendDate(DateTimeUtil.parseSqlDate(time.toDate()));
+                    trainingAttend.setAttendDate(DateTimeUtil.calculationSqlNextWeekDay(DateTimeUtil.getNowSqlDate(), trainingConfigure.getWeekDay()));
                 }
 
                 trainingAttend.setAttendStartTime(trainingConfigure.getStartTime());
