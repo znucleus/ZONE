@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.Authentication;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.Application;
+import top.zbeboy.zbase.domain.tables.pojos.Role;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.platform.RoleService;
 import top.zbeboy.zone.web.util.SessionUtil;
@@ -49,20 +50,27 @@ public class WebSecurity {
         boolean hasRole = false;
 
         List<String> roles = new ArrayList<>();
-        authentication.getAuthorities().iterator().forEachRemaining(i -> roles.add(i.getAuthority()));
-        List<Application> applications = roleService.findInRoleEnNamesRelation(roles, users.getUsername());
-        for (Application application : applications) {
-            if (uri.endsWith(application.getApplicationUrl())) {
-                hasRole = true;
-                break;
-            }
+        List<Role> roleList = roleService.findByUsername(users.getUsername());
+        if (Objects.nonNull(roleList) && !roleList.isEmpty()) {
+            roleList.forEach(r -> roles.add(r.getRoleEnName()));
+        }
 
-            if (StringUtils.isNotBlank(application.getApplicationDataUrlStartWith()) &&
-                    uri.startsWith(application.getApplicationDataUrlStartWith())) {
-                hasRole = true;
-                break;
+        if(!roles.isEmpty()){
+            List<Application> applications = roleService.findInRoleEnNamesRelation(roles, users.getUsername());
+            for (Application application : applications) {
+                if (uri.endsWith(application.getApplicationUrl())) {
+                    hasRole = true;
+                    break;
+                }
+
+                if (StringUtils.isNotBlank(application.getApplicationDataUrlStartWith()) &&
+                        uri.startsWith(application.getApplicationDataUrlStartWith())) {
+                    hasRole = true;
+                    break;
+                }
             }
         }
+
         return hasRole;
     }
 }
