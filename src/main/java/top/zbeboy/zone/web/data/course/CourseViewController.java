@@ -14,6 +14,7 @@ import top.zbeboy.zbase.domain.tables.pojos.UsersType;
 import top.zbeboy.zbase.feign.data.CourseService;
 import top.zbeboy.zbase.feign.data.StaffService;
 import top.zbeboy.zbase.feign.data.StudentService;
+import top.zbeboy.zbase.feign.platform.RoleService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 import top.zbeboy.zone.web.util.SessionUtil;
@@ -36,6 +37,9 @@ public class CourseViewController {
     @Resource
     private CourseService courseService;
 
+    @Resource
+    private RoleService roleService;
+
     /**
      * 课程数据
      *
@@ -56,8 +60,8 @@ public class CourseViewController {
     public String add(ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        if (!SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
-            Users users = SessionUtil.getUserFromSession();
+        Users users = SessionUtil.getUserFromSession();
+        if (!roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_SYSTEM.name())) {
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
                 int collegeId = 0;
@@ -107,7 +111,8 @@ public class CourseViewController {
         CourseBean courseBean = courseService.findByIdRelation(id);
         if (Objects.nonNull(courseBean.getCourseId()) && courseBean.getCourseId() > 0) {
             modelMap.addAttribute("course", courseBean);
-            if (!SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+            Users users = SessionUtil.getUserFromSession();
+            if (!roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_SYSTEM.name())) {
                 modelMap.addAttribute("collegeId", courseBean.getCollegeId());
             } else {
                 modelMap.addAttribute("collegeId", 0);

@@ -81,7 +81,7 @@ public class SessionUtil {
      * @param role 权限
      * @return true 有 false 无
      */
-    public static Boolean isCurrentUserInRole(String role) {
+    /*public static Boolean isCurrentUserInRole(String role) {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         Authentication authentication = securityContext.getAuthentication();
         if (Objects.nonNull(authentication)) {
@@ -91,7 +91,7 @@ public class SessionUtil {
             }
         }
         return false;
-    }
+    }*/
 
     /**
      * 检查当前用户是否有此权限

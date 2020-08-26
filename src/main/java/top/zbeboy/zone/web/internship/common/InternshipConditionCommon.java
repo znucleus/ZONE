@@ -11,10 +11,11 @@ import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.*;
 import top.zbeboy.zbase.feign.data.StaffService;
 import top.zbeboy.zbase.feign.data.StudentService;
+import top.zbeboy.zbase.feign.platform.RoleService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
-import top.zbeboy.zone.service.internship.*;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.web.util.BooleanUtil;
+import top.zbeboy.zone.service.internship.*;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
@@ -51,6 +52,9 @@ public class InternshipConditionCommon {
     @Resource
     private StudentService studentService;
 
+    @Resource
+    private RoleService roleService;
+
     /**
      * 是否可操作
      *
@@ -59,14 +63,14 @@ public class InternshipConditionCommon {
      */
     public boolean canOperator(String internshipReleaseId) {
         boolean canOperator = false;
-        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+        Users users = SessionUtil.getUserFromSession();
+        if (roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_SYSTEM.name())) {
             canOperator = true;
-        } else if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+        } else if (roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_ADMIN.name())) {
             Optional<Record> internshipReleaseRecord = internshipReleaseService.findByIdRelation(internshipReleaseId);
             if (internshipReleaseRecord.isPresent()) {
                 InternshipReleaseBean bean = internshipReleaseRecord.get().into(InternshipReleaseBean.class);
 
-                Users users = SessionUtil.getUserFromSession();
                 UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
                 if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
                     int collegeId = 0;
@@ -89,7 +93,6 @@ public class InternshipConditionCommon {
             Optional<Record> internshipReleaseRecord = internshipReleaseService.findByIdRelation(internshipReleaseId);
             if (internshipReleaseRecord.isPresent()) {
                 InternshipReleaseBean bean = internshipReleaseRecord.get().into(InternshipReleaseBean.class);
-                Users users = SessionUtil.getUserFromSession();
                 canOperator = StringUtils.equals(bean.getUsername(), users.getUsername());
             }
         }
@@ -414,12 +417,12 @@ public class InternshipConditionCommon {
      */
     public boolean journalEditCondition(String internshipJournalId) {
         boolean canOperator = false;
-        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+        Users users = SessionUtil.getUserFromSession();
+        if (roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_SYSTEM.name())) {
             canOperator = true;
-        } else if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+        } else if (roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_ADMIN.name())) {
             // 本院管理员可操作
             int collegeId = 0;
-            Users users = SessionUtil.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
@@ -443,7 +446,6 @@ public class InternshipConditionCommon {
                 }
             }
         } else {
-            Users users = SessionUtil.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
@@ -479,14 +481,14 @@ public class InternshipConditionCommon {
      */
     public boolean journalLookCondition(String internshipJournalId) {
         boolean canOperator = false;
-        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
-                SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+        Users users = SessionUtil.getUserFromSession();
+        if (roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_SYSTEM.name()) ||
+                roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_ADMIN.name())) {
             canOperator = true;
         } else {
             InternshipJournal internshipJournal = internshipJournalService.findById(internshipJournalId);
             if (Objects.nonNull(internshipJournal)) {
                 if (internshipJournal.getIsSeeStaff() == 1) {
-                    Users users = SessionUtil.getUserFromSession();
                     UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
                     if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
                         canOperator = StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName());
@@ -535,12 +537,12 @@ public class InternshipConditionCommon {
      */
     public boolean regulateEditCondition(String internshipRegulateId) {
         boolean canOperator = false;
-        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+        Users users = SessionUtil.getUserFromSession();
+        if (roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_SYSTEM.name())) {
             canOperator = true;
-        } else if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+        } else if (roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_ADMIN.name())) {
             // 本院管理员可操作
             int collegeId = 0;
-            Users users = SessionUtil.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
@@ -564,7 +566,6 @@ public class InternshipConditionCommon {
                 }
             }
         } else {
-            Users users = SessionUtil.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {

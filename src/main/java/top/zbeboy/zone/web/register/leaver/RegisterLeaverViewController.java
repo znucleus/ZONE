@@ -13,6 +13,7 @@ import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.domain.tables.pojos.UsersType;
 import top.zbeboy.zbase.feign.data.StaffService;
 import top.zbeboy.zbase.feign.data.StudentService;
+import top.zbeboy.zbase.feign.platform.RoleService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zbase.feign.register.RegisterLeaverService;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
@@ -36,6 +37,9 @@ public class RegisterLeaverViewController {
     @Resource
     private RegisterLeaverService registerLeaverService;
 
+    @Resource
+    private RoleService roleService;
+
     /**
      * 离校登记
      *
@@ -55,8 +59,8 @@ public class RegisterLeaverViewController {
     public String add(ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        if (!SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
-            Users users = SessionUtil.getUserFromSession();
+        Users users = SessionUtil.getUserFromSession();
+        if (!roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_SYSTEM.name())) {
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
                 int schoolId = 0;
@@ -104,7 +108,7 @@ public class RegisterLeaverViewController {
         Users users = SessionUtil.getUserFromSession();
         if (registerLeaverService.leaverOperator(users.getUsername(), id)) {
             boolean canAccess = false;
-            if (!SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+            if (!roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_SYSTEM.name())) {
                 UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
                 if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
                     int schoolId = 0;

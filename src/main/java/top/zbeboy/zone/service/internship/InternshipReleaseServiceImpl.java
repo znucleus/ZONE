@@ -20,6 +20,7 @@ import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.domain.tables.pojos.UsersType;
 import top.zbeboy.zbase.feign.data.StaffService;
 import top.zbeboy.zbase.feign.data.StudentService;
+import top.zbeboy.zbase.feign.platform.RoleService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zbase.tools.service.util.SQLQueryUtil;
@@ -49,6 +50,9 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService, P
 
     @Resource
     private StaffService staffService;
+
+    @Resource
+    private RoleService roleService;
 
     @Autowired
     InternshipReleaseServiceImpl(DSLContext dslContext) {
@@ -182,7 +186,7 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService, P
                 }
             } else {
                 // 非系统，查看全院
-                if (!SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+                if (!roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_SYSTEM.name())) {
                     UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
                     if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
                         int collegeId = 0;

@@ -41,6 +41,7 @@ public class RosterDataExport extends ExportUtil<RosterDataBean> {
         row.createCell(15).setCellValue("家长联系地址");
         row.createCell(16).setCellValue("邮政编码");
         row.createCell(17).setCellValue("本人联系方式");
+        row.createCell(18).setCellValue("宿舍号");
     }
 
     @Override
@@ -64,5 +65,6 @@ public class RosterDataExport extends ExportUtil<RosterDataBean> {
         row.createCell(15).setCellValue(t.getParentContactAddress());
         row.createCell(16).setCellValue(t.getZipCode());
         row.createCell(17).setCellValue(t.getPhoneNumber());
+        row.createCell(18).setCellValue(t.getDormitoryNumber());
     }
 }
