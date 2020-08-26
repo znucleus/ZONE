@@ -152,12 +152,12 @@ public class TrainingAttendServiceImpl implements TrainingAttendService, Paginat
         boolean isAsc = StringUtils.equalsIgnoreCase("asc", orderDir);
         SortField[] sortField = null;
         if (StringUtils.isNotBlank(orderColumnName)) {
-            if (StringUtils.equals("publishDate", orderColumnName)) {
+            if (StringUtils.equals("attendDate", orderColumnName)) {
                 sortField = new SortField[1];
                 if (isAsc) {
-                    sortField[0] = TRAINING_ATTEND.PUBLISH_DATE.asc();
+                    sortField[0] = TRAINING_ATTEND.ATTEND_DATE.asc();
                 } else {
-                    sortField[0] = TRAINING_ATTEND.PUBLISH_DATE.desc();
+                    sortField[0] = TRAINING_ATTEND.ATTEND_DATE.desc();
                 }
             }
         }

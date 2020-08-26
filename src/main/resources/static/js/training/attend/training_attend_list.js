@@ -31,7 +31,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "messenge
             pageNum: 0,
             length: 2,
             displayedPages: 3,
-            orderColumnName: 'publishDate',
+            orderColumnName: 'attendDate',
             orderDir: 'desc',
             extraSearch: JSON.stringify({
                 attendDate: '',

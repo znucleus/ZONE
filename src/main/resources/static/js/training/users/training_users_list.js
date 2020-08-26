@@ -22,9 +22,9 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         web storage key.
         */
         var webStorageKey = {
-            REAL_NAME: 'TRAINING_USERS_LIST_REAL_NAME_SEARCH',
-            STUDENT_NUMBER: 'TRAINING_USERS_LIST_STUDENT_NUMBER_SEARCH',
-            USERNAME: 'TRAINING_USERS_LIST_USERNAME_SEARCH'
+            REAL_NAME: 'TRAINING_USERS_LIST_REAL_NAME_SEARCH_' + page_param.paramTrainingReleaseId,
+            STUDENT_NUMBER: 'TRAINING_USERS_LIST_STUDENT_NUMBER_SEARCH_' + page_param.paramTrainingReleaseId,
+            USERNAME: 'TRAINING_USERS_LIST_USERNAME_SEARCH_' + page_param.paramTrainingReleaseId
         };
 
         /*
