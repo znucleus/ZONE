@@ -14,8 +14,10 @@ import top.zbeboy.zbase.bean.campus.roster.RosterDataBean;
 import top.zbeboy.zbase.bean.campus.roster.RosterReleaseBean;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.RosterData;
+import top.zbeboy.zbase.domain.tables.pojos.RosterRelease;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.campus.roster.RosterReleaseService;
+import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.service.util.FilesUtil;
 import top.zbeboy.zbase.tools.service.util.RequestUtil;
 import top.zbeboy.zbase.tools.service.util.UUIDUtil;
@@ -196,11 +198,22 @@ public class CampusRosterRestController {
     public ResponseEntity<Map<String, Object>> dataOuterSave(@Valid RosterDataAddVo rosterDataAddVo, BindingResult bindingResult) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
-            RosterData rosterData = rosterReleaseService.findRosterDataByStudentNumber(rosterDataAddVo.getStudentNumber());
-            if (Objects.isNull(rosterData) || StringUtils.isBlank(rosterData.getRosterDataId())) {
-                ajaxUtil = rosterReleaseService.dataSave(rosterDataAddVo);
+            RosterRelease rosterRelease = rosterReleaseService.findById(rosterDataAddVo.getRosterReleaseId());
+            if(Objects.nonNull(rosterRelease)&& StringUtils.isNotBlank(rosterRelease.getRosterReleaseId())){
+                // 时间范围
+                if (DateTimeUtil.nowAfterSqlTimestamp(rosterRelease.getStartTime()) &&
+                        DateTimeUtil.nowBeforeSqlTimestamp(rosterRelease.getEndTime())) {
+                    RosterData rosterData = rosterReleaseService.findRosterDataByStudentNumber(rosterDataAddVo.getStudentNumber());
+                    if (Objects.isNull(rosterData) || StringUtils.isBlank(rosterData.getRosterDataId())) {
+                        ajaxUtil = rosterReleaseService.dataSave(rosterDataAddVo);
+                    } else {
+                        ajaxUtil.fail().msg("保存失败，该学号已登记，若需要修改请登录。");
+                    }
+                } else {
+                    ajaxUtil.fail().msg("保存失败，不在花名册填写时间范围");
+                }
             } else {
-                ajaxUtil.fail().msg("保存失败，该学号已登记，若需要修改请登录。");
+                ajaxUtil.fail().msg("保存失败，未查询到发布信息");
             }
         } else {
             ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
