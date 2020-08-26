@@ -1,6 +1,7 @@
 package top.zbeboy.zone.web.training.attend;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.jooq.Record;
 import org.jooq.Record11;
 import org.jooq.Result;
@@ -15,6 +16,7 @@ import top.zbeboy.zbase.bean.training.release.TrainingConfigureBean;
 import top.zbeboy.zbase.bean.training.release.TrainingReleaseBean;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.*;
+import top.zbeboy.zbase.domain.tables.records.TrainingAttendRecord;
 import top.zbeboy.zbase.feign.data.StudentService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.export.TrainingAttendSituationExport;
@@ -141,11 +143,25 @@ public class TrainingAttendRestController {
         TrainingConfigure trainingConfigure = trainingConfigureService.findById(trainingConfigureId);
         if (Objects.nonNull(trainingConfigure)) {
             if (trainingConditionCommon.usersCondition(trainingConfigure.getTrainingReleaseId())) {
+
+
                 TrainingAttend trainingAttend = new TrainingAttend();
                 String trainingAttendId = UUIDUtil.getUUID();
                 trainingAttend.setTrainingAttendId(trainingAttendId);
                 trainingAttend.setTrainingReleaseId(trainingConfigure.getTrainingReleaseId());
-                trainingAttend.setAttendDate(DateTimeUtil.getNowSqlDate());
+
+                // 生成考勤日期
+                TrainingAttendRecord trainingAttendRecord = trainingAttendService.findByTrainingReleaseIdWithRecentlyAttendDate(trainingConfigure.getTrainingReleaseId());
+                if(Objects.nonNull(trainingAttendRecord)){
+                    DateTime time = new DateTime(trainingAttendRecord.getAttendDate());
+                    time = time.withDayOfWeek(trainingConfigure.getWeekDay());
+                    trainingAttend.setAttendDate(DateTimeUtil.parseSqlDate(time.toDate()));
+                } else {
+                    DateTime time = DateTime.now();
+                    time = time.withDayOfWeek(trainingConfigure.getWeekDay());
+                    trainingAttend.setAttendDate(DateTimeUtil.parseSqlDate(time.toDate()));
+                }
+
                 trainingAttend.setAttendStartTime(trainingConfigure.getStartTime());
                 trainingAttend.setAttendEndTime(trainingConfigure.getEndTime());
                 trainingAttend.setAttendRoom(trainingConfigure.getSchoolroomId());

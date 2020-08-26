@@ -12,9 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zbase.config.CacheBook;
 import top.zbeboy.zbase.domain.tables.daos.TrainingAttendDao;
 import top.zbeboy.zbase.domain.tables.pojos.TrainingAttend;
-import top.zbeboy.zone.service.plugin.PaginationPlugin;
+import top.zbeboy.zbase.domain.tables.records.TrainingAttendRecord;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
+import top.zbeboy.zone.service.plugin.PaginationPlugin;
 
 import javax.annotation.Resource;
 import java.util.Objects;
@@ -39,6 +40,14 @@ public class TrainingAttendServiceImpl implements TrainingAttendService, Paginat
     @Override
     public TrainingAttend findById(String id) {
         return trainingAttendDao.findById(id);
+    }
+
+    @Override
+    public TrainingAttendRecord findByTrainingReleaseIdWithRecentlyAttendDate(String trainingReleaseId) {
+        return create.selectFrom(TRAINING_ATTEND)
+                .where(TRAINING_ATTEND.TRAINING_RELEASE_ID.eq(trainingReleaseId))
+                .orderBy(TRAINING_ATTEND.ATTEND_DATE.desc())
+                .fetchOne();
     }
 
     @Cacheable(cacheNames = CacheBook.TRAINING_ATTEND, key = "#id")
