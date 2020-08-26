@@ -47,6 +47,7 @@ public class TrainingAttendServiceImpl implements TrainingAttendService, Paginat
         return create.selectFrom(TRAINING_ATTEND)
                 .where(TRAINING_ATTEND.TRAINING_RELEASE_ID.eq(trainingReleaseId))
                 .orderBy(TRAINING_ATTEND.ATTEND_DATE.desc())
+                .limit(1)
                 .fetchOne();
     }
 
