@@ -71,4 +71,10 @@ public class TestData {
         Map<String, String> map = systemNowApiService.findZipCodeByName("云南省安宁市");
         System.out.println(map);
     }
+
+    @Test
+    public void testQueryIdCard() throws IOException {
+        Map<String, String> map = systemNowApiService.findInfoByIdCard("530181199401073015");
+        System.out.println(map);
+    }
 }

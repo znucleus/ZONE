@@ -148,7 +148,7 @@ public class UsersViewController {
                 StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
                 modelMap.addAttribute("staff", bean);
                 page = "web/platform/users/users_profile_staff::#page-wrapper";
-            } else if(StringUtils.equals(Workbook.POTENTIAL_USERS_TYPE, usersType.getUsersTypeName())){
+            } else if (StringUtils.equals(Workbook.POTENTIAL_USERS_TYPE, usersType.getUsersTypeName())) {
                 PotentialBean bean = potentialService.findByUsernameRelation(users.getUsername());
                 modelMap.addAttribute("potential", bean);
                 page = "web/platform/users/users_profile_potential::#page-wrapper";
@@ -199,6 +199,7 @@ public class UsersViewController {
         modelMap.addAttribute("email", StringUtils.overlay(users.getEmail(), "****", 1, users.getEmail().lastIndexOf("@")));
         modelMap.addAttribute("mobile", StringUtils.overlay(users.getMobile(), "****", 3, 6));
         modelMap.addAttribute("idCard", StringUtils.isNotBlank(users.getIdCard()) ? StringUtils.overlay(users.getIdCard(), "****", 3, users.getIdCard().length() - 4) : "");
+        modelMap.addAttribute("plaintextIdCard", users.getIdCard());
 
         GoogleOauth googleOauth = usersService.findGoogleOauthByUsername(users.getUsername());
         if (Objects.nonNull(googleOauth) && StringUtils.isNotBlank(googleOauth.getUsername())) {

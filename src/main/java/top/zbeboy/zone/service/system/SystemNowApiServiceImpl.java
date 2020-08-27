@@ -29,8 +29,8 @@ public class SystemNowApiServiceImpl implements SystemNowApiService {
         Map<String, String> param = new HashMap<>();
         param.put("app", "life.postcode");
         param.put("areaname", name);
-        param.put("appkey", zoneProperties.getNowApi().getZipCodeAppKey());
-        param.put("sign", zoneProperties.getNowApi().getZipCodeSign());
+        param.put("appkey", zoneProperties.getNowApi().getCodeAppKey());
+        param.put("sign", zoneProperties.getNowApi().getCodeSign());
         param.put("format", "json");
         String json = queryNowApi(param);
         JSONObject jsonObject = JSON.parseObject(json);
@@ -45,6 +45,32 @@ public class SystemNowApiServiceImpl implements SystemNowApiService {
             }
         } else {
             log.debug("查询邮政编码失败，NAME：{}，MESSAGE：{} ", name, jsonObject.getString("msg"));
+        }
+        return last;
+    }
+
+    @Override
+    public Map<String, String> findInfoByIdCard(String idCard) throws IOException {
+        Map<String, String> last = new HashMap<>();
+        Map<String, String> param = new HashMap<>();
+        param.put("app", "idcard.get");
+        param.put("idcard", idCard);
+        param.put("appkey", zoneProperties.getNowApi().getCodeAppKey());
+        param.put("sign", zoneProperties.getNowApi().getCodeSign());
+        param.put("format", "json");
+        String json = queryNowApi(param);
+        JSONObject jsonObject = JSON.parseObject(json);
+        if (StringUtils.equals("1", jsonObject.getString("success"))) {
+            JSONObject result = jsonObject.getJSONObject("result");
+            String status = result.getString("status");
+            last.put("status", status);
+            if (StringUtils.equals("ALREADY_ATT", status)) {
+                last.put("born", result.getString("born"));
+                last.put("sex", result.getString("sex"));
+                last.put("postno", result.getString("postno"));
+            }
+        } else {
+            log.debug("查询身份证信息失败，ID_CARD：{}，MESSAGE：{} ", idCard, jsonObject.getString("msg"));
         }
         return last;
     }

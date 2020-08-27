@@ -46,6 +46,12 @@
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
+                            <label>身份证号</label>
+                            <input class="form-control"
+                                   id="idCard" name="idCard" placeholder="身份证号" th:value="${rosterData.idCard}">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
                             <label>性别</label>
                             <select id="sex" name="sex" class="form-control">
                                 <option value="">请选择性别</option>
@@ -58,12 +64,6 @@
                             <label>生日</label>
                             <input class="form-control"
                                    id="birthday" name="birthday" placeholder="生日" th:value="${rosterData.birthday}">
-                            <div class="invalid-feedback"></div>
-                        </div>
-                        <div class="form-group">
-                            <label>身份证号</label>
-                            <input class="form-control"
-                                   id="idCard" name="idCard" placeholder="身份证号" th:value="${rosterData.idCard}">
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">

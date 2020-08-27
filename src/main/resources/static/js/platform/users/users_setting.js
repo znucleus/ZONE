@@ -32,6 +32,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "clipboard", "bootstrap",
             mobile: '#mobile',
             idCard: '#idCard',
             defaultIdCard: '#defaultIdCard',
+            plaintextIdCard:'#plaintextIdCard',
             verificationCode: '#verificationCode',
             googleOauthPassword: '#googleOauthPassword',
             googleOauthKey: '#googleOauthKey',
@@ -399,7 +400,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "clipboard", "bootstrap",
             $(this).prop('hidden', true);
             $(button_id.updateIdCard.id).prop('hidden', false);
             $(button_id.cancelUpdateIdCard.id).prop('hidden', false);
-            $(param_id.idCard).prop('readonly', false).removeClass('form-control-plaintext').addClass('form-control');
+            $(param_id.idCard).prop('readonly', false).removeClass('form-control-plaintext').addClass('form-control').val($(param_id.plaintextIdCard).val());
         });
 
         $(button_id.cancelUpdateIdCard.id).click(function () {

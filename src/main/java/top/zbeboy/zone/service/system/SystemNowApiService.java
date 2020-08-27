@@ -12,4 +12,12 @@ public interface SystemNowApiService {
      * @return 邮编
      */
     Map<String, String> findZipCodeByName(String name) throws IOException;
+
+    /**
+     * 查询身份证信息
+     *
+     * @param idCard 身份证号
+     * @return 信息
+     */
+    Map<String, String> findInfoByIdCard(String idCard) throws IOException;
 }

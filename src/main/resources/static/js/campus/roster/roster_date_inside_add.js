@@ -16,7 +16,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
         navActive(ajax_url.page);
 
         var param_id = {
-            studentNumber:'#studentNumber',
+            studentNumber: '#studentNumber',
             realName: '#realName',
             namePinyin: '#namePinyin',
             sex: '#sex',
@@ -24,7 +24,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
             idCard: '#idCard',
             politicalLandscapeId: '#politicalLandscape',
             nationId: '#nation',
-            organizeId:'#organizeId',
+            organizeId: '#organizeId',
             province: '#province',
             region: '#region',
             busSection: '#busSection',
@@ -32,7 +32,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
             parentContactPhone: '#parentContactPhone',
             parentContactAddress: '#parentContactAddress',
             zipCode: '#zipCode',
-            phoneNumber:'#phoneNumber',
+            phoneNumber: '#phoneNumber',
             dormitoryNumber: '#dormitoryNumber'
         };
 
@@ -53,7 +53,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
 
         var param = {
             rosterReleaseId: '',
-            studentNumber:'',
+            studentNumber: '',
             realName: '',
             namePinyin: '',
             sex: '',
@@ -61,7 +61,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
             idCard: '',
             politicalLandscapeId: '',
             nationId: '',
-            organizeId:'',
+            organizeId: '',
             province: '',
             region: '',
             busSection: '',
@@ -69,7 +69,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
             parentContactPhone: '',
             parentContactAddress: '',
             zipCode: '',
-            phoneNumber:'',
+            phoneNumber: '',
             dormitoryNumber: ''
         };
 
@@ -98,6 +98,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
         init();
 
         function init() {
+            initIdCard();
             initSex();
             initNation();
             initPoliticalLandscapeId();
@@ -108,6 +109,18 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
             $('.select2-show-search').select2({
                 language: "zh-CN"
             });
+        }
+
+        function initIdCard() {
+            var v = $(param_id.idCard).val();
+            if (tools.regex.idCard.test(v)) {
+                $(param_id.birthday).val(v.substring(6, 10) + "-" + v.substring(10, 12) + "-" + v.substring(12, 14));
+                if (Number(v.substring(16, 17)) % 2 === 0) {
+                    $(param_id.sex).val('女');
+                } else {
+                    $(param_id.sex).val('男');
+                }
+            }
         }
 
         function initSex() {
@@ -139,6 +152,10 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
             defaultDate: _.trim($(param_id.birthday).val()) !== '' ? moment(_.trim($(param_id.birthday).val()), "YYYY-MM-DD").toDate() : moment((new Date().getFullYear() - 26) + "-01-07", "YYYY-MM-DD").toDate()
         });
 
+        $(param_id.idCard).blur(function () {
+            initIdCard();
+        });
+
         $(button_id.save.id).click(function () {
             initParam();
             validRealName();
@@ -162,8 +179,25 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
                 errorTip('姓名拼音20个字符以内');
             } else {
                 tools.validSuccessDom(param_id.namePinyin);
-                validSex();
+                validIdCard();
             }
+        }
+
+        function validIdCard() {
+            var idCard = param.idCard;
+            if (idCard.length <= 0) {
+                tools.validErrorDom(param_id.idCard, '请填写身份证号');
+                errorTip('请填写身份证号');
+            } else {
+                if (!tools.regex.idCard.test(idCard)) {
+                    tools.validErrorDom(param_id.idCard, '身份证号格式不正确');
+                    errorTip('身份证号格式不正确');
+                } else {
+                    tools.validSuccessDom(param_id.idCard);
+                    validSex();
+                }
+            }
+
         }
 
         function validSex() {
@@ -184,25 +218,8 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
                 errorTip('请选择生日');
             } else {
                 tools.validSuccessDom(param_id.birthday);
-                validIdCard();
+                validPoliticalLandscape();
             }
-        }
-
-        function validIdCard() {
-            var idCard = param.idCard;
-            if (idCard.length <= 0) {
-                tools.validErrorDom(param_id.idCard, '请填写身份证号');
-                errorTip('请填写身份证号');
-            } else {
-                if (!tools.regex.idCard.test(idCard)) {
-                    tools.validErrorDom(param_id.idCard, '身份证号格式不正确');
-                    errorTip('身份证号格式不正确');
-                } else {
-                    tools.validSuccessDom(param_id.idCard);
-                    validPoliticalLandscape();
-                }
-            }
-
         }
 
         function validPoliticalLandscape() {
