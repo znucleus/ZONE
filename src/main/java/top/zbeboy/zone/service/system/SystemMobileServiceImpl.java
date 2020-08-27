@@ -7,8 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.config.ZoneProperties;
 import top.zbeboy.zbase.domain.tables.pojos.SystemConfigure;
@@ -29,13 +27,12 @@ import java.net.URLEncoder;
 import java.util.Arrays;
 
 @Service("systemMobileService")
-@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class SystemMobileServiceImpl implements SystemMobileService {
 
     private final Logger log = LoggerFactory.getLogger(SystemMobileServiceImpl.class);
 
     @Autowired
-    private ZoneProperties ZoneProperties;
+    private ZoneProperties zoneProperties;
 
     @Resource
     private SystemConfigureService systemConfigureService;
@@ -61,19 +58,19 @@ public class SystemMobileServiceImpl implements SystemMobileService {
                 send.append("action=send");
             }
 
-            send.append("&userid=").append(ZoneProperties.getMobile().getUserId());
+            send.append("&userid=").append(zoneProperties.getMobile().getUserId());
             send.append("&account=").append(
-                    URLEncoder.encode(ZoneProperties.getMobile().getAccount(), codingType));
+                    URLEncoder.encode(zoneProperties.getMobile().getAccount(), codingType));
             send.append("&password=").append(
-                    URLEncoder.encode(ZoneProperties.getMobile().getPassword(), codingType));
+                    URLEncoder.encode(zoneProperties.getMobile().getPassword(), codingType));
             send.append("&mobile=").append(mobile);
             send.append("&content=").append(
                     URLEncoder.encode(content, codingType));
             if (StringUtils.isNotBlank(sendType) && StringUtils.equalsIgnoreCase("get", sendType)) {
                 result = SmsClientAccessTool.getInstance().doAccessHTTPGet(
-                        ZoneProperties.getMobile().getUrl() + "?" + send.toString(), backEncodeType);
+                        zoneProperties.getMobile().getUrl() + "?" + send.toString(), backEncodeType);
             } else {
-                result = SmsClientAccessTool.getInstance().doAccessHTTPPost(ZoneProperties.getMobile().getUrl(),
+                result = SmsClientAccessTool.getInstance().doAccessHTTPPost(zoneProperties.getMobile().getUrl(),
                         send.toString(), backEncodeType);
             }
         } catch (Exception e) {
@@ -96,7 +93,7 @@ public class SystemMobileServiceImpl implements SystemMobileService {
         log.debug(" mobile valid : {} : {}", mobile, verificationCode);
         SystemConfigure systemConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MOBILE_SWITCH.name());
         if (StringUtils.equals("1", systemConfigure.getDataValue())) {
-            String content = "【" + ZoneProperties.getMobile().getSign() + "】 您的验证码是:" + verificationCode + "，感谢您的使用！";
+            String content = "【" + zoneProperties.getMobile().getSign() + "】 您的验证码是:" + verificationCode + "，感谢您的使用！";
             sendShortMessage(mobile, content, "", "", "", "");
         } else {
             log.debug(" 管理员已关闭短信发送 ");

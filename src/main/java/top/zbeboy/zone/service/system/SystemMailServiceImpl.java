@@ -14,8 +14,6 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import top.zbeboy.zbase.config.Workbook;
@@ -34,13 +32,12 @@ import javax.mail.internet.MimeMessage;
 import java.util.Locale;
 
 @Service("systemMailService")
-@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class SystemMailServiceImpl implements SystemMailService {
 
     private final Logger log = LoggerFactory.getLogger(SystemMailServiceImpl.class);
 
     @Autowired
-    private ZoneProperties ZoneProperties;
+    private ZoneProperties zoneProperties;
 
     @Resource
     private SystemConfigureService systemConfigureService;
@@ -66,7 +63,7 @@ public class SystemMailServiceImpl implements SystemMailService {
             return;
         }
 
-        switch (ZoneProperties.getMail().getSendMethod()) {
+        switch (zoneProperties.getMail().getSendMethod()) {
             case 1:
                 sendDefaultMail(to, subject, content, isMultipart, isHtml);
                 log.info("使用默认邮件服务发送");
@@ -161,7 +158,7 @@ public class SystemMailServiceImpl implements SystemMailService {
         try {
             MimeMessageHelper message = new MimeMessageHelper(mimeMessage, isMultipart, CharEncoding.UTF_8);
             message.setTo(to);
-            message.setFrom(ZoneProperties.getMail().getMailFrom());
+            message.setFrom(zoneProperties.getMail().getMailFrom());
             message.setSubject(subject);
             message.setText(content, isHtml);
             javaMailSender.send(mimeMessage);
@@ -183,10 +180,10 @@ public class SystemMailServiceImpl implements SystemMailService {
     @Async
     @Override
     public void sendCloudMail(String userMail, String subject, String content) {
-        SendCloud webApi = SendCloud.createWebApi(ZoneProperties.getMail().getApiUser(), ZoneProperties.getMail().getApiKey());
+        SendCloud webApi = SendCloud.createWebApi(zoneProperties.getMail().getApiUser(), zoneProperties.getMail().getApiKey());
         GeneralEmail email = Email.general()
-                .from(ZoneProperties.getMail().getUser())
-                .fromName(ZoneProperties.getMail().getFromName())
+                .from(zoneProperties.getMail().getUser())
+                .fromName(zoneProperties.getMail().getFromName())
                 .html(content)          // or .plain()
                 .subject(subject)
                 .to(userMail);

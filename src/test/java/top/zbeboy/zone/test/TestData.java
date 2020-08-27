@@ -5,10 +5,13 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import top.zbeboy.zbase.bean.training.report.TrainingReportBean;
+import top.zbeboy.zone.service.system.SystemNowApiService;
 import top.zbeboy.zone.service.training.TrainingReportService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -16,6 +19,9 @@ public class TestData {
 
     @Resource
     private TrainingReportService trainingReportService;
+
+    @Resource
+    private SystemNowApiService systemNowApiService;
 
     @Test
     public void testTrainingFile() {
@@ -58,5 +64,11 @@ public class TestData {
 
         HttpServletRequest request = null;
         System.out.println(trainingReportService.saveTrainingReport(bean, request, false));
+    }
+
+    @Test
+    public void testQueryZipCode() throws IOException {
+        Map<String, String> map = systemNowApiService.findZipCodeByName("云南省安宁市");
+        System.out.println(map);
     }
 }
