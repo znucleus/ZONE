@@ -3,6 +3,7 @@ package top.zbeboy.zone.service.training;
 import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.zbase.domain.tables.pojos.TrainingAttend;
+import top.zbeboy.zbase.domain.tables.records.TrainingAttendRecord;
 import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
 
 import java.util.Optional;
@@ -16,6 +17,14 @@ public interface TrainingAttendService {
      * @return 数据
      */
     TrainingAttend findById(String id);
+
+    /**
+     * 查询最近一条考勤
+     *
+     * @param trainingReleaseId 发布id
+     * @return 数据
+     */
+    TrainingAttendRecord findByTrainingReleaseIdWithRecentlyAttendDate(String trainingReleaseId);
 
     /**
      * 根据主键关联查询

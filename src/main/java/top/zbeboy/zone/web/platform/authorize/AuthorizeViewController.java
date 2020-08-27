@@ -12,6 +12,7 @@ import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.*;
 import top.zbeboy.zbase.feign.data.*;
 import top.zbeboy.zbase.feign.platform.AuthorizeService;
+import top.zbeboy.zbase.feign.platform.RoleService;
 import top.zbeboy.zbase.feign.platform.UsersService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
@@ -50,6 +51,9 @@ public class AuthorizeViewController {
     @Resource
     private OrganizeService organizeService;
 
+    @Resource
+    private RoleService roleService;
+
     /**
      * 平台授权限
      *
@@ -57,13 +61,13 @@ public class AuthorizeViewController {
      */
     @GetMapping("/web/menu/platform/authorize")
     public String index(ModelMap modelMap) {
-        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+        Users users = SessionUtil.getUserFromSession();
+        if (roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_SYSTEM.name())) {
             modelMap.addAttribute("authorities", Workbook.authorities.ROLE_SYSTEM.name());
-        } else if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+        } else if (roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_ADMIN.name())) {
             modelMap.addAttribute("authorities", Workbook.authorities.ROLE_ADMIN.name());
         }
 
-        Users users = SessionUtil.getUserFromSession();
         modelMap.addAttribute("username", users.getUsername());
         return "web/platform/authorize/authorize_data::#page-wrapper";
     }
@@ -77,8 +81,8 @@ public class AuthorizeViewController {
     public String add(ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        if (!SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
-            Users users = SessionUtil.getUserFromSession();
+        Users users = SessionUtil.getUserFromSession();
+        if (!roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_SYSTEM.name())) {
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
                 int collegeId = 0;
@@ -125,9 +129,10 @@ public class AuthorizeViewController {
         String page;
 
         boolean canEdit = false;
-        RoleApplyBean roleApplyBean = null;
-        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
-                SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+        RoleApplyBean roleApplyBean;
+        Users own = SessionUtil.getUserFromSession();
+        if (roleService.isCurrentUserInRole(own.getUsername(), Workbook.authorities.ROLE_SYSTEM.name()) ||
+                roleService.isCurrentUserInRole(own.getUsername(), Workbook.authorities.ROLE_ADMIN.name())) {
             roleApplyBean = authorizeService.findRoleApplyByIdRelation(roleUsersId);
             if (Objects.nonNull(roleApplyBean) && StringUtils.isNotBlank(roleApplyBean.getRoleApplyId())) {
                 canEdit = true;
@@ -135,8 +140,7 @@ public class AuthorizeViewController {
         } else {
             roleApplyBean = authorizeService.findRoleApplyByIdRelation(roleUsersId);
             if (Objects.nonNull(roleApplyBean) && StringUtils.isNotBlank(roleApplyBean.getRoleApplyId())) {
-                Users users = SessionUtil.getUserFromSession();
-                if (StringUtils.equals(users.getUsername(), roleApplyBean.getUsername())) {
+                if (StringUtils.equals(own.getUsername(), roleApplyBean.getUsername())) {
                     canEdit = true;
                 }
             }

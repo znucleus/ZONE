@@ -46,9 +46,10 @@ public class RoleViewController {
      */
     @GetMapping("/web/menu/platform/role")
     public String index(ModelMap modelMap) {
-        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+        Users users = SessionUtil.getUserFromSession();
+        if (roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_SYSTEM.name())) {
             modelMap.addAttribute("authorities", Workbook.authorities.ROLE_SYSTEM.name());
-        } else if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+        } else if (roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_ADMIN.name())) {
             modelMap.addAttribute("authorities", Workbook.authorities.ROLE_ADMIN.name());
         }
         return "web/platform/role/role_data::#page-wrapper";
@@ -65,11 +66,11 @@ public class RoleViewController {
     public String add(ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+        Users users = SessionUtil.getUserFromSession();
+        if (roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_SYSTEM.name())) {
             modelMap.addAttribute("collegeId", 0);
             page = "web/platform/role/role_add::#page-wrapper";
-        } else if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
-            Users users = SessionUtil.getUserFromSession();
+        } else if (roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_ADMIN.name())) {
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
                 int collegeId = 0;
@@ -118,7 +119,8 @@ public class RoleViewController {
     public String edit(@PathVariable("id") String id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+        Users users = SessionUtil.getUserFromSession();
+        if (roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_SYSTEM.name())) {
             RoleBean role = roleService.findCollegeRoleByRoleIdRelation(id);
             if (Objects.nonNull(role) && StringUtils.isNotBlank(role.getRoleId())) {
                 modelMap.addAttribute("role", role);
@@ -128,9 +130,8 @@ public class RoleViewController {
                 config.dataMerging(modelMap);
                 page = "inline_tip::#page-wrapper";
             }
-        } else if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+        } else if (roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_ADMIN.name())) {
             // 判断是否同一个院
-            Users users = SessionUtil.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
                 int collegeId = 0;
@@ -190,7 +191,8 @@ public class RoleViewController {
     public String auto(@PathVariable("id") String id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+        Users users = SessionUtil.getUserFromSession();
+        if (roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_SYSTEM.name())) {
             RoleBean role = roleService.findCollegeRoleByRoleIdRelation(id);
             if (Objects.nonNull(role) && StringUtils.isNotBlank(role.getRoleId())) {
                 List<DefaultRole> defaultRoles = roleService.findDefaultRoleByRoleId(role.getRoleId());
@@ -206,9 +208,8 @@ public class RoleViewController {
                 config.dataMerging(modelMap);
                 page = "inline_tip::#page-wrapper";
             }
-        } else if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+        } else if (roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_ADMIN.name())) {
             // 判断是否同一个院
-            Users users = SessionUtil.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
                 int collegeId = 0;

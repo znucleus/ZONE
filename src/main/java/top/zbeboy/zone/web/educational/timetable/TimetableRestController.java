@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.config.Workbook;
+import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.elastic.*;
 import top.zbeboy.zbase.feign.city.TimetableService;
+import top.zbeboy.zbase.feign.platform.RoleService;
 import top.zbeboy.zbase.tools.web.plugin.select2.Select2Data;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.ElasticUtil;
@@ -26,6 +28,9 @@ public class TimetableRestController {
     @Resource
     private TimetableService timetableService;
 
+    @Resource
+    private RoleService roleService;
+
     /**
      * 同步数据
      *
@@ -35,7 +40,8 @@ public class TimetableRestController {
     @GetMapping("/web/educational/timetable/sync")
     public ResponseEntity<Map<String, Object>> sync(HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+        Users users = SessionUtil.getUserFromSession();
+        if (roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_SYSTEM.name())) {
             ajaxUtil = timetableService.sync();
         } else {
             ajaxUtil.fail().msg("您无权限操作");

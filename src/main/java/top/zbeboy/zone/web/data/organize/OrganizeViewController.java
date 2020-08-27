@@ -14,6 +14,7 @@ import top.zbeboy.zbase.domain.tables.pojos.UsersType;
 import top.zbeboy.zbase.feign.data.OrganizeService;
 import top.zbeboy.zbase.feign.data.StaffService;
 import top.zbeboy.zbase.feign.data.StudentService;
+import top.zbeboy.zbase.feign.platform.RoleService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 import top.zbeboy.zone.web.util.SessionUtil;
@@ -36,6 +37,9 @@ public class OrganizeViewController {
     @Resource
     private OrganizeService organizeService;
 
+    @Resource
+    private RoleService roleService;
+
     /**
      * 班级数据
      *
@@ -55,8 +59,8 @@ public class OrganizeViewController {
     public String add(ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        if (!SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
-            Users users = SessionUtil.getUserFromSession();
+        Users users = SessionUtil.getUserFromSession();
+        if (!roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_SYSTEM.name())) {
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
                 int collegeId = 0;
@@ -114,7 +118,8 @@ public class OrganizeViewController {
                 }
             }
             modelMap.addAttribute("organize", organizeBean);
-            if (!SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+            Users users = SessionUtil.getUserFromSession();
+            if (!roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_SYSTEM.name())) {
                 modelMap.addAttribute("collegeId", organizeBean.getCollegeId());
             } else {
                 modelMap.addAttribute("collegeId", 0);

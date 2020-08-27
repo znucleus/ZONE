@@ -15,23 +15,27 @@ import top.zbeboy.zbase.bean.training.release.TrainingConfigureBean;
 import top.zbeboy.zbase.bean.training.release.TrainingReleaseBean;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.*;
+import top.zbeboy.zbase.domain.tables.records.TrainingAttendRecord;
 import top.zbeboy.zbase.feign.data.StudentService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
-import top.zbeboy.zone.service.export.TrainingAttendSituationExport;
-import top.zbeboy.zone.service.export.TrainingAttendUsersExport;
-import top.zbeboy.zone.service.training.*;
-import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.service.util.UUIDUtil;
-import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
-import top.zbeboy.zone.web.training.common.TrainingControllerCommon;
-import top.zbeboy.zbase.tools.web.util.*;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.BooleanUtil;
+import top.zbeboy.zbase.tools.web.util.ByteUtil;
+import top.zbeboy.zbase.tools.web.util.SmallPropsUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.ExportInfo;
 import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.TableSawUtil;
 import top.zbeboy.zbase.vo.training.attend.TrainingAttendAddVo;
 import top.zbeboy.zbase.vo.training.attend.TrainingAttendEditVo;
+import top.zbeboy.zone.service.export.TrainingAttendSituationExport;
+import top.zbeboy.zone.service.export.TrainingAttendUsersExport;
+import top.zbeboy.zone.service.training.*;
+import top.zbeboy.zone.service.upload.UploadService;
+import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
+import top.zbeboy.zone.web.training.common.TrainingControllerCommon;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
@@ -39,7 +43,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @RestController
 public class TrainingAttendRestController {
@@ -141,11 +148,21 @@ public class TrainingAttendRestController {
         TrainingConfigure trainingConfigure = trainingConfigureService.findById(trainingConfigureId);
         if (Objects.nonNull(trainingConfigure)) {
             if (trainingConditionCommon.usersCondition(trainingConfigure.getTrainingReleaseId())) {
+
+
                 TrainingAttend trainingAttend = new TrainingAttend();
                 String trainingAttendId = UUIDUtil.getUUID();
                 trainingAttend.setTrainingAttendId(trainingAttendId);
                 trainingAttend.setTrainingReleaseId(trainingConfigure.getTrainingReleaseId());
-                trainingAttend.setAttendDate(DateTimeUtil.getNowSqlDate());
+
+                // 生成考勤日期
+                TrainingAttendRecord trainingAttendRecord = trainingAttendService.findByTrainingReleaseIdWithRecentlyAttendDate(trainingConfigure.getTrainingReleaseId());
+                if (Objects.nonNull(trainingAttendRecord)) {
+                    trainingAttend.setAttendDate(DateTimeUtil.calculationSqlNextWeekDay(trainingAttendRecord.getAttendDate(), trainingConfigure.getWeekDay()));
+                } else {
+                    trainingAttend.setAttendDate(DateTimeUtil.calculationSqlNextWeekDay(DateTimeUtil.getNowSqlDate(), trainingConfigure.getWeekDay()));
+                }
+
                 trainingAttend.setAttendStartTime(trainingConfigure.getStartTime());
                 trainingAttend.setAttendEndTime(trainingConfigure.getEndTime());
                 trainingAttend.setAttendRoom(trainingConfigure.getSchoolroomId());

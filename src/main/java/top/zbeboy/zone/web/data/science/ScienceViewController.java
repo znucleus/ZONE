@@ -14,6 +14,7 @@ import top.zbeboy.zbase.domain.tables.pojos.UsersType;
 import top.zbeboy.zbase.feign.data.ScienceService;
 import top.zbeboy.zbase.feign.data.StaffService;
 import top.zbeboy.zbase.feign.data.StudentService;
+import top.zbeboy.zbase.feign.platform.RoleService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 import top.zbeboy.zone.web.util.SessionUtil;
@@ -36,6 +37,9 @@ public class ScienceViewController {
     @Resource
     private ScienceService scienceService;
 
+    @Resource
+    private RoleService roleService;
+
     /**
      * 专业数据
      *
@@ -55,8 +59,8 @@ public class ScienceViewController {
     public String add(ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        if (!SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
-            Users users = SessionUtil.getUserFromSession();
+        Users users = SessionUtil.getUserFromSession();
+        if (!roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_SYSTEM.name())) {
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
                 int collegeId = 0;
@@ -106,7 +110,8 @@ public class ScienceViewController {
         ScienceBean scienceBean = scienceService.findByIdRelation(id);
         if (Objects.nonNull(scienceBean.getScienceId()) && scienceBean.getScienceId() > 0) {
             modelMap.addAttribute("science", scienceBean);
-            if (!SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+            Users users = SessionUtil.getUserFromSession();
+            if (!roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_SYSTEM.name())) {
                 modelMap.addAttribute("collegeId", scienceBean.getCollegeId());
             } else {
                 modelMap.addAttribute("collegeId", 0);

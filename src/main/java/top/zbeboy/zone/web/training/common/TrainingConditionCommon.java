@@ -13,6 +13,7 @@ import top.zbeboy.zbase.domain.tables.pojos.UsersType;
 import top.zbeboy.zbase.domain.tables.records.TrainingAuthoritiesRecord;
 import top.zbeboy.zbase.feign.data.StaffService;
 import top.zbeboy.zbase.feign.data.StudentService;
+import top.zbeboy.zbase.feign.platform.RoleService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.training.TrainingAuthoritiesService;
 import top.zbeboy.zone.service.training.TrainingReleaseService;
@@ -40,6 +41,9 @@ public class TrainingConditionCommon {
     @Resource
     private StudentService studentService;
 
+    @Resource
+    private RoleService roleService;
+
     /**
      * 是否可操作
      *
@@ -48,19 +52,19 @@ public class TrainingConditionCommon {
      */
     public boolean canOperator(String trainingReleaseId) {
         boolean canOperator = false;
-        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+        Users users = SessionUtil.getUserFromSession();
+        if (roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_SYSTEM.name())) {
             canOperator = true;
-        } else if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+        } else if (roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_ADMIN.name())) {
             Optional<Record> trainingReleaseRecord = trainingReleaseService.findByIdRelation(trainingReleaseId);
             if (trainingReleaseRecord.isPresent()) {
                 TrainingReleaseBean bean = trainingReleaseRecord.get().into(TrainingReleaseBean.class);
 
-                Users users = SessionUtil.getUserFromSession();
                 UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
                 if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
                     int collegeId = 0;
                     if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                        StaffBean staffBean  = staffService.findByUsernameRelation(users.getUsername());
+                        StaffBean staffBean = staffService.findByUsernameRelation(users.getUsername());
                         if (Objects.nonNull(staffBean) && Objects.nonNull(staffBean.getStaffId()) && staffBean.getStaffId() > 0) {
                             collegeId = staffBean.getCollegeId();
                         }
@@ -78,7 +82,6 @@ public class TrainingConditionCommon {
             Optional<Record> trainingReleaseRecord = trainingReleaseService.findByIdRelation(trainingReleaseId);
             if (trainingReleaseRecord.isPresent()) {
                 TrainingReleaseBean bean = trainingReleaseRecord.get().into(TrainingReleaseBean.class);
-                Users users = SessionUtil.getUserFromSession();
                 canOperator = StringUtils.equals(bean.getUsername(), users.getUsername());
             }
         }
@@ -113,11 +116,11 @@ public class TrainingConditionCommon {
      */
     public boolean reportCondition() {
         boolean canOperator = false;
-        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name()) ||
-                SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+        Users users = SessionUtil.getUserFromSession();
+        if (roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_SYSTEM.name()) ||
+                roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_ADMIN.name())) {
             canOperator = true;
         } else {
-            Users users = SessionUtil.getUserFromSession();
             UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
             if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
@@ -134,6 +137,7 @@ public class TrainingConditionCommon {
      * @return true or false
      */
     public boolean specialCondition() {
-        return SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name());
+        Users users = SessionUtil.getUserFromSession();
+        return roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_SYSTEM.name());
     }
 }

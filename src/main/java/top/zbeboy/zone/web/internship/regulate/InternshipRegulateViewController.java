@@ -11,9 +11,10 @@ import top.zbeboy.zbase.domain.tables.pojos.InternshipRegulate;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.domain.tables.pojos.UsersType;
 import top.zbeboy.zbase.feign.data.StaffService;
+import top.zbeboy.zbase.feign.platform.RoleService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
-import top.zbeboy.zone.service.internship.InternshipRegulateService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
+import top.zbeboy.zone.service.internship.InternshipRegulateService;
 import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 import top.zbeboy.zone.web.util.SessionUtil;
@@ -29,6 +30,9 @@ public class InternshipRegulateViewController {
 
     @Resource
     private StaffService staffService;
+
+    @Resource
+    private RoleService roleService;
 
     @Resource
     private InternshipConditionCommon internshipConditionCommon;
@@ -54,13 +58,13 @@ public class InternshipRegulateViewController {
     @GetMapping("/web/internship/regulate/list/{id}")
     public String list(@PathVariable("id") String id, ModelMap modelMap) {
         modelMap.addAttribute("internshipReleaseId", id);
-        if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_SYSTEM.name())) {
+        Users users = SessionUtil.getUserFromSession();
+        if (roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_SYSTEM.name())) {
             modelMap.addAttribute("authorities", Workbook.authorities.ROLE_SYSTEM.name());
-        } else if (SessionUtil.isCurrentUserInRole(Workbook.authorities.ROLE_ADMIN.name())) {
+        } else if (roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_ADMIN.name())) {
             modelMap.addAttribute("authorities", Workbook.authorities.ROLE_ADMIN.name());
         }
 
-        Users users = SessionUtil.getUserFromSession();
         UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
         if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
             if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {

@@ -40,8 +40,10 @@
                         <div class="form-group">
                             <label>姓名拼音</label>
                             <input class="form-control" name="namePinyin"
-                                   id="namePinyin" placeholder="姓名拼音" th:value="${student.namePinyin}"/>
+                                   id="namePinyin" placeholder="姓名拼音" th:value="${student.namePinyin}" aria-describedby="namePinyinHelp"/>
                             <div class="invalid-feedback"></div>
+                            <small id="namePinyinHelp" class="form-text text-muted">如：ZhangSan，首字母大写，且中间不要有空格
+                            </small>
                         </div>
                         <div class="form-group">
                             <label>性别</label>
@@ -128,10 +130,12 @@
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
-                            <label>家长联系地址</label>
+                            <label>家长详细联系地址</label>
                             <input class="form-control" name="parentContactAddress"
-                                   id="parentContactAddress" placeholder="家长联系地址"/>
+                                   id="parentContactAddress" placeholder="家长详细联系地址" aria-describedby="parentContactAddressHelp"/>
                             <div class="invalid-feedback"></div>
+                            <small id="parentContactAddressHelp" class="form-text text-muted">请填写家庭详细地址
+                            </small>
                         </div>
                         <div class="form-group">
                             <label>邮政编码</label>

@@ -130,10 +130,12 @@
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
-                            <label>家长联系地址</label>
+                            <label>家长详细联系地址</label>
                             <input class="form-control" name="parentContactAddress"
-                                   id="parentContactAddress" placeholder="家长联系地址" th:value="${rosterData.parentContactAddress}"/>
+                                   id="parentContactAddress" placeholder="家长详细联系地址" th:value="${rosterData.parentContactAddress}" aria-describedby="parentContactAddressHelp"/>
                             <div class="invalid-feedback"></div>
+                            <small id="parentContactAddressHelp" class="form-text text-muted">请填写家庭详细地址
+                            </small>
                         </div>
                         <div class="form-group">
                             <label>邮政编码</label>
