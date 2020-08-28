@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.bean.campus.roster.RosterReleaseBean;
 import top.zbeboy.zbase.config.Workbook;
+import top.zbeboy.zbase.domain.tables.pojos.RosterData;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.campus.roster.RosterReleaseService;
 import top.zbeboy.zbase.tools.service.util.RequestUtil;
@@ -103,6 +104,20 @@ public class CampusRosterApiController {
     public ResponseEntity<Map<String, Object>> dataDelete(@RequestParam("id") String id, Principal principal, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromOauth(principal);
         AjaxUtil<Map<String, Object>> ajaxUtil = rosterReleaseService.dataDelete(users.getUsername(), id);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 数据查询
+     *
+     * @param studentNumber 学号
+     * @return true or false
+     */
+    @ApiLoggingRecord(remark = "校园开学内部数据查询", channel = Workbook.channel.API, needLogin = true)
+    @PostMapping("/api/campus/roster/data/query")
+    public ResponseEntity<Map<String, Object>> dataQuery(@RequestParam("studentNumber") String studentNumber, Principal principal, HttpServletRequest request) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = new AjaxUtil<>();
+        ajaxUtil.put("rosterData", rosterReleaseService.findRosterDataByStudentNumber(studentNumber));
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }
