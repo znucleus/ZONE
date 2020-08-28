@@ -7,11 +7,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import top.zbeboy.zbase.bean.campus.roster.RosterDataBean;
 import top.zbeboy.zbase.bean.campus.roster.RosterReleaseBean;
+import top.zbeboy.zbase.bean.data.student.StudentBean;
 import top.zbeboy.zbase.config.Workbook;
-import top.zbeboy.zbase.domain.tables.pojos.RosterData;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.campus.roster.RosterReleaseService;
+import top.zbeboy.zbase.feign.data.StudentService;
 import top.zbeboy.zbase.tools.service.util.RequestUtil;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
@@ -30,6 +32,9 @@ import java.util.Objects;
 
 @RestController
 public class CampusRosterApiController {
+
+    @Resource
+    private StudentService studentService;
 
     @Resource
     private RosterReleaseService rosterReleaseService;
@@ -110,14 +115,22 @@ public class CampusRosterApiController {
     /**
      * 数据查询
      *
-     * @param studentNumber 学号
+     * @param rosterReleaseId 发布id
      * @return true or false
      */
     @ApiLoggingRecord(remark = "校园开学内部数据查询", channel = Workbook.channel.API, needLogin = true)
-    @PostMapping("/api/campus/roster/data/query")
-    public ResponseEntity<Map<String, Object>> dataQuery(@RequestParam("studentNumber") String studentNumber, Principal principal, HttpServletRequest request) {
+    @PostMapping("/api/campus/roster/data/query_roster_release_id")
+    public ResponseEntity<Map<String, Object>> dataQuery(@RequestParam("rosterReleaseId") String rosterReleaseId, Principal principal, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = new AjaxUtil<>();
-        ajaxUtil.put("rosterData", rosterReleaseService.findRosterDataByStudentNumber(studentNumber));
+        Users users = SessionUtil.getUserFromOauth(principal);
+        StudentBean studentBean = studentService.findByUsername(users.getUsername());
+        if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
+            RosterDataBean bean = rosterReleaseService.findRosterDataByStudentNumberAndRosterReleaseIdRelation(studentBean.getStudentNumber(), rosterReleaseId);
+            bean.setBusSection(bean.getBusSection().substring(bean.getBusSection().indexOf("-") + 1));
+            ajaxUtil.success().msg("数据获取成功").put("rosterData", bean);
+        } else {
+            ajaxUtil.fail().msg("未查询到学生信息");
+        }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }
