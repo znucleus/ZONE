@@ -29,6 +29,7 @@ import top.zbeboy.zbase.tools.web.util.pagination.ExportInfo;
 import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.TableSawUtil;
 import top.zbeboy.zbase.vo.campus.roster.*;
+import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
 import top.zbeboy.zone.service.export.RosterDataExport;
 import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zone.web.campus.common.CampusRosterUrlCommon;
@@ -90,6 +91,7 @@ public class CampusRosterRestController {
      * @param simplePaginationUtil 请求
      * @return 数据
      */
+    @ApiLoggingRecord(remark = "校园花名册数据", channel = Workbook.channel.WEB, needLogin = true)
     @GetMapping("/web/campus/roster/data")
     public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
@@ -171,8 +173,9 @@ public class CampusRosterRestController {
      * @param rosterDataAddVo 数据
      * @return true or false
      */
+    @ApiLoggingRecord(remark = "校园开学内部数据保存", channel = Workbook.channel.WEB, needLogin = true)
     @PostMapping("/web/campus/roster/data/save")
-    public ResponseEntity<Map<String, Object>> dataInsideSave(@Valid RosterDataAddVo rosterDataAddVo, BindingResult bindingResult) {
+    public ResponseEntity<Map<String, Object>> dataInsideSave(@Valid RosterDataAddVo rosterDataAddVo, BindingResult bindingResult, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
@@ -194,8 +197,9 @@ public class CampusRosterRestController {
      * @param rosterDataAddVo 数据
      * @return true or false
      */
+    @ApiLoggingRecord(remark = "校园开学外部数据保存", channel = Workbook.channel.WEB)
     @PostMapping("/anyone/campus/roster/data/save")
-    public ResponseEntity<Map<String, Object>> dataOuterSave(@Valid RosterDataAddVo rosterDataAddVo, BindingResult bindingResult) {
+    public ResponseEntity<Map<String, Object>> dataOuterSave(@Valid RosterDataAddVo rosterDataAddVo, BindingResult bindingResult, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
             RosterRelease rosterRelease = rosterReleaseService.findById(rosterDataAddVo.getRosterReleaseId());
@@ -222,13 +226,14 @@ public class CampusRosterRestController {
     }
 
     /**
-     * 数据保存
+     * 数据更新
      *
      * @param rosterDataEditVo 数据
      * @return true or false
      */
+    @ApiLoggingRecord(remark = "校园开学内部数据更新", channel = Workbook.channel.WEB, needLogin = true)
     @PostMapping("/web/campus/roster/data/update")
-    public ResponseEntity<Map<String, Object>> dataUpdate(RosterDataEditVo rosterDataEditVo) {
+    public ResponseEntity<Map<String, Object>> dataUpdate(RosterDataEditVo rosterDataEditVo, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
         rosterDataEditVo.setUsername(users.getUsername());
         AjaxUtil<Map<String, Object>> ajaxUtil = rosterReleaseService.dataUpdate(rosterDataEditVo);
@@ -241,8 +246,9 @@ public class CampusRosterRestController {
      * @param id 发布id
      * @return true or false
      */
+    @ApiLoggingRecord(remark = "校园开学内部数据删除", channel = Workbook.channel.WEB, needLogin = true)
     @PostMapping("/web/campus/roster/data/delete")
-    public ResponseEntity<Map<String, Object>> dataDelete(@RequestParam("id") String id) {
+    public ResponseEntity<Map<String, Object>> dataDelete(@RequestParam("id") String id, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Map<String, Object>> ajaxUtil = rosterReleaseService.dataDelete(users.getUsername(), id);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
