@@ -190,7 +190,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
             var realName = param.realName;
             if (realName !== '') {
                 tools.dataLoading();
-                $.post(ajax_url.convert_name, {realName: realName}, function (data) {
+                $.get(ajax_url.convert_name, {realName: realName}, function (data) {
                     tools.dataEndLoading();
                     if (data.state) {
                         $(param_id.namePinyin).val(data.pinyin);

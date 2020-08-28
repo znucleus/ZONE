@@ -78,7 +78,7 @@ public class CampusRosterRestController {
      * @param realName 姓名
      * @return 拼音
      */
-    @PostMapping("/anyone/campus/roster/convert_name")
+    @GetMapping("/anyone/campus/roster/convert_name")
     public ResponseEntity<Map<String, Object>> convertName(@RequestParam("realName") String realName) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         ajaxUtil.success().msg("转换成功").put("pinyin", PinYinUtil.changeToUpper(realName));

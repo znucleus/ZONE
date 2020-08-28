@@ -8,6 +8,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
         var ajax_url = {
             obtain_nation_data: web_path + '/anyone/data/nation',
             obtain_political_landscape_data: web_path + '/anyone/data/politics',
+            convert_name: web_path + '/anyone/campus/roster/convert_name',
             update: web_path + '/web/campus/roster/data/update',
             page: '/web/menu/campus/roster'
         };
@@ -145,6 +146,20 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
 
         $(param_id.idCard).blur(function () {
             initIdCard();
+        });
+
+        $(param_id.realName).blur(function () {
+            initParam();
+            var realName = param.realName;
+            if (realName !== '') {
+                tools.dataLoading();
+                $.get(ajax_url.convert_name, {realName: realName}, function (data) {
+                    tools.dataEndLoading();
+                    if (data.state) {
+                        $(param_id.namePinyin).val(data.pinyin);
+                    }
+                });
+            }
         });
 
         $(button_id.save.id).click(function () {
