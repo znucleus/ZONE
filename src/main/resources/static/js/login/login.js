@@ -45,7 +45,8 @@ require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf"]
                 backstage: web_path + '/web/menu/backstage',
                 potential_register: web_path + '/register/potential',
                 student_register: web_path + '/register/student',
-                staff_register: web_path + '/register/staff'
+                staff_register: web_path + '/register/staff',
+                resend_valid_mail: '/anyone/resend/valid/mail',
             };
 
             var param_id = {
@@ -179,7 +180,8 @@ require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf"]
                             globalError.text('密码不能为空');
                             break;
                         case error_code.EMAIL_IS_NOT_VALID:
-                            globalError.text('您的邮箱未验证无法登录');
+                            var anew_mail = '<a href="' + web_path + ajax_url.resend_valid_mail + '?username=' + param.username + '" >重新验证</a>';
+                            globalError.html('您的邮箱未验证无法登录  ' + anew_mail + '?');
                             break;
                         case error_code.USERNAME_IS_ENABLES:
                             globalError.text('您的账号已被注销，请联系管理员');

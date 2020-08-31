@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import top.zbeboy.zbase.bean.data.potential.PotentialBean;
 import top.zbeboy.zbase.bean.data.staff.StaffBean;
 import top.zbeboy.zbase.bean.data.student.StudentBean;
@@ -21,12 +22,13 @@ import top.zbeboy.zbase.feign.platform.RoleService;
 import top.zbeboy.zbase.feign.platform.UsersService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zbase.feign.system.SystemConfigureService;
-import top.zbeboy.zone.service.system.SystemMailService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.service.util.RandomUtil;
 import top.zbeboy.zbase.tools.service.util.RequestUtil;
-import top.zbeboy.zone.web.system.tip.SystemTipConfig;
 import top.zbeboy.zbase.tools.web.util.BooleanUtil;
+import top.zbeboy.zone.service.system.SystemMailService;
+import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
+import top.zbeboy.zone.web.system.tip.SystemTipConfig;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -34,6 +36,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 @Controller
 public class SystemMailViewController {
@@ -166,12 +169,29 @@ public class SystemMailViewController {
      * @param modelMap 页面对象
      * @return 消息
      */
-    @GetMapping(SystemMailConfig.WEB_RESEND_MAIL + "/{username}")
-    public String reSendVerifyMail(@PathVariable("username") String username, HttpServletRequest request, ModelMap modelMap) {
+    @GetMapping(SystemMailConfig.WEB_RESEND_MAIL)
+    public String reSendValidMail(@RequestParam("username") String username, HttpServletRequest request, ModelMap modelMap) {
         SystemTipConfig config = new SystemTipConfig();
-        Users users = usersService.findByUsername(username);
-        if (Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername())) {
-            if (users.getVerifyMailbox().equals(BooleanUtil.toByte(true))) {
+
+        Users users = null;
+        boolean hasUser = false;
+        if (Pattern.matches(SystemMailConfig.MAIL_REGEX, username)) {
+            users = usersService.findByEmail(username);
+            hasUser = Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername());
+        }
+
+        if (!hasUser && Pattern.matches(SystemMobileConfig.MOBILE_REGEX, username)) {
+            users = usersService.findByMobile(username);
+            hasUser = Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername());
+        }
+
+        if (!hasUser) {
+            users = usersService.findByUsername(username);
+            hasUser = Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername());
+        }
+
+        if (hasUser) {
+            if (!Objects.equals(users.getVerifyMailbox(), BooleanUtil.toByte(true))) {
                 SystemConfigure mailConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
                 if (StringUtils.equals("1", mailConfigure.getDataValue())) {
                     DateTime dateTime = DateTime.now();
