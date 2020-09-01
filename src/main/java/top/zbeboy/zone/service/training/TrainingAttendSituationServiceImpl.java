@@ -179,19 +179,21 @@ public class TrainingAttendSituationServiceImpl implements TrainingAttendSituati
                 sortField = new SortField[2];
                 if (isAsc) {
                     sortField[0] = USERS.REAL_NAME.asc();
-                    sortField[1] = STUDENT.STUDENT_NUMBER.asc();
+                    sortField[1] = TRAINING_ATTEND.ATTEND_DATE.asc();
                 } else {
                     sortField[0] = USERS.REAL_NAME.desc();
-                    sortField[1] = STUDENT.STUDENT_NUMBER.desc();
+                    sortField[1] = TRAINING_ATTEND.ATTEND_DATE.desc();
                 }
             }
 
             if (StringUtils.equals("studentNumber", orderColumnName)) {
-                sortField = new SortField[1];
+                sortField = new SortField[2];
                 if (isAsc) {
                     sortField[0] = STUDENT.STUDENT_NUMBER.asc();
+                    sortField[1] = TRAINING_ATTEND.ATTEND_DATE.asc();
                 } else {
                     sortField[0] = STUDENT.STUDENT_NUMBER.desc();
+                    sortField[1] = TRAINING_ATTEND.ATTEND_DATE.desc();
                 }
             }
 
@@ -210,10 +212,10 @@ public class TrainingAttendSituationServiceImpl implements TrainingAttendSituati
                 sortField = new SortField[2];
                 if (isAsc) {
                     sortField[0] = ORGANIZE.ORGANIZE_NAME.asc();
-                    sortField[1] = STUDENT.STUDENT_NUMBER.asc();
+                    sortField[1] = TRAINING_ATTEND.ATTEND_DATE.asc();
                 } else {
                     sortField[0] = ORGANIZE.ORGANIZE_NAME.desc();
-                    sortField[1] = STUDENT.STUDENT_NUMBER.desc();
+                    sortField[1] = TRAINING_ATTEND.ATTEND_DATE.desc();
                 }
             }
 
@@ -221,10 +223,10 @@ public class TrainingAttendSituationServiceImpl implements TrainingAttendSituati
                 sortField = new SortField[2];
                 if (isAsc) {
                     sortField[0] = STUDENT.SEX.asc();
-                    sortField[1] = STUDENT.STUDENT_NUMBER.asc();
+                    sortField[1] = TRAINING_ATTEND.ATTEND_DATE.asc();
                 } else {
                     sortField[0] = STUDENT.SEX.desc();
-                    sortField[1] = STUDENT.STUDENT_NUMBER.desc();
+                    sortField[1] = TRAINING_ATTEND.ATTEND_DATE.desc();
                 }
             }
 
@@ -232,10 +234,10 @@ public class TrainingAttendSituationServiceImpl implements TrainingAttendSituati
                 sortField = new SortField[2];
                 if (isAsc) {
                     sortField[0] = DSL.field("OUTER.operate").asc();
-                    sortField[1] = STUDENT.STUDENT_NUMBER.asc();
+                    sortField[1] = TRAINING_ATTEND.ATTEND_DATE.asc();
                 } else {
                     sortField[0] = DSL.field("OUTER.operate").desc();
-                    sortField[1] = STUDENT.STUDENT_NUMBER.desc();
+                    sortField[1] = TRAINING_ATTEND.ATTEND_DATE.desc();
                 }
             }
 
@@ -243,10 +245,10 @@ public class TrainingAttendSituationServiceImpl implements TrainingAttendSituati
                 sortField = new SortField[2];
                 if (isAsc) {
                     sortField[0] = TRAINING_USERS.REMARK.asc();
-                    sortField[1] = STUDENT.STUDENT_NUMBER.asc();
+                    sortField[1] = TRAINING_ATTEND.ATTEND_DATE.asc();
                 } else {
                     sortField[0] = TRAINING_USERS.REMARK.desc();
-                    sortField[1] = STUDENT.STUDENT_NUMBER.desc();
+                    sortField[1] = TRAINING_ATTEND.ATTEND_DATE.desc();
                 }
             }
         }
