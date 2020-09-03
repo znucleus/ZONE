@@ -25,10 +25,12 @@
             <div class="row">
                 <div class="col-md-12">
                     <form id="app_form">
+                        <h4 class="tx-info">一、基本信息</h4>
                         <div class="form-group">
                             <label>学号</label>
                             <input class="form-control" name="studentNumber"
-                                   id="studentNumber" placeholder="学号" th:value="${student.studentNumber}" readonly="readonly"/>
+                                   id="studentNumber" placeholder="学号" th:value="${student.studentNumber}"
+                                   readonly="readonly"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
@@ -40,7 +42,8 @@
                         <div class="form-group">
                             <label>姓名拼音</label>
                             <input class="form-control" name="namePinyin"
-                                   id="namePinyin" placeholder="姓名拼音" th:value="${student.namePinyin}" aria-describedby="namePinyinHelp"/>
+                                   id="namePinyin" placeholder="姓名拼音" th:value="${student.namePinyin}"
+                                   aria-describedby="namePinyinHelp"/>
                             <div class="invalid-feedback"></div>
                             <small id="namePinyinHelp" class="form-text text-muted">如：ZhangSan，首字母大写，且中间不要有空格
                             </small>
@@ -85,7 +88,8 @@
                         <div class="form-group">
                             <label>班级</label>
                             <input class="form-control" name="organize"
-                                   id="organizeName" placeholder="班级" th:value="${student.organizeName}" readonly="readonly"/>
+                                   id="organizeName" placeholder="班级" th:value="${student.organizeName}"
+                                   readonly="readonly"/>
                             <input type="hidden" class="form-control" name="organize"
                                    id="organizeId" placeholder="班级ID" th:value="${student.organizeId}"/>
                             <div class="invalid-feedback"></div>
@@ -97,6 +101,12 @@
                             <div class="invalid-feedback"></div>
                             <small id="provinceHelp" class="form-text text-muted">如：云南省
                             </small>
+                        </div>
+                        <div class="form-group">
+                            <label>籍贯</label>
+                            <input class="form-control" name="nativePlace"
+                                   id="nativePlace" placeholder="籍贯"/>
+                            <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>所属地区</label>
@@ -126,13 +136,15 @@
                         <div class="form-group">
                             <label>家长联系电话</label>
                             <input class="form-control" name="parentContactPhone"
-                                   id="parentContactPhone" placeholder="家长联系电话" th:value="${student.parentContactPhone}"/>
+                                   id="parentContactPhone" placeholder="家长联系电话"
+                                   th:value="${student.parentContactPhone}"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>家长详细联系地址</label>
                             <input class="form-control" name="parentContactAddress"
-                                   id="parentContactAddress" placeholder="家长详细联系地址" aria-describedby="parentContactAddressHelp"/>
+                                   id="parentContactAddress" placeholder="家长详细联系地址"
+                                   aria-describedby="parentContactAddressHelp"/>
                             <div class="invalid-feedback"></div>
                             <small id="parentContactAddressHelp" class="form-text text-muted">请填写家庭详细地址
                             </small>
@@ -146,16 +158,206 @@
                         <div class="form-group">
                             <label>本人联系电话</label>
                             <input class="form-control" name="phoneNumber"
-                                   id="phoneNumber" placeholder="本人联系电话" th:value="${student.mobile}" readonly="readonly"/>
+                                   id="phoneNumber" placeholder="本人联系电话" th:value="${student.mobile}"
+                                   readonly="readonly"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>邮箱</label>
+                            <input class="form-control" name="email"
+                                   id="email" placeholder="邮箱" th:value="${student.email}" readonly="readonly"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>考生类别</label>
+                            <select id="candidatesType" name="candidatesType" class="form-control">
+                                <option value="0">城镇应届</option>
+                                <option value="1">城市往届</option>
+                                <option value="2">农村应届</option>
+                                <option value="3">农村往届</option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>是否残疾人</label>
+                            <select id="isDeformedMan" name="isDeformedMan" class="form-control">
+                                <option value="0">否</option>
+                                <option value="1">是</option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group" style="display: none">
+                            <label>残疾人编号</label>
+                            <input class="form-control" id="deformedManCode" name="deformedManCode"
+                                   placeholder="残疾人编号">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>是否进行兵役登记</label>
+                            <select id="isMilitaryServiceRegistration" name="isMilitaryServiceRegistration"
+                                    class="form-control">
+                                <option value="0">否</option>
+                                <option value="1">是</option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>是否办理生源地贷款</label>
+                            <select id="isProvideLoan" name="isProvideLoan" class="form-control">
+                                <option value="0">否</option>
+                                <option value="1">是</option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>大学任职情况</label>
+                            <input class="form-control" id="universityPosition" name="universityPosition"
+                                   placeholder="大学任职情况" aria-describedby="universityPositionHelp">
+                            <div class="invalid-feedback"></div>
+                            <small id="universityPositionHelp" class="form-text text-muted">如：班长、信息员、系学生会XX部门部委、院学生会XX部门部长
+                            </small>
+                        </div>
+                        <div class="form-group">
+                            <label>是否为贫困生</label>
+                            <select id="isPoorStudents" name="isPoorStudents" class="form-control">
+                                <option value="0">否</option>
+                                <option value="1">是</option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group" style="display: none">
+                            <label>贫困生类型</label>
+                            <select id="poorStudentsType" name="poorStudentsType" class="form-control">
+                                <option value="">请选择</option>
+                                <option value="0">一般困难</option>
+                                <option value="1">贫困</option>
+                                <option value="2">特困</option>
+                                <option value="3">建档立卡户</option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>是否外宿</label>
+                            <select id="isStayOutside" name="isStayOutside" class="form-control">
+                                <option value="0">否</option>
+                                <option value="1">是</option>
+                            </select>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>宿舍号</label>
                             <input class="form-control" id="dormitoryNumber" name="dormitoryNumber"
-                                   placeholder="宿舍号" aria-describedby="dormitoryNumberHelp" data-mask="99-999" th:value="${student.dormitoryNumber}">
+                                   placeholder="宿舍号" aria-describedby="dormitoryNumberHelp" data-mask="99-999"
+                                   th:value="${student.dormitoryNumber}">
                             <div class="invalid-feedback"></div>
                             <small id="dormitoryNumberHelp" class="form-text text-muted">如：06-603，6栋603室
                             </small>
+                        </div>
+                        <div class="form-group" style="display: none">
+                            <label>外宿类型</label>
+                            <select id="stayOutsideType" name="stayOutsideType" class="form-control">
+                                <option value="">请选择</option>
+                                <option value="0">住自家</option>
+                                <option value="1">亲戚家</option>
+                                <option value="2">同学家</option>
+                                <option value="3">租房</option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group" style="display: none">
+                            <label>外宿详细地址具体到门牌号</label>
+                            <input class="form-control" id="stayOutsideAddress" name="stayOutsideAddress"
+                                   placeholder="外宿详细地址具体到门牌号">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <h4 class="tx-info">二、团员信息（团员填写）</h4>
+                        <p class="tx-black">若记不清或没有，可不填写，先提交，稍后注册完成，进系统再编辑。</p>
+                        <div class="form-group">
+                            <label>入团时间</label>
+                            <div class="input-group flatpickr">
+                                <input type="text" class="form-control"
+                                       id="leagueMemberJoinDate" name="leagueMemberJoinDate" placeholder="入团时间"
+                                       data-input>
+                                <span class="input-group-addon tx-size-sm lh-2" title="toggle" data-toggle><i
+                                        class="fa fa-calendar" aria-hidden="true"></i></span>
+                                <span class="input-group-addon tx-size-sm lh-2" title="clear" data-clear><i
+                                        class="fa fa-close" aria-hidden="true"></i></span>
+                            </div>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>是否注册志愿者</label>
+                            <select id="isRegisteredVolunteers" name="isRegisteredVolunteers" class="form-control">
+                                <option value="0">否</option>
+                                <option value="1">是</option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>团籍档案是否完整</label>
+                            <select id="isOkLeagueMembership" name="isOkLeagueMembership" class="form-control"
+                                    aria-describedby="isOkLeagueMembershipHelp">
+                                <option value="">请选择</option>
+                                <option value="0">否</option>
+                                <option value="1">是</option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                            <small id="isOkLeagueMembershipHelp" class="form-text text-muted">“三不缺”入团申请书、入团志愿书、介绍信；“四准确”-团员编号正确、入团志愿书填写准确、智慧团建系统团员名字准确、智慧团建系统团员身份证号准确
+                            </small>
+                        </div>
+                        <h4 class="tx-info">三、党员信息（积极分子，预备党员，正式党员填写）</h4>
+                        <p class="tx-black">若记不清或没有，可不填写，先提交，稍后注册完成，进系统再编辑。</p>
+                        <div class="form-group">
+                            <label>递交入党申请书时间</label>
+                            <div class="input-group flatpickr">
+                                <input type="text" class="form-control"
+                                       id="applyPartyMembershipDate" name="applyPartyMembershipDate"
+                                       placeholder="递交入党申请书时间" data-input>
+                                <span class="input-group-addon tx-size-sm lh-2" title="toggle" data-toggle><i
+                                        class="fa fa-calendar" aria-hidden="true"></i></span>
+                                <span class="input-group-addon tx-size-sm lh-2" title="clear" data-clear><i
+                                        class="fa fa-close" aria-hidden="true"></i></span>
+                            </div>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>列积极分子时间</label>
+                            <div class="input-group flatpickr">
+                                <input type="text" class="form-control"
+                                       id="becomeActivistsDate" name="becomeActivistsDate" placeholder="列积极分子时间"
+                                       data-input>
+                                <span class="input-group-addon tx-size-sm lh-2" title="toggle" data-toggle><i
+                                        class="fa fa-calendar" aria-hidden="true"></i></span>
+                                <span class="input-group-addon tx-size-sm lh-2" title="clear" data-clear><i
+                                        class="fa fa-close" aria-hidden="true"></i></span>
+                            </div>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>列预备党员时间</label>
+                            <div class="input-group flatpickr">
+                                <input type="text" class="form-control"
+                                       id="becomeProbationaryPartyMemberDate" name="becomeProbationaryPartyMemberDate"
+                                       placeholder="列预备党员时间" data-input>
+                                <span class="input-group-addon tx-size-sm lh-2" title="toggle" data-toggle><i
+                                        class="fa fa-calendar" aria-hidden="true"></i></span>
+                                <span class="input-group-addon tx-size-sm lh-2" title="clear" data-clear><i
+                                        class="fa fa-close" aria-hidden="true"></i></span>
+                            </div>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>转正时间（入党时间）</label>
+                            <div class="input-group flatpickr">
+                                <input type="text" class="form-control"
+                                       id="joiningPartyDate" name="joiningPartyDate" placeholder="转正时间（入党时间）"
+                                       data-input>
+                                <span class="input-group-addon tx-size-sm lh-2" title="toggle" data-toggle><i
+                                        class="fa fa-calendar" aria-hidden="true"></i></span>
+                                <span class="input-group-addon tx-size-sm lh-2" title="clear" data-clear><i
+                                        class="fa fa-close" aria-hidden="true"></i></span>
+                            </div>
+                            <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group text-center">
                             <button type="button" class="btn btn-primary text-center" id="save">保存</button>
