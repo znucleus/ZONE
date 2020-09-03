@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2016/10/25.
  */
-define(["jquery", "tools", "jquery.showLoading", "messenger"], function ($, tools) {
+define(["jquery", "tools", "jquery-loading", "messenger"], function ($, tools) {
 
     var loadingMessage;
 

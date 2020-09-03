@@ -17,7 +17,7 @@ requirejs.config({
         "bootstrap-inputmask": web_path + "/plugins/bootstrap-inputmask/bootstrap-inputmask.min",
         "flatpickr": web_path + "/plugins/flatpickr/js/flatpickr.min",
         "flatpickr-zh": web_path + "/plugins/flatpickr/l10n/zh.min",
-        "jquery.showLoading": web_path + "/plugins/loading/js/jquery.showLoading.min"
+        "jquery-loading": web_path + "/plugins/jquery-loading/jquery.loading.min"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -45,7 +45,7 @@ requirejs.config({
         "messenger": {
             deps: ["jquery"]
         },
-        "jquery.showLoading": {
+        "jquery-loading": {
             deps: ["jquery"]
         }
     }
@@ -63,7 +63,7 @@ requirejs.onError = function (err) {
 };
 
 require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "bootstrap", "messenger",
-        "csrf", "select2-zh-CN", "flatpickr-zh", "bootstrap-inputmask", "jquery.showLoading"],
+        "csrf", "select2-zh-CN", "flatpickr-zh", "bootstrap-inputmask", "jquery-loading"],
     function ($, _, tools, Swal, moment) {
         Messenger.options = {
             extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',

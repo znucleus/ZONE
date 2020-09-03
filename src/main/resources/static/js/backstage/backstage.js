@@ -19,6 +19,7 @@ requirejs.config({
         "moment": web_path + "/plugins/moment/moment.min",
         "moment-with-locales": web_path + "/plugins/moment/moment-with-locales.min",
         "jquery.showLoading": web_path + "/plugins/loading/js/jquery.showLoading.min",
+        "jquery-loading": web_path + "/plugins/jquery-loading/jquery.loading.min",
         "jquery.address": web_path + "/plugins/jquery-address/jquery.address-1.6.min",
         "jquery.simple-pagination": web_path + "/plugins/jquery-simple-pagination/jquery.simplePagination.min",
         "dropify": web_path + "/plugins/file-uploads/js/dropify.min",
@@ -77,6 +78,9 @@ requirejs.config({
             deps: ["jquery"]
         },
         "jquery.showLoading": {
+            deps: ["jquery"]
+        },
+        "jquery-loading":{
             deps: ["jquery"]
         },
         "jquery.address": {
