@@ -60,6 +60,7 @@ public class TrainingConfigureServiceImpl implements TrainingConfigureService {
                 .leftJoin(BUILDING)
                 .on(SCHOOLROOM.BUILDING_ID.eq(BUILDING.BUILDING_ID))
                 .where(TRAINING_CONFIGURE.TRAINING_RELEASE_ID.eq(trainingReleaseId))
+                .orderBy(TRAINING_CONFIGURE.WEEK_DAY)
                 .fetch();
     }
 
