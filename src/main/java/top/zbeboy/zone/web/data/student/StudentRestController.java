@@ -139,6 +139,10 @@ public class StudentRestController {
                     studentAddVo.setDormitoryNumber(rosterData.getDormitoryNumber());
                     studentAddVo.setParentName(rosterData.getParentName());
                     studentAddVo.setParentContactPhone(rosterData.getParentContactPhone());
+
+                    rosterData.setPhoneNumber(studentAddVo.getMobile());
+                    rosterData.setEmail(studentAddVo.getEmail());
+                    rosterReleaseService.dataSync(rosterData);
                 }
 
                 ajaxUtil = studentService.save(studentAddVo);
