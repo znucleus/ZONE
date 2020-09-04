@@ -243,9 +243,13 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                         var v = '';
                         var n = Number(c.stayOutsideType);
                         if (n === 0) {
-                            v = '否';
+                            v = '住自家';
                         } else if (n === 1) {
-                            v = '是';
+                            v = '亲戚家';
+                        } else if (n === 2) {
+                            v = '同学家';
+                        } else if (n === 3) {
+                            v = '租房';
                         }
                         return v;
                     }
