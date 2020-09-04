@@ -139,7 +139,7 @@ public class CampusRosterViewController {
                 studentBean.setNamePinyin(PinYinUtil.changeToUpper(studentBean.getRealName()));
                 modelMap.addAttribute("student", studentBean);
                 modelMap.addAttribute("rosterReleaseId", id);
-                page = "web/campus/roster/roster_date_inside_add::#page-wrapper";
+                page = "web/campus/roster/roster_data_inside_add::#page-wrapper";
             } else {
                 config.buildDangerTip("查询错误", "未查询到学生信息");
                 config.dataMerging(modelMap);
@@ -208,7 +208,7 @@ public class CampusRosterViewController {
                 RosterDataBean bean = rosterReleaseService.findRosterDataByStudentNumberAndRosterReleaseIdRelation(studentBean.getStudentNumber(), id);
                 bean.setBusSection(bean.getBusSection().substring(bean.getBusSection().indexOf("-") + 1));
                 modelMap.addAttribute("rosterData", bean);
-                page = "web/campus/roster/roster_date_edit::#page-wrapper";
+                page = "web/campus/roster/roster_data_edit::#page-wrapper";
             } else {
                 config.buildDangerTip("查询错误", "未查询到学生信息");
                 config.dataMerging(modelMap);
@@ -239,7 +239,7 @@ public class CampusRosterViewController {
                 RosterDataBean bean = rosterReleaseService.findRosterDataByStudentNumberAndRosterReleaseIdRelation(studentBean.getStudentNumber(), id);
                 bean.setBusSection(bean.getBusSection().substring(bean.getBusSection().indexOf("-") + 1));
                 modelMap.addAttribute("rosterData", bean);
-                page = "web/campus/roster/roster_date_look::#page-wrapper";
+                page = "web/campus/roster/roster_data_look::#page-wrapper";
             } else {
                 config.buildDangerTip("查询错误", "未查询到学生信息");
                 config.dataMerging(modelMap);

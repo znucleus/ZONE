@@ -1,4 +1,4 @@
-//# sourceURL=roster_date_edit.js
+//# sourceURL=roster_data_inside_add.js
 require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav.active", "bootstrap", "messenger",
         "csrf", "select2-zh-CN", "flatpickr-zh", "bootstrap-inputmask", "jquery.address"],
     function ($, _, tools, Swal, moment, navActive) {
@@ -9,7 +9,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
             obtain_nation_data: web_path + '/anyone/data/nation',
             obtain_political_landscape_data: web_path + '/anyone/data/politics',
             convert_name: web_path + '/anyone/campus/roster/convert_name',
-            update: web_path + '/web/campus/roster/data/update',
+            save: web_path + '/web/campus/roster/data/save',
             page: '/web/menu/campus/roster'
         };
 
@@ -17,6 +17,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
         navActive(ajax_url.page);
 
         var param_id = {
+            studentNumber: '#studentNumber',
             realName: '#realName',
             namePinyin: '#namePinyin',
             sex: '#sex',
@@ -24,6 +25,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
             idCard: '#idCard',
             politicalLandscapeId: '#politicalLandscape',
             nationId: '#nation',
+            organizeId: '#organizeId',
             province: '#province',
             nativePlace: '#nativePlace',
             region: '#region',
@@ -32,6 +34,8 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
             parentContactPhone: '#parentContactPhone',
             parentContactAddress: '#parentContactAddress',
             zipCode: '#zipCode',
+            phoneNumber: '#phoneNumber',
+            email: '#email',
             candidatesType: '#candidatesType',
             isDeformedMan: '#isDeformedMan',
             deformedManCode: '#deformedManCode',
@@ -62,24 +66,15 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
         };
 
         var page_param = {
-            rosterDataId: $('#rosterDataId').val(),
+            rosterReleaseId: $('#rosterReleaseId').val(),
             sex: $('#sexParam').val(),
             politicalLandscapeId: $('#politicalLandscapeParam').val(),
-            nationId: $('#nationParam').val(),
-            candidatesType:$('#candidatesTypeParam').val(),
-            isDeformedMan:$('#isDeformedManParam').val(),
-            isMilitaryServiceRegistration:$('#isMilitaryServiceRegistrationParam').val(),
-            isProvideLoan:$('#isProvideLoanParam').val(),
-            isPoorStudents:$('#isPoorStudentsParam').val(),
-            poorStudentsType:$('#poorStudentsTypeParam').val(),
-            isStayOutside:$('#isStayOutsideParam').val(),
-            stayOutsideType:$('#stayOutsideTypeParam').val(),
-            isRegisteredVolunteers:$('#isRegisteredVolunteersParam').val(),
-            isOkLeagueMembership:$('#isOkLeagueMembershipParam').val()
+            nationId: $('#nationParam').val()
         };
 
         var param = {
-            rosterDataId: '',
+            rosterReleaseId: '',
+            studentNumber: '',
             realName: '',
             namePinyin: '',
             sex: '',
@@ -87,6 +82,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
             idCard: '',
             politicalLandscapeId: '',
             nationId: '',
+            organizeId: '',
             province: '',
             nativePlace: '',
             region: '',
@@ -95,6 +91,8 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
             parentContactPhone: '',
             parentContactAddress: '',
             zipCode: '',
+            phoneNumber: '',
+            email: '',
             candidatesType: '',
             isDeformedMan: '',
             deformedManCode: '',
@@ -117,7 +115,8 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
         };
 
         function initParam() {
-            param.rosterDataId = page_param.rosterDataId;
+            param.rosterReleaseId = page_param.rosterReleaseId;
+            param.studentNumber = _.trim($(param_id.studentNumber).val());
             param.realName = _.trim($(param_id.realName).val());
             param.namePinyin = _.trim($(param_id.namePinyin).val());
             param.sex = $(param_id.sex).val();
@@ -125,6 +124,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
             param.idCard = _.trim($(param_id.idCard).val());
             param.politicalLandscapeId = $(param_id.politicalLandscapeId).val();
             param.nationId = $(param_id.nationId).val();
+            param.organizeId = $(param_id.organizeId).val();
             param.province = _.trim($(param_id.province).val());
             param.nativePlace = _.trim($(param_id.nativePlace).val());
             param.region = _.trim($(param_id.region).val());
@@ -133,6 +133,8 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
             param.parentContactPhone = _.trim($(param_id.parentContactPhone).val());
             param.parentContactAddress = _.trim($(param_id.parentContactAddress).val());
             param.zipCode = _.trim($(param_id.zipCode).val());
+            param.phoneNumber = _.trim($(param_id.phoneNumber).val());
+            param.email = _.trim($(param_id.email).val());
             param.candidatesType = $(param_id.candidatesType).val();
             param.isDeformedMan = $(param_id.isDeformedMan).val();
             param.deformedManCode = _.trim($(param_id.deformedManCode).val());
@@ -157,7 +159,6 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
         init();
 
         function init() {
-            initBaseData();
             initIdCard();
             initSex();
             initNation();
@@ -165,45 +166,10 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
             initSelect2();
         }
 
-        function initBaseData() {
-            var isDeformedMan = page_param.isDeformedMan;
-            if(Number(isDeformedMan) === 1){
-                $(param_id.deformedManCode).parent().css('display','');
-            }
-
-            var isPoorStudents = page_param.isPoorStudents;
-            if(Number(isPoorStudents) === 1){
-                $(param_id.poorStudentsType).parent().css('display','');
-            }
-
-            var isStayOutside = page_param.isStayOutside;
-            if(Number(isStayOutside) === 1){
-                $(param_id.stayOutsideType).parent().css('display','');
-                $(param_id.stayOutsideAddress).parent().css('display','');
-            } else {
-                $(param_id.dormitoryNumber).parent().css('display','');
-            }
-
-            $(param_id.candidatesType).val(page_param.candidatesType);
-            $(param_id.isDeformedMan).val(page_param.isDeformedMan);
-            $(param_id.isMilitaryServiceRegistration).val(page_param.isMilitaryServiceRegistration);
-            $(param_id.isProvideLoan).val(page_param.isProvideLoan);
-            $(param_id.isPoorStudents).val(page_param.isPoorStudents);
-            $(param_id.poorStudentsType).val(page_param.poorStudentsType);
-            $(param_id.isStayOutside).val(page_param.isStayOutside);
-            $(param_id.stayOutsideType).val(page_param.stayOutsideType);
-            $(param_id.isRegisteredVolunteers).val(page_param.isRegisteredVolunteers);
-            $(param_id.isOkLeagueMembership).val(page_param.isOkLeagueMembership);
-        }
-
         function initSelect2() {
             $('.select2-show-search').select2({
                 language: "zh-CN"
             });
-        }
-
-        function initSex() {
-            $(param_id.sex).val(page_param.sex);
         }
 
         function initIdCard() {
@@ -216,6 +182,10 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
                     $(param_id.sex).val('男');
                 }
             }
+        }
+
+        function initSex() {
+            $(param_id.sex).val(page_param.sex);
         }
 
         function initNation() {
@@ -456,8 +426,19 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
                     errorTip('家长联系电话格式不正确');
                 } else {
                     tools.validSuccessDom(param_id.parentContactPhone);
-                    validZipCode();
+                    validParentContactAddress();
                 }
+            }
+        }
+
+        function validParentContactAddress() {
+            var parentContactAddress = param.parentContactAddress;
+            if (parentContactAddress.length <= 0 || parentContactAddress.length > 200) {
+                tools.validErrorDom(param_id.parentContactAddress, '家长联系地址200个字符以内');
+                errorTip('家长联系地址200个字符以内');
+            } else {
+                tools.validSuccessDom(param_id.parentContactAddress);
+                validZipCode();
             }
         }
 
@@ -475,7 +456,6 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
                     validDeformedManCode();
                 }
             }
-
         }
 
         function validDeformedManCode() {
@@ -588,7 +568,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
             tools.buttonLoading(button_id.save.id, button_id.save.tip);
             $.ajax({
                 type: 'POST',
-                url: ajax_url.update,
+                url: ajax_url.save,
                 data: param,
                 success: function (data) {
                     tools.buttonEndLoading(button_id.save.id, button_id.save.text);
