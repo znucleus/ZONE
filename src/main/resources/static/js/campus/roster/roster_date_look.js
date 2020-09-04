@@ -14,23 +14,80 @@ require(["jquery", "nav.active", "jquery.address", "select2-zh-CN"],
         var param_id = {
             sex: '#sex',
             politicalLandscapeId: '#politicalLandscape',
-            nationId: '#nation'
+            nationId: '#nation',
+            candidatesType: '#candidatesType',
+            isDeformedMan: '#isDeformedMan',
+            deformedManCode: '#deformedManCode',
+            isMilitaryServiceRegistration: '#isMilitaryServiceRegistration',
+            isProvideLoan: '#isProvideLoan',
+            universityPosition: '#universityPosition',
+            isPoorStudents: '#isPoorStudents',
+            poorStudentsType: '#poorStudentsType',
+            isStayOutside: '#isStayOutside',
+            dormitoryNumber: '#dormitoryNumber',
+            stayOutsideType: '#stayOutsideType',
+            stayOutsideAddress: '#stayOutsideAddress',
+            leagueMemberJoinDate: '#leagueMemberJoinDate',
+            isRegisteredVolunteers: '#isRegisteredVolunteers',
+            isOkLeagueMembership: '#isOkLeagueMembership',
         };
 
         var page_param = {
             rosterDataId: $('#rosterDataId').val(),
             sex: $('#sexParam').val(),
             politicalLandscapeId: $('#politicalLandscapeParam').val(),
-            nationId: $('#nationParam').val()
+            nationId: $('#nationParam').val(),
+            candidatesType:$('#candidatesTypeParam').val(),
+            isDeformedMan:$('#isDeformedManParam').val(),
+            isMilitaryServiceRegistration:$('#isMilitaryServiceRegistrationParam').val(),
+            isProvideLoan:$('#isProvideLoanParam').val(),
+            isPoorStudents:$('#isPoorStudentsParam').val(),
+            poorStudentsType:$('#poorStudentsTypeParam').val(),
+            isStayOutside:$('#isStayOutsideParam').val(),
+            stayOutsideType:$('#stayOutsideTypeParam').val(),
+            isRegisteredVolunteers:$('#isRegisteredVolunteersParam').val(),
+            isOkLeagueMembership:$('#isOkLeagueMembershipParam').val()
         };
 
         init();
 
         function init() {
+            initBaseData();
             initSex();
             initNation();
             initPoliticalLandscapeId();
             initSelect2();
+        }
+
+        function initBaseData() {
+            var isDeformedMan = page_param.isDeformedMan;
+            if(Number(isDeformedMan) === 1){
+                $(param_id.deformedManCode).parent().css('display','');
+            }
+
+            var isPoorStudents = page_param.isPoorStudents;
+            if(Number(isPoorStudents) === 1){
+                $(param_id.poorStudentsType).parent().css('display','');
+            }
+
+            var isStayOutside = page_param.isStayOutside;
+            if(Number(isStayOutside) === 1){
+                $(param_id.stayOutsideType).parent().css('display','');
+                $(param_id.stayOutsideAddress).parent().css('display','');
+            } else {
+                $(param_id.dormitoryNumber).parent().css('display','');
+            }
+
+            $(param_id.candidatesType).val(page_param.candidatesType);
+            $(param_id.isDeformedMan).val(page_param.isDeformedMan);
+            $(param_id.isMilitaryServiceRegistration).val(page_param.isMilitaryServiceRegistration);
+            $(param_id.isProvideLoan).val(page_param.isProvideLoan);
+            $(param_id.isPoorStudents).val(page_param.isPoorStudents);
+            $(param_id.poorStudentsType).val(page_param.poorStudentsType);
+            $(param_id.isStayOutside).val(page_param.isStayOutside);
+            $(param_id.stayOutsideType).val(page_param.stayOutsideType);
+            $(param_id.isRegisteredVolunteers).val(page_param.isRegisteredVolunteers);
+            $(param_id.isOkLeagueMembership).val(page_param.isOkLeagueMembership);
         }
 
         function initSelect2() {
