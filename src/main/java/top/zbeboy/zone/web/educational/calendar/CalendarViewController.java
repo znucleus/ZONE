@@ -15,4 +15,14 @@ public class CalendarViewController {
     public String index() {
         return "web/educational/calendar/calendar_look::#page-wrapper";
     }
+
+    /**
+     * 数据管理
+     *
+     * @return 数据页面
+     */
+    @GetMapping("/web/educational/calendar/list")
+    public String list() {
+        return "web/educational/calendar/calendar_data::#page-wrapper";
+    }
 }
