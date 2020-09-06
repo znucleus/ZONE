@@ -3,16 +3,20 @@ package top.zbeboy.zone.web.educational.calendar;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.educational.calendar.SchoolCalendarService;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zbase.vo.educational.calendar.SchoolCalendarAddVo;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class CalendarRestController {
@@ -48,6 +52,20 @@ public class CalendarRestController {
         Users users = SessionUtil.getUserFromSession();
         dataTablesUtil.setUsername(users.getUsername());
         return new ResponseEntity<>(schoolCalendarService.data(dataTablesUtil), HttpStatus.OK);
+    }
+
+    /**
+     * 保存
+     *
+     * @param schoolCalendarAddVo 数据
+     * @return true or false
+     */
+    @PostMapping("/web/educational/calendar/save")
+    public ResponseEntity<Map<String, Object>> save(SchoolCalendarAddVo schoolCalendarAddVo, HttpServletRequest request) {
+        Users users = SessionUtil.getUserFromSession();
+        schoolCalendarAddVo.setUsername(users.getUsername());
+        AjaxUtil<Map<String, Object>> ajaxUtil = schoolCalendarService.save(schoolCalendarAddVo);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
 }

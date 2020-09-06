@@ -24,7 +24,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                 data: web_path + '/web/educational/calendar/data',
                 add: '/web/educational/calendar/add',
                 edit: '/web/educational/calendar/edit',
-                del: '/web/educational/calendar/delete',
+                del: web_path + '/web/educational/calendar/delete',
                 page: '/web/menu/educational/calendar'
             };
         }
@@ -93,6 +93,18 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                     orderable: false,
                     render: function (a, b, c, d) {
                         return '<input type="checkbox" value="' + c.calendarId + '" name="check"/>';
+                    }
+                },
+                {
+                    targets: 5,
+                    render: function (a, b, c, d) {
+                        var v = '';
+                        if (Number(c.term) === 0) {
+                            v = '上学期';
+                        } else if (Number(c.term) === 1) {
+                            v = '下学期';
+                        }
+                        return v;
                     }
                 },
                 {
