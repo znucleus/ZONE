@@ -109,14 +109,6 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
             dateFormat: "Y-m-d H:i"
         });
 
-        $(param_id.remark).change(function () {
-            var v = $(this).val();
-
-            if (Number(v) > 0) {
-                tools.validSelect2SuccessDom(param_id.remark);
-            }
-        });
-
         $(param_id.title).blur(function () {
             initParam();
             var title = param.title;

@@ -192,14 +192,6 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
             }
         });
 
-        $(param_id.remark).change(function () {
-            var v = $(this).val();
-
-            if (Number(v) > 0) {
-                tools.validSelect2SuccessDom(param_id.remark);
-            }
-        });
-
         $(param_id.remark).blur(function () {
             initParam();
             var remark = param.remark;
