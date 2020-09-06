@@ -270,7 +270,7 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
                     tools.validSuccessDom(param_id.endTime);
                     validRemark();
                 } else {
-                    tools.validErrorDom(param_id.endTime, '开始填写时间应大于或等于结束填写时间');
+                    tools.validErrorDom(param_id.endTime, '开始填写时间应小于或等于结束填写时间');
                 }
             }
         }
