@@ -1,4 +1,4 @@
-//# sourceURL=calendar_add.js
+//# sourceURL=calendar_edit.js
 require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", "messenger", "select2-zh-CN", "jquery.address", "bootstrap-maxlength", "flatpickr-zh"],
     function ($, tools, moment, Swal, navActive) {
 
@@ -6,9 +6,7 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
          ajax url.
          */
         var ajax_url = {
-            obtain_school_data: web_path + '/anyone/data/school',
-            obtain_college_data: web_path + '/anyone/data/college',
-            save: web_path + '/web/educational/calendar/save',
+            update: web_path + '/web/educational/calendar/update',
             back:'/web/educational/calendar/list',
             page: '/web/menu/educational/calendar'
         };
@@ -17,15 +15,16 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
         navActive(ajax_url.page);
 
         var page_param = {
-            collegeId: $('#collegeId').val()
+            calendarId: $('#calendarId').val(),
+            academicYear: $('#academicYearParam').val(),
+            term: $('#termParam').val()
         };
 
         /*
          参数id
          */
         var param_id = {
-            school: '#school',
-            college: '#college',
+            title:'#title',
             academicYear: '#academicYear',
             term: '#term',
             startDate: '#startDate',
@@ -47,8 +46,7 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
          参数
          */
         var param = {
-            schoolId: '',
-            collegeId: '',
+            calendarId: '',
             title:'',
             academicYear: '',
             term: '',
@@ -63,22 +61,10 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
          * 初始化参数
          */
         function initParam() {
-            if (Number(page_param.collegeId) === 0) {
-                param.schoolId = $(param_id.school).val();
-                param.collegeId = $(param_id.college).val();
-            } else {
-                param.collegeId = page_param.collegeId;
-            }
-
+            param.calendarId = page_param.calendarId;
             param.academicYear = $(param_id.academicYear).val();
             param.term = $(param_id.term).val();
-
-            param.title = $(param_id.school).find("option:selected").text() +
-                $(param_id.college).find("option:selected").text() +
-                $(param_id.academicYear).find("option:selected").text() +
-                $(param_id.term).find("option:selected").text() +
-                '校历';
-
+            param.title = $(param_id.title).val();
             param.startDate = $(param_id.startDate).val();
             param.endDate = $(param_id.endDate).val();
             param.holidayStartDate = $(param_id.holidayStartDate).val();
@@ -96,33 +82,10 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
          * 初始化界面
          */
         function init() {
-            if (Number(page_param.collegeId) === 0) {
-                initSchool();
-                $(param_id.school).parent().css('display', '');
-                $(param_id.college).parent().css('display', '');
-            }
             initAcademicYear();
+            initTerm();
             initSelect2();
             initMaxLength();
-        }
-
-        function initSchool() {
-            $.get(ajax_url.obtain_school_data, function (data) {
-                $(param_id.school).select2({
-                    data: data.results
-                });
-            });
-        }
-
-        function initCollege(schoolId) {
-            if (Number(schoolId) > 0) {
-                $.get(ajax_url.obtain_college_data, {schoolId: schoolId}, function (data) {
-                    $(param_id.college).html('<option label="请选择院"></option>');
-                    $(param_id.college).select2({data: data.results});
-                });
-            } else {
-                $(param_id.college).html('<option label="请选择院"></option>');
-            }
         }
 
         function initAcademicYear() {
@@ -137,7 +100,12 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
                 });
             }
 
-            $(param_id.academicYear).select2({data: yearArr});
+            var sl = $(param_id.academicYear).select2({data: yearArr});
+            sl.val(page_param.academicYear).trigger("change");
+        }
+
+        function initTerm() {
+            $(param_id.term).val(page_param.term);
         }
 
         function initSelect2() {
@@ -150,6 +118,13 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
          * 初始化Input max length
          */
         function initMaxLength() {
+            $(param_id.title).maxlength({
+                alwaysShow: true,
+                threshold: 10,
+                warningClass: "text-success",
+                limitReachedClass: "text-danger"
+            });
+
             $(param_id.remark).maxlength({
                 alwaysShow: true,
                 threshold: 10,
@@ -162,28 +137,21 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
             locale: "zh"
         });
 
-        $(param_id.school).change(function () {
-            var v = $(this).val();
-            initCollege(v);
-
-            if (Number(v) > 0) {
-                tools.validSelect2SuccessDom(param_id.school);
-            }
-        });
-
-        $(param_id.college).change(function () {
-            var v = $(this).val();
-
-            if (Number(v) > 0) {
-                tools.validSelect2SuccessDom(param_id.college);
-            }
-        });
-
         $(param_id.academicYear).change(function () {
             var v = $(this).val();
 
             if (Number(v) > 0) {
                 tools.validSelect2SuccessDom(param_id.academicYear);
+            }
+        });
+
+        $(param_id.title).blur(function () {
+            initParam();
+            var title = param.title;
+            if (title.length <= 0 || title.length > 100) {
+                tools.validErrorDom(param_id.title, '标题100个字符以内');
+            } else {
+                tools.validSuccessDom(param_id.title);
             }
         });
 
@@ -202,35 +170,15 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
          */
         $(button_id.save.id).click(function () {
             initParam();
-            if (Number(page_param.collegeId) === 0) {
-                validSchoolId();
-            } else {
-                validAcademicYear();
-            }
+            validTitle();
         });
 
-        /**
-         * 检验学校id
-         */
-        function validSchoolId() {
-            var schoolId = param.schoolId;
-            if (Number(schoolId) <= 0) {
-                tools.validSelect2ErrorDom(param_id.school, '请选择学校');
+        function validTitle() {
+            var title = param.title;
+            if (title.length <= 0 || title.length > 100) {
+                tools.validErrorDom(param_id.title, '标题100个字符以内');
             } else {
-                tools.validSelect2SuccessDom(param_id.school);
-                validCollegeId();
-            }
-        }
-
-        /**
-         * 检验院id
-         */
-        function validCollegeId() {
-            var collegeId = param.collegeId;
-            if (Number(collegeId) <= 0) {
-                tools.validSelect2ErrorDom(param_id.college, '请选择院');
-            } else {
-                tools.validSelect2SuccessDom(param_id.college);
+                tools.validSuccessDom(param_id.title);
                 validAcademicYear();
             }
         }
@@ -322,7 +270,7 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
             tools.buttonLoading(button_id.save.id, button_id.save.tip);
             $.ajax({
                 type: 'POST',
-                url: ajax_url.save,
+                url: ajax_url.update,
                 data: param,
                 success: function (data) {
                     tools.buttonEndLoading(button_id.save.id, button_id.save.text);
