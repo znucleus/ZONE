@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zbase.bean.data.staff.StaffBean;
 import top.zbeboy.zbase.bean.data.student.StudentBean;
 import top.zbeboy.zbase.config.Workbook;
-import top.zbeboy.zbase.domain.tables.pojos.RosterRelease;
 import top.zbeboy.zbase.domain.tables.pojos.SchoolCalendar;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.domain.tables.pojos.UsersType;
@@ -16,7 +15,6 @@ import top.zbeboy.zbase.feign.data.StaffService;
 import top.zbeboy.zbase.feign.data.StudentService;
 import top.zbeboy.zbase.feign.educational.calendar.SchoolCalendarService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
-import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 import top.zbeboy.zone.web.util.SessionUtil;
 
@@ -44,7 +42,9 @@ public class CalendarViewController {
      * @return 校历页面
      */
     @GetMapping("/web/menu/educational/calendar")
-    public String index() {
+    public String index(ModelMap modelMap) {
+        Users users = SessionUtil.getUserFromSession();
+        modelMap.addAttribute("canRelease", schoolCalendarService.canRelease(users.getUsername()));
         return "web/educational/calendar/calendar_look::#page-wrapper";
     }
 
@@ -54,8 +54,18 @@ public class CalendarViewController {
      * @return 数据页面
      */
     @GetMapping("/web/educational/calendar/list")
-    public String list() {
-        return "web/educational/calendar/calendar_data::#page-wrapper";
+    public String list(ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        Users users = SessionUtil.getUserFromSession();
+        if (schoolCalendarService.canRelease(users.getUsername())) {
+            page = "web/educational/calendar/calendar_data::#page-wrapper";
+        } else {
+            config.buildWarningTip("操作警告", "您无权限操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
     }
 
     /**
@@ -69,28 +79,35 @@ public class CalendarViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         Users users = SessionUtil.getUserFromSession();
-        UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-        if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
-            int collegeId = 0;
-            if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
-                if (Objects.nonNull(bean.getStaffId()) && bean.getStaffId() > 0) {
-                    collegeId = bean.getCollegeId();
+        if (schoolCalendarService.canRelease(users.getUsername())) {
+            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
+            if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+                int collegeId = 0;
+                if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
+                    StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
+                    if (Objects.nonNull(bean.getStaffId()) && bean.getStaffId() > 0) {
+                        collegeId = bean.getCollegeId();
+                    }
+                } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
+                    StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+                    if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
+                        collegeId = studentBean.getCollegeId();
+                    }
                 }
-            } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
-                if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
-                    collegeId = studentBean.getCollegeId();
-                }
-            }
 
-            modelMap.addAttribute("collegeId", collegeId);
-            page = "web/educational/calendar/calendar_add::#page-wrapper";
+                modelMap.addAttribute("collegeId", collegeId);
+                page = "web/educational/calendar/calendar_add::#page-wrapper";
+            } else {
+                config.buildDangerTip("查询错误", "未查询到用户类型");
+                config.dataMerging(modelMap);
+                page = "inline_tip::#page-wrapper";
+            }
         } else {
-            config.buildDangerTip("查询错误", "未查询到用户类型");
+            config.buildWarningTip("操作警告", "您无权限操作");
             config.dataMerging(modelMap);
             page = "inline_tip::#page-wrapper";
         }
+
         return page;
     }
 
@@ -102,8 +119,39 @@ public class CalendarViewController {
      */
     @GetMapping("/web/educational/calendar/edit/{id}")
     public String edit(@PathVariable("id") String id, ModelMap modelMap) {
-        SchoolCalendar schoolCalendar = schoolCalendarService.findById(id);
-        modelMap.addAttribute("schoolCalendar", schoolCalendar);
-        return "web/educational/calendar/calendar_edit::#page-wrapper";
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        Users users = SessionUtil.getUserFromSession();
+        if (schoolCalendarService.canOperator(users.getUsername(), id)) {
+            SchoolCalendar schoolCalendar = schoolCalendarService.findById(id);
+            modelMap.addAttribute("schoolCalendar", schoolCalendar);
+            page = "web/educational/calendar/calendar_edit::#page-wrapper";
+        } else {
+            config.buildWarningTip("操作警告", "您无权限操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
+
+    /**
+     * 权限分配页面
+     *
+     * @param modelMap 页面对象
+     * @return 权限分配页面
+     */
+    @GetMapping("/web/educational/calendar/authorize/add")
+    public String authorizeAdd(ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        Users users = SessionUtil.getUserFromSession();
+        if (schoolCalendarService.canAuthorize(users.getUsername())) {
+            page = "web/educational/calendar/calendar_authorize::#page-wrapper";
+        } else {
+            config.buildWarningTip("操作警告", "您无权限操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
     }
 }

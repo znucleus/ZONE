@@ -4,12 +4,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import top.zbeboy.zbase.bean.educational.calendar.SchoolCalendarAuthoritiesBean;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.educational.calendar.SchoolCalendarService;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.TableSawUtil;
 import top.zbeboy.zbase.vo.educational.calendar.SchoolCalendarAddVo;
+import top.zbeboy.zbase.vo.educational.calendar.SchoolCalendarAuthoritiesAddVo;
 import top.zbeboy.zbase.vo.educational.calendar.SchoolCalendarEditVo;
 import top.zbeboy.zone.web.util.SessionUtil;
 
@@ -52,6 +56,11 @@ public class CalendarRestController {
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
         Users users = SessionUtil.getUserFromSession();
         dataTablesUtil.setUsername(users.getUsername());
+        if (schoolCalendarService.canRelease(users.getUsername())) {
+            dataTablesUtil = schoolCalendarService.data(dataTablesUtil);
+        } else {
+            dataTablesUtil.setData(new ArrayList<>());
+        }
         return new ResponseEntity<>(schoolCalendarService.data(dataTablesUtil), HttpStatus.OK);
     }
 
@@ -91,7 +100,49 @@ public class CalendarRestController {
      */
     @PostMapping("/web/educational/calendar/delete")
     public ResponseEntity<Map<String, Object>> delete(String calendarIds) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = schoolCalendarService.delete(calendarIds);
+        Users users = SessionUtil.getUserFromSession();
+        AjaxUtil<Map<String, Object>> ajaxUtil = schoolCalendarService.delete(users.getUsername(), calendarIds);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 权限数据
+     *
+     * @param tableSawUtil 请求
+     * @return 数据
+     */
+    @GetMapping("/web/educational/calendar/authorize/data")
+    public ResponseEntity<Map<String, Object>> authorizeData(TableSawUtil tableSawUtil) {
+        Users users = SessionUtil.getUserFromSession();
+        tableSawUtil.setUsername(users.getUsername());
+        AjaxUtil<SchoolCalendarAuthoritiesBean> ajaxUtil = schoolCalendarService.authorizeData(tableSawUtil);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 保存
+     *
+     * @param schoolCalendarAuthoritiesAddVo 数据
+     * @return true or false
+     */
+    @PostMapping("/web/educational/calendar/authorize/save")
+    public ResponseEntity<Map<String, Object>> authorizeSave(SchoolCalendarAuthoritiesAddVo schoolCalendarAuthoritiesAddVo) {
+        Users users = SessionUtil.getUserFromSession();
+        schoolCalendarAuthoritiesAddVo.setUsername(users.getUsername());
+        AjaxUtil<Map<String, Object>> ajaxUtil = schoolCalendarService.authorizeSave(schoolCalendarAuthoritiesAddVo);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 删除
+     *
+     * @param id 权限id
+     * @return true or false
+     */
+    @PostMapping("/web/educational/calendar/authorize/delete")
+    public ResponseEntity<Map<String, Object>> authorizeDelete(@RequestParam("id") String id) {
+        Users users = SessionUtil.getUserFromSession();
+        AjaxUtil<Map<String, Object>> ajaxUtil = schoolCalendarService.authorizeDelete(users.getUsername(), id);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

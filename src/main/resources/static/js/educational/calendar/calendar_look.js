@@ -7,6 +7,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "jquery.addres
         var ajax_url = {
             data: web_path + '/web/educational/timetable/search',
             list: '/web/educational/calendar/list',
+            authorize: '/web/educational/calendar/authorize/add',
             page: '/web/menu/educational/calendar'
         };
 
@@ -32,5 +33,11 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "jquery.addres
             $.address.value(ajax_url.list);
         });
 
+        /*
+       权限分配
+       */
+        $('#authorize').click(function () {
+            $.address.value(ajax_url.authorize);
+        });
 
     });
