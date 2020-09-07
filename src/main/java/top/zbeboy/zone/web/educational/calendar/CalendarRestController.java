@@ -83,4 +83,15 @@ public class CalendarRestController {
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
+    /**
+     * 批量删除
+     *
+     * @param calendarIds ids
+     * @return true删除成功
+     */
+    @PostMapping("/web/educational/calendar/delete")
+    public ResponseEntity<Map<String, Object>> delete(String calendarIds) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = schoolCalendarService.delete(calendarIds);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
 }
