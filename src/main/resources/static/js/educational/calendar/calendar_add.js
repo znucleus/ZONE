@@ -49,7 +49,6 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
         var param = {
             schoolId: '',
             collegeId: '',
-            title:'',
             academicYear: '',
             term: '',
             startDate: '',
@@ -72,12 +71,6 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
 
             param.academicYear = $(param_id.academicYear).val();
             param.term = $(param_id.term).val();
-
-            param.title = $(param_id.school).find("option:selected").text() +
-                $(param_id.college).find("option:selected").text() +
-                $(param_id.academicYear).find("option:selected").text() +
-                $(param_id.term).find("option:selected").text() +
-                '校历';
 
             param.startDate = $(param_id.startDate).val();
             param.endDate = $(param_id.endDate).val();

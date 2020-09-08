@@ -14,25 +14,40 @@
         <div class="br-section-wrapper">
             <div class="row">
                 <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-6 mt-2">
+                            <select class="form-control select2-show-search" id="school"
+                                    data-placeholder="请选择学校">
+                                <option label="请选择学校"></option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mt-2">
+                            <select class="form-control select2-show-search" id="college"
+                                    data-placeholder="请选择院">
+                                <option label="请选择院"></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mg-t-7">
                     <div class="card">
-                        <div class="card-header tx-medium bd-0 tx-white bg-info">
-                            校历-昆明理工大学城市学院
+                        <div class="card-header tx-medium bd-0 tx-white bg-primary" id="title">
                         </div>
                         <div class="card-body color-gray-lighter">
                             <div class="row">
-                                <div class="col-md-4 tx-xs-center tx-sm-center tx-md-left tx-lg-left tx-xl-left tx-black mg-t-5"><span>学校：</span>昆明理工大学</div>
-                                <div class="col-md-4 tx-xs-center tx-sm-center tx-md-center tx-lg-center tx-xl-center tx-black mg-t-5"><span>院：</span>城市学院</div>
-                                <div class="col-md-4 tx-xs-center tx-sm-center tx-md-right tx-lg-right tx-xl-right tx-black mg-t-5"><span>学年：</span>2020-2021 上学期</div>
-                                <div class="col-md-6 tx-xs-center tx-sm-center tx-md-left tx-lg-left tx-xl-left tx-primary mg-t-5"><span>开学：</span>2020-09-01 ~ 2020-10-01 共24周</div>
-                                <div class="col-md-6 tx-xs-center tx-sm-center tx-md-right tx-lg-right tx-xl-right tx-success mg-t-5"><span>放假：</span>2020-09-01 ~ 2020-10-01 共23周</div>
-                                <div class="col-md-4 tx-xs-center tx-sm-center tx-md-left tx-lg-left tx-xl-left tx-black mg-t-5"><span class="tx-bold tx-20 tx-primary">2020</span> 年 <span class="tx-bold tx-20 tx-primary">09</span> 月 <span class="tx-bold tx-20 tx-primary">01</span> 日</div>
-                                <div class="col-md-4 tx-xs-center tx-sm-center tx-md-center tx-lg-center tx-xl-center tx-black mg-t-5">星期 <span class="tx-bold tx-20 tx-primary">二</span></div>
-                                <div class="col-md-4 tx-xs-center tx-sm-center tx-md-right tx-lg-right tx-xl-right tx-black mg-t-5">第 <span class="tx-bold tx-20 tx-purple"><em>2</em></span> 周</div>
-                                <div class="col-md-12 tx-black mg-t-5"><span>备注：</span>测试</div>
+                                <div class="col-md-4 tx-xs-center tx-sm-center tx-md-left tx-lg-left tx-xl-left tx-black mg-t-5" id="schoolName"></div>
+                                <div class="col-md-4 tx-xs-center tx-sm-center tx-md-center tx-lg-center tx-xl-center tx-black mg-t-5" id="collegeName"></div>
+                                <div class="col-md-4 tx-xs-center tx-sm-center tx-md-right tx-lg-right tx-xl-right tx-black mg-t-5" id="academicYear"></div>
+                                <div class="col-md-6 tx-xs-center tx-sm-center tx-md-left tx-lg-left tx-xl-left tx-black mg-t-5" id="openDate"></div>
+                                <div class="col-md-6 tx-xs-center tx-sm-center tx-md-right tx-lg-right tx-xl-right tx-black mg-t-5" id="holidayDate"></div>
+                                <div class="col-md-4 tx-xs-center tx-sm-center tx-md-left tx-lg-left tx-xl-left tx-black mg-t-5" id="nowDate"></div>
+                                <div class="col-md-4 tx-xs-center tx-sm-center tx-md-center tx-lg-center tx-xl-center tx-black mg-t-5" id="week"></div>
+                                <div class="col-md-4 tx-xs-center tx-sm-center tx-md-right tx-lg-right tx-xl-right tx-black mg-t-5" id="weeks"></div>
+                                <div class="col-md-12 tx-black mg-t-5" id="remark"></div>
                             </div>
                         </div><!-- card-body -->
                         <div class="card-footer tx-right">
-                            <em><span>2020-09-01 23:28:00</span></em>
+                            <em id="releaseTimeStr"></em>
                         </div><!-- card-footer -->
                     </div>
                 </div>
@@ -53,6 +68,8 @@
         </div>
     </div>
 
+    <input type="hidden" id="schoolId" th:value="${schoolId}"/>
+    <input type="hidden" id="collegeId" th:value="${collegeId}"/>
     <input type="hidden" class="dy_script"
            th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/educational/calendar/calendar_look.js')}"/>
 </div>

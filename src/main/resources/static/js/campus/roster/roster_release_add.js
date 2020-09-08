@@ -46,7 +46,6 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
             schoolId: '',
             collegeId: '',
             grade: '',
-            title: '',
             startTime: '',
             endTime: '',
             remark: ''
@@ -64,8 +63,6 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
             }
 
             param.grade = $(param_id.grade).val();
-
-            param.title = $(param_id.school).find("option:selected").text() + $(param_id.college).find("option:selected").text() + $(param_id.grade).find("option:selected").text() + '花名册';
 
             var startTime = $(param_id.startTime).val();
             if (startTime.length > 0) {

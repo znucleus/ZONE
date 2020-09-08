@@ -44,6 +44,27 @@ public class CalendarViewController {
     @GetMapping("/web/menu/educational/calendar")
     public String index(ModelMap modelMap) {
         Users users = SessionUtil.getUserFromSession();
+        int schoolId = 0;
+        int collegeId = 0;
+        UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
+        if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+            if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
+                StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
+                if (Objects.nonNull(bean.getStaffId()) && bean.getStaffId() > 0) {
+                    schoolId = bean.getSchoolId();
+                    collegeId = bean.getCollegeId();
+                }
+            } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
+                StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
+                if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
+                    schoolId = studentBean.getSchoolId();
+                    collegeId = studentBean.getCollegeId();
+                }
+            }
+        }
+
+        modelMap.addAttribute("schoolId", schoolId);
+        modelMap.addAttribute("collegeId", collegeId);
         modelMap.addAttribute("canRelease", schoolCalendarService.canRelease(users.getUsername()));
         return "web/educational/calendar/calendar_look::#page-wrapper";
     }
