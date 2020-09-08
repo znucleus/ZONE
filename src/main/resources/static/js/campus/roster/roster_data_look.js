@@ -37,16 +37,16 @@ require(["jquery", "nav.active", "jquery.address", "select2-zh-CN"],
             sex: $('#sexParam').val(),
             politicalLandscapeId: $('#politicalLandscapeParam').val(),
             nationId: $('#nationParam').val(),
-            candidatesType:$('#candidatesTypeParam').val(),
-            isDeformedMan:$('#isDeformedManParam').val(),
-            isMilitaryServiceRegistration:$('#isMilitaryServiceRegistrationParam').val(),
-            isProvideLoan:$('#isProvideLoanParam').val(),
-            isPoorStudents:$('#isPoorStudentsParam').val(),
-            poorStudentsType:$('#poorStudentsTypeParam').val(),
-            isStayOutside:$('#isStayOutsideParam').val(),
-            stayOutsideType:$('#stayOutsideTypeParam').val(),
-            isRegisteredVolunteers:$('#isRegisteredVolunteersParam').val(),
-            isOkLeagueMembership:$('#isOkLeagueMembershipParam').val()
+            candidatesType: $('#candidatesTypeParam').val(),
+            isDeformedMan: $('#isDeformedManParam').val(),
+            isMilitaryServiceRegistration: $('#isMilitaryServiceRegistrationParam').val(),
+            isProvideLoan: $('#isProvideLoanParam').val(),
+            isPoorStudents: $('#isPoorStudentsParam').val(),
+            poorStudentsType: $('#poorStudentsTypeParam').val(),
+            isStayOutside: $('#isStayOutsideParam').val(),
+            stayOutsideType: $('#stayOutsideTypeParam').val(),
+            isRegisteredVolunteers: $('#isRegisteredVolunteersParam').val(),
+            isOkLeagueMembership: $('#isOkLeagueMembershipParam').val()
         };
 
         init();
@@ -61,21 +61,21 @@ require(["jquery", "nav.active", "jquery.address", "select2-zh-CN"],
 
         function initBaseData() {
             var isDeformedMan = page_param.isDeformedMan;
-            if(Number(isDeformedMan) === 1){
-                $(param_id.deformedManCode).parent().css('display','');
+            if (Number(isDeformedMan) === 1) {
+                $(param_id.deformedManCode).parent().css('display', '');
             }
 
             var isPoorStudents = page_param.isPoorStudents;
-            if(Number(isPoorStudents) === 1){
-                $(param_id.poorStudentsType).parent().css('display','');
+            if (Number(isPoorStudents) === 1) {
+                $(param_id.poorStudentsType).parent().css('display', '');
             }
 
             var isStayOutside = page_param.isStayOutside;
-            if(Number(isStayOutside) === 1){
-                $(param_id.stayOutsideType).parent().css('display','');
-                $(param_id.stayOutsideAddress).parent().css('display','');
+            if (Number(isStayOutside) === 1) {
+                $(param_id.stayOutsideType).parent().css('display', '');
+                $(param_id.stayOutsideAddress).parent().css('display', '');
             } else {
-                $(param_id.dormitoryNumber).parent().css('display','');
+                $(param_id.dormitoryNumber).parent().css('display', '');
             }
 
             $(param_id.candidatesType).val(page_param.candidatesType);

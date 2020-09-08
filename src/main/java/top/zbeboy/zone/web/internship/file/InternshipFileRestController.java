@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.bean.internship.release.InternshipFileBean;
-import top.zbeboy.zone.service.internship.InternshipFileService;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zone.service.internship.InternshipFileService;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;

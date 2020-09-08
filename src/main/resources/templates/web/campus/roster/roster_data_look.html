@@ -29,19 +29,22 @@
                         <div class="form-group">
                             <label>学号</label>
                             <input class="form-control" name="studentNumber"
-                                   id="studentNumber" placeholder="学号" th:value="${rosterData.studentNumber}" disabled="disabled"/>
+                                   id="studentNumber" placeholder="学号" th:value="${rosterData.studentNumber}"
+                                   disabled="disabled"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>姓名</label>
                             <input class="form-control" name="realName"
-                                   id="realName" placeholder="姓名" th:value="${rosterData.realName}" disabled="disabled"/>
+                                   id="realName" placeholder="姓名" th:value="${rosterData.realName}"
+                                   disabled="disabled"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>姓名拼音</label>
                             <input class="form-control" name="namePinyin"
-                                   id="namePinyin" placeholder="姓名拼音" th:value="${rosterData.namePinyin}" aria-describedby="namePinyinHelp" disabled="disabled" />
+                                   id="namePinyin" placeholder="姓名拼音" th:value="${rosterData.namePinyin}"
+                                   aria-describedby="namePinyinHelp" disabled="disabled"/>
                             <div class="invalid-feedback"></div>
                             <small id="namePinyinHelp" class="form-text text-muted">如：ZhangSan，首字母大写，且中间不要有空格
                             </small>
@@ -49,7 +52,8 @@
                         <div class="form-group">
                             <label>身份证号</label>
                             <input class="form-control"
-                                   id="idCard" name="idCard" placeholder="身份证号" th:value="${rosterData.idCard}" disabled="disabled">
+                                   id="idCard" name="idCard" placeholder="身份证号" th:value="${rosterData.idCard}"
+                                   disabled="disabled">
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
@@ -64,7 +68,8 @@
                         <div class="form-group">
                             <label>生日</label>
                             <input class="form-control"
-                                   id="birthday" name="birthday" placeholder="生日" th:value="${rosterData.birthday}" disabled="disabled">
+                                   id="birthday" name="birthday" placeholder="生日" th:value="${rosterData.birthday}"
+                                   disabled="disabled">
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
@@ -86,13 +91,15 @@
                         <div class="form-group">
                             <label>班级</label>
                             <input class="form-control" name="organize"
-                                   id="organizeName" placeholder="班级" th:value="${rosterData.organizeName}" disabled="disabled"/>
+                                   id="organizeName" placeholder="班级" th:value="${rosterData.organizeName}"
+                                   disabled="disabled"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>省份</label>
                             <input class="form-control" name="province"
-                                   id="province" placeholder="省份" aria-describedby="provinceHelp" th:value="${rosterData.province}" disabled="disabled"/>
+                                   id="province" placeholder="省份" aria-describedby="provinceHelp"
+                                   th:value="${rosterData.province}" disabled="disabled"/>
                             <div class="invalid-feedback"></div>
                             <small id="provinceHelp" class="form-text text-muted">如：云南省
                             </small>
@@ -100,13 +107,15 @@
                         <div class="form-group">
                             <label>籍贯</label>
                             <input class="form-control" name="nativePlace"
-                                   id="nativePlace" placeholder="籍贯" th:value="${rosterData.nativePlace}" disabled="disabled"/>
+                                   id="nativePlace" placeholder="籍贯" th:value="${rosterData.nativePlace}"
+                                   disabled="disabled"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>所属地区</label>
                             <input class="form-control" name="region"
-                                   id="region" placeholder="所属地区" aria-describedby="regionHelp" th:value="${rosterData.region}" disabled="disabled"/>
+                                   id="region" placeholder="所属地区" aria-describedby="regionHelp"
+                                   th:value="${rosterData.region}" disabled="disabled"/>
                             <div class="invalid-feedback"></div>
                             <small id="regionHelp" class="form-text text-muted">如：昆明市
                             </small>
@@ -116,7 +125,8 @@
                             <div class="input-group">
                                 <span class="input-group-addon">昆明——</span>
                                 <input class="form-control" name="busSection"
-                                       id="busSection" placeholder="乘车区间" aria-describedby="busSectionHelp" th:value="${rosterData.busSection}" disabled="disabled"/>
+                                       id="busSection" placeholder="乘车区间" aria-describedby="busSectionHelp"
+                                       th:value="${rosterData.busSection}" disabled="disabled"/>
                             </div>
                             <div class="invalid-feedback"></div>
                             <small id="busSectionHelp" class="form-text text-muted">“乘车区间”所填写的一定是：乘火车回家最终到站的站名，学生证一经办理不再修改，请同学们慎重清楚的填写。
@@ -125,31 +135,36 @@
                         <div class="form-group">
                             <label>家长姓名</label>
                             <input class="form-control" name="parentName"
-                                   id="parentName" placeholder="家长姓名" th:value="${rosterData.parentName}" disabled="disabled"/>
+                                   id="parentName" placeholder="家长姓名" th:value="${rosterData.parentName}"
+                                   disabled="disabled"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>家长联系电话</label>
                             <input class="form-control" name="parentContactPhone"
-                                   id="parentContactPhone" placeholder="家长联系电话" th:value="${rosterData.parentContactPhone}" disabled="disabled"/>
+                                   id="parentContactPhone" placeholder="家长联系电话"
+                                   th:value="${rosterData.parentContactPhone}" disabled="disabled"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>家长详细联系地址</label>
                             <input class="form-control" name="parentContactAddress"
-                                   id="parentContactAddress" placeholder="家长详细联系地址" th:value="${rosterData.parentContactAddress}" disabled="disabled"/>
+                                   id="parentContactAddress" placeholder="家长详细联系地址"
+                                   th:value="${rosterData.parentContactAddress}" disabled="disabled"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>邮政编码</label>
                             <input class="form-control" name="zipCode"
-                                   id="zipCode" placeholder="邮政编码" th:value="${rosterData.zipCode}" disabled="disabled"/>
+                                   id="zipCode" placeholder="邮政编码" th:value="${rosterData.zipCode}"
+                                   disabled="disabled"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>本人联系电话</label>
                             <input class="form-control" name="phoneNumber"
-                                   id="phoneNumber" placeholder="本人联系电话" th:value="${rosterData.phoneNumber}" disabled="disabled"/>
+                                   id="phoneNumber" placeholder="本人联系电话" th:value="${rosterData.phoneNumber}"
+                                   disabled="disabled"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
@@ -215,7 +230,8 @@
                         </div>
                         <div class="form-group" style="display: none">
                             <label>贫困生类型</label>
-                            <select id="poorStudentsType" name="poorStudentsType" class="form-control" disabled="disabled">
+                            <select id="poorStudentsType" name="poorStudentsType" class="form-control"
+                                    disabled="disabled">
                                 <option value="">请选择</option>
                                 <option value="0">一般困难</option>
                                 <option value="1">贫困</option>
@@ -235,14 +251,16 @@
                         <div class="form-group" style="display: none">
                             <label>宿舍号</label>
                             <input class="form-control" id="dormitoryNumber" name="dormitoryNumber"
-                                   placeholder="宿舍号" aria-describedby="dormitoryNumberHelp" data-mask="99-999" th:value="${rosterData.dormitoryNumber}" disabled="disabled">
+                                   placeholder="宿舍号" aria-describedby="dormitoryNumberHelp" data-mask="99-999"
+                                   th:value="${rosterData.dormitoryNumber}" disabled="disabled">
                             <div class="invalid-feedback"></div>
                             <small id="dormitoryNumberHelp" class="form-text text-muted">如：06-603，6栋603室
                             </small>
                         </div>
                         <div class="form-group" style="display: none">
                             <label>外宿类型</label>
-                            <select id="stayOutsideType" name="stayOutsideType" class="form-control" disabled="disabled">
+                            <select id="stayOutsideType" name="stayOutsideType" class="form-control"
+                                    disabled="disabled">
                                 <option value="">请选择</option>
                                 <option value="0">住自家</option>
                                 <option value="1">亲戚家</option>
@@ -254,7 +272,8 @@
                         <div class="form-group" style="display: none">
                             <label>外宿详细地址具体到门牌号</label>
                             <input class="form-control" id="stayOutsideAddress" name="stayOutsideAddress"
-                                   placeholder="外宿详细地址具体到门牌号" th:value="${rosterData.stayOutsideAddress}" disabled="disabled">
+                                   placeholder="外宿详细地址具体到门牌号" th:value="${rosterData.stayOutsideAddress}"
+                                   disabled="disabled">
                             <div class="invalid-feedback"></div>
                         </div>
                         <h4 class="tx-info">二、团员信息（团员填写）</h4>
@@ -262,13 +281,15 @@
                         <div class="form-group">
                             <label>入团时间</label>
                             <input type="text" class="form-control"
-                                   id="leagueMemberJoinDate" name="leagueMemberJoinDate" th:value="${rosterData.leagueMemberJoinDate}" placeholder="入团时间"
+                                   id="leagueMemberJoinDate" name="leagueMemberJoinDate"
+                                   th:value="${rosterData.leagueMemberJoinDate}" placeholder="入团时间"
                                    disabled="disabled">
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>是否注册志愿者</label>
-                            <select id="isRegisteredVolunteers" name="isRegisteredVolunteers" class="form-control" disabled="disabled">
+                            <select id="isRegisteredVolunteers" name="isRegisteredVolunteers" class="form-control"
+                                    disabled="disabled">
                                 <option value="0">否</option>
                                 <option value="1">是</option>
                             </select>
@@ -292,13 +313,15 @@
                             <label>递交入党申请书时间</label>
                             <input type="text" class="form-control"
                                    id="applyPartyMembershipDate" name="applyPartyMembershipDate"
-                                   placeholder="递交入党申请书时间" th:value="${rosterData.applyPartyMembershipDate}" disabled="disabled">
+                                   placeholder="递交入党申请书时间" th:value="${rosterData.applyPartyMembershipDate}"
+                                   disabled="disabled">
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>列积极分子时间</label>
                             <input type="text" class="form-control"
-                                   id="becomeActivistsDate" name="becomeActivistsDate" th:value="${rosterData.becomeActivistsDate}" placeholder="列积极分子时间"
+                                   id="becomeActivistsDate" name="becomeActivistsDate"
+                                   th:value="${rosterData.becomeActivistsDate}" placeholder="列积极分子时间"
                                    disabled="disabled">
                             <div class="invalid-feedback"></div>
                         </div>
@@ -306,13 +329,15 @@
                             <label>列预备党员时间</label>
                             <input type="text" class="form-control"
                                    id="becomeProbationaryPartyMemberDate" name="becomeProbationaryPartyMemberDate"
-                                   placeholder="列预备党员时间" th:value="${rosterData.becomeProbationaryPartyMemberDate}" disabled="disabled">
+                                   placeholder="列预备党员时间" th:value="${rosterData.becomeProbationaryPartyMemberDate}"
+                                   disabled="disabled">
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>转正时间（入党时间）</label>
                             <input type="text" class="form-control"
-                                   id="joiningPartyDate" name="joiningPartyDate" th:value="${rosterData.joiningPartyDate}" placeholder="转正时间（入党时间）"
+                                   id="joiningPartyDate" name="joiningPartyDate"
+                                   th:value="${rosterData.joiningPartyDate}" placeholder="转正时间（入党时间）"
                                    disabled="disabled">
                             <div class="invalid-feedback"></div>
                         </div>
@@ -327,7 +352,8 @@
     <input type="hidden" id="nationParam" th:value="${rosterData.nationId}"/>
     <input type="hidden" id="candidatesTypeParam" th:value="${rosterData.candidatesType}"/>
     <input type="hidden" id="isDeformedManParam" th:value="${rosterData.isDeformedMan}"/>
-    <input type="hidden" id="isMilitaryServiceRegistrationParam" th:value="${rosterData.isMilitaryServiceRegistration}"/>
+    <input type="hidden" id="isMilitaryServiceRegistrationParam"
+           th:value="${rosterData.isMilitaryServiceRegistration}"/>
     <input type="hidden" id="isProvideLoanParam" th:value="${rosterData.isProvideLoan}"/>
     <input type="hidden" id="isPoorStudentsParam" th:value="${rosterData.isPoorStudents}"/>
     <input type="hidden" id="poorStudentsTypeParam" th:value="${rosterData.poorStudentsType}"/>

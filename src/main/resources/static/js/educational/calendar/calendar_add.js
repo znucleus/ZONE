@@ -9,7 +9,7 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
             obtain_school_data: web_path + '/anyone/data/school',
             obtain_college_data: web_path + '/anyone/data/college',
             save: web_path + '/web/educational/calendar/save',
-            back:'/web/educational/calendar/list',
+            back: '/web/educational/calendar/list',
             page: '/web/menu/educational/calendar'
         };
 

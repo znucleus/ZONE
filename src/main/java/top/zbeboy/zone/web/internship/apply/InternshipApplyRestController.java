@@ -19,22 +19,22 @@ import top.zbeboy.zbase.domain.tables.pojos.*;
 import top.zbeboy.zbase.feign.data.StaffService;
 import top.zbeboy.zbase.feign.data.StudentService;
 import top.zbeboy.zbase.feign.system.FilesService;
-import top.zbeboy.zbase.tools.web.plugin.select2.Select2Data;
-import top.zbeboy.zone.service.internship.*;
-import top.zbeboy.zone.service.upload.FileBean;
-import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.service.util.FilesUtil;
 import top.zbeboy.zbase.tools.service.util.RequestUtil;
 import top.zbeboy.zbase.tools.service.util.UUIDUtil;
-import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
-import top.zbeboy.zone.web.internship.common.InternshipControllerCommon;
+import top.zbeboy.zbase.tools.web.plugin.select2.Select2Data;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.BooleanUtil;
-import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zbase.vo.internship.apply.InternshipApplyAddVo;
 import top.zbeboy.zbase.vo.internship.apply.InternshipApplyEditVo;
+import top.zbeboy.zone.service.internship.*;
+import top.zbeboy.zone.service.upload.FileBean;
+import top.zbeboy.zone.service.upload.UploadService;
+import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
+import top.zbeboy.zone.web.internship.common.InternshipControllerCommon;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -166,7 +166,7 @@ public class InternshipApplyRestController {
     @GetMapping("/web/internship/apply/download/{id}")
     public void download(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
         Files files = filesService.findById(id);
-        if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId()))  {
+        if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())) {
             uploadService.download(files.getOriginalFileName(), files.getRelativePath(), response, request);
         }
     }
@@ -479,7 +479,7 @@ public class InternshipApplyRestController {
                     for (FileBean fileBean : fileBeens) {
                         if (StringUtils.isNotBlank(internshipApply.getFileId())) {
                             Files oldFile = filesService.findById(internshipApply.getFileId());
-                            if (Objects.nonNull(oldFile) && StringUtils.isNotBlank(oldFile.getFileId())){
+                            if (Objects.nonNull(oldFile) && StringUtils.isNotBlank(oldFile.getFileId())) {
                                 FilesUtil.deleteFile(RequestUtil.getRealPath(request) + oldFile.getRelativePath());
                                 filesService.deleteById(oldFile.getFileId());
                             }

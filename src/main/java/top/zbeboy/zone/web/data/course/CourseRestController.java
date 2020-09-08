@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.domain.tables.pojos.Course;
-import top.zbeboy.zbase.domain.tables.pojos.SystemLoginLog;
 import top.zbeboy.zbase.domain.tables.pojos.SystemOperatorLog;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.data.CourseService;
@@ -21,7 +20,6 @@ import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zbase.vo.data.course.CourseAddVo;
 import top.zbeboy.zbase.vo.data.course.CourseEditVo;
 import top.zbeboy.zbase.vo.data.course.CourseSearchVo;
-import top.zbeboy.zone.annotation.logging.LoginLoggingRecord;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
@@ -141,7 +139,7 @@ public class CourseRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = courseService.update(courseEditVo);
         Users users = SessionUtil.getUserFromSession();
         SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(),
-                "更新课程"+courseEditVo.getCourseId()+"[" + courseEditVo.getCourseName() + "]",
+                "更新课程" + courseEditVo.getCourseId() + "[" + courseEditVo.getCourseName() + "]",
                 DateTimeUtil.getNowSqlTimestamp(), users.getUsername(), RequestUtil.getIpAddress(request));
         systemLogService.save(systemLog);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);

@@ -17,7 +17,7 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
          参数id
          */
         var param_id = {
-            rosterReleaseId:'#rosterReleaseId',
+            rosterReleaseId: '#rosterReleaseId',
             title: '#title',
             startTime: '#startTime',
             endTime: '#endTime',
@@ -36,7 +36,7 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
          参数
          */
         var param = {
-            rosterReleaseId:'',
+            rosterReleaseId: '',
             title: '',
             startTime: '',
             endTime: '',

@@ -23,7 +23,8 @@
                     <form id="app_form">
                         <div class="form-group" sec:authorize="hasAnyRole('ROLE_SYSTEM','ROLE_ADMIN')">
                             <label>申请账号</label>
-                            <input type="text" class="form-control" id="targetUsername" name="targetUsername" placeholder="申请账号">
+                            <input type="text" class="form-control" id="targetUsername" name="targetUsername"
+                                   placeholder="申请账号">
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">

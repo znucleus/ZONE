@@ -203,7 +203,7 @@ public class CampusRosterRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
             RosterRelease rosterRelease = rosterReleaseService.findById(rosterDataAddVo.getRosterReleaseId());
-            if(Objects.nonNull(rosterRelease)&& StringUtils.isNotBlank(rosterRelease.getRosterReleaseId())){
+            if (Objects.nonNull(rosterRelease) && StringUtils.isNotBlank(rosterRelease.getRosterReleaseId())) {
                 // 时间范围
                 if (DateTimeUtil.nowAfterSqlTimestamp(rosterRelease.getStartTime()) &&
                         DateTimeUtil.nowBeforeSqlTimestamp(rosterRelease.getEndTime())) {

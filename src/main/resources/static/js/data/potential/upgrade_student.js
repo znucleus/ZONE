@@ -139,7 +139,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "select2-zh-CN"],
 
         function initSchool() {
             $.get(ajax_url.obtain_school_data, function (data) {
-                var schoolSelect2 =  $(param_id.school).select2({
+                var schoolSelect2 = $(param_id.school).select2({
                     data: data.results
                 });
 
@@ -154,7 +154,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "select2-zh-CN"],
             if (Number(schoolId) > 0) {
                 $.get(ajax_url.obtain_college_data, {schoolId: schoolId}, function (data) {
                     $(param_id.college).html('<option label="请选择院"></option>');
-                    var collegeSelect2 =  $(param_id.college).select2({data: data.results});
+                    var collegeSelect2 = $(param_id.college).select2({data: data.results});
                     if (!init_configure.init_college) {
                         collegeSelect2.val(Number(page_param.collegeId)).trigger("change");
                         init_configure.init_college = true;

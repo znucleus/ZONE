@@ -55,7 +55,7 @@ requirejs.config({
         "mfb": web_path + "/plugins/mfb/mfb.min",
         "modernizr.touch": web_path + "/plugins/mfb/lib/modernizr.touch.min",
         "js-year-calendar": web_path + "/plugins/js-year-calendar/js-year-calendar.min",
-        "js-year-calendar.zh-CN": web_path + "/plugins/js-year-calendar/js-year-calendar.zh-CN"
+        "js-year-calendar.zh-CN": web_path + "/plugins/js-year-calendar/js-year-calendar.zh-CN.min"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -80,7 +80,7 @@ requirejs.config({
         "jquery.showLoading": {
             deps: ["jquery"]
         },
-        "jquery-loading":{
+        "jquery-loading": {
             deps: ["jquery"]
         },
         "jquery.address": {

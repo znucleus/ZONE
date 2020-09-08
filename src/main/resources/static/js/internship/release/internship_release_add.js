@@ -47,7 +47,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
          */
         var param = {
             internshipTypeId: '',
-            isTimeLimit:'',
+            isTimeLimit: '',
             teacherDistributionTime: '',
             time: '',
             schoolId: '',
@@ -335,7 +335,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
 
         function validIsTimeLimit() {
             var isTimeLimit = param.isTimeLimit;
-            if(Number(isTimeLimit) === 0){
+            if (Number(isTimeLimit) === 0) {
                 validSchoolId();
             } else {
                 validTeacherDistributionTime();

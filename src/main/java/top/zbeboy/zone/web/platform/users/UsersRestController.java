@@ -24,17 +24,23 @@ import top.zbeboy.zbase.feign.platform.UsersService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zbase.feign.system.FilesService;
 import top.zbeboy.zbase.feign.system.SystemConfigureService;
-import top.zbeboy.zone.web.util.SessionUtil;
-import top.zbeboy.zone.service.system.SystemMailService;
-import top.zbeboy.zbase.tools.service.util.*;
-import top.zbeboy.zone.service.util.BCryptUtil;
-import top.zbeboy.zone.web.system.mail.SystemMailConfig;
-import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
-import top.zbeboy.zbase.tools.web.util.*;
+import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
+import top.zbeboy.zbase.tools.service.util.FilesUtil;
+import top.zbeboy.zbase.tools.service.util.RandomUtil;
+import top.zbeboy.zbase.tools.service.util.RequestUtil;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.BooleanUtil;
+import top.zbeboy.zbase.tools.web.util.GoogleOauthUtil;
+import top.zbeboy.zbase.tools.web.util.PinYinUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zbase.vo.platform.user.ResetPasswordVo;
 import top.zbeboy.zbase.vo.platform.user.UsersProfileVo;
+import top.zbeboy.zone.service.system.SystemMailService;
+import top.zbeboy.zone.service.util.BCryptUtil;
+import top.zbeboy.zone.web.system.mail.SystemMailConfig;
+import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
 import top.zbeboy.zone.web.util.BaseImgUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -311,10 +317,10 @@ public class UsersRestController {
 
                     // 学生需要同步花名册
                     UsersType usersType = usersTypeService.findById(own.getUsersTypeId());
-                    if(Objects.nonNull(usersType) && StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())){
+                    if (Objects.nonNull(usersType) && StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
                         Student student = studentService.findByUsername(own.getUsername());
                         RosterData rosterData = rosterReleaseService.findRosterDataByStudentNumber(student.getStudentNumber());
-                        if (Objects.nonNull(rosterData) && StringUtils.isNotBlank(rosterData.getRosterDataId())){
+                        if (Objects.nonNull(rosterData) && StringUtils.isNotBlank(rosterData.getRosterDataId())) {
                             rosterData.setRealName(value);
                             rosterData.setNamePinyin(PinYinUtil.changeToUpper(value));
                             rosterReleaseService.dataSync(rosterData);
@@ -398,10 +404,10 @@ public class UsersRestController {
 
                             // 学生需要同步花名册
                             UsersType usersType = usersTypeService.findById(own.getUsersTypeId());
-                            if(Objects.nonNull(usersType) && StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())){
+                            if (Objects.nonNull(usersType) && StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
                                 Student student = studentService.findByUsername(own.getUsername());
                                 RosterData rosterData = rosterReleaseService.findRosterDataByStudentNumber(student.getStudentNumber());
-                                if (Objects.nonNull(rosterData) && StringUtils.isNotBlank(rosterData.getRosterDataId())){
+                                if (Objects.nonNull(rosterData) && StringUtils.isNotBlank(rosterData.getRosterDataId())) {
                                     rosterData.setIdCard(value);
                                     rosterReleaseService.dataSync(rosterData);
                                 }

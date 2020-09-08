@@ -60,7 +60,8 @@
                         <div class="form-group">
                             <label>放假日期</label>
                             <input class="form-control flatpickr" name="holidayStartDate"
-                                   id="holidayStartDate" placeholder="放假日期" th:value="${schoolCalendar.holidayStartDate}"/>
+                                   id="holidayStartDate" placeholder="放假日期"
+                                   th:value="${schoolCalendar.holidayStartDate}"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
@@ -71,7 +72,8 @@
                         </div>
                         <div class="form-group">
                             <label>备注</label>
-                            <textarea class="form-control" id="remark" rows="3" name="remark" maxlength="200" th:text="${schoolCalendar.remark}"></textarea>
+                            <textarea class="form-control" id="remark" rows="3" name="remark" maxlength="200"
+                                      th:text="${schoolCalendar.remark}"></textarea>
                         </div>
                         <div class="form-group text-center">
                             <button type="button" class="btn btn-primary text-center" id="save">保存</button>

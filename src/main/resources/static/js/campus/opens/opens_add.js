@@ -46,7 +46,7 @@ require(["jquery", "tools", "sweetalert2", "nav.active", "quill", "KaTeX", "mess
          */
         var param = {
             title: '',
-            schoolId:'',
+            schoolId: '',
             collegeId: '',
             content: '',
             textContent: '',

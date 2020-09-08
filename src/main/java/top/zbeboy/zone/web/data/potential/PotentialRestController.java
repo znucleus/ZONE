@@ -28,7 +28,6 @@ import top.zbeboy.zbase.vo.data.potential.PotentialAddVo;
 import top.zbeboy.zbase.vo.data.potential.PotentialEditVo;
 import top.zbeboy.zbase.vo.data.potential.PotentialUpgradeStaffVo;
 import top.zbeboy.zbase.vo.data.potential.PotentialUpgradeStudentVo;
-import top.zbeboy.zbase.vo.data.staff.StaffEditVo;
 import top.zbeboy.zone.service.system.SystemMailService;
 import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
 import top.zbeboy.zone.web.util.SessionUtil;

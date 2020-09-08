@@ -163,7 +163,7 @@ public class CampusRosterViewController {
     public String dataOuterAdd(@PathVariable("id") String id, ModelMap modelMap) {
         SystemTipConfig config = new SystemTipConfig();
         RosterRelease rosterRelease = rosterReleaseService.findById(id);
-        if(Objects.nonNull(rosterRelease) && StringUtils.isNotBlank(rosterRelease.getRosterReleaseId())){
+        if (Objects.nonNull(rosterRelease) && StringUtils.isNotBlank(rosterRelease.getRosterReleaseId())) {
             // 时间范围
             if (DateTimeUtil.nowAfterSqlTimestamp(rosterRelease.getStartTime()) &&
                     DateTimeUtil.nowBeforeSqlTimestamp(rosterRelease.getEndTime())) {

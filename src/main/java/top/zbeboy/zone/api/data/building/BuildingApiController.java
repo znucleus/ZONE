@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.bean.data.building.BuildingBean;
 import top.zbeboy.zbase.config.Workbook;
-import top.zbeboy.zbase.domain.tables.pojos.Building;
 import top.zbeboy.zbase.feign.data.BuildingService;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.vo.data.building.BuildingSearchVo;

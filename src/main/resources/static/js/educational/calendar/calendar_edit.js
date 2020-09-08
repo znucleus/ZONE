@@ -7,7 +7,7 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
          */
         var ajax_url = {
             update: web_path + '/web/educational/calendar/update',
-            back:'/web/educational/calendar/list',
+            back: '/web/educational/calendar/list',
             page: '/web/menu/educational/calendar'
         };
 
@@ -24,7 +24,7 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
          参数id
          */
         var param_id = {
-            title:'#title',
+            title: '#title',
             academicYear: '#academicYear',
             term: '#term',
             startDate: '#startDate',
@@ -47,7 +47,7 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
          */
         var param = {
             calendarId: '',
-            title:'',
+            title: '',
             academicYear: '',
             term: '',
             startDate: '',

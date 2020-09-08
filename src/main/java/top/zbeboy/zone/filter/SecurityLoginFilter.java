@@ -17,10 +17,10 @@ import top.zbeboy.zbase.feign.data.StaffService;
 import top.zbeboy.zbase.feign.data.StudentService;
 import top.zbeboy.zbase.feign.platform.UsersService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
+import top.zbeboy.zbase.tools.web.util.BooleanUtil;
 import top.zbeboy.zone.security.AjaxAuthenticationCode;
 import top.zbeboy.zone.web.system.mail.SystemMailConfig;
 import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
-import top.zbeboy.zbase.tools.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.SpringBootUtil;
 
 import javax.servlet.*;

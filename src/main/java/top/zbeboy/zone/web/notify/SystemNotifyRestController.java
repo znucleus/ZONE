@@ -9,10 +9,10 @@ import top.zbeboy.zbase.domain.tables.pojos.SystemNotify;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.notify.SystemNotifyService;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
-import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zbase.vo.system.notify.SystemNotifyAddVo;
 import top.zbeboy.zbase.vo.system.notify.SystemNotifyEditVo;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -85,7 +85,7 @@ public class SystemNotifyRestController {
      * @return true 保存成功 false 保存失败
      */
     @PostMapping("/web/system/notify/update")
-    public ResponseEntity<Map<String, Object>> update( SystemNotifyEditVo systemNotifyEditVo) {
+    public ResponseEntity<Map<String, Object>> update(SystemNotifyEditVo systemNotifyEditVo) {
         AjaxUtil<Map<String, Object>> ajaxUtil = systemNotifyService.update(systemNotifyEditVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }

@@ -29,7 +29,8 @@
                         <div class="form-group">
                             <label>学号</label>
                             <input class="form-control" name="studentNumber"
-                                   id="studentNumber" placeholder="学号" th:value="${rosterData.studentNumber}" readonly="readonly" aria-describedby="studentNumberHelp"/>
+                                   id="studentNumber" placeholder="学号" th:value="${rosterData.studentNumber}"
+                                   readonly="readonly" aria-describedby="studentNumberHelp"/>
                             <div class="invalid-feedback"></div>
                             <small id="studentNumberHelp" class="form-text text-muted">请在个人资料中修改
                             </small>
@@ -86,7 +87,8 @@
                         <div class="form-group">
                             <label>班级</label>
                             <input class="form-control" name="organize"
-                                   id="organizeName" placeholder="班级" th:value="${rosterData.organizeName}" readonly="readonly" aria-describedby="organizeHelp"/>
+                                   id="organizeName" placeholder="班级" th:value="${rosterData.organizeName}"
+                                   readonly="readonly" aria-describedby="organizeHelp"/>
                             <div class="invalid-feedback"></div>
                             <small id="organizeHelp" class="form-text text-muted">请在个人资料中修改
                             </small>
@@ -94,7 +96,8 @@
                         <div class="form-group">
                             <label>省份</label>
                             <input class="form-control" name="province"
-                                   id="province" placeholder="省份" aria-describedby="provinceHelp" th:value="${rosterData.province}"/>
+                                   id="province" placeholder="省份" aria-describedby="provinceHelp"
+                                   th:value="${rosterData.province}"/>
                             <div class="invalid-feedback"></div>
                             <small id="provinceHelp" class="form-text text-muted">如：云南省
                             </small>
@@ -108,7 +111,8 @@
                         <div class="form-group">
                             <label>所属地区</label>
                             <input class="form-control" name="region"
-                                   id="region" placeholder="所属地区" aria-describedby="regionHelp" th:value="${rosterData.region}"/>
+                                   id="region" placeholder="所属地区" aria-describedby="regionHelp"
+                                   th:value="${rosterData.region}"/>
                             <div class="invalid-feedback"></div>
                             <small id="regionHelp" class="form-text text-muted">如：昆明市
                             </small>
@@ -118,7 +122,8 @@
                             <div class="input-group">
                                 <span class="input-group-addon">昆明——</span>
                                 <input class="form-control" name="busSection"
-                                       id="busSection" placeholder="乘车区间" aria-describedby="busSectionHelp" th:value="${rosterData.busSection}"/>
+                                       id="busSection" placeholder="乘车区间" aria-describedby="busSectionHelp"
+                                       th:value="${rosterData.busSection}"/>
                             </div>
                             <div class="invalid-feedback"></div>
                             <small id="busSectionHelp" class="form-text text-muted">“乘车区间”所填写的一定是：乘火车回家最终到站的站名，学生证一经办理不再修改，请同学们慎重清楚的填写。
@@ -133,13 +138,16 @@
                         <div class="form-group">
                             <label>家长联系电话</label>
                             <input class="form-control" name="parentContactPhone"
-                                   id="parentContactPhone" placeholder="家长联系电话" th:value="${rosterData.parentContactPhone}"/>
+                                   id="parentContactPhone" placeholder="家长联系电话"
+                                   th:value="${rosterData.parentContactPhone}"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>家长详细联系地址</label>
                             <input class="form-control" name="parentContactAddress"
-                                   id="parentContactAddress" placeholder="家长详细联系地址" th:value="${rosterData.parentContactAddress}" aria-describedby="parentContactAddressHelp"/>
+                                   id="parentContactAddress" placeholder="家长详细联系地址"
+                                   th:value="${rosterData.parentContactAddress}"
+                                   aria-describedby="parentContactAddressHelp"/>
                             <div class="invalid-feedback"></div>
                             <small id="parentContactAddressHelp" class="form-text text-muted">请填写家庭详细地址
                             </small>
@@ -153,7 +161,8 @@
                         <div class="form-group">
                             <label>本人联系电话</label>
                             <input class="form-control" name="phoneNumber"
-                                   id="phoneNumber" placeholder="本人联系电话" th:value="${rosterData.phoneNumber}" readonly="readonly" aria-describedby="phoneNumberHelp"/>
+                                   id="phoneNumber" placeholder="本人联系电话" th:value="${rosterData.phoneNumber}"
+                                   readonly="readonly" aria-describedby="phoneNumberHelp"/>
                             <div class="invalid-feedback"></div>
                             <small id="phoneNumberHelp" class="form-text text-muted">请在个人资料中修改
                             </small>
@@ -161,7 +170,8 @@
                         <div class="form-group">
                             <label>邮箱</label>
                             <input class="form-control" name="email"
-                                   id="email" placeholder="邮箱" th:value="${rosterData.email}" readonly="readonly" aria-describedby="emailHelp"/>
+                                   id="email" placeholder="邮箱" th:value="${rosterData.email}" readonly="readonly"
+                                   aria-describedby="emailHelp"/>
                             <div class="invalid-feedback"></div>
                             <small id="emailHelp" class="form-text text-muted">请在个人资料中修改
                             </small>
@@ -210,7 +220,8 @@
                         <div class="form-group">
                             <label>大学任职情况</label>
                             <input class="form-control" id="universityPosition" name="universityPosition"
-                                   placeholder="大学任职情况" th:value="${rosterData.universityPosition}" aria-describedby="universityPositionHelp">
+                                   placeholder="大学任职情况" th:value="${rosterData.universityPosition}"
+                                   aria-describedby="universityPositionHelp">
                             <div class="invalid-feedback"></div>
                             <small id="universityPositionHelp" class="form-text text-muted">如：班长、信息员、系学生会XX部门部委、院学生会XX部门部长
                             </small>
@@ -245,7 +256,8 @@
                         <div class="form-group" style="display: none">
                             <label>宿舍号</label>
                             <input class="form-control" id="dormitoryNumber" name="dormitoryNumber"
-                                   placeholder="宿舍号" aria-describedby="dormitoryNumberHelp" data-mask="99-999" th:value="${rosterData.dormitoryNumber}">
+                                   placeholder="宿舍号" aria-describedby="dormitoryNumberHelp" data-mask="99-999"
+                                   th:value="${rosterData.dormitoryNumber}">
                             <div class="invalid-feedback"></div>
                             <small id="dormitoryNumberHelp" class="form-text text-muted">如：06-603，6栋603室
                             </small>
@@ -273,7 +285,8 @@
                             <label>入团时间</label>
                             <div class="input-group flatpickr">
                                 <input type="text" class="form-control"
-                                       id="leagueMemberJoinDate" name="leagueMemberJoinDate" th:value="${rosterData.leagueMemberJoinDate}" placeholder="入团时间"
+                                       id="leagueMemberJoinDate" name="leagueMemberJoinDate"
+                                       th:value="${rosterData.leagueMemberJoinDate}" placeholder="入团时间"
                                        data-input>
                                 <span class="input-group-addon tx-size-sm lh-2" title="toggle" data-toggle><i
                                         class="fa fa-calendar" aria-hidden="true"></i></span>
@@ -309,7 +322,8 @@
                             <div class="input-group flatpickr">
                                 <input type="text" class="form-control"
                                        id="applyPartyMembershipDate" name="applyPartyMembershipDate"
-                                       placeholder="递交入党申请书时间" th:value="${rosterData.applyPartyMembershipDate}" data-input>
+                                       placeholder="递交入党申请书时间" th:value="${rosterData.applyPartyMembershipDate}"
+                                       data-input>
                                 <span class="input-group-addon tx-size-sm lh-2" title="toggle" data-toggle><i
                                         class="fa fa-calendar" aria-hidden="true"></i></span>
                                 <span class="input-group-addon tx-size-sm lh-2" title="clear" data-clear><i
@@ -321,7 +335,8 @@
                             <label>列积极分子时间</label>
                             <div class="input-group flatpickr">
                                 <input type="text" class="form-control"
-                                       id="becomeActivistsDate" name="becomeActivistsDate" th:value="${rosterData.becomeActivistsDate}" placeholder="列积极分子时间"
+                                       id="becomeActivistsDate" name="becomeActivistsDate"
+                                       th:value="${rosterData.becomeActivistsDate}" placeholder="列积极分子时间"
                                        data-input>
                                 <span class="input-group-addon tx-size-sm lh-2" title="toggle" data-toggle><i
                                         class="fa fa-calendar" aria-hidden="true"></i></span>
@@ -335,7 +350,8 @@
                             <div class="input-group flatpickr">
                                 <input type="text" class="form-control"
                                        id="becomeProbationaryPartyMemberDate" name="becomeProbationaryPartyMemberDate"
-                                       placeholder="列预备党员时间" th:value="${rosterData.becomeProbationaryPartyMemberDate}" data-input>
+                                       placeholder="列预备党员时间" th:value="${rosterData.becomeProbationaryPartyMemberDate}"
+                                       data-input>
                                 <span class="input-group-addon tx-size-sm lh-2" title="toggle" data-toggle><i
                                         class="fa fa-calendar" aria-hidden="true"></i></span>
                                 <span class="input-group-addon tx-size-sm lh-2" title="clear" data-clear><i
@@ -347,7 +363,8 @@
                             <label>转正时间（入党时间）</label>
                             <div class="input-group flatpickr">
                                 <input type="text" class="form-control"
-                                       id="joiningPartyDate" name="joiningPartyDate" th:value="${rosterData.joiningPartyDate}" placeholder="转正时间（入党时间）"
+                                       id="joiningPartyDate" name="joiningPartyDate"
+                                       th:value="${rosterData.joiningPartyDate}" placeholder="转正时间（入党时间）"
                                        data-input>
                                 <span class="input-group-addon tx-size-sm lh-2" title="toggle" data-toggle><i
                                         class="fa fa-calendar" aria-hidden="true"></i></span>
@@ -371,7 +388,8 @@
     <input type="hidden" id="nationParam" th:value="${rosterData.nationId}"/>
     <input type="hidden" id="candidatesTypeParam" th:value="${rosterData.candidatesType}"/>
     <input type="hidden" id="isDeformedManParam" th:value="${rosterData.isDeformedMan}"/>
-    <input type="hidden" id="isMilitaryServiceRegistrationParam" th:value="${rosterData.isMilitaryServiceRegistration}"/>
+    <input type="hidden" id="isMilitaryServiceRegistrationParam"
+           th:value="${rosterData.isMilitaryServiceRegistration}"/>
     <input type="hidden" id="isProvideLoanParam" th:value="${rosterData.isProvideLoan}"/>
     <input type="hidden" id="isPoorStudentsParam" th:value="${rosterData.isPoorStudents}"/>
     <input type="hidden" id="poorStudentsTypeParam" th:value="${rosterData.poorStudentsType}"/>

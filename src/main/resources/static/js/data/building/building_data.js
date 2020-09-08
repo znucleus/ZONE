@@ -1,5 +1,5 @@
 //# sourceURL=building_data.js
-require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "responsive.bootstrap4", "check.all","select2-zh-CN", "jquery.address", "messenger"],
+require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "responsive.bootstrap4", "check.all", "select2-zh-CN", "jquery.address", "messenger"],
     function ($, DP, Handlebars, navActive, Swal) {
 
         /*
@@ -8,9 +8,9 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
         var param = {
             schoolName: '',
             collegeName: '',
-            buildingClassifyId:'',
+            buildingClassifyId: '',
             buildingName: '',
-            coordinate:''
+            coordinate: ''
         };
 
         /*
@@ -210,7 +210,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
                 collegeName: '#search_college',
                 buildingClassifyId: '#search_building_classify_id',
                 buildingName: '#search_building',
-                coordinate:'#search_coordinate'
+                coordinate: '#search_coordinate'
             };
         }
 
