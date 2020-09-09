@@ -9,9 +9,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.bean.educational.calendar.SchoolCalendarAuthoritiesBean;
 import top.zbeboy.zbase.bean.educational.calendar.SchoolCalendarBean;
+import top.zbeboy.zbase.domain.tables.pojos.College;
+import top.zbeboy.zbase.domain.tables.pojos.SchoolCalendar;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.educational.calendar.SchoolCalendarService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
+import top.zbeboy.zbase.tools.web.plugin.select2.Select2Data;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.TableSawUtil;
@@ -151,14 +154,28 @@ public class CalendarRestController {
     }
 
     /**
-     * 查看
+     * 查询最近数据
      *
      * @param collegeId 院id
      * @return 数据
      */
+    @GetMapping("/web/educational/calendars")
+    public ResponseEntity<Map<String, Object>> calendars(@RequestParam("collegeId") int collegeId) {
+        Select2Data select2Data = Select2Data.of();
+        List<SchoolCalendar> schoolCalendars = schoolCalendarService.findByCollegeIdRecently(collegeId);
+        schoolCalendars.forEach(schoolCalendar -> select2Data.add(schoolCalendar.getCalendarId(), schoolCalendar.getTitle()));
+        return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
+    }
+
+    /**
+     * 查看
+     *
+     * @param calendarId id
+     * @return 数据
+     */
     @GetMapping("/web/educational/calendar/look")
-    public ResponseEntity<Map<String, Object>> look(@RequestParam("collegeId") int collegeId) {
-        SchoolCalendarBean bean = schoolCalendarService.findByCollegeIdRelation(collegeId);
+    public ResponseEntity<Map<String, Object>> look(@RequestParam("calendarId") String calendarId) {
+        SchoolCalendarBean bean = schoolCalendarService.findByIdRelation(calendarId);
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (Objects.nonNull(bean) && StringUtils.isNotBlank(bean.getCalendarId())) {
             bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime()));

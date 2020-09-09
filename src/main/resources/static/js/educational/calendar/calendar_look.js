@@ -7,6 +7,7 @@ require(["jquery", "tools", "nav.active", "jquery.address", "js-year-calendar.zh
         var ajax_url = {
             obtain_school_data: web_path + '/anyone/data/school',
             obtain_college_data: web_path + '/anyone/data/college',
+            obtain_school_calendar_data: web_path + '/web/educational/calendars',
             data: web_path + '/web/educational/calendar/look',
             list: '/web/educational/calendar/list',
             authorize: '/web/educational/calendar/authorize/add',
@@ -20,7 +21,8 @@ require(["jquery", "tools", "nav.active", "jquery.address", "js-year-calendar.zh
         */
         var param_id = {
             school: '#school',
-            college: '#college'
+            college: '#college',
+            schoolCalendar: '#schoolCalendar'
         };
 
         var page_param = {
@@ -28,8 +30,18 @@ require(["jquery", "tools", "nav.active", "jquery.address", "js-year-calendar.zh
             collegeId: $('#collegeId').val()
         };
 
+        /*
+        web storage key.
+        */
+        var webStorageKey = {
+            SCHOOL: 'CALENDAR_SCHOOL_SEARCH',
+            COLLEGE: 'CALENDAR_COLLEGE_SEARCH',
+            SCHOOL_CALENDAR: 'CALENDAR_SCHOOL_CALENDAR_SEARCH'
+        };
+
         var init_configure = {
-            init_college: false
+            init_college: false,
+            init_school_calendar: false
         };
 
         init();
@@ -45,7 +57,17 @@ require(["jquery", "tools", "nav.active", "jquery.address", "js-year-calendar.zh
                 var sl = $(param_id.school).select2({
                     data: data.results
                 });
-                sl.val(page_param.schoolId).trigger("change");
+
+                var schoolId = null;
+                if (typeof (Storage) !== "undefined") {
+                    schoolId = sessionStorage.getItem(webStorageKey.SCHOOL);
+                }
+                if (schoolId !== null) {
+                    sl.val(schoolId).trigger("change");
+                } else {
+                    sl.val(page_param.schoolId).trigger("change");
+                }
+
             });
         }
 
@@ -55,12 +77,42 @@ require(["jquery", "tools", "nav.active", "jquery.address", "js-year-calendar.zh
                     $(param_id.college).html('<option label="请选择院"></option>');
                     var sl = $(param_id.college).select2({data: data.results});
                     if (!init_configure.init_college) {
-                        sl.val(page_param.collegeId).trigger("change");
+                        var collegeId = null;
+                        if (typeof (Storage) !== "undefined") {
+                            collegeId = sessionStorage.getItem(webStorageKey.COLLEGE);
+                        }
+                        if (collegeId !== null) {
+                            sl.val(collegeId).trigger("change");
+                        } else {
+                            sl.val(page_param.collegeId).trigger("change");
+                        }
                         init_configure.init_college = true;
                     }
                 });
             } else {
                 $(param_id.college).html('<option label="请选择院"></option>');
+            }
+        }
+
+        function initSchoolCalendar(collegeId) {
+            if (Number(collegeId) > 0) {
+                $.get(ajax_url.obtain_school_calendar_data, {collegeId: collegeId}, function (data) {
+                    $(param_id.schoolCalendar).html('<option label="请选择校历"></option>');
+                    var sl = $(param_id.schoolCalendar).select2({data: data.results});
+
+                    if (!init_configure.init_school_calendar) {
+                        var schoolCalendar = null;
+                        if (typeof (Storage) !== "undefined") {
+                            schoolCalendar = sessionStorage.getItem(webStorageKey.SCHOOL_CALENDAR);
+                        }
+                        if (schoolCalendar !== null) {
+                            sl.val(schoolCalendar).trigger("change");
+                        }
+                        init_configure.init_school_calendar = true;
+                    }
+                });
+            } else {
+                $(param_id.schoolCalendar).html('<option label="请选择校历"></option>');
             }
         }
 
@@ -73,16 +125,33 @@ require(["jquery", "tools", "nav.active", "jquery.address", "js-year-calendar.zh
         $(param_id.school).change(function () {
             var v = $(this).val();
             initCollege(v);
+
+            if (typeof (Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.SCHOOL, v);
+            }
         });
 
         $(param_id.college).change(function () {
             var v = $(this).val();
-            initData(v);
+            initSchoolCalendar(v);
+
+            if (typeof (Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.COLLEGE, v);
+            }
         });
 
-        function initData(collegeId) {
-            if (Number(collegeId) > 0) {
-                $.get(ajax_url.data, {collegeId: collegeId}, function (data) {
+        $(param_id.schoolCalendar).change(function () {
+            var v = $(this).val();
+            initData(v);
+
+            if (typeof (Storage) !== "undefined") {
+                sessionStorage.setItem(webStorageKey.SCHOOL_CALENDAR, v);
+            }
+        });
+
+        function initData(calendarId) {
+            if (calendarId && calendarId.length > 0) {
+                $.get(ajax_url.data, {calendarId: calendarId}, function (data) {
                     if (data.state) {
                         var calendar = data.calendar;
                         $('#title').text(calendar.title);
