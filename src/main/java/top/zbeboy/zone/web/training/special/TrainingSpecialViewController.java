@@ -11,9 +11,9 @@ import top.zbeboy.zbase.bean.training.special.TrainingSpecialDocumentBean;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.Files;
 import top.zbeboy.zbase.feign.system.FilesService;
+import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.training.TrainingSpecialDocumentService;
 import top.zbeboy.zone.service.training.TrainingSpecialService;
-import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
 
@@ -58,7 +58,7 @@ public class TrainingSpecialViewController {
         String page;
         if (trainingConditionCommon.specialCondition()) {
             Files files = filesService.findById(Workbook.SYSTEM_COVER);
-            if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())){
+            if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())) {
                 modelMap.addAttribute("cover", Workbook.DIRECTORY_SPLIT + files.getRelativePath());
             }
             page = "web/training/special/training_special_add::#page-wrapper";

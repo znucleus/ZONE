@@ -11,12 +11,12 @@ import top.zbeboy.zbase.domain.tables.pojos.AnswerResult;
 import top.zbeboy.zbase.domain.tables.pojos.AnswerSolving;
 import top.zbeboy.zbase.domain.tables.pojos.AnswerSubject;
 import top.zbeboy.zbase.domain.tables.records.AnswerResultRecord;
-import top.zbeboy.zone.service.answer.AnswerResultService;
-import top.zbeboy.zone.service.answer.AnswerSolvingService;
-import top.zbeboy.zone.service.answer.AnswerSubjectService;
 import top.zbeboy.zbase.tools.service.util.RequestUtil;
 import top.zbeboy.zbase.tools.service.util.UUIDUtil;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zone.service.answer.AnswerResultService;
+import top.zbeboy.zone.service.answer.AnswerSolvingService;
+import top.zbeboy.zone.service.answer.AnswerSubjectService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;

@@ -2,13 +2,12 @@ package top.zbeboy.zone.test;
 
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.joda.time.DateTime;
-import org.joda.time.Years;
+import org.joda.time.Weeks;
 import org.junit.Test;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Date;
 
@@ -22,7 +21,7 @@ public class TestDate {
 
         time = time.withDayOfWeek(2);
 
-        System.out.println(DateFormatUtils.format(time.toDate(),  "yyyyMMdd"));
+        System.out.println(DateFormatUtils.format(time.toDate(), "yyyyMMdd"));
 
         java.sql.Date date = DateTimeUtil.parseSqlDate(new Date());
         System.out.println(date);
@@ -32,6 +31,15 @@ public class TestDate {
 
         java.sql.Date next = DateTimeUtil.calculationSqlNextWeekDay(date, 6);
         System.out.println(next);
+    }
+
+    @Test
+    public void calcWeeks() {
+        java.sql.Date data1 = DateTimeUtil.defaultParseSqlDate("2020-08-24");
+        java.sql.Date data2 = DateTimeUtil.defaultParseSqlDate("2020-08-26");
+        DateTime dt1 = new DateTime(data1);
+        DateTime dt2 = new DateTime(data2);
+        System.out.print(Weeks.weeksBetween(dt1, dt2).getWeeks() + 1 + " 周 ");
     }
 
     private LocalDate calcNextFriday(LocalDate d) {

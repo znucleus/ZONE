@@ -22,19 +22,22 @@ import top.zbeboy.zbase.domain.tables.pojos.*;
 import top.zbeboy.zbase.domain.tables.records.InternshipJournalContentRecord;
 import top.zbeboy.zbase.domain.tables.records.InternshipJournalRecord;
 import top.zbeboy.zbase.feign.data.StudentService;
-import top.zbeboy.zone.service.export.InternshipJournalExport;
-import top.zbeboy.zone.service.internship.*;
-import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.service.util.FilesUtil;
 import top.zbeboy.zbase.tools.service.util.RequestUtil;
 import top.zbeboy.zbase.tools.service.util.UUIDUtil;
-import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
-import top.zbeboy.zbase.tools.web.util.*;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.BooleanUtil;
+import top.zbeboy.zbase.tools.web.util.ByteUtil;
+import top.zbeboy.zbase.tools.web.util.SmallPropsUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zbase.vo.internship.journal.InternshipJournalAddVo;
 import top.zbeboy.zbase.vo.internship.journal.InternshipJournalEditVo;
+import top.zbeboy.zone.service.export.InternshipJournalExport;
+import top.zbeboy.zone.service.internship.*;
+import top.zbeboy.zone.service.upload.UploadService;
+import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
@@ -84,8 +87,8 @@ public class InternshipJournalRestController {
         Result<Record> records = internshipReleaseService.findAllByPage(simplePaginationUtil);
         if (records.isNotEmpty()) {
             beans = records.into(InternshipReleaseBean.class);
-            beans.forEach(bean->{
-                if(BooleanUtil.toBoolean(bean.getIsTimeLimit())){
+            beans.forEach(bean -> {
+                if (BooleanUtil.toBoolean(bean.getIsTimeLimit())) {
                     bean.setTeacherDistributionStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionStartTime()));
                     bean.setTeacherDistributionEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionEndTime()));
                     bean.setStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getStartTime()));
@@ -251,7 +254,7 @@ public class InternshipJournalRestController {
                         }
 
                         // 异步保存word
-                        StudentBean studentBean  = studentService.findByIdRelation(internshipJournal.getStudentId());
+                        StudentBean studentBean = studentService.findByIdRelation(internshipJournal.getStudentId());
                         if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
                             internshipJournalService.saveWord(internshipJournal, internshipJournalContent, studentBean.getUsername(), request);
                             ajaxUtil.success().msg("保存成功");

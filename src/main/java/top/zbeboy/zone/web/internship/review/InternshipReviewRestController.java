@@ -18,20 +18,20 @@ import top.zbeboy.zbase.feign.platform.AuthorizeService;
 import top.zbeboy.zbase.feign.platform.UsersService;
 import top.zbeboy.zbase.feign.system.FilesService;
 import top.zbeboy.zbase.feign.system.SystemConfigureService;
-import top.zbeboy.zbase.tools.web.plugin.select2.Select2Data;
-import top.zbeboy.zone.service.internship.*;
-import top.zbeboy.zone.service.system.SystemMailService;
-import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.service.util.RequestUtil;
 import top.zbeboy.zbase.tools.service.util.UUIDUtil;
-import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
-import top.zbeboy.zone.web.internship.common.InternshipControllerCommon;
+import top.zbeboy.zbase.tools.web.plugin.select2.Select2Data;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.BooleanUtil;
 import top.zbeboy.zbase.tools.web.util.ByteUtil;
-import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
+import top.zbeboy.zone.service.internship.*;
+import top.zbeboy.zone.service.system.SystemMailService;
+import top.zbeboy.zone.service.upload.UploadService;
+import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
+import top.zbeboy.zone.web.internship.common.InternshipControllerCommon;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -102,8 +102,8 @@ public class InternshipReviewRestController {
         Result<Record> records = internshipReleaseService.findAllByPage(simplePaginationUtil);
         if (records.isNotEmpty()) {
             beans = records.into(InternshipReleaseBean.class);
-            beans.forEach(bean->{
-                if(BooleanUtil.toBoolean(bean.getIsTimeLimit())){
+            beans.forEach(bean -> {
+                if (BooleanUtil.toBoolean(bean.getIsTimeLimit())) {
                     bean.setTeacherDistributionStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionStartTime()));
                     bean.setTeacherDistributionEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionEndTime()));
                     bean.setStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getStartTime()));
@@ -485,7 +485,7 @@ public class InternshipReviewRestController {
             InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
             if (Objects.nonNull(internshipRelease)) {
                 Users sendUser = SessionUtil.getUserFromSession();
-                StudentBean studentBean= studentService.findByIdRelation(studentId);
+                StudentBean studentBean = studentService.findByIdRelation(studentId);
                 if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
                     Users acceptUsers = new Users();
                     acceptUsers.setUsername(studentBean.getUsername());
@@ -529,7 +529,7 @@ public class InternshipReviewRestController {
     @GetMapping("/web/internship/review/download/{id}")
     public void download(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
         Files files = filesService.findById(id);
-        if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())){
+        if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())) {
             uploadService.download(files.getOriginalFileName(), files.getRelativePath(), response, request);
         }
     }

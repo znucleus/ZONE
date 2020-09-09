@@ -6,9 +6,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zbase.bean.training.document.TrainingDocumentBean;
+import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zone.service.training.TrainingDocumentService;
 import top.zbeboy.zone.service.training.TrainingReleaseService;
-import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
 

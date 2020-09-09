@@ -46,7 +46,6 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
             schoolId: '',
             collegeId: '',
             grade: '',
-            title: '',
             startTime: '',
             endTime: '',
             remark: ''
@@ -64,8 +63,6 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
             }
 
             param.grade = $(param_id.grade).val();
-
-            param.title = $(param_id.school).find("option:selected").text() + $(param_id.college).find("option:selected").text() + $(param_id.grade).find("option:selected").text() + '花名册';
 
             var startTime = $(param_id.startTime).val();
             if (startTime.length > 0) {
@@ -192,14 +189,6 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
             }
         });
 
-        $(param_id.remark).change(function () {
-            var v = $(this).val();
-
-            if (Number(v) > 0) {
-                tools.validSelect2SuccessDom(param_id.remark);
-            }
-        });
-
         $(param_id.remark).blur(function () {
             initParam();
             var remark = param.remark;
@@ -278,7 +267,7 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
                     tools.validSuccessDom(param_id.endTime);
                     validRemark();
                 } else {
-                    tools.validErrorDom(param_id.endTime, '开始填写时间应大于或等于结束填写时间');
+                    tools.validErrorDom(param_id.endTime, '开始填写时间应小于或等于结束填写时间');
                 }
             }
         }

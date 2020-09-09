@@ -14,25 +14,25 @@ import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.*;
 import top.zbeboy.zbase.feign.data.StaffService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
-import top.zbeboy.zbase.tools.web.plugin.select2.Select2Data;
-import top.zbeboy.zone.service.export.InternshipRegulateExport;
-import top.zbeboy.zone.service.internship.InternshipInfoService;
-import top.zbeboy.zone.service.internship.InternshipRegulateService;
-import top.zbeboy.zone.service.internship.InternshipReleaseService;
-import top.zbeboy.zone.service.internship.InternshipTeacherDistributionService;
-import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.service.util.UUIDUtil;
-import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
+import top.zbeboy.zbase.tools.web.plugin.select2.Select2Data;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.BooleanUtil;
-import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zbase.tools.web.util.SmallPropsUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.ExportInfo;
 import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zbase.vo.internship.regulate.InternshipRegulateAddVo;
 import top.zbeboy.zbase.vo.internship.regulate.InternshipRegulateEditVo;
+import top.zbeboy.zone.service.export.InternshipRegulateExport;
+import top.zbeboy.zone.service.internship.InternshipInfoService;
+import top.zbeboy.zone.service.internship.InternshipRegulateService;
+import top.zbeboy.zone.service.internship.InternshipReleaseService;
+import top.zbeboy.zone.service.internship.InternshipTeacherDistributionService;
+import top.zbeboy.zone.service.upload.UploadService;
+import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -81,8 +81,8 @@ public class InternshipRegulateRestController {
         Result<Record> records = internshipReleaseService.findAllByPage(simplePaginationUtil);
         if (records.isNotEmpty()) {
             beans = records.into(InternshipReleaseBean.class);
-            beans.forEach(bean->{
-                if(BooleanUtil.toBoolean(bean.getIsTimeLimit())){
+            beans.forEach(bean -> {
+                if (BooleanUtil.toBoolean(bean.getIsTimeLimit())) {
                     bean.setTeacherDistributionStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionStartTime()));
                     bean.setTeacherDistributionEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionEndTime()));
                     bean.setStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getStartTime()));

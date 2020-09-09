@@ -1,4 +1,4 @@
-//# sourceURL=roster_date_edit.js
+//# sourceURL=roster_data_edit.js
 require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav.active", "bootstrap", "messenger",
         "csrf", "select2-zh-CN", "flatpickr-zh", "bootstrap-inputmask", "jquery.address"],
     function ($, _, tools, Swal, moment, navActive) {
@@ -25,13 +25,32 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
             politicalLandscapeId: '#politicalLandscape',
             nationId: '#nation',
             province: '#province',
+            nativePlace: '#nativePlace',
             region: '#region',
             busSection: '#busSection',
             parentName: '#parentName',
             parentContactPhone: '#parentContactPhone',
             parentContactAddress: '#parentContactAddress',
             zipCode: '#zipCode',
-            dormitoryNumber: '#dormitoryNumber'
+            candidatesType: '#candidatesType',
+            isDeformedMan: '#isDeformedMan',
+            deformedManCode: '#deformedManCode',
+            isMilitaryServiceRegistration: '#isMilitaryServiceRegistration',
+            isProvideLoan: '#isProvideLoan',
+            universityPosition: '#universityPosition',
+            isPoorStudents: '#isPoorStudents',
+            poorStudentsType: '#poorStudentsType',
+            isStayOutside: '#isStayOutside',
+            dormitoryNumber: '#dormitoryNumber',
+            stayOutsideType: '#stayOutsideType',
+            stayOutsideAddress: '#stayOutsideAddress',
+            leagueMemberJoinDate: '#leagueMemberJoinDate',
+            isRegisteredVolunteers: '#isRegisteredVolunteers',
+            isOkLeagueMembership: '#isOkLeagueMembership',
+            applyPartyMembershipDate: '#applyPartyMembershipDate',
+            becomeActivistsDate: '#becomeActivistsDate',
+            becomeProbationaryPartyMemberDate: '#becomeProbationaryPartyMemberDate',
+            joiningPartyDate: '#joiningPartyDate'
         };
 
         var button_id = {
@@ -46,7 +65,17 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
             rosterDataId: $('#rosterDataId').val(),
             sex: $('#sexParam').val(),
             politicalLandscapeId: $('#politicalLandscapeParam').val(),
-            nationId: $('#nationParam').val()
+            nationId: $('#nationParam').val(),
+            candidatesType: $('#candidatesTypeParam').val(),
+            isDeformedMan: $('#isDeformedManParam').val(),
+            isMilitaryServiceRegistration: $('#isMilitaryServiceRegistrationParam').val(),
+            isProvideLoan: $('#isProvideLoanParam').val(),
+            isPoorStudents: $('#isPoorStudentsParam').val(),
+            poorStudentsType: $('#poorStudentsTypeParam').val(),
+            isStayOutside: $('#isStayOutsideParam').val(),
+            stayOutsideType: $('#stayOutsideTypeParam').val(),
+            isRegisteredVolunteers: $('#isRegisteredVolunteersParam').val(),
+            isOkLeagueMembership: $('#isOkLeagueMembershipParam').val()
         };
 
         var param = {
@@ -59,13 +88,32 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
             politicalLandscapeId: '',
             nationId: '',
             province: '',
+            nativePlace: '',
             region: '',
             busSection: '',
             parentName: '',
             parentContactPhone: '',
             parentContactAddress: '',
             zipCode: '',
-            dormitoryNumber: ''
+            candidatesType: '',
+            isDeformedMan: '',
+            deformedManCode: '',
+            isMilitaryServiceRegistration: '',
+            isProvideLoan: '',
+            universityPosition: '',
+            isPoorStudents: '',
+            poorStudentsType: '',
+            isStayOutside: '',
+            dormitoryNumber: '',
+            stayOutsideType: '',
+            stayOutsideAddress: '',
+            leagueMemberJoinDate: '',
+            isRegisteredVolunteers: '',
+            isOkLeagueMembership: '',
+            applyPartyMembershipDate: '',
+            becomeActivistsDate: '',
+            becomeProbationaryPartyMemberDate: '',
+            joiningPartyDate: ''
         };
 
         function initParam() {
@@ -78,23 +126,74 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
             param.politicalLandscapeId = $(param_id.politicalLandscapeId).val();
             param.nationId = $(param_id.nationId).val();
             param.province = _.trim($(param_id.province).val());
+            param.nativePlace = _.trim($(param_id.nativePlace).val());
             param.region = _.trim($(param_id.region).val());
             param.busSection = _.trim($(param_id.busSection).val());
             param.parentName = _.trim($(param_id.parentName).val());
             param.parentContactPhone = _.trim($(param_id.parentContactPhone).val());
             param.parentContactAddress = _.trim($(param_id.parentContactAddress).val());
             param.zipCode = _.trim($(param_id.zipCode).val());
+            param.candidatesType = $(param_id.candidatesType).val();
+            param.isDeformedMan = $(param_id.isDeformedMan).val();
+            param.deformedManCode = _.trim($(param_id.deformedManCode).val());
+            param.isMilitaryServiceRegistration = $(param_id.isMilitaryServiceRegistration).val();
+            param.isProvideLoan = $(param_id.isProvideLoan).val();
+            param.universityPosition = _.trim($(param_id.universityPosition).val());
+            param.isPoorStudents = $(param_id.isPoorStudents).val();
+            param.poorStudentsType = $(param_id.poorStudentsType).val();
+            param.isStayOutside = $(param_id.isStayOutside).val();
             param.dormitoryNumber = _.trim($(param_id.dormitoryNumber).val());
+            param.stayOutsideType = $(param_id.stayOutsideType).val();
+            param.stayOutsideAddress = _.trim($(param_id.stayOutsideAddress).val());
+            param.leagueMemberJoinDate = $(param_id.leagueMemberJoinDate).val();
+            param.isRegisteredVolunteers = $(param_id.isRegisteredVolunteers).val();
+            param.isOkLeagueMembership = $(param_id.isOkLeagueMembership).val();
+            param.applyPartyMembershipDate = $(param_id.applyPartyMembershipDate).val();
+            param.becomeActivistsDate = $(param_id.becomeActivistsDate).val();
+            param.becomeProbationaryPartyMemberDate = $(param_id.becomeProbationaryPartyMemberDate).val();
+            param.joiningPartyDate = $(param_id.joiningPartyDate).val();
         }
 
         init();
 
         function init() {
+            initBaseData();
             initIdCard();
             initSex();
             initNation();
             initPoliticalLandscapeId();
             initSelect2();
+        }
+
+        function initBaseData() {
+            var isDeformedMan = page_param.isDeformedMan;
+            if (Number(isDeformedMan) === 1) {
+                $(param_id.deformedManCode).parent().css('display', '');
+            }
+
+            var isPoorStudents = page_param.isPoorStudents;
+            if (Number(isPoorStudents) === 1) {
+                $(param_id.poorStudentsType).parent().css('display', '');
+            }
+
+            var isStayOutside = page_param.isStayOutside;
+            if (Number(isStayOutside) === 1) {
+                $(param_id.stayOutsideType).parent().css('display', '');
+                $(param_id.stayOutsideAddress).parent().css('display', '');
+            } else {
+                $(param_id.dormitoryNumber).parent().css('display', '');
+            }
+
+            $(param_id.candidatesType).val(page_param.candidatesType);
+            $(param_id.isDeformedMan).val(page_param.isDeformedMan);
+            $(param_id.isMilitaryServiceRegistration).val(page_param.isMilitaryServiceRegistration);
+            $(param_id.isProvideLoan).val(page_param.isProvideLoan);
+            $(param_id.isPoorStudents).val(page_param.isPoorStudents);
+            $(param_id.poorStudentsType).val(page_param.poorStudentsType);
+            $(param_id.isStayOutside).val(page_param.isStayOutside);
+            $(param_id.stayOutsideType).val(page_param.stayOutsideType);
+            $(param_id.isRegisteredVolunteers).val(page_param.isRegisteredVolunteers);
+            $(param_id.isOkLeagueMembership).val(page_param.isOkLeagueMembership);
         }
 
         function initSelect2() {
@@ -144,6 +243,11 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
             defaultDate: _.trim($(param_id.birthday).val()) !== '' ? moment(_.trim($(param_id.birthday).val()), "YYYY-MM-DD").toDate() : moment((new Date().getFullYear() - 26) + "-01-07", "YYYY-MM-DD").toDate()
         });
 
+        $('.flatpickr').flatpickr({
+            "locale": "zh",
+            wrap: true
+        });
+
         $(param_id.idCard).blur(function () {
             initIdCard();
         });
@@ -159,6 +263,42 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
                         $(param_id.namePinyin).val(data.pinyin);
                     }
                 });
+            }
+        });
+
+        $(param_id.isDeformedMan).change(function () {
+            var v = $(this).val();
+            if (Number(v) === 1) {
+                $(param_id.deformedManCode).parent().css('display', '');
+            } else {
+                $(param_id.deformedManCode).parent().css('display', 'none');
+                $(param_id.deformedManCode).val('');
+            }
+        });
+
+        $(param_id.isPoorStudents).change(function () {
+            var v = $(this).val();
+            if (Number(v) === 1) {
+                $(param_id.poorStudentsType).parent().css('display', '');
+            } else {
+                $(param_id.poorStudentsType).parent().css('display', 'none');
+                $(param_id.poorStudentsType).val('');
+            }
+        });
+
+        $(param_id.isStayOutside).change(function () {
+            var v = $(this).val();
+            if (Number(v) === 1) {
+                $(param_id.stayOutsideType).parent().css('display', '');
+                $(param_id.stayOutsideAddress).parent().css('display', '');
+                $(param_id.dormitoryNumber).parent().css('display', 'none');
+                $(param_id.dormitoryNumber).val('');
+            } else {
+                $(param_id.stayOutsideType).parent().css('display', 'none');
+                $(param_id.stayOutsideAddress).parent().css('display', 'none');
+                $(param_id.dormitoryNumber).parent().css('display', '');
+                $(param_id.stayOutsideType).val('');
+                $(param_id.stayOutsideAddress).val('');
             }
         });
 
@@ -257,6 +397,17 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
                 errorTip('省份20个字符以内');
             } else {
                 tools.validSuccessDom(param_id.province);
+                validNativePlace();
+            }
+        }
+
+        function validNativePlace() {
+            var nativePlace = param.nativePlace;
+            if (nativePlace.length <= 0 || nativePlace.length > 120) {
+                tools.validErrorDom(param_id.nativePlace, '籍贯120个字符以内');
+                errorTip('籍贯120个字符以内');
+            } else {
+                tools.validSuccessDom(param_id.nativePlace);
                 validRegion();
             }
         }
@@ -321,25 +472,99 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
                     errorTip('邮政编码格式不正确');
                 } else {
                     tools.validSuccessDom(param_id.zipCode);
-                    validDormitoryNumber();
+                    validDeformedManCode();
                 }
             }
 
         }
 
-        function validDormitoryNumber() {
-            var dormitoryNumber = param.dormitoryNumber;
-            if (dormitoryNumber.length <= 0) {
-                tools.validErrorDom(param_id.dormitoryNumber, '请填写宿舍号');
-                errorTip('请填写宿舍号');
-            } else {
-                if (!tools.regex.dormitoryNumber.test(dormitoryNumber)) {
-                    tools.validErrorDom(param_id.dormitoryNumber, '宿舍号格式不正确');
-                    errorTip('宿舍号格式不正确');
+        function validDeformedManCode() {
+            var isDeformedMan = param.isDeformedMan;
+            var deformedManCode = param.deformedManCode;
+            if (Number(isDeformedMan) === 1) {
+                if (deformedManCode.length <= 0 || deformedManCode.length > 100) {
+                    tools.validErrorDom(param_id.deformedManCode, '残疾人编号100个字符以内');
+                    errorTip('残疾人编号100个字符以内');
                 } else {
-                    tools.validSuccessDom(param_id.dormitoryNumber);
+                    tools.validSuccessDom(param_id.deformedManCode);
+                    validPoorStudentsType();
+                }
+            } else {
+                tools.validSuccessDom(param_id.deformedManCode);
+                validPoorStudentsType();
+            }
+        }
+
+        function validPoorStudentsType() {
+            var isPoorStudents = param.isPoorStudents;
+            var poorStudentsType = param.poorStudentsType;
+            if (Number(isPoorStudents) === 1) {
+                if (poorStudentsType === '') {
+                    tools.validErrorDom(param_id.poorStudentsType, '请选择贫困生类型');
+                    errorTip('请选择贫困生类型');
+                } else {
+                    tools.validSuccessDom(param_id.poorStudentsType);
+                    validDormitoryNumber();
+                }
+            } else {
+                tools.validSuccessDom(param_id.poorStudentsType);
+                validDormitoryNumber();
+            }
+        }
+
+        function validDormitoryNumber() {
+            var isStayOutside = param.isStayOutside;
+            var dormitoryNumber = param.dormitoryNumber;
+            if (Number(isStayOutside) === 0) {
+                if (dormitoryNumber.length <= 0) {
+                    tools.validErrorDom(param_id.dormitoryNumber, '请填写宿舍号');
+                    errorTip('请填写宿舍号');
+                } else {
+                    if (!tools.regex.dormitoryNumber.test(dormitoryNumber)) {
+                        tools.validErrorDom(param_id.dormitoryNumber, '宿舍号格式不正确');
+                        errorTip('宿舍号格式不正确');
+                    } else {
+                        tools.validSuccessDom(param_id.dormitoryNumber);
+                        validStayOutsideType();
+                    }
+                }
+            } else {
+                tools.validSuccessDom(param_id.dormitoryNumber);
+                validStayOutsideType();
+            }
+        }
+
+        function validStayOutsideType() {
+            var isStayOutside = param.isStayOutside;
+            var stayOutsideType = param.stayOutsideType;
+            if (Number(isStayOutside) === 1) {
+                if (stayOutsideType === '') {
+                    tools.validErrorDom(param_id.stayOutsideType, '请选择外宿类型');
+                    errorTip('请选择外宿类型');
+                } else {
+                    tools.validSuccessDom(param_id.stayOutsideType);
+                    validStayOutsideAddress();
+                }
+            } else {
+                tools.validSuccessDom(param_id.stayOutsideType);
+                validStayOutsideAddress();
+            }
+        }
+
+        function validStayOutsideAddress() {
+            var isStayOutside = param.isStayOutside;
+            var stayOutsideAddress = param.stayOutsideAddress;
+            if (Number(isStayOutside) === 1) {
+                if (stayOutsideAddress.length <= 0 || stayOutsideAddress.length > 200) {
+                    tools.validErrorDom(param_id.stayOutsideAddress, '外宿详细地址200个字符以内');
+                    errorTip('外宿详细地址200个字符以内');
+                } else {
+                    tools.validSuccessDom(param_id.stayOutsideAddress);
                     lastInitParam();
                 }
+            } else {
+                tools.validSuccessDom(param_id.stayOutsideAddress);
+                lastInitParam();
             }
         }
 

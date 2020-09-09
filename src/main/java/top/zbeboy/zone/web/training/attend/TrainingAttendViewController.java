@@ -13,11 +13,11 @@ import top.zbeboy.zbase.domain.tables.pojos.TrainingRelease;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.domain.tables.pojos.UsersType;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
+import top.zbeboy.zbase.tools.web.util.BooleanUtil;
 import top.zbeboy.zone.service.training.TrainingAttendService;
 import top.zbeboy.zone.service.training.TrainingReleaseService;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
-import top.zbeboy.zbase.tools.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;

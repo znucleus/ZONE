@@ -19,6 +19,7 @@ requirejs.config({
         "moment": web_path + "/plugins/moment/moment.min",
         "moment-with-locales": web_path + "/plugins/moment/moment-with-locales.min",
         "jquery.showLoading": web_path + "/plugins/loading/js/jquery.showLoading.min",
+        "jquery-loading": web_path + "/plugins/jquery-loading/jquery.loading.min",
         "jquery.address": web_path + "/plugins/jquery-address/jquery.address-1.6.min",
         "jquery.simple-pagination": web_path + "/plugins/jquery-simple-pagination/jquery.simplePagination.min",
         "dropify": web_path + "/plugins/file-uploads/js/dropify.min",
@@ -52,7 +53,9 @@ requirejs.config({
         "jquery-toggles": web_path + "/plugins/jquery-toggles/toggles.min",
         "clipboard": web_path + "/plugins/clipboard/clipboard.min",
         "mfb": web_path + "/plugins/mfb/mfb.min",
-        "modernizr.touch": web_path + "/plugins/mfb/lib/modernizr.touch.min"
+        "modernizr.touch": web_path + "/plugins/mfb/lib/modernizr.touch.min",
+        "js-year-calendar": web_path + "/plugins/js-year-calendar/js-year-calendar.min",
+        "js-year-calendar.zh-CN": web_path + "/plugins/js-year-calendar/js-year-calendar.zh-CN.min"
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
@@ -75,6 +78,9 @@ requirejs.config({
             deps: ["jquery"]
         },
         "jquery.showLoading": {
+            deps: ["jquery"]
+        },
+        "jquery-loading": {
             deps: ["jquery"]
         },
         "jquery.address": {
@@ -152,6 +158,12 @@ requirejs.config({
         },
         "mfb": {
             deps: ["modernizr.touch", "css!" + web_path + "/plugins/mfb/mfb.min"]
+        },
+        "js-year-calendar": {
+            deps: ["jquery", "css!" + web_path + "/plugins/js-year-calendar/js-year-calendar.min", "css!" + web_path + "/plugins/js-year-calendar/custom"]
+        },
+        "js-year-calendar.zh-CN": {
+            deps: ["jquery", "js-year-calendar"]
         }
     }
 });
@@ -234,7 +246,7 @@ require(["jquery", "requirejs-domready", "moment-with-locales", "handlebars", "a
                 user_notify_reads: web_path + '/users/notify/reads',
                 system_notify: web_path + '/users/system/notify',
                 upgrade_student: '/users/upgrade/student',
-                upgrade_staff:'/users/upgrade/staff'
+                upgrade_staff: '/users/upgrade/staff'
             };
 
             var user_notify_param_id = {

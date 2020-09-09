@@ -14,9 +14,9 @@ import top.zbeboy.zbase.config.CacheBook;
 import top.zbeboy.zbase.domain.tables.daos.InternshipTeacherDistributionDao;
 import top.zbeboy.zbase.domain.tables.pojos.InternshipTeacherDistribution;
 import top.zbeboy.zbase.domain.tables.records.InternshipApplyRecord;
-import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zbase.tools.service.util.SQLQueryUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zone.service.plugin.PaginationPlugin;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;

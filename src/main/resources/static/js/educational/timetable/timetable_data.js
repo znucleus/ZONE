@@ -223,7 +223,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 }
 
                 initSearchContent();
-                if(data.listResult && data.listResult.length > 0){
+                if (data.listResult && data.listResult.length > 0) {
                     initData();
                     initCourseName();
                     initAttendClass();

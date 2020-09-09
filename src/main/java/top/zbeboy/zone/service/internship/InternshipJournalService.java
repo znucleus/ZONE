@@ -5,7 +5,6 @@ import org.jooq.Record3;
 import org.jooq.Result;
 import top.zbeboy.zbase.domain.tables.pojos.InternshipJournal;
 import top.zbeboy.zbase.domain.tables.pojos.InternshipJournalContent;
-import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.domain.tables.records.InternshipJournalRecord;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 
@@ -91,7 +90,7 @@ public interface InternshipJournalService {
      *
      * @param internshipJournal        数据
      * @param internshipJournalContent 内容
-     * @param username                    用户
+     * @param username                 用户
      * @param request                  请求
      */
     void saveWord(InternshipJournal internshipJournal, InternshipJournalContent internshipJournalContent, String username, HttpServletRequest request);

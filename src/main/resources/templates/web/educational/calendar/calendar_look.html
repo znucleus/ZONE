@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="pd-30">
+        <h4 class="tx-gray-800 mg-b-5">校园校历</h4>
+        <p class="mg-b-0">管理校园校历。</p>
+    </div><!-- d-flex -->
+
+    <div class="br-pagebody mg-t-5 pd-x-30">
+        <div class="br-section-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-4 mt-2">
+                            <select class="form-control select2-show-search" id="school"
+                                    data-placeholder="请选择学校">
+                                <option label="请选择学校"></option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mt-2">
+                            <select class="form-control select2-show-search" id="college"
+                                    data-placeholder="请选择院">
+                                <option label="请选择院"></option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mt-2">
+                            <select class="form-control select2-show-search" id="schoolCalendar"
+                                    data-placeholder="请选择校历">
+                                <option label="请选择校历"></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mg-t-7">
+                    <div class="card">
+                        <div class="card-header tx-medium bd-0 tx-white bg-primary" id="title">
+                        </div>
+                        <div class="card-body color-gray-lighter">
+                            <div class="row">
+                                <div class="col-md-4 tx-xs-center tx-sm-center tx-md-left tx-lg-left tx-xl-left tx-black mg-t-5"
+                                     id="schoolName"></div>
+                                <div class="col-md-4 tx-xs-center tx-sm-center tx-md-center tx-lg-center tx-xl-center tx-black mg-t-5"
+                                     id="collegeName"></div>
+                                <div class="col-md-4 tx-xs-center tx-sm-center tx-md-right tx-lg-right tx-xl-right tx-black mg-t-5"
+                                     id="academicYear"></div>
+                                <div class="col-md-6 tx-xs-center tx-sm-center tx-md-left tx-lg-left tx-xl-left tx-black mg-t-5"
+                                     id="openDate"></div>
+                                <div class="col-md-6 tx-xs-center tx-sm-center tx-md-right tx-lg-right tx-xl-right tx-black mg-t-5"
+                                     id="holidayDate"></div>
+                                <div class="col-md-4 tx-xs-center tx-sm-center tx-md-left tx-lg-left tx-xl-left tx-black mg-t-5"
+                                     id="nowDate"></div>
+                                <div class="col-md-4 tx-xs-center tx-sm-center tx-md-center tx-lg-center tx-xl-center tx-black mg-t-5"
+                                     id="week"></div>
+                                <div class="col-md-4 tx-xs-center tx-sm-center tx-md-right tx-lg-right tx-xl-right tx-black mg-t-5"
+                                     id="weeks"></div>
+                                <div class="col-md-12 tx-black mg-t-5" id="remark"></div>
+                            </div>
+                        </div><!-- card-body -->
+                        <div class="card-footer tx-right">
+                            <em id="releaseTimeStr"></em>
+                        </div><!-- card-footer -->
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="float-right mg-t-5">
+                        <button type="button" class="btn btn-outline-primary" id="list" th:if="${canRelease}"><i
+                                class="fa fa-cog"></i> 管理
+                        </button>
+                        <button type="button" class="btn btn-purple" id="authorize"
+                                sec:authorize="hasAnyRole('ROLE_SYSTEM','ROLE_ADMIN')"><i class="fa fa-user-o"></i> 分配权限
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div id="calendar" class="tx-black mg-t-7"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" id="schoolId" th:value="${schoolId}"/>
+    <input type="hidden" id="collegeId" th:value="${collegeId}"/>
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/educational/calendar/calendar_look.js')}"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>

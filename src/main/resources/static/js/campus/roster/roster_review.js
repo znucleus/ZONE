@@ -70,6 +70,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
             "aaSorting": [[20, 'desc']],// 排序
             "ajax": {
                 "url": getAjaxUrl().data,
+                "type": "POST",
                 "dataSrc": "data",
                 "data": function (d) {
                     // 添加额外的参数传给服务器
@@ -91,6 +92,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                 {"data": "nationName"},
                 {"data": "organizeName"},
                 {"data": "province"},
+                {"data": "nativePlace"},
                 {"data": "region"},
                 {"data": "busSection"},
                 {"data": "parentName"},
@@ -98,7 +100,26 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                 {"data": "parentContactAddress"},
                 {"data": "zipCode"},
                 {"data": "phoneNumber"},
+                {"data": "email"},
+                {"data": "candidatesType"},
+                {"data": "isDeformedMan"},
+                {"data": "deformedManCode"},
+                {"data": "isMilitaryServiceRegistration"},
+                {"data": "isProvideLoan"},
+                {"data": "universityPosition"},
+                {"data": "isPoorStudents"},
+                {"data": "poorStudentsType"},
+                {"data": "isStayOutside"},
                 {"data": "dormitoryNumber"},
+                {"data": "stayOutsideType"},
+                {"data": "stayOutsideAddress"},
+                {"data": "leagueMemberJoinDate"},
+                {"data": "isRegisteredVolunteers"},
+                {"data": "isOkLeagueMembership"},
+                {"data": "applyPartyMembershipDate"},
+                {"data": "becomeActivistsDate"},
+                {"data": "becomeProbationaryPartyMemberDate"},
+                {"data": "joiningPartyDate"},
                 {"data": "createDateStr"},
                 {"data": null}
             ],
@@ -119,6 +140,148 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                 },
                 {
                     targets: 21,
+                    render: function (a, b, c, d) {
+                        var v = '';
+                        var n = Number(c.candidatesType);
+                        if (n === 0) {
+                            v = '城镇应届';
+                        } else if (n === 1) {
+                            v = '城市往届';
+                        } else if (n === 2) {
+                            v = '农村应届';
+                        } else if (n === 3) {
+                            v = '农村往届';
+                        }
+                        return v;
+                    }
+                },
+                {
+                    targets: 22,
+                    render: function (a, b, c, d) {
+                        var v = '';
+                        var n = Number(c.isDeformedMan);
+                        if (n === 0) {
+                            v = '否';
+                        } else if (n === 1) {
+                            v = '是';
+                        }
+                        return v;
+                    }
+                },
+                {
+                    targets: 24,
+                    render: function (a, b, c, d) {
+                        var v = '';
+                        var n = Number(c.isMilitaryServiceRegistration);
+                        if (n === 0) {
+                            v = '否';
+                        } else if (n === 1) {
+                            v = '是';
+                        }
+                        return v;
+                    }
+                },
+                {
+                    targets: 25,
+                    render: function (a, b, c, d) {
+                        var v = '';
+                        var n = Number(c.isProvideLoan);
+                        if (n === 0) {
+                            v = '否';
+                        } else if (n === 1) {
+                            v = '是';
+                        }
+                        return v;
+                    }
+                },
+                {
+                    targets: 27,
+                    render: function (a, b, c, d) {
+                        var v = '';
+                        var n = Number(c.isPoorStudents);
+                        if (n === 0) {
+                            v = '否';
+                        } else if (n === 1) {
+                            v = '是';
+                        }
+                        return v;
+                    }
+                },
+                {
+                    targets: 28,
+                    render: function (a, b, c, d) {
+                        var v = '';
+                        var n = Number(c.poorStudentsType);
+                        if (n === 0) {
+                            v = '一般困难';
+                        } else if (n === 1) {
+                            v = '贫困';
+                        } else if (n === 3) {
+                            v = '特困';
+                        } else if (n === 4) {
+                            v = '建档立卡户';
+                        }
+                        return v;
+                    }
+                },
+                {
+                    targets: 29,
+                    render: function (a, b, c, d) {
+                        var v = '';
+                        var n = Number(c.isStayOutside);
+                        if (n === 0) {
+                            v = '否';
+                        } else if (n === 1) {
+                            v = '是';
+                        }
+                        return v;
+                    }
+                },
+                {
+                    targets: 31,
+                    render: function (a, b, c, d) {
+                        var v = '';
+                        var n = Number(c.stayOutsideType);
+                        if (n === 0) {
+                            v = '住自家';
+                        } else if (n === 1) {
+                            v = '亲戚家';
+                        } else if (n === 2) {
+                            v = '同学家';
+                        } else if (n === 3) {
+                            v = '租房';
+                        }
+                        return v;
+                    }
+                },
+                {
+                    targets: 34,
+                    render: function (a, b, c, d) {
+                        var v = '';
+                        var n = Number(c.isRegisteredVolunteers);
+                        if (n === 0) {
+                            v = '否';
+                        } else if (n === 1) {
+                            v = '是';
+                        }
+                        return v;
+                    }
+                },
+                {
+                    targets: 35,
+                    render: function (a, b, c, d) {
+                        var v = '';
+                        var n = Number(c.isOkLeagueMembership);
+                        if (n === 0) {
+                            v = '否';
+                        } else if (n === 1) {
+                            v = '是';
+                        }
+                        return v;
+                    }
+                },
+                {
+                    targets: 41,
                     orderable: false,
                     render: function (a, b, c, d) {
 

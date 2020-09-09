@@ -55,7 +55,7 @@ public class WebSecurity {
             roleList.forEach(r -> roles.add(r.getRoleEnName()));
         }
 
-        if(!roles.isEmpty()){
+        if (!roles.isEmpty()) {
             List<Application> applications = roleService.findInRoleEnNamesRelation(roles, users.getUsername());
             for (Application application : applications) {
                 if (uri.endsWith(application.getApplicationUrl())) {

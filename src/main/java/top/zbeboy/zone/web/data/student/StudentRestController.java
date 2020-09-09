@@ -131,7 +131,7 @@ public class StudentRestController {
 
                 // 同步花名册
                 RosterData rosterData = rosterReleaseService.findRosterDataByStudentNumber(studentAddVo.getStudentNumber());
-                if (Objects.nonNull(rosterData) && StringUtils.isNotBlank(rosterData.getRosterDataId())){
+                if (Objects.nonNull(rosterData) && StringUtils.isNotBlank(rosterData.getRosterDataId())) {
                     studentAddVo.setBirthday(rosterData.getBirthday());
                     studentAddVo.setSex(rosterData.getSex());
                     studentAddVo.setPoliticalLandscapeId(rosterData.getPoliticalLandscapeId());
@@ -139,6 +139,10 @@ public class StudentRestController {
                     studentAddVo.setDormitoryNumber(rosterData.getDormitoryNumber());
                     studentAddVo.setParentName(rosterData.getParentName());
                     studentAddVo.setParentContactPhone(rosterData.getParentContactPhone());
+
+                    rosterData.setPhoneNumber(studentAddVo.getMobile());
+                    rosterData.setEmail(studentAddVo.getEmail());
+                    rosterReleaseService.dataSync(rosterData);
                 }
 
                 ajaxUtil = studentService.save(studentAddVo);

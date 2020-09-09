@@ -46,7 +46,7 @@ public class OauthViewController {
             model.put("client", client);
 
             OauthClientUsers oauthClientUsers = appService.findOauthClientUsersById(clientAuth.getClientId());
-            if(Objects.nonNull(oauthClientUsers) && StringUtils.isNotBlank(oauthClientUsers.getClientId())){
+            if (Objects.nonNull(oauthClientUsers) && StringUtils.isNotBlank(oauthClientUsers.getClientId())) {
                 model.put("appName", oauthClientUsers.getAppName());
             }
             Map<String, String> scopes = new LinkedHashMap<>();

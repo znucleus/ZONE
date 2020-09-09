@@ -23,9 +23,9 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
         var param_id = {
             school: '#school',
             college: '#college',
-            buildingClassify:'#buildingClassify',
+            buildingClassify: '#buildingClassify',
             buildingName: '#buildingName',
-            coordinate:'#coordinate'
+            coordinate: '#coordinate'
         };
 
         var button_id = {
@@ -42,9 +42,9 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
         var param = {
             schoolId: '',
             collegeId: '',
-            buildingClassifyId:'',
+            buildingClassifyId: '',
             buildingName: '',
-            coordinate:'',
+            coordinate: '',
             buildingIsDel: ''
         };
 

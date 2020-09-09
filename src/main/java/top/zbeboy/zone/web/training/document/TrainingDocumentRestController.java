@@ -16,24 +16,24 @@ import top.zbeboy.zbase.bean.training.release.TrainingReleaseBean;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.*;
 import top.zbeboy.zbase.feign.system.FilesService;
+import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
+import top.zbeboy.zbase.tools.service.util.FilesUtil;
+import top.zbeboy.zbase.tools.service.util.RequestUtil;
+import top.zbeboy.zbase.tools.service.util.UUIDUtil;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.BooleanUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
+import top.zbeboy.zbase.vo.training.document.TrainingDocumentAddVo;
+import top.zbeboy.zbase.vo.training.document.TrainingDocumentEditVo;
 import top.zbeboy.zone.service.training.TrainingDocumentContentService;
 import top.zbeboy.zone.service.training.TrainingDocumentFileService;
 import top.zbeboy.zone.service.training.TrainingDocumentService;
 import top.zbeboy.zone.service.training.TrainingReleaseService;
 import top.zbeboy.zone.service.upload.FileBean;
 import top.zbeboy.zone.service.upload.UploadService;
-import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
-import top.zbeboy.zbase.tools.service.util.FilesUtil;
-import top.zbeboy.zbase.tools.service.util.RequestUtil;
-import top.zbeboy.zbase.tools.service.util.UUIDUtil;
 import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
 import top.zbeboy.zone.web.training.common.TrainingControllerCommon;
-import top.zbeboy.zbase.tools.web.util.AjaxUtil;
-import top.zbeboy.zbase.tools.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.SessionUtil;
-import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
-import top.zbeboy.zbase.vo.training.document.TrainingDocumentAddVo;
-import top.zbeboy.zbase.vo.training.document.TrainingDocumentEditVo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -308,7 +308,7 @@ public class TrainingDocumentRestController {
             if (trainingConditionCommon.canOperator(trainingDocumentFile.getTrainingReleaseId())) {
                 trainingDocumentFileService.deleteById(trainingDocumentFileId);
                 Files files = filesService.findById(trainingDocumentFile.getFileId());
-                if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())){
+                if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())) {
                     FilesUtil.deleteFile(RequestUtil.getRealPath(request) + files.getRelativePath());
                     filesService.delete(files);
                 }
@@ -335,7 +335,7 @@ public class TrainingDocumentRestController {
         if (Objects.nonNull(trainingDocumentFile)) {
             trainingDocumentFileService.updateDownloads(id);
             Files files = filesService.findById(trainingDocumentFile.getFileId());
-            if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())){
+            if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())) {
                 uploadService.download(files.getOriginalFileName(), files.getRelativePath(), response, request);
             }
         }

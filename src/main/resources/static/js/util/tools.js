@@ -42,19 +42,23 @@ define(["jquery"], function ($) {
             },
             dataLoading: function () {
                 // 显示遮罩
-                $('#page-wrapper').showLoading();
+                $('#page-wrapper').loading({
+                    stoppable: true
+                });
             },
             dataEndLoading: function () {
                 // 去除遮罩
-                $('#page-wrapper').hideLoading();
+                $('#page-wrapper').loading('stop');
             },
             dataLocalLoading: function (id) {
                 // 显示遮罩
-                $(id).showLoading();
+                $(id).loading({
+                    stoppable: true
+                });
             },
             dataLocalEndLoading: function (id) {
                 // 去除遮罩
-                $(id).hideLoading();
+                $(id).loading('stop');
             },
             toSize: function (size) {
                 var str = "";

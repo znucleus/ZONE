@@ -5,10 +5,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import top.zbeboy.zbase.tools.web.util.BooleanUtil;
 import top.zbeboy.zone.service.training.TrainingReleaseService;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 import top.zbeboy.zone.web.training.common.TrainingConditionCommon;
-import top.zbeboy.zbase.tools.web.util.BooleanUtil;
 
 import javax.annotation.Resource;
 import java.util.Optional;

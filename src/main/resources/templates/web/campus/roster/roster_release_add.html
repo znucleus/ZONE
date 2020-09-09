@@ -22,6 +22,7 @@
                 <div class="col-md-12">
                     <form id="app_form">
                         <div class="form-group" style="display: none">
+                            <label>学校</label>
                             <select class="form-control select2-show-search" id="school"
                                     data-placeholder="请选择学校">
                                 <option label="请选择学校"></option>
@@ -29,6 +30,7 @@
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group" style="display: none">
+                            <label>院</label>
                             <select class="form-control select2-show-search" id="college"
                                     data-placeholder="请选择院">
                                 <option label="请选择院"></option>
@@ -36,6 +38,7 @@
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
+                            <label>年级</label>
                             <select class="form-control select2-show-search" name="gradeId" id="grade"
                                     data-placeholder="请选择年级">
                                 <option label="请选择年级"></option>
@@ -56,7 +59,8 @@
                         </div>
                         <div class="form-group">
                             <label>备注</label>
-                            <textarea class="form-control" id="remark" rows="3" name="remark" maxlength="200"></textarea>
+                            <textarea class="form-control" id="remark" rows="3" name="remark"
+                                      maxlength="200"></textarea>
                         </div>
                         <div class="form-group text-center">
                             <button type="button" class="btn btn-primary text-center" id="save">保存</button>

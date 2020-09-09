@@ -4,10 +4,10 @@ import org.jooq.Record;
 import org.jooq.Result;
 import org.springframework.stereotype.Component;
 import top.zbeboy.zbase.bean.training.release.TrainingReleaseBean;
-import top.zbeboy.zone.service.training.TrainingReleaseService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
+import top.zbeboy.zone.service.training.TrainingReleaseService;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;

@@ -7,8 +7,8 @@ import top.zbeboy.zbase.bean.notify.UserNotifyBean;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.notify.UserNotifyService;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
-import top.zbeboy.zone.web.util.SessionUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
+import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import java.util.Map;

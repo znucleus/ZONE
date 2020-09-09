@@ -11,9 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import top.zbeboy.zbase.domain.tables.daos.TrainingAttendUsersDao;
 import top.zbeboy.zbase.domain.tables.pojos.TrainingAttendUsers;
 import top.zbeboy.zbase.domain.tables.records.TrainingAttendUsersRecord;
-import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import top.zbeboy.zbase.tools.service.util.SQLQueryUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zone.service.plugin.PaginationPlugin;
 
 import javax.annotation.Resource;
 import java.util.List;

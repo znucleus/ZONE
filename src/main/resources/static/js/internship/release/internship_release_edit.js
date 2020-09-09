@@ -303,7 +303,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
 
         function validIsTimeLimit() {
             var isTimeLimit = param.isTimeLimit;
-            if(Number(isTimeLimit) === 0){
+            if (Number(isTimeLimit) === 0) {
                 sendAjax();
             } else {
                 validTeacherDistributionTime();

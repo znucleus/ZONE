@@ -14,18 +14,18 @@ import top.zbeboy.zbase.bean.internship.statistical.InternshipStatisticalBean;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.InternshipInfo;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
-import top.zbeboy.zbase.tools.web.plugin.select2.Select2Data;
-import top.zbeboy.zone.service.export.InternshipInfoExport;
-import top.zbeboy.zone.service.internship.*;
-import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
-import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
-import top.zbeboy.zone.web.internship.common.InternshipControllerCommon;
+import top.zbeboy.zbase.tools.web.plugin.select2.Select2Data;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.BooleanUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.ExportInfo;
 import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
+import top.zbeboy.zone.service.export.InternshipInfoExport;
+import top.zbeboy.zone.service.internship.*;
+import top.zbeboy.zone.service.upload.UploadService;
+import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
+import top.zbeboy.zone.web.internship.common.InternshipControllerCommon;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
@@ -77,8 +77,8 @@ public class InternshipStatisticalRestController {
         Result<Record> records = internshipReleaseService.findAllByPage(simplePaginationUtil);
         if (records.isNotEmpty()) {
             beans = records.into(InternshipReleaseBean.class);
-            beans.forEach(bean->{
-                if(BooleanUtil.toBoolean(bean.getIsTimeLimit())){
+            beans.forEach(bean -> {
+                if (BooleanUtil.toBoolean(bean.getIsTimeLimit())) {
                     bean.setTeacherDistributionStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionStartTime()));
                     bean.setTeacherDistributionEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionEndTime()));
                     bean.setStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getStartTime()));

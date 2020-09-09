@@ -51,10 +51,10 @@ public class OrganizeRestController {
     public ResponseEntity<Map<String, Object>> anyoneData(OrganizeSearchVo organizeSearchVo, HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
         List<Organize> organizes = new ArrayList<>();
-        if(Objects.nonNull(organizeSearchVo.getGradeId()) && organizeSearchVo.getGradeId() > 0){
+        if (Objects.nonNull(organizeSearchVo.getGradeId()) && organizeSearchVo.getGradeId() > 0) {
             organizes = organizeService.findByGradeIdAndOrganizeIsDel(organizeSearchVo);
-        } else if(Objects.nonNull(organizeSearchVo.getGrade()) && organizeSearchVo.getGrade() > 0 &&
-        Objects.nonNull(organizeSearchVo.getCollegeId()) && organizeSearchVo.getCollegeId() > 0){
+        } else if (Objects.nonNull(organizeSearchVo.getGrade()) && organizeSearchVo.getGrade() > 0 &&
+                Objects.nonNull(organizeSearchVo.getCollegeId()) && organizeSearchVo.getCollegeId() > 0) {
             organizes = organizeService.findByGradeAndCollegeIdAndOrganizeIsDel(organizeSearchVo);
         }
         organizes.forEach(organize -> select2Data.add(organize.getOrganizeId().toString(), organize.getOrganizeName()));
@@ -160,7 +160,7 @@ public class OrganizeRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = organizeService.update(organizeEditVo);
         Users users = SessionUtil.getUserFromSession();
         SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(),
-                "更新班级"+organizeEditVo.getOrganizeId()+"[" + organizeEditVo.getOrganizeName() + "]",
+                "更新班级" + organizeEditVo.getOrganizeId() + "[" + organizeEditVo.getOrganizeName() + "]",
                 DateTimeUtil.getNowSqlTimestamp(), users.getUsername(), RequestUtil.getIpAddress(request));
         systemLogService.save(systemLog);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);

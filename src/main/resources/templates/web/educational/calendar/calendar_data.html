@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="br-pageheader pd-y-15 pd-l-20">
+        <nav class="breadcrumb pd-0 mg-0 tx-12">
+            <a class="breadcrumb-item dy_href" href="#/web/menu/educational/calendar">校历</a>
+            <span class="breadcrumb-item active">校历数据</span>
+        </nav>
+    </div><!-- br-pageheader -->
+    <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
+        <h4 class="tx-gray-800 mg-b-5">校历数据</h4>
+        <p class="mg-b-0">管理校历数据。</p>
+    </div>
+
+    <div class="br-pagebody">
+        <div class="br-section-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12 mt-2">
+                            <input type="text" id="search_title" class="form-control" placeholder="标题"/>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button type="button" id="search" class="btn btn-outline-secondary"><i
+                                class="fa fa-search"></i>搜索
+                        </button>
+                        <button type="button" id="reset_search" class="btn btn-outline-secondary"><i
+                                class="fa fa-repeat"></i>重置
+                        </button>
+                    </div>
+                </div>
+
+                <div class="col-md-12 mt-2">
+                    <table id="dataTable" class="table table-striped table-bordered dt-responsive nowrap"
+                           cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th data-priority="1">#</th>
+                            <th data-priority="2">
+                                <input type="checkbox" name="checkall" id="checkall"/>
+                            </th>
+                            <th data-priority="3">标题</th>
+                            <th>院</th>
+                            <th>学年</th>
+                            <th>学期</th>
+                            <th>开学日期</th>
+                            <th>结束日期</th>
+                            <th>放假日期</th>
+                            <th>收假日期</th>
+                            <th>发布人</th>
+                            <th>发布时间</th>
+                            <th>备注</th>
+                            <th data-priority="4">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--定义操作列按钮模板-->
+    <script id="operator_button" type="text/x-handlebars-template">
+        <div class="btn-group" role="group">
+            {{#each func}}
+            <button type="button" class="btn btn-{{this.type}} btn-sm {{this.css}}" data-id="{{this.id}}"
+                    data-calendar="{{this.calendar}}">{{this.name}}
+            </button>
+            {{/each}}
+        </div>
+    </script>
+
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/educational/calendar/calendar_data.js')}"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>
