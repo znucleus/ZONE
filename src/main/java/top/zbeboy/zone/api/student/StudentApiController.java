@@ -46,6 +46,7 @@ public class StudentApiController {
                 outPut.put("studentId", studentBean.getStudentId());
                 outPut.put("studentNumber", studentBean.getStudentNumber());
                 outPut.put("organizeId", studentBean.getOrganizeId());
+                outPut.put("organizeName", studentBean.getOrganizeName());
                 outPut.put("schoolId", studentBean.getSchoolId());
                 ajaxUtil.success().msg("获取用户信息成功").map(outPut);
             } else {
