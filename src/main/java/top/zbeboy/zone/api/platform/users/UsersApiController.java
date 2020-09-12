@@ -1,4 +1,4 @@
-package top.zbeboy.zone.api.users;
+package top.zbeboy.zone.api.platform.users;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;

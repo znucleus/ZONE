@@ -1,4 +1,4 @@
-package top.zbeboy.zone.api.student;
+package top.zbeboy.zone.api.data.student;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
