@@ -60,7 +60,7 @@ public class CampusRosterRestController {
      * @param studentNumber 学号
      * @return 是否填写
      */
-    @PostMapping("/anyone/campus/roster/check/student/number")
+    @GetMapping("/anyone/campus/roster/check/student/number")
     public ResponseEntity<Map<String, Object>> checkStudentNumber(@RequestParam("studentNumber") String studentNumber) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         RosterData rosterData = rosterReleaseService.findRosterDataByStudentNumber(studentNumber);

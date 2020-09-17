@@ -74,8 +74,6 @@ require(["jquery", "requirejs-domready", "tools", "sweetalert2", "moment-with-lo
             moment.locale('zh-cn');
 
             var ajax_url = {
-                obtain_department_data: web_path + '/anyone/data/department',
-                obtain_science_data: web_path + '/anyone/data/science',
                 obtain_organize_data: web_path + '/anyone/data/organize',
                 obtain_nation_data: web_path + '/anyone/data/nation',
                 obtain_political_landscape_data: web_path + '/anyone/data/politics',
@@ -232,7 +230,7 @@ require(["jquery", "requirejs-domready", "tools", "sweetalert2", "moment-with-lo
                     if (!regex.test(studentNumber)) {
                         tools.validErrorDom(param_id.studentNumber, '学号13位数字');
                     } else {
-                        $.post(ajax_url.check_student_number, {studentNumber: studentNumber}, function (data) {
+                        $.get(ajax_url.check_student_number, {studentNumber: studentNumber}, function (data) {
                             if (data.state) {
                                 tools.validErrorDom(param_id.studentNumber, "该学号已登记，若需要修改资料，请登录后修改。");
                             } else {
