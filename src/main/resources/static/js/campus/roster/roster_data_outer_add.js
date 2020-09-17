@@ -62,9 +62,9 @@ requirejs.onError = function (err) {
     throw err;
 };
 
-require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "bootstrap", "messenger",
+require(["jquery", "tools", "sweetalert2", "moment-with-locales", "bootstrap", "messenger",
         "csrf", "select2-zh-CN", "flatpickr-zh", "bootstrap-inputmask", "jquery-loading"],
-    function ($, _, tools, Swal, moment) {
+    function ($, tools, Swal, moment) {
         Messenger.options = {
             extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',
             theme: 'flat'
@@ -183,37 +183,37 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
 
         function initParam() {
             param.rosterReleaseId = page_param.rosterReleaseId;
-            param.studentNumber = _.trim($(param_id.studentNumber).val());
-            param.realName = _.trim($(param_id.realName).val());
-            param.namePinyin = _.trim($(param_id.namePinyin).val());
+            param.studentNumber = tools.trim($(param_id.studentNumber).val());
+            param.realName = tools.trim($(param_id.realName).val());
+            param.namePinyin = tools.trim($(param_id.namePinyin).val());
             param.sex = $(param_id.sex).val();
             param.birthday = $(param_id.birthday).val();
-            param.idCard = _.trim($(param_id.idCard).val());
+            param.idCard = tools.trim($(param_id.idCard).val());
             param.politicalLandscapeId = $(param_id.politicalLandscapeId).val();
             param.nationId = $(param_id.nationId).val();
             param.organizeId = $(param_id.organizeId).val();
-            param.province = _.trim($(param_id.province).val());
-            param.nativePlace = _.trim($(param_id.nativePlace).val());
-            param.region = _.trim($(param_id.region).val());
-            param.busSection = _.trim($(param_id.busSection).val());
-            param.parentName = _.trim($(param_id.parentName).val());
-            param.parentContactPhone = _.trim($(param_id.parentContactPhone).val());
-            param.parentContactAddress = _.trim($(param_id.parentContactAddress).val());
-            param.zipCode = _.trim($(param_id.zipCode).val());
-            param.phoneNumber = _.trim($(param_id.phoneNumber).val());
-            param.email = _.trim($(param_id.email).val());
+            param.province = tools.trim($(param_id.province).val());
+            param.nativePlace = tools.trim($(param_id.nativePlace).val());
+            param.region = tools.trim($(param_id.region).val());
+            param.busSection = tools.trim($(param_id.busSection).val());
+            param.parentName = tools.trim($(param_id.parentName).val());
+            param.parentContactPhone = tools.trim($(param_id.parentContactPhone).val());
+            param.parentContactAddress = tools.trim($(param_id.parentContactAddress).val());
+            param.zipCode = tools.trim($(param_id.zipCode).val());
+            param.phoneNumber = tools.trim($(param_id.phoneNumber).val());
+            param.email = tools.trim($(param_id.email).val());
             param.candidatesType = $(param_id.candidatesType).val();
             param.isDeformedMan = $(param_id.isDeformedMan).val();
-            param.deformedManCode = _.trim($(param_id.deformedManCode).val());
+            param.deformedManCode = tools.trim($(param_id.deformedManCode).val());
             param.isMilitaryServiceRegistration = $(param_id.isMilitaryServiceRegistration).val();
             param.isProvideLoan = $(param_id.isProvideLoan).val();
-            param.universityPosition = _.trim($(param_id.universityPosition).val());
+            param.universityPosition = tools.trim($(param_id.universityPosition).val());
             param.isPoorStudents = $(param_id.isPoorStudents).val();
             param.poorStudentsType = $(param_id.poorStudentsType).val();
             param.isStayOutside = $(param_id.isStayOutside).val();
-            param.dormitoryNumber = _.trim($(param_id.dormitoryNumber).val());
+            param.dormitoryNumber = tools.trim($(param_id.dormitoryNumber).val());
             param.stayOutsideType = $(param_id.stayOutsideType).val();
-            param.stayOutsideAddress = _.trim($(param_id.stayOutsideAddress).val());
+            param.stayOutsideAddress = tools.trim($(param_id.stayOutsideAddress).val());
             param.leagueMemberJoinDate = $(param_id.leagueMemberJoinDate).val();
             param.isRegisteredVolunteers = $(param_id.isRegisteredVolunteers).val();
             param.isOkLeagueMembership = $(param_id.isOkLeagueMembership).val();
@@ -316,7 +316,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
 
         $(param_id.birthday).flatpickr({
             "locale": "zh",
-            defaultDate: _.trim($(param_id.birthday).val()) !== '' ? moment(_.trim($(param_id.birthday).val()), "YYYY-MM-DD").toDate() : moment((new Date().getFullYear() - 26) + "-01-07", "YYYY-MM-DD").toDate()
+            defaultDate: tools.trim($(param_id.birthday).val()) !== '' ? moment(tools.trim($(param_id.birthday).val()), "YYYY-MM-DD").toDate() : moment((new Date().getFullYear() - 26) + "-01-07", "YYYY-MM-DD").toDate()
         });
 
         $('.flatpickr').flatpickr({
