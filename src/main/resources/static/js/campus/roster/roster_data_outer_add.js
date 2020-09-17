@@ -24,9 +24,6 @@ requirejs.config({
         "tools": {
             deps: ["jquery"]
         },
-        "csrf": {
-            deps: ["jquery"]
-        },
         "bootstrap": {
             deps: ["jquery"]
         },
