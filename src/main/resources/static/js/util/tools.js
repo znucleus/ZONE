@@ -61,7 +61,7 @@ define(["jquery"], function ($) {
                 $(id).loading('stop');
             },
             toSize: function (size) {
-                var str = "";
+                var str;
                 if (size < 1024) {
                     str = size + "B";
                 } else if (size >= 1024 && size < 1024 * 1024) {
@@ -117,6 +117,9 @@ define(["jquery"], function ($) {
                         break;
                 }
                 return v;
+            },
+            trim: function (str) {
+                return str.replace(/(^\s*)|(\s*$)/g, "");
             }
         };
     }

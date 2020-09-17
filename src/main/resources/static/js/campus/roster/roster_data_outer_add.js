@@ -230,16 +230,15 @@ require(["jquery", "tools", "sweetalert2", "moment-with-locales", "bootstrap", "
                 var regex = tools.regex.studentNumber;
                 if (!regex.test(studentNumber)) {
                     tools.validErrorDom(param_id.studentNumber, '学号13位数字');
-                    return;
+                } else {
+                    $.post(ajax_url.check_student_number, {studentNumber: studentNumber}, function (data) {
+                        if (data.state) {
+                            tools.validErrorDom(param_id.studentNumber, "该学号已登记，若需要修改资料，请登录后修改。");
+                        } else {
+                            tools.validSuccessDom(param_id.studentNumber);
+                        }
+                    });
                 }
-
-                $.post(ajax_url.check_student_number, {studentNumber: studentNumber}, function (data) {
-                    if (data.state) {
-                        tools.validErrorDom(param_id.studentNumber, "该学号已登记，若需要修改资料，请登录后修改。");
-                    } else {
-                        tools.validSuccessDom(param_id.studentNumber);
-                    }
-                });
             } else {
                 tools.validSuccessDom(param_id.studentNumber);
             }
@@ -376,18 +375,17 @@ require(["jquery", "tools", "sweetalert2", "moment-with-locales", "bootstrap", "
                 if (!regex.test(studentNumber)) {
                     tools.validErrorDom(param_id.studentNumber, '学号13位数字');
                     errorTip('学号13位数字');
-                    return;
+                } else {
+                    $.post(ajax_url.check_student_number, {studentNumber: studentNumber}, function (data) {
+                        if (data.state) {
+                            tools.validErrorDom(param_id.studentNumber, "该学号已填写，若需要修改资料，请登录后修改。");
+                            errorTip('该学号已填写，若需要修改资料，请登录后修改。');
+                        } else {
+                            tools.validSuccessDom(param_id.studentNumber);
+                            validRealName();
+                        }
+                    });
                 }
-
-                $.post(ajax_url.check_student_number, {studentNumber: studentNumber}, function (data) {
-                    if (data.state) {
-                        tools.validErrorDom(param_id.studentNumber, "该学号已填写，若需要修改资料，请登录后修改。");
-                        errorTip('该学号已填写，若需要修改资料，请登录后修改。');
-                    } else {
-                        tools.validSuccessDom(param_id.studentNumber);
-                        validRealName();
-                    }
-                });
             } else {
                 tools.validErrorDom(param_id.studentNumber, "请填写学号");
                 errorTip('请填写学号');
