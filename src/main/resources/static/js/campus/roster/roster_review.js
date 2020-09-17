@@ -142,7 +142,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                     targets: 21,
                     render: function (a, b, c, d) {
                         var v = '';
-                        if(c.candidatesType){
+                        if(null != c.candidatesType){
                             var n = Number(c.candidatesType);
                             if (n === 0) {
                                 v = '城镇应届';
@@ -161,7 +161,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                     targets: 22,
                     render: function (a, b, c, d) {
                         var v = '';
-                        if(c.isDeformedMan){
+                        if(null != c.isDeformedMan){
                             var n = Number(c.isDeformedMan);
                             if (n === 0) {
                                 v = '否';
@@ -176,7 +176,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                     targets: 24,
                     render: function (a, b, c, d) {
                         var v = '';
-                        if(c.isMilitaryServiceRegistration){
+                        if(null != c.isMilitaryServiceRegistration){
                             var n = Number(c.isMilitaryServiceRegistration);
                             if (n === 0) {
                                 v = '否';
@@ -191,7 +191,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                     targets: 25,
                     render: function (a, b, c, d) {
                         var v = '';
-                        if(c.isProvideLoan){
+                        if(null != c.isProvideLoan){
                             var n = Number(c.isProvideLoan);
                             if (n === 0) {
                                 v = '否';
@@ -206,7 +206,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                     targets: 27,
                     render: function (a, b, c, d) {
                         var v = '';
-                        if(c.isPoorStudents){
+                        if(null != c.isPoorStudents){
                             var n = Number(c.isPoorStudents);
                             if (n === 0) {
                                 v = '否';
@@ -221,7 +221,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                     targets: 28,
                     render: function (a, b, c, d) {
                         var v = '';
-                        if(c.poorStudentsType){
+                        if(null != c.poorStudentsType){
                             var n = Number(c.poorStudentsType);
                             if (n === 0) {
                                 v = '一般困难';
@@ -240,7 +240,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                     targets: 29,
                     render: function (a, b, c, d) {
                         var v = '';
-                        if(c.isStayOutside){
+                        if(null != c.isStayOutside){
                             var n = Number(c.isStayOutside);
                             if (n === 0) {
                                 v = '否';
@@ -255,7 +255,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                     targets: 31,
                     render: function (a, b, c, d) {
                         var v = '';
-                        if(c.stayOutsideType){
+                        if(null != c.stayOutsideType){
                             var n = Number(c.stayOutsideType);
                             if (n === 0) {
                                 v = '住自家';
@@ -274,7 +274,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                     targets: 34,
                     render: function (a, b, c, d) {
                         var v = '';
-                        if(c.isRegisteredVolunteers){
+                        if(null != c.isRegisteredVolunteers){
                             var n = Number(c.isRegisteredVolunteers);
                             if (n === 0) {
                                 v = '否';
@@ -289,7 +289,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                     targets: 35,
                     render: function (a, b, c, d) {
                         var v = '';
-                        if(c.isOkLeagueMembership){
+                        if(null != c.isOkLeagueMembership){
                             var n = Number(c.isOkLeagueMembership);
                             if (n === 0) {
                                 v = '否';
