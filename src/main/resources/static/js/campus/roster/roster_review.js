@@ -142,15 +142,17 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                     targets: 21,
                     render: function (a, b, c, d) {
                         var v = '';
-                        var n = Number(c.candidatesType);
-                        if (n === 0) {
-                            v = '城镇应届';
-                        } else if (n === 1) {
-                            v = '城市往届';
-                        } else if (n === 2) {
-                            v = '农村应届';
-                        } else if (n === 3) {
-                            v = '农村往届';
+                        if(c.candidatesType){
+                            var n = Number(c.candidatesType);
+                            if (n === 0) {
+                                v = '城镇应届';
+                            } else if (n === 1) {
+                                v = '城市往届';
+                            } else if (n === 2) {
+                                v = '农村应届';
+                            } else if (n === 3) {
+                                v = '农村往届';
+                            }
                         }
                         return v;
                     }
@@ -159,11 +161,13 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                     targets: 22,
                     render: function (a, b, c, d) {
                         var v = '';
-                        var n = Number(c.isDeformedMan);
-                        if (n === 0) {
-                            v = '否';
-                        } else if (n === 1) {
-                            v = '是';
+                        if(c.isDeformedMan){
+                            var n = Number(c.isDeformedMan);
+                            if (n === 0) {
+                                v = '否';
+                            } else if (n === 1) {
+                                v = '是';
+                            }
                         }
                         return v;
                     }
@@ -172,11 +176,13 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                     targets: 24,
                     render: function (a, b, c, d) {
                         var v = '';
-                        var n = Number(c.isMilitaryServiceRegistration);
-                        if (n === 0) {
-                            v = '否';
-                        } else if (n === 1) {
-                            v = '是';
+                        if(c.isMilitaryServiceRegistration){
+                            var n = Number(c.isMilitaryServiceRegistration);
+                            if (n === 0) {
+                                v = '否';
+                            } else if (n === 1) {
+                                v = '是';
+                            }
                         }
                         return v;
                     }
@@ -185,11 +191,13 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                     targets: 25,
                     render: function (a, b, c, d) {
                         var v = '';
-                        var n = Number(c.isProvideLoan);
-                        if (n === 0) {
-                            v = '否';
-                        } else if (n === 1) {
-                            v = '是';
+                        if(c.isProvideLoan){
+                            var n = Number(c.isProvideLoan);
+                            if (n === 0) {
+                                v = '否';
+                            } else if (n === 1) {
+                                v = '是';
+                            }
                         }
                         return v;
                     }
@@ -198,11 +206,13 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                     targets: 27,
                     render: function (a, b, c, d) {
                         var v = '';
-                        var n = Number(c.isPoorStudents);
-                        if (n === 0) {
-                            v = '否';
-                        } else if (n === 1) {
-                            v = '是';
+                        if(c.isPoorStudents){
+                            var n = Number(c.isPoorStudents);
+                            if (n === 0) {
+                                v = '否';
+                            } else if (n === 1) {
+                                v = '是';
+                            }
                         }
                         return v;
                     }
@@ -211,15 +221,17 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                     targets: 28,
                     render: function (a, b, c, d) {
                         var v = '';
-                        var n = Number(c.poorStudentsType);
-                        if (n === 0) {
-                            v = '一般困难';
-                        } else if (n === 1) {
-                            v = '贫困';
-                        } else if (n === 3) {
-                            v = '特困';
-                        } else if (n === 4) {
-                            v = '建档立卡户';
+                        if(c.poorStudentsType){
+                            var n = Number(c.poorStudentsType);
+                            if (n === 0) {
+                                v = '一般困难';
+                            } else if (n === 1) {
+                                v = '贫困';
+                            } else if (n === 3) {
+                                v = '特困';
+                            } else if (n === 4) {
+                                v = '建档立卡户';
+                            }
                         }
                         return v;
                     }
@@ -228,11 +240,13 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                     targets: 29,
                     render: function (a, b, c, d) {
                         var v = '';
-                        var n = Number(c.isStayOutside);
-                        if (n === 0) {
-                            v = '否';
-                        } else if (n === 1) {
-                            v = '是';
+                        if(c.isStayOutside){
+                            var n = Number(c.isStayOutside);
+                            if (n === 0) {
+                                v = '否';
+                            } else if (n === 1) {
+                                v = '是';
+                            } 
                         }
                         return v;
                     }
@@ -241,15 +255,17 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                     targets: 31,
                     render: function (a, b, c, d) {
                         var v = '';
-                        var n = Number(c.stayOutsideType);
-                        if (n === 0) {
-                            v = '住自家';
-                        } else if (n === 1) {
-                            v = '亲戚家';
-                        } else if (n === 2) {
-                            v = '同学家';
-                        } else if (n === 3) {
-                            v = '租房';
+                        if(c.stayOutsideType){
+                            var n = Number(c.stayOutsideType);
+                            if (n === 0) {
+                                v = '住自家';
+                            } else if (n === 1) {
+                                v = '亲戚家';
+                            } else if (n === 2) {
+                                v = '同学家';
+                            } else if (n === 3) {
+                                v = '租房';
+                            }
                         }
                         return v;
                     }
@@ -258,11 +274,13 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                     targets: 34,
                     render: function (a, b, c, d) {
                         var v = '';
-                        var n = Number(c.isRegisteredVolunteers);
-                        if (n === 0) {
-                            v = '否';
-                        } else if (n === 1) {
-                            v = '是';
+                        if(c.isRegisteredVolunteers){
+                            var n = Number(c.isRegisteredVolunteers);
+                            if (n === 0) {
+                                v = '否';
+                            } else if (n === 1) {
+                                v = '是';
+                            }
                         }
                         return v;
                     }
@@ -271,11 +289,13 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                     targets: 35,
                     render: function (a, b, c, d) {
                         var v = '';
-                        var n = Number(c.isOkLeagueMembership);
-                        if (n === 0) {
-                            v = '否';
-                        } else if (n === 1) {
-                            v = '是';
+                        if(c.isOkLeagueMembership){
+                            var n = Number(c.isOkLeagueMembership);
+                            if (n === 0) {
+                                v = '否';
+                            } else if (n === 1) {
+                                v = '是';
+                            }
                         }
                         return v;
                     }
