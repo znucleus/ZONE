@@ -67,7 +67,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf()
-                .ignoringAntMatchers("/api/**", Workbook.OAUTH_AUTHORIZE)
+                .ignoringAntMatchers("/api/**", "/anyone/**", Workbook.OAUTH_AUTHORIZE)
                 .and()
                 .headers()
                 // allow same origin to frame our site to support iframe SockJS
