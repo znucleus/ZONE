@@ -15,8 +15,6 @@ spring:
     host: smtp.qq.com
   jooq:
     sql-dialect: mysql
-  session:
-    store-type: redis
 
 # project info
 info:
@@ -38,7 +36,11 @@ zone:
 server:
   compression:
     enabled: true
-    min-response-size: 1
+  undertow:
+    buffer-size: 1024
+    io-threads: 16
+    worker-threads: 256
+    direct-buffers: true
 
 # web manage
 management:

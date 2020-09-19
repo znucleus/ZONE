@@ -8,6 +8,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
+import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import top.zbeboy.zbase.config.ZoneProperties;
 import top.zbeboy.zone.web.util.SpringBootUtil;
 
@@ -18,6 +19,7 @@ import top.zbeboy.zone.web.util.SpringBootUtil;
 @EnableConfigurationProperties(ZoneProperties.class)
 @EnableDiscoveryClient
 @EnableFeignClients(basePackages = {"top.zbeboy.zone", "top.zbeboy.zbase"})
+@EnableRedisHttpSession
 public class Application {
 
     public static void main(String[] args) {
