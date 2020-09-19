@@ -60,7 +60,7 @@ public class CampusRosterRestController {
      * @param studentNumber 学号
      * @return 是否填写
      */
-    @GetMapping("/anyone/campus/roster/check_student_number")
+    @PostMapping("/anyone/campus/roster/check_student_number")
     public ResponseEntity<Map<String, Object>> checkStudentNumber(@RequestParam("studentNumber") String studentNumber) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         RosterData rosterData = rosterReleaseService.findRosterDataByStudentNumber(studentNumber);
@@ -198,7 +198,7 @@ public class CampusRosterRestController {
      * @return true or false
      */
     @ApiLoggingRecord(remark = "校园开学外部数据保存", channel = Workbook.channel.WEB)
-    @PostMapping("/overt/campus/roster/data/save")
+    @PostMapping("/anyone/campus/roster/data/save")
     public ResponseEntity<Map<String, Object>> dataOuterSave(@Valid RosterDataAddVo rosterDataAddVo, BindingResult bindingResult, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
