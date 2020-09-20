@@ -44,6 +44,7 @@ public class StaffApiController {
                 outPut.put("staffNumber", bean.getStaffNumber());
                 outPut.put("departmentId", bean.getDepartmentId());
                 outPut.put("schoolId", bean.getSchoolId());
+                outPut.put("realName", bean.getRealName());
                 ajaxUtil.success().msg("获取用户信息成功").map(outPut);
             } else {
                 ajaxUtil.fail().msg("未查询到教职工信息");
