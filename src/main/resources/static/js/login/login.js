@@ -204,6 +204,7 @@ require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf"]
                             break;
                         default:
                             globalError.text('系统登录异常，请联系管理员');
+                            console.log(data);
                     }
                 });
             }
