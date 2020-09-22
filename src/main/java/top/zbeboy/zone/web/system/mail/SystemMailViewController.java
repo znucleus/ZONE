@@ -14,6 +14,7 @@ import top.zbeboy.zbase.bean.data.student.StudentBean;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.config.ZoneProperties;
 import top.zbeboy.zbase.domain.tables.pojos.*;
+import top.zbeboy.zbase.feign.campus.roster.RosterReleaseService;
 import top.zbeboy.zbase.feign.data.PotentialService;
 import top.zbeboy.zbase.feign.data.StaffService;
 import top.zbeboy.zbase.feign.data.StudentService;
@@ -71,6 +72,9 @@ public class SystemMailViewController {
     @Resource
     private AuthorizeService authorizeService;
 
+    @Resource
+    private RosterReleaseService rosterReleaseService;
+
     /**
      * 用户验证邮箱
      *
@@ -105,6 +109,16 @@ public class SystemMailViewController {
                             StudentBean bean = studentService.findByUsernameRelation(users.getUsername());
                             if (Objects.nonNull(bean.getCollegeId())) {
                                 collegeId = bean.getCollegeId();
+                            }
+
+                            // 进行花名册同步
+                            if(StringUtils.isNotBlank(bean.getStudentNumber())){
+                                RosterData rosterData = rosterReleaseService.findRosterDataByStudentNumber(bean.getStudentNumber());
+                                if (Objects.nonNull(rosterData) && StringUtils.isNotBlank(rosterData.getRosterDataId())) {
+                                    rosterData.setPhoneNumber(bean.getMobile());
+                                    rosterData.setEmail(bean.getEmail());
+                                    rosterReleaseService.dataSync(rosterData);
+                                }
                             }
                         } else if (StringUtils.equals(usersType.getUsersTypeName(), Workbook.POTENTIAL_USERS_TYPE)) {
                             PotentialBean bean = potentialService.findByUsernameRelation(users.getUsername());
