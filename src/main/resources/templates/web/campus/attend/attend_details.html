@@ -104,6 +104,7 @@
         {{/each}}
     </script>
 
+    <input type="hidden" id="attendReleaseId" th:value="${attendReleaseId}"/>
     <input type="hidden" id="attendReleaseSubId" th:value="${attendReleaseSubId}"/>
     <input type="hidden" class="dy_script"
            th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/campus/attend/attend_details.js')}"/>

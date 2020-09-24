@@ -3,6 +3,7 @@ package top.zbeboy.zone.api.campus.attend;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.bean.campus.attend.AttendReleaseBean;
@@ -26,6 +27,60 @@ public class AttendReleaseApiController {
 
     @Resource
     private AttendReleaseService attendReleaseService;
+
+    /**
+     * 检查是否可分配权限
+     *
+     * @param id 发布id
+     * @return true or false
+     */
+    @GetMapping("/api/attend/attend_condition/authorize/{id}")
+    public ResponseEntity<Map<String, Object>> canAuthorize(@PathVariable("id") String id, Principal principal) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        Users users = SessionUtil.getUserFromOauth(principal);
+        if (attendReleaseService.canAuthorize(users.getUsername(), id)) {
+            ajaxUtil.success().msg("可操作");
+        } else {
+            ajaxUtil.fail().msg("无权限操作");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 检查是否可操作分配权限
+     *
+     * @param targetUsername 被授权人
+     * @return true or false
+     */
+    @GetMapping("/api/attend/attend_condition/operator_authorize/{targetUsername}")
+    public ResponseEntity<Map<String, Object>> canOperatorAuthorize(@PathVariable("targetUsername") String targetUsername, Principal principal) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        Users users = SessionUtil.getUserFromOauth(principal);
+        if (attendReleaseService.canOperatorAuthorize(users.getUsername(), targetUsername)) {
+            ajaxUtil.success().msg("可操作");
+        } else {
+            ajaxUtil.fail().msg("无权限操作");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 检查是否可统计
+     *
+     * @param id 发布id
+     * @return true or false
+     */
+    @GetMapping("/api/attend/attend_condition/review/{id}")
+    public ResponseEntity<Map<String, Object>> canReview(@PathVariable("id") String id, Principal principal) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        Users users = SessionUtil.getUserFromOauth(principal);
+        if (attendReleaseService.canReview(users.getUsername(), id)) {
+            ajaxUtil.success().msg("可操作");
+        } else {
+            ajaxUtil.fail().msg("无权限操作");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
 
     /**
      * 保存

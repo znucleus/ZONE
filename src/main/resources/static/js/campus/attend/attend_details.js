@@ -15,6 +15,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
         navActive(getAjaxUrl().page);
 
         var page_param = {
+            attendReleaseId: $('#attendReleaseId').val(),
             attendReleaseSubId: $('#attendReleaseSubId').val(),
             initData: []
         };
@@ -55,6 +56,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
         参数
         */
         var param = {
+            attendReleaseId: page_param.attendReleaseId,
             attendReleaseSubId: page_param.attendReleaseSubId,
             type: 2
         };
@@ -210,7 +212,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
                     $(button_id.hasAttend.id).addClass('active');
                 } else if (Number(type) === 2) {
                     $(button_id.noAttend.id).addClass('active');
-                } else if (Number(type) === 3){
+                } else if (Number(type) === 3) {
                     $(button_id.allAttend.id).addClass('active');
                 } else {
                     $(button_id.noAttend.id).addClass('active');

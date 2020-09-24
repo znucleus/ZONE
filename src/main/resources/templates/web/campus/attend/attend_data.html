@@ -65,7 +65,7 @@
     <script id="operator_button" type="text/x-handlebars-template">
         <div class="btn-group" role="group">
             {{#each func}}
-            <button type="button" class="btn btn-{{this.type}} btn-sm {{this.css}}" data-id="{{this.id}}">{{this.name}}
+            <button type="button" class="btn btn-{{this.type}} btn-sm {{this.css}}" data-id="{{this.id}}" data-sub-id="{{this.subId}}">{{this.name}}
             </button>
             {{/each}}
         </div>
