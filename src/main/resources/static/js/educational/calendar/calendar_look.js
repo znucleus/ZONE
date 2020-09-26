@@ -59,8 +59,8 @@ require(["jquery", "tools", "nav.active", "jquery.address", "js-year-calendar.zh
                 });
 
                 var schoolId = null;
-                if (typeof (Storage) !== "undefined") {
-                    schoolId = sessionStorage.getItem(webStorageKey.SCHOOL);
+                if (localStorage) {
+                    schoolId = localStorage.getItem(webStorageKey.SCHOOL);
                 }
                 if (schoolId !== null) {
                     sl.val(schoolId).trigger("change");
@@ -78,8 +78,8 @@ require(["jquery", "tools", "nav.active", "jquery.address", "js-year-calendar.zh
                     var sl = $(param_id.college).select2({data: data.results});
                     if (!init_configure.init_college) {
                         var collegeId = null;
-                        if (typeof (Storage) !== "undefined") {
-                            collegeId = sessionStorage.getItem(webStorageKey.COLLEGE);
+                        if (localStorage) {
+                            collegeId = localStorage.getItem(webStorageKey.COLLEGE);
                         }
                         if (collegeId !== null) {
                             sl.val(collegeId).trigger("change");
@@ -102,8 +102,8 @@ require(["jquery", "tools", "nav.active", "jquery.address", "js-year-calendar.zh
 
                     if (!init_configure.init_school_calendar) {
                         var schoolCalendar = null;
-                        if (typeof (Storage) !== "undefined") {
-                            schoolCalendar = sessionStorage.getItem(webStorageKey.SCHOOL_CALENDAR);
+                        if (localStorage) {
+                            schoolCalendar = localStorage.getItem(webStorageKey.SCHOOL_CALENDAR);
                         }
                         if (schoolCalendar !== null) {
                             sl.val(schoolCalendar).trigger("change");
@@ -126,8 +126,8 @@ require(["jquery", "tools", "nav.active", "jquery.address", "js-year-calendar.zh
             var v = $(this).val();
             initCollege(v);
 
-            if (typeof (Storage) !== "undefined") {
-                sessionStorage.setItem(webStorageKey.SCHOOL, v);
+            if (localStorage) {
+                localStorage.setItem(webStorageKey.SCHOOL, v);
             }
         });
 
@@ -135,8 +135,8 @@ require(["jquery", "tools", "nav.active", "jquery.address", "js-year-calendar.zh
             var v = $(this).val();
             initSchoolCalendar(v);
 
-            if (typeof (Storage) !== "undefined") {
-                sessionStorage.setItem(webStorageKey.COLLEGE, v);
+            if (localStorage) {
+                localStorage.setItem(webStorageKey.COLLEGE, v);
             }
         });
 
@@ -144,8 +144,8 @@ require(["jquery", "tools", "nav.active", "jquery.address", "js-year-calendar.zh
             var v = $(this).val();
             initData(v);
 
-            if (typeof (Storage) !== "undefined") {
-                sessionStorage.setItem(webStorageKey.SCHOOL_CALENDAR, v);
+            if (localStorage) {
+                localStorage.setItem(webStorageKey.SCHOOL_CALENDAR, v);
             }
         });
 
