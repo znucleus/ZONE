@@ -1,6 +1,6 @@
 //# sourceURL=attend_data.js
-require(["jquery", "nav.active", "responsive.bootstrap4", "flatpickr-zh"],
-    function ($, navActive) {
+require(["jquery", "handlebars", "nav.active", "responsive.bootstrap4", "flatpickr-zh"],
+    function ($, Handlebars, navActive) {
 
         /*
          参数
@@ -27,11 +27,15 @@ require(["jquery", "nav.active", "responsive.bootstrap4", "flatpickr-zh"],
         function getAjaxUrl() {
             return {
                 data: web_path + '/web/campus/attend/data',
+                details: '/web/campus/attend/details',
                 page: '/web/menu/campus/attend'
             };
         }
 
         navActive(getAjaxUrl().page);
+
+        // 预编译模板
+        var template = Handlebars.compile($("#operator_button").html());
 
         var tableElement = $('#dataTable');
 
@@ -68,7 +72,8 @@ require(["jquery", "nav.active", "responsive.bootstrap4", "flatpickr-zh"],
                 {"data": "organizeName"},
                 {"data": "totalUsers"},
                 {"data": "totalAttend"},
-                {"data": "releaseTimeStr"}
+                {"data": "releaseTimeStr"},
+                {"data": null}
             ],
             columnDefs: [
                 {
@@ -113,6 +118,32 @@ require(["jquery", "nav.active", "responsive.bootstrap4", "flatpickr-zh"],
                 {
                     targets: 8,
                     orderable: false
+                },
+                {
+                    targets: 10,
+                    orderable: false,
+                    render: function (a, b, c, d) {
+                        var context = null;
+                        var html = '<i class="fa fa-lock"></i>';
+                        if (c.canReview === 1) {
+                            context = {
+                                func: [
+                                    {
+                                        "name": "详情",
+                                        "css": "details",
+                                        "type": "primary",
+                                        "id": c.attendReleaseId,
+                                        "subId": c.attendReleaseSubId,
+                                    }
+                                ]
+                            };
+                        }
+
+                        if (context != null) {
+                            html = template(context);
+                        }
+                        return html;
+                    }
                 }
 
             ],
@@ -144,6 +175,10 @@ require(["jquery", "nav.active", "responsive.bootstrap4", "flatpickr-zh"],
                 "t" +
                 "<'row'<'col-sm-5'i><'col-sm-7'p>>",
             initComplete: function () {
+                tableElement.delegate('.details', "click", function () {
+                    details($(this).attr('data-id'), $(this).attr('data-sub-id'));
+                });
+
                 // 初始化搜索框中内容
                 initSearchInput();
             }
@@ -281,4 +316,11 @@ require(["jquery", "nav.active", "responsive.bootstrap4", "flatpickr-zh"],
         $('#refresh').click(function () {
             myTable.ajax.reload();
         });
+
+        /*
+        编辑页面
+        */
+        function details(attendReleaseId, attendReleaseSubId) {
+            $.address.value(getAjaxUrl().details + '/' + attendReleaseId + '/' + attendReleaseSubId);
+        }
     });

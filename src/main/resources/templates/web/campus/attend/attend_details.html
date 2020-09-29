@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="br-pageheader pd-y-15 pd-l-20">
+        <nav class="breadcrumb pd-0 mg-0 tx-12">
+            <a class="breadcrumb-item dy_href" href="#/web/menu/campus/attend">列表</a>
+            <span class="breadcrumb-item active">详情</span>
+        </nav>
+    </div><!-- br-pageheader -->
+    <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
+        <h4 class="tx-gray-800 mg-b-5">校园签到</h4>
+        <p class="mg-b-0">校园签到详情。</p>
+    </div>
+
+    <div class="br-pagebody">
+        <div class="br-section-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <ul class="nav nav-pills nav-fill">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="javascript:" id="noAttend">未签到</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="javascript:" id="hasAttend">已签到</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="javascript:" id="allAttend">全部</a>
+                        </li>
+                    </ul>
+                    <hr/>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-6 mt-2">
+                            <input type="text" id="search_real_name" class="form-control" placeholder="姓名"/>
+                        </div>
+                        <div class="col-md-6 mt-2">
+                            <input type="text" id="search_student_number" class="form-control" placeholder="学号"/>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button type="button" id="search" class="btn btn-outline-secondary"><i
+                                class="fa fa-search"></i>搜索
+                        </button>
+                        <button type="button" id="reset_search" class="btn btn-outline-secondary"><i
+                                class="fa fa-repeat"></i>重置
+                        </button>
+                    </div>
+                </div>
+
+                <div class="col-md-12 mt-2">
+                    <div>
+                        <div class="float-left">
+                            <span>数量: </span><span id="totalSize"></span>
+                        </div>
+                        <div class="float-right">
+                            <button type="button" id="refresh" class="btn btn-light btn-sm"><i
+                                    class="fa fa-refresh"></i>刷新
+                            </button>
+                        </div>
+                    </div>
+                    <table class="tablesaw tablesaw-stack table table-striped mt-3" data-tablesaw-mode="stack"
+                           id="dataTable">
+                        <thead>
+                        <tr>
+                            <th scope="col" data-tablesaw-priority="persist">序号</th>
+                            <th scope="col" data-tablesaw-priority="persist">姓名</th>
+                            <th scope="col" data-tablesaw-priority="persist">学号</th>
+                            <th scope="col">时间</th>
+                            <th scope="col">地点</th>
+                            <th scope="col">备注</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 详情模板-->
+    <script id="details-template" type="text/x-handlebars-template">
+        {{#each listResult}}
+        <tr>
+            <td>{{sequence}}</td>
+            <td>{{realName}}</td>
+            <td>{{studentNumber}}</td>
+            <td>
+                {{attendDateStr}}
+            </td>
+            <td>
+                {{address}}
+            </td>
+            <td>
+                {{attendRemark}}
+            </td>
+        </tr>
+        {{/each}}
+    </script>
+
+    <input type="hidden" id="attendReleaseId" th:value="${attendReleaseId}"/>
+    <input type="hidden" id="attendReleaseSubId" th:value="${attendReleaseSubId}"/>
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/campus/attend/attend_details.js')}"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>

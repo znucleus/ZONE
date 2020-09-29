@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.bean.educational.calendar.SchoolCalendarAuthoritiesBean;
 import top.zbeboy.zbase.bean.educational.calendar.SchoolCalendarBean;
+import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.College;
 import top.zbeboy.zbase.domain.tables.pojos.SchoolCalendar;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
@@ -21,6 +22,7 @@ import top.zbeboy.zbase.tools.web.util.pagination.TableSawUtil;
 import top.zbeboy.zbase.vo.educational.calendar.SchoolCalendarAddVo;
 import top.zbeboy.zbase.vo.educational.calendar.SchoolCalendarAuthoritiesAddVo;
 import top.zbeboy.zbase.vo.educational.calendar.SchoolCalendarEditVo;
+import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
@@ -159,8 +161,9 @@ public class CalendarRestController {
      * @param collegeId 院id
      * @return 数据
      */
+    @ApiLoggingRecord(remark = "教务校历数据", channel = Workbook.channel.WEB, needLogin = true)
     @GetMapping("/web/educational/calendars")
-    public ResponseEntity<Map<String, Object>> calendars(@RequestParam("collegeId") int collegeId) {
+    public ResponseEntity<Map<String, Object>> calendars(@RequestParam("collegeId") int collegeId, HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
         List<SchoolCalendar> schoolCalendars = schoolCalendarService.findByCollegeIdRecently(collegeId);
         schoolCalendars.forEach(schoolCalendar -> select2Data.add(schoolCalendar.getCalendarId(), schoolCalendar.getTitle()));
@@ -173,8 +176,9 @@ public class CalendarRestController {
      * @param calendarId id
      * @return 数据
      */
+    @ApiLoggingRecord(remark = "教务校历查看", channel = Workbook.channel.WEB, needLogin = true)
     @GetMapping("/web/educational/calendar/look")
-    public ResponseEntity<Map<String, Object>> look(@RequestParam("calendarId") String calendarId) {
+    public ResponseEntity<Map<String, Object>> look(@RequestParam("calendarId") String calendarId, HttpServletRequest request) {
         SchoolCalendarBean bean = schoolCalendarService.findByIdRelation(calendarId);
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (Objects.nonNull(bean) && StringUtils.isNotBlank(bean.getCalendarId())) {

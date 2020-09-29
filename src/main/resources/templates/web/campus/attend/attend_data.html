@@ -41,15 +41,16 @@
                         <thead>
                         <tr>
                             <th data-priority="1">标题</th>
-                            <th data-priority="3">签到开始时间</th>
-                            <th data-priority="4">签到结束时间</th>
+                            <th data-priority="4">签到开始时间</th>
+                            <th data-priority="5">签到结束时间</th>
                             <th>是否自动生成</th>
                             <th>生效时间</th>
                             <th>失效时间</th>
                             <th data-priority="2">班级</th>
-                            <th data-priority="5">名单人数</th>
-                            <th data-priority="6">签到人数</th>
-                            <th data-priority="7">创建时间</th>
+                            <th data-priority="6">名单人数</th>
+                            <th data-priority="7">签到人数</th>
+                            <th data-priority="8">创建时间</th>
+                            <th data-priority="3">操作</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -59,6 +60,16 @@
             </div>
         </div>
     </div>
+
+    <!--定义操作列按钮模板-->
+    <script id="operator_button" type="text/x-handlebars-template">
+        <div class="btn-group" role="group">
+            {{#each func}}
+            <button type="button" class="btn btn-{{this.type}} btn-sm {{this.css}}" data-id="{{this.id}}" data-sub-id="{{this.subId}}">{{this.name}}
+            </button>
+            {{/each}}
+        </div>
+    </script>
 
     <input type="hidden" class="dy_script"
            th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/campus/attend/attend_data.js')}"/>
