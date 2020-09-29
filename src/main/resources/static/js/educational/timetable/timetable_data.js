@@ -104,16 +104,16 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
          */
         function refreshSearch() {
             initParam();
-            if (typeof (Storage) !== "undefined") {
-                sessionStorage.setItem(webStorageKey.COURSE_NAME, param.courseName != null ? param.courseName : '');
-                sessionStorage.setItem(webStorageKey.ATTEND_CLASS, param.attendClass != null ? param.attendClass : '');
-                sessionStorage.setItem(webStorageKey.CLASSROOM, param.classroom != null ? param.classroom : '');
-                sessionStorage.setItem(webStorageKey.TEACHER_NAME, param.teacherName != null ? param.teacherName : '');
-                sessionStorage.setItem(webStorageKey.TEACHER_NUMBER, param.teacherNumber);
-                sessionStorage.setItem(webStorageKey.START_YEAR, param.startYear);
-                sessionStorage.setItem(webStorageKey.END_YEAR, param.endYear);
-                sessionStorage.setItem(webStorageKey.SEMESTER, param.semester);
-                sessionStorage.setItem(webStorageKey.IDENTIFICATION, param.identification);
+            if (localStorage) {
+                localStorage.setItem(webStorageKey.COURSE_NAME, param.courseName != null ? param.courseName : '');
+                localStorage.setItem(webStorageKey.ATTEND_CLASS, param.attendClass != null ? param.attendClass : '');
+                localStorage.setItem(webStorageKey.CLASSROOM, param.classroom != null ? param.classroom : '');
+                localStorage.setItem(webStorageKey.TEACHER_NAME, param.teacherName != null ? param.teacherName : '');
+                localStorage.setItem(webStorageKey.TEACHER_NUMBER, param.teacherNumber);
+                localStorage.setItem(webStorageKey.START_YEAR, param.startYear);
+                localStorage.setItem(webStorageKey.END_YEAR, param.endYear);
+                localStorage.setItem(webStorageKey.SEMESTER, param.semester);
+                localStorage.setItem(webStorageKey.IDENTIFICATION, param.identification);
             }
         }
 
@@ -204,8 +204,8 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 });
 
                 if (!init_configure.init_uniques) {
-                    if (typeof (Storage) !== "undefined") {
-                        var id = sessionStorage.getItem(webStorageKey.IDENTIFICATION);
+                    if (localStorage) {
+                        var id = localStorage.getItem(webStorageKey.IDENTIFICATION);
                         var dcs = $('#dataTime').children();
                         for (var i = 0; i < dcs.length; i++) {
                             var v = $(dcs[i]).val();
@@ -249,8 +249,8 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 courseNameSelect2 = $(param_id.courseName).select2({data: data.results});
 
                 if (!init_configure.init_course_name) {
-                    if (typeof (Storage) !== "undefined") {
-                        var courseName = sessionStorage.getItem(webStorageKey.COURSE_NAME);
+                    if (localStorage) {
+                        var courseName = localStorage.getItem(webStorageKey.COURSE_NAME);
                         courseNameSelect2.val(courseName).trigger("change");
                     }
                     init_configure.init_course_name = true;
@@ -264,8 +264,8 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 attendClassSelect2 = $(param_id.attendClass).select2({data: data.results});
 
                 if (!init_configure.init_attend_class) {
-                    if (typeof (Storage) !== "undefined") {
-                        var attendClass = sessionStorage.getItem(webStorageKey.ATTEND_CLASS);
+                    if (localStorage) {
+                        var attendClass = localStorage.getItem(webStorageKey.ATTEND_CLASS);
                         attendClassSelect2.val(attendClass).trigger("change");
                     }
                     init_configure.init_attend_class = true;
@@ -279,8 +279,8 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 classroomSelect2 = $(param_id.classroom).select2({data: data.results});
 
                 if (!init_configure.init_classroom) {
-                    if (typeof (Storage) !== "undefined") {
-                        var classroom = sessionStorage.getItem(webStorageKey.CLASSROOM);
+                    if (localStorage) {
+                        var classroom = localStorage.getItem(webStorageKey.CLASSROOM);
                         classroomSelect2.val(classroom).trigger("change");
                     }
                     init_configure.init_classroom = true;
@@ -294,8 +294,8 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 teacherNameSelect2 = $(param_id.teacherName).select2({data: data.results});
 
                 if (!init_configure.init_teacher_name) {
-                    if (typeof (Storage) !== "undefined") {
-                        var teacherName = sessionStorage.getItem(webStorageKey.TEACHER_NAME);
+                    if (localStorage) {
+                        var teacherName = localStorage.getItem(webStorageKey.TEACHER_NAME);
                         teacherNameSelect2.val(teacherName).trigger("change");
                     }
                     init_configure.init_teacher_name = true;
@@ -324,16 +324,16 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             var endYear = null;
             var semester = null;
             var identification = null;
-            if (typeof (Storage) !== "undefined") {
-                courseName = sessionStorage.getItem(webStorageKey.COURSE_NAME);
-                attendClass = sessionStorage.getItem(webStorageKey.ATTEND_CLASS);
-                classroom = sessionStorage.getItem(webStorageKey.CLASSROOM);
-                teacherName = sessionStorage.getItem(webStorageKey.TEACHER_NAME);
-                teacherNumber = sessionStorage.getItem(webStorageKey.TEACHER_NUMBER);
-                startYear = sessionStorage.getItem(webStorageKey.START_YEAR);
-                endYear = sessionStorage.getItem(webStorageKey.END_YEAR);
-                semester = sessionStorage.getItem(webStorageKey.SEMESTER);
-                identification = sessionStorage.getItem(webStorageKey.IDENTIFICATION);
+            if (localStorage) {
+                courseName = localStorage.getItem(webStorageKey.COURSE_NAME);
+                attendClass = localStorage.getItem(webStorageKey.ATTEND_CLASS);
+                classroom = localStorage.getItem(webStorageKey.CLASSROOM);
+                teacherName = localStorage.getItem(webStorageKey.TEACHER_NAME);
+                teacherNumber = localStorage.getItem(webStorageKey.TEACHER_NUMBER);
+                startYear = localStorage.getItem(webStorageKey.START_YEAR);
+                endYear = localStorage.getItem(webStorageKey.END_YEAR);
+                semester = localStorage.getItem(webStorageKey.SEMESTER);
+                identification = localStorage.getItem(webStorageKey.IDENTIFICATION);
             }
             if (courseName !== null) {
                 param.courseName = courseName;
@@ -386,16 +386,16 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             var endYear = null;
             var semester = null;
             var identification = null;
-            if (typeof (Storage) !== "undefined") {
-                courseName = sessionStorage.getItem(webStorageKey.COURSE_NAME);
-                attendClass = sessionStorage.getItem(webStorageKey.ATTEND_CLASS);
-                classroom = sessionStorage.getItem(webStorageKey.CLASSROOM);
-                teacherName = sessionStorage.getItem(webStorageKey.TEACHER_NAME);
-                teacherNumber = sessionStorage.getItem(webStorageKey.TEACHER_NUMBER);
-                startYear = sessionStorage.getItem(webStorageKey.START_YEAR);
-                endYear = sessionStorage.getItem(webStorageKey.END_YEAR);
-                semester = sessionStorage.getItem(webStorageKey.SEMESTER);
-                identification = sessionStorage.getItem(webStorageKey.IDENTIFICATION);
+            if (localStorage) {
+                courseName = localStorage.getItem(webStorageKey.COURSE_NAME);
+                attendClass = localStorage.getItem(webStorageKey.ATTEND_CLASS);
+                classroom = localStorage.getItem(webStorageKey.CLASSROOM);
+                teacherName = localStorage.getItem(webStorageKey.TEACHER_NAME);
+                teacherNumber = localStorage.getItem(webStorageKey.TEACHER_NUMBER);
+                startYear = localStorage.getItem(webStorageKey.START_YEAR);
+                endYear = localStorage.getItem(webStorageKey.END_YEAR);
+                semester = localStorage.getItem(webStorageKey.SEMESTER);
+                identification = localStorage.getItem(webStorageKey.IDENTIFICATION);
             }
             if (courseName !== null) {
                 $(param_id.courseName).val(courseName);
