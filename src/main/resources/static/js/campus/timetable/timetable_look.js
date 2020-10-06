@@ -1,4 +1,4 @@
-//# sourceURL=calendar_look.js
+//# sourceURL=timetable_look.js
 require(["jquery", "tools", "nav.active", "jquery.address", "select2-zh-CN"],
     function ($, tools, navActive) {
         /*
@@ -11,6 +11,7 @@ require(["jquery", "tools", "nav.active", "jquery.address", "select2-zh-CN"],
             data: web_path + '/web/educational/calendar/look',
             releases: web_path + '/web/campus/timetable/releases',
             release: web_path + '/web/campus/timetable/release',
+            edit: '/web/campus/timetable/edit',
             page: '/web/menu/campus/timetable'
         };
 
@@ -234,5 +235,15 @@ require(["jquery", "tools", "nav.active", "jquery.address", "select2-zh-CN"],
             }
 
         }
+
+        $('#editTimetable').click(function () {
+            var id = $('#shareId').text();
+            if(id !== ''){
+                $.address.value(ajax_url.edit + '/' + id);
+            } else {
+                tools.validSelect2ErrorDom('#timetable', '请选择课表');
+            }
+
+        });
 
     });

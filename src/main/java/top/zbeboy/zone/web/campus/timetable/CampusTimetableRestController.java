@@ -16,7 +16,9 @@ import top.zbeboy.zbase.tools.service.util.UUIDUtil;
 import top.zbeboy.zbase.tools.web.plugin.select2.Select2Data;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.QRCodeUtil;
+import top.zbeboy.zbase.vo.campus.roster.RosterReleaseEditVo;
 import top.zbeboy.zbase.vo.campus.timetable.CampusCourseReleaseAddVo;
+import top.zbeboy.zbase.vo.campus.timetable.CampusCourseReleaseEditVo;
 import top.zbeboy.zone.web.campus.common.CampusUrlCommon;
 import top.zbeboy.zone.web.util.SessionUtil;
 
@@ -27,7 +29,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @RestController
-public class CampusTimetableApiController {
+public class CampusTimetableRestController {
 
     @Resource
     private CampusCourseReleaseService campusCourseReleaseService;
@@ -89,6 +91,20 @@ public class CampusTimetableApiController {
             ajaxUtil.fail().msg("保存失败: 异常: " + e.getMessage());
         }
 
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 更新
+     *
+     * @param campusCourseReleaseEditVo 数据
+     * @return true or false
+     */
+    @PostMapping("/web/campus/timetable/update")
+    public ResponseEntity<Map<String, Object>> update(CampusCourseReleaseEditVo campusCourseReleaseEditVo) {
+        Users users = SessionUtil.getUserFromSession();
+        campusCourseReleaseEditVo.setUsername(users.getUsername());
+        AjaxUtil<Map<String, Object>> ajaxUtil = campusCourseReleaseService.update(campusCourseReleaseEditVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }
