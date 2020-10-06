@@ -6,8 +6,8 @@
 <body>
 <div id="page-wrapper">
     <div class="pd-30">
-        <h4 class="tx-gray-800 mg-b-5">校园校历</h4>
-        <p class="mg-b-0">查看校园校历。</p>
+        <h4 class="tx-gray-800 mg-b-5">校园课表</h4>
+        <p class="mg-b-0">查看校园课表。</p>
     </div><!-- d-flex -->
 
     <div class="br-pagebody mg-t-5 pd-x-30">
@@ -67,12 +67,22 @@
                 </div>
                 <div class="col-md-12 mg-t-7">
                     <div class="float-right mg-t-5">
-                        <button type="button" class="btn btn-outline-primary" id="addTimetable"><i
-                                class="fa fa-plus"></i> 新建课表
-                        </button>
                         <button type="button" class="btn btn-outline-info" id="operationCourse"><i
                                 class="fa fa-cog"></i> 管理课程
                         </button>
+                    </div>
+                    <div class="float-right mg-t-5 mg-r-10">
+                        <div class="dropdown">
+                            <button class="btn btn-outline-primary dropdown-toggle" type="button" id="addTimetableButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-plus"></i> 新建课表
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="addTimetableButton">
+                                <a class="dropdown-item" href="#/web/campus/timetable/add">空白课表</a>
+                                <a class="dropdown-item" href="#">导入教务班级课表</a>
+                                <a class="dropdown-item" href="#">导入教务教师课表</a>
+                                <a class="dropdown-item" href="#">导入共享课表</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-12 mg-t-7">
@@ -83,12 +93,16 @@
                                 <option label="请选择课表"></option>
                             </select>
                         </div>
-                        <div class="col-md-12 mg-t-5">
+                        <div class="col-md-12">
                             <div class="row">
-                                <div class="col-md-3"><span>共享ID：</span></div>
-                                <div class="col-md-3"><span>共享链：</span></div>
-                                <div class="col-md-3"><span>共享码：</span><a href="#">点击查看</a></div>
-                                <div class="col-md-3"><span>共享次数：</span></div>
+                                <div class="col-md-6 mg-t-5 tx-teal"><span>学年学期：</span><span id="yearAndTerm"></span></div>
+                                <div class="col-md-6 mg-t-5 tx-teal"><span>共享ID：</span><span id="shareId"></span></div>
+                                <div class="col-md-6 mg-t-5 tx-teal"><span>共享码：</span>
+                                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#qrcodeModal">
+                                        点击查看
+                                    </button>
+                                </div>
+                                <div class="col-md-6 mg-t-5 tx-teal"><span>共享次数：</span><span id="shareNumber"></span></div>
                             </div>
                         </div>
                     </div>
@@ -366,6 +380,27 @@
                             <span class="sr-only">Next</span>
                         </a>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="qrcodeModal" tabindex="-1" role="dialog" aria-labelledby="qrcodeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="qrcodeModalLabel">共享码</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <img id="qrCodeUrl" src="" class="card-img" alt="共享码">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
                 </div>
             </div>
         </div>

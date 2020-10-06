@@ -60,4 +60,14 @@ public class CampusTimetableViewController {
         modelMap.addAttribute("collegeId", collegeId);
         return "web/campus/timetable/timetable_look::#page-wrapper";
     }
+
+    /**
+     * 新建空白课表
+     *
+     * @return 新建空白课表
+     */
+    @GetMapping("/web/campus/timetable/add")
+    public String add() {
+        return "web/campus/timetable/timetable_release_blank::#page-wrapper";
+    }
 }

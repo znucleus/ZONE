@@ -9,6 +9,8 @@ require(["jquery", "tools", "nav.active", "jquery.address", "select2-zh-CN"],
             obtain_college_data: web_path + '/anyone/data/college',
             obtain_school_calendar_data: web_path + '/web/educational/calendars',
             data: web_path + '/web/educational/calendar/look',
+            releases: web_path + '/web/campus/timetable/releases',
+            release: web_path + '/web/campus/timetable/release',
             page: '/web/menu/campus/timetable'
         };
 
@@ -20,7 +22,8 @@ require(["jquery", "tools", "nav.active", "jquery.address", "select2-zh-CN"],
         var param_id = {
             school: '#school',
             college: '#college',
-            schoolCalendar: '#schoolCalendar'
+            schoolCalendar: '#schoolCalendar',
+            timetable: '#timetable'
         };
 
         var page_param = {
@@ -34,7 +37,8 @@ require(["jquery", "tools", "nav.active", "jquery.address", "select2-zh-CN"],
         var webStorageKey = {
             SCHOOL: 'CALENDAR_SCHOOL_SEARCH',
             COLLEGE: 'CALENDAR_COLLEGE_SEARCH',
-            SCHOOL_CALENDAR: 'CALENDAR_SCHOOL_CALENDAR_SEARCH'
+            SCHOOL_CALENDAR: 'CALENDAR_SCHOOL_CALENDAR_SEARCH',
+            TIMETABLE:'CALENDAR_TIMETABLE_SEARCH'
         };
 
         var init_configure = {
@@ -46,6 +50,7 @@ require(["jquery", "tools", "nav.active", "jquery.address", "select2-zh-CN"],
 
         function init() {
             initSchool();
+            initTimetable();
             initSelect2();
             initData();
         }
@@ -114,6 +119,24 @@ require(["jquery", "tools", "nav.active", "jquery.address", "select2-zh-CN"],
             }
         }
 
+        function initTimetable() {
+            $.get(ajax_url.releases, function (data) {
+                var sl = $(param_id.timetable).select2({
+                    data: data.results
+                });
+
+                var campusCourseReleaseId = null;
+                if (localStorage) {
+                    campusCourseReleaseId = localStorage.getItem(webStorageKey.TIMETABLE);
+                }
+                if (campusCourseReleaseId !== null) {
+                    queryRelease(campusCourseReleaseId);
+                    sl.val(campusCourseReleaseId).trigger("change");
+                }
+
+            });
+        }
+
         function initSelect2() {
             $('.select2-show-search').select2({
                 language: "zh-CN"
@@ -144,6 +167,14 @@ require(["jquery", "tools", "nav.active", "jquery.address", "select2-zh-CN"],
 
             if (localStorage) {
                 localStorage.setItem(webStorageKey.SCHOOL_CALENDAR, v);
+            }
+        });
+
+        $(param_id.timetable).change(function () {
+            var v = $(this).val();
+            queryRelease(v);
+            if (localStorage) {
+                localStorage.setItem(webStorageKey.TIMETABLE, v);
             }
         });
 
@@ -183,16 +214,25 @@ require(["jquery", "tools", "nav.active", "jquery.address", "select2-zh-CN"],
 
         }
 
+        function queryRelease(id) {
+            if(id !== ''){
+                $.get(ajax_url.release + '/' + id, function (data) {
+                    if(data.state){
+                        var term = data.release.term;
+                        var t;
+                        if(Number(term) === 0){
+                            t = '上学期';
+                        } else  if(Number(term) === 1){
+                            t = '下学期';
+                        }
+                        $('#yearAndTerm').text(data.release.startYear + '~' + data.release.endYear + ' ' + t);
+                        $('#shareId').text(data.release.campusCourseReleaseId);
+                        $('#shareNumber').text(data.release.shareNumber);
+                        $('#qrCodeUrl').attr('src', web_path + '/' + data.release.qrCodeUrl);
+                    }
+                });
+            }
 
-        $('#list').click(function () {
-            $.address.value(ajax_url.list);
-        });
-
-        /*
-       权限分配
-       */
-        $('#authorize').click(function () {
-            $.address.value(ajax_url.authorize);
-        });
+        }
 
     });

@@ -20,7 +20,7 @@ import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zbase.vo.campus.roster.RosterDataAddVo;
 import top.zbeboy.zbase.vo.campus.roster.RosterDataEditVo;
 import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
-import top.zbeboy.zone.web.campus.common.CampusRosterUrlCommon;
+import top.zbeboy.zone.web.campus.common.CampusUrlCommon;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
@@ -53,7 +53,7 @@ public class CampusRosterApiController {
         AjaxUtil<RosterReleaseBean> ajaxUtil = rosterReleaseService.data(simplePaginationUtil);
         if (Objects.nonNull(ajaxUtil.getListResult())) {
             for (RosterReleaseBean bean : ajaxUtil.getListResult()) {
-                bean.setPublicLink(RequestUtil.getBaseUrl(request) + CampusRosterUrlCommon.ANYONE_DATE_ADD_URL + bean.getRosterReleaseId());
+                bean.setPublicLink(RequestUtil.getBaseUrl(request) + CampusUrlCommon.ANYONE_ROSTER_DATE_ADD_URL + bean.getRosterReleaseId());
             }
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);

@@ -18,7 +18,7 @@ import top.zbeboy.zbase.feign.data.StudentService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.web.util.PinYinUtil;
-import top.zbeboy.zone.web.campus.common.CampusRosterUrlCommon;
+import top.zbeboy.zone.web.campus.common.CampusUrlCommon;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 import top.zbeboy.zone.web.system.tip.SystemTipConfig;
 import top.zbeboy.zone.web.util.SessionUtil;
@@ -159,7 +159,7 @@ public class CampusRosterViewController {
      * @param modelMap 页面对象
      * @return 编辑页面
      */
-    @GetMapping(CampusRosterUrlCommon.ANYONE_DATE_ADD_URL + "{id}")
+    @GetMapping(CampusUrlCommon.ANYONE_ROSTER_DATE_ADD_URL + "{id}")
     public String dataOuterAdd(@PathVariable("id") String id, ModelMap modelMap) {
         SystemTipConfig config = new SystemTipConfig();
         RosterRelease rosterRelease = rosterReleaseService.findById(id);
