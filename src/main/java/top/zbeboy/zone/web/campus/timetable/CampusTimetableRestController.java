@@ -3,14 +3,12 @@ package top.zbeboy.zone.web.campus.timetable;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.CampusCourseRelease;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.campus.timetable.CampusCourseReleaseService;
+import top.zbeboy.zbase.tools.service.util.FilesUtil;
 import top.zbeboy.zbase.tools.service.util.RequestUtil;
 import top.zbeboy.zbase.tools.service.util.UUIDUtil;
 import top.zbeboy.zbase.tools.web.plugin.select2.Select2Data;
@@ -105,6 +103,25 @@ public class CampusTimetableRestController {
         Users users = SessionUtil.getUserFromSession();
         campusCourseReleaseEditVo.setUsername(users.getUsername());
         AjaxUtil<Map<String, Object>> ajaxUtil = campusCourseReleaseService.update(campusCourseReleaseEditVo);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 删除
+     *
+     * @param id 发布id
+     * @return true or false
+     */
+    @PostMapping("/web/campus/timetable/delete")
+    public ResponseEntity<Map<String, Object>> delete(@RequestParam("id") String id, HttpServletRequest request) {
+        Users users = SessionUtil.getUserFromSession();
+        AjaxUtil<Map<String, Object>> ajaxUtil = campusCourseReleaseService.delete(users.getUsername(), id);
+        if (ajaxUtil.getState()) {
+            // 删除文件
+            String realPath = RequestUtil.getRealPath(request);
+            String path = Workbook.campusTimetableQrCodeFilePath() + id + ".jpg";
+            FilesUtil.deleteFile(realPath + path);
+        }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

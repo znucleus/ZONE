@@ -1,6 +1,6 @@
 //# sourceURL=timetable_look.js
-require(["jquery", "tools", "nav.active", "jquery.address", "select2-zh-CN"],
-    function ($, tools, navActive) {
+require(["jquery", "tools", "nav.active", "sweetalert2", "jquery.address", "select2-zh-CN", "messenger"],
+    function ($, tools, navActive, Swal) {
         /*
          ajax url.
         */
@@ -12,6 +12,7 @@ require(["jquery", "tools", "nav.active", "jquery.address", "select2-zh-CN"],
             releases: web_path + '/web/campus/timetable/releases',
             release: web_path + '/web/campus/timetable/release',
             edit: '/web/campus/timetable/edit',
+            del: web_path + '/web/campus/timetable/delete',
             page: '/web/menu/campus/timetable'
         };
 
@@ -39,7 +40,7 @@ require(["jquery", "tools", "nav.active", "jquery.address", "select2-zh-CN"],
             SCHOOL: 'CALENDAR_SCHOOL_SEARCH',
             COLLEGE: 'CALENDAR_COLLEGE_SEARCH',
             SCHOOL_CALENDAR: 'CALENDAR_SCHOOL_CALENDAR_SEARCH',
-            TIMETABLE:'CALENDAR_TIMETABLE_SEARCH'
+            TIMETABLE: 'CALENDAR_TIMETABLE_SEARCH'
         };
 
         var init_configure = {
@@ -120,9 +121,10 @@ require(["jquery", "tools", "nav.active", "jquery.address", "select2-zh-CN"],
             }
         }
 
+        var timetableSelect2 = null;
         function initTimetable() {
             $.get(ajax_url.releases, function (data) {
-                var sl = $(param_id.timetable).select2({
+                timetableSelect2 = $(param_id.timetable).select2({
                     data: data.results
                 });
 
@@ -132,7 +134,7 @@ require(["jquery", "tools", "nav.active", "jquery.address", "select2-zh-CN"],
                 }
                 if (campusCourseReleaseId !== null) {
                     queryRelease(campusCourseReleaseId);
-                    sl.val(campusCourseReleaseId).trigger("change");
+                    timetableSelect2.val(campusCourseReleaseId).trigger("change");
                 }
 
             });
@@ -177,6 +179,10 @@ require(["jquery", "tools", "nav.active", "jquery.address", "select2-zh-CN"],
             if (localStorage) {
                 localStorage.setItem(webStorageKey.TIMETABLE, v);
             }
+
+            if(v !== ''){
+                tools.validSelect2SuccessDom(param_id.timetable);
+            }
         });
 
         function initData(calendarId) {
@@ -216,34 +222,101 @@ require(["jquery", "tools", "nav.active", "jquery.address", "select2-zh-CN"],
         }
 
         function queryRelease(id) {
-            if(id !== ''){
+            if (id !== '') {
                 $.get(ajax_url.release + '/' + id, function (data) {
-                    if(data.state){
+                    if (data.state) {
                         var term = data.release.term;
                         var t;
-                        if(Number(term) === 0){
+                        if (Number(term) === 0) {
                             t = '上学期';
-                        } else  if(Number(term) === 1){
+                        } else if (Number(term) === 1) {
                             t = '下学期';
                         }
                         $('#yearAndTerm').text(data.release.startYear + '~' + data.release.endYear + ' ' + t);
                         $('#shareId').text(data.release.campusCourseReleaseId);
                         $('#shareNumber').text(data.release.shareNumber);
                         $('#qrCodeUrl').attr('src', web_path + '/' + data.release.qrCodeUrl);
+                    } else {
+                        $('#yearAndTerm').text('');
+                        $('#shareId').text('');
+                        $('#shareNumber').text('');
+                        $('#qrCodeUrl').attr('src', '');
                     }
                 });
             }
 
         }
 
+        $('#shareQrCode').click(function () {
+            var id = $('#shareId').text();
+            if (id !== '') {
+                $('#qrcodeModal').modal('show');
+            } else {
+                tools.validSelect2ErrorDom('#timetable', '请选择课表');
+            }
+
+        });
+
         $('#editTimetable').click(function () {
             var id = $('#shareId').text();
-            if(id !== ''){
+            if (id !== '') {
                 $.address.value(ajax_url.edit + '/' + id);
             } else {
                 tools.validSelect2ErrorDom('#timetable', '请选择课表');
             }
 
         });
+
+        $('#delTimetable').click(function () {
+            var id = $('#shareId').text();
+            if (id !== '') {
+                Swal.fire({
+                    title: "确定删除该课表吗？",
+                    text: "课表删除！",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    preConfirm: function () {
+                        sendDelTimetableAjax(id);
+                    }
+                });
+            } else {
+                tools.validSelect2ErrorDom(param_id.timetable, '请选择课表');
+            }
+        });
+
+        function sendDelTimetableAjax(id) {
+            $.ajax({
+                type: 'POST',
+                url: ajax_url.del,
+                data: {id: id},
+                success: function (data) {
+                    Messenger().post({
+                        message: data.msg,
+                        type: data.state ? 'success' : 'error',
+                        showCloseButton: true
+                    });
+
+                    if (data.state) {
+                        $('#yearAndTerm').text('');
+                        $('#shareId').text('');
+                        $('#shareNumber').text('');
+                        $('#qrCodeUrl').attr('src', '');
+                        timetableSelect2.val('').trigger("change");
+                        $(param_id.timetable).empty();
+                        initTimetable();
+                    }
+                },
+                error: function (XMLHttpRequest) {
+                    Messenger().post({
+                        message: 'Request error : ' + XMLHttpRequest.status + " " + XMLHttpRequest.statusText,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        }
 
     });
