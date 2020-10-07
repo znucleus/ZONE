@@ -44,7 +44,9 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
             SCHOOL: 'CALENDAR_SCHOOL_SEARCH',
             COLLEGE: 'CALENDAR_COLLEGE_SEARCH',
             SCHOOL_CALENDAR: 'CALENDAR_SCHOOL_CALENDAR_SEARCH',
-            TIMETABLE: 'CALENDAR_TIMETABLE_SEARCH'
+            TIMETABLE: 'CALENDAR_TIMETABLE_SEARCH',
+            SHOW_SCREEN: 'CALENDAR_TIMETABLE_SHOW_SCREEN',
+            SHOW_EFFECTIVE_COURSE: 'CALENDAR_TIMETABLE_SHOW_EFFECTIVE_COURSE'
         };
 
         var init_configure = {
@@ -55,10 +57,22 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
         init();
 
         function init() {
+            initShowEffectiveCourse();
             initSchool();
             initTimetable();
             initSelect2();
-            initData();
+            initScreen();
+        }
+
+        function initShowEffectiveCourse() {
+            if (localStorage) {
+                var showEffectiveCourse = localStorage.getItem(webStorageKey.SHOW_EFFECTIVE_COURSE);
+                if (Number(showEffectiveCourse) === 1) {
+                    $('#showEffectiveCourse').prop('checked', true);
+                } else {
+                    $('#showEffectiveCourse').prop('checked', false);
+                }
+            }
         }
 
         function initSchool() {
@@ -189,6 +203,8 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
             }
         });
 
+        var effectiveCourseCalendarAjaxFinish = false;
+        var curWeeks = -1;
         function initData(calendarId) {
             if (calendarId && calendarId.length > 0) {
                 $.get(ajax_url.data, {calendarId: calendarId}, function (data) {
@@ -207,6 +223,10 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
                         $('#weeks').html('第 <span class="tx-bold tx-20 tx-purple"><em >' + calendar.weeks + '</em></span> 周');
                         $('#remark').text('备注：' + calendar.remark);
                         $('#releaseTimeStr').text(calendar.releaseTimeStr);
+
+                        curWeeks = calendar.weeks;
+                        effectiveCourseCalendarAjaxFinish = true;
+                        showEffectiveCourse();
                     } else {
                         $('#title').text('');
                         $('#schoolName').text('');
@@ -225,6 +245,21 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
 
         }
 
+        function initScreen() {
+            if (localStorage) {
+                var showScreen = localStorage.getItem(webStorageKey.SHOW_SCREEN);
+                if (Number(showScreen) === 1) {
+                    $('#simpleScreen').prop('checked', true);
+                    $('#defaultData').css('display', 'none');
+                    $('#simpleData').css('display', '');
+                } else {
+                    $('#simpleScreen').prop('checked', false);
+                    $('#defaultData').css('display', '');
+                    $('#simpleData').css('display', 'none');
+                }
+            }
+        }
+
         function queryRelease(id) {
             if (id !== '') {
                 $.get(ajax_url.release + '/' + id, function (data) {
@@ -240,7 +275,6 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
                         $('#shareId').text(data.release.campusCourseReleaseId);
                         $('#shareNumber').text(data.release.shareNumber);
                         $('#qrCodeUrl').attr('src', web_path + '/' + data.release.qrCodeUrl);
-
                         initCourseData(data.release.campusCourseReleaseId);
                     } else {
                         $('#yearAndTerm').text('');
@@ -252,6 +286,8 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
             }
         }
 
+        var courseData = [];
+        var effectiveCourseDataAjaxFinish = false;
         function initCourseData(id) {
             $.get(ajax_url.courses + '/' + id, function (data) {
                 for (var i = 1; i <= 7; i++) {
@@ -259,6 +295,9 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
                     $('#simpleWeek' + i).empty();
                 }
                 if (data.state) {
+                    courseData = data.listResult;
+                    effectiveCourseDataAjaxFinish = true;
+                    showEffectiveCourse();
                     $.each(data.listResult, function (i, v) {
                         $('#week' + v.weekDay).append(defaultHtml(v));
                         $('#simpleWeek' + v.weekDay).append(simpleHtml(v));
@@ -426,6 +465,71 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
                     });
                 }
             });
+        }
+
+        $('#manageCourse').click(function () {
+            if ($(this).hasClass('btn-outline-teal')) {
+                $('.manageCourse').css('display', '');
+                $(this).removeClass('btn-outline-teal').addClass('btn-teal');
+            } else {
+                $('.manageCourse').css('display', 'none');
+                $(this).addClass('btn-outline-teal').removeClass('btn-teal');
+            }
+        });
+
+        $('#simpleScreen').click(function () {
+            if ($(this).prop('checked')) {
+                $('#defaultData').css('display', 'none');
+                $('#simpleData').css('display', '');
+
+                if (localStorage) {
+                    localStorage.setItem(webStorageKey.SHOW_SCREEN, "1");
+                }
+            } else {
+                $('#defaultData').css('display', '');
+                $('#simpleData').css('display', 'none');
+
+                if (localStorage) {
+                    localStorage.setItem(webStorageKey.SHOW_SCREEN, "0");
+                }
+            }
+        });
+
+        $('#showEffectiveCourse').click(function () {
+            if ($(this).prop('checked')) {
+                if (localStorage) {
+                    localStorage.setItem(webStorageKey.SHOW_EFFECTIVE_COURSE, "1");
+                }
+            } else {
+                if (localStorage) {
+                    localStorage.setItem(webStorageKey.SHOW_EFFECTIVE_COURSE, "0");
+                }
+            }
+
+            showEffectiveCourse();
+        });
+
+        function showEffectiveCourse() {
+            if(effectiveCourseCalendarAjaxFinish && effectiveCourseDataAjaxFinish){
+                for (var i = 1; i <= 7; i++) {
+                    $('#week' + i).empty();
+                    $('#simpleWeek' + i).empty();
+                }
+                $.each(courseData, function (i, v) {
+                    // 显示有效课程
+                    if ($('#showEffectiveCourse').prop('checked') && curWeeks !== -1) {
+                        var startWeek = v.startWeek;
+                        var endWeek = v.endWeek;
+                        if (startWeek <= curWeeks && endWeek >= curWeeks) {
+                            $('#week' + v.weekDay).append(defaultHtml(v));
+                            $('#simpleWeek' + v.weekDay).append(simpleHtml(v));
+                        }
+                    } else {
+                        $('#week' + v.weekDay).append(defaultHtml(v));
+                        $('#simpleWeek' + v.weekDay).append(simpleHtml(v));
+                    }
+                });
+            }
         }
 
     });

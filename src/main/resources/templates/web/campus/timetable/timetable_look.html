@@ -118,7 +118,7 @@
                         <button type="button" class="btn btn-primary btn-sm" id="addCourse"><i
                                 class="fa fa-plus"></i> 添加课程
                         </button>
-                        <button type="button" class="btn btn-teal btn-sm" id="manageCourse"><i
+                        <button type="button" class="btn btn-outline-teal btn-sm" id="manageCourse"><i
                                 class="fa fa-cog"></i> 管理课程
                         </button>
                     </div>
@@ -126,18 +126,18 @@
                 <div class="col-md-12 mg-t-7">
                     <div class="float-right mg-t-5">
                         <label class="ckbox">
-                            <input type="checkbox" name="simpleScreen" value="1"/>
+                            <input type="checkbox" name="simpleScreen" id="simpleScreen" value="1"/>
                             <span>简屏</span>
                         </label>
                     </div>
                     <div class="float-right mg-t-5 mg-r-20">
                         <label class="ckbox">
-                            <input type="checkbox" name="showEffectiveCourse" value="1"/>
+                            <input type="checkbox" name="showEffectiveCourse" id="showEffectiveCourse" value="1"/>
                             <span>显示有效课程</span>
                         </label>
                     </div>
                 </div>
-                <div class="col-md-12">
+                <div class="col-md-12" id="defaultData">
                     <div class="table-responsive">
                         <table class="table table-bordered courseData">
                             <thead>
@@ -172,7 +172,7 @@
                         </table>
                     </div>
                 </div>
-                <div class="col-md-12">
+                <div class="col-md-12" id="simpleData" style="display: none;">
                     <div id="carousel" class="carousel slide carousel-fade courseData" data-interval="false">
                         <div class="carousel-inner">
                             <div class="carousel-item active">
@@ -287,7 +287,7 @@
                     {{startTime}}-{{endTime}}<br/>
                     备注：{{remark}}
                 </p>
-                <div class="btn-group manageCourse" role="group" aria-label="Basic example">
+                <div class="btn-group manageCourse" role="group" aria-label="Basic example" style="display: none">
                     <button type="button" class="btn btn-primary edit" data-id="{{campusCourseDataId}}">编辑</button>
                     <button type="button" class="btn btn-danger del" data-id="{{campusCourseDataId}}">删除</button>
                 </div>
@@ -299,7 +299,7 @@
         <div class="card card-body {{bgColor}} bd-0">
             <p class="card-text">{{courseName}}@{{organizeName}}@{{teacherName}}@{{startWeek}}-{{endWeek}}周@{{startTime}}-{{endTime}}@备注：{{remark}}</p>
             <div class="text-center">
-                <div class="btn-group manageCourse" role="group" aria-label="Basic example">
+                <div class="btn-group manageCourse" role="group" aria-label="Basic example" style="display: none">
                     <button type="button" class="btn btn-primary edit" data-id="{{campusCourseDataId}}">编辑</button>
                     <button type="button" class="btn btn-danger del" data-id="{{campusCourseDataId}}">删除</button>
                 </div>
