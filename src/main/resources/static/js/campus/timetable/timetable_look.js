@@ -13,6 +13,7 @@ require(["jquery", "tools", "nav.active", "sweetalert2", "jquery.address", "sele
             release: web_path + '/web/campus/timetable/release',
             edit: '/web/campus/timetable/edit',
             del: web_path + '/web/campus/timetable/delete',
+            course_add: '/web/campus/timetable/course/add',
             page: '/web/menu/campus/timetable'
         };
 
@@ -264,7 +265,6 @@ require(["jquery", "tools", "nav.active", "sweetalert2", "jquery.address", "sele
             } else {
                 tools.validSelect2ErrorDom('#timetable', '请选择课表');
             }
-
         });
 
         $('#delTimetable').click(function () {
@@ -318,5 +318,14 @@ require(["jquery", "tools", "nav.active", "sweetalert2", "jquery.address", "sele
                 }
             });
         }
+
+        $('#addCourse').click(function () {
+            var id = $('#shareId').text();
+            if (id !== '') {
+                $.address.value(ajax_url.course_add + '/' + id);
+            } else {
+                tools.validSelect2ErrorDom('#timetable', '请选择课表');
+            }
+        });
 
     });

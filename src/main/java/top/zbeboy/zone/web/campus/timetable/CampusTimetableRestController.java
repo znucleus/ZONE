@@ -14,7 +14,7 @@ import top.zbeboy.zbase.tools.service.util.UUIDUtil;
 import top.zbeboy.zbase.tools.web.plugin.select2.Select2Data;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.QRCodeUtil;
-import top.zbeboy.zbase.vo.campus.roster.RosterReleaseEditVo;
+import top.zbeboy.zbase.vo.campus.timetable.CampusCourseDataAddVo;
 import top.zbeboy.zbase.vo.campus.timetable.CampusCourseReleaseAddVo;
 import top.zbeboy.zbase.vo.campus.timetable.CampusCourseReleaseEditVo;
 import top.zbeboy.zone.web.campus.common.CampusUrlCommon;
@@ -41,7 +41,7 @@ public class CampusTimetableRestController {
     public ResponseEntity<Map<String, Object>> release(@PathVariable("id") String id, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         CampusCourseRelease release = campusCourseReleaseService.findById(id);
-        if(Objects.nonNull(release) && StringUtils.isNotBlank(release.getCampusCourseReleaseId())){
+        if (Objects.nonNull(release) && StringUtils.isNotBlank(release.getCampusCourseReleaseId())) {
             ajaxUtil.success().msg("查询课表成功").put("release", release);
         } else {
             ajaxUtil.fail().msg("未查询到数据");
@@ -122,6 +122,20 @@ public class CampusTimetableRestController {
             String path = Workbook.campusTimetableQrCodeFilePath() + id + ".jpg";
             FilesUtil.deleteFile(realPath + path);
         }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 保存课程
+     *
+     * @param campusCourseDataAddVo 数据
+     * @return true or false
+     */
+    @PostMapping("/web/campus/timetable/course/save")
+    public ResponseEntity<Map<String, Object>> courseSave(CampusCourseDataAddVo campusCourseDataAddVo) {
+        Users users = SessionUtil.getUserFromSession();
+        campusCourseDataAddVo.setUsername(users.getUsername());
+        AjaxUtil<Map<String, Object>> ajaxUtil = campusCourseReleaseService.courseSave(campusCourseDataAddVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

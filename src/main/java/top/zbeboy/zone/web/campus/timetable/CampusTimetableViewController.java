@@ -9,14 +9,12 @@ import top.zbeboy.zbase.bean.data.staff.StaffBean;
 import top.zbeboy.zbase.bean.data.student.StudentBean;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.CampusCourseRelease;
-import top.zbeboy.zbase.domain.tables.pojos.RosterRelease;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.domain.tables.pojos.UsersType;
 import top.zbeboy.zbase.feign.campus.timetable.CampusCourseReleaseService;
 import top.zbeboy.zbase.feign.data.StaffService;
 import top.zbeboy.zbase.feign.data.StudentService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
-import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 import top.zbeboy.zone.web.util.SessionUtil;
 
@@ -95,6 +93,27 @@ public class CampusTimetableViewController {
             CampusCourseRelease campusCourseRelease = campusCourseReleaseService.findById(id);
             modelMap.addAttribute("campusCourseRelease", campusCourseRelease);
             page = "web/campus/timetable/timetable_release_edit::#page-wrapper";
+        } else {
+            config.buildWarningTip("操作警告", "您无权限操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
+
+    /**
+     * 添加课程
+     *
+     * @return 添加课程
+     */
+    @GetMapping("/web/campus/timetable/course/add/{id}")
+    public String courseAdd(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        Users users = SessionUtil.getUserFromSession();
+        if (campusCourseReleaseService.canOperator(users.getUsername(), id)) {
+            modelMap.addAttribute("campusCourseReleaseId", id);
+            page = "web/campus/timetable/timetable_course_add::#page-wrapper";
         } else {
             config.buildWarningTip("操作警告", "您无权限操作");
             config.dataMerging(modelMap);
