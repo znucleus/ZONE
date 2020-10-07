@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="br-pageheader pd-y-15 pd-l-20">
+        <nav class="breadcrumb pd-0 mg-0 tx-12">
+            <a class="breadcrumb-item dy_href" href="#/web/menu/campus/timetable">课表</a>
+            <span class="breadcrumb-item active">编辑课程</span>
+        </nav>
+    </div><!-- br-pageheader -->
+    <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
+        <h4 class="tx-gray-800 mg-b-5">课表</h4>
+        <p class="mg-b-0">编辑课程。</p>
+    </div>
+
+    <div class="br-pagebody">
+        <div class="br-section-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <form id="app_form">
+                        <div class="form-group">
+                            <label>（必填）班级名</label>
+                            <input class="form-control" name="organizeName"
+                                   id="organizeName" placeholder="班级名" th:value="${campusCourseData.organizeName}"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>（必填）课程名</label>
+                            <input class="form-control" name="courseName"
+                                   id="courseName" placeholder="课程名" th:value="${campusCourseData.courseName}"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>（选填）教室</label>
+                            <input class="form-control" name="buildingName"
+                                   id="buildingName" placeholder="教室" th:value="${campusCourseData.buildingName}"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>（选填）开始上课周</label>
+                            <input type="number" class="form-control" name="startWeek"
+                                   id="startWeek" placeholder="开始上课周" th:value="${campusCourseData.startWeek}"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>（选填）结束上课周</label>
+                            <input type="number" class="form-control" name="endWeek"
+                                   id="endWeek" placeholder="结束上课周" th:value="${campusCourseData.endWeek}"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>（必选）本周内星期几上课？</label>
+                            <select class="form-control" id="weekDay" name="weekDay">
+                                <option value="">请选择星期</option>
+                                <option value="1">星期一</option>
+                                <option value="2">星期二</option>
+                                <option value="3">星期三</option>
+                                <option value="4">星期四</option>
+                                <option value="5">星期五</option>
+                                <option value="6">星期六</option>
+                                <option value="7">星期天</option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>（选填）当天上课开始时间</label>
+                            <input class="form-control flatpickr" name="startTime"
+                                   id="startTime" placeholder="当天上课开始时间" th:value="${campusCourseData.startTime}"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>（选填）当天上课结束时间</label>
+                            <input class="form-control flatpickr" name="endTime"
+                                   id="endTime" placeholder="当天上课结束时间" th:value="${campusCourseData.endTime}"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>（选填）教师姓名</label>
+                            <input class="form-control" name="teacherName"
+                                   id="teacherName" placeholder="教师姓名" th:value="${campusCourseData.teacherName}"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>（可选）课程颜色</label>
+                            <select class="form-control" name="bgColor" id="bgColor">
+                                <option value="">默认</option>
+                                <option value="bg-primary" class="tx-primary">蓝色</option>
+                                <option value="bg-success" class="tx-success">绿色</option>
+                                <option value="bg-warning" class="tx-warning">橘黄色</option>
+                                <option value="bg-danger" class="tx-danger">红色</option>
+                                <option value="bg-purple" class="tx-purple">紫色</option>
+                                <option value="bg-pink" class="tx-pink">粉红色</option>
+                                <option value="bg-dark" class="tx-dark">黑色</option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>（选填）备注</label>
+                            <input class="form-control" name="remark"
+                                   id="remark" placeholder="备注" th:value="${campusCourseData.remark}"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group text-center">
+                            <button type="button" class="btn btn-primary text-center" id="save">保存</button>
+                            <button type="reset" class="btn btn-default">重置</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" id="campusCourseDataId" th:value="${campusCourseData.campusCourseDataId}"/>
+    <input type="hidden" id="weekDayParam" th:value="${campusCourseData.weekDay}"/>
+    <input type="hidden" id="bgColorParam" th:value="${campusCourseData.bgColor}"/>
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/campus/timetable/timetable_course_edit.js')}"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>

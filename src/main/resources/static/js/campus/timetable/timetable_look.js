@@ -14,6 +14,8 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
             edit: '/web/campus/timetable/edit',
             del: web_path + '/web/campus/timetable/delete',
             course_add: '/web/campus/timetable/course/add',
+            course_edit: '/web/campus/timetable/course/edit',
+            course_del: '/web/campus/timetable/course/delete',
             courses: web_path + '/web/campus/timetable/courses',
             page: '/web/menu/campus/timetable'
         };
@@ -379,5 +381,51 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
                 tools.validSelect2ErrorDom('#timetable', '请选择课表');
             }
         });
+
+        $('.courseData').delegate('.edit', "click", function () {
+            $.address.value(ajax_url.course_edit + '/' + $(this).attr('data-id'));
+        });
+
+        $('.courseData').delegate('.del', "click", function () {
+            var id = $(this).attr('data-id');
+            Swal.fire({
+                title: "确定删除该课程吗？",
+                text: "课程删除！",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                preConfirm: function () {
+                    sendDelCourseAjax(id);
+                }
+            });
+        });
+
+        function sendDelCourseAjax(id) {
+            $.ajax({
+                type: 'POST',
+                url: ajax_url.course_del,
+                data: {id: id},
+                success: function (data) {
+                    Messenger().post({
+                        message: data.msg,
+                        type: data.state ? 'success' : 'error',
+                        showCloseButton: true
+                    });
+
+                    if (data.state) {
+                        initCourseData($('#shareId').text());
+                    }
+                },
+                error: function (XMLHttpRequest) {
+                    Messenger().post({
+                        message: 'Request error : ' + XMLHttpRequest.status + " " + XMLHttpRequest.statusText,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        }
 
     });

@@ -17,6 +17,7 @@ import top.zbeboy.zbase.tools.web.plugin.select2.Select2Data;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.QRCodeUtil;
 import top.zbeboy.zbase.vo.campus.timetable.CampusCourseDataAddVo;
+import top.zbeboy.zbase.vo.campus.timetable.CampusCourseDataEditVo;
 import top.zbeboy.zbase.vo.campus.timetable.CampusCourseReleaseAddVo;
 import top.zbeboy.zbase.vo.campus.timetable.CampusCourseReleaseEditVo;
 import top.zbeboy.zone.web.campus.common.CampusUrlCommon;
@@ -152,6 +153,33 @@ public class CampusTimetableRestController {
         AjaxUtil<CampusCourseData> ajaxUtil = AjaxUtil.of();
         List<CampusCourseData> campusCourseData = campusCourseReleaseService.findCourseByCampusCourseReleaseId(campusCourseReleaseId);
         ajaxUtil.success().msg("获取数据成功").list(campusCourseData).put("weekDay", DateTimeUtil.getNowDayOfWeek());
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 更新课程
+     *
+     * @param campusCourseDataEditVo 数据
+     * @return true or false
+     */
+    @PostMapping("/web/campus/timetable/course/update")
+    public ResponseEntity<Map<String, Object>> courseUpdate(CampusCourseDataEditVo campusCourseDataEditVo) {
+        Users users = SessionUtil.getUserFromSession();
+        campusCourseDataEditVo.setUsername(users.getUsername());
+        AjaxUtil<Map<String, Object>> ajaxUtil = campusCourseReleaseService.courseUpdate(campusCourseDataEditVo);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 删除
+     *
+     * @param id 课程id
+     * @return true or false
+     */
+    @PostMapping("/web/campus/timetable/course/delete")
+    public ResponseEntity<Map<String, Object>> courseDelete(@RequestParam("id") String id) {
+        Users users = SessionUtil.getUserFromSession();
+        AjaxUtil<Map<String, Object>> ajaxUtil = campusCourseReleaseService.courseDelete(users.getUsername(), id);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }
