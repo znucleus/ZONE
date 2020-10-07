@@ -1,6 +1,6 @@
 //# sourceURL=timetable_look.js
-require(["jquery", "tools", "nav.active", "sweetalert2", "jquery.address", "select2-zh-CN", "messenger"],
-    function ($, tools, navActive, Swal) {
+require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.address", "select2-zh-CN", "messenger"],
+    function ($, tools, Handlebars, navActive, Swal) {
         /*
          ajax url.
         */
@@ -14,6 +14,7 @@ require(["jquery", "tools", "nav.active", "sweetalert2", "jquery.address", "sele
             edit: '/web/campus/timetable/edit',
             del: web_path + '/web/campus/timetable/delete',
             course_add: '/web/campus/timetable/course/add',
+            courses: web_path + '/web/campus/timetable/courses',
             page: '/web/menu/campus/timetable'
         };
 
@@ -123,6 +124,7 @@ require(["jquery", "tools", "nav.active", "sweetalert2", "jquery.address", "sele
         }
 
         var timetableSelect2 = null;
+
         function initTimetable() {
             $.get(ajax_url.releases, function (data) {
                 timetableSelect2 = $(param_id.timetable).select2({
@@ -134,7 +136,6 @@ require(["jquery", "tools", "nav.active", "sweetalert2", "jquery.address", "sele
                     campusCourseReleaseId = localStorage.getItem(webStorageKey.TIMETABLE);
                 }
                 if (campusCourseReleaseId !== null) {
-                    queryRelease(campusCourseReleaseId);
                     timetableSelect2.val(campusCourseReleaseId).trigger("change");
                 }
 
@@ -181,7 +182,7 @@ require(["jquery", "tools", "nav.active", "sweetalert2", "jquery.address", "sele
                 localStorage.setItem(webStorageKey.TIMETABLE, v);
             }
 
-            if(v !== ''){
+            if (v !== '') {
                 tools.validSelect2SuccessDom(param_id.timetable);
             }
         });
@@ -237,6 +238,8 @@ require(["jquery", "tools", "nav.active", "sweetalert2", "jquery.address", "sele
                         $('#shareId').text(data.release.campusCourseReleaseId);
                         $('#shareNumber').text(data.release.shareNumber);
                         $('#qrCodeUrl').attr('src', web_path + '/' + data.release.qrCodeUrl);
+
+                        initCourseData(data.release.campusCourseReleaseId);
                     } else {
                         $('#yearAndTerm').text('');
                         $('#shareId').text('');
@@ -245,7 +248,52 @@ require(["jquery", "tools", "nav.active", "sweetalert2", "jquery.address", "sele
                     }
                 });
             }
+        }
 
+        function initCourseData(id) {
+            $.get(ajax_url.courses + '/' + id, function (data) {
+                for (var i = 1; i <= 7; i++) {
+                    $('#week' + i).empty();
+                    $('#simpleWeek' + i).empty();
+                }
+                if (data.state) {
+                    $.each(data.listResult, function (i, v) {
+                        $('#week' + v.weekDay).append(defaultHtml(v));
+                        $('#simpleWeek' + v.weekDay).append(simpleHtml(v));
+                    });
+                    $('#week' + data.weekDay).addClass('table-primary');
+                    $('.carousel').carousel(data.weekDay - 1);
+                }
+            });
+        }
+
+        /**
+         * 默认列表数据
+         * @param d 数据
+         */
+        function defaultHtml(d) {
+            var template = Handlebars.compile($("#default-course-template").html());
+            Handlebars.registerHelper('bgColor', function () {
+                var bgColor = this.bgColor;
+                if (bgColor !== '') {
+                    bgColor += ' tx-white';
+                }
+                return new Handlebars.SafeString(Handlebars.escapeExpression(bgColor));
+            });
+            return template(d);
+        }
+
+        function simpleHtml(d) {
+            var template = Handlebars.compile($("#simple-course-template").html());
+            Handlebars.registerHelper('bgColor', function () {
+                var bgColor = this.bgColor;
+                if (bgColor === '') {
+                    bgColor = 'bg-dark';
+                }
+                bgColor += ' tx-white';
+                return new Handlebars.SafeString(Handlebars.escapeExpression(bgColor));
+            });
+            return template(d);
         }
 
         $('#shareQrCode').click(function () {
@@ -306,6 +354,10 @@ require(["jquery", "tools", "nav.active", "sweetalert2", "jquery.address", "sele
                         $('#qrCodeUrl').attr('src', '');
                         timetableSelect2.val('').trigger("change");
                         $(param_id.timetable).empty();
+                        for (var i = 1; i <= 7; i++) {
+                            $('#week' + i).empty();
+                            $('#simpleWeek' + i).empty();
+                        }
                         initTimetable();
                     }
                 },

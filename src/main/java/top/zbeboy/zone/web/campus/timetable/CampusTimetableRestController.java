@@ -5,9 +5,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zbase.config.Workbook;
+import top.zbeboy.zbase.domain.tables.pojos.CampusCourseData;
 import top.zbeboy.zbase.domain.tables.pojos.CampusCourseRelease;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.campus.timetable.CampusCourseReleaseService;
+import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.service.util.FilesUtil;
 import top.zbeboy.zbase.tools.service.util.RequestUtil;
 import top.zbeboy.zbase.tools.service.util.UUIDUtil;
@@ -136,6 +138,20 @@ public class CampusTimetableRestController {
         Users users = SessionUtil.getUserFromSession();
         campusCourseDataAddVo.setUsername(users.getUsername());
         AjaxUtil<Map<String, Object>> ajaxUtil = campusCourseReleaseService.courseSave(campusCourseDataAddVo);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 课程数据
+     *
+     * @param campusCourseReleaseId 发布id
+     * @return 数据
+     */
+    @GetMapping("/web/campus/timetable/courses/{campusCourseReleaseId}")
+    public ResponseEntity<Map<String, Object>> courses(@PathVariable("campusCourseReleaseId") String campusCourseReleaseId) {
+        AjaxUtil<CampusCourseData> ajaxUtil = AjaxUtil.of();
+        List<CampusCourseData> campusCourseData = campusCourseReleaseService.findCourseByCampusCourseReleaseId(campusCourseReleaseId);
+        ajaxUtil.success().msg("获取数据成功").list(campusCourseData).put("weekDay", DateTimeUtil.getNowDayOfWeek());
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }
