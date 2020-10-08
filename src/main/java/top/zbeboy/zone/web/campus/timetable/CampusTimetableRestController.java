@@ -224,7 +224,7 @@ public class CampusTimetableRestController {
      * @param campusCourseReleaseId 发布id
      * @return 数据
      */
-    @GetMapping("/web/campus/timetable/share_courses/{campusCourseReleaseId}")
+    @GetMapping("/anyone/campus/timetable/share_courses/{campusCourseReleaseId}")
     public ResponseEntity<Map<String, Object>> shareCourses(@PathVariable("campusCourseReleaseId") String campusCourseReleaseId) {
         AjaxUtil<CampusCourseData> ajaxUtil = AjaxUtil.of();
         CampusCourseRelease release = campusCourseReleaseService.findById(campusCourseReleaseId);

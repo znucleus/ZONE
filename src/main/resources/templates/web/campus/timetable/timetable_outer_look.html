@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" class="pos-relative">
+<head th:include="header :: header(~{::meta},~{::title},~{::link})">
+    <!-- csrf -->
+    <meta name="_csrf" content="" th:content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" content="" th:content="${_csrf.headerName}"/>
+    <title th:text="'课程表-' + #{ web.title}">ZHE</title>
+
+    <!-- Bracket CSS -->
+    <link rel="stylesheet" href="plugins/css/bracket.css" th:href="@{/plugins/bracket/css/bracket.min.css}"/>
+</head>
+<body>
+
+<div class="d-flex align-items-center justify-content-center bg-br-primary">
+
+    <div class="login-wrapper wd-300 wd-xs-1000 pd-25 pd-xs-40 bg-white rounded shadow-base mg-t-20 mg-b-20"
+         id="page-wrapper">
+        <div class="signin-logo tx-center tx-28 tx-bold tx-inverse"><span class="tx-normal">[</span> <span
+                id="title"></span> <span class="tx-normal">]</span></div>
+        <p class="mg-b-10 mg-lg-b-20 text-center tx-dark">创建人: <span id="publisher"></span></p>
+        <div class="row mg-b-10 mg-lg-b-20 text-success">
+            <div class="col-md-6">
+                <span>学年学期: </span><span id="yearAndTerm"></span>
+            </div>
+            <div class="col-md-6">
+                <span>共享ID: </span><span id="campusCourseReleaseId" th:text="${id}"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 mg-t-7">
+                <div class="float-right mg-t-5">
+                    <label class="ckbox">
+                        <input type="checkbox" name="simpleScreen" id="simpleScreen" value="1"/>
+                        <span>简屏</span>
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-12" id="defaultData">
+                <div class="table-responsive">
+                    <table class="table table-bordered courseData">
+                        <thead>
+                        <tr>
+                            <th>一</th>
+                            <th>二</th>
+                            <th>三</th>
+                            <th>四</th>
+                            <th>五</th>
+                            <th>六</th>
+                            <th>七</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td id="week1">
+                            </td>
+                            <td id="week2">
+                            </td>
+                            <td id="week3">
+                            </td>
+                            <td id="week4">
+                            </td>
+                            <td id="week5">
+                            </td>
+                            <td id="week6">
+                            </td>
+                            <td id="week7">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-12" id="simpleData" style="display: none;">
+                <div id="carousel" class="carousel slide carousel-fade courseData" data-interval="false">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <div class="card bd-0">
+                                <div class="card-header tx-medium bd-0 tx-white bg-primary text-center">
+                                    星期一
+                                </div><!-- card-header -->
+                                <div class="card-body bd bd-t-0 rounded-bottom bg-dark" id="simpleWeek1">
+                                </div><!-- card-body -->
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="card bd-0">
+                                <div class="card-header tx-medium bd-0 tx-white bg-success text-center">
+                                    星期二
+                                </div><!-- card-header -->
+                                <div class="card-body bd bd-t-0 rounded-bottom bg-dark" id="simpleWeek2">
+                                </div><!-- card-body -->
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="card bd-0">
+                                <div class="card-header tx-medium bd-0 tx-white bg-warning text-center">
+                                    星期三
+                                </div><!-- card-header -->
+                                <div class="card-body bd bd-t-0 rounded-bottom bg-dark" id="simpleWeek3">
+                                </div><!-- card-body -->
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="card bd-0">
+                                <div class="card-header tx-medium bd-0 tx-white bg-info text-center">
+                                    星期四
+                                </div><!-- card-header -->
+                                <div class="card-body bd bd-t-0 rounded-bottom bg-dark" id="simpleWeek4">
+                                </div><!-- card-body -->
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="card bd-0">
+                                <div class="card-header tx-medium bd-0 tx-white bg-indigo text-center">
+                                    星期五
+                                </div><!-- card-header -->
+                                <div class="card-body bd bd-t-0 rounded-bottom bg-dark" id="simpleWeek5">
+                                </div><!-- card-body -->
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="card bd-0">
+                                <div class="card-header tx-medium bd-0 tx-white bg-pink text-center">
+                                    星期六
+                                </div><!-- card-header -->
+                                <div class="card-body bd bd-t-0 rounded-bottom bg-dark" id="simpleWeek6">
+                                </div><!-- card-body -->
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="card bd-0">
+                                <div class="card-header tx-medium bd-0 tx-white bg-teal text-center">
+                                    星期天
+                                </div><!-- card-header -->
+                                <div class="card-body bd bd-t-0 rounded-bottom bg-dark" id="simpleWeek7">
+                                </div><!-- card-body -->
+                            </div>
+                        </div>
+                    </div>
+                    <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carousel" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div><!-- login-wrapper -->
+</div><!-- d-flex -->
+
+<script id="default-course-template" type="text/x-handlebars-template">
+    <div class="card mg-t-5">
+        <div class="card-header tx-medium bd-0 {{bgColor}}">
+            {{courseName}}
+        </div><!-- card-header -->
+        <div class="card-body bd-t-0 rounded-bottom">
+            <p class="mg-b-0">
+                {{organizeName}}<br/>
+                {{teacherName}}<br/>
+                {{startWeek}}-{{endWeek}}周<br/>
+                {{startTime}}-{{endTime}}<br/>
+                备注：{{remark}}
+            </p>
+        </div><!-- card-body -->
+    </div>
+</script>
+
+<script id="simple-course-template" type="text/x-handlebars-template">
+    <div class="card card-body {{bgColor}} bd-0">
+        <p class="card-text">
+            {{courseName}}@{{organizeName}}@{{teacherName}}@{{startWeek}}-{{endWeek}}周@{{startTime}}-{{endTime}}@备注：{{remark}}</p>
+    </div>
+</script>
+
+<script src="webjarsjs" th:src="@{/webjarsjs}"></script>
+<script src="webjars/requirejs/require.min.js" th:src="@{/webjars/requirejs/require.min.js}"
+        data-main="/timetable_outer_look"></script>
+<script th:inline="javascript">
+    var web_path = /*[[${#httpServletRequest.getContextPath()}]]*/ '';
+    require.config({
+        baseUrl: web_path + "/js/campus/timetable",
+        waitSeconds: 0,
+        urlArgs: "v=" + /*[[${staticResourceVersion}]]*/ ''
+    });
+</script>
+</body>
+
+</html>

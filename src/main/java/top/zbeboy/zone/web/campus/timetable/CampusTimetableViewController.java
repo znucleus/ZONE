@@ -16,6 +16,7 @@ import top.zbeboy.zbase.feign.campus.timetable.CampusCourseReleaseService;
 import top.zbeboy.zbase.feign.data.StaffService;
 import top.zbeboy.zbase.feign.data.StudentService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
+import top.zbeboy.zone.web.campus.common.CampusUrlCommon;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 import top.zbeboy.zone.web.util.SessionUtil;
 
@@ -67,6 +68,18 @@ public class CampusTimetableViewController {
         modelMap.addAttribute("schoolId", schoolId);
         modelMap.addAttribute("collegeId", collegeId);
         return "web/campus/timetable/timetable_look::#page-wrapper";
+    }
+
+    /**
+     * 共享课表页面
+     *
+     * @param modelMap 页面对象
+     * @return 共享课表页面
+     */
+    @GetMapping(CampusUrlCommon.ANYONE_TIMETABLE_LOOK_URL + "/{id}")
+    public String anyoneLook(@PathVariable("id") String id, ModelMap modelMap) {
+        modelMap.addAttribute("id", id);
+        return "web/campus/timetable/timetable_outer_look";
     }
 
     /**

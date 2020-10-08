@@ -6,7 +6,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
          ajax url.
          */
         var ajax_url = {
-            courses: web_path + '/web/campus/timetable/share_courses',
+            courses: web_path + '/anyone/campus/timetable/share_courses',
             save: web_path + '/web/campus/timetable/course/batch_save',
             page: '/web/menu/campus/timetable'
         };

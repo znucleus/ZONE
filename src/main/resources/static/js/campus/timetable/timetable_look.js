@@ -44,12 +44,12 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
         web storage key.
         */
         var webStorageKey = {
-            SCHOOL: 'CALENDAR_SCHOOL_SEARCH',
-            COLLEGE: 'CALENDAR_COLLEGE_SEARCH',
-            SCHOOL_CALENDAR: 'CALENDAR_SCHOOL_CALENDAR_SEARCH',
-            TIMETABLE: 'CALENDAR_TIMETABLE_SEARCH',
-            SHOW_SCREEN: 'CALENDAR_TIMETABLE_SHOW_SCREEN',
-            SHOW_EFFECTIVE_COURSE: 'CALENDAR_TIMETABLE_SHOW_EFFECTIVE_COURSE'
+            SCHOOL: 'CAMPUS_TIMETABLE_SCHOOL_SEARCH',
+            COLLEGE: 'CAMPUS_TIMETABLE_COLLEGE_SEARCH',
+            SCHOOL_CALENDAR: 'CAMPUS_TIMETABLE_SCHOOL_CALENDAR_SEARCH',
+            TIMETABLE: 'CAMPUS_TIMETABLE_TIMETABLE_SEARCH',
+            SHOW_SCREEN: 'CAMPUS_TIMETABLE_SHOW_SCREEN',
+            SHOW_EFFECTIVE_COURSE: 'CAMPUS_TIMETABLE_SHOW_EFFECTIVE_COURSE'
         };
 
         var init_configure = {
