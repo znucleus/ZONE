@@ -73,8 +73,6 @@
                             </button>
                             <div class="dropdown-menu" aria-labelledby="addTimetableButton">
                                 <a class="dropdown-item" href="#/web/campus/timetable/add">空白课表</a>
-                                <a class="dropdown-item" href="#">导入教务班级课表</a>
-                                <a class="dropdown-item" href="#">导入教务教师课表</a>
                                 <a class="dropdown-item" href="#">导入共享课表</a>
                             </div>
                         </div>
@@ -115,12 +113,22 @@
                 </div>
                 <div class="col-md-12 mg-t-7">
                     <div class="float-right mg-t-5">
-                        <button type="button" class="btn btn-primary btn-sm" id="addCourse"><i
-                                class="fa fa-plus"></i> 添加课程
-                        </button>
                         <button type="button" class="btn btn-outline-teal btn-sm" id="manageCourse"><i
                                 class="fa fa-cog"></i> 管理课程
                         </button>
+                    </div>
+                    <div class="float-right mg-t-5 mg-r-4">
+                        <div class="dropdown">
+                            <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="addCourseButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-plus"></i> 添加课程
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="addTimetableButton">
+                                <a class="dropdown-item" href="javascript:" id="addCourse">自定义课程</a>
+                                <a class="dropdown-item" href="javascript:">导入教务班级课程</a>
+                                <a class="dropdown-item" href="javascript:">导入教务教师课程</a>
+                                <a class="dropdown-item" href="javascript:">导入共享课程</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-12 mg-t-7">
