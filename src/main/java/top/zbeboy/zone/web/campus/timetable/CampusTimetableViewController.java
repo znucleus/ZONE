@@ -80,6 +80,16 @@ public class CampusTimetableViewController {
     }
 
     /**
+     * 导入共享课表
+     *
+     * @return 导入共享课表
+     */
+    @GetMapping("/web/campus/timetable/share/add")
+    public String shareAdd() {
+        return "web/campus/timetable/timetable_release_share::#page-wrapper";
+    }
+
+    /**
      * 编辑页面
      *
      * @param modelMap 页面对象

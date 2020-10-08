@@ -96,6 +96,47 @@ public class CampusTimetableRestController {
     }
 
     /**
+     * 保存
+     *
+     * @param shareId 共享id
+     * @return true or false
+     */
+    @PostMapping("/web/campus/timetable/share/save")
+    public ResponseEntity<Map<String, Object>> shareSave(@RequestParam("shareId") String shareId, HttpServletRequest request) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        try {
+            CampusCourseRelease release = campusCourseReleaseService.findById(shareId);
+            if (Objects.nonNull(release) && StringUtils.isNotBlank(release.getCampusCourseReleaseId())) {
+                CampusCourseReleaseAddVo campusCourseReleaseAddVo = new CampusCourseReleaseAddVo();
+                Users users = SessionUtil.getUserFromSession();
+                campusCourseReleaseAddVo.setUsername(users.getUsername());
+                String id = UUIDUtil.getUUID();
+                campusCourseReleaseAddVo.setCampusCourseReleaseId(id);
+                String realPath = RequestUtil.getRealPath(request);
+                String path = Workbook.campusTimetableQrCodeFilePath() + id + ".jpg";
+                String logoPath = Workbook.SYSTEM_LOGO_PATH;
+                //生成二维码
+                String text = RequestUtil.getBaseUrl(request) + CampusUrlCommon.ANYONE_TIMETABLE_LOOK_URL + id;
+                QRCodeUtil.encode(text, logoPath, realPath + path, true);
+                campusCourseReleaseAddVo.setQrCodeUrl(path);
+
+                campusCourseReleaseAddVo.setTitle(release.getTitle());
+                campusCourseReleaseAddVo.setStartYear(release.getStartYear());
+                campusCourseReleaseAddVo.setEndYear(release.getEndYear());
+                campusCourseReleaseAddVo.setTerm(release.getTerm());
+                campusCourseReleaseAddVo.setShareId(shareId);
+                ajaxUtil = campusCourseReleaseService.shareSave(campusCourseReleaseAddVo);
+            } else {
+                ajaxUtil.fail().msg("保存失败，根据共享ID未查询到课表信息");
+            }
+        } catch (Exception e) {
+            ajaxUtil.fail().msg("保存失败: 异常: " + e.getMessage());
+        }
+
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
      * 更新
      *
      * @param campusCourseReleaseEditVo 数据

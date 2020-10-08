@@ -226,7 +226,9 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
 
                         curWeeks = calendar.weeks;
                         effectiveCourseCalendarAjaxFinish = true;
+
                         showEffectiveCourse();
+
                     } else {
                         $('#title').text('');
                         $('#schoolName').text('');
@@ -298,10 +300,6 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
                     courseData = data.listResult;
                     effectiveCourseDataAjaxFinish = true;
                     showEffectiveCourse();
-                    $.each(data.listResult, function (i, v) {
-                        $('#week' + v.weekDay).append(defaultHtml(v));
-                        $('#simpleWeek' + v.weekDay).append(simpleHtml(v));
-                    });
                     $('#week' + data.weekDay).addClass('table-primary');
                     $('.carousel').carousel(data.weekDay - 1);
                 }
@@ -510,24 +508,28 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
         });
 
         function showEffectiveCourse() {
-            if(effectiveCourseCalendarAjaxFinish && effectiveCourseDataAjaxFinish){
-                for (var i = 1; i <= 7; i++) {
-                    $('#week' + i).empty();
-                    $('#simpleWeek' + i).empty();
-                }
-                $.each(courseData, function (i, v) {
-                    // 显示有效课程
-                    if ($('#showEffectiveCourse').prop('checked') && curWeeks !== -1) {
+            // 显示有效课程
+            for (var i = 1; i <= 7; i++) {
+                $('#week' + i).empty();
+                $('#simpleWeek' + i).empty();
+            }
+            if ($('#showEffectiveCourse').prop('checked')) {
+                if(effectiveCourseCalendarAjaxFinish && effectiveCourseDataAjaxFinish){
+                    $.each(courseData, function (i, v) {
+                        // 显示有效课程
                         var startWeek = v.startWeek;
                         var endWeek = v.endWeek;
                         if (startWeek <= curWeeks && endWeek >= curWeeks) {
                             $('#week' + v.weekDay).append(defaultHtml(v));
                             $('#simpleWeek' + v.weekDay).append(simpleHtml(v));
                         }
-                    } else {
-                        $('#week' + v.weekDay).append(defaultHtml(v));
-                        $('#simpleWeek' + v.weekDay).append(simpleHtml(v));
-                    }
+                    });
+
+                }
+            } else {
+                $.each(courseData, function (i, v) {
+                    $('#week' + v.weekDay).append(defaultHtml(v));
+                    $('#simpleWeek' + v.weekDay).append(simpleHtml(v));
                 });
             }
         }
