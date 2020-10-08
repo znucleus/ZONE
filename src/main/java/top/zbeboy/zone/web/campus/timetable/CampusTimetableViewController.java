@@ -155,6 +155,27 @@ public class CampusTimetableViewController {
     }
 
     /**
+     * 添加教务教师课程
+     *
+     * @return 添加教务教师课程
+     */
+    @GetMapping("/web/campus/timetable/course/edu/teacher/add/{id}")
+    public String courseEduTeacherAdd(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        Users users = SessionUtil.getUserFromSession();
+        if (campusCourseReleaseService.canOperator(users.getUsername(), id)) {
+            modelMap.addAttribute("campusCourseReleaseId", id);
+            page = "web/campus/timetable/timetable_course_edu_teacher_add::#page-wrapper";
+        } else {
+            config.buildWarningTip("操作警告", "您无权限操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
+
+    /**
      * 编辑课程
      *
      * @return 添加课程
