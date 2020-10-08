@@ -112,8 +112,8 @@ require(["jquery", "tools", "sweetalert2", "nav.active", "messenger", "jquery.ad
          */
         function validOrganizeName() {
             var organizeName = param.organizeName;
-            if (organizeName.length <= 0 || organizeName.length > 50) {
-                tools.validErrorDom(param_id.organizeName, '班级名50个字符以内');
+            if (organizeName.length <= 0 || organizeName.length > 500) {
+                tools.validErrorDom(param_id.organizeName, '班级名500个字符以内');
             } else {
                 tools.validSuccessDom(param_id.organizeName);
                 validCourseName();
@@ -125,8 +125,8 @@ require(["jquery", "tools", "sweetalert2", "nav.active", "messenger", "jquery.ad
          */
         function validCourseName() {
             var courseName = param.courseName;
-            if (courseName.length <= 0 || courseName.length > 80) {
-                tools.validErrorDom(param_id.courseName, '课程名80个字符以内');
+            if (courseName.length <= 0 || courseName.length > 220) {
+                tools.validErrorDom(param_id.courseName, '课程名220个字符以内');
             } else {
                 tools.validSuccessDom(param_id.courseName);
                 validWeekDay();

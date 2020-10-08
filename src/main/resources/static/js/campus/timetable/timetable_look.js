@@ -14,6 +14,8 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
             edit: '/web/campus/timetable/edit',
             del: web_path + '/web/campus/timetable/delete',
             course_add: '/web/campus/timetable/course/add',
+            course_edu_attend_class_add: '/web/campus/timetable/course/edu/organize/add',
+            course_edu_teacher: '/web/campus/timetable/course/edu/teacher/add',
             course_edit: '/web/campus/timetable/course/edit',
             course_del: '/web/campus/timetable/course/delete',
             courses: web_path + '/web/campus/timetable/courses',
@@ -314,7 +316,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
             var template = Handlebars.compile($("#default-course-template").html());
             Handlebars.registerHelper('bgColor', function () {
                 var bgColor = this.bgColor;
-                if (bgColor !== '') {
+                if (bgColor && bgColor !== '') {
                     bgColor += ' tx-white';
                 }
                 return new Handlebars.SafeString(Handlebars.escapeExpression(bgColor));
@@ -326,7 +328,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
             var template = Handlebars.compile($("#simple-course-template").html());
             Handlebars.registerHelper('bgColor', function () {
                 var bgColor = this.bgColor;
-                if (bgColor === '') {
+                if (!bgColor || bgColor === '') {
                     bgColor = 'bg-dark';
                 }
                 bgColor += ' tx-white';
@@ -414,6 +416,24 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
             var id = $('#shareId').text();
             if (id !== '') {
                 $.address.value(ajax_url.course_add + '/' + id);
+            } else {
+                tools.validSelect2ErrorDom('#timetable', '请选择课表');
+            }
+        });
+
+        $('#addEduOrganize').click(function () {
+            var id = $('#shareId').text();
+            if (id !== '') {
+                $.address.value(ajax_url.course_edu_attend_class_add + '/' + id);
+            } else {
+                tools.validSelect2ErrorDom('#timetable', '请选择课表');
+            }
+        });
+
+        $('#addEduTeacher').click(function () {
+            var id = $('#shareId').text();
+            if (id !== '') {
+                $.address.value(ajax_url.course_edu_teacher + '/' + id);
             } else {
                 tools.validSelect2ErrorDom('#timetable', '请选择课表');
             }
@@ -525,6 +545,12 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
                         }
                     });
 
+                } else {
+                    Messenger().post({
+                        message: '请先选择校历和课表',
+                        type: 'error',
+                        showCloseButton: true
+                    });
                 }
             } else {
                 $.each(courseData, function (i, v) {

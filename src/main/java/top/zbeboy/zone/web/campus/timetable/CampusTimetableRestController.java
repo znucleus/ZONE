@@ -1,5 +1,6 @@
 package top.zbeboy.zone.web.campus.timetable;
 
+import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -180,6 +181,26 @@ public class CampusTimetableRestController {
         Users users = SessionUtil.getUserFromSession();
         campusCourseDataAddVo.setUsername(users.getUsername());
         AjaxUtil<Map<String, Object>> ajaxUtil = campusCourseReleaseService.courseSave(campusCourseDataAddVo);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 批量保存课程
+     *
+     * @param data 数据
+     * @return true or false
+     */
+    @PostMapping("/web/campus/timetable/course/batch_save")
+    public ResponseEntity<Map<String, Object>> courseBatchSave(@RequestParam("data") String data) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        Users users = SessionUtil.getUserFromSession();
+        List<CampusCourseDataAddVo> list = JSON.parseArray(data,CampusCourseDataAddVo.class);
+        if(Objects.nonNull(list) && !list.isEmpty()){
+            list.forEach(campusCourseDataAddVo -> campusCourseDataAddVo.setUsername(users.getUsername()));
+            ajaxUtil = campusCourseReleaseService.courseBatchSave(list);
+        } else {
+            ajaxUtil.fail().msg("请选择课程");
+        }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
