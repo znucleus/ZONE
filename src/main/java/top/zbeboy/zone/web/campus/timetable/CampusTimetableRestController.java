@@ -219,6 +219,27 @@ public class CampusTimetableRestController {
     }
 
     /**
+     * 共享课程数据
+     *
+     * @param campusCourseReleaseId 发布id
+     * @return 数据
+     */
+    @GetMapping("/web/campus/timetable/share_courses/{campusCourseReleaseId}")
+    public ResponseEntity<Map<String, Object>> shareCourses(@PathVariable("campusCourseReleaseId") String campusCourseReleaseId) {
+        AjaxUtil<CampusCourseData> ajaxUtil = AjaxUtil.of();
+        CampusCourseRelease release = campusCourseReleaseService.findById(campusCourseReleaseId);
+        if (Objects.nonNull(release) && StringUtils.isNotBlank(release.getCampusCourseReleaseId())) {
+            List<CampusCourseData> campusCourseData = campusCourseReleaseService.findCourseByCampusCourseReleaseId(campusCourseReleaseId);
+            ajaxUtil.success().msg("获取数据成功").list(campusCourseData)
+                    .put("release", release)
+                    .put("weekDay", DateTimeUtil.getNowDayOfWeek());
+        } else {
+            ajaxUtil.fail().msg("未查询到课表数据");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
      * 更新课程
      *
      * @param campusCourseDataEditVo 数据

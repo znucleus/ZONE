@@ -15,7 +15,8 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
             del: web_path + '/web/campus/timetable/delete',
             course_add: '/web/campus/timetable/course/add',
             course_edu_attend_class_add: '/web/campus/timetable/course/edu/organize/add',
-            course_edu_teacher: '/web/campus/timetable/course/edu/teacher/add',
+            course_edu_teacher_add: '/web/campus/timetable/course/edu/teacher/add',
+            course_share_add: '/web/campus/timetable/course/share/add',
             course_edit: '/web/campus/timetable/course/edit',
             course_del: '/web/campus/timetable/course/delete',
             courses: web_path + '/web/campus/timetable/courses',
@@ -437,7 +438,16 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
         $('#addEduTeacher').click(function () {
             var id = $('#shareId').text();
             if (id !== '') {
-                $.address.value(ajax_url.course_edu_teacher + '/' + id);
+                $.address.value(ajax_url.course_edu_teacher_add + '/' + id);
+            } else {
+                tools.validSelect2ErrorDom('#timetable', '请选择课表');
+            }
+        });
+
+        $('#addShareCourse').click(function () {
+            var id = $('#shareId').text();
+            if (id !== '') {
+                $.address.value(ajax_url.course_share_add + '/' + id);
             } else {
                 tools.validSelect2ErrorDom('#timetable', '请选择课表');
             }
