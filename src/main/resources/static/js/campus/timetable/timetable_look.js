@@ -53,7 +53,8 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
 
         var init_configure = {
             init_college: false,
-            init_school_calendar: false
+            init_school_calendar: false,
+            init_simple_screen:false
         };
 
         init();
@@ -303,7 +304,10 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
                     effectiveCourseDataAjaxFinish = true;
                     showEffectiveCourse();
                     $('#week' + data.weekDay).addClass('table-primary');
-                    $('.carousel').carousel(data.weekDay - 1);
+                    if(!init_configure.init_simple_screen){
+                        $('.carousel').carousel(data.weekDay - 1);
+                        init_configure.init_simple_screen = true;
+                    }
                 }
             });
         }
@@ -544,7 +548,6 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
                             $('#simpleWeek' + v.weekDay).append(simpleHtml(v));
                         }
                     });
-
                 } else {
                     Messenger().post({
                         message: '请先选择校历和课表',
@@ -557,6 +560,12 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
                     $('#week' + v.weekDay).append(defaultHtml(v));
                     $('#simpleWeek' + v.weekDay).append(simpleHtml(v));
                 });
+            }
+
+            if ($('#manageCourse').hasClass('btn-outline-teal')) {
+                $('.manageCourse').css('display', 'none');
+            } else {
+                $('.manageCourse').css('display', '');
             }
         }
 
