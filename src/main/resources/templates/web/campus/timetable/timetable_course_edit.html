@@ -22,37 +22,37 @@
                 <div class="col-md-12">
                     <form id="app_form">
                         <div class="form-group">
-                            <label>（必填）班级名</label>
+                            <label>(<span class="tx-danger">必填</span>)班级名</label>
                             <input class="form-control" name="organizeName"
                                    id="organizeName" placeholder="班级名" th:value="${campusCourseData.organizeName}"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
-                            <label>（必填）课程名</label>
+                            <label>(<span class="tx-danger">必填</span>)课程名</label>
                             <input class="form-control" name="courseName"
                                    id="courseName" placeholder="课程名" th:value="${campusCourseData.courseName}"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
-                            <label>（选填）教室</label>
+                            <label>(<span class="tx-primary">选填</span>)教室</label>
                             <input class="form-control" name="buildingName"
                                    id="buildingName" placeholder="教室" th:value="${campusCourseData.buildingName}"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
-                            <label>（选填）开始上课周</label>
+                            <label>(<span class="tx-primary">选填</span>)开始上课周</label>
                             <input type="number" class="form-control" name="startWeek"
                                    id="startWeek" placeholder="开始上课周" th:value="${campusCourseData.startWeek}"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
-                            <label>（选填）结束上课周</label>
+                            <label>(<span class="tx-primary">选填</span>)结束上课周</label>
                             <input type="number" class="form-control" name="endWeek"
                                    id="endWeek" placeholder="结束上课周" th:value="${campusCourseData.endWeek}"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
-                            <label>（必选）本周内星期几上课？</label>
+                            <label>(<span class="tx-danger">必选</span>)本周内星期几上课？</label>
                             <select class="form-control" id="weekDay" name="weekDay">
                                 <option value="">请选择星期</option>
                                 <option value="1">星期一</option>
@@ -66,25 +66,25 @@
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
-                            <label>（选填）当天上课开始时间</label>
+                            <label>(<span class="tx-primary">选填</span>)当天上课开始时间</label>
                             <input class="form-control flatpickr" name="startTime"
                                    id="startTime" placeholder="当天上课开始时间" th:value="${campusCourseData.startTime}"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
-                            <label>（选填）当天上课结束时间</label>
+                            <label>(<span class="tx-primary">选填</span>)当天上课结束时间</label>
                             <input class="form-control flatpickr" name="endTime"
                                    id="endTime" placeholder="当天上课结束时间" th:value="${campusCourseData.endTime}"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
-                            <label>（选填）教师姓名</label>
+                            <label>(<span class="tx-primary">选填</span>)教师姓名</label>
                             <input class="form-control" name="teacherName"
                                    id="teacherName" placeholder="教师姓名" th:value="${campusCourseData.teacherName}"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
-                            <label>（可选）课程颜色</label>
+                            <label>(<span class="tx-primary">可选</span>)课程颜色</label>
                             <select class="form-control" name="bgColor" id="bgColor">
                                 <option value="">默认</option>
                                 <option value="bg-primary" class="tx-primary">蓝色</option>
@@ -98,7 +98,7 @@
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
-                            <label>（选填）备注</label>
+                            <label>(<span class="tx-primary">选填</span>)备注</label>
                             <input class="form-control" name="remark"
                                    id="remark" placeholder="备注" th:value="${campusCourseData.remark}"/>
                             <div class="invalid-feedback"></div>
