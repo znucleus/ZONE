@@ -60,6 +60,7 @@ require(["jquery", "requirejs-domready", "tools", "handlebars","csrf", "bootstra
             function init() {
                 initData();
                 initScreen();
+                initMobileCarousel();
             }
 
             function initData() {
@@ -100,6 +101,18 @@ require(["jquery", "requirejs-domready", "tools", "handlebars","csrf", "bootstra
                         $('#simpleData').css('display', 'none');
                     }
                 }
+            }
+
+            function initMobileCarousel() {
+                tools.listenTouchDirection(document.getElementById("carousel"), true, false,carouselPrev,false,carouselNext)
+            }
+
+            function carouselPrev() {
+                $('#carousel').carousel('prev');
+            }
+
+            function carouselNext() {
+                $('#carousel').carousel('next');
             }
 
             function defaultHtml(d) {

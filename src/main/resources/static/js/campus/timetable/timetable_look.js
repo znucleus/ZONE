@@ -66,6 +66,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
             initTimetable();
             initSelect2();
             initScreen();
+            initMobileCarousel();
         }
 
         function initShowEffectiveCourse() {
@@ -264,6 +265,18 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
                     $('#simpleData').css('display', 'none');
                 }
             }
+        }
+        
+        function initMobileCarousel() {
+            tools.listenTouchDirection(document.getElementById("carousel"), true, false,carouselPrev,false,carouselNext)
+        }
+
+        function carouselPrev() {
+            $('#carousel').carousel('prev');
+        }
+
+        function carouselNext() {
+            $('#carousel').carousel('next');
         }
 
         function queryRelease(id) {
