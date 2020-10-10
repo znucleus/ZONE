@@ -104,7 +104,7 @@ require(["jquery", "requirejs-domready", "tools", "handlebars","csrf", "bootstra
             }
 
             function initMobileCarousel() {
-                tools.listenTouchDirection(document.getElementById("carousel"), true, false,carouselPrev,false,carouselNext)
+                tools.listenTouchDirection(document.getElementById("carousel"), false, false,carouselPrev,false,carouselNext)
             }
 
             function carouselPrev() {

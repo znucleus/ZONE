@@ -268,7 +268,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
         }
         
         function initMobileCarousel() {
-            tools.listenTouchDirection(document.getElementById("carousel"), true, false,carouselPrev,false,carouselNext)
+            tools.listenTouchDirection(document.getElementById("carousel"), false, false,carouselPrev,false,carouselNext)
         }
 
         function carouselPrev() {
