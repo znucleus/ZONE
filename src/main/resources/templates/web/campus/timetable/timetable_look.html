@@ -288,13 +288,14 @@
                 {{courseName}}
             </div><!-- card-header -->
             <div class="card-body bd-t-0 rounded-bottom">
-                <p class="mg-b-0">
-                    {{organizeName}}<br/>
-                    {{teacherName}}<br/>
-                    {{startWeek}}-{{endWeek}}周<br/>
-                    {{startTime}}-{{endTime}}<br/>
-                    备注：{{remark}}
-                </p>
+                <div class="row mg-b-0">
+                    <div class="col-md-12">{{buildingName}}</div>
+                    <div class="col-md-12">{{organizeName}}</div>
+                    <div class="col-md-12">{{teacherName}}</div>
+                    <div class="col-md-12">{{startWeek}}-{{endWeek}}周</div>
+                    <div class="col-md-12">{{startTime}}-{{endTime}}</div>
+                    <div class="col-md-12"> 备注：{{remark}}</div>
+                </div>
                 <div class="btn-group manageCourse" role="group" aria-label="Basic example" style="display: none">
                     <button type="button" class="btn btn-primary edit" data-id="{{campusCourseDataId}}">编辑</button>
                     <button type="button" class="btn btn-danger del" data-id="{{campusCourseDataId}}">删除</button>
@@ -305,7 +306,16 @@
 
     <script id="simple-course-template" type="text/x-handlebars-template">
         <div class="card card-body {{bgColor}} bd-0">
-            <p class="card-text">{{courseName}}@{{organizeName}}@{{teacherName}}@{{startWeek}}-{{endWeek}}周@{{startTime}}-{{endTime}}@备注：{{remark}}</p>
+            <div class="row">
+                <div class="col-md-12 card-text">{{courseName}}</div>
+                <div class="col-md-4 card-text">{{buildingName}}</div>
+                <div class="col-md-4 card-text">{{organizeName}}</div>
+                <div class="col-md-4 card-text">{{teacherName}}</div>
+                <div class="col-md-4 card-text">{{startWeek}}-{{endWeek}}周</div>
+                <div class="col-md-4 card-text">{{startTime}}-{{endTime}}</div>
+                <div class="col-md-12 card-text"> 备注：{{remark}}</div>
+            </div>
+
             <div class="text-center">
                 <div class="btn-group manageCourse" role="group" aria-label="Basic example" style="display: none">
                     <button type="button" class="btn btn-primary edit" data-id="{{campusCourseDataId}}">编辑</button>
