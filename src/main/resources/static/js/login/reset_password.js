@@ -128,7 +128,7 @@ require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf",
                             validOkPassword();
                         }
                     } else {
-                        tools.validErrorDom(param_id.password, "密码格式不正确");
+                        tools.validErrorDom(param_id.password, "密码至少包含数字与字母，可使用特殊符号，长度6~20位");
                     }
                 } else {
                     tools.validErrorDom(param_id.password, "请填写您的密码");

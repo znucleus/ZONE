@@ -52,7 +52,7 @@ public class SystemMailRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         String param = StringUtils.deleteWhitespace(email);
         if (StringUtils.isNotBlank(param)) {
-            if (Pattern.matches(SystemMailConfig.MAIL_REGEX, param)) {
+            if (Pattern.matches(Workbook.MAIL_REGEX, param)) {
                 Users users = usersService.findByEmail(param);
                 if (Objects.nonNull(users)) {
                     if (Objects.isNull(users.getVerifyMailbox()) || !BooleanUtil.toBoolean(users.getVerifyMailbox())) {

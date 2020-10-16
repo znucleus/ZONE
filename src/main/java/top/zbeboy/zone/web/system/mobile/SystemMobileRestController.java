@@ -51,7 +51,7 @@ public class SystemMobileRestController {
     public ResponseEntity<Map<String, Object>> anyoneSendMobile(@RequestParam("mobile") String mobile, HttpSession session) {
         String param = StringUtils.trim(mobile);
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        if (Pattern.matches(SystemMobileConfig.MOBILE_REGEX, param)) {
+        if (Pattern.matches(Workbook.MOBILE_REGEX, param)) {
             SystemConfigure systemConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MOBILE_SWITCH.name());
             if (StringUtils.equals("1", systemConfigure.getDataValue())) {
                 boolean isSend = false;
@@ -108,7 +108,7 @@ public class SystemMobileRestController {
         String param = StringUtils.trim(mobile);
         String code = StringUtils.trim(verificationCode);
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        if (Pattern.matches(SystemMobileConfig.MOBILE_REGEX, param)) {
+        if (Pattern.matches(Workbook.MOBILE_REGEX, param)) {
             boolean hasError = isHasError(session, param, ajaxUtil);
 
             if (!hasError) {
@@ -158,7 +158,7 @@ public class SystemMobileRestController {
     public ResponseEntity<Map<String, Object>> anyoneDataMobileCode(@RequestParam("mobile") String mobile, HttpSession session) {
         String param = StringUtils.trim(mobile);
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        if (Pattern.matches(SystemMobileConfig.MOBILE_REGEX, param)) {
+        if (Pattern.matches(Workbook.MOBILE_REGEX, param)) {
             boolean hasError = isHasError(session, param, ajaxUtil);
 
             if (!hasError) {
@@ -190,7 +190,7 @@ public class SystemMobileRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         String param = StringUtils.deleteWhitespace(mobile);
         if (StringUtils.isNotBlank(param)) {
-            if (Pattern.matches(SystemMobileConfig.MOBILE_REGEX, param)) {
+            if (Pattern.matches(Workbook.MOBILE_REGEX, param)) {
                 if (Objects.nonNull(session.getAttribute(param + SystemMobileConfig.MOBILE_VALID))) {
                     boolean isValid = (boolean) session.getAttribute(param + SystemMobileConfig.MOBILE_VALID);
                     if (isValid) {

@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.Authorities;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.platform.AuthorizeService;
@@ -44,12 +45,12 @@ public class MyUserDetailsServiceImpl implements UserDetailsService {
         String username = StringUtils.deleteWhitespace(s);
         Users users = null;
         boolean hasUser = false;
-        if (Pattern.matches(SystemMailConfig.MAIL_REGEX, username)) {
+        if (Pattern.matches(Workbook.MAIL_REGEX, username)) {
             users = usersService.findByEmail(username);
             hasUser = Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername());
         }
 
-        if (!hasUser && Pattern.matches(SystemMobileConfig.MOBILE_REGEX, username)) {
+        if (!hasUser && Pattern.matches(Workbook.MOBILE_REGEX, username)) {
             users = usersService.findByMobile(username);
             hasUser = Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername());
         }

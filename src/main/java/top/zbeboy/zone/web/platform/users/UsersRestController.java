@@ -331,7 +331,7 @@ public class UsersRestController {
                 }
             } else if (StringUtils.equals("email", name)) {
                 if (canUpdate) {
-                    if (Pattern.matches(SystemMailConfig.MAIL_REGEX, value)) {
+                    if (Pattern.matches(Workbook.MAIL_REGEX, value)) {
                         if (!StringUtils.equals(own.getEmail(), value)) {
                             List<Users> usersList = usersService.findByEmailNeOwn(value, own.getEmail());
                             if (Objects.isNull(usersList) || usersList.size() <= 0) {
@@ -364,7 +364,7 @@ public class UsersRestController {
                 }
             } else if (StringUtils.equals("mobile", name)) {
                 if (canUpdate) {
-                    if (Pattern.matches(SystemMobileConfig.MOBILE_REGEX, value)) {
+                    if (Pattern.matches(Workbook.MOBILE_REGEX, value)) {
                         if (!StringUtils.equals(own.getMobile(), value)) {
                             List<Users> usersList = usersService.findByMobileNeOwn(value, own.getMobile());
                             if (Objects.isNull(usersList) || usersList.size() <= 0) {

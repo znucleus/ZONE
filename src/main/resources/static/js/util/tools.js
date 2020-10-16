@@ -80,7 +80,7 @@ define(["jquery"], function ($) {
                 studentNumber: /^[0-9]{13}$/,
                 staffNumber: /^[0-9]+$/,
                 mobile: /^1[0-9]{10}$/,
-                password: /^[a-zA-Z0-9]\w{5,17}$/,
+                password: /^(?=.*([a-zA-Z].*))(?=.*[0-9].*)[a-zA-Z0-9-_*/+.~=!@#$%^&()]{6,20}$/,
                 idCard: /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/,
                 dormitoryNumber: /^\d{2}-\d{3}$/,
                 year: /^\d{4}$/,
