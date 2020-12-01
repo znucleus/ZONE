@@ -377,7 +377,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
                 preConfirm: function () {
-                    sendFillTimeAjax();
+                    validFillTime();
                 }
             });
         }
@@ -397,7 +397,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
          * 发送状态申请
          */
         function sendStateAjax() {
-            $.post(web_path + ajax_url.disagree, $('#state_form').serialize(), function (data) {
+            $.post(ajax_url.disagree, $('#state_form').serialize(), function (data) {
                 if (data.state) {
                     Swal.fire({
                         title: data.msg,
@@ -414,11 +414,22 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
             });
         }
 
+        function validFillTime() {
+            var fillTimeId = '#fillTime';
+            var fillTime = $(fillTimeId).val();
+            if (fillTime.length <= 0) {
+                tools.validErrorDom(fillTimeId, '请选择填写时间范围');
+            } else {
+                tools.validSuccessDom(fillTimeId);
+                sendFillTimeAjax();
+            }
+        }
+
         /**
          * 发送同意申请
          */
         function sendFillTimeAjax() {
-            $.post(web_path + ajax_url.agree, $('#fill_time_form').serialize(), function (data) {
+            $.post(ajax_url.agree, $('#fill_time_form').serialize(), function (data) {
                 if (data.state) {
                     Swal.fire({
                         title: data.msg,
