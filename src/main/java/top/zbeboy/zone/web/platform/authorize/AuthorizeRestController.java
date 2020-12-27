@@ -159,7 +159,7 @@ public class AuthorizeRestController {
 
             String notify = "用户【" + applyUser.getRealName() +
                     "-" + applyUser.getUsername() + "】于" +
-                    DateTimeUtil.getLocalDateTime(DateTimeUtil.STANDARD_FORMAT) +
+                    DateTimeUtil.formatLocalDateTime(DateTimeUtil.STANDARD_FORMAT) +
                     "提交了新的权限申请，请及时到平台授权菜单审核。";
             for (Users u : admins) {
                 // 检查邮件推送是否被关闭
