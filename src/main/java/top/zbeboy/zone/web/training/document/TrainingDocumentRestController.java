@@ -253,7 +253,7 @@ public class TrainingDocumentRestController {
                     Users users = SessionUtil.getUserFromSession();
                     String path = Workbook.trainingDocumentFilePath(trainingReleaseId);
                     List<FileBean> fileBeens = uploadService.upload(request,
-                            RequestUtil.getRealPath(request) + path, request.getRemoteAddr());
+                            RequestUtil.getRealPath(request) + path, RequestUtil.getIpAddress(request));
                     for (FileBean fileBean : fileBeens) {
                         String fileId = UUIDUtil.getUUID();
                         Files files = new Files();

@@ -475,7 +475,7 @@ public class InternshipApplyRestController {
                     InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
                     String path = Workbook.internshipFilePath();
                     List<FileBean> fileBeens = uploadService.upload(request,
-                            RequestUtil.getRealPath(request) + path, request.getRemoteAddr());
+                            RequestUtil.getRealPath(request) + path, RequestUtil.getIpAddress(request));
                     for (FileBean fileBean : fileBeens) {
                         if (StringUtils.isNotBlank(internshipApply.getFileId())) {
                             Files oldFile = filesService.findById(internshipApply.getFileId());

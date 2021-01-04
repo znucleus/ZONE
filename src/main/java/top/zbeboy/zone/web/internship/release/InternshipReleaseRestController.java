@@ -113,7 +113,7 @@ public class InternshipReleaseRestController {
         try {
             String path = Workbook.internshipFilePath();
             List<FileBean> fileBeen = uploadService.upload(request,
-                    RequestUtil.getRealPath(request) + path, request.getRemoteAddr());
+                    RequestUtil.getRealPath(request) + path, RequestUtil.getIpAddress(request));
             fileBeen.forEach(file -> file.setRelativePath(path + file.getNewName()));
             ajaxUtil.success().list(fileBeen).msg("上传成功");
         } catch (Exception e) {
