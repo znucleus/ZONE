@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="br-pageheader pd-y-15 pd-l-20">
+        <nav class="breadcrumb pd-0 mg-0 tx-12">
+            <a class="breadcrumb-item dy_href" href="#/web/menu/theory/release">列表</a>
+            <span class="breadcrumb-item active">添加</span>
+        </nav>
+    </div><!-- br-pageheader -->
+    <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
+        <h4 class="tx-gray-800 mg-b-5">理论发布</h4>
+        <p class="mg-b-0">添加理论发布。</p>
+    </div>
+
+    <div class="br-pagebody">
+        <div class="br-section-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <form id="app_form">
+                        <div class="form-group">
+                            <label>标题</label>
+                            <input class="form-control" name="title"
+                                   id="title" placeholder="标题" maxlength="100"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control select2-show-search" id="school"
+                                    data-placeholder="请选择学校">
+                                <option label="请选择学校"></option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control select2-show-search" id="college"
+                                    data-placeholder="请选择院">
+                                <option label="请选择院"></option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control select2-show-search" id="department" data-placeholder="请选择系">
+                                <option label="请选择系"></option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control select2-show-search" id="science" data-placeholder="请选择专业">
+                                <option label="请选择专业"></option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control select2-show-search" id="grade" data-placeholder="请选择年级">
+                                <option label="请选择年级"></option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control select2-show-search" id="organize" data-placeholder="请选择班级">
+                                <option label="请选择班级"></option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                            <small id="organizeHelp" class="form-text text-muted">注意：此字段保存后不可编辑</small>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control select2-show-search" id="course" data-placeholder="请选择课程">
+                                <option label="请选择课程"></option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>开课时间</label>
+                            <input class="form-control" name="startDate" id="startDate"
+                                   placeholder="开课时间"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>结课时间</label>
+                            <input class="form-control" name="endDate" id="endDate"
+                                   placeholder="结课时间"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group text-center">
+                            <button type="button" class="btn btn-primary text-center" id="save">保存</button>
+                            <button type="reset" class="btn btn-default">重置</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/theory/release/theory_release_add.js')}"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>

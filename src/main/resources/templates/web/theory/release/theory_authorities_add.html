@@ -7,15 +7,15 @@
 <div id="page-wrapper">
     <div class="br-pageheader pd-y-15 pd-l-20">
         <nav class="breadcrumb pd-0 mg-0 tx-12">
-            <a class="breadcrumb-item dy_href" href="#/web/menu/training/release">列表</a>
+            <a class="breadcrumb-item dy_href" href="#/web/menu/theory/release">列表</a>
             <a class="breadcrumb-item dy_href" href="javascript:"
-               th:href="${'#/web/training/release/authorities/' + trainingReleaseId}">权限分配</a>
-            <span class="breadcrumb-item active">编辑权限</span>
+               th:href="${'#/web/theory/release/authorities/' + theoryReleaseId}">权限分配</a>
+            <span class="breadcrumb-item active">添加权限</span>
         </nav>
     </div><!-- br-pageheader -->
     <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
-        <h4 class="tx-gray-800 mg-b-5">实训权限</h4>
-        <p class="mg-b-0">编辑权限。</p>
+        <h4 class="tx-gray-800 mg-b-5">理论权限</h4>
+        <p class="mg-b-0">添加权限。</p>
     </div>
 
     <div class="br-pagebody">
@@ -23,26 +23,24 @@
             <div class="row">
                 <div class="col-md-12">
                     <form id="app_form">
-                        <input type="hidden" id="trainingReleaseId" name="trainingReleaseId"
-                               th:value="${trainingAuthorities.trainingReleaseId}"/>
-                        <input type="hidden" id="authoritiesId" name="authoritiesId"
-                               th:value="${trainingAuthorities.authoritiesId}"/>
+                        <input type="hidden" id="theoryReleaseId" name="theoryReleaseId"
+                               th:value="${theoryReleaseId}"/>
                         <div class="form-group">
                             <label>账号</label>
                             <input class="form-control" name="username" id="username"
-                                   placeholder="账号" th:value="${trainingAuthorities.username}"/>
+                                   placeholder="账号"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>生效时间</label>
                             <input class="form-control" name="validDate" id="validDate"
-                                   placeholder="生效时间" th:value="${trainingAuthorities.validDateStr}"/>
+                                   placeholder="生效时间"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>失效时间</label>
                             <input class="form-control" name="expireDate" id="expireDate"
-                                   placeholder="失效时间" th:value="${trainingAuthorities.expireDateStr}"/>
+                                   placeholder="失效时间"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group text-center">
@@ -56,7 +54,7 @@
     </div>
 
     <input type="hidden" class="dy_script"
-           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/training/release/training_authorities_edit.js')}"/>
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/theory/release/theory_authorities_add.js')}"/>
 </div>
 <!-- /#page-wrapper -->
 </body>
