@@ -8,8 +8,8 @@
         <Console name="CONSOLE" target="SYSTEM_OUT" follow="true">
             <PatternLayout pattern="${LOG_PATTERN}"/>
         </Console>
-        <RollingFile name="WroxFileAppender" fileName="logs/zhe.log"
-                     filePattern="logs/$${date:yyyy-MM}/app-%d{yyyy-MM-dd-HH}-%i.log.gz">
+        <RollingFile name="WroxFileAppender" fileName="logs/web/web.log"
+                     filePattern="logs/web/$${date:yyyy-MM}/app-%d{yyyy-MM-dd-HH}-%i.log.gz">
             <PatternLayout>
                 <pattern>%d %p %c{1.} [%t] %m%n</pattern>
             </PatternLayout>
