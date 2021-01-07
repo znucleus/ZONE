@@ -1,5 +1,6 @@
 package top.zbeboy.zone.security;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler;
@@ -17,6 +18,8 @@ import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.service.util.RequestUtil;
 import top.zbeboy.zbase.tools.service.util.UUIDUtil;
 import top.zbeboy.zbase.tools.web.util.BooleanUtil;
+import top.zbeboy.zone.web.system.mail.SystemMailConfig;
+import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
 import top.zbeboy.zone.web.util.SpringBootUtil;
 
 import javax.servlet.ServletContext;
@@ -26,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 /**
  * Returns a 401 error code (Unauthorized) to the client, when Ajax authentication fails.
@@ -49,9 +53,6 @@ public class AjaxAuthenticationFailureHandler extends ExceptionMappingAuthentica
 
         if (!needSkip) {
             String username = request.getParameter("username");
-            ServletContext context = request.getSession().getServletContext();
-            ApplicationContext ctx = WebApplicationContextUtils
-                    .getWebApplicationContext(context);
             SystemLoginLog systemLog = new SystemLoginLog(UUIDUtil.getUUID(), "登录系统失败", DateTimeUtil.getNowSqlTimestamp(), username, RequestUtil.getIpAddress(request));
             SystemLogService systemLogService = SpringBootUtil.getBean(SystemLogService.class);
             systemLogService.save(systemLog);
@@ -62,13 +63,32 @@ public class AjaxAuthenticationFailureHandler extends ExceptionMappingAuthentica
                 int loginErrorCount = (int) session.getAttribute(key);
                 if (loginErrorCount > 7) {
                     code = AjaxAuthenticationCode.USERNAME_ACCOUNT_NON_LOCKED;
-                    UsersService usersService = SpringBootUtil.getBean(UsersService.class);
-                    Users users = usersService.findByUsername(username);
-                    users.setAccountNonLocked(BooleanUtil.toByte(false));
-                    usersService.update(users);
 
-                    systemLog = new SystemLoginLog(UUIDUtil.getUUID(), "账号锁定", DateTimeUtil.getNowSqlTimestamp(), username, RequestUtil.getIpAddress(request));
-                    systemLogService.save(systemLog);
+                    UsersService usersService = SpringBootUtil.getBean(UsersService.class);
+                    Users users = null;
+                    boolean hasUser = false;
+                    if (Pattern.matches(SystemMailConfig.MAIL_REGEX, username)) {
+                        users = usersService.findByEmail(username);
+                        hasUser = Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername());
+                    }
+
+                    if (!hasUser && Pattern.matches(SystemMobileConfig.MOBILE_REGEX, username)) {
+                        users = usersService.findByMobile(username);
+                        hasUser = Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername());
+                    }
+
+                    if (!hasUser) {
+                        users = usersService.findByUsername(username);
+                        hasUser = Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername());
+                    }
+
+                    if(hasUser){
+                        users.setAccountNonLocked(BooleanUtil.toByte(false));
+                        usersService.update(users);
+
+                        systemLog = new SystemLoginLog(UUIDUtil.getUUID(), "账号锁定", DateTimeUtil.getNowSqlTimestamp(), username, RequestUtil.getIpAddress(request));
+                        systemLogService.save(systemLog);
+                    }
 
                     session.removeAttribute(key);
                 } else {
