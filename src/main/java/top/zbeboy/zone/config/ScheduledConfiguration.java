@@ -10,14 +10,15 @@ import org.springframework.core.env.Profiles;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import top.zbeboy.zbase.config.Workbook;
-import top.zbeboy.zbase.domain.tables.pojos.TrainingAttend;
-import top.zbeboy.zbase.domain.tables.pojos.TrainingAttendUsers;
-import top.zbeboy.zbase.domain.tables.pojos.TrainingConfigure;
-import top.zbeboy.zbase.domain.tables.pojos.TrainingUsers;
+import top.zbeboy.zbase.domain.tables.pojos.*;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.service.util.UUIDUtil;
 import top.zbeboy.zbase.tools.web.util.ByteUtil;
 import top.zbeboy.zone.service.internship.InternshipApplyService;
+import top.zbeboy.zone.service.theory.TheoryAttendService;
+import top.zbeboy.zone.service.theory.TheoryAttendUsersService;
+import top.zbeboy.zone.service.theory.TheoryConfigureService;
+import top.zbeboy.zone.service.theory.TheoryUsersService;
 import top.zbeboy.zone.service.training.TrainingAttendService;
 import top.zbeboy.zone.service.training.TrainingAttendUsersService;
 import top.zbeboy.zone.service.training.TrainingConfigureService;
@@ -77,6 +78,18 @@ public class ScheduledConfiguration {
     @Resource
     private TrainingAttendUsersService trainingAttendUsersService;
 
+    @Resource
+    private TheoryConfigureService theoryConfigureService;
+
+    @Resource
+    private TheoryAttendService theoryAttendService;
+
+    @Resource
+    private TheoryUsersService theoryUsersService;
+
+    @Resource
+    private TheoryAttendUsersService theoryAttendUsersService;
+
     /**
      * 更改实习状态为申请中
      */
@@ -134,6 +147,51 @@ public class ScheduledConfiguration {
                 }
             }
             log.info(">>>>>>>>>>>>> scheduled ... generate training attend ");
+        }
+    }
+
+    /**
+     * 自动生成理论考勤数据
+     */
+    @Scheduled(cron = "0 0 01 * * ?") // 每天 晚间01
+    public void generateTheoryAttend() {
+        if (env.acceptsProfiles(Profiles.of(Workbook.SPRING_PROFILE_DEVELOPMENT, Workbook.SPRING_PROFILE_PRODUCTION))) {
+            Result<Record> records = theoryConfigureService.findIsAuto(ByteUtil.toByte(DateTimeUtil.getNowDayOfWeek()));
+            if (records.isNotEmpty()) {
+                List<TheoryConfigure> theoryConfigures = records.into(TheoryConfigure.class);
+                for (TheoryConfigure theoryConfigure : theoryConfigures) {
+                    TheoryAttend theoryAttend = new TheoryAttend();
+                    String theoryAttendId = UUIDUtil.getUUID();
+                    theoryAttend.setTheoryAttendId(theoryAttendId);
+                    theoryAttend.setTheoryReleaseId(theoryConfigure.getTheoryReleaseId());
+                    theoryAttend.setAttendDate(DateTimeUtil.getNowSqlDate());
+                    theoryAttend.setAttendStartTime(theoryConfigure.getStartTime());
+                    theoryAttend.setAttendEndTime(theoryConfigure.getEndTime());
+                    theoryAttend.setAttendRoom(theoryConfigure.getSchoolroomId());
+                    theoryAttend.setPublishDate(DateTimeUtil.getNowSqlTimestamp());
+                    theoryAttendService.save(theoryAttend);
+
+                    List<TheoryUsers> theoryUsers = theoryUsersService.findByTheoryReleaseId(theoryConfigure.getTheoryReleaseId());
+                    if (Objects.nonNull(theoryUsers)) {
+                        List<TheoryAttendUsers> theoryAttendUsers = new ArrayList<>();
+                        for (TheoryUsers users : theoryUsers) {
+                            TheoryAttendUsers theoryAttendUser = new TheoryAttendUsers();
+                            theoryAttendUser.setAttendUsersId(UUIDUtil.getUUID());
+                            theoryAttendUser.setTheoryAttendId(theoryAttendId);
+                            theoryAttendUser.setTheoryUsersId(users.getTheoryUsersId());
+                            theoryAttendUser.setOperateUser(Workbook.username.actuator.name());
+                            theoryAttendUser.setOperateDate(DateTimeUtil.getNowSqlTimestamp());
+                            theoryAttendUser.setOperate(ByteUtil.toByte(0));
+                            theoryAttendUser.setRemark(users.getRemark());
+
+                            theoryAttendUsers.add(theoryAttendUser);
+                        }
+
+                        theoryAttendUsersService.batchSave(theoryAttendUsers);
+                    }
+                }
+            }
+            log.info(">>>>>>>>>>>>> scheduled ... generate theory attend ");
         }
     }
 
