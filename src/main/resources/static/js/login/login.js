@@ -203,7 +203,7 @@ require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf"]
                             globalError.text('您的用户类型查询为空，请联系管理员');
                             break;
                         default:
-                            globalError.text('系统登录异常，请联系管理员');
+                            globalError.text('系统登录异常，请联系管理员，编码[' + data + ']');
                             console.log(data);
                     }
                 });
