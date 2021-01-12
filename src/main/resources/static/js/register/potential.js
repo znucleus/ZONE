@@ -349,7 +349,7 @@ require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf",
                 if (password !== '') {
                     var regex = tools.regex.password;
                     if (!regex.test(password)) {
-                        tools.validErrorDom(param_id.password, '密码为6-16位任意字母、数字或下划线');
+                        tools.validErrorDom(param_id.password, '密码至少包含数字与字母，可使用特殊符号，长度6~20位');
                     } else {
                         if (global_param.password_strong < 55) {
                             tools.validErrorDom(param_id.password, '密码过于简单，请更换密码');
@@ -369,7 +369,7 @@ require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf",
                     var password = param.password;
                     var regex = tools.regex.password;
                     if (!regex.test(password)) {
-                        tools.validErrorDom(param_id.password, '密码为6-16位任意字母、数字或下划线');
+                        tools.validErrorDom(param_id.password, '密码至少包含数字与字母，可使用特殊符号，长度6~20位');
                     } else {
                         if (global_param.password_strong < 55) {
                             tools.validErrorDom(param_id.password, '密码过于简单，请更换密码');
@@ -529,7 +529,7 @@ require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf",
                 if (password !== '') {
                     var regex = tools.regex.password;
                     if (!regex.test(password)) {
-                        tools.validErrorDom(param_id.password, '密码为6-16位任意字母、数字或下划线');
+                        tools.validErrorDom(param_id.password, '密码至少包含数字与字母，可使用特殊符号，长度6~20位');
                     } else {
                         if (global_param.password_strong < 55) {
                             tools.validErrorDom(param_id.password, '密码过于简单，请更换密码');
@@ -549,7 +549,7 @@ require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf",
                     var password = param.password;
                     var regex = tools.regex.password;
                     if (!regex.test(password)) {
-                        tools.validErrorDom(param_id.password, '密码为6-16位任意字母、数字或下划线');
+                        tools.validErrorDom(param_id.password, '密码至少包含数字与字母，可使用特殊符号，长度6~20位');
                     } else {
                         if (global_param.password_strong < 55) {
                             tools.validErrorDom(param_id.password, '密码过于简单，请更换密码');

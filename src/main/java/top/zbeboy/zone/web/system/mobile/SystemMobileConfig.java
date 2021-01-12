@@ -9,6 +9,4 @@ public final class SystemMobileConfig {
     static final String MOBILE_CODE = "_mobile_code";
 
     public static final String MOBILE_VALID = "_mobile_valid";
-
-    public static final String MOBILE_REGEX = "^1[0-9]{10}$";
 }

@@ -115,12 +115,8 @@ require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf"]
                 initParam();
                 var password = param.password;
                 if (password !== '') {
-                    if (tools.regex.password.test(password)) {
-                        tools.validCustomerSingleSuccessDom(param_id.password);
-                        sendAjax();
-                    } else {
-                        tools.validCustomerSingleErrorDom(param_id.password, "密码格式不正确");
-                    }
+                    tools.validCustomerSingleSuccessDom(param_id.password);
+                    sendAjax();
                 } else {
                     tools.validCustomerSingleErrorDom(param_id.password, "您的密码？");
                 }

@@ -895,7 +895,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "clipboard", "bootstrap",
                             validConfirmPassword();
                         }
                     } else {
-                        tools.validErrorDom(param_id.newPassword, '密码为6-16位任意字母、数字或下划线');
+                        tools.validErrorDom(param_id.newPassword, '密码至少包含数字与字母，可使用特殊符号，长度6~20位');
                     }
                 } else {
                     tools.validErrorDom(param_id.newPassword, '不能与旧密码一致');
@@ -914,7 +914,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "clipboard", "bootstrap",
                         tools.validSuccessDom(param_id.confirmPassword);
                         updatePassword();
                     } else {
-                        tools.validErrorDom(param_id.confirmPassword, '密码为6-16位任意字母、数字或下划线');
+                        tools.validErrorDom(param_id.confirmPassword, '密码至少包含数字与字母，可使用特殊符号，长度6~20位');
                     }
                 } else {
                     tools.validErrorDom(param_id.confirmPassword, '密码不一致');

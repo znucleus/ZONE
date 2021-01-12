@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="br-pageheader pd-y-15 pd-l-20">
+        <nav class="breadcrumb pd-0 mg-0 tx-12">
+            <a class="breadcrumb-item dy_href" href="#/web/menu/theory/attend">列表</a>
+            <span class="breadcrumb-item active">理论考勤</span>
+        </nav>
+    </div><!-- br-pageheader -->
+    <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
+        <h4 class="tx-gray-800 mg-b-5">理论考勤</h4>
+        <p class="mg-b-0">理论考勤列表。</p>
+    </div>
+
+    <div class="br-pagebody">
+        <div class="br-section-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12 mt-2">
+                            <input type="text" id="search_attend_date" class="form-control"
+                                   placeholder="考勤日期"/>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button type="button" id="search" class="btn btn-outline-secondary"><i
+                                class="fa fa-search"></i>搜索
+                        </button>
+                        <button type="button" id="reset_search" class="btn btn-outline-secondary"><i
+                                class="fa fa-repeat"></i>重置
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="float-right mg-t-5">
+                        <button type="button" class="btn btn-dark" id="attendSituation" th:if="${canOperator==1}"><i
+                                class="fa fa-bar-chart"></i> 考勤情况
+                        </button>
+                        <button type="button" class="btn btn-info" id="configureRelease" th:if="${canOperator==1}"><i
+                                class="fa fa-th-list"></i>
+                            配置发布
+                        </button>
+                        <button type="button" class="btn btn-primary" id="customRelease" th:if="${canOperator==1}"><i
+                                class="fa fa-cog"></i> 自定义发布
+                        </button>
+                        <button type="button" class="btn btn-teal" id="myAttend" th:if="${isStudent==1}"><i
+                                class="fa fa-line-chart"></i> 我的考勤
+                        </button>
+                        <button type="button" class="btn btn-light" id="refresh"><i class="fa fa-refresh"></i> 刷新
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-12" id="tableData">
+                </div>
+                <div class="col-md-12 mg-t-20">
+                    <div class="ht-80 bd d-flex align-items-center justify-content-center">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination" id="pagination"></ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 配置发布Modal -->
+    <div class="modal fade" id="configureReleaseModal" tabindex="-1" role="dialog"
+         aria-labelledby="configureReleaseModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="configureReleaseModalLabel">配置发布</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive-md">
+                        <table class="table" id="dataTable">
+                            <thead>
+                            <tr>
+                                <th scope="col">星期</th>
+                                <th scope="col">开始时间</th>
+                                <th scope="col">结束时间</th>
+                                <th scope="col">教室</th>
+                                <th scope="col">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script id="attend-template" type="text/x-handlebars-template">
+        {{#each listResult}}
+        <div class="card mg-t-10 text-dark">
+            <div class="card-header">{{attendDate}}</div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4"><span>教室：</span><span>{{buildingName}}{{buildingCode}}</span></div>
+                    <div class="col-md-4"><span>开始时间：</span><span>{{attendStartTime}}</span></div>
+                    <div class="col-md-4"><span>结束时间：</span><span>{{attendEndTime}}</span></div>
+                    <div class="col-md-12"><span>备注：</span><span>{{remark}}</span></div>
+                </div>
+                <p class="text-right font-italic m-t-10">
+                    <small><em><span>发布时间：</span><span>{{publishDateStr}}</span></em>
+                    </small>
+                </p>
+            </div>
+            <div class="card-footer text-right">
+                <div class="btn-group" role="group">
+                    {{#if canOperator}}
+                    <button type="button" class="btn btn-teal list" data-id="{{theoryAttendId}}">列表</button>
+                    <button type="button" class="btn btn-primary edit" data-id="{{theoryAttendId}}">编辑</button>
+                    <button type="button" class="btn btn-danger del" data-id="{{theoryAttendId}}">删除</button>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </script>
+
+    <!--定义数据模板-->
+    <script id="configure-data-template" type="text/x-handlebars-template">
+        {{#each listResult}}
+        <tr>
+            <td>{{week_day}}</td>
+            <td>{{startTime}}</td>
+            <td>{{endTime}}</td>
+            <td>{{buildingName}}{{buildingCode}}</td>
+            <td>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-primary btn-sm release" data-id="{{this.theoryConfigureId}}">
+                        发布
+                    </button>
+                </div>
+            </td>
+        </tr>
+        {{/each}}
+    </script>
+
+    <input type="hidden" id="paramTheoryReleaseId" th:value="${theoryReleaseId}"/>
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/theory/attend/theory_attend_list.js')}"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>
