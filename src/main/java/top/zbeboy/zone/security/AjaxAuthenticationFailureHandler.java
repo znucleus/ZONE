@@ -18,8 +18,6 @@ import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.service.util.RequestUtil;
 import top.zbeboy.zbase.tools.service.util.UUIDUtil;
 import top.zbeboy.zbase.tools.web.util.BooleanUtil;
-import top.zbeboy.zone.web.system.mail.SystemMailConfig;
-import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
 import top.zbeboy.zone.web.util.SpringBootUtil;
 
 import javax.servlet.ServletContext;
@@ -67,12 +65,12 @@ public class AjaxAuthenticationFailureHandler extends ExceptionMappingAuthentica
                     UsersService usersService = SpringBootUtil.getBean(UsersService.class);
                     Users users = null;
                     boolean hasUser = false;
-                    if (Pattern.matches(SystemMailConfig.MAIL_REGEX, username)) {
+                    if (Pattern.matches(Workbook.MAIL_REGEX, username)) {
                         users = usersService.findByEmail(username);
                         hasUser = Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername());
                     }
 
-                    if (!hasUser && Pattern.matches(SystemMobileConfig.MOBILE_REGEX, username)) {
+                    if (!hasUser && Pattern.matches(Workbook.MOBILE_REGEX, username)) {
                         users = usersService.findByMobile(username);
                         hasUser = Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername());
                     }
@@ -82,7 +80,7 @@ public class AjaxAuthenticationFailureHandler extends ExceptionMappingAuthentica
                         hasUser = Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername());
                     }
 
-                    if(hasUser){
+                    if (hasUser) {
                         users.setAccountNonLocked(BooleanUtil.toByte(false));
                         usersService.update(users);
 
