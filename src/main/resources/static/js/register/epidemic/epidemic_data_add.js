@@ -1,5 +1,5 @@
 //# sourceURL=epidemic_data_add.js
-require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active", "messenger", "jquery.address", "bootstrap-maxlength"],
+require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active", "messenger", "jquery.address", "bootstrap-maxlength", "amap"],
     function ($, _, tools, Handlebars, Swal, navActive) {
 
         /*
@@ -18,8 +18,10 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
          */
         var param_id = {
             epidemicStatus: '#epidemicStatus',
+            mapRegion: 'mapRegion',
             address: '#address',
-            remark: '#remark'
+            remark: '#remark',
+            location: '#location'
         };
 
         var button_id = {
@@ -57,13 +59,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             param.address = _.trim($(param_id.address).val());
             param.remark = $(param_id.remark).val();
             param.epidemicRegisterDataId = page_param.paramEpidemicRegisterDataId;
-
-            //判断是否支持 获取本地位置
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function (res) {
-                    param.location = res.coords.latitude + "," + res.coords.longitude;
-                });
-            }
+            param.location = $(param_id.location).val();
         }
 
         /*
@@ -75,6 +71,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
          * 初始化界面
          */
         function init() {
+            initMap();
             if (page_param.paramEpidemicRegisterDataId !== '') {
                 initEpidemicStatus();
             }
@@ -165,6 +162,38 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
                     });
                 }
             });
+        }
+
+        function initMap() {
+            var map = new AMap.Map(param_id.mapRegion, {
+                resizeEnable: true
+            });
+            AMap.plugin('AMap.Geolocation', function () {
+                var geolocation = new AMap.Geolocation({
+                    timeout: 10000,          //超过10秒后停止定位，默认：5s
+                    buttonPosition: 'RB',    //定位按钮的停靠位置
+                });
+                map.addControl(geolocation);
+                geolocation.getCurrentPosition(function (status, result) {
+                    if (status === 'complete') {
+                        onMapComplete(result)
+                    } else {
+                        onMapError(result)
+                    }
+                });
+            });
+        }
+
+        //解析定位结果
+        function onMapComplete(data) {
+            $(param_id.address).val(data.formattedAddress);
+            $(param_id.location).val(data.position);
+        }
+
+        //解析定位错误信息
+        function onMapError(data) {
+            tools.validCustomerSingleErrorDom("#" + param_id.mapRegion, "定位失败，您可手动填写位置或换用其它浏览器（Edge），失败原因：" + data.message);
+            $(param_id.address).prop("readonly", false);
         }
 
     });

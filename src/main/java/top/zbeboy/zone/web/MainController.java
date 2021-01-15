@@ -10,13 +10,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.zbase.config.Workbook;
-import top.zbeboy.zbase.domain.tables.pojos.Files;
-import top.zbeboy.zbase.domain.tables.pojos.Role;
-import top.zbeboy.zbase.domain.tables.pojos.Users;
-import top.zbeboy.zbase.domain.tables.pojos.UsersType;
+import top.zbeboy.zbase.domain.tables.pojos.*;
 import top.zbeboy.zbase.feign.platform.RoleService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zbase.feign.system.FilesService;
+import top.zbeboy.zbase.feign.system.MapKeyService;
 import top.zbeboy.zone.annotation.logging.LoginLoggingRecord;
 import top.zbeboy.zone.service.platform.MenuService;
 import top.zbeboy.zone.web.util.SessionUtil;
@@ -42,6 +40,9 @@ public class MainController {
 
     @Resource
     private RoleService roleService;
+
+    @Resource
+    private MapKeyService mapKeyService;
 
     private final RequestCache requestCache = new HttpSessionRequestCache();
 
@@ -139,6 +140,12 @@ public class MainController {
 
         modelMap.addAttribute("isPotential", isPotential);
         modelMap.addAttribute("realName", users.getRealName());
+
+        // map key
+        MapKey mapKey = mapKeyService.mapKey(Workbook.mapFactory.GD.name(), Workbook.mapBusiness.WEB_GD_KEY.name());
+        if(Objects.nonNull(mapKey) && StringUtils.isNotBlank(mapKey.getMapKey())){
+            modelMap.addAttribute("mapKey", mapKey.getMapKey());
+        }
 
         List<Role> roleList = roleService.findByUsername(users.getUsername());
         if (Objects.nonNull(roleList) && !roleList.isEmpty()) {

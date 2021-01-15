@@ -55,7 +55,8 @@ requirejs.config({
         "mfb": web_path + "/plugins/mfb/mfb.min",
         "modernizr.touch": web_path + "/plugins/mfb/lib/modernizr.touch.min",
         "js-year-calendar": web_path + "/plugins/js-year-calendar/js-year-calendar.min",
-        "js-year-calendar.zh-CN": web_path + "/plugins/js-year-calendar/js-year-calendar.zh-CN.min"
+        "js-year-calendar.zh-CN": web_path + "/plugins/js-year-calendar/js-year-calendar.zh-CN.min",
+        "amap": "https://webapi.amap.com/maps?v=1.4.15&key=" + map_key
     },
     // shimオプションの設定。モジュール間の依存関係を定義します。
     shim: {
