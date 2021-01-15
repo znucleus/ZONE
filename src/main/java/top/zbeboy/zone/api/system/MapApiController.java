@@ -24,12 +24,15 @@ public class MapApiController {
     /**
      * KEY获取
      *
+     * @param factory  厂家
+     * @param business 业务
      * @return 数据
      */
     @ApiLoggingRecord(remark = "系统地图KEY", channel = Workbook.channel.API, needLogin = true)
-    @GetMapping("/api/map_key_factory/{factory}")
-    public ResponseEntity<Map<String, Object>> mapKeys(@PathVariable("factory") String factory, Principal principal, HttpServletRequest request) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = mapKeyService.mapKeys(factory);
+    @GetMapping("/api/map_key_factory_business/{factory}/{business}")
+    public ResponseEntity<Map<String, Object>> mapKey(@PathVariable("factory") String factory, @PathVariable("business") String business,
+                                                       Principal principal, HttpServletRequest request) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = mapKeyService.mapKey(factory, business);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }
