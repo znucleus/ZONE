@@ -14,6 +14,7 @@ import top.zbeboy.zbase.domain.tables.pojos.SystemConfigure;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.platform.UsersService;
 import top.zbeboy.zbase.feign.system.SystemConfigureService;
+import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.service.util.RandomUtil;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zone.service.system.SystemMobileService;
@@ -62,7 +63,7 @@ public class SystemMobileRestController {
                     } else {
                         if (Objects.nonNull(session.getAttribute(param + SystemMobileConfig.MOBILE_EXPIRE))) {
                             Date mobileExpiry = (Date) session.getAttribute(param + SystemMobileConfig.MOBILE_EXPIRE);
-                            if (new Date().before(mobileExpiry)) {
+                            if (DateTimeUtil.nowBeforeUtilDate(mobileExpiry)) {
                                 ajaxUtil.fail().msg("验证码不可重复发送(" + ZoneProperties.getMobile().getValidCodeTime() + "分钟内)");
                             } else {
                                 isSend = true;
@@ -114,7 +115,7 @@ public class SystemMobileRestController {
             if (!hasError) {
                 if (Objects.nonNull(session.getAttribute(param + SystemMobileConfig.MOBILE_EXPIRE))) {
                     Date mobileExpiry = (Date) session.getAttribute(param + SystemMobileConfig.MOBILE_EXPIRE);
-                    if (!new Date().before(mobileExpiry)) {
+                    if (!DateTimeUtil.nowBeforeUtilDate(mobileExpiry)) {
                         ajaxUtil.fail().msg("验证码已失效(" + ZoneProperties.getMobile().getValidCodeTime() + "分钟内有效)");
                         hasError = true;
                     }

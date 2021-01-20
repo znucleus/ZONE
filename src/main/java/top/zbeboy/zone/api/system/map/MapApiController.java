@@ -1,4 +1,4 @@
-package top.zbeboy.zone.api.system;
+package top.zbeboy.zone.api.system.map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;

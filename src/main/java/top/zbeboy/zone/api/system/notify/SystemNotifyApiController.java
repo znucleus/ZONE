@@ -1,4 +1,4 @@
-package top.zbeboy.zone.api.system;
+package top.zbeboy.zone.api.system.notify;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
