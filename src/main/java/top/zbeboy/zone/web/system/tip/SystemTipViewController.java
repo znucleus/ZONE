@@ -17,7 +17,7 @@ public class SystemTipViewController {
     public String registerSuccess(ModelMap modelMap) {
         SystemTipConfig config = new SystemTipConfig(
                 "恭喜您注册成功，稍后请前往您的邮箱进行邮箱验证。",
-                "邮箱验证通过后，您将可以正常登录，并获得更多功能体验。");
+                "邮箱验证通过后，您可以登录修改个人信息，然后耐心等待管理员审核。");
         config.addLoginButton();
         config.addHomeButton();
         config.dataMerging(modelMap);
