@@ -188,8 +188,6 @@ public class StudentApiController {
                 users.setRealName(studentAddVo.getRealName());
                 systemMailService.sendValidEmailMail(users, RequestUtil.getBaseUrl(request));
             }
-        } else {
-            ajaxUtil.fail().msg("验证码错误");
         }
 
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);

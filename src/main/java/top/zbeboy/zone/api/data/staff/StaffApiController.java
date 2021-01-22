@@ -151,8 +151,6 @@ public class StaffApiController {
                 users.setRealName(staffAddVo.getRealName());
                 systemMailService.sendValidEmailMail(users, staffAddVo.getBaseUrl());
             }
-        } else {
-            ajaxUtil.fail().msg("验证手机号失败");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
