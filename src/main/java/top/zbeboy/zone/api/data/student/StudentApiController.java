@@ -140,7 +140,12 @@ public class StudentApiController {
                             // step 5.检验手机号
                             ajaxUtil = usersService.anyoneCheckMobile(studentAddVo.getMobile());
                             if (ajaxUtil.getState()) {
-                                canRegister = true;
+                                // step 6.检验密码是否一致
+                                if (studentAddVo.getPassword().equals(studentAddVo.getOkPassword())) {
+                                    canRegister = true;
+                                } else {
+                                    ajaxUtil.fail().msg("密码不一致");
+                                }
                             }
                         }
                     }

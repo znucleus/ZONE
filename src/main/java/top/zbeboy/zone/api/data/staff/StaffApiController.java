@@ -114,7 +114,12 @@ public class StaffApiController {
                             // step 5.检验手机号
                             ajaxUtil = usersService.anyoneCheckMobile(staffAddVo.getMobile());
                             if (ajaxUtil.getState()) {
-                                canRegister = true;
+                                // step 6.检验密码是否一致
+                                if (staffAddVo.getPassword().equals(staffAddVo.getOkPassword())) {
+                                    canRegister = true;
+                                } else {
+                                    ajaxUtil.fail().msg("密码不一致");
+                                }
                             }
                         }
                     }
