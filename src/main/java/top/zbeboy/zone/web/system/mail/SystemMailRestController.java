@@ -47,7 +47,7 @@ public class SystemMailRestController {
      * @param email 邮箱
      * @return 是否验证通过
      */
-    @PostMapping("/forget_password/mail")
+    @PostMapping(value = {"/forget_password/mail", "/overt/forget_password/mail"})
     public ResponseEntity<Map<String, Object>> forgetPassword(@RequestParam("email") String email, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         String param = StringUtils.deleteWhitespace(email);

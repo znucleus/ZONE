@@ -7,6 +7,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.config.CacheBook;
@@ -47,7 +48,7 @@ public class SystemMobileApiController {
     /**
      * 发送验证码
      *
-     * @param mobile  手机号
+     * @param mobile 手机号
      * @return 验证码
      */
     @ApiLoggingRecord(remark = "获取手机验证码", channel = Workbook.channel.API)
@@ -60,7 +61,7 @@ public class SystemMobileApiController {
             if (StringUtils.equals("1", systemConfigure.getDataValue())) {
                 boolean isSend = false;
                 ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();
-                if(!stringRedisTemplate.hasKey(param + SystemMobileConfig.MOBILE_CODE)){
+                if (!stringRedisTemplate.hasKey(param + SystemMobileConfig.MOBILE_CODE)) {
                     isSend = true;
                 } else {
                     ajaxUtil.fail().msg("验证码不可重复发送(" + ZoneProperties.getMobile().getValidCodeTime() + "分钟内)");
@@ -76,6 +77,39 @@ public class SystemMobileApiController {
                 }
             } else {
                 ajaxUtil.fail().msg("管理员已关闭短信发送");
+            }
+        } else {
+            ajaxUtil.fail().msg("手机号不正确");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 验证验证码
+     *
+     * @param mobile           手机号
+     * @param verificationCode 验证码
+     * @return 验证结果
+     */
+    @ApiLoggingRecord(remark = "验证手机验证码", channel = Workbook.channel.API)
+    @PostMapping("/overt/check/mobile/code")
+    public ResponseEntity<Map<String, Object>> overtCheckMobileCode(@RequestParam("mobile") String mobile,
+                                                                    @RequestParam("verificationCode") String verificationCode) {
+        String param = StringUtils.trim(mobile);
+        String code = StringUtils.trim(verificationCode);
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (Pattern.matches(Workbook.MOBILE_REGEX, param)) {
+            ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();
+            if (stringRedisTemplate.hasKey(param + SystemMobileConfig.MOBILE_CODE)) {
+                String mobileCode = ops.get(param + SystemMobileConfig.MOBILE_CODE);
+                boolean isValid = StringUtils.equals(mobileCode, code);
+                if (isValid) {
+                    ajaxUtil.success().msg("验证成功");
+                } else {
+                    ajaxUtil.fail().msg("验证码错误");
+                }
+            } else {
+                ajaxUtil.fail().msg("验证码已失效");
             }
         } else {
             ajaxUtil.fail().msg("手机号不正确");
