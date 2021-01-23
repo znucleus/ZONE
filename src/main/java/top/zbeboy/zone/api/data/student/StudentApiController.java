@@ -1,5 +1,6 @@
 package top.zbeboy.zone.api.data.student;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -123,9 +124,9 @@ public class StudentApiController {
         boolean canRegister = false;
         // step 1.手机号是否已验证
         ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();
-        if (stringRedisTemplate.hasKey(studentAddVo.getMobile() + SystemMobileConfig.MOBILE_CODE)) {
-            String mobileCode = ops.get(studentAddVo.getMobile() + SystemMobileConfig.MOBILE_CODE);
-            boolean isValid = StringUtils.equals(mobileCode, studentAddVo.getVerificationCode());
+        if (stringRedisTemplate.hasKey(studentAddVo.getMobile() + "_" + studentAddVo.getVerificationCode() + SystemMobileConfig.MOBILE_VALID)) {
+            String validContent = ops.get(studentAddVo.getMobile() + "_" + studentAddVo.getVerificationCode() + SystemMobileConfig.MOBILE_VALID);
+            boolean isValid = BooleanUtils.toBoolean(validContent);
             if (isValid) {
                 // step 2.检验账号
                 ajaxUtil = usersService.anyoneCheckUsername(studentAddVo.getUsername());
@@ -145,10 +146,10 @@ public class StudentApiController {
                     }
                 }
             } else {
-                ajaxUtil.fail().msg("验证码错误");
+                ajaxUtil.fail().msg("验证码未验证通过");
             }
         } else {
-            ajaxUtil.fail().msg("验证码已失效");
+            ajaxUtil.fail().msg("验证码未验证，请先验证");
         }
 
         if (canRegister) {

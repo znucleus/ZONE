@@ -104,6 +104,9 @@ public class SystemMobileApiController {
                 String mobileCode = ops.get(param + SystemMobileConfig.MOBILE_CODE);
                 boolean isValid = StringUtils.equals(mobileCode, code);
                 if (isValid) {
+                    ops.set(param + "_" + code + SystemMobileConfig.MOBILE_VALID, "true",
+                            CacheBook.EXPIRES_MINUTES,
+                            TimeUnit.MINUTES);
                     ajaxUtil.success().msg("验证成功");
                 } else {
                     ajaxUtil.fail().msg("验证码错误");
