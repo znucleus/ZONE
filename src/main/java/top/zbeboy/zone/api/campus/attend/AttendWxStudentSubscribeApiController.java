@@ -30,28 +30,7 @@ public class AttendWxStudentSubscribeApiController {
     @Resource
     private AttendWxStudentSubscribeService attendWxStudentSubscribeService;
 
-    /**
-     * 保存
-     *
-     * @param resCode   code
-     * @param principal 当前用户信息
-     * @return true or false
-     */
-    @ApiLoggingRecord(remark = "校园签到微信保存", channel = Workbook.channel.API, needLogin = true)
-    @PostMapping("/api/attend/weixin/save")
-    public ResponseEntity<Map<String, Object>> save(@RequestParam("resCode") String resCode,
-                                                    @RequestParam("appId") String appId,
-                                                    Principal principal, HttpServletRequest request) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        try {
-            Users users = SessionUtil.getUserFromOauth(principal);
-            ajaxUtil = attendWxStudentSubscribeService.save(resCode, appId, users.getUsername());
-        } catch (IOException e) {
-            log.error("获取微信用户信息异常：{}", e);
-            ajaxUtil.fail().msg("保存异常，" + e.getMessage());
-        }
-        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
-    }
+
 
     /**
      * 订阅
