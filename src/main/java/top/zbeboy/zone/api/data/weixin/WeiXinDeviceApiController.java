@@ -2,6 +2,7 @@ package top.zbeboy.zone.api.data.weixin;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
@@ -26,16 +27,17 @@ public class WeiXinDeviceApiController {
     /**
      * 查询
      *
+     * @param appId APP_ID
      * @param principal 当前用户信息
      * @return true or false
      */
     @ApiLoggingRecord(remark = "校园签到设备查询", channel = Workbook.channel.API, needLogin = true)
     @PostMapping("/api/weixin/device/query")
-    public AjaxUtil<Map<String, Object>> query(Principal principal, HttpServletRequest request) {
+    public AjaxUtil<Map<String, Object>> query(@RequestParam("appId") String appId, Principal principal, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         Users users = SessionUtil.getUserFromOauth(principal);
         if (Objects.nonNull(users)) {
-            WeiXinDevice weiXinDevice = weiXinDeviceService.findByUsername(users.getUsername());
+            WeiXinDevice weiXinDevice = weiXinDeviceService.findByUsernameAndAppId(users.getUsername(), appId);
             if (Objects.nonNull(weiXinDevice) && StringUtils.isNotBlank(weiXinDevice.getDeviceId())) {
                 ajaxUtil.success().msg("查询信息成功").put("device", weiXinDevice);
             } else {
