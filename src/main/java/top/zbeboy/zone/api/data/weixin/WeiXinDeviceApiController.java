@@ -27,7 +27,7 @@ public class WeiXinDeviceApiController {
     /**
      * 查询
      *
-     * @param appId APP_ID
+     * @param appId     APP_ID
      * @param principal 当前用户信息
      * @return true or false
      */

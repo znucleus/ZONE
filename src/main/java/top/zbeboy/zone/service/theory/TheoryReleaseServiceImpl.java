@@ -15,7 +15,6 @@ import top.zbeboy.zbase.bean.data.student.StudentBean;
 import top.zbeboy.zbase.config.CacheBook;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.daos.TheoryReleaseDao;
-import top.zbeboy.zbase.domain.tables.daos.TrainingReleaseDao;
 import top.zbeboy.zbase.domain.tables.pojos.TheoryRelease;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.domain.tables.pojos.UsersType;

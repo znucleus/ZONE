@@ -143,7 +143,7 @@ public class MainController {
 
         // map key
         MapKey mapKey = mapKeyService.mapKey(Workbook.mapFactory.GD.name(), Workbook.mapBusiness.WEB_GD_KEY.name());
-        if(Objects.nonNull(mapKey) && StringUtils.isNotBlank(mapKey.getMapKey())){
+        if (Objects.nonNull(mapKey) && StringUtils.isNotBlank(mapKey.getMapKey())) {
             modelMap.addAttribute("mapKey", mapKey.getMapKey());
         }
 

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.bean.educational.calendar.SchoolCalendarAuthoritiesBean;
 import top.zbeboy.zbase.bean.educational.calendar.SchoolCalendarBean;
 import top.zbeboy.zbase.config.Workbook;
-import top.zbeboy.zbase.domain.tables.pojos.College;
 import top.zbeboy.zbase.domain.tables.pojos.SchoolCalendar;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.educational.calendar.SchoolCalendarService;

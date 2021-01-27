@@ -28,7 +28,6 @@ import top.zbeboy.zbase.tools.service.util.RandomUtil;
 import top.zbeboy.zbase.tools.service.util.RequestUtil;
 import top.zbeboy.zbase.tools.web.util.BooleanUtil;
 import top.zbeboy.zone.service.system.SystemMailService;
-import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
 import top.zbeboy.zone.web.system.tip.SystemTipConfig;
 
 import javax.annotation.Resource;
@@ -112,7 +111,7 @@ public class SystemMailViewController {
                             }
 
                             // 进行花名册同步
-                            if(StringUtils.isNotBlank(bean.getStudentNumber())){
+                            if (StringUtils.isNotBlank(bean.getStudentNumber())) {
                                 RosterData rosterData = rosterReleaseService.findRosterDataByStudentNumber(bean.getStudentNumber());
                                 if (Objects.nonNull(rosterData) && StringUtils.isNotBlank(rosterData.getRosterDataId())) {
                                     rosterData.setPhoneNumber(bean.getMobile());

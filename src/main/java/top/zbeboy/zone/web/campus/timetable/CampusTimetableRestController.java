@@ -194,8 +194,8 @@ public class CampusTimetableRestController {
     public ResponseEntity<Map<String, Object>> courseBatchSave(@RequestParam("data") String data) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         Users users = SessionUtil.getUserFromSession();
-        List<CampusCourseDataAddVo> list = JSON.parseArray(data,CampusCourseDataAddVo.class);
-        if(Objects.nonNull(list) && !list.isEmpty()){
+        List<CampusCourseDataAddVo> list = JSON.parseArray(data, CampusCourseDataAddVo.class);
+        if (Objects.nonNull(list) && !list.isEmpty()) {
             list.forEach(campusCourseDataAddVo -> campusCourseDataAddVo.setUsername(users.getUsername()));
             ajaxUtil = campusCourseReleaseService.courseBatchSave(list);
         } else {

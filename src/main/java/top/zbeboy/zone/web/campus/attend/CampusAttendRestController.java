@@ -1,22 +1,17 @@
 package top.zbeboy.zone.web.campus.attend;
 
-import org.jooq.Record;
-import org.jooq.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.bean.campus.attend.AttendUsersBean;
-import top.zbeboy.zbase.bean.internship.review.InternshipReviewAuthorizeBean;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.campus.attend.AttendReleaseService;
 import top.zbeboy.zbase.feign.campus.attend.AttendReleaseSubService;
 import top.zbeboy.zbase.feign.campus.attend.AttendUsersService;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
-import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
@@ -74,7 +69,7 @@ public class CampusAttendRestController {
                                                            @RequestParam("attendReleaseSubId") int attendReleaseSubId, int type) {
         AjaxUtil<AttendUsersBean> ajaxUtil = AjaxUtil.of();
         Users users = SessionUtil.getUserFromSession();
-        if(attendReleaseService.canReview(users.getUsername(), attendReleaseId)){
+        if (attendReleaseService.canReview(users.getUsername(), attendReleaseId)) {
             ajaxUtil = attendUsersService.data(attendReleaseSubId, type);
         } else {
             ajaxUtil.fail().msg("您无权限操作");

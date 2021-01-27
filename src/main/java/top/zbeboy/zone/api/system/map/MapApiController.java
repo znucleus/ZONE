@@ -34,10 +34,10 @@ public class MapApiController {
     @ApiLoggingRecord(remark = "系统地图KEY", channel = Workbook.channel.API, needLogin = true)
     @GetMapping("/api/map_key_factory_business/{factory}/{business}")
     public ResponseEntity<Map<String, Object>> mapKey(@PathVariable("factory") String factory, @PathVariable("business") String business,
-                                                       Principal principal, HttpServletRequest request) {
+                                                      Principal principal, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         MapKey mapKey = mapKeyService.mapKey(factory, business);
-        if(Objects.nonNull(mapKey) && StringUtils.isNotBlank(mapKey.getMapKey())){
+        if (Objects.nonNull(mapKey) && StringUtils.isNotBlank(mapKey.getMapKey())) {
             ajaxUtil.success().msg("获取数据成功").put("data", mapKey);
         } else {
             ajaxUtil.fail().msg("获取数据失败");

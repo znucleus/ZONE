@@ -3,9 +3,7 @@ package top.zbeboy.zone.service.theory;
 import org.jooq.Record;
 import org.jooq.Result;
 import top.zbeboy.zbase.domain.tables.pojos.TheoryAttend;
-import top.zbeboy.zbase.domain.tables.pojos.TrainingAttend;
 import top.zbeboy.zbase.domain.tables.records.TheoryAttendRecord;
-import top.zbeboy.zbase.domain.tables.records.TrainingAttendRecord;
 import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
 
 import java.util.Optional;

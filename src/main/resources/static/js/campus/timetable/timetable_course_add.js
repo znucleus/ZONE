@@ -46,7 +46,7 @@ require(["jquery", "tools", "sweetalert2", "nav.active", "messenger", "jquery.ad
          参数
          */
         var param = {
-            campusCourseReleaseId:'',
+            campusCourseReleaseId: '',
             organizeName: '',
             courseName: '',
             buildingName: '',

@@ -36,7 +36,7 @@ requirejs.onError = function (err) {
     throw err;
 };
 
-require(["jquery", "requirejs-domready", "tools", "handlebars","csrf", "bootstrap", "jquery-loading"],
+require(["jquery", "requirejs-domready", "tools", "handlebars", "csrf", "bootstrap", "jquery-loading"],
     function ($, domready, tools, Handlebars) {
         domready(function () {
 
@@ -104,7 +104,7 @@ require(["jquery", "requirejs-domready", "tools", "handlebars","csrf", "bootstra
             }
 
             function initMobileCarousel() {
-                tools.listenTouchDirection(document.getElementById("carousel"), false, false,carouselPrev,false,carouselNext)
+                tools.listenTouchDirection(document.getElementById("carousel"), false, false, carouselPrev, false, carouselNext)
             }
 
             function carouselPrev() {

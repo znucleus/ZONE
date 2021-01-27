@@ -224,9 +224,9 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
 
         function getTime(t) {
             var v = '';
-            if(t !== ''){
+            if (t !== '') {
                 var trr = t.split(":")[0];
-                if(Number(trr) < 10){
+                if (Number(trr) < 10) {
                     v = "0" + t + ":00";
                 } else {
                     v = t + ":00";

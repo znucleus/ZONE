@@ -125,7 +125,7 @@ public class SystemMobileApiController {
     /**
      * 忘记密码手机提交验证
      *
-     * @param mobile 手机号
+     * @param mobile           手机号
      * @param verificationCode 验证码
      * @return 是否验证通过
      */

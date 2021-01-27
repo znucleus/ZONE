@@ -11,9 +11,6 @@ import top.zbeboy.zbase.bean.data.student.StudentBean;
 import top.zbeboy.zbase.bean.theory.release.TheoryAuthoritiesBean;
 import top.zbeboy.zbase.bean.theory.release.TheoryConfigureBean;
 import top.zbeboy.zbase.bean.theory.release.TheoryReleaseBean;
-import top.zbeboy.zbase.bean.training.release.TrainingAuthoritiesBean;
-import top.zbeboy.zbase.bean.training.release.TrainingConfigureBean;
-import top.zbeboy.zbase.bean.training.release.TrainingReleaseBean;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.*;
 import top.zbeboy.zbase.feign.data.StudentService;
@@ -24,7 +21,6 @@ import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.BooleanUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zbase.vo.theory.release.*;
-import top.zbeboy.zbase.vo.training.release.*;
 import top.zbeboy.zone.service.theory.TheoryAuthoritiesService;
 import top.zbeboy.zone.service.theory.TheoryConfigureService;
 import top.zbeboy.zone.service.theory.TheoryReleaseService;
@@ -87,7 +83,7 @@ public class TheoryReleaseRestController {
      * 保存
      *
      * @param theoryReleaseAddVo 理论
-     * @param bindingResult        检验
+     * @param bindingResult      检验
      * @return true or false
      */
     @PostMapping("/web/theory/release/save")
@@ -134,7 +130,7 @@ public class TheoryReleaseRestController {
      * 更新
      *
      * @param theoryReleaseEditVo 理论
-     * @param bindingResult         检验
+     * @param bindingResult       检验
      * @return true or false
      */
     @PostMapping("/web/theory/release/update")
@@ -200,7 +196,7 @@ public class TheoryReleaseRestController {
      * 配置保存
      *
      * @param theoryConfigureAddVo 数据
-     * @param bindingResult          检验
+     * @param bindingResult        检验
      * @return true or false
      */
     @PostMapping("/web/theory/release/configure/save")
@@ -231,7 +227,7 @@ public class TheoryReleaseRestController {
      * 配置更新
      *
      * @param theoryConfigureEditVo 数据
-     * @param bindingResult           检验
+     * @param bindingResult         检验
      * @return true or false
      */
     @PostMapping("/web/theory/release/configure/update")
@@ -305,7 +301,7 @@ public class TheoryReleaseRestController {
      * 权限保存
      *
      * @param theoryAuthoritiesAddVo 数据
-     * @param bindingResult            检验
+     * @param bindingResult          检验
      * @return true or false
      */
     @PostMapping("/web/theory/release/authorities/save")
@@ -351,7 +347,7 @@ public class TheoryReleaseRestController {
      * 权限更新
      *
      * @param theoryAuthoritiesEditVo 数据
-     * @param bindingResult             检验
+     * @param bindingResult           检验
      * @return true or false
      */
     @PostMapping("/web/theory/release/authorities/update")

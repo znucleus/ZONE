@@ -37,7 +37,6 @@ import top.zbeboy.zbase.vo.platform.user.ResetPasswordVo;
 import top.zbeboy.zbase.vo.platform.user.UsersProfileVo;
 import top.zbeboy.zone.service.system.SystemMailService;
 import top.zbeboy.zone.service.util.BCryptUtil;
-import top.zbeboy.zone.web.system.mail.SystemMailConfig;
 import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
 import top.zbeboy.zone.web.util.BaseImgUtil;
 import top.zbeboy.zone.web.util.SessionUtil;

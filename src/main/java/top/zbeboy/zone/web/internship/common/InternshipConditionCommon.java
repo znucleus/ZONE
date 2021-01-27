@@ -490,8 +490,8 @@ public class InternshipConditionCommon {
             if (Objects.nonNull(internshipJournal)) {
                 // 本人可以查看和下载
                 StudentBean studentBean = studentService.findByUsername(users.getUsername());
-                if(Objects.nonNull(studentBean) &&
-                        Objects.equals(studentBean.getStudentId(), internshipJournal.getStudentId())){
+                if (Objects.nonNull(studentBean) &&
+                        Objects.equals(studentBean.getStudentId(), internshipJournal.getStudentId())) {
                     canOperator = true;
                 } else {
                     if (internshipJournal.getIsSeeStaff() == 1) {

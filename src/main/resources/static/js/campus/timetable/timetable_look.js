@@ -55,7 +55,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
         var init_configure = {
             init_college: false,
             init_school_calendar: false,
-            init_simple_screen:false
+            init_simple_screen: false
         };
 
         init();
@@ -210,6 +210,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
 
         var effectiveCourseCalendarAjaxFinish = false;
         var curWeeks = -1;
+
         function initData(calendarId) {
             if (calendarId && calendarId.length > 0) {
                 $.get(ajax_url.data, {calendarId: calendarId}, function (data) {
@@ -266,9 +267,9 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
                 }
             }
         }
-        
+
         function initMobileCarousel() {
-            tools.listenTouchDirection(document.getElementById("carousel"), false, false,carouselPrev,false,carouselNext)
+            tools.listenTouchDirection(document.getElementById("carousel"), false, false, carouselPrev, false, carouselNext)
         }
 
         function carouselPrev() {
@@ -307,6 +308,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
 
         var courseData = [];
         var effectiveCourseDataAjaxFinish = false;
+
         function initCourseData(id) {
             $.get(ajax_url.courses + '/' + id, function (data) {
                 for (var i = 1; i <= 7; i++) {
@@ -318,7 +320,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
                     effectiveCourseDataAjaxFinish = true;
                     showEffectiveCourse();
                     $('#week' + data.weekDay).addClass('table-primary');
-                    if(!init_configure.init_simple_screen){
+                    if (!init_configure.init_simple_screen) {
                         $('.carousel').carousel(data.weekDay - 1);
                         init_configure.init_simple_screen = true;
                     }
@@ -561,7 +563,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
                 $('#simpleWeek' + i).empty();
             }
             if ($('#showEffectiveCourse').prop('checked')) {
-                if(effectiveCourseCalendarAjaxFinish && effectiveCourseDataAjaxFinish){
+                if (effectiveCourseCalendarAjaxFinish && effectiveCourseDataAjaxFinish) {
                     $.each(courseData, function (i, v) {
                         // 显示有效课程
                         var startWeek = v.startWeek;
