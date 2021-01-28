@@ -19,6 +19,7 @@ import top.zbeboy.zbase.domain.tables.pojos.Student;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.campus.roster.RosterReleaseService;
 import top.zbeboy.zbase.feign.data.StudentService;
+import top.zbeboy.zbase.feign.data.WeiXinService;
 import top.zbeboy.zbase.feign.platform.UsersService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
@@ -62,6 +63,9 @@ public class StudentApiController {
 
     @Resource
     private UsersService usersService;
+
+    @Resource
+    private WeiXinService weiXinService;
 
     /**
      * API:获取学生信息
@@ -185,6 +189,12 @@ public class StudentApiController {
 
             ajaxUtil = studentService.save(studentAddVo);
             if (ajaxUtil.getState()) {
+                // 注册微信
+                if(StringUtils.isNotBlank(studentAddVo.getResCode()) && StringUtils.isNotBlank(studentAddVo.getAppId())
+                        &&StringUtils.isNotBlank(studentAddVo.getSecret())){
+                    weiXinService.save(studentAddVo.getResCode(), studentAddVo.getAppId(), studentAddVo.getSecret(), studentAddVo.getUsername());
+                }
+
                 Users users = new Users();
                 users.setUsername(studentAddVo.getUsername());
                 users.setLangKey(studentAddVo.getLangKey());

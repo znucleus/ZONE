@@ -1,6 +1,7 @@
 package top.zbeboy.zone.api.data.staff;
 
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -14,6 +15,7 @@ import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.config.ZoneProperties;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.data.StaffService;
+import top.zbeboy.zbase.feign.data.WeiXinService;
 import top.zbeboy.zbase.feign.platform.UsersService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
@@ -54,6 +56,9 @@ public class StaffApiController {
 
     @Resource
     private UsersService usersService;
+
+    @Resource
+    private WeiXinService weiXinService;
 
     /**
      * API:获取教职工信息
@@ -147,6 +152,12 @@ public class StaffApiController {
             ajaxUtil = staffService.save(staffAddVo);
 
             if (ajaxUtil.getState()) {
+                // 注册微信
+                if(StringUtils.isNotBlank(staffAddVo.getResCode()) && StringUtils.isNotBlank(staffAddVo.getAppId())
+                        &&StringUtils.isNotBlank(staffAddVo.getSecret())){
+                    weiXinService.save(staffAddVo.getResCode(), staffAddVo.getAppId(), staffAddVo.getSecret(), staffAddVo.getUsername());
+                }
+
                 Users users = new Users();
                 users.setUsername(staffAddVo.getUsername());
                 users.setLangKey(staffAddVo.getLangKey());
