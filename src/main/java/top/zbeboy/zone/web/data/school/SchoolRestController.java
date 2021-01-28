@@ -10,6 +10,7 @@ import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.School;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.data.SchoolService;
+import top.zbeboy.zbase.tools.service.util.RequestUtil;
 import top.zbeboy.zbase.tools.web.plugin.select2.Select2Data;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
@@ -20,7 +21,7 @@ import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -53,22 +54,10 @@ public class SchoolRestController {
      */
     @GetMapping("/web/data/schools/paging")
     public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
-        // 前台数据标题 注：要和前台标题顺序一致，获取order用
-        List<String> headers = new ArrayList<>();
-        headers.add("#");
-        headers.add("select");
-        headers.add("schoolId");
-        headers.add("schoolName");
-        headers.add("schoolIsDel");
-        headers.add("operator");
-        DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
         Users users = SessionUtil.getUserFromSession();
-        dataTablesUtil.setUsername(users.getUsername());
-        Optional<DataTablesUtil> result = schoolService.data(dataTablesUtil);
-        if (result.isPresent()) {
-            dataTablesUtil = result.get();
-        }
-        return new ResponseEntity<>(dataTablesUtil, HttpStatus.OK);
+        HashMap<String, String> paramMap = RequestUtil.addValue(request, RequestUtil.commonUseKey.username.name(), users.getUsername());
+        Optional<DataTablesUtil> result = schoolService.data(paramMap);
+        return new ResponseEntity<>(result.orElseGet(() -> new DataTablesUtil(request)), HttpStatus.OK);
     }
 
     /**
