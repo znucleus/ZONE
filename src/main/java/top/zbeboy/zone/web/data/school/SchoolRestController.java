@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class SchoolRestController {
@@ -36,11 +37,11 @@ public class SchoolRestController {
      * @return 学校数据
      */
     @ApiLoggingRecord(remark = "学校数据", channel = Workbook.channel.WEB)
-    @GetMapping("/anyone/data/school")
+    @GetMapping("/anyone/data/schools")
     public ResponseEntity<Map<String, Object>> anyoneData(HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
-        List<School> schools = schoolService.findNormal();
-        schools.forEach(school -> select2Data.add(school.getSchoolId().toString(), school.getSchoolName()));
+        Optional<List<School>> result = schoolService.findNormal();
+        result.ifPresent(schools -> schools.forEach(school -> select2Data.add(school.getSchoolId().toString(), school.getSchoolName())));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
 
@@ -50,7 +51,7 @@ public class SchoolRestController {
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/data/school/data")
+    @GetMapping("/web/data/schools/paging")
     public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         List<String> headers = new ArrayList<>();
@@ -63,7 +64,11 @@ public class SchoolRestController {
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
         Users users = SessionUtil.getUserFromSession();
         dataTablesUtil.setUsername(users.getUsername());
-        return new ResponseEntity<>(schoolService.data(dataTablesUtil), HttpStatus.OK);
+        Optional<DataTablesUtil> result = schoolService.data(dataTablesUtil);
+        if (result.isPresent()) {
+            dataTablesUtil = result.get();
+        }
+        return new ResponseEntity<>(dataTablesUtil, HttpStatus.OK);
     }
 
     /**
@@ -72,7 +77,7 @@ public class SchoolRestController {
      * @param schoolName 学校名
      * @return true 合格 false 不合格
      */
-    @PostMapping("/web/data/school/check/add/name")
+    @GetMapping("/web/data/school/check-add/name")
     public ResponseEntity<Map<String, Object>> checkAddName(@RequestParam("schoolName") String schoolName) {
         AjaxUtil<Map<String, Object>> ajaxUtil = schoolService.checkAddName(schoolName);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -97,7 +102,7 @@ public class SchoolRestController {
      * @param schoolName 学校名
      * @return true 合格 false 不合格
      */
-    @PostMapping("/web/data/school/check/edit/name")
+    @GetMapping("/web/data/school/check-edit/name")
     public ResponseEntity<Map<String, Object>> checkEditName(@RequestParam("schoolId") int id,
                                                              @RequestParam("schoolName") String schoolName) {
         AjaxUtil<Map<String, Object>> ajaxUtil = schoolService.checkEditName(id, schoolName);
@@ -123,7 +128,7 @@ public class SchoolRestController {
      * @param isDel     is_del
      * @return true注销成功
      */
-    @PostMapping("/web/data/school/status")
+    @PostMapping("/web/data/schools/update-status")
     public ResponseEntity<Map<String, Object>> status(String schoolIds, Byte isDel) {
         AjaxUtil<Map<String, Object>> ajaxUtil = schoolService.status(schoolIds, isDel);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);

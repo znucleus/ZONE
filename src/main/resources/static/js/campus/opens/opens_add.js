@@ -8,7 +8,7 @@ require(["jquery", "tools", "sweetalert2", "nav.active", "quill", "KaTeX", "mess
          ajax url.
          */
         var ajax_url = {
-            obtain_school_data: web_path + '/anyone/data/school',
+            obtain_school_data: web_path + '/anyone/data/schools',
             obtain_college_data: web_path + '/anyone/data/college',
             save: web_path + '/web/campus/opens/save',
             page: '/web/menu/campus/opens'

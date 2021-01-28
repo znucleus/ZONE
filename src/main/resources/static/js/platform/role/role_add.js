@@ -6,7 +6,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
      ajax url.
      */
     var ajax_url = {
-        obtain_school_data: web_path + '/anyone/data/school',
+        obtain_school_data: web_path + '/anyone/data/schools',
         obtain_college_data: web_path + '/anyone/data/college',
         application_json_data: web_path + '/web/platform/role/application/json',
         save: web_path + '/web/platform/role/save',

@@ -10,6 +10,7 @@ import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 
 import javax.annotation.Resource;
 import java.util.Objects;
+import java.util.Optional;
 
 @Controller
 public class SchoolViewController {
@@ -48,9 +49,9 @@ public class SchoolViewController {
     public String edit(@PathVariable("id") int id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        School school = schoolService.findById(id);
-        if (Objects.nonNull(school.getSchoolId())) {
-            modelMap.addAttribute("school", school);
+        Optional<School> result = schoolService.findById(id);
+        if (result.isPresent()) {
+            modelMap.addAttribute("school", result.get());
             page = "web/data/school/school_edit::#page-wrapper";
         } else {
             config.buildDangerTip("查询错误", "未查询到学校数据");

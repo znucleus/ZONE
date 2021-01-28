@@ -48,7 +48,7 @@ require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf",
             //It will be safe to query the DOM and manipulate
             //DOM nodes in this function.
             var ajax_url = {
-                obtain_school_data: web_path + '/anyone/data/school',
+                obtain_school_data: web_path + '/anyone/data/schools',
                 obtain_college_data: web_path + '/anyone/data/college',
                 obtain_department_data: web_path + '/anyone/data/department',
                 obtain_science_data: web_path + '/anyone/data/science',

@@ -7,7 +7,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
          */
         var ajax_url = {
             save: web_path + '/web/data/school/save',
-            check_name: web_path + '/web/data/school/check/add/name',
+            check_name: web_path + '/web/data/school/check-add/name',
             page: '/web/menu/data/school'
         };
 
@@ -71,7 +71,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             if (schoolName.length <= 0 || schoolName.length > 200) {
                 tools.validErrorDom(param_id.schoolName, '学校名200个字符以内');
             } else {
-                $.post(ajax_url.check_name, param, function (data) {
+                $.get(ajax_url.check_name, param, function (data) {
                     if (data.state) {
                         tools.validSuccessDom(param_id.schoolName);
                     } else {

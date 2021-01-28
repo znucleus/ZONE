@@ -5,7 +5,7 @@ require(["jquery", "tools", "nav.active", "jquery.address", "js-year-calendar.zh
          ajax url.
         */
         var ajax_url = {
-            obtain_school_data: web_path + '/anyone/data/school',
+            obtain_school_data: web_path + '/anyone/data/schools',
             obtain_college_data: web_path + '/anyone/data/college',
             obtain_school_calendar_data: web_path + '/web/educational/calendars',
             data: web_path + '/web/educational/calendar/look',
