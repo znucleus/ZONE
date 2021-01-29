@@ -7,7 +7,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "responsi
      */
     function getAjaxUrl() {
         return {
-            data: web_path + '/web/platform/users/data',
+            data: web_path + '/web/platform/users/paging',
             role_data: web_path + '/web/platform/users/role/data',
             setting_role: web_path + '/web/platform/users/role/save',
             update_enabled: web_path + '/web/platform/users/update/enabled',

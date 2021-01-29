@@ -550,7 +550,7 @@ public class UsersRestController {
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/platform/users/data")
+    @GetMapping("/web/platform/users/paging")
     public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
         HashMap<String, String> paramMap = RequestUtil.addValue(request, RequestUtil.commonUseKey.username.name(), users.getUsername());
