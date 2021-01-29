@@ -46,10 +46,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @RestController
@@ -87,7 +84,7 @@ public class UsersRestController {
      * @param username 账号
      * @return 是否被注册
      */
-    @PostMapping("/anyone/check/username")
+    @PostMapping("/anyone/check-username")
     public ResponseEntity<Map<String, Object>> anyoneCheckUsername(@RequestParam("username") String username) {
         AjaxUtil<Map<String, Object>> ajaxUtil = usersService.anyoneCheckUsername(username);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -99,7 +96,7 @@ public class UsersRestController {
      * @param username 账号
      * @return 是否被注册
      */
-    @PostMapping("/anyone/check/exist/username")
+    @PostMapping("/anyone/check-exist-username")
     public ResponseEntity<Map<String, Object>> anyoneCheckExistUsername(@RequestParam("username") String username) {
         AjaxUtil<Map<String, Object>> ajaxUtil = usersService.anyoneCheckExistUsername(username);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -111,7 +108,7 @@ public class UsersRestController {
      * @param email 邮箱
      * @return 是否被注册
      */
-    @PostMapping("/anyone/check/email")
+    @PostMapping("/anyone/check-email")
     public ResponseEntity<Map<String, Object>> anyoneCheckEmail(@RequestParam("email") String email) {
         AjaxUtil<Map<String, Object>> ajaxUtil = usersService.anyoneCheckEmail(email);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -123,7 +120,7 @@ public class UsersRestController {
      * @param mobile 手机号
      * @return 是否被注册
      */
-    @PostMapping("/anyone/check/mobile")
+    @PostMapping("/anyone/check-mobile")
     public ResponseEntity<Map<String, Object>> anyoneCheckMobile(@RequestParam("mobile") String mobile) {
         AjaxUtil<Map<String, Object>> ajaxUtil = usersService.anyoneCheckMobile(mobile);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -135,7 +132,7 @@ public class UsersRestController {
      * @param password 密码
      * @return 是否正确
      */
-    @PostMapping("/users/check/password")
+    @PostMapping("/users/check-password")
     public ResponseEntity<Map<String, Object>> userCheckPassword(@RequestParam("password") String password) {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Map<String, Object>> ajaxUtil = usersService.userCheckPassword(users.getUsername(), password);
@@ -148,7 +145,7 @@ public class UsersRestController {
      * @param username 账号
      * @return 是否存在以及该用户状态是否正常
      */
-    @PostMapping("/users/check/username/status")
+    @PostMapping("/users/check-status")
     public ResponseEntity<Map<String, Object>> userCheckStatusByUsername(@RequestParam("username") String username) {
         AjaxUtil<Map<String, Object>> ajaxUtil = usersService.userCheckStatusByUsername(username);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -160,7 +157,7 @@ public class UsersRestController {
      * @param mobile 手机号
      * @return 是否被注册
      */
-    @PostMapping("/users/check/mobile")
+    @PostMapping("/users/check-mobile")
     public ResponseEntity<Map<String, Object>> usersCheckMobile(@RequestParam("mobile") String mobile) {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Map<String, Object>> ajaxUtil = usersService.usersCheckMobile(users.getUsername(), mobile);
@@ -173,7 +170,7 @@ public class UsersRestController {
      * @param email 邮箱
      * @return 是否被注册
      */
-    @PostMapping("/users/check/email")
+    @PostMapping("/users/check-email")
     public ResponseEntity<Map<String, Object>> usersCheckEmail(@RequestParam("email") String email) {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Map<String, Object>> ajaxUtil = usersService.usersCheckEmail(users.getUsername(), email);
@@ -187,13 +184,14 @@ public class UsersRestController {
      * @param bindingResult   检验
      * @return 重置
      */
-    @PostMapping("/reset_password")
+    @PostMapping("/reset-password")
     public ResponseEntity<Map<String, Object>> resetPassword(@Valid ResetPasswordVo resetPasswordVo, BindingResult bindingResult, HttpSession session) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
             if (resetPasswordVo.getPassword().equals(resetPasswordVo.getOkPassword())) {
-                Users users = usersService.findByUsername(resetPasswordVo.getUsername());
-                if (Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername())) {
+                Optional<Users> result = usersService.findByUsername(resetPasswordVo.getUsername());
+                if (result.isPresent()) {
+                    Users users = result.get();
                     // 检验是否已通过验证
                     boolean isValid;
                     if (resetPasswordVo.getVerificationMode() == 0) {
@@ -271,9 +269,9 @@ public class UsersRestController {
                     String dynamicPassword = usersProfileVo.getDynamicPassword();
                     if (StringUtils.isNotBlank(dynamicPassword)) {
                         if (NumberUtils.isDigits(dynamicPassword)) {
-                            GoogleOauth googleOauth = usersService.findGoogleOauthByUsername(own.getUsername());
-                            if (Objects.nonNull(googleOauth) && StringUtils.isNotBlank(googleOauth.getUsername())) {
-                                if (GoogleOauthUtil.validCode(googleOauth.getGoogleOauthKey(), NumberUtils.toInt(dynamicPassword))) {
+                            Optional<GoogleOauth> optionalGoogleOauth = usersService.findGoogleOauthByUsername(own.getUsername());
+                            if (optionalGoogleOauth.isPresent()) {
+                                if (GoogleOauthUtil.validCode(optionalGoogleOauth.get().getGoogleOauthKey(), NumberUtils.toInt(dynamicPassword))) {
                                     canUpdate = true;
                                 } else {
                                     ajaxUtil.fail().msg("动态密码错误");
@@ -296,8 +294,11 @@ public class UsersRestController {
                 ajaxUtil = usersService.checkUsername(value);
                 if (BooleanUtils.isTrue(ajaxUtil.getState())) {
                     if (!StringUtils.equals(own.getUsername(), value)) {
-                        List<Users> users = usersService.findByUsernameNeOwn(value, own.getUsername());
-                        if (Objects.isNull(users) || users.size() <= 0) {
+                        HashMap<String, String> paramMap = new HashMap<>();
+                        paramMap.put("own", own.getUsername());
+                        paramMap.put("username", value);
+                        Optional<List<Users>> optionalUsers = usersService.usersNeOwn(paramMap);
+                        if (!optionalUsers.isPresent()) {
                             // 更新
                             usersService.updateUsername(own.getUsername(), value);
                             ajaxUtil.success().msg("账号更新成功");
@@ -332,8 +333,11 @@ public class UsersRestController {
                 if (canUpdate) {
                     if (Pattern.matches(Workbook.MAIL_REGEX, value)) {
                         if (!StringUtils.equals(own.getEmail(), value)) {
-                            List<Users> usersList = usersService.findByEmailNeOwn(value, own.getEmail());
-                            if (Objects.isNull(usersList) || usersList.size() <= 0) {
+                            HashMap<String, String> paramMap = new HashMap<>();
+                            paramMap.put("own", own.getEmail());
+                            paramMap.put("email", value);
+                            Optional<List<Users>> optionalUsers = usersService.usersNeOwn(paramMap);
+                            if (!optionalUsers.isPresent()) {
                                 // 检查邮件推送是否被关闭
                                 SystemConfigure mailConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
                                 if (StringUtils.equals("1", mailConfigure.getDataValue())) {
@@ -365,8 +369,11 @@ public class UsersRestController {
                 if (canUpdate) {
                     if (Pattern.matches(Workbook.MOBILE_REGEX, value)) {
                         if (!StringUtils.equals(own.getMobile(), value)) {
-                            List<Users> usersList = usersService.findByMobileNeOwn(value, own.getMobile());
-                            if (Objects.isNull(usersList) || usersList.size() <= 0) {
+                            HashMap<String, String> paramMap = new HashMap<>();
+                            paramMap.put("own", own.getMobile());
+                            paramMap.put("email", value);
+                            Optional<List<Users>> optionalUsers = usersService.usersNeOwn(paramMap);
+                            if (!optionalUsers.isPresent()) {
                                 // step 2.手机号是否已验证
                                 if (Objects.nonNull(session.getAttribute(value + SystemMobileConfig.MOBILE_VALID))) {
                                     boolean isValid = (boolean) session.getAttribute(value + SystemMobileConfig.MOBILE_VALID);
@@ -395,8 +402,11 @@ public class UsersRestController {
                 if (Pattern.matches(Workbook.ID_CARD_REGEX, value)) {
                     if (!StringUtils.equals(own.getIdCard(), value)) {
                         // 检查是否已经存在该身份证号
-                        List<Users> usersList = usersService.findByIdCardNeOwn(value, own.getUsername());
-                        if (Objects.isNull(usersList) || usersList.size() <= 0) {
+                        HashMap<String, String> paramMap = new HashMap<>();
+                        paramMap.put("own", own.getIdCard());
+                        paramMap.put("email", value);
+                        Optional<List<Users>> optionalUsers = usersService.usersNeOwn(paramMap);
+                        if (!optionalUsers.isPresent()) {
                             own.setIdCard(value);
                             usersService.update(own);
                             ajaxUtil.success().msg("身份证号更新成功");
@@ -437,7 +447,7 @@ public class UsersRestController {
      * @param password 当前密码
      * @return true or false
      */
-    @PostMapping("/users/open/google_oauth")
+    @PostMapping("/users/open-google-oauth")
     public ResponseEntity<Map<String, Object>> userOpenGoogleOauth(@RequestParam("password") String password) {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Map<String, Object>> ajaxUtil = usersService.userOpenGoogleOauth(users.getUsername(), password);
@@ -452,7 +462,7 @@ public class UsersRestController {
      * @param dynamicPassword 动态密码
      * @return true or false
      */
-    @PostMapping("/users/close/google_oauth")
+    @PostMapping("/users/close-google-oauth")
     public ResponseEntity<Map<String, Object>> userCloseGoogleOauth(@RequestParam("mode") int mode, String password, String dynamicPassword) {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Map<String, Object>> ajaxUtil = usersService.userCloseGoogleOauth(users.getUsername(), mode, password, dynamicPassword);
@@ -542,26 +552,10 @@ public class UsersRestController {
      */
     @GetMapping("/web/platform/users/data")
     public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
-        // 前台数据标题 注：要和前台标题顺序一致，获取order用
-        List<String> headers = new ArrayList<>();
-        headers.add("#");
-        headers.add("select");
-        headers.add("realName");
-        headers.add("username");
-        headers.add("email");
-        headers.add("mobile");
-        headers.add("idCard");
-        headers.add("roleName");
-        headers.add("usersTypeName");
-        headers.add("enabled");
-        headers.add("accountNonLocked");
-        headers.add("langKey");
-        headers.add("joinDate");
-        headers.add("operator");
-        DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
         Users users = SessionUtil.getUserFromSession();
-        dataTablesUtil.setUsername(users.getUsername());
-        return new ResponseEntity<>(usersService.data(dataTablesUtil), HttpStatus.OK);
+        HashMap<String, String> paramMap = RequestUtil.addValue(request, RequestUtil.commonUseKey.username.name(), users.getUsername());
+        Optional<DataTablesUtil> result = usersService.data(paramMap);
+        return new ResponseEntity<>(result.orElseGet(() -> new DataTablesUtil(request)), HttpStatus.OK);
     }
 
     /**
@@ -598,7 +592,9 @@ public class UsersRestController {
             // 检查邮件推送是否被关闭
             SystemConfigure mailConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
             if (StringUtils.equals("1", mailConfigure.getDataValue())) {
-                systemMailService.sendNotifyMail(usersService.findByUsername(username), RequestUtil.getBaseUrl(request), notify);
+                Optional<Users> result = usersService.findByUsername(username);
+                result.ifPresent(value -> systemMailService.sendNotifyMail(value, RequestUtil.getBaseUrl(request), notify));
+
             }
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -661,7 +657,7 @@ public class UsersRestController {
      * @param dynamicPassword 动态密码
      * @return true or false
      */
-    @PostMapping("/forget_password/dynamic_password")
+    @PostMapping("/forget-password/dynamic-password")
     public ResponseEntity<Map<String, Object>> forgetPassword(@RequestParam("username") String username,
                                                               @RequestParam("dynamicPassword") String dynamicPassword, HttpSession session) {
         AjaxUtil<Map<String, Object>> ajaxUtil = usersService.forgetPassword(username, dynamicPassword);

@@ -38,6 +38,7 @@ import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class PotentialRestController {
@@ -231,7 +232,8 @@ public class PotentialRestController {
             // 检查邮件推送是否被关闭
             SystemConfigure mailConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
             if (StringUtils.equals("1", mailConfigure.getDataValue())) {
-                systemMailService.sendNotifyMail(usersService.findByUsername(username), RequestUtil.getBaseUrl(request), notify);
+                Optional<Users> result = usersService.findByUsername(username);
+                result.ifPresent(value -> systemMailService.sendNotifyMail(value, RequestUtil.getBaseUrl(request), notify));
             }
         }
 

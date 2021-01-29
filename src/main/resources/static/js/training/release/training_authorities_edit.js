@@ -9,7 +9,7 @@ require(["jquery", "tools", "moment-with-locales", "handlebars", "sweetalert2",
          ajax url.
          */
         var ajax_url = {
-            check_username: web_path + '/anyone/check/exist/username',
+            check_username: web_path + '/anyone/check-exist-username',
             update: web_path + '/web/training/release/authorities/update',
             back: '/web/training/release/authorities',
             page: '/web/menu/training/release'

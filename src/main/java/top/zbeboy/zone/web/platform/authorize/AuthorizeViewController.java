@@ -20,6 +20,7 @@ import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import java.util.Objects;
+import java.util.Optional;
 
 @Controller
 public class AuthorizeViewController {
@@ -149,8 +150,9 @@ public class AuthorizeViewController {
         if (canEdit) {
             Byte status = roleApplyBean.getApplyStatus();
             if (status != 1) {
-                Users users = usersService.findByUsername(roleApplyBean.getUsername());
-                if (Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername())) {
+                Optional<Users> result = usersService.findByUsername(roleApplyBean.getUsername());
+                if (result.isPresent()) {
+                    Users users = result.get();
                     int collegeId = 0;
                     UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
                     if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {

@@ -25,7 +25,9 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 /**
@@ -67,27 +69,33 @@ public class SecurityLoginFilter implements Filter {
 
             UsersService usersService = SpringBootUtil.getBean(UsersService.class);
 
-            Users users = null;
+            Optional<Users> result = Optional.empty();
             boolean hasUser = false;
             if (Pattern.matches(Workbook.MAIL_REGEX, username)) {
-                users = usersService.findByEmail(username);
-                hasUser = Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername());
+                HashMap<String, String> paramMap = new HashMap<>();
+                paramMap.put("email", username);
+                result = usersService.findByCondition(paramMap);
+                hasUser = result.isPresent();
             }
 
             if (!hasUser && Pattern.matches(Workbook.MOBILE_REGEX, username)) {
-                users = usersService.findByMobile(username);
-                hasUser = Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername());
+                HashMap<String, String> paramMap = new HashMap<>();
+                paramMap.put("mobile", username);
+                result = usersService.findByCondition(paramMap);
+                hasUser = result.isPresent();
             }
 
             if (!hasUser) {
-                users = usersService.findByUsername(username);
-                hasUser = Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername());
+                result = usersService.findByUsername(username);
+                hasUser = result.isPresent();
             }
 
             if (!hasUser) {
                 response.getWriter().print(AjaxAuthenticationCode.USERNAME_IS_NOT_EXIST_CODE);
                 return;
             }
+
+            Users users = result.get();
 
             if (Objects.isNull(users.getEnabled()) || !BooleanUtil.toBoolean(users.getEnabled())) {// 用户是否已被注销
                 response.getWriter().print(AjaxAuthenticationCode.USERNAME_IS_ENABLES);

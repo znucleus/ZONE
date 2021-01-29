@@ -26,7 +26,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 /**
@@ -63,24 +65,29 @@ public class AjaxAuthenticationFailureHandler extends ExceptionMappingAuthentica
                     code = AjaxAuthenticationCode.USERNAME_ACCOUNT_NON_LOCKED;
 
                     UsersService usersService = SpringBootUtil.getBean(UsersService.class);
-                    Users users = null;
+                    Optional<Users> result = Optional.empty();
                     boolean hasUser = false;
                     if (Pattern.matches(Workbook.MAIL_REGEX, username)) {
-                        users = usersService.findByEmail(username);
-                        hasUser = Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername());
+                        HashMap<String, String> paramMap = new HashMap<>();
+                        paramMap.put("email", username);
+                        result = usersService.findByCondition(paramMap);
+                        hasUser = result.isPresent();
                     }
 
                     if (!hasUser && Pattern.matches(Workbook.MOBILE_REGEX, username)) {
-                        users = usersService.findByMobile(username);
-                        hasUser = Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername());
+                        HashMap<String, String> paramMap = new HashMap<>();
+                        paramMap.put("mobile", username);
+                        result = usersService.findByCondition(paramMap);
+                        hasUser = result.isPresent();
                     }
 
                     if (!hasUser) {
-                        users = usersService.findByUsername(username);
-                        hasUser = Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername());
+                        result = usersService.findByUsername(username);
+                        hasUser = result.isPresent();
                     }
 
                     if (hasUser) {
+                        Users users = result.get();
                         users.setAccountNonLocked(BooleanUtil.toByte(false));
                         usersService.update(users);
 

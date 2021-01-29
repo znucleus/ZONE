@@ -21,9 +21,7 @@ import top.zbeboy.zone.service.system.SystemMobileService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
-import java.util.Date;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @RestController
@@ -195,8 +193,10 @@ public class SystemMobileRestController {
                 if (Objects.nonNull(session.getAttribute(param + SystemMobileConfig.MOBILE_VALID))) {
                     boolean isValid = (boolean) session.getAttribute(param + SystemMobileConfig.MOBILE_VALID);
                     if (isValid) {
-                        Users users = usersService.findByMobile(param);
-                        if (Objects.nonNull(users)) {
+                        HashMap<String, String> paramMap = new HashMap<>();
+                        paramMap.put("mobile", param);
+                        Optional<Users> result = usersService.findByCondition(paramMap);
+                        if (result.isPresent()) {
                             ajaxUtil.success().msg("验证通过");
                         } else {
                             ajaxUtil.fail().msg("手机号未注册");

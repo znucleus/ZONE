@@ -7,16 +7,16 @@ require(["jquery", "lodash", "tools", "sweetalert2", "clipboard", "bootstrap",
 
         var ajax_url = {
             users_update: web_path + '/users/update',
-            check_password: web_path + '/users/check/password',
+            check_password: web_path + '/users/check-password',
             system_configure: web_path + '/anyone/data/configure',
-            check_email: web_path + '/users/check/email',
-            check_mobile: web_path + '/users/check/mobile',
+            check_email: web_path + '/users/check-email',
+            check_mobile: web_path + '/users/check-mobile',
             send_mobile: web_path + '/anyone/send/mobile',
             check_mobile_verification_code: web_path + '/anyone/check/mobile/code',
             obtain_mobile_code_valid: web_path + '/anyone/data/mobile/code',
             users_password_update: web_path + '/users/password/update',
-            open_google_oauth: web_path + "/users/open/google_oauth",
-            close_google_oauth: web_path + "/users/close/google_oauth"
+            open_google_oauth: web_path + "/users/open-google-oauth",
+            close_google_oauth: web_path + "/users/close-google-oauth"
         };
 
         var param_id = {

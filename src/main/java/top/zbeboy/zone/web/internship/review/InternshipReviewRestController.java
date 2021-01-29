@@ -206,8 +206,8 @@ public class InternshipReviewRestController {
                 if (!StringUtils.equals(users.getUsername(), param)) {
                     Optional<Record> record = internshipReviewAuthorizeService.findByInternshipReleaseIdAndUsername(internshipReleaseId, param);
                     if (!record.isPresent()) {
-                        Users checkUser = usersService.findByUsername(param);
-                        if (Objects.nonNull(checkUser) && StringUtils.isNotBlank(checkUser.getUsername())) {
+                        Optional<Users> result = usersService.findByUsername(param);
+                        if (result.isPresent()) {
                             InternshipReviewAuthorize internshipReviewAuthorize = new InternshipReviewAuthorize(internshipReleaseId, param);
                             internshipReviewAuthorizeService.save(internshipReviewAuthorize);
                             ajaxUtil.success().msg("保存成功");

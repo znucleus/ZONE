@@ -107,7 +107,7 @@ public class MainController {
      *
      * @return 忘记密码页.
      */
-    @GetMapping("/forget_password")
+    @GetMapping("/forget-password")
     public String forgetPassword() {
         return "forget_password";
     }

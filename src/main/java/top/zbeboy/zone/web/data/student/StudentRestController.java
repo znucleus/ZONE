@@ -34,10 +34,7 @@ import top.zbeboy.zone.web.util.SessionUtil;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 public class StudentRestController {
@@ -268,7 +265,8 @@ public class StudentRestController {
             // 检查邮件推送是否被关闭
             SystemConfigure mailConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
             if (StringUtils.equals("1", mailConfigure.getDataValue())) {
-                systemMailService.sendNotifyMail(usersService.findByUsername(username), RequestUtil.getBaseUrl(request), notify);
+                Optional<Users> result = usersService.findByUsername(username);
+                result.ifPresent(value -> systemMailService.sendNotifyMail(value, RequestUtil.getBaseUrl(request), notify));
             }
 
             SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(),

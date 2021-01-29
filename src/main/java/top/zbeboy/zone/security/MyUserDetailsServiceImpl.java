@@ -41,22 +41,27 @@ public class MyUserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         log.debug("Username is {}", s);
         String username = StringUtils.deleteWhitespace(s);
-        Users users = null;
+        Optional<Users> result = Optional.empty();
         boolean hasUser = false;
         if (Pattern.matches(Workbook.MAIL_REGEX, username)) {
-            users = usersService.findByEmail(username);
-            hasUser = Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername());
+            HashMap<String, String> paramMap = new HashMap<>();
+            paramMap.put("email", username);
+            result = usersService.findByCondition(paramMap);
+            hasUser = result.isPresent();
         }
 
         if (!hasUser && Pattern.matches(Workbook.MOBILE_REGEX, username)) {
-            users = usersService.findByMobile(username);
-            hasUser = Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername());
+            HashMap<String, String> paramMap = new HashMap<>();
+            paramMap.put("mobile", username);
+            result = usersService.findByCondition(paramMap);
+            hasUser = result.isPresent();
         }
 
         if (!hasUser) {
-            users = usersService.findByUsername(username);
+            result = usersService.findByUsername(username);
         }
-        assert Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername());
+        assert result.isPresent();
+        Users users = result.get();
         List<GrantedAuthority> authorities = buildUserAuthority(authorizeService.findByUsername(users.getUsername()));
         return buildUserForAuthentication(users, authorities);
     }

@@ -30,6 +30,7 @@ import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 public class UsersApiController {
@@ -93,8 +94,11 @@ public class UsersApiController {
                     String validContent = ops.get(resetPasswordApiVo.getMobile() + "_" + resetPasswordApiVo.getVerificationCode() + SystemMobileConfig.MOBILE_VALID);
                     boolean isValid = BooleanUtils.toBoolean(validContent);
                     if (isValid) {
-                        Users users = usersService.findByMobile(resetPasswordApiVo.getMobile());
-                        if (Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername())) {
+                        HashMap<String, String> paramMap = new HashMap<>();
+                        paramMap.put("mobile", resetPasswordApiVo.getMobile());
+                        Optional<Users>  result = usersService.findByCondition(paramMap);
+                        if (result.isPresent()) {
+                            Users users = result.get();
                             users.setPassword(BCryptUtil.bCryptPassword(resetPasswordApiVo.getPassword()));
                             usersService.update(users);
                             ajaxUtil.success().msg("重置密码成功");

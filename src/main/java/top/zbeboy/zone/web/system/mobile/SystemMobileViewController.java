@@ -9,7 +9,9 @@ import top.zbeboy.zone.web.system.tip.SystemTipConfig;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.Objects;
+import java.util.Optional;
 
 @Controller
 public class SystemMobileViewController {
@@ -28,8 +30,11 @@ public class SystemMobileViewController {
         SystemTipConfig config = new SystemTipConfig();
         if (Objects.nonNull(session.getAttribute(SystemMobileConfig.MOBILE))) {
             String mobile = (String) session.getAttribute(SystemMobileConfig.MOBILE);
-            Users users = usersService.findByMobile(mobile);
-            if (Objects.nonNull(users)) {
+            HashMap<String, String> paramMap = new HashMap<>();
+            paramMap.put("mobile", mobile);
+            Optional<Users> result = usersService.findByCondition(paramMap);
+            if (result.isPresent()) {
+                Users users = result.get();
                 if (Objects.nonNull(session.getAttribute(mobile + SystemMobileConfig.MOBILE_VALID))) {
                     boolean isValid = (boolean) session.getAttribute(mobile + SystemMobileConfig.MOBILE_VALID);
                     if (isValid) {

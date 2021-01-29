@@ -22,8 +22,10 @@ import top.zbeboy.zone.service.system.SystemMailService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 @RestController
@@ -53,8 +55,11 @@ public class SystemMailRestController {
         String param = StringUtils.deleteWhitespace(email);
         if (StringUtils.isNotBlank(param)) {
             if (Pattern.matches(Workbook.MAIL_REGEX, param)) {
-                Users users = usersService.findByEmail(param);
-                if (Objects.nonNull(users)) {
+                HashMap<String, String> paramMap = new HashMap<>();
+                paramMap.put("email", param);
+                Optional<Users>  result = usersService.findByCondition(paramMap);
+                if (result.isPresent()) {
+                    Users users = result.get();
                     if (Objects.isNull(users.getVerifyMailbox()) || !BooleanUtil.toBoolean(users.getVerifyMailbox())) {
                         ajaxUtil.fail().msg("邮箱未验证通过");
                     } else {

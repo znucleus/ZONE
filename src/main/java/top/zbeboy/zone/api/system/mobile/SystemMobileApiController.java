@@ -24,8 +24,9 @@ import top.zbeboy.zone.service.system.SystemMobileService;
 import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
@@ -140,8 +141,10 @@ public class SystemMobileApiController {
                 String validContent = ops.get(mobile + "_" + code + SystemMobileConfig.MOBILE_VALID);
                 boolean isValid = BooleanUtils.toBoolean(validContent);
                 if (isValid) {
-                    Users users = usersService.findByMobile(param);
-                    if (Objects.nonNull(users)) {
+                    HashMap<String, String> paramMap = new HashMap<>();
+                    paramMap.put("mobile", param);
+                    Optional<Users> result = usersService.findByCondition(paramMap);
+                    if (result.isPresent()) {
                         ajaxUtil.success().msg("验证通过");
                     } else {
                         ajaxUtil.fail().msg("手机号未注册");

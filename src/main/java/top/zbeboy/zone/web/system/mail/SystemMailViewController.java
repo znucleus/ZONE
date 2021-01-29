@@ -33,9 +33,7 @@ import top.zbeboy.zone.web.system.tip.SystemTipConfig;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @Controller
@@ -86,8 +84,9 @@ public class SystemMailViewController {
     public String anyoneValidMail(@PathVariable("mailboxVerifyCode") String mailboxVerifyCode,
                                   @PathVariable("username") String username, ModelMap modelMap) {
         SystemTipConfig config = new SystemTipConfig();
-        Users users = usersService.findByUsername(username);
-        if (Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername())) {
+        Optional<Users> result = usersService.findByUsername(username);
+        if (result.isPresent()) {
+            Users users = result.get();
             Timestamp mailboxVerifyValid = users.getMailboxVerifyValid();
             Timestamp now = DateTimeUtil.getNowSqlTimestamp();
             if (now.before(mailboxVerifyValid)) {
@@ -186,24 +185,29 @@ public class SystemMailViewController {
     public String reSendValidMail(@RequestParam("username") String username, HttpServletRequest request, ModelMap modelMap) {
         SystemTipConfig config = new SystemTipConfig();
 
-        Users users = null;
+        Optional<Users> result = Optional.empty();
         boolean hasUser = false;
         if (Pattern.matches(Workbook.MAIL_REGEX, username)) {
-            users = usersService.findByEmail(username);
-            hasUser = Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername());
+            HashMap<String, String> paramMap = new HashMap<>();
+            paramMap.put("email", username);
+            result = usersService.findByCondition(paramMap);
+            hasUser = result.isPresent();
         }
 
         if (!hasUser && Pattern.matches(Workbook.MOBILE_REGEX, username)) {
-            users = usersService.findByMobile(username);
-            hasUser = Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername());
+            HashMap<String, String> paramMap = new HashMap<>();
+            paramMap.put("mobile", username);
+            result = usersService.findByCondition(paramMap);
+            hasUser = result.isPresent();
         }
 
         if (!hasUser) {
-            users = usersService.findByUsername(username);
-            hasUser = Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername());
+            result = usersService.findByUsername(username);
+            hasUser = result.isPresent();
         }
 
         if (hasUser) {
+            Users users = result.get();
             if (!Objects.equals(users.getVerifyMailbox(), BooleanUtil.toByte(true))) {
                 SystemConfigure mailConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
                 if (StringUtils.equals("1", mailConfigure.getDataValue())) {
@@ -258,8 +262,9 @@ public class SystemMailViewController {
     public String resetPasswordMail(@PathVariable("passwordResetKey") String passwordResetKey,
                                     @PathVariable("username") String username, ModelMap modelMap) {
         SystemTipConfig config = new SystemTipConfig();
-        Users users = usersService.findByUsername(username);
-        if (Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername())) {
+        Optional<Users> result = usersService.findByUsername(username);
+        if (result.isPresent()) {
+            Users users = result.get();
             Timestamp passwordResetKeyValid = users.getPasswordResetKeyValid();
             Timestamp now = DateTimeUtil.getNowSqlTimestamp();
             if (now.before(passwordResetKeyValid)) {

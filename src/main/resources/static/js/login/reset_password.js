@@ -40,7 +40,7 @@ require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf",
             //DOM nodes in this function.
 
             var ajax_url = {
-                reset_password: web_path + '/reset_password',
+                reset_password: web_path + '/reset-password',
                 reset_password_success: web_path + '/tip/reset_password/success'
             };
 

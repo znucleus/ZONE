@@ -26,6 +26,7 @@ import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Controller
 public class UsersViewController {
@@ -57,14 +58,15 @@ public class UsersViewController {
      * @param modelMap 页面对象
      * @return 消息
      */
-    @GetMapping("/anyone/reset_password/dynamic_password")
+    @GetMapping("/anyone/reset-password/dynamic-password")
     public String resetPasswordDynamicPassword(HttpSession session, ModelMap modelMap) {
         SystemTipConfig config = new SystemTipConfig();
         final String usernameKey = SessionBook.DYNAMIC_PASSWORD_USERNAME;
         if (Objects.nonNull(session.getAttribute(usernameKey))) {
             String username = (String) session.getAttribute(usernameKey);
-            Users users = usersService.findByUsername(username);
-            if (Objects.nonNull(users) && StringUtils.isNotBlank(users.getUsername())) {
+            Optional<Users> result = usersService.findByUsername(username);
+            if (result.isPresent()) {
+                Users users = result.get();
                 String validKey = username + SessionBook.DYNAMIC_PASSWORD_VALID;
                 if (Objects.nonNull(session.getAttribute(validKey))) {
                     boolean isValid = (boolean) session.getAttribute(validKey);
@@ -201,8 +203,8 @@ public class UsersViewController {
         modelMap.addAttribute("idCard", StringUtils.isNotBlank(users.getIdCard()) ? StringUtils.overlay(users.getIdCard(), "****", 3, users.getIdCard().length() - 2) : "");
         modelMap.addAttribute("plaintextIdCard", users.getIdCard());
 
-        GoogleOauth googleOauth = usersService.findGoogleOauthByUsername(users.getUsername());
-        if (Objects.nonNull(googleOauth) && StringUtils.isNotBlank(googleOauth.getUsername())) {
+        Optional<GoogleOauth> optionalGoogleOauth = usersService.findGoogleOauthByUsername(users.getUsername());
+        if (optionalGoogleOauth.isPresent()) {
             modelMap.addAttribute("isOpenGoogleOauth", 1);
         } else {
             modelMap.addAttribute("isOpenGoogleOauth", 0);
