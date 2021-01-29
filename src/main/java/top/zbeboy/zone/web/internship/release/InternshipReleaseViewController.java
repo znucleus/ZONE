@@ -70,8 +70,9 @@ public class InternshipReleaseViewController {
         String page;
         Users users = SessionUtil.getUserFromSession();
         if (!roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_SYSTEM.name())) {
-            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-            if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+            Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+            if (optionalUsersType.isPresent()) {
+                UsersType usersType = optionalUsersType.get();
                 int collegeId = 0;
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                     StaffBean bean = staffService.findByUsernameRelation(users.getUsername());

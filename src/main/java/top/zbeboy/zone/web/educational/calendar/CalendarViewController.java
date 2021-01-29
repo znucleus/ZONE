@@ -20,6 +20,7 @@ import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import java.util.Objects;
+import java.util.Optional;
 
 @Controller
 public class CalendarViewController {
@@ -46,8 +47,9 @@ public class CalendarViewController {
         Users users = SessionUtil.getUserFromSession();
         int schoolId = 0;
         int collegeId = 0;
-        UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-        if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+        Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+        if (optionalUsersType.isPresent()) {
+            UsersType usersType = optionalUsersType.get();
             if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                 StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
                 if (Objects.nonNull(bean.getStaffId()) && bean.getStaffId() > 0) {
@@ -101,8 +103,9 @@ public class CalendarViewController {
         String page;
         Users users = SessionUtil.getUserFromSession();
         if (schoolCalendarService.canRelease(users.getUsername())) {
-            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-            if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+            Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+            if (optionalUsersType.isPresent()) {
+                UsersType usersType = optionalUsersType.get();
                 int collegeId = 0;
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                     StaffBean bean = staffService.findByUsernameRelation(users.getUsername());

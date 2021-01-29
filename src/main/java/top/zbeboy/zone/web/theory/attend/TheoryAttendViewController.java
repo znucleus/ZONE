@@ -63,8 +63,9 @@ public class TheoryAttendViewController {
         if (record.isPresent()) {
             boolean isStudent = false;
             Users users = SessionUtil.getUserFromSession();
-            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-            if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+            Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+            if (optionalUsersType.isPresent()) {
+                UsersType usersType = optionalUsersType.get();
                 if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
                     isStudent = true;
                 }
@@ -180,8 +181,9 @@ public class TheoryAttendViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         Users users = SessionUtil.getUserFromSession();
-        UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-        if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+        Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+        if (optionalUsersType.isPresent()) {
+            UsersType usersType = optionalUsersType.get();
             if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
                 TheoryRelease theoryRelease = theoryReleaseService.findById(id);
                 if (Objects.nonNull(theoryRelease)) {

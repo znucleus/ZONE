@@ -316,8 +316,8 @@ public class UsersRestController {
                     ajaxUtil.success().msg("姓名更新成功");
 
                     // 学生需要同步花名册
-                    UsersType usersType = usersTypeService.findById(own.getUsersTypeId());
-                    if (Objects.nonNull(usersType) && StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
+                    Optional<UsersType> optionalUsersType = usersTypeService.findById(own.getUsersTypeId());
+                    if (optionalUsersType.isPresent() && StringUtils.equals(Workbook.STUDENT_USERS_TYPE, optionalUsersType.get().getUsersTypeName())) {
                         Student student = studentService.findByUsername(own.getUsername());
                         RosterData rosterData = rosterReleaseService.findRosterDataByStudentNumber(student.getStudentNumber());
                         if (Objects.nonNull(rosterData) && StringUtils.isNotBlank(rosterData.getRosterDataId())) {
@@ -412,8 +412,8 @@ public class UsersRestController {
                             ajaxUtil.success().msg("身份证号更新成功");
 
                             // 学生需要同步花名册
-                            UsersType usersType = usersTypeService.findById(own.getUsersTypeId());
-                            if (Objects.nonNull(usersType) && StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
+                            Optional<UsersType> optionalUsersType = usersTypeService.findById(own.getUsersTypeId());
+                            if (optionalUsersType.isPresent() && StringUtils.equals(Workbook.STUDENT_USERS_TYPE, optionalUsersType.get().getUsersTypeName())) {
                                 Student student = studentService.findByUsername(own.getUsername());
                                 RosterData rosterData = rosterReleaseService.findRosterDataByStudentNumber(student.getStudentNumber());
                                 if (Objects.nonNull(rosterData) && StringUtils.isNotBlank(rosterData.getRosterDataId())) {

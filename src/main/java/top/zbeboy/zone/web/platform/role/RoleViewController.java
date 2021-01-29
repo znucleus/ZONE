@@ -23,6 +23,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Controller
 public class RoleViewController {
@@ -71,8 +72,9 @@ public class RoleViewController {
             modelMap.addAttribute("collegeId", 0);
             page = "web/platform/role/role_add::#page-wrapper";
         } else if (roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_ADMIN.name())) {
-            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-            if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+            Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+            if (optionalUsersType.isPresent()) {
+                UsersType usersType = optionalUsersType.get();
                 int collegeId = 0;
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                     StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
@@ -132,8 +134,9 @@ public class RoleViewController {
             }
         } else if (roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_ADMIN.name())) {
             // 判断是否同一个院
-            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-            if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+            Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+            if (optionalUsersType.isPresent()) {
+                UsersType usersType = optionalUsersType.get();
                 int collegeId = 0;
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                     StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
@@ -210,8 +213,9 @@ public class RoleViewController {
             }
         } else if (roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_ADMIN.name())) {
             // 判断是否同一个院
-            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-            if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+            Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+            if (optionalUsersType.isPresent()) {
+                UsersType usersType = optionalUsersType.get();
                 int collegeId = 0;
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                     StaffBean bean = staffService.findByUsernameRelation(users.getUsername());

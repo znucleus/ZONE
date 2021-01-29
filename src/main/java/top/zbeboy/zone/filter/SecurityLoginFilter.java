@@ -123,12 +123,12 @@ public class SecurityLoginFilter implements Filter {
             }
 
             UsersTypeService usersTypeService = SpringBootUtil.getBean(UsersTypeService.class);
-            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-            if (Objects.isNull(usersType) || Objects.isNull(usersType.getUsersTypeId()) || usersType.getUsersTypeId() <= 0) {
+            Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+            if (!optionalUsersType.isPresent()) {
                 response.getWriter().print(AjaxAuthenticationCode.USER_TYPE_IS_BLANK);
                 return;
             }
-
+            UsersType usersType = optionalUsersType.get();
             boolean schoolIsNotDel = false;
             switch (usersType.getUsersTypeName()) {
                 case Workbook.STUDENT_USERS_TYPE:

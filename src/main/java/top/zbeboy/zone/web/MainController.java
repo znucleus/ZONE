@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Controller
 public class MainController {
@@ -132,10 +133,14 @@ public class MainController {
 
         boolean isPotential = false;
         if (Objects.nonNull(users.getUsersTypeId()) && users.getUsersTypeId() > 0) {
-            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-            if (StringUtils.equals(usersType.getUsersTypeName(), Workbook.POTENTIAL_USERS_TYPE)) {
-                isPotential = true;
+            Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+            if (optionalUsersType.isPresent()) {
+                UsersType usersType = optionalUsersType.get();
+                if (StringUtils.equals(usersType.getUsersTypeName(), Workbook.POTENTIAL_USERS_TYPE)) {
+                    isPotential = true;
+                }
             }
+
         }
 
         modelMap.addAttribute("isPotential", isPotential);

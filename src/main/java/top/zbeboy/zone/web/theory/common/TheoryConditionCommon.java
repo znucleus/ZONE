@@ -60,8 +60,9 @@ public class TheoryConditionCommon {
             if (theoryReleaseRecord.isPresent()) {
                 TheoryReleaseBean bean = theoryReleaseRecord.get().into(TheoryReleaseBean.class);
 
-                UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-                if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+                Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+                if (optionalUsersType.isPresent()) {
+                    UsersType usersType = optionalUsersType.get();
                     int collegeId = 0;
                     if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                         StaffBean staffBean = staffService.findByUsernameRelation(users.getUsername());

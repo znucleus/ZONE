@@ -138,8 +138,9 @@ public class UsersViewController {
         roles.forEach(r -> rList.add(r.getRoleName()));
         modelMap.addAttribute("roles", String.join(",", rList));
 
-        UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-        if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+        Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+        if (optionalUsersType.isPresent()) {
+            UsersType usersType = optionalUsersType.get();
             if (StringUtils.equals(Workbook.SYSTEM_USERS_TYPE, usersType.getUsersTypeName())) {
                 page = "web/platform/users/users_profile_system::#page-wrapper";
             } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {

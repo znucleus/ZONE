@@ -16,6 +16,7 @@ import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import java.util.Objects;
+import java.util.Optional;
 
 @Controller
 public class PotentialViewController {
@@ -47,21 +48,28 @@ public class PotentialViewController {
         String page;
         Users users = SessionUtil.getUserFromSession();
         if (Objects.nonNull(users.getUsersTypeId()) && users.getUsersTypeId() > 0) {
-            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-            if (StringUtils.equals(usersType.getUsersTypeName(), Workbook.POTENTIAL_USERS_TYPE)) {
-                PotentialBean bean = potentialService.findByUsernameRelation(users.getUsername());
-                modelMap.addAttribute("potential", bean);
-                if (StringUtils.equals(type, Workbook.UPGRADE_STUDENT)) {
-                    page = "web/data/potential/upgrade_student::#page-wrapper";
-                } else if (StringUtils.equals(type, Workbook.UPGRADE_STAFF)) {
-                    page = "web/data/potential/upgrade_staff::#page-wrapper";
+            Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+            if (optionalUsersType.isPresent()) {
+                UsersType usersType = optionalUsersType.get();
+                if (StringUtils.equals(usersType.getUsersTypeName(), Workbook.POTENTIAL_USERS_TYPE)) {
+                    PotentialBean bean = potentialService.findByUsernameRelation(users.getUsername());
+                    modelMap.addAttribute("potential", bean);
+                    if (StringUtils.equals(type, Workbook.UPGRADE_STUDENT)) {
+                        page = "web/data/potential/upgrade_student::#page-wrapper";
+                    } else if (StringUtils.equals(type, Workbook.UPGRADE_STAFF)) {
+                        page = "web/data/potential/upgrade_staff::#page-wrapper";
+                    } else {
+                        config.buildDangerTip("升级错误", "暂不支持升级其它类型");
+                        config.dataMerging(modelMap);
+                        page = "inline_tip::#page-wrapper";
+                    }
                 } else {
-                    config.buildDangerTip("升级错误", "暂不支持升级其它类型");
+                    config.buildDangerTip("类型错误", "非临时用户不允许升级其它类型");
                     config.dataMerging(modelMap);
                     page = "inline_tip::#page-wrapper";
                 }
             } else {
-                config.buildDangerTip("类型错误", "非临时用户不允许升级其它类型");
+                config.buildDangerTip("查询错误", "未查询到用户类型信息");
                 config.dataMerging(modelMap);
                 page = "inline_tip::#page-wrapper";
             }

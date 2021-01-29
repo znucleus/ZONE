@@ -95,8 +95,9 @@ public class SystemMailViewController {
                     usersService.update(users);
                     // 检查是否有默认角色
                     String subTitle = "您可以登录系统进行资料完善，耐心等待管理员审核您的角色权限，审核结果会发致您的邮箱，请注意查收。";
-                    UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-                    if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+                    Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+                    if (optionalUsersType.isPresent()) {
+                        UsersType usersType = optionalUsersType.get();
                         int collegeId = 0;
                         if (StringUtils.equals(usersType.getUsersTypeName(), Workbook.STAFF_USERS_TYPE)) {
                             StaffBean bean = staffService.findByUsernameRelation(users.getUsername());

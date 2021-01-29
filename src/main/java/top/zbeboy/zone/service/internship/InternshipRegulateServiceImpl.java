@@ -25,6 +25,7 @@ import top.zbeboy.zone.web.util.SessionUtil;
 import javax.annotation.Resource;
 import java.sql.Timestamp;
 import java.util.Objects;
+import java.util.Optional;
 
 import static top.zbeboy.zbase.domain.Tables.INTERNSHIP_REGULATE;
 
@@ -157,8 +158,9 @@ public class InternshipRegulateServiceImpl implements InternshipRegulateService,
             if (dataRangeInt == 1) {
                 int staffId = 0;
                 Users users = SessionUtil.getUserFromSession();
-                UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-                if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+                Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+                if (optionalUsersType.isPresent()) {
+                    UsersType usersType = optionalUsersType.get();
                     if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                         StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
                         if (Objects.nonNull(bean.getStaffId()) && bean.getStaffId() > 0) {

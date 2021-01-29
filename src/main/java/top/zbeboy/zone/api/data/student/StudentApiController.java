@@ -17,6 +17,7 @@ import top.zbeboy.zbase.config.ZoneProperties;
 import top.zbeboy.zbase.domain.tables.pojos.RosterData;
 import top.zbeboy.zbase.domain.tables.pojos.Student;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
+import top.zbeboy.zbase.domain.tables.pojos.UsersType;
 import top.zbeboy.zbase.feign.campus.roster.RosterReleaseService;
 import top.zbeboy.zbase.feign.data.StudentService;
 import top.zbeboy.zbase.feign.data.WeiXinService;
@@ -39,6 +40,7 @@ import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 public class StudentApiController {
@@ -162,47 +164,53 @@ public class StudentApiController {
         }
 
         if (canRegister) {
-            studentAddVo.setEnabled(BooleanUtil.toByte(true));
-            studentAddVo.setAccountNonExpired(BooleanUtil.toByte(true));
-            studentAddVo.setCredentialsNonExpired(BooleanUtil.toByte(true));
-            studentAddVo.setAccountNonLocked(BooleanUtil.toByte(true));
-            studentAddVo.setUsersTypeId(usersTypeService.findByUsersTypeName(Workbook.STUDENT_USERS_TYPE).getUsersTypeId());
-            studentAddVo.setAvatar(Workbook.USERS_AVATAR);
-            DateTime dateTime = DateTime.now();
-            dateTime = dateTime.plusDays(ZoneProperties.getMail().getValidCodeTime());
-            studentAddVo.setMailboxVerifyCode(RandomUtil.generateEmailCheckKey());
-            studentAddVo.setMailboxVerifyValid(DateTimeUtil.utilDateToSqlTimestamp(dateTime.toDate()));
-            studentAddVo.setLangKey(request.getLocale().toLanguageTag());
-            studentAddVo.setJoinDate(DateTimeUtil.getNowSqlDate());
+            Optional<UsersType> optionalUsersType = usersTypeService.findByUsersTypeName(Workbook.STAFF_USERS_TYPE);
+            if(optionalUsersType.isPresent()){
+                UsersType usersType = optionalUsersType.get();
+                studentAddVo.setEnabled(BooleanUtil.toByte(true));
+                studentAddVo.setAccountNonExpired(BooleanUtil.toByte(true));
+                studentAddVo.setCredentialsNonExpired(BooleanUtil.toByte(true));
+                studentAddVo.setAccountNonLocked(BooleanUtil.toByte(true));
+                studentAddVo.setUsersTypeId(usersType.getUsersTypeId());
+                studentAddVo.setAvatar(Workbook.USERS_AVATAR);
+                DateTime dateTime = DateTime.now();
+                dateTime = dateTime.plusDays(ZoneProperties.getMail().getValidCodeTime());
+                studentAddVo.setMailboxVerifyCode(RandomUtil.generateEmailCheckKey());
+                studentAddVo.setMailboxVerifyValid(DateTimeUtil.utilDateToSqlTimestamp(dateTime.toDate()));
+                studentAddVo.setLangKey(request.getLocale().toLanguageTag());
+                studentAddVo.setJoinDate(DateTimeUtil.getNowSqlDate());
 
-            // 同步花名册
-            RosterData rosterData = rosterReleaseService.findRosterDataByStudentNumber(studentAddVo.getStudentNumber());
-            if (Objects.nonNull(rosterData) && StringUtils.isNotBlank(rosterData.getRosterDataId())) {
-                studentAddVo.setBirthday(rosterData.getBirthday());
-                studentAddVo.setSex(rosterData.getSex());
-                studentAddVo.setPoliticalLandscapeId(rosterData.getPoliticalLandscapeId());
-                studentAddVo.setNationId(rosterData.getNationId());
-                studentAddVo.setDormitoryNumber(rosterData.getDormitoryNumber());
-                studentAddVo.setParentName(rosterData.getParentName());
-                studentAddVo.setParentContactPhone(rosterData.getParentContactPhone());
-            }
-
-            ajaxUtil = studentService.save(studentAddVo);
-            if (ajaxUtil.getState()) {
-                // 注册微信
-                if(StringUtils.isNotBlank(studentAddVo.getResCode()) && StringUtils.isNotBlank(studentAddVo.getAppId())
-                        &&StringUtils.isNotBlank(studentAddVo.getSecret())){
-                    weiXinService.save(studentAddVo.getResCode(), studentAddVo.getAppId(), studentAddVo.getSecret(), studentAddVo.getUsername());
+                // 同步花名册
+                RosterData rosterData = rosterReleaseService.findRosterDataByStudentNumber(studentAddVo.getStudentNumber());
+                if (Objects.nonNull(rosterData) && StringUtils.isNotBlank(rosterData.getRosterDataId())) {
+                    studentAddVo.setBirthday(rosterData.getBirthday());
+                    studentAddVo.setSex(rosterData.getSex());
+                    studentAddVo.setPoliticalLandscapeId(rosterData.getPoliticalLandscapeId());
+                    studentAddVo.setNationId(rosterData.getNationId());
+                    studentAddVo.setDormitoryNumber(rosterData.getDormitoryNumber());
+                    studentAddVo.setParentName(rosterData.getParentName());
+                    studentAddVo.setParentContactPhone(rosterData.getParentContactPhone());
                 }
 
-                Users users = new Users();
-                users.setUsername(studentAddVo.getUsername());
-                users.setLangKey(studentAddVo.getLangKey());
-                users.setMailboxVerifyCode(studentAddVo.getMailboxVerifyCode());
-                users.setMailboxVerifyValid(studentAddVo.getMailboxVerifyValid());
-                users.setEmail(studentAddVo.getEmail());
-                users.setRealName(studentAddVo.getRealName());
-                systemMailService.sendValidEmailMail(users, RequestUtil.getBaseUrl(request));
+                ajaxUtil = studentService.save(studentAddVo);
+                if (ajaxUtil.getState()) {
+                    // 注册微信
+                    if(StringUtils.isNotBlank(studentAddVo.getResCode()) && StringUtils.isNotBlank(studentAddVo.getAppId())
+                            &&StringUtils.isNotBlank(studentAddVo.getSecret())){
+                        weiXinService.save(studentAddVo.getResCode(), studentAddVo.getAppId(), studentAddVo.getSecret(), studentAddVo.getUsername());
+                    }
+
+                    Users users = new Users();
+                    users.setUsername(studentAddVo.getUsername());
+                    users.setLangKey(studentAddVo.getLangKey());
+                    users.setMailboxVerifyCode(studentAddVo.getMailboxVerifyCode());
+                    users.setMailboxVerifyValid(studentAddVo.getMailboxVerifyValid());
+                    users.setEmail(studentAddVo.getEmail());
+                    users.setRealName(studentAddVo.getRealName());
+                    systemMailService.sendValidEmailMail(users, RequestUtil.getBaseUrl(request));
+                }
+            } else {
+                ajaxUtil.fail().msg("未查询到用户类型信息");
             }
         }
 

@@ -60,8 +60,9 @@ public class InternshipApplyViewController {
     @GetMapping("/web/menu/internship/apply")
     public String index(ModelMap modelMap) {
         Users users = SessionUtil.getUserFromSession();
-        UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-        if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+        Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+        if (optionalUsersType.isPresent()) {
+            UsersType usersType = optionalUsersType.get();
             modelMap.put("usersType", usersType.getUsersTypeName());
         }
         return "web/internship/apply/internship_apply::#page-wrapper";
@@ -130,8 +131,9 @@ public class InternshipApplyViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         Users users = SessionUtil.getUserFromSession();
-        UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-        if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+        Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+        if (optionalUsersType.isPresent()) {
+            UsersType usersType = optionalUsersType.get();
             if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
                 page = "web/internship/apply/internship_apply_my::#page-wrapper";
             } else {

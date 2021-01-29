@@ -14,6 +14,7 @@ import top.zbeboy.zbase.config.ZoneProperties;
 import top.zbeboy.zbase.domain.tables.pojos.Role;
 import top.zbeboy.zbase.domain.tables.pojos.SystemConfigure;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
+import top.zbeboy.zbase.domain.tables.pojos.UsersType;
 import top.zbeboy.zbase.feign.data.StaffService;
 import top.zbeboy.zbase.feign.platform.UsersService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
@@ -97,30 +98,36 @@ public class StaffRestController {
         if (!ObjectUtils.isEmpty(session.getAttribute(staffAddVo.getMobile() + SystemMobileConfig.MOBILE_VALID))) {
             boolean isValid = (boolean) session.getAttribute(staffAddVo.getMobile() + SystemMobileConfig.MOBILE_VALID);
             if (isValid) {
-                staffAddVo.setEnabled(BooleanUtil.toByte(true));
-                staffAddVo.setAccountNonExpired(BooleanUtil.toByte(true));
-                staffAddVo.setCredentialsNonExpired(BooleanUtil.toByte(true));
-                staffAddVo.setAccountNonLocked(BooleanUtil.toByte(true));
-                staffAddVo.setUsersTypeId(usersTypeService.findByUsersTypeName(Workbook.STAFF_USERS_TYPE).getUsersTypeId());
-                staffAddVo.setAvatar(Workbook.USERS_AVATAR);
-                DateTime dateTime = DateTime.now();
-                dateTime = dateTime.plusDays(ZoneProperties.getMail().getValidCodeTime());
-                staffAddVo.setMailboxVerifyCode(RandomUtil.generateEmailCheckKey());
-                staffAddVo.setMailboxVerifyValid(DateTimeUtil.utilDateToSqlTimestamp(dateTime.toDate()));
-                staffAddVo.setJoinDate(DateTimeUtil.getNowSqlDate());
-                staffAddVo.setLangKey(request.getLocale().toLanguageTag());
-                staffAddVo.setBaseUrl(RequestUtil.getBaseUrl(request));
-                ajaxUtil = staffService.save(staffAddVo);
+                Optional<UsersType> optionalUsersType = usersTypeService.findByUsersTypeName(Workbook.STAFF_USERS_TYPE);
+                if(optionalUsersType.isPresent()){
+                    UsersType usersType = optionalUsersType.get();
+                    staffAddVo.setEnabled(BooleanUtil.toByte(true));
+                    staffAddVo.setAccountNonExpired(BooleanUtil.toByte(true));
+                    staffAddVo.setCredentialsNonExpired(BooleanUtil.toByte(true));
+                    staffAddVo.setAccountNonLocked(BooleanUtil.toByte(true));
+                    staffAddVo.setUsersTypeId(usersType.getUsersTypeId());
+                    staffAddVo.setAvatar(Workbook.USERS_AVATAR);
+                    DateTime dateTime = DateTime.now();
+                    dateTime = dateTime.plusDays(ZoneProperties.getMail().getValidCodeTime());
+                    staffAddVo.setMailboxVerifyCode(RandomUtil.generateEmailCheckKey());
+                    staffAddVo.setMailboxVerifyValid(DateTimeUtil.utilDateToSqlTimestamp(dateTime.toDate()));
+                    staffAddVo.setJoinDate(DateTimeUtil.getNowSqlDate());
+                    staffAddVo.setLangKey(request.getLocale().toLanguageTag());
+                    staffAddVo.setBaseUrl(RequestUtil.getBaseUrl(request));
+                    ajaxUtil = staffService.save(staffAddVo);
 
-                if (ajaxUtil.getState()) {
-                    Users users = new Users();
-                    users.setUsername(staffAddVo.getUsername());
-                    users.setLangKey(staffAddVo.getLangKey());
-                    users.setMailboxVerifyCode(staffAddVo.getMailboxVerifyCode());
-                    users.setMailboxVerifyValid(staffAddVo.getMailboxVerifyValid());
-                    users.setEmail(staffAddVo.getEmail());
-                    users.setRealName(staffAddVo.getRealName());
-                    systemMailService.sendValidEmailMail(users, staffAddVo.getBaseUrl());
+                    if (ajaxUtil.getState()) {
+                        Users users = new Users();
+                        users.setUsername(staffAddVo.getUsername());
+                        users.setLangKey(staffAddVo.getLangKey());
+                        users.setMailboxVerifyCode(staffAddVo.getMailboxVerifyCode());
+                        users.setMailboxVerifyValid(staffAddVo.getMailboxVerifyValid());
+                        users.setEmail(staffAddVo.getEmail());
+                        users.setRealName(staffAddVo.getRealName());
+                        systemMailService.sendValidEmailMail(users, staffAddVo.getBaseUrl());
+                    }
+                } else {
+                    ajaxUtil.fail().msg("未查询到用户类型信息");
                 }
             } else {
                 ajaxUtil.fail().msg("验证手机号失败");

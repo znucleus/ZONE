@@ -43,10 +43,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 public class TrainingAttendRestController {
@@ -515,8 +512,9 @@ public class TrainingAttendRestController {
         AjaxUtil<TrainingAttendUsersBean> ajaxUtil = AjaxUtil.of();
         List<TrainingAttendUsersBean> beans = new ArrayList<>();
         Users users = SessionUtil.getUserFromSession();
-        UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-        if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+        Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+        if (optionalUsersType.isPresent()) {
+            UsersType usersType = optionalUsersType.get();
             if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
                 StudentBean studentBean = studentService.findByUsername(users.getUsername());
                 if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {

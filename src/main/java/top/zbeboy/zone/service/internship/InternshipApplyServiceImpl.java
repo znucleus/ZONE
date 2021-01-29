@@ -169,8 +169,9 @@ public class InternshipApplyServiceImpl implements InternshipApplyService, Pagin
     public Condition extraCondition(SimplePaginationUtil paginationUtil) {
         Condition a = null;
         Users users = SessionUtil.getUserFromSession();
-        UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-        if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+        Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+        if (optionalUsersType.isPresent()) {
+            UsersType usersType = optionalUsersType.get();
             if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
                 StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
                 if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {

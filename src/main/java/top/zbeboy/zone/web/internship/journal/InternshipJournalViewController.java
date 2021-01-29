@@ -78,8 +78,9 @@ public class InternshipJournalViewController {
             modelMap.addAttribute("authorities", Workbook.authorities.ROLE_ADMIN.name());
         }
 
-        UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-        if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+        Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+        if (optionalUsersType.isPresent()) {
+            UsersType usersType = optionalUsersType.get();
             modelMap.addAttribute("usersTypeName", usersType.getUsersTypeName());
 
             if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {

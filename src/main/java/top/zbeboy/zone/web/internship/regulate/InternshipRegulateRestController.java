@@ -162,8 +162,9 @@ public class InternshipRegulateRestController {
         Select2Data select2Data = Select2Data.of();
         if (internshipConditionCommon.basicCondition(id)) {
             Users users = SessionUtil.getUserFromSession();
-            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-            if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+            Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+            if (optionalUsersType.isPresent()) {
+                UsersType usersType = optionalUsersType.get();
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                     StaffBean staffBean = staffService.findByUsernameRelation(users.getUsername());
                     if (Objects.nonNull(staffBean) && Objects.nonNull(staffBean.getStaffId()) && staffBean.getStaffId() > 0) {
@@ -216,8 +217,9 @@ public class InternshipRegulateRestController {
         if (!bindingResult.hasErrors()) {
             if (internshipConditionCommon.regulateCondition(internshipRegulateAddVo.getInternshipReleaseId())) {
                 Users users = SessionUtil.getUserFromSession();
-                UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-                if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+                Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+                if (optionalUsersType.isPresent()) {
+                    UsersType usersType = optionalUsersType.get();
                     if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                         StaffBean staffBean = staffService.findByUsernameRelation(users.getUsername());
                         if (Objects.nonNull(staffBean) && Objects.nonNull(staffBean.getStaffId()) && staffBean.getStaffId() > 0) {

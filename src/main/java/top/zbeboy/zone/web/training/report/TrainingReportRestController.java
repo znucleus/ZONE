@@ -188,8 +188,9 @@ public class TrainingReportRestController {
         bean.setAge("");
         bean.setAcademicTitleName("");
 
-        UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-        if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+        Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+        if (optionalUsersType.isPresent()) {
+            UsersType usersType = optionalUsersType.get();
             if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                 StaffBean staffBean = staffService.findByUsernameRelation(users.getUsername());
                 if (Objects.nonNull(staffBean) && Objects.nonNull(staffBean.getStaffId()) && staffBean.getStaffId() > 0) {
@@ -239,8 +240,9 @@ public class TrainingReportRestController {
             bean.setAge("");
             bean.setAcademicTitleName("");
 
-            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-            if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+            Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+            if (optionalUsersType.isPresent()) {
+                UsersType usersType = optionalUsersType.get();
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                     StaffBean staffBean = staffService.findByUsernameRelation(users.getUsername());
                     if (Objects.nonNull(staffBean) && Objects.nonNull(staffBean.getStaffId()) && staffBean.getStaffId() > 0) {
@@ -315,8 +317,9 @@ public class TrainingReportRestController {
         bean.setStudentNumber("");
         bean.setStudentName("");
 
-        UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-        if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+        Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+        if (optionalUsersType.isPresent()) {
+            UsersType usersType = optionalUsersType.get();
             if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
                 StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
                 if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
@@ -353,8 +356,9 @@ public class TrainingReportRestController {
             bean.setStudentNumber("");
             bean.setStudentName("");
 
-            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-            if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+            Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+            if (optionalUsersType.isPresent()) {
+                UsersType usersType = optionalUsersType.get();
                 if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
                     StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
                     if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {

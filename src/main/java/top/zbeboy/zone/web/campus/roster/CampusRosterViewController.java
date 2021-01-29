@@ -25,6 +25,7 @@ import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import java.util.Objects;
+import java.util.Optional;
 
 @Controller
 public class CampusRosterViewController {
@@ -65,8 +66,9 @@ public class CampusRosterViewController {
         String page;
         Users users = SessionUtil.getUserFromSession();
         if (rosterReleaseService.canRelease(users.getUsername())) {
-            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-            if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+            Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+            if (optionalUsersType.isPresent()) {
+                UsersType usersType = optionalUsersType.get();
                 int collegeId = 0;
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                     StaffBean bean = staffService.findByUsernameRelation(users.getUsername());

@@ -71,8 +71,9 @@ public class InternshipConditionCommon {
             if (internshipReleaseRecord.isPresent()) {
                 InternshipReleaseBean bean = internshipReleaseRecord.get().into(InternshipReleaseBean.class);
 
-                UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-                if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+                Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+                if (optionalUsersType.isPresent()) {
+                    UsersType usersType = optionalUsersType.get();
                     int collegeId = 0;
                     if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                         StaffBean staffBean = staffService.findByUsernameRelation(users.getUsername());
@@ -156,8 +157,9 @@ public class InternshipConditionCommon {
     public boolean applyCondition(String internshipReleaseId) {
         boolean canOperator = false;
         Users users = SessionUtil.getUserFromSession();
-        UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-        if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+        Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+        if (optionalUsersType.isPresent()) {
+            UsersType usersType = optionalUsersType.get();
             // 检测是否学生类型
             if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
                 StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
@@ -216,8 +218,9 @@ public class InternshipConditionCommon {
     public boolean applyEditCondition(String internshipReleaseId) {
         boolean canOperator = false;
         Users users = SessionUtil.getUserFromSession();
-        UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-        if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+        Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+        if (optionalUsersType.isPresent()) {
+            UsersType usersType = optionalUsersType.get();
             // 检测是否学生类型
             if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
                 StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
@@ -356,8 +359,9 @@ public class InternshipConditionCommon {
         boolean canOperator = false;
         if (basicCondition(internshipReleaseId)) {
             Users users = SessionUtil.getUserFromSession();
-            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-            if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+            Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+            if (optionalUsersType.isPresent()) {
+                UsersType usersType = optionalUsersType.get();
                 if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
                     StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
                     if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
@@ -383,8 +387,9 @@ public class InternshipConditionCommon {
         boolean canOperator = false;
         if (basicCondition(internshipReleaseId)) {
             Users users = SessionUtil.getUserFromSession();
-            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-            if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+            Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+            if (optionalUsersType.isPresent()) {
+                UsersType usersType = optionalUsersType.get();
                 if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
                     StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
                     if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
@@ -423,8 +428,9 @@ public class InternshipConditionCommon {
         } else if (roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_ADMIN.name())) {
             // 本院管理员可操作
             int collegeId = 0;
-            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-            if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+            Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+            if (optionalUsersType.isPresent()) {
+                UsersType usersType = optionalUsersType.get();
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                     StaffBean staffBean = staffService.findByUsernameRelation(users.getUsername());
                     if (Objects.nonNull(staffBean) && Objects.nonNull(staffBean.getStaffId()) && staffBean.getStaffId() > 0) {
@@ -446,8 +452,9 @@ public class InternshipConditionCommon {
                 }
             }
         } else {
-            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-            if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+            Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+            if (optionalUsersType.isPresent()) {
+                UsersType usersType = optionalUsersType.get();
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                     StaffBean staffBean = staffService.findByUsernameRelation(users.getUsername());
                     if (Objects.nonNull(staffBean) && Objects.nonNull(staffBean.getStaffId()) && staffBean.getStaffId() > 0) {
@@ -495,8 +502,9 @@ public class InternshipConditionCommon {
                     canOperator = true;
                 } else {
                     if (internshipJournal.getIsSeeStaff() == 1) {
-                        UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-                        if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+                        Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+                        if (optionalUsersType.isPresent()) {
+                            UsersType usersType = optionalUsersType.get();
                             canOperator = StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName());
                         }
                     } else {
@@ -519,8 +527,9 @@ public class InternshipConditionCommon {
         boolean canOperator = false;
         if (basicCondition(internshipReleaseId)) {
             Users users = SessionUtil.getUserFromSession();
-            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-            if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+            Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+            if (optionalUsersType.isPresent()) {
+                UsersType usersType = optionalUsersType.get();
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                     StaffBean staffBean = staffService.findByUsernameRelation(users.getUsername());
                     if (Objects.nonNull(staffBean) && Objects.nonNull(staffBean.getStaffId()) && staffBean.getStaffId() > 0) {
@@ -550,8 +559,9 @@ public class InternshipConditionCommon {
         } else if (roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_ADMIN.name())) {
             // 本院管理员可操作
             int collegeId = 0;
-            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-            if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+            Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+            if (optionalUsersType.isPresent()) {
+                UsersType usersType = optionalUsersType.get();
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                     StaffBean staffBean = staffService.findByUsernameRelation(users.getUsername());
                     if (Objects.nonNull(staffBean) && Objects.nonNull(staffBean.getStaffId()) && staffBean.getStaffId() > 0) {
@@ -573,8 +583,9 @@ public class InternshipConditionCommon {
                 }
             }
         } else {
-            UsersType usersType = usersTypeService.findById(users.getUsersTypeId());
-            if (Objects.nonNull(usersType.getUsersTypeId()) && usersType.getUsersTypeId() > 0) {
+            Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+            if (optionalUsersType.isPresent()) {
+                UsersType usersType = optionalUsersType.get();
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                     StaffBean staffBean = staffService.findByUsernameRelation(users.getUsername());
                     if (Objects.nonNull(staffBean) && Objects.nonNull(staffBean.getStaffId()) && staffBean.getStaffId() > 0) {
