@@ -26,10 +26,7 @@ import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 public class CalendarRestController {
@@ -164,8 +161,8 @@ public class CalendarRestController {
     @GetMapping("/web/educational/calendars")
     public ResponseEntity<Map<String, Object>> calendars(@RequestParam("collegeId") int collegeId, HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
-        List<SchoolCalendar> schoolCalendars = schoolCalendarService.findRecentlyByCollegeId(collegeId);
-        schoolCalendars.forEach(schoolCalendar -> select2Data.add(schoolCalendar.getCalendarId(), schoolCalendar.getTitle()));
+        Optional<List<SchoolCalendar>> optionalSchoolCalendars = schoolCalendarService.findRecentlyByCollegeId(collegeId);
+        optionalSchoolCalendars.ifPresent(schoolCalendars -> schoolCalendars.forEach(schoolCalendar -> select2Data.add(schoolCalendar.getCalendarId(), schoolCalendar.getTitle())));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
 
@@ -178,9 +175,10 @@ public class CalendarRestController {
     @ApiLoggingRecord(remark = "教务校历查看", channel = Workbook.channel.WEB, needLogin = true)
     @GetMapping("/web/educational/calendar/look")
     public ResponseEntity<Map<String, Object>> look(@RequestParam("calendarId") String calendarId, HttpServletRequest request) {
-        SchoolCalendarBean bean = schoolCalendarService.findByIdRelation(calendarId);
+        Optional<SchoolCalendarBean> optionalSchoolCalendarBean = schoolCalendarService.findByIdRelation(calendarId);
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        if (Objects.nonNull(bean) && StringUtils.isNotBlank(bean.getCalendarId())) {
+        if (optionalSchoolCalendarBean.isPresent()) {
+            SchoolCalendarBean bean = optionalSchoolCalendarBean.get();
             bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime()));
             bean.setNowDate(DateTimeUtil.getNowSqlDate());
             bean.setOpenWeeks(DateTimeUtil.calculationTwoDateDifferWeeks(bean.getStartDate(), bean.getEndDate()));

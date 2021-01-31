@@ -147,9 +147,16 @@ public class CalendarViewController {
         String page;
         Users users = SessionUtil.getUserFromSession();
         if (schoolCalendarService.canOperator(users.getUsername(), id)) {
-            SchoolCalendar schoolCalendar = schoolCalendarService.findById(id);
-            modelMap.addAttribute("schoolCalendar", schoolCalendar);
-            page = "web/educational/calendar/calendar_edit::#page-wrapper";
+            Optional<SchoolCalendar> optionalSchoolCalendar = schoolCalendarService.findById(id);
+            if(optionalSchoolCalendar.isPresent()){
+                modelMap.addAttribute("schoolCalendar", optionalSchoolCalendar.get());
+                page = "web/educational/calendar/calendar_edit::#page-wrapper";
+            } else {
+                config.buildDangerTip("查询错误", "未查询到数据");
+                config.dataMerging(modelMap);
+                page = "inline_tip::#page-wrapper";
+            }
+
         } else {
             config.buildWarningTip("操作警告", "您无权限操作");
             config.dataMerging(modelMap);

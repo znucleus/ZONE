@@ -40,10 +40,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 public class CampusRosterRestController {
@@ -63,8 +60,8 @@ public class CampusRosterRestController {
     @PostMapping("/anyone/campus/roster/check_student_number")
     public ResponseEntity<Map<String, Object>> checkStudentNumber(@RequestParam("studentNumber") String studentNumber) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        RosterData rosterData = rosterReleaseService.findRosterDataByStudentNumber(studentNumber);
-        if (Objects.nonNull(rosterData) && StringUtils.isNotBlank(rosterData.getRosterDataId())) {
+        Optional<RosterData> optionalRosterData = rosterReleaseService.findRosterDataByStudentNumber(studentNumber);
+        if (optionalRosterData.isPresent()) {
             ajaxUtil.success().msg("已填写");
         } else {
             ajaxUtil.fail().msg("未填写");
@@ -202,13 +199,14 @@ public class CampusRosterRestController {
     public ResponseEntity<Map<String, Object>> dataOuterSave(@Valid RosterDataAddVo rosterDataAddVo, BindingResult bindingResult, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
-            RosterRelease rosterRelease = rosterReleaseService.findById(rosterDataAddVo.getRosterReleaseId());
-            if (Objects.nonNull(rosterRelease) && StringUtils.isNotBlank(rosterRelease.getRosterReleaseId())) {
+            Optional<RosterRelease> optionalRosterRelease = rosterReleaseService.findById(rosterDataAddVo.getRosterReleaseId());
+            if (optionalRosterRelease.isPresent()) {
+                RosterRelease rosterRelease = optionalRosterRelease.get();
                 // 时间范围
                 if (DateTimeUtil.nowAfterSqlTimestamp(rosterRelease.getStartTime()) &&
                         DateTimeUtil.nowBeforeSqlTimestamp(rosterRelease.getEndTime())) {
-                    RosterData rosterData = rosterReleaseService.findRosterDataByStudentNumber(rosterDataAddVo.getStudentNumber());
-                    if (Objects.isNull(rosterData) || StringUtils.isBlank(rosterData.getRosterDataId())) {
+                    Optional<RosterData> optionalRosterData = rosterReleaseService.findRosterDataByStudentNumber(rosterDataAddVo.getStudentNumber());
+                    if (!optionalRosterData.isPresent()) {
                         ajaxUtil = rosterReleaseService.dataSave(rosterDataAddVo);
                     } else {
                         ajaxUtil.fail().msg("保存失败，该学号已登记，若需要修改请登录。");
@@ -303,63 +301,10 @@ public class CampusRosterRestController {
      */
     @PostMapping("/web/campus/roster/review/data")
     public ResponseEntity<DataTablesUtil> reviewData(HttpServletRequest request) {
-        // 前台数据标题 注：要和前台标题顺序一致，获取order用
-        List<String> headers = new ArrayList<>();
-        headers.add("#");
-        headers.add("select");
-        headers.add("studentNumber");
-        headers.add("realName");
-        headers.add("namePinyin");
-        headers.add("sex");
-        headers.add("birthday");
-        headers.add("idCard");
-        headers.add("politicalLandscapeName");
-        headers.add("nationName");
-        headers.add("organizeName");
-        headers.add("province");
-        headers.add("nativePlace");
-        headers.add("region");
-        headers.add("busSection");
-        headers.add("parentName");
-        headers.add("parentContactPhone");
-        headers.add("parentContactAddress");
-        headers.add("zipCode");
-        headers.add("phoneNumber");
-        headers.add("email");
-        headers.add("candidatesType");
-        headers.add("isDeformedMan");
-        headers.add("deformedManCode");
-        headers.add("isMilitaryServiceRegistration");
-        headers.add("isProvideLoan");
-        headers.add("universityPosition");
-        headers.add("isPoorStudents");
-        headers.add("poorStudentsType");
-        headers.add("isStayOutside");
-        headers.add("dormitoryNumber");
-        headers.add("stayOutsideType");
-        headers.add("stayOutsideAddress");
-        headers.add("leagueMemberJoinDate");
-        headers.add("isRegisteredVolunteers");
-        headers.add("isOkLeagueMembership");
-        headers.add("applyPartyMembershipDate");
-        headers.add("becomeActivistsDate");
-        headers.add("becomeProbationaryPartyMemberDate");
-        headers.add("joiningPartyDate");
-        headers.add("createDateStr");
-        headers.add("operator");
-        DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
         Users users = SessionUtil.getUserFromSession();
-        dataTablesUtil.setUsername(users.getUsername());
-
-        JSONObject search = dataTablesUtil.getSearch();
-        String rosterReleaseId = search.getString("rosterReleaseId");
-        if (StringUtils.isNotBlank(rosterReleaseId) &&
-                rosterReleaseService.canReview(users.getUsername(), rosterReleaseId)) {
-            dataTablesUtil = rosterReleaseService.reviewData(dataTablesUtil);
-        } else {
-            dataTablesUtil.setData(new ArrayList<>());
-        }
-        return new ResponseEntity<>(dataTablesUtil, HttpStatus.OK);
+        HashMap<String, String> paramMap = RequestUtil.addValue(request, RequestUtil.commonUseKey.username.name(), users.getUsername());
+        Optional<DataTablesUtil> result = rosterReleaseService.reviewData(paramMap);
+        return new ResponseEntity<>(result.orElseGet(() -> new DataTablesUtil(request)), HttpStatus.OK);
     }
 
     /**
@@ -391,10 +336,10 @@ public class CampusRosterRestController {
         String rosterReleaseId = search.getString("rosterReleaseId");
         if (StringUtils.isNotBlank(rosterReleaseId) &&
                 rosterReleaseService.canReview(users.getUsername(), rosterReleaseId)) {
-            dataTablesUtil = rosterReleaseService.reviewData(dataTablesUtil);
-
-            List<RosterDataBean> rosterDataBeans = rosterReleaseService.reviewDataExport(dataTablesUtil);
-            RosterDataExport export = new RosterDataExport(rosterDataBeans);
+            List<RosterDataBean> beans;
+            Optional<List<RosterDataBean>> optionalRosterDataBeans = rosterReleaseService.reviewDataExport(dataTablesUtil);
+            beans = optionalRosterDataBeans.orElseGet(ArrayList::new);
+            RosterDataExport export = new RosterDataExport(beans);
             ExportInfo exportInfo = dataTablesUtil.getExportInfo();
             if (export.exportExcel(exportInfo.getLastPath(), exportInfo.getFileName(), exportInfo.getExt())) {
                 uploadService.download(exportInfo.getFileName(), exportInfo.getFilePath(), response, request);

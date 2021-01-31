@@ -12,6 +12,7 @@ import top.zbeboy.zone.web.system.tip.SystemTipConfig;
 
 import javax.annotation.Resource;
 import java.util.Objects;
+import java.util.Optional;
 
 @Controller
 public class QuestionnaireViewController {
@@ -27,9 +28,9 @@ public class QuestionnaireViewController {
     @GetMapping("/anyone/questionnaire/result/add/{id}")
     public String anyoneQuestionnaireAdd(@PathVariable("id") String id, ModelMap modelMap) {
         SystemTipConfig config = new SystemTipConfig();
-        QuestionnaireRelease questionnaireRelease = questionnaireService.findById(id);
-        if (Objects.nonNull(questionnaireRelease) &&
-                StringUtils.isNotBlank(questionnaireRelease.getQuestionnaireReleaseId())) {
+        Optional<QuestionnaireRelease> optionalQuestionnaireRelease = questionnaireService.findById(id);
+        if (optionalQuestionnaireRelease.isPresent()) {
+            QuestionnaireRelease questionnaireRelease = optionalQuestionnaireRelease.get();
             if (DateTimeUtil.nowRangeSqlDate(questionnaireRelease.getStartDate(), questionnaireRelease.getEndDate())) {
                 modelMap.addAttribute("questionnaireRelease", questionnaireRelease);
                 return "web/questionnaire/questionnaire_outer_add";

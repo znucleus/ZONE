@@ -130,8 +130,9 @@ public class StudentRestController {
                     studentAddVo.setJoinDate(DateTimeUtil.getNowSqlDate());
 
                     // 同步花名册
-                    RosterData rosterData = rosterReleaseService.findRosterDataByStudentNumber(studentAddVo.getStudentNumber());
-                    if (Objects.nonNull(rosterData) && StringUtils.isNotBlank(rosterData.getRosterDataId())) {
+                    Optional<RosterData> optionalRosterData = rosterReleaseService.findRosterDataByStudentNumber(studentAddVo.getStudentNumber());
+                    if (optionalRosterData.isPresent()) {
+                        RosterData rosterData = optionalRosterData.get();
                         studentAddVo.setBirthday(rosterData.getBirthday());
                         studentAddVo.setSex(rosterData.getSex());
                         studentAddVo.setPoliticalLandscapeId(rosterData.getPoliticalLandscapeId());

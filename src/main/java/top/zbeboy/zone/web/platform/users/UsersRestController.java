@@ -319,8 +319,9 @@ public class UsersRestController {
                     Optional<UsersType> optionalUsersType = usersTypeService.findById(own.getUsersTypeId());
                     if (optionalUsersType.isPresent() && StringUtils.equals(Workbook.STUDENT_USERS_TYPE, optionalUsersType.get().getUsersTypeName())) {
                         Student student = studentService.findByUsername(own.getUsername());
-                        RosterData rosterData = rosterReleaseService.findRosterDataByStudentNumber(student.getStudentNumber());
-                        if (Objects.nonNull(rosterData) && StringUtils.isNotBlank(rosterData.getRosterDataId())) {
+                        Optional<RosterData> optionalRosterData = rosterReleaseService.findRosterDataByStudentNumber(student.getStudentNumber());
+                        if (optionalRosterData.isPresent()) {
+                            RosterData rosterData = optionalRosterData.get();
                             rosterData.setRealName(value);
                             rosterData.setNamePinyin(PinYinUtil.changeToUpper(value));
                             rosterReleaseService.dataSync(rosterData);
@@ -415,8 +416,9 @@ public class UsersRestController {
                             Optional<UsersType> optionalUsersType = usersTypeService.findById(own.getUsersTypeId());
                             if (optionalUsersType.isPresent() && StringUtils.equals(Workbook.STUDENT_USERS_TYPE, optionalUsersType.get().getUsersTypeName())) {
                                 Student student = studentService.findByUsername(own.getUsername());
-                                RosterData rosterData = rosterReleaseService.findRosterDataByStudentNumber(student.getStudentNumber());
-                                if (Objects.nonNull(rosterData) && StringUtils.isNotBlank(rosterData.getRosterDataId())) {
+                                Optional<RosterData> optionalRosterData = rosterReleaseService.findRosterDataByStudentNumber(student.getStudentNumber());
+                                if (optionalRosterData.isPresent()) {
+                                    RosterData rosterData = optionalRosterData.get();
                                     rosterData.setIdCard(value);
                                     rosterReleaseService.dataSync(rosterData);
                                 }

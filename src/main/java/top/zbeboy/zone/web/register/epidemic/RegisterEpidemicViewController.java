@@ -14,6 +14,7 @@ import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import java.util.Objects;
+import java.util.Optional;
 
 @Controller
 public class RegisterEpidemicViewController {
@@ -65,9 +66,9 @@ public class RegisterEpidemicViewController {
         String page;
         Users users = SessionUtil.getUserFromSession();
         if (registerEpidemicService.epidemicOperator(users.getUsername())) {
-            EpidemicRegisterRelease epidemicRegisterRelease = registerEpidemicService.release(id);
-            if (Objects.nonNull(epidemicRegisterRelease) && StringUtils.isNotBlank(epidemicRegisterRelease.getEpidemicRegisterReleaseId())) {
-                modelMap.addAttribute("epidemicRegisterRelease", epidemicRegisterRelease);
+            Optional<EpidemicRegisterRelease> optionalEpidemicRegisterRelease = registerEpidemicService.release(id);
+            if (optionalEpidemicRegisterRelease.isPresent()) {
+                modelMap.addAttribute("epidemicRegisterRelease", optionalEpidemicRegisterRelease.get());
                 page = "web/register/epidemic/epidemic_release_edit::#page-wrapper";
             } else {
                 config.buildDangerTip("查询错误", "未查询到疫情登记发布数据");
@@ -91,11 +92,20 @@ public class RegisterEpidemicViewController {
      */
     @GetMapping("/web/register/epidemic/data/add/{id}")
     public String dataAdd(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
         Users users = SessionUtil.getUserFromSession();
-        EpidemicRegisterData epidemicRegisterData = registerEpidemicService.findTodayByUsernameAndEpidemicRegisterReleaseId(users.getUsername(), id);
-        modelMap.addAttribute("epidemicRegisterData", epidemicRegisterData);
-        modelMap.addAttribute("epidemicRegisterReleaseId", id);
-        return "web/register/epidemic/epidemic_data_add::#page-wrapper";
+        Optional<EpidemicRegisterData> optionalEpidemicRegisterData = registerEpidemicService.findTodayByUsernameAndEpidemicRegisterReleaseId(users.getUsername(), id);
+        if(optionalEpidemicRegisterData.isPresent()){
+            modelMap.addAttribute("epidemicRegisterData", optionalEpidemicRegisterData.get());
+            modelMap.addAttribute("epidemicRegisterReleaseId", id);
+            page = "web/register/epidemic/epidemic_data_add::#page-wrapper";
+        } else {
+            config.buildDangerTip("查询错误", "未查询到疫情登记数据");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
     }
 
     /**

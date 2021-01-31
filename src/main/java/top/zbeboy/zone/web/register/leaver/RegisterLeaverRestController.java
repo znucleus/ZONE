@@ -26,8 +26,10 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class RegisterLeaverRestController {
@@ -206,8 +208,9 @@ public class RegisterLeaverRestController {
     public void export(HttpServletRequest request, HttpServletResponse response) throws IOException {
         SimplePaginationUtil simplePaginationUtil = new SimplePaginationUtil(request, "studentNumber", "asc",
                 "离校登记数据表", Workbook.registerFilePath());
-        List<LeaverRegisterDataBean> beans = registerLeaverService.export(simplePaginationUtil);
-
+        Optional<List<LeaverRegisterDataBean>> optionalLeaverRegisterDataBeans = registerLeaverService.export(simplePaginationUtil);
+        List<LeaverRegisterDataBean> beans;
+        beans = optionalLeaverRegisterDataBeans.orElseGet(ArrayList::new);
         LeaverRegisterDataExport export = new LeaverRegisterDataExport(beans);
         ExportInfo exportInfo = simplePaginationUtil.getExportInfo();
         if (export.exportExcel(exportInfo.getLastPath(), exportInfo.getFileName(), exportInfo.getExt())) {

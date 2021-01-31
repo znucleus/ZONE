@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zbase.bean.data.staff.StaffBean;
 import top.zbeboy.zbase.bean.data.student.StudentBean;
+import top.zbeboy.zbase.bean.register.leaver.LeaverRegisterScopeBean;
 import top.zbeboy.zbase.config.Workbook;
+import top.zbeboy.zbase.domain.tables.pojos.LeaverRegisterOption;
 import top.zbeboy.zbase.domain.tables.pojos.LeaverRegisterRelease;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.domain.tables.pojos.UsersType;
@@ -20,6 +22,7 @@ import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -148,12 +151,14 @@ public class RegisterLeaverViewController {
             }
 
             if (canAccess) {
-                LeaverRegisterRelease leaverRegisterRelease = registerLeaverService.release(id);
-                if (Objects.nonNull(leaverRegisterRelease) && StringUtils.isNotBlank(leaverRegisterRelease.getLeaverRegisterReleaseId())) {
-                    modelMap.addAttribute("leaverRegisterRelease", leaverRegisterRelease);
-                    modelMap.addAttribute("leaverRegisterOptions", registerLeaverService.leaverRegisterOptions(id));
-                    modelMap.addAttribute("leaverRegisterScopes",
-                            registerLeaverService.leaverRegisterScopes(id));
+                Optional<LeaverRegisterRelease> optionalLeaverRegisterRelease = registerLeaverService.release(id);
+                Optional<List<LeaverRegisterOption>> optionalLeaverRegisterOptions = registerLeaverService.leaverRegisterOptions(id);
+                Optional<List<LeaverRegisterScopeBean>> optionalLeaverRegisterScopeBeans = registerLeaverService.leaverRegisterScopes(id);
+                if (optionalLeaverRegisterRelease.isPresent() && optionalLeaverRegisterOptions.isPresent() && optionalLeaverRegisterScopeBeans.isPresent()) {
+                    modelMap.addAttribute("leaverRegisterRelease", optionalLeaverRegisterRelease.get());
+                    modelMap.addAttribute("leaverRegisterOptions", optionalLeaverRegisterOptions.get());
+                    modelMap.addAttribute("leaverRegisterScopes", optionalLeaverRegisterScopeBeans.get()
+                    );
                 } else {
                     config.buildDangerTip("查询错误", "未查询到离校登记发布数据");
                     config.dataMerging(modelMap);

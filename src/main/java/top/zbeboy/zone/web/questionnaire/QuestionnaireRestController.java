@@ -12,6 +12,7 @@ import top.zbeboy.zbase.vo.questionnaire.QuestionnaireResultAddVo;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class QuestionnaireRestController {
@@ -26,9 +27,13 @@ public class QuestionnaireRestController {
      */
     @GetMapping("/anyone/questionnaire/subjects/{id}")
     public ResponseEntity<Map<String, Object>> subjects(@PathVariable("id") String id) {
-        List<QuestionnaireSubjectBean> subjectBeans = questionnaireService.subjects(id);
+        Optional<List<QuestionnaireSubjectBean>> optionalQuestionnaireSubjectBeans = questionnaireService.subjects(id);
         AjaxUtil<QuestionnaireSubjectBean> ajaxUtil = AjaxUtil.of();
-        ajaxUtil.success().list(subjectBeans).msg("获取数据成功");
+        if(optionalQuestionnaireSubjectBeans.isPresent()){
+            ajaxUtil.success().list(optionalQuestionnaireSubjectBeans.get()).msg("获取数据成功");
+        } else {
+            ajaxUtil.fail().msg("获取数据失败");
+        }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 

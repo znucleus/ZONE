@@ -109,11 +109,18 @@ public class CampusRosterViewController {
         String page;
         Users users = SessionUtil.getUserFromSession();
         if (rosterReleaseService.canOperator(users.getUsername(), id)) {
-            RosterRelease rosterRelease = rosterReleaseService.findById(id);
-            modelMap.addAttribute("rosterRelease", rosterRelease);
-            modelMap.addAttribute("startTimeStr", DateTimeUtil.defaultFormatSqlTimestamp(rosterRelease.getStartTime()));
-            modelMap.addAttribute("endTimeStr", DateTimeUtil.defaultFormatSqlTimestamp(rosterRelease.getEndTime()));
-            page = "web/campus/roster/roster_release_edit::#page-wrapper";
+            Optional<RosterRelease> optionalRosterRelease = rosterReleaseService.findById(id);
+            if (optionalRosterRelease.isPresent()) {
+                RosterRelease rosterRelease = optionalRosterRelease.get();
+                modelMap.addAttribute("rosterRelease", rosterRelease);
+                modelMap.addAttribute("startTimeStr", DateTimeUtil.defaultFormatSqlTimestamp(rosterRelease.getStartTime()));
+                modelMap.addAttribute("endTimeStr", DateTimeUtil.defaultFormatSqlTimestamp(rosterRelease.getEndTime()));
+                page = "web/campus/roster/roster_release_edit::#page-wrapper";
+            } else {
+                config.buildWarningTip("查询错误", "未查询到数据");
+                config.dataMerging(modelMap);
+                page = "inline_tip::#page-wrapper";
+            }
         } else {
             config.buildWarningTip("操作警告", "您无权限操作");
             config.dataMerging(modelMap);
@@ -164,8 +171,9 @@ public class CampusRosterViewController {
     @GetMapping(CampusUrlCommon.ANYONE_ROSTER_DATE_ADD_URL + "{id}")
     public String dataOuterAdd(@PathVariable("id") String id, ModelMap modelMap) {
         SystemTipConfig config = new SystemTipConfig();
-        RosterRelease rosterRelease = rosterReleaseService.findById(id);
-        if (Objects.nonNull(rosterRelease) && StringUtils.isNotBlank(rosterRelease.getRosterReleaseId())) {
+        Optional<RosterRelease> optionalRosterRelease = rosterReleaseService.findById(id);
+        if (optionalRosterRelease.isPresent()) {
+            RosterRelease rosterRelease = optionalRosterRelease.get();
             // 时间范围
             if (DateTimeUtil.nowAfterSqlTimestamp(rosterRelease.getStartTime()) &&
                     DateTimeUtil.nowBeforeSqlTimestamp(rosterRelease.getEndTime())) {
@@ -207,10 +215,17 @@ public class CampusRosterViewController {
         if (rosterReleaseService.canDataEdit(users.getUsername(), id)) {
             StudentBean studentBean = studentService.findByUsername(users.getUsername());
             if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
-                RosterDataBean bean = rosterReleaseService.findRosterDataByStudentNumberAndRosterReleaseIdRelation(studentBean.getStudentNumber(), id);
-                bean.setBusSection(bean.getBusSection().substring(bean.getBusSection().indexOf("-") + 1));
-                modelMap.addAttribute("rosterData", bean);
-                page = "web/campus/roster/roster_data_edit::#page-wrapper";
+                Optional<RosterDataBean> optionalRosterDataBean = rosterReleaseService.findRosterDataByStudentNumberAndRosterReleaseIdRelation(studentBean.getStudentNumber(), id);
+                if (optionalRosterDataBean.isPresent()) {
+                    RosterDataBean rosterDataBean = optionalRosterDataBean.get();
+                    rosterDataBean.setBusSection(rosterDataBean.getBusSection().substring(rosterDataBean.getBusSection().indexOf("-") + 1));
+                    modelMap.addAttribute("rosterData", rosterDataBean);
+                    page = "web/campus/roster/roster_data_edit::#page-wrapper";
+                } else {
+                    config.buildDangerTip("查询错误", "未查询到花名册数据");
+                    config.dataMerging(modelMap);
+                    page = "inline_tip::#page-wrapper";
+                }
             } else {
                 config.buildDangerTip("查询错误", "未查询到学生信息");
                 config.dataMerging(modelMap);
@@ -238,10 +253,17 @@ public class CampusRosterViewController {
         if (rosterReleaseService.canDataLook(users.getUsername(), id)) {
             StudentBean studentBean = studentService.findByUsername(users.getUsername());
             if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
-                RosterDataBean bean = rosterReleaseService.findRosterDataByStudentNumberAndRosterReleaseIdRelation(studentBean.getStudentNumber(), id);
-                bean.setBusSection(bean.getBusSection().substring(bean.getBusSection().indexOf("-") + 1));
-                modelMap.addAttribute("rosterData", bean);
-                page = "web/campus/roster/roster_data_look::#page-wrapper";
+                Optional<RosterDataBean> optionalRosterDataBean = rosterReleaseService.findRosterDataByStudentNumberAndRosterReleaseIdRelation(studentBean.getStudentNumber(), id);
+                if (optionalRosterDataBean.isPresent()) {
+                    RosterDataBean rosterDataBean = optionalRosterDataBean.get();
+                    rosterDataBean.setBusSection(rosterDataBean.getBusSection().substring(rosterDataBean.getBusSection().indexOf("-") + 1));
+                    modelMap.addAttribute("rosterData", rosterDataBean);
+                    page = "web/campus/roster/roster_data_look::#page-wrapper";
+                } else {
+                    config.buildDangerTip("查询错误", "未查询到花名册数据");
+                    config.dataMerging(modelMap);
+                    page = "inline_tip::#page-wrapper";
+                }
             } else {
                 config.buildDangerTip("查询错误", "未查询到学生信息");
                 config.dataMerging(modelMap);

@@ -21,6 +21,7 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 public class CalendarApiController {
@@ -38,8 +39,13 @@ public class CalendarApiController {
     @GetMapping("/api/educational/calendar/query-with-college-id/{collegeId}")
     public ResponseEntity<Map<String, Object>> calendars(@PathVariable("collegeId") int collegeId, Principal principal, HttpServletRequest request) {
         AjaxUtil<SchoolCalendar> ajaxUtil = AjaxUtil.of();
-        List<SchoolCalendar> schoolCalendars = schoolCalendarService.findRecentlyByCollegeId(collegeId);
-        ajaxUtil.success().list(schoolCalendars).msg("获取数据成功");
+        Optional<List<SchoolCalendar>> optionalSchoolCalendars = schoolCalendarService.findRecentlyByCollegeId(collegeId);
+        if(optionalSchoolCalendars.isPresent()){
+            ajaxUtil.success().list(optionalSchoolCalendars.get()).msg("获取数据成功");
+        } else {
+            ajaxUtil.fail().msg("未查询到校历数据");
+        }
+
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -52,9 +58,10 @@ public class CalendarApiController {
     @ApiLoggingRecord(remark = "教务校历查询", channel = Workbook.channel.API, needLogin = true)
     @GetMapping("/api/educational/calendar/query/{calendarId}")
     public ResponseEntity<Map<String, Object>> query(@PathVariable("calendarId") String calendarId, Principal principal, HttpServletRequest request) {
-        SchoolCalendarBean bean = schoolCalendarService.findByIdRelation(calendarId);
+        Optional<SchoolCalendarBean> optionalSchoolCalendarBean = schoolCalendarService.findByIdRelation(calendarId);
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        if (Objects.nonNull(bean) && StringUtils.isNotBlank(bean.getCalendarId())) {
+        if (optionalSchoolCalendarBean.isPresent()) {
+            SchoolCalendarBean bean = optionalSchoolCalendarBean.get();
             bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime()));
             bean.setNowDate(DateTimeUtil.getNowSqlDate());
             bean.setOpenWeeks(DateTimeUtil.calculationTwoDateDifferWeeks(bean.getStartDate(), bean.getEndDate()));

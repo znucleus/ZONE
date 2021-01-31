@@ -29,8 +29,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class RegisterLeaverApiController {
@@ -83,8 +85,12 @@ public class RegisterLeaverApiController {
     public ResponseEntity<Map<String, Object>> scopes(@RequestParam("leaverRegisterReleaseId") String leaverRegisterReleaseId,
                                                       Principal principal, HttpServletRequest request) {
         AjaxUtil<LeaverRegisterScopeBean> ajaxUtil = AjaxUtil.of();
-        List<LeaverRegisterScopeBean> beans = registerLeaverService.leaverRegisterScopes(leaverRegisterReleaseId);
-        ajaxUtil.success().list(beans).msg("获取数据成功");
+        Optional<List<LeaverRegisterScopeBean>> optionalLeaverRegisterScopeBeans = registerLeaverService.leaverRegisterScopes(leaverRegisterReleaseId);
+        if (optionalLeaverRegisterScopeBeans.isPresent()) {
+            ajaxUtil.success().list(optionalLeaverRegisterScopeBeans.get()).msg("获取数据成功");
+        } else {
+            ajaxUtil.fail().msg("获取数据失败");
+        }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -99,8 +105,12 @@ public class RegisterLeaverApiController {
     public ResponseEntity<Map<String, Object>> options(@RequestParam("leaverRegisterReleaseId") String leaverRegisterReleaseId,
                                                        Principal principal, HttpServletRequest request) {
         AjaxUtil<LeaverRegisterOption> ajaxUtil = AjaxUtil.of();
-        List<LeaverRegisterOption> leaverRegisterOptions = registerLeaverService.leaverRegisterOptions(leaverRegisterReleaseId);
-        ajaxUtil.success().list(leaverRegisterOptions).msg("获取数据成功");
+        Optional<List<LeaverRegisterOption>> optionalLeaverRegisterOptions = registerLeaverService.leaverRegisterOptions(leaverRegisterReleaseId);
+        if (optionalLeaverRegisterOptions.isPresent()) {
+            ajaxUtil.success().list(optionalLeaverRegisterOptions.get()).msg("获取数据成功");
+        } else {
+            ajaxUtil.fail().msg("获取数据失败");
+        }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -213,8 +223,8 @@ public class RegisterLeaverApiController {
     @ApiLoggingRecord(remark = "离校登记列表登记删除", channel = Workbook.channel.API, needLogin = true)
     @PostMapping("/api/register/leaver/data/delete-with-leaver-register-releaseId-and-leaver-register-data-id")
     public ResponseEntity<Map<String, Object>> dataDelete(@RequestParam("leaverRegisterReleaseId") String leaverRegisterReleaseId,
-                                                              @RequestParam("leaverRegisterDataId") String leaverRegisterDataId,
-                                                              Principal principal, HttpServletRequest request) {
+                                                          @RequestParam("leaverRegisterDataId") String leaverRegisterDataId,
+                                                          Principal principal, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromOauth(principal);
         AjaxUtil<Map<String, Object>> ajaxUtil =
                 registerLeaverService.dataListDelete(leaverRegisterReleaseId, leaverRegisterDataId, users.getUsername());
@@ -245,8 +255,9 @@ public class RegisterLeaverApiController {
     public void export(Principal principal, HttpServletRequest request, HttpServletResponse response) throws IOException {
         SimplePaginationUtil simplePaginationUtil = new SimplePaginationUtil(request, "studentNumber", "asc",
                 "离校登记数据表", Workbook.registerFilePath());
-        List<LeaverRegisterDataBean> beans = registerLeaverService.export(simplePaginationUtil);
-
+        List<LeaverRegisterDataBean> beans;
+        Optional<List<LeaverRegisterDataBean>> optionalLeaverRegisterDataBeans = registerLeaverService.export(simplePaginationUtil);
+        beans = optionalLeaverRegisterDataBeans.orElseGet(ArrayList::new);
         LeaverRegisterDataExport export = new LeaverRegisterDataExport(beans);
         ExportInfo exportInfo = simplePaginationUtil.getExportInfo();
         if (export.exportExcel(exportInfo.getLastPath(), exportInfo.getFileName(), exportInfo.getExt())) {

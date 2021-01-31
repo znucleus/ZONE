@@ -116,9 +116,15 @@ public class CampusTimetableViewController {
         String page;
         Users users = SessionUtil.getUserFromSession();
         if (campusCourseReleaseService.canOperator(users.getUsername(), id)) {
-            CampusCourseRelease campusCourseRelease = campusCourseReleaseService.findById(id);
-            modelMap.addAttribute("campusCourseRelease", campusCourseRelease);
-            page = "web/campus/timetable/timetable_release_edit::#page-wrapper";
+            Optional<CampusCourseRelease> optionalCampusCourseRelease = campusCourseReleaseService.findById(id);
+            if(optionalCampusCourseRelease.isPresent()){
+                modelMap.addAttribute("campusCourseRelease", optionalCampusCourseRelease.get());
+                page = "web/campus/timetable/timetable_release_edit::#page-wrapper";
+            } else {
+                config.buildDangerTip("查询错误", "未查询到课表发布数据");
+                config.dataMerging(modelMap);
+                page = "inline_tip::#page-wrapper";
+            }
         } else {
             config.buildWarningTip("操作警告", "您无权限操作");
             config.dataMerging(modelMap);
@@ -220,8 +226,9 @@ public class CampusTimetableViewController {
     public String courseEdit(@PathVariable("id") String id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        CampusCourseData campusCourseData = campusCourseReleaseService.findCourseById(id);
-        if (Objects.nonNull(campusCourseData) && StringUtils.isNotBlank(campusCourseData.getCampusCourseDataId())) {
+        Optional<CampusCourseData> optionalCampusCourseData = campusCourseReleaseService.findCourseById(id);
+        if (optionalCampusCourseData.isPresent()) {
+            CampusCourseData campusCourseData = optionalCampusCourseData.get();
             Users users = SessionUtil.getUserFromSession();
             if (campusCourseReleaseService.canOperator(users.getUsername(), campusCourseData.getCampusCourseReleaseId())) {
                 modelMap.addAttribute("campusCourseData", campusCourseData);

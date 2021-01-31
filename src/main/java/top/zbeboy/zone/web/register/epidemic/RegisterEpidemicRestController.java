@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class RegisterEpidemicRestController {
@@ -166,8 +167,9 @@ public class RegisterEpidemicRestController {
     public void export(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, "registerDateStr", "desc",
                 "疫情登记数据表", Workbook.registerFilePath());
-        List<EpidemicRegisterDataBean> beans = registerEpidemicService.export(dataTablesUtil);
-
+        Optional<List<EpidemicRegisterDataBean>> optionalEpidemicRegisterDataBeans = registerEpidemicService.export(dataTablesUtil);
+        List<EpidemicRegisterDataBean> beans;
+        beans = optionalEpidemicRegisterDataBeans.orElseGet(ArrayList::new);
         EpidemicRegisterDataExport export = new EpidemicRegisterDataExport(beans);
         ExportInfo exportInfo = dataTablesUtil.getExportInfo();
         if (export.exportExcel(exportInfo.getLastPath(), exportInfo.getFileName(), exportInfo.getExt())) {

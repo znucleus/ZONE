@@ -112,8 +112,9 @@ public class SystemMailViewController {
 
                             // 进行花名册同步
                             if (StringUtils.isNotBlank(bean.getStudentNumber())) {
-                                RosterData rosterData = rosterReleaseService.findRosterDataByStudentNumber(bean.getStudentNumber());
-                                if (Objects.nonNull(rosterData) && StringUtils.isNotBlank(rosterData.getRosterDataId())) {
+                                Optional<RosterData> optionalRosterData = rosterReleaseService.findRosterDataByStudentNumber(bean.getStudentNumber());
+                                if (optionalRosterData.isPresent()) {
+                                    RosterData rosterData = optionalRosterData.get();
                                     rosterData.setPhoneNumber(bean.getMobile());
                                     rosterData.setEmail(bean.getEmail());
                                     rosterReleaseService.dataSync(rosterData);

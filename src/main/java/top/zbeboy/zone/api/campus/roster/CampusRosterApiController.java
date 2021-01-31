@@ -29,6 +29,7 @@ import javax.validation.Valid;
 import java.security.Principal;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 public class CampusRosterApiController {
@@ -125,9 +126,15 @@ public class CampusRosterApiController {
         Users users = SessionUtil.getUserFromOauth(principal);
         StudentBean studentBean = studentService.findByUsername(users.getUsername());
         if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
-            RosterDataBean bean = rosterReleaseService.findRosterDataByStudentNumberAndRosterReleaseIdRelation(studentBean.getStudentNumber(), rosterReleaseId);
-            bean.setBusSection(bean.getBusSection().substring(bean.getBusSection().indexOf("-") + 1));
-            ajaxUtil.success().msg("数据获取成功").put("rosterData", bean);
+            Optional<RosterDataBean> optionalRosterDataBean = rosterReleaseService.findRosterDataByStudentNumberAndRosterReleaseIdRelation(studentBean.getStudentNumber(), rosterReleaseId);
+            if(optionalRosterDataBean.isPresent()){
+                RosterDataBean rosterDataBean = optionalRosterDataBean.get();
+                rosterDataBean.setBusSection(rosterDataBean.getBusSection().substring(rosterDataBean.getBusSection().indexOf("-") + 1));
+                ajaxUtil.success().msg("数据获取成功").put("rosterData", rosterDataBean);
+            } else {
+                ajaxUtil.fail().msg("未查询到花名册数据");
+            }
+
         } else {
             ajaxUtil.fail().msg("未查询到学生信息");
         }

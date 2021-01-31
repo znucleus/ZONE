@@ -9,6 +9,7 @@ import top.zbeboy.zbase.bean.data.staff.StaffBean;
 import top.zbeboy.zbase.bean.data.student.StudentBean;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.SchoolOpens;
+import top.zbeboy.zbase.domain.tables.pojos.SchoolOpensContent;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.domain.tables.pojos.UsersType;
 import top.zbeboy.zbase.feign.campus.opens.SchoolOpensService;
@@ -125,10 +126,11 @@ public class CampusOpensViewController {
     public String look(@PathVariable("id") String id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        SchoolOpens schoolOpens = schoolOpensService.findById(id);
-        if (StringUtils.isNotBlank(schoolOpens.getOpenId())) {
-            modelMap.addAttribute("schoolOpens", schoolOpens);
-            modelMap.addAttribute("schoolOpensContent", schoolOpensService.content(id));
+        Optional<SchoolOpens> optionalSchoolOpens = schoolOpensService.findById(id);
+        Optional<SchoolOpensContent> optionalSchoolOpensContent = schoolOpensService.content(id);
+        if (optionalSchoolOpens.isPresent() && optionalSchoolOpensContent.isPresent()) {
+            modelMap.addAttribute("schoolOpens", optionalSchoolOpens.get());
+            modelMap.addAttribute("schoolOpensContent", optionalSchoolOpensContent.get());
             page = "web/campus/opens/opens_look::#page-wrapper";
         } else {
             config.buildDangerTip("查询错误", "未查询到开学内容");

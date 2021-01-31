@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 public class CampusTimetableRestController {
@@ -44,9 +45,9 @@ public class CampusTimetableRestController {
     @GetMapping("/web/campus/timetable/release/{id}")
     public ResponseEntity<Map<String, Object>> release(@PathVariable("id") String id, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        CampusCourseRelease release = campusCourseReleaseService.findById(id);
-        if (Objects.nonNull(release) && StringUtils.isNotBlank(release.getCampusCourseReleaseId())) {
-            ajaxUtil.success().msg("查询课表成功").put("release", release);
+        Optional<CampusCourseRelease> optionalCampusCourseRelease = campusCourseReleaseService.findById(id);
+        if (optionalCampusCourseRelease.isPresent()) {
+            ajaxUtil.success().msg("查询课表成功").put("release", optionalCampusCourseRelease.get());
         } else {
             ajaxUtil.fail().msg("未查询到数据");
         }
@@ -62,8 +63,11 @@ public class CampusTimetableRestController {
     public ResponseEntity<Map<String, Object>> releases() {
         Users users = SessionUtil.getUserFromSession();
         Select2Data select2Data = Select2Data.of();
-        List<CampusCourseRelease> campusCourseReleases = campusCourseReleaseService.findByUsername(users.getUsername());
-        campusCourseReleases.forEach(release -> select2Data.add(release.getCampusCourseReleaseId(), release.getTitle()));
+        Optional<List<CampusCourseRelease>> optionalCampusCourseReleases = campusCourseReleaseService.findByUsername(users.getUsername());
+        if(optionalCampusCourseReleases.isPresent()){
+            List<CampusCourseRelease> campusCourseReleases = optionalCampusCourseReleases.get();
+            campusCourseReleases.forEach(release -> select2Data.add(release.getCampusCourseReleaseId(), release.getTitle()));
+        }
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
 
@@ -106,8 +110,9 @@ public class CampusTimetableRestController {
     public ResponseEntity<Map<String, Object>> shareSave(@RequestParam("shareId") String shareId, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         try {
-            CampusCourseRelease release = campusCourseReleaseService.findById(shareId);
-            if (Objects.nonNull(release) && StringUtils.isNotBlank(release.getCampusCourseReleaseId())) {
+            Optional<CampusCourseRelease> optionalCampusCourseRelease = campusCourseReleaseService.findById(shareId);
+            if (optionalCampusCourseRelease.isPresent()) {
+                CampusCourseRelease release = optionalCampusCourseRelease.get();
                 CampusCourseReleaseAddVo campusCourseReleaseAddVo = new CampusCourseReleaseAddVo();
                 Users users = SessionUtil.getUserFromSession();
                 campusCourseReleaseAddVo.setUsername(users.getUsername());
@@ -213,8 +218,12 @@ public class CampusTimetableRestController {
     @GetMapping("/web/campus/timetable/courses/{campusCourseReleaseId}")
     public ResponseEntity<Map<String, Object>> courses(@PathVariable("campusCourseReleaseId") String campusCourseReleaseId) {
         AjaxUtil<CampusCourseData> ajaxUtil = AjaxUtil.of();
-        List<CampusCourseData> campusCourseData = campusCourseReleaseService.findCourseByCampusCourseReleaseId(campusCourseReleaseId);
-        ajaxUtil.success().msg("获取数据成功").list(campusCourseData).put("weekDay", DateTimeUtil.getNowDayOfWeek());
+        Optional<List<CampusCourseData>> optionalCampusCourseData = campusCourseReleaseService.findCourseByCampusCourseReleaseId(campusCourseReleaseId);
+        if(optionalCampusCourseData.isPresent()){
+            ajaxUtil.success().msg("获取数据成功").list(optionalCampusCourseData.get()).put("weekDay", DateTimeUtil.getNowDayOfWeek());
+        } else {
+            ajaxUtil.fail().msg("获取数据失败");
+        }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -227,14 +236,19 @@ public class CampusTimetableRestController {
     @GetMapping("/anyone/campus/timetable/share_courses/{campusCourseReleaseId}")
     public ResponseEntity<Map<String, Object>> shareCourses(@PathVariable("campusCourseReleaseId") String campusCourseReleaseId) {
         AjaxUtil<CampusCourseData> ajaxUtil = AjaxUtil.of();
-        CampusCourseRelease release = campusCourseReleaseService.findById(campusCourseReleaseId);
-        if (Objects.nonNull(release) && StringUtils.isNotBlank(release.getCampusCourseReleaseId())) {
-            List<CampusCourseData> campusCourseData = campusCourseReleaseService.findCourseByCampusCourseReleaseId(campusCourseReleaseId);
-            ajaxUtil.success().msg("获取数据成功").list(campusCourseData)
-                    .put("release", release)
-                    .put("weekDay", DateTimeUtil.getNowDayOfWeek());
+        Optional<CampusCourseRelease> optionalCampusCourseRelease = campusCourseReleaseService.findById(campusCourseReleaseId);
+        if (optionalCampusCourseRelease.isPresent()) {
+            CampusCourseRelease release = optionalCampusCourseRelease.get();
+            Optional<List<CampusCourseData>> optionalCampusCourseData = campusCourseReleaseService.findCourseByCampusCourseReleaseId(campusCourseReleaseId);
+            if(optionalCampusCourseData.isPresent()){
+                ajaxUtil.success().msg("获取数据成功").list(optionalCampusCourseData.get())
+                        .put("release", release)
+                        .put("weekDay", DateTimeUtil.getNowDayOfWeek());
+            } else {
+                ajaxUtil.fail().msg("未查询到课表数据");
+            }
         } else {
-            ajaxUtil.fail().msg("未查询到课表数据");
+            ajaxUtil.fail().msg("未查询到课表发布数据");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
