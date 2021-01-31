@@ -18,7 +18,7 @@ import top.zbeboy.zbase.config.SessionBook;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.config.ZoneProperties;
 import top.zbeboy.zbase.domain.tables.pojos.*;
-import top.zbeboy.zbase.feign.campus.roster.RosterReleaseService;
+import top.zbeboy.zbase.feign.campus.roster.CampusRosterService;
 import top.zbeboy.zbase.feign.data.StudentService;
 import top.zbeboy.zbase.feign.platform.UsersService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
@@ -67,7 +67,7 @@ public class UsersRestController {
     private StudentService studentService;
 
     @Resource
-    private RosterReleaseService rosterReleaseService;
+    private CampusRosterService campusRosterService;
 
     @Resource
     private FilesService filesService;
@@ -319,12 +319,12 @@ public class UsersRestController {
                     Optional<UsersType> optionalUsersType = usersTypeService.findById(own.getUsersTypeId());
                     if (optionalUsersType.isPresent() && StringUtils.equals(Workbook.STUDENT_USERS_TYPE, optionalUsersType.get().getUsersTypeName())) {
                         Student student = studentService.findByUsername(own.getUsername());
-                        Optional<RosterData> optionalRosterData = rosterReleaseService.findRosterDataByStudentNumber(student.getStudentNumber());
+                        Optional<RosterData> optionalRosterData = campusRosterService.findRosterDataByStudentNumber(student.getStudentNumber());
                         if (optionalRosterData.isPresent()) {
                             RosterData rosterData = optionalRosterData.get();
                             rosterData.setRealName(value);
                             rosterData.setNamePinyin(PinYinUtil.changeToUpper(value));
-                            rosterReleaseService.dataSync(rosterData);
+                            campusRosterService.dataSync(rosterData);
                         }
                     }
                 } else {
@@ -416,11 +416,11 @@ public class UsersRestController {
                             Optional<UsersType> optionalUsersType = usersTypeService.findById(own.getUsersTypeId());
                             if (optionalUsersType.isPresent() && StringUtils.equals(Workbook.STUDENT_USERS_TYPE, optionalUsersType.get().getUsersTypeName())) {
                                 Student student = studentService.findByUsername(own.getUsername());
-                                Optional<RosterData> optionalRosterData = rosterReleaseService.findRosterDataByStudentNumber(student.getStudentNumber());
+                                Optional<RosterData> optionalRosterData = campusRosterService.findRosterDataByStudentNumber(student.getStudentNumber());
                                 if (optionalRosterData.isPresent()) {
                                     RosterData rosterData = optionalRosterData.get();
                                     rosterData.setIdCard(value);
-                                    rosterReleaseService.dataSync(rosterData);
+                                    campusRosterService.dataSync(rosterData);
                                 }
                             }
                         } else {

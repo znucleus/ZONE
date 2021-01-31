@@ -13,7 +13,7 @@ import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.domain.tables.pojos.UsersType;
 import top.zbeboy.zbase.feign.data.StaffService;
 import top.zbeboy.zbase.feign.data.StudentService;
-import top.zbeboy.zbase.feign.educational.calendar.SchoolCalendarService;
+import top.zbeboy.zbase.feign.educational.calendar.EducationalCalendarService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 import top.zbeboy.zone.web.util.SessionUtil;
@@ -35,7 +35,7 @@ public class CalendarViewController {
     private StaffService staffService;
 
     @Resource
-    private SchoolCalendarService schoolCalendarService;
+    private EducationalCalendarService educationalCalendarService;
 
     /**
      * 校历
@@ -67,7 +67,7 @@ public class CalendarViewController {
 
         modelMap.addAttribute("schoolId", schoolId);
         modelMap.addAttribute("collegeId", collegeId);
-        modelMap.addAttribute("canRelease", schoolCalendarService.canRelease(users.getUsername()));
+        modelMap.addAttribute("canRelease", educationalCalendarService.canRelease(users.getUsername()));
         return "web/educational/calendar/calendar_look::#page-wrapper";
     }
 
@@ -81,7 +81,7 @@ public class CalendarViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         Users users = SessionUtil.getUserFromSession();
-        if (schoolCalendarService.canRelease(users.getUsername())) {
+        if (educationalCalendarService.canRelease(users.getUsername())) {
             page = "web/educational/calendar/calendar_data::#page-wrapper";
         } else {
             config.buildWarningTip("操作警告", "您无权限操作");
@@ -102,7 +102,7 @@ public class CalendarViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         Users users = SessionUtil.getUserFromSession();
-        if (schoolCalendarService.canRelease(users.getUsername())) {
+        if (educationalCalendarService.canRelease(users.getUsername())) {
             Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
             if (optionalUsersType.isPresent()) {
                 UsersType usersType = optionalUsersType.get();
@@ -146,8 +146,8 @@ public class CalendarViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         Users users = SessionUtil.getUserFromSession();
-        if (schoolCalendarService.canOperator(users.getUsername(), id)) {
-            Optional<SchoolCalendar> optionalSchoolCalendar = schoolCalendarService.findById(id);
+        if (educationalCalendarService.canOperator(users.getUsername(), id)) {
+            Optional<SchoolCalendar> optionalSchoolCalendar = educationalCalendarService.findById(id);
             if(optionalSchoolCalendar.isPresent()){
                 modelMap.addAttribute("schoolCalendar", optionalSchoolCalendar.get());
                 page = "web/educational/calendar/calendar_edit::#page-wrapper";
@@ -176,7 +176,7 @@ public class CalendarViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         Users users = SessionUtil.getUserFromSession();
-        if (schoolCalendarService.canAuthorize(users.getUsername())) {
+        if (educationalCalendarService.canAuthorize(users.getUsername())) {
             page = "web/educational/calendar/calendar_authorize::#page-wrapper";
         } else {
             config.buildWarningTip("操作警告", "您无权限操作");

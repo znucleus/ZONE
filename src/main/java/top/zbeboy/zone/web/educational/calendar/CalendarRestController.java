@@ -1,6 +1,5 @@
 package top.zbeboy.zone.web.educational.calendar;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +11,7 @@ import top.zbeboy.zbase.bean.educational.calendar.SchoolCalendarBean;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.SchoolCalendar;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
-import top.zbeboy.zbase.feign.educational.calendar.SchoolCalendarService;
+import top.zbeboy.zbase.feign.educational.calendar.EducationalCalendarService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.web.plugin.select2.Select2Data;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
@@ -32,7 +31,7 @@ import java.util.*;
 public class CalendarRestController {
 
     @Resource
-    private SchoolCalendarService schoolCalendarService;
+    private EducationalCalendarService educationalCalendarService;
 
     /**
      * 数据
@@ -61,12 +60,12 @@ public class CalendarRestController {
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
         Users users = SessionUtil.getUserFromSession();
         dataTablesUtil.setUsername(users.getUsername());
-        if (schoolCalendarService.canRelease(users.getUsername())) {
-            dataTablesUtil = schoolCalendarService.data(dataTablesUtil);
+        if (educationalCalendarService.canRelease(users.getUsername())) {
+            dataTablesUtil = educationalCalendarService.data(dataTablesUtil);
         } else {
             dataTablesUtil.setData(new ArrayList<>());
         }
-        return new ResponseEntity<>(schoolCalendarService.data(dataTablesUtil), HttpStatus.OK);
+        return new ResponseEntity<>(educationalCalendarService.data(dataTablesUtil), HttpStatus.OK);
     }
 
     /**
@@ -79,7 +78,7 @@ public class CalendarRestController {
     public ResponseEntity<Map<String, Object>> save(SchoolCalendarAddVo schoolCalendarAddVo, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
         schoolCalendarAddVo.setUsername(users.getUsername());
-        AjaxUtil<Map<String, Object>> ajaxUtil = schoolCalendarService.save(schoolCalendarAddVo);
+        AjaxUtil<Map<String, Object>> ajaxUtil = educationalCalendarService.save(schoolCalendarAddVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -93,7 +92,7 @@ public class CalendarRestController {
     public ResponseEntity<Map<String, Object>> update(SchoolCalendarEditVo schoolCalendarEditVo) {
         Users users = SessionUtil.getUserFromSession();
         schoolCalendarEditVo.setUsername(users.getUsername());
-        AjaxUtil<Map<String, Object>> ajaxUtil = schoolCalendarService.update(schoolCalendarEditVo);
+        AjaxUtil<Map<String, Object>> ajaxUtil = educationalCalendarService.update(schoolCalendarEditVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -106,7 +105,7 @@ public class CalendarRestController {
     @PostMapping("/web/educational/calendar/delete")
     public ResponseEntity<Map<String, Object>> delete(String calendarIds) {
         Users users = SessionUtil.getUserFromSession();
-        AjaxUtil<Map<String, Object>> ajaxUtil = schoolCalendarService.delete(users.getUsername(), calendarIds);
+        AjaxUtil<Map<String, Object>> ajaxUtil = educationalCalendarService.delete(users.getUsername(), calendarIds);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -120,7 +119,7 @@ public class CalendarRestController {
     public ResponseEntity<Map<String, Object>> authorizeData(TableSawUtil tableSawUtil) {
         Users users = SessionUtil.getUserFromSession();
         tableSawUtil.setUsername(users.getUsername());
-        AjaxUtil<SchoolCalendarAuthoritiesBean> ajaxUtil = schoolCalendarService.authorizeData(tableSawUtil);
+        AjaxUtil<SchoolCalendarAuthoritiesBean> ajaxUtil = educationalCalendarService.authorizeData(tableSawUtil);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -134,7 +133,7 @@ public class CalendarRestController {
     public ResponseEntity<Map<String, Object>> authorizeSave(SchoolCalendarAuthoritiesAddVo schoolCalendarAuthoritiesAddVo) {
         Users users = SessionUtil.getUserFromSession();
         schoolCalendarAuthoritiesAddVo.setUsername(users.getUsername());
-        AjaxUtil<Map<String, Object>> ajaxUtil = schoolCalendarService.authorizeSave(schoolCalendarAuthoritiesAddVo);
+        AjaxUtil<Map<String, Object>> ajaxUtil = educationalCalendarService.authorizeSave(schoolCalendarAuthoritiesAddVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -147,7 +146,7 @@ public class CalendarRestController {
     @PostMapping("/web/educational/calendar/authorize/delete")
     public ResponseEntity<Map<String, Object>> authorizeDelete(@RequestParam("id") String id) {
         Users users = SessionUtil.getUserFromSession();
-        AjaxUtil<Map<String, Object>> ajaxUtil = schoolCalendarService.authorizeDelete(users.getUsername(), id);
+        AjaxUtil<Map<String, Object>> ajaxUtil = educationalCalendarService.authorizeDelete(users.getUsername(), id);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -161,7 +160,7 @@ public class CalendarRestController {
     @GetMapping("/web/educational/calendars")
     public ResponseEntity<Map<String, Object>> calendars(@RequestParam("collegeId") int collegeId, HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
-        Optional<List<SchoolCalendar>> optionalSchoolCalendars = schoolCalendarService.findRecentlyByCollegeId(collegeId);
+        Optional<List<SchoolCalendar>> optionalSchoolCalendars = educationalCalendarService.findRecentlyByCollegeId(collegeId);
         optionalSchoolCalendars.ifPresent(schoolCalendars -> schoolCalendars.forEach(schoolCalendar -> select2Data.add(schoolCalendar.getCalendarId(), schoolCalendar.getTitle())));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
@@ -175,7 +174,7 @@ public class CalendarRestController {
     @ApiLoggingRecord(remark = "教务校历查看", channel = Workbook.channel.WEB, needLogin = true)
     @GetMapping("/web/educational/calendar/look")
     public ResponseEntity<Map<String, Object>> look(@RequestParam("calendarId") String calendarId, HttpServletRequest request) {
-        Optional<SchoolCalendarBean> optionalSchoolCalendarBean = schoolCalendarService.findByIdRelation(calendarId);
+        Optional<SchoolCalendarBean> optionalSchoolCalendarBean = educationalCalendarService.findByIdRelation(calendarId);
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (optionalSchoolCalendarBean.isPresent()) {
             SchoolCalendarBean bean = optionalSchoolCalendarBean.get();

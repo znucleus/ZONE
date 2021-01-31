@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.config.ZoneProperties;
 import top.zbeboy.zbase.domain.tables.pojos.*;
-import top.zbeboy.zbase.feign.campus.roster.RosterReleaseService;
+import top.zbeboy.zbase.feign.campus.roster.CampusRosterService;
 import top.zbeboy.zbase.feign.data.StudentService;
 import top.zbeboy.zbase.feign.platform.UsersService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
@@ -49,7 +49,7 @@ public class StudentRestController {
     private UsersService usersService;
 
     @Resource
-    private RosterReleaseService rosterReleaseService;
+    private CampusRosterService campusRosterService;
 
     @Resource
     private SystemConfigureService systemConfigureService;
@@ -130,7 +130,7 @@ public class StudentRestController {
                     studentAddVo.setJoinDate(DateTimeUtil.getNowSqlDate());
 
                     // 同步花名册
-                    Optional<RosterData> optionalRosterData = rosterReleaseService.findRosterDataByStudentNumber(studentAddVo.getStudentNumber());
+                    Optional<RosterData> optionalRosterData = campusRosterService.findRosterDataByStudentNumber(studentAddVo.getStudentNumber());
                     if (optionalRosterData.isPresent()) {
                         RosterData rosterData = optionalRosterData.get();
                         studentAddVo.setBirthday(rosterData.getBirthday());

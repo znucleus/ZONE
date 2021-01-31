@@ -12,7 +12,7 @@ import top.zbeboy.zbase.bean.campus.roster.RosterReleaseBean;
 import top.zbeboy.zbase.bean.data.student.StudentBean;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
-import top.zbeboy.zbase.feign.campus.roster.RosterReleaseService;
+import top.zbeboy.zbase.feign.campus.roster.CampusRosterService;
 import top.zbeboy.zbase.feign.data.StudentService;
 import top.zbeboy.zbase.tools.service.util.RequestUtil;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
@@ -38,7 +38,7 @@ public class CampusRosterApiController {
     private StudentService studentService;
 
     @Resource
-    private RosterReleaseService rosterReleaseService;
+    private CampusRosterService campusRosterService;
 
     /**
      * 数据
@@ -51,7 +51,7 @@ public class CampusRosterApiController {
     public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil, Principal principal, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromOauth(principal);
         simplePaginationUtil.setUsername(users.getUsername());
-        AjaxUtil<RosterReleaseBean> ajaxUtil = rosterReleaseService.data(simplePaginationUtil);
+        AjaxUtil<RosterReleaseBean> ajaxUtil = campusRosterService.data(simplePaginationUtil);
         if (Objects.nonNull(ajaxUtil.getListResult())) {
             for (RosterReleaseBean bean : ajaxUtil.getListResult()) {
                 bean.setPublicLink(RequestUtil.getBaseUrl(request) + CampusUrlCommon.ANYONE_ROSTER_DATE_ADD_URL + bean.getRosterReleaseId());
@@ -72,9 +72,9 @@ public class CampusRosterApiController {
         Users users = SessionUtil.getUserFromOauth(principal);
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
-            if (rosterReleaseService.canRegister(users.getUsername(), rosterDataAddVo.getRosterReleaseId()) &&
-                    !rosterReleaseService.canDataEdit(users.getUsername(), rosterDataAddVo.getRosterReleaseId())) {
-                ajaxUtil = rosterReleaseService.dataSave(rosterDataAddVo);
+            if (campusRosterService.canRegister(users.getUsername(), rosterDataAddVo.getRosterReleaseId()) &&
+                    !campusRosterService.canDataEdit(users.getUsername(), rosterDataAddVo.getRosterReleaseId())) {
+                ajaxUtil = campusRosterService.dataSave(rosterDataAddVo);
             } else {
                 ajaxUtil.fail().msg("保存失败，无权限操作");
             }
@@ -95,7 +95,7 @@ public class CampusRosterApiController {
     public ResponseEntity<Map<String, Object>> dataUpdate(RosterDataEditVo rosterDataEditVo, Principal principal, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromOauth(principal);
         rosterDataEditVo.setUsername(users.getUsername());
-        AjaxUtil<Map<String, Object>> ajaxUtil = rosterReleaseService.dataUpdate(rosterDataEditVo);
+        AjaxUtil<Map<String, Object>> ajaxUtil = campusRosterService.dataUpdate(rosterDataEditVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -109,7 +109,7 @@ public class CampusRosterApiController {
     @PostMapping("/api/campus/roster/data/delete")
     public ResponseEntity<Map<String, Object>> dataDelete(@RequestParam("id") String id, Principal principal, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromOauth(principal);
-        AjaxUtil<Map<String, Object>> ajaxUtil = rosterReleaseService.dataDelete(users.getUsername(), id);
+        AjaxUtil<Map<String, Object>> ajaxUtil = campusRosterService.dataDelete(users.getUsername(), id);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -126,7 +126,7 @@ public class CampusRosterApiController {
         Users users = SessionUtil.getUserFromOauth(principal);
         StudentBean studentBean = studentService.findByUsername(users.getUsername());
         if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
-            Optional<RosterDataBean> optionalRosterDataBean = rosterReleaseService.findRosterDataByStudentNumberAndRosterReleaseIdRelation(studentBean.getStudentNumber(), rosterReleaseId);
+            Optional<RosterDataBean> optionalRosterDataBean = campusRosterService.findRosterDataByStudentNumberAndRosterReleaseIdRelation(studentBean.getStudentNumber(), rosterReleaseId);
             if(optionalRosterDataBean.isPresent()){
                 RosterDataBean rosterDataBean = optionalRosterDataBean.get();
                 rosterDataBean.setBusSection(rosterDataBean.getBusSection().substring(rosterDataBean.getBusSection().indexOf("-") + 1));

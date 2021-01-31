@@ -10,7 +10,7 @@ import top.zbeboy.zbase.bean.campus.opens.SchoolOpensAuthoritiesBean;
 import top.zbeboy.zbase.bean.campus.opens.SchoolOpensBean;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
-import top.zbeboy.zbase.feign.campus.opens.SchoolOpensService;
+import top.zbeboy.zbase.feign.campus.opens.CampusOpensService;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.TableSawUtil;
@@ -28,7 +28,7 @@ import java.util.Map;
 public class CampusOpensRestController {
 
     @Resource
-    private SchoolOpensService schoolOpensService;
+    private CampusOpensService campusOpensService;
 
     /**
      * 数据
@@ -41,7 +41,7 @@ public class CampusOpensRestController {
     public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
         simplePaginationUtil.setUsername(users.getUsername());
-        AjaxUtil<SchoolOpensBean> ajaxUtil = schoolOpensService.data(simplePaginationUtil);
+        AjaxUtil<SchoolOpensBean> ajaxUtil = campusOpensService.data(simplePaginationUtil);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -55,7 +55,7 @@ public class CampusOpensRestController {
     public ResponseEntity<Map<String, Object>> save(SchoolOpensAddVo schoolOpensAddVo) {
         Users users = SessionUtil.getUserFromSession();
         schoolOpensAddVo.setUsername(users.getUsername());
-        AjaxUtil<Map<String, Object>> ajaxUtil = schoolOpensService.save(schoolOpensAddVo);
+        AjaxUtil<Map<String, Object>> ajaxUtil = campusOpensService.save(schoolOpensAddVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -69,7 +69,7 @@ public class CampusOpensRestController {
     public ResponseEntity<Map<String, Object>> update(SchoolOpensEditVo schoolOpensEditVo) {
         Users users = SessionUtil.getUserFromSession();
         schoolOpensEditVo.setUsername(users.getUsername());
-        AjaxUtil<Map<String, Object>> ajaxUtil = schoolOpensService.update(schoolOpensEditVo);
+        AjaxUtil<Map<String, Object>> ajaxUtil = campusOpensService.update(schoolOpensEditVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -82,7 +82,7 @@ public class CampusOpensRestController {
     @PostMapping("/web/campus/opens/delete")
     public ResponseEntity<Map<String, Object>> delete(@RequestParam("id") String id) {
         Users users = SessionUtil.getUserFromSession();
-        AjaxUtil<Map<String, Object>> ajaxUtil = schoolOpensService.delete(users.getUsername(), id);
+        AjaxUtil<Map<String, Object>> ajaxUtil = campusOpensService.delete(users.getUsername(), id);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -96,7 +96,7 @@ public class CampusOpensRestController {
     public ResponseEntity<Map<String, Object>> authorizeData(TableSawUtil tableSawUtil) {
         Users users = SessionUtil.getUserFromSession();
         tableSawUtil.setUsername(users.getUsername());
-        AjaxUtil<SchoolOpensAuthoritiesBean> ajaxUtil = schoolOpensService.authorizeData(tableSawUtil);
+        AjaxUtil<SchoolOpensAuthoritiesBean> ajaxUtil = campusOpensService.authorizeData(tableSawUtil);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -110,7 +110,7 @@ public class CampusOpensRestController {
     public ResponseEntity<Map<String, Object>> authorizeSave(SchoolOpensAuthoritiesAddVo schoolOpensAuthoritiesAddVo) {
         Users users = SessionUtil.getUserFromSession();
         schoolOpensAuthoritiesAddVo.setUsername(users.getUsername());
-        AjaxUtil<Map<String, Object>> ajaxUtil = schoolOpensService.authorizeSave(schoolOpensAuthoritiesAddVo);
+        AjaxUtil<Map<String, Object>> ajaxUtil = campusOpensService.authorizeSave(schoolOpensAuthoritiesAddVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -123,7 +123,7 @@ public class CampusOpensRestController {
     @PostMapping("/web/campus/opens/authorize/delete")
     public ResponseEntity<Map<String, Object>> authorizeDelete(@RequestParam("id") String id) {
         Users users = SessionUtil.getUserFromSession();
-        AjaxUtil<Map<String, Object>> ajaxUtil = schoolOpensService.authorizeDelete(users.getUsername(), id);
+        AjaxUtil<Map<String, Object>> ajaxUtil = campusOpensService.authorizeDelete(users.getUsername(), id);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

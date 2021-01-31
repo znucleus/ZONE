@@ -1,6 +1,5 @@
 package top.zbeboy.zone.api.campus.opens;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +10,7 @@ import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.SchoolOpens;
 import top.zbeboy.zbase.domain.tables.pojos.SchoolOpensContent;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
-import top.zbeboy.zbase.feign.campus.opens.SchoolOpensService;
+import top.zbeboy.zbase.feign.campus.opens.CampusOpensService;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
@@ -27,7 +26,7 @@ import java.util.Optional;
 public class CampusOpensApiController {
 
     @Resource
-    private SchoolOpensService schoolOpensService;
+    private CampusOpensService campusOpensService;
 
     /**
      * 数据
@@ -40,7 +39,7 @@ public class CampusOpensApiController {
     public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil, Principal principal, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromOauth(principal);
         simplePaginationUtil.setUsername(users.getUsername());
-        AjaxUtil<SchoolOpensBean> ajaxUtil = schoolOpensService.data(simplePaginationUtil);
+        AjaxUtil<SchoolOpensBean> ajaxUtil = campusOpensService.data(simplePaginationUtil);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -53,8 +52,8 @@ public class CampusOpensApiController {
     @GetMapping("/api/campus/opens/look/{id}")
     public ResponseEntity<Map<String, Object>> look(@PathVariable("id") String id) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        Optional<SchoolOpens> optionalSchoolOpens = schoolOpensService.findById(id);
-        Optional<SchoolOpensContent> optionalSchoolOpensContent = schoolOpensService.content(id);
+        Optional<SchoolOpens> optionalSchoolOpens = campusOpensService.findById(id);
+        Optional<SchoolOpensContent> optionalSchoolOpensContent = campusOpensService.content(id);
         if (optionalSchoolOpens.isPresent() && optionalSchoolOpensContent.isPresent()) {
             ajaxUtil.success().put("schoolOpens", optionalSchoolOpens.get()).put("schoolOpensContent", optionalSchoolOpensContent.get());
         } else {

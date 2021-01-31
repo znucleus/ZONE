@@ -18,7 +18,7 @@ import top.zbeboy.zbase.domain.tables.pojos.RosterData;
 import top.zbeboy.zbase.domain.tables.pojos.Student;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.domain.tables.pojos.UsersType;
-import top.zbeboy.zbase.feign.campus.roster.RosterReleaseService;
+import top.zbeboy.zbase.feign.campus.roster.CampusRosterService;
 import top.zbeboy.zbase.feign.data.StudentService;
 import top.zbeboy.zbase.feign.data.WeiXinService;
 import top.zbeboy.zbase.feign.platform.UsersService;
@@ -55,7 +55,7 @@ public class StudentApiController {
     private ZoneProperties ZoneProperties;
 
     @Resource
-    private RosterReleaseService rosterReleaseService;
+    private CampusRosterService campusRosterService;
 
     @Resource
     private SystemMailService systemMailService;
@@ -181,7 +181,7 @@ public class StudentApiController {
                 studentAddVo.setJoinDate(DateTimeUtil.getNowSqlDate());
 
                 // 同步花名册
-                Optional<RosterData> optionalRosterData = rosterReleaseService.findRosterDataByStudentNumber(studentAddVo.getStudentNumber());
+                Optional<RosterData> optionalRosterData = campusRosterService.findRosterDataByStudentNumber(studentAddVo.getStudentNumber());
                 if (optionalRosterData.isPresent()) {
                     RosterData rosterData = optionalRosterData.get();
                     studentAddVo.setBirthday(rosterData.getBirthday());

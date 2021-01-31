@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.elastic.*;
-import top.zbeboy.zbase.feign.city.TimetableService;
+import top.zbeboy.zbase.feign.city.educational.EducationalTimetableService;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.ElasticUtil;
 import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
@@ -27,7 +27,7 @@ import java.util.Objects;
 public class TimetableApiController {
 
     @Resource
-    private TimetableService timetableService;
+    private EducationalTimetableService educationalTimetableService;
 
     /**
      * 同步数据
@@ -39,7 +39,7 @@ public class TimetableApiController {
     public ResponseEntity<Map<String, Object>> sync(Principal principal, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (SessionUtil.isOauthUserInRole(Workbook.authorities.ROLE_SYSTEM.name(), principal)) {
-            ajaxUtil = timetableService.sync();
+            ajaxUtil = educationalTimetableService.sync();
         } else {
             ajaxUtil.fail().msg("您无权限操作");
         }
@@ -56,7 +56,7 @@ public class TimetableApiController {
     public ResponseEntity<Map<String, Object>> uniques(Principal principal, HttpServletRequest request) {
         AjaxUtil<TimetableUniqueElastic> ajaxUtil = AjaxUtil.of();
         // 排序
-        List<TimetableUniqueElastic> list = timetableService.uniques();
+        List<TimetableUniqueElastic> list = educationalTimetableService.uniques();
         if (Objects.nonNull(list) && !list.isEmpty()) {
             list.sort((o1, o2) -> o2.getIdentification().compareTo(o1.getIdentification()));
         }
@@ -90,7 +90,7 @@ public class TimetableApiController {
                             StringUtils.isNotBlank(classroom) ||
                             StringUtils.isNotBlank(teacherName) ||
                             StringUtils.isNotBlank(teacherNumber))) {
-                timetableElastics = timetableService.search(elasticUtil);
+                timetableElastics = educationalTimetableService.search(elasticUtil);
             }
         }
         timetableElastics.forEach(timetableElastic -> timetableElastic.setTeacherNumber(""));
@@ -108,7 +108,7 @@ public class TimetableApiController {
     public ResponseEntity<Map<String, Object>> classroom(@PathVariable("identification") String identification,
                                                          Principal principal, HttpServletRequest request) {
         AjaxUtil<TimetableClassroomElastic> ajaxUtil = AjaxUtil.of();
-        List<TimetableClassroomElastic> timetableClassroomElastics = timetableService.classrooms(identification);
+        List<TimetableClassroomElastic> timetableClassroomElastics = educationalTimetableService.classrooms(identification);
         ajaxUtil.success().msg("获取数据成功").list(timetableClassroomElastics);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
@@ -123,7 +123,7 @@ public class TimetableApiController {
     public ResponseEntity<Map<String, Object>> attendClass(@PathVariable("identification") String identification,
                                                            Principal principal, HttpServletRequest request) {
         AjaxUtil<TimetableAttendClassElastic> ajaxUtil = AjaxUtil.of();
-        List<TimetableAttendClassElastic> timetableAttendClassElastics = timetableService.attendClasses(identification);
+        List<TimetableAttendClassElastic> timetableAttendClassElastics = educationalTimetableService.attendClasses(identification);
         ajaxUtil.success().msg("获取数据成功").list(timetableAttendClassElastics);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
@@ -138,7 +138,7 @@ public class TimetableApiController {
     public ResponseEntity<Map<String, Object>> courseName(@PathVariable("identification") String identification,
                                                           Principal principal, HttpServletRequest request) {
         AjaxUtil<TimetableCourseNameElastic> ajaxUtil = AjaxUtil.of();
-        List<TimetableCourseNameElastic> timetableCourseNameElastics = timetableService.courseNames(identification);
+        List<TimetableCourseNameElastic> timetableCourseNameElastics = educationalTimetableService.courseNames(identification);
         ajaxUtil.success().msg("获取数据成功").list(timetableCourseNameElastics);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
@@ -153,7 +153,7 @@ public class TimetableApiController {
     public ResponseEntity<Map<String, Object>> teacherName(@PathVariable("identification") String identification,
                                                            Principal principal, HttpServletRequest request) {
         AjaxUtil<TimetableTeacherNameElastic> ajaxUtil = AjaxUtil.of();
-        List<TimetableTeacherNameElastic> timetableTeacherNameElastics = timetableService.teacherNames(identification);
+        List<TimetableTeacherNameElastic> timetableTeacherNameElastics = educationalTimetableService.teacherNames(identification);
         ajaxUtil.success().msg("获取数据成功").list(timetableTeacherNameElastics);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.elastic.*;
-import top.zbeboy.zbase.feign.city.TimetableService;
+import top.zbeboy.zbase.feign.city.educational.EducationalTimetableService;
 import top.zbeboy.zbase.feign.platform.RoleService;
 import top.zbeboy.zbase.tools.web.plugin.select2.Select2Data;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
@@ -29,7 +29,7 @@ import java.util.Objects;
 public class TimetableRestController {
 
     @Resource
-    private TimetableService timetableService;
+    private EducationalTimetableService educationalTimetableService;
 
     @Resource
     private RoleService roleService;
@@ -45,7 +45,7 @@ public class TimetableRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         Users users = SessionUtil.getUserFromSession();
         if (roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_SYSTEM.name())) {
-            ajaxUtil = timetableService.sync();
+            ajaxUtil = educationalTimetableService.sync();
         } else {
             ajaxUtil.fail().msg("您无权限操作");
         }
@@ -62,7 +62,7 @@ public class TimetableRestController {
     public ResponseEntity<Map<String, Object>> uniques(HttpServletRequest request) {
         AjaxUtil<TimetableUniqueElastic> ajaxUtil = AjaxUtil.of();
         // 排序
-        List<TimetableUniqueElastic> list = timetableService.uniques();
+        List<TimetableUniqueElastic> list = educationalTimetableService.uniques();
         if (Objects.nonNull(list) && !list.isEmpty()) {
             list.sort((o1, o2) -> o2.getIdentification().compareTo(o1.getIdentification()));
         }
@@ -95,7 +95,7 @@ public class TimetableRestController {
                             StringUtils.isNotBlank(classroom) ||
                             StringUtils.isNotBlank(teacherName) ||
                             StringUtils.isNotBlank(teacherNumber))) {
-                timetableElastics = timetableService.search(elasticUtil);
+                timetableElastics = educationalTimetableService.search(elasticUtil);
             }
         }
         timetableElastics.forEach(timetableElastic -> timetableElastic.setTeacherNumber(""));
@@ -112,7 +112,7 @@ public class TimetableRestController {
     @GetMapping("/web/educational/timetable/classroom/{identification}")
     public ResponseEntity<Map<String, Object>> classroom(@PathVariable("identification") String identification, HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
-        List<TimetableClassroomElastic> timetableClassroomElastics = timetableService.classrooms(identification);
+        List<TimetableClassroomElastic> timetableClassroomElastics = educationalTimetableService.classrooms(identification);
         timetableClassroomElastics.forEach(data -> select2Data.add(data.getClassroom(), data.getClassroom()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
@@ -126,7 +126,7 @@ public class TimetableRestController {
     @GetMapping("/web/educational/timetable/attend_class/{identification}")
     public ResponseEntity<Map<String, Object>> attendClass(@PathVariable("identification") String identification, HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
-        List<TimetableAttendClassElastic> timetableAttendClassElastics = timetableService.attendClasses(identification);
+        List<TimetableAttendClassElastic> timetableAttendClassElastics = educationalTimetableService.attendClasses(identification);
         timetableAttendClassElastics.forEach(data -> select2Data.add(data.getAttendClass(), data.getAttendClass()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
@@ -140,7 +140,7 @@ public class TimetableRestController {
     @GetMapping("/web/educational/timetable/course_name/{identification}")
     public ResponseEntity<Map<String, Object>> courseName(@PathVariable("identification") String identification, HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
-        List<TimetableCourseNameElastic> timetableCourseNameElastics = timetableService.courseNames(identification);
+        List<TimetableCourseNameElastic> timetableCourseNameElastics = educationalTimetableService.courseNames(identification);
         timetableCourseNameElastics.forEach(data -> select2Data.add(data.getCourseName(), data.getCourseName()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
@@ -154,7 +154,7 @@ public class TimetableRestController {
     @GetMapping("/web/educational/timetable/teacher_name/{identification}")
     public ResponseEntity<Map<String, Object>> teacherName(@PathVariable("identification") String identification, HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
-        List<TimetableTeacherNameElastic> timetableTeacherNameElastics = timetableService.teacherNames(identification);
+        List<TimetableTeacherNameElastic> timetableTeacherNameElastics = educationalTimetableService.teacherNames(identification);
         timetableTeacherNameElastics.forEach(data -> select2Data.add(data.getTeacherName(), data.getTeacherName()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }

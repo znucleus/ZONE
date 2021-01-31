@@ -12,7 +12,7 @@ import top.zbeboy.zbase.domain.tables.pojos.SchoolOpens;
 import top.zbeboy.zbase.domain.tables.pojos.SchoolOpensContent;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.domain.tables.pojos.UsersType;
-import top.zbeboy.zbase.feign.campus.opens.SchoolOpensService;
+import top.zbeboy.zbase.feign.campus.opens.CampusOpensService;
 import top.zbeboy.zbase.feign.data.StaffService;
 import top.zbeboy.zbase.feign.data.StudentService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
@@ -27,7 +27,7 @@ import java.util.Optional;
 public class CampusOpensViewController {
 
     @Resource
-    private SchoolOpensService schoolOpensService;
+    private CampusOpensService campusOpensService;
 
     @Resource
     private UsersTypeService usersTypeService;
@@ -46,7 +46,7 @@ public class CampusOpensViewController {
     @GetMapping("/web/menu/campus/opens")
     public String index(ModelMap modelMap) {
         Users users = SessionUtil.getUserFromSession();
-        modelMap.addAttribute("canRelease", schoolOpensService.opensConditionRelease(users.getUsername()));
+        modelMap.addAttribute("canRelease", campusOpensService.opensConditionRelease(users.getUsername()));
         return "web/campus/opens/opens_data::#page-wrapper";
     }
 
@@ -61,7 +61,7 @@ public class CampusOpensViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         Users users = SessionUtil.getUserFromSession();
-        if (schoolOpensService.opensConditionRelease(users.getUsername())) {
+        if (campusOpensService.opensConditionRelease(users.getUsername())) {
             Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
             if (optionalUsersType.isPresent()) {
                 UsersType usersType = optionalUsersType.get();
@@ -104,9 +104,9 @@ public class CampusOpensViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         Users users = SessionUtil.getUserFromSession();
-        if (schoolOpensService.opensConditionOperator(users.getUsername(), id)) {
-            modelMap.addAttribute("schoolOpens", schoolOpensService.findById(id));
-            modelMap.addAttribute("schoolOpensContent", schoolOpensService.content(id));
+        if (campusOpensService.opensConditionOperator(users.getUsername(), id)) {
+            modelMap.addAttribute("schoolOpens", campusOpensService.findById(id));
+            modelMap.addAttribute("schoolOpensContent", campusOpensService.content(id));
             page = "web/campus/opens/opens_edit::#page-wrapper";
         } else {
             config.buildWarningTip("操作警告", "您无权限操作");
@@ -126,8 +126,8 @@ public class CampusOpensViewController {
     public String look(@PathVariable("id") String id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        Optional<SchoolOpens> optionalSchoolOpens = schoolOpensService.findById(id);
-        Optional<SchoolOpensContent> optionalSchoolOpensContent = schoolOpensService.content(id);
+        Optional<SchoolOpens> optionalSchoolOpens = campusOpensService.findById(id);
+        Optional<SchoolOpensContent> optionalSchoolOpensContent = campusOpensService.content(id);
         if (optionalSchoolOpens.isPresent() && optionalSchoolOpensContent.isPresent()) {
             modelMap.addAttribute("schoolOpens", optionalSchoolOpens.get());
             modelMap.addAttribute("schoolOpensContent", optionalSchoolOpensContent.get());
@@ -151,7 +151,7 @@ public class CampusOpensViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         Users users = SessionUtil.getUserFromSession();
-        if (schoolOpensService.opensConditionAuthorize(users.getUsername())) {
+        if (campusOpensService.opensConditionAuthorize(users.getUsername())) {
             page = "web/campus/opens/open_authorize::#page-wrapper";
         } else {
             config.buildWarningTip("操作警告", "您无权限操作");

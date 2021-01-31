@@ -12,7 +12,7 @@ import top.zbeboy.zbase.domain.tables.pojos.CampusCourseData;
 import top.zbeboy.zbase.domain.tables.pojos.CampusCourseRelease;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.domain.tables.pojos.UsersType;
-import top.zbeboy.zbase.feign.campus.timetable.CampusCourseReleaseService;
+import top.zbeboy.zbase.feign.campus.timetable.CampusTimetableService;
 import top.zbeboy.zbase.feign.data.StaffService;
 import top.zbeboy.zbase.feign.data.StudentService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
@@ -37,7 +37,7 @@ public class CampusTimetableViewController {
     private StaffService staffService;
 
     @Resource
-    private CampusCourseReleaseService campusCourseReleaseService;
+    private CampusTimetableService campusTimetableService;
 
     /**
      * 课表
@@ -115,8 +115,8 @@ public class CampusTimetableViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         Users users = SessionUtil.getUserFromSession();
-        if (campusCourseReleaseService.canOperator(users.getUsername(), id)) {
-            Optional<CampusCourseRelease> optionalCampusCourseRelease = campusCourseReleaseService.findById(id);
+        if (campusTimetableService.canOperator(users.getUsername(), id)) {
+            Optional<CampusCourseRelease> optionalCampusCourseRelease = campusTimetableService.findById(id);
             if(optionalCampusCourseRelease.isPresent()){
                 modelMap.addAttribute("campusCourseRelease", optionalCampusCourseRelease.get());
                 page = "web/campus/timetable/timetable_release_edit::#page-wrapper";
@@ -143,7 +143,7 @@ public class CampusTimetableViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         Users users = SessionUtil.getUserFromSession();
-        if (campusCourseReleaseService.canOperator(users.getUsername(), id)) {
+        if (campusTimetableService.canOperator(users.getUsername(), id)) {
             modelMap.addAttribute("campusCourseReleaseId", id);
             page = "web/campus/timetable/timetable_course_add::#page-wrapper";
         } else {
@@ -164,7 +164,7 @@ public class CampusTimetableViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         Users users = SessionUtil.getUserFromSession();
-        if (campusCourseReleaseService.canOperator(users.getUsername(), id)) {
+        if (campusTimetableService.canOperator(users.getUsername(), id)) {
             modelMap.addAttribute("campusCourseReleaseId", id);
             page = "web/campus/timetable/timetable_course_edu_organize_add::#page-wrapper";
         } else {
@@ -185,7 +185,7 @@ public class CampusTimetableViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         Users users = SessionUtil.getUserFromSession();
-        if (campusCourseReleaseService.canOperator(users.getUsername(), id)) {
+        if (campusTimetableService.canOperator(users.getUsername(), id)) {
             modelMap.addAttribute("campusCourseReleaseId", id);
             page = "web/campus/timetable/timetable_course_edu_teacher_add::#page-wrapper";
         } else {
@@ -206,7 +206,7 @@ public class CampusTimetableViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         Users users = SessionUtil.getUserFromSession();
-        if (campusCourseReleaseService.canOperator(users.getUsername(), id)) {
+        if (campusTimetableService.canOperator(users.getUsername(), id)) {
             modelMap.addAttribute("campusCourseReleaseId", id);
             page = "web/campus/timetable/timetable_course_share_add::#page-wrapper";
         } else {
@@ -226,11 +226,11 @@ public class CampusTimetableViewController {
     public String courseEdit(@PathVariable("id") String id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        Optional<CampusCourseData> optionalCampusCourseData = campusCourseReleaseService.findCourseById(id);
+        Optional<CampusCourseData> optionalCampusCourseData = campusTimetableService.findCourseById(id);
         if (optionalCampusCourseData.isPresent()) {
             CampusCourseData campusCourseData = optionalCampusCourseData.get();
             Users users = SessionUtil.getUserFromSession();
-            if (campusCourseReleaseService.canOperator(users.getUsername(), campusCourseData.getCampusCourseReleaseId())) {
+            if (campusTimetableService.canOperator(users.getUsername(), campusCourseData.getCampusCourseReleaseId())) {
                 modelMap.addAttribute("campusCourseData", campusCourseData);
                 page = "web/campus/timetable/timetable_course_edit::#page-wrapper";
             } else {

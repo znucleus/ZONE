@@ -12,7 +12,7 @@ import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.RosterRelease;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.domain.tables.pojos.UsersType;
-import top.zbeboy.zbase.feign.campus.roster.RosterReleaseService;
+import top.zbeboy.zbase.feign.campus.roster.CampusRosterService;
 import top.zbeboy.zbase.feign.data.StaffService;
 import top.zbeboy.zbase.feign.data.StudentService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
@@ -31,7 +31,7 @@ import java.util.Optional;
 public class CampusRosterViewController {
 
     @Resource
-    private RosterReleaseService rosterReleaseService;
+    private CampusRosterService campusRosterService;
 
     @Resource
     private UsersTypeService usersTypeService;
@@ -50,7 +50,7 @@ public class CampusRosterViewController {
     @GetMapping("/web/menu/campus/roster")
     public String index(ModelMap modelMap) {
         Users users = SessionUtil.getUserFromSession();
-        modelMap.addAttribute("canRelease", rosterReleaseService.canRelease(users.getUsername()));
+        modelMap.addAttribute("canRelease", campusRosterService.canRelease(users.getUsername()));
         return "web/campus/roster/roster_release::#page-wrapper";
     }
 
@@ -65,7 +65,7 @@ public class CampusRosterViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         Users users = SessionUtil.getUserFromSession();
-        if (rosterReleaseService.canRelease(users.getUsername())) {
+        if (campusRosterService.canRelease(users.getUsername())) {
             Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
             if (optionalUsersType.isPresent()) {
                 UsersType usersType = optionalUsersType.get();
@@ -108,8 +108,8 @@ public class CampusRosterViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         Users users = SessionUtil.getUserFromSession();
-        if (rosterReleaseService.canOperator(users.getUsername(), id)) {
-            Optional<RosterRelease> optionalRosterRelease = rosterReleaseService.findById(id);
+        if (campusRosterService.canOperator(users.getUsername(), id)) {
+            Optional<RosterRelease> optionalRosterRelease = campusRosterService.findById(id);
             if (optionalRosterRelease.isPresent()) {
                 RosterRelease rosterRelease = optionalRosterRelease.get();
                 modelMap.addAttribute("rosterRelease", rosterRelease);
@@ -140,8 +140,8 @@ public class CampusRosterViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         Users users = SessionUtil.getUserFromSession();
-        if (rosterReleaseService.canRegister(users.getUsername(), id) &&
-                !rosterReleaseService.canDataEdit(users.getUsername(), id)) {
+        if (campusRosterService.canRegister(users.getUsername(), id) &&
+                !campusRosterService.canDataEdit(users.getUsername(), id)) {
             // 添加
             StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
             if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
@@ -171,7 +171,7 @@ public class CampusRosterViewController {
     @GetMapping(CampusUrlCommon.ANYONE_ROSTER_DATE_ADD_URL + "{id}")
     public String dataOuterAdd(@PathVariable("id") String id, ModelMap modelMap) {
         SystemTipConfig config = new SystemTipConfig();
-        Optional<RosterRelease> optionalRosterRelease = rosterReleaseService.findById(id);
+        Optional<RosterRelease> optionalRosterRelease = campusRosterService.findById(id);
         if (optionalRosterRelease.isPresent()) {
             RosterRelease rosterRelease = optionalRosterRelease.get();
             // 时间范围
@@ -212,10 +212,10 @@ public class CampusRosterViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         Users users = SessionUtil.getUserFromSession();
-        if (rosterReleaseService.canDataEdit(users.getUsername(), id)) {
+        if (campusRosterService.canDataEdit(users.getUsername(), id)) {
             StudentBean studentBean = studentService.findByUsername(users.getUsername());
             if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
-                Optional<RosterDataBean> optionalRosterDataBean = rosterReleaseService.findRosterDataByStudentNumberAndRosterReleaseIdRelation(studentBean.getStudentNumber(), id);
+                Optional<RosterDataBean> optionalRosterDataBean = campusRosterService.findRosterDataByStudentNumberAndRosterReleaseIdRelation(studentBean.getStudentNumber(), id);
                 if (optionalRosterDataBean.isPresent()) {
                     RosterDataBean rosterDataBean = optionalRosterDataBean.get();
                     rosterDataBean.setBusSection(rosterDataBean.getBusSection().substring(rosterDataBean.getBusSection().indexOf("-") + 1));
@@ -250,10 +250,10 @@ public class CampusRosterViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         Users users = SessionUtil.getUserFromSession();
-        if (rosterReleaseService.canDataLook(users.getUsername(), id)) {
+        if (campusRosterService.canDataLook(users.getUsername(), id)) {
             StudentBean studentBean = studentService.findByUsername(users.getUsername());
             if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
-                Optional<RosterDataBean> optionalRosterDataBean = rosterReleaseService.findRosterDataByStudentNumberAndRosterReleaseIdRelation(studentBean.getStudentNumber(), id);
+                Optional<RosterDataBean> optionalRosterDataBean = campusRosterService.findRosterDataByStudentNumberAndRosterReleaseIdRelation(studentBean.getStudentNumber(), id);
                 if (optionalRosterDataBean.isPresent()) {
                     RosterDataBean rosterDataBean = optionalRosterDataBean.get();
                     rosterDataBean.setBusSection(rosterDataBean.getBusSection().substring(rosterDataBean.getBusSection().indexOf("-") + 1));
@@ -288,7 +288,7 @@ public class CampusRosterViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         Users users = SessionUtil.getUserFromSession();
-        if (rosterReleaseService.canAuthorize(users.getUsername())) {
+        if (campusRosterService.canAuthorize(users.getUsername())) {
             page = "web/campus/roster/roster_authorize::#page-wrapper";
         } else {
             config.buildWarningTip("操作警告", "您无权限操作");
@@ -309,7 +309,7 @@ public class CampusRosterViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         Users users = SessionUtil.getUserFromSession();
-        if (rosterReleaseService.canReview(users.getUsername(), id)) {
+        if (campusRosterService.canReview(users.getUsername(), id)) {
             modelMap.addAttribute("rosterReleaseId", id);
             page = "web/campus/roster/roster_review::#page-wrapper";
         } else {

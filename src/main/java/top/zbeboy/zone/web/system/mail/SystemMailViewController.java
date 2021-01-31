@@ -14,7 +14,7 @@ import top.zbeboy.zbase.bean.data.student.StudentBean;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.config.ZoneProperties;
 import top.zbeboy.zbase.domain.tables.pojos.*;
-import top.zbeboy.zbase.feign.campus.roster.RosterReleaseService;
+import top.zbeboy.zbase.feign.campus.roster.CampusRosterService;
 import top.zbeboy.zbase.feign.data.PotentialService;
 import top.zbeboy.zbase.feign.data.StaffService;
 import top.zbeboy.zbase.feign.data.StudentService;
@@ -70,7 +70,7 @@ public class SystemMailViewController {
     private AuthorizeService authorizeService;
 
     @Resource
-    private RosterReleaseService rosterReleaseService;
+    private CampusRosterService campusRosterService;
 
     /**
      * 用户验证邮箱
@@ -112,12 +112,12 @@ public class SystemMailViewController {
 
                             // 进行花名册同步
                             if (StringUtils.isNotBlank(bean.getStudentNumber())) {
-                                Optional<RosterData> optionalRosterData = rosterReleaseService.findRosterDataByStudentNumber(bean.getStudentNumber());
+                                Optional<RosterData> optionalRosterData = campusRosterService.findRosterDataByStudentNumber(bean.getStudentNumber());
                                 if (optionalRosterData.isPresent()) {
                                     RosterData rosterData = optionalRosterData.get();
                                     rosterData.setPhoneNumber(bean.getMobile());
                                     rosterData.setEmail(bean.getEmail());
-                                    rosterReleaseService.dataSync(rosterData);
+                                    campusRosterService.dataSync(rosterData);
                                 }
                             }
                         } else if (StringUtils.equals(usersType.getUsersTypeName(), Workbook.POTENTIAL_USERS_TYPE)) {

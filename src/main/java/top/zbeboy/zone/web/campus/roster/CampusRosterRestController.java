@@ -16,7 +16,7 @@ import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.RosterData;
 import top.zbeboy.zbase.domain.tables.pojos.RosterRelease;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
-import top.zbeboy.zbase.feign.campus.roster.RosterReleaseService;
+import top.zbeboy.zbase.feign.campus.roster.CampusRosterService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.service.util.FilesUtil;
 import top.zbeboy.zbase.tools.service.util.RequestUtil;
@@ -46,7 +46,7 @@ import java.util.*;
 public class CampusRosterRestController {
 
     @Resource
-    private RosterReleaseService rosterReleaseService;
+    private CampusRosterService campusRosterService;
 
     @Resource
     private UploadService uploadService;
@@ -60,7 +60,7 @@ public class CampusRosterRestController {
     @PostMapping("/anyone/campus/roster/check_student_number")
     public ResponseEntity<Map<String, Object>> checkStudentNumber(@RequestParam("studentNumber") String studentNumber) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        Optional<RosterData> optionalRosterData = rosterReleaseService.findRosterDataByStudentNumber(studentNumber);
+        Optional<RosterData> optionalRosterData = campusRosterService.findRosterDataByStudentNumber(studentNumber);
         if (optionalRosterData.isPresent()) {
             ajaxUtil.success().msg("已填写");
         } else {
@@ -93,7 +93,7 @@ public class CampusRosterRestController {
     public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
         simplePaginationUtil.setUsername(users.getUsername());
-        AjaxUtil<RosterReleaseBean> ajaxUtil = rosterReleaseService.data(simplePaginationUtil);
+        AjaxUtil<RosterReleaseBean> ajaxUtil = campusRosterService.data(simplePaginationUtil);
         if (Objects.nonNull(ajaxUtil.getListResult())) {
             for (RosterReleaseBean bean : ajaxUtil.getListResult()) {
                 bean.setPublicLink(RequestUtil.getBaseUrl(request) + CampusUrlCommon.ANYONE_ROSTER_DATE_ADD_URL + bean.getRosterReleaseId());
@@ -123,7 +123,7 @@ public class CampusRosterRestController {
             String text = RequestUtil.getBaseUrl(request) + CampusUrlCommon.ANYONE_ROSTER_DATE_ADD_URL + id;
             QRCodeUtil.encode(text, logoPath, realPath + path, true);
             rosterReleaseAddVo.setQrCodeUrl(path);
-            ajaxUtil = rosterReleaseService.save(rosterReleaseAddVo);
+            ajaxUtil = campusRosterService.save(rosterReleaseAddVo);
         } catch (Exception e) {
             ajaxUtil.fail().msg("保存失败: 异常: " + e.getMessage());
         }
@@ -141,7 +141,7 @@ public class CampusRosterRestController {
     public ResponseEntity<Map<String, Object>> update(RosterReleaseEditVo rosterReleaseEditVo) {
         Users users = SessionUtil.getUserFromSession();
         rosterReleaseEditVo.setUsername(users.getUsername());
-        AjaxUtil<Map<String, Object>> ajaxUtil = rosterReleaseService.update(rosterReleaseEditVo);
+        AjaxUtil<Map<String, Object>> ajaxUtil = campusRosterService.update(rosterReleaseEditVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -154,7 +154,7 @@ public class CampusRosterRestController {
     @PostMapping("/web/campus/roster/delete")
     public ResponseEntity<Map<String, Object>> delete(@RequestParam("id") String id, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
-        AjaxUtil<Map<String, Object>> ajaxUtil = rosterReleaseService.delete(users.getUsername(), id);
+        AjaxUtil<Map<String, Object>> ajaxUtil = campusRosterService.delete(users.getUsername(), id);
         if (ajaxUtil.getState()) {
             // 删除文件
             String realPath = RequestUtil.getRealPath(request);
@@ -176,9 +176,9 @@ public class CampusRosterRestController {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
-            if (rosterReleaseService.canRegister(users.getUsername(), rosterDataAddVo.getRosterReleaseId()) &&
-                    !rosterReleaseService.canDataEdit(users.getUsername(), rosterDataAddVo.getRosterReleaseId())) {
-                ajaxUtil = rosterReleaseService.dataSave(rosterDataAddVo);
+            if (campusRosterService.canRegister(users.getUsername(), rosterDataAddVo.getRosterReleaseId()) &&
+                    !campusRosterService.canDataEdit(users.getUsername(), rosterDataAddVo.getRosterReleaseId())) {
+                ajaxUtil = campusRosterService.dataSave(rosterDataAddVo);
             } else {
                 ajaxUtil.fail().msg("保存失败，无权限操作");
             }
@@ -199,15 +199,15 @@ public class CampusRosterRestController {
     public ResponseEntity<Map<String, Object>> dataOuterSave(@Valid RosterDataAddVo rosterDataAddVo, BindingResult bindingResult, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {
-            Optional<RosterRelease> optionalRosterRelease = rosterReleaseService.findById(rosterDataAddVo.getRosterReleaseId());
+            Optional<RosterRelease> optionalRosterRelease = campusRosterService.findById(rosterDataAddVo.getRosterReleaseId());
             if (optionalRosterRelease.isPresent()) {
                 RosterRelease rosterRelease = optionalRosterRelease.get();
                 // 时间范围
                 if (DateTimeUtil.nowAfterSqlTimestamp(rosterRelease.getStartTime()) &&
                         DateTimeUtil.nowBeforeSqlTimestamp(rosterRelease.getEndTime())) {
-                    Optional<RosterData> optionalRosterData = rosterReleaseService.findRosterDataByStudentNumber(rosterDataAddVo.getStudentNumber());
+                    Optional<RosterData> optionalRosterData = campusRosterService.findRosterDataByStudentNumber(rosterDataAddVo.getStudentNumber());
                     if (!optionalRosterData.isPresent()) {
-                        ajaxUtil = rosterReleaseService.dataSave(rosterDataAddVo);
+                        ajaxUtil = campusRosterService.dataSave(rosterDataAddVo);
                     } else {
                         ajaxUtil.fail().msg("保存失败，该学号已登记，若需要修改请登录。");
                     }
@@ -234,7 +234,7 @@ public class CampusRosterRestController {
     public ResponseEntity<Map<String, Object>> dataUpdate(RosterDataEditVo rosterDataEditVo, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
         rosterDataEditVo.setUsername(users.getUsername());
-        AjaxUtil<Map<String, Object>> ajaxUtil = rosterReleaseService.dataUpdate(rosterDataEditVo);
+        AjaxUtil<Map<String, Object>> ajaxUtil = campusRosterService.dataUpdate(rosterDataEditVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -248,7 +248,7 @@ public class CampusRosterRestController {
     @PostMapping("/web/campus/roster/data/delete")
     public ResponseEntity<Map<String, Object>> dataDelete(@RequestParam("id") String id, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
-        AjaxUtil<Map<String, Object>> ajaxUtil = rosterReleaseService.dataDelete(users.getUsername(), id);
+        AjaxUtil<Map<String, Object>> ajaxUtil = campusRosterService.dataDelete(users.getUsername(), id);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -262,7 +262,7 @@ public class CampusRosterRestController {
     public ResponseEntity<Map<String, Object>> authorizeData(TableSawUtil tableSawUtil) {
         Users users = SessionUtil.getUserFromSession();
         tableSawUtil.setUsername(users.getUsername());
-        AjaxUtil<RosterAuthoritiesBean> ajaxUtil = rosterReleaseService.authorizeData(tableSawUtil);
+        AjaxUtil<RosterAuthoritiesBean> ajaxUtil = campusRosterService.authorizeData(tableSawUtil);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -276,7 +276,7 @@ public class CampusRosterRestController {
     public ResponseEntity<Map<String, Object>> authorizeSave(RosterAuthoritiesAddVo rosterAuthoritiesAddVo) {
         Users users = SessionUtil.getUserFromSession();
         rosterAuthoritiesAddVo.setUsername(users.getUsername());
-        AjaxUtil<Map<String, Object>> ajaxUtil = rosterReleaseService.authorizeSave(rosterAuthoritiesAddVo);
+        AjaxUtil<Map<String, Object>> ajaxUtil = campusRosterService.authorizeSave(rosterAuthoritiesAddVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -289,7 +289,7 @@ public class CampusRosterRestController {
     @PostMapping("/web/campus/roster/authorize/delete")
     public ResponseEntity<Map<String, Object>> authorizeDelete(@RequestParam("id") String id) {
         Users users = SessionUtil.getUserFromSession();
-        AjaxUtil<Map<String, Object>> ajaxUtil = rosterReleaseService.authorizeDelete(users.getUsername(), id);
+        AjaxUtil<Map<String, Object>> ajaxUtil = campusRosterService.authorizeDelete(users.getUsername(), id);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -352,8 +352,8 @@ public class CampusRosterRestController {
         JSONObject search = dataTablesUtil.getSearch();
         String rosterReleaseId = search.getString("rosterReleaseId");
         if (StringUtils.isNotBlank(rosterReleaseId) &&
-                rosterReleaseService.canReview(users.getUsername(), rosterReleaseId)) {
-            dataTablesUtil = rosterReleaseService.reviewData(dataTablesUtil);
+                campusRosterService.canReview(users.getUsername(), rosterReleaseId)) {
+            dataTablesUtil = campusRosterService.reviewData(dataTablesUtil);
         } else {
             dataTablesUtil.setData(new ArrayList<>());
         }
@@ -370,7 +370,7 @@ public class CampusRosterRestController {
     @PostMapping("/web/campus/roster/review/delete")
     public ResponseEntity<Map<String, Object>> reviewDelete(String rosterDataIds, String rosterReleaseId) {
         Users users = SessionUtil.getUserFromSession();
-        AjaxUtil<Map<String, Object>> ajaxUtil = rosterReleaseService.reviewDelete(users.getUsername(), rosterDataIds, rosterReleaseId);
+        AjaxUtil<Map<String, Object>> ajaxUtil = campusRosterService.reviewDelete(users.getUsername(), rosterDataIds, rosterReleaseId);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -388,9 +388,9 @@ public class CampusRosterRestController {
         JSONObject search = dataTablesUtil.getSearch();
         String rosterReleaseId = search.getString("rosterReleaseId");
         if (StringUtils.isNotBlank(rosterReleaseId) &&
-                rosterReleaseService.canReview(users.getUsername(), rosterReleaseId)) {
+                campusRosterService.canReview(users.getUsername(), rosterReleaseId)) {
             List<RosterDataBean> beans;
-            Optional<List<RosterDataBean>> optionalRosterDataBeans = rosterReleaseService.reviewDataExport(dataTablesUtil);
+            Optional<List<RosterDataBean>> optionalRosterDataBeans = campusRosterService.reviewDataExport(dataTablesUtil);
             beans = optionalRosterDataBeans.orElseGet(ArrayList::new);
             RosterDataExport export = new RosterDataExport(beans);
             ExportInfo exportInfo = dataTablesUtil.getExportInfo();

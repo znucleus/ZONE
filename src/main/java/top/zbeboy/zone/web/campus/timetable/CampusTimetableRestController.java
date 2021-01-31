@@ -1,7 +1,6 @@
 package top.zbeboy.zone.web.campus.timetable;
 
 import com.alibaba.fastjson.JSON;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,7 +8,7 @@ import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.CampusCourseData;
 import top.zbeboy.zbase.domain.tables.pojos.CampusCourseRelease;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
-import top.zbeboy.zbase.feign.campus.timetable.CampusCourseReleaseService;
+import top.zbeboy.zbase.feign.campus.timetable.CampusTimetableService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.service.util.FilesUtil;
 import top.zbeboy.zbase.tools.service.util.RequestUtil;
@@ -35,7 +34,7 @@ import java.util.Optional;
 public class CampusTimetableRestController {
 
     @Resource
-    private CampusCourseReleaseService campusCourseReleaseService;
+    private CampusTimetableService campusTimetableService;
 
     /**
      * 通过主键查询
@@ -45,7 +44,7 @@ public class CampusTimetableRestController {
     @GetMapping("/web/campus/timetable/release/{id}")
     public ResponseEntity<Map<String, Object>> release(@PathVariable("id") String id, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        Optional<CampusCourseRelease> optionalCampusCourseRelease = campusCourseReleaseService.findById(id);
+        Optional<CampusCourseRelease> optionalCampusCourseRelease = campusTimetableService.findById(id);
         if (optionalCampusCourseRelease.isPresent()) {
             ajaxUtil.success().msg("查询课表成功").put("release", optionalCampusCourseRelease.get());
         } else {
@@ -63,7 +62,7 @@ public class CampusTimetableRestController {
     public ResponseEntity<Map<String, Object>> releases() {
         Users users = SessionUtil.getUserFromSession();
         Select2Data select2Data = Select2Data.of();
-        Optional<List<CampusCourseRelease>> optionalCampusCourseReleases = campusCourseReleaseService.findByUsername(users.getUsername());
+        Optional<List<CampusCourseRelease>> optionalCampusCourseReleases = campusTimetableService.findByUsername(users.getUsername());
         if(optionalCampusCourseReleases.isPresent()){
             List<CampusCourseRelease> campusCourseReleases = optionalCampusCourseReleases.get();
             campusCourseReleases.forEach(release -> select2Data.add(release.getCampusCourseReleaseId(), release.getTitle()));
@@ -92,7 +91,7 @@ public class CampusTimetableRestController {
             String text = RequestUtil.getBaseUrl(request) + CampusUrlCommon.ANYONE_TIMETABLE_LOOK_URL + id;
             QRCodeUtil.encode(text, logoPath, realPath + path, true);
             campusCourseReleaseAddVo.setQrCodeUrl(path);
-            ajaxUtil = campusCourseReleaseService.save(campusCourseReleaseAddVo);
+            ajaxUtil = campusTimetableService.save(campusCourseReleaseAddVo);
         } catch (Exception e) {
             ajaxUtil.fail().msg("保存失败: 异常: " + e.getMessage());
         }
@@ -110,7 +109,7 @@ public class CampusTimetableRestController {
     public ResponseEntity<Map<String, Object>> shareSave(@RequestParam("shareId") String shareId, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         try {
-            Optional<CampusCourseRelease> optionalCampusCourseRelease = campusCourseReleaseService.findById(shareId);
+            Optional<CampusCourseRelease> optionalCampusCourseRelease = campusTimetableService.findById(shareId);
             if (optionalCampusCourseRelease.isPresent()) {
                 CampusCourseRelease release = optionalCampusCourseRelease.get();
                 CampusCourseReleaseAddVo campusCourseReleaseAddVo = new CampusCourseReleaseAddVo();
@@ -131,7 +130,7 @@ public class CampusTimetableRestController {
                 campusCourseReleaseAddVo.setEndYear(release.getEndYear());
                 campusCourseReleaseAddVo.setTerm(release.getTerm());
                 campusCourseReleaseAddVo.setShareId(shareId);
-                ajaxUtil = campusCourseReleaseService.shareSave(campusCourseReleaseAddVo);
+                ajaxUtil = campusTimetableService.shareSave(campusCourseReleaseAddVo);
             } else {
                 ajaxUtil.fail().msg("保存失败，根据共享ID未查询到课表信息");
             }
@@ -152,7 +151,7 @@ public class CampusTimetableRestController {
     public ResponseEntity<Map<String, Object>> update(CampusCourseReleaseEditVo campusCourseReleaseEditVo) {
         Users users = SessionUtil.getUserFromSession();
         campusCourseReleaseEditVo.setUsername(users.getUsername());
-        AjaxUtil<Map<String, Object>> ajaxUtil = campusCourseReleaseService.update(campusCourseReleaseEditVo);
+        AjaxUtil<Map<String, Object>> ajaxUtil = campusTimetableService.update(campusCourseReleaseEditVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -165,7 +164,7 @@ public class CampusTimetableRestController {
     @PostMapping("/web/campus/timetable/delete")
     public ResponseEntity<Map<String, Object>> delete(@RequestParam("id") String id, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
-        AjaxUtil<Map<String, Object>> ajaxUtil = campusCourseReleaseService.delete(users.getUsername(), id);
+        AjaxUtil<Map<String, Object>> ajaxUtil = campusTimetableService.delete(users.getUsername(), id);
         if (ajaxUtil.getState()) {
             // 删除文件
             String realPath = RequestUtil.getRealPath(request);
@@ -185,7 +184,7 @@ public class CampusTimetableRestController {
     public ResponseEntity<Map<String, Object>> courseSave(CampusCourseDataAddVo campusCourseDataAddVo) {
         Users users = SessionUtil.getUserFromSession();
         campusCourseDataAddVo.setUsername(users.getUsername());
-        AjaxUtil<Map<String, Object>> ajaxUtil = campusCourseReleaseService.courseSave(campusCourseDataAddVo);
+        AjaxUtil<Map<String, Object>> ajaxUtil = campusTimetableService.courseSave(campusCourseDataAddVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -202,7 +201,7 @@ public class CampusTimetableRestController {
         List<CampusCourseDataAddVo> list = JSON.parseArray(data, CampusCourseDataAddVo.class);
         if (Objects.nonNull(list) && !list.isEmpty()) {
             list.forEach(campusCourseDataAddVo -> campusCourseDataAddVo.setUsername(users.getUsername()));
-            ajaxUtil = campusCourseReleaseService.courseBatchSave(list);
+            ajaxUtil = campusTimetableService.courseBatchSave(list);
         } else {
             ajaxUtil.fail().msg("请选择课程");
         }
@@ -218,7 +217,7 @@ public class CampusTimetableRestController {
     @GetMapping("/web/campus/timetable/courses/{campusCourseReleaseId}")
     public ResponseEntity<Map<String, Object>> courses(@PathVariable("campusCourseReleaseId") String campusCourseReleaseId) {
         AjaxUtil<CampusCourseData> ajaxUtil = AjaxUtil.of();
-        Optional<List<CampusCourseData>> optionalCampusCourseData = campusCourseReleaseService.findCourseByCampusCourseReleaseId(campusCourseReleaseId);
+        Optional<List<CampusCourseData>> optionalCampusCourseData = campusTimetableService.findCourseByCampusCourseReleaseId(campusCourseReleaseId);
         if(optionalCampusCourseData.isPresent()){
             ajaxUtil.success().msg("获取数据成功").list(optionalCampusCourseData.get()).put("weekDay", DateTimeUtil.getNowDayOfWeek());
         } else {
@@ -236,10 +235,10 @@ public class CampusTimetableRestController {
     @GetMapping("/anyone/campus/timetable/share_courses/{campusCourseReleaseId}")
     public ResponseEntity<Map<String, Object>> shareCourses(@PathVariable("campusCourseReleaseId") String campusCourseReleaseId) {
         AjaxUtil<CampusCourseData> ajaxUtil = AjaxUtil.of();
-        Optional<CampusCourseRelease> optionalCampusCourseRelease = campusCourseReleaseService.findById(campusCourseReleaseId);
+        Optional<CampusCourseRelease> optionalCampusCourseRelease = campusTimetableService.findById(campusCourseReleaseId);
         if (optionalCampusCourseRelease.isPresent()) {
             CampusCourseRelease release = optionalCampusCourseRelease.get();
-            Optional<List<CampusCourseData>> optionalCampusCourseData = campusCourseReleaseService.findCourseByCampusCourseReleaseId(campusCourseReleaseId);
+            Optional<List<CampusCourseData>> optionalCampusCourseData = campusTimetableService.findCourseByCampusCourseReleaseId(campusCourseReleaseId);
             if(optionalCampusCourseData.isPresent()){
                 ajaxUtil.success().msg("获取数据成功").list(optionalCampusCourseData.get())
                         .put("release", release)
@@ -263,7 +262,7 @@ public class CampusTimetableRestController {
     public ResponseEntity<Map<String, Object>> courseUpdate(CampusCourseDataEditVo campusCourseDataEditVo) {
         Users users = SessionUtil.getUserFromSession();
         campusCourseDataEditVo.setUsername(users.getUsername());
-        AjaxUtil<Map<String, Object>> ajaxUtil = campusCourseReleaseService.courseUpdate(campusCourseDataEditVo);
+        AjaxUtil<Map<String, Object>> ajaxUtil = campusTimetableService.courseUpdate(campusCourseDataEditVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -276,7 +275,7 @@ public class CampusTimetableRestController {
     @PostMapping("/web/campus/timetable/course/delete")
     public ResponseEntity<Map<String, Object>> courseDelete(@RequestParam("id") String id) {
         Users users = SessionUtil.getUserFromSession();
-        AjaxUtil<Map<String, Object>> ajaxUtil = campusCourseReleaseService.courseDelete(users.getUsername(), id);
+        AjaxUtil<Map<String, Object>> ajaxUtil = campusTimetableService.courseDelete(users.getUsername(), id);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }
