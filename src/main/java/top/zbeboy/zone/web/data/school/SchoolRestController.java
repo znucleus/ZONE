@@ -52,7 +52,7 @@ public class SchoolRestController {
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/data/school/data")
+    @GetMapping("/web/data/school/paging")
     public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
         HashMap<String, String> paramMap = RequestUtil.addValue(request, RequestUtil.commonUseKey.username.name(), users.getUsername());

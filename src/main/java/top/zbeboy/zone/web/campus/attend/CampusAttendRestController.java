@@ -10,15 +10,14 @@ import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.campus.attend.AttendReleaseService;
 import top.zbeboy.zbase.feign.campus.attend.AttendReleaseSubService;
 import top.zbeboy.zbase.feign.campus.attend.AttendUsersService;
+import top.zbeboy.zbase.tools.service.util.RequestUtil;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 public class CampusAttendRestController {
@@ -40,23 +39,10 @@ public class CampusAttendRestController {
      */
     @GetMapping("/web/campus/attend/data")
     public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
-        // 前台数据标题 注：要和前台标题顺序一致，获取order用
-        List<String> headers = new ArrayList<>();
-        headers.add("title");
-        headers.add("attendStartTime");
-        headers.add("attendEndTime");
-        headers.add("isAuto");
-        headers.add("validDate");
-        headers.add("expireDate");
-        headers.add("organizeName");
-        headers.add("totalUsers");
-        headers.add("totalAttend");
-        headers.add("releaseTime");
-        headers.add("operator");
-        DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
         Users users = SessionUtil.getUserFromSession();
-        dataTablesUtil.setUsername(users.getUsername());
-        return new ResponseEntity<>(attendReleaseSubService.statistics(dataTablesUtil), HttpStatus.OK);
+        HashMap<String, String> paramMap = RequestUtil.addValue(request, RequestUtil.commonUseKey.username.name(), users.getUsername());
+        Optional<DataTablesUtil> result = attendReleaseSubService.statistics(paramMap);
+        return new ResponseEntity<>(result.orElseGet(() -> new DataTablesUtil(request)), HttpStatus.OK);
     }
 
     /**
