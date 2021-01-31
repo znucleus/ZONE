@@ -39,10 +39,23 @@ public class CampusAttendRestController {
      */
     @GetMapping("/web/campus/attend/data")
     public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
+        // 前台数据标题 注：要和前台标题顺序一致，获取order用
+        List<String> headers = new ArrayList<>();
+        headers.add("title");
+        headers.add("attendStartTime");
+        headers.add("attendEndTime");
+        headers.add("isAuto");
+        headers.add("validDate");
+        headers.add("expireDate");
+        headers.add("organizeName");
+        headers.add("totalUsers");
+        headers.add("totalAttend");
+        headers.add("releaseTime");
+        headers.add("operator");
+        DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
         Users users = SessionUtil.getUserFromSession();
-        HashMap<String, String> paramMap = RequestUtil.addValue(request, RequestUtil.commonUseKey.username.name(), users.getUsername());
-        Optional<DataTablesUtil> result = attendReleaseSubService.statistics(paramMap);
-        return new ResponseEntity<>(result.orElseGet(() -> new DataTablesUtil(request)), HttpStatus.OK);
+        dataTablesUtil.setUsername(users.getUsername());
+        return new ResponseEntity<>(attendReleaseSubService.statistics(dataTablesUtil), HttpStatus.OK);
     }
 
     /**
