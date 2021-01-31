@@ -9,7 +9,7 @@ require(["jquery", "lodash", "tools", "moment-with-locales", "handlebars", "swee
          ajax url.
          */
         var ajax_url = {
-            obtain_school_data: web_path + '/anyone/data/schools',
+            obtain_school_data: web_path + '/anyone/data/school',
             obtain_college_data: web_path + '/anyone/data/college',
             obtain_department_data: web_path + '/anyone/data/department',
             obtain_science_data: web_path + '/anyone/data/science',

@@ -6,7 +6,7 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
          ajax url.
          */
         var ajax_url = {
-            obtain_school_data: web_path + '/anyone/data/schools',
+            obtain_school_data: web_path + '/anyone/data/school',
             obtain_college_data: web_path + '/anyone/data/college',
             save: web_path + '/web/campus/roster/save',
             page: '/web/menu/campus/roster'

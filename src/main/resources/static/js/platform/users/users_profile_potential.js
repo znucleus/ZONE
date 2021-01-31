@@ -6,7 +6,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
         moment.locale('zh-cn');
 
         var ajax_url = {
-            obtain_school_data: web_path + '/anyone/data/schools',
+            obtain_school_data: web_path + '/anyone/data/school',
             obtain_college_data: web_path + '/anyone/data/college',
             potential_update_school: web_path + '/users/potential/update/school',
             obtain_nation_data: web_path + '/anyone/data/nation',

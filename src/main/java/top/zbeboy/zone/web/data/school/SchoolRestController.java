@@ -38,7 +38,7 @@ public class SchoolRestController {
      * @return 学校数据
      */
     @ApiLoggingRecord(remark = "学校数据", channel = Workbook.channel.WEB)
-    @GetMapping("/anyone/data/schools")
+    @GetMapping("/anyone/data/school")
     public ResponseEntity<Map<String, Object>> anyoneData(HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
         Optional<List<School>> result = schoolService.findNormal();
@@ -52,7 +52,7 @@ public class SchoolRestController {
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/data/schools/paging")
+    @GetMapping("/web/data/school/data")
     public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
         HashMap<String, String> paramMap = RequestUtil.addValue(request, RequestUtil.commonUseKey.username.name(), users.getUsername());
@@ -117,7 +117,7 @@ public class SchoolRestController {
      * @param isDel     is_del
      * @return true注销成功
      */
-    @PostMapping("/web/data/schools/update-status")
+    @PostMapping("/web/data/school/update-status")
     public ResponseEntity<Map<String, Object>> status(String schoolIds, Byte isDel) {
         AjaxUtil<Map<String, Object>> ajaxUtil = schoolService.status(schoolIds, isDel);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);

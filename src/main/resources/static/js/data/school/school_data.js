@@ -21,8 +21,8 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
          */
         function getAjaxUrl() {
             return {
-                data: web_path + '/web/data/schools/paging',
-                status: web_path + '/web/data/schools/update-status',
+                data: web_path + '/web/data/school/data',
+                status: web_path + '/web/data/school/update-status',
                 add: '/web/data/school/add',
                 edit: '/web/data/school/edit',
                 page: '/web/menu/data/school'
