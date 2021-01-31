@@ -34,7 +34,7 @@ public class AttendReleaseApiController {
      * @param id 发布id
      * @return true or false
      */
-    @GetMapping("/api/attend/attend_condition/authorize/{id}")
+    @GetMapping("/api/campus/attend/authorize-condition/{id}")
     public ResponseEntity<Map<String, Object>> canAuthorize(@PathVariable("id") String id, Principal principal) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         Users users = SessionUtil.getUserFromOauth(principal);
@@ -52,7 +52,7 @@ public class AttendReleaseApiController {
      * @param targetUsername 被授权人
      * @return true or false
      */
-    @GetMapping("/api/attend/attend_condition/operator_authorize/{targetUsername}")
+    @GetMapping("/api/campus/attend/operator-authorize-condition/{targetUsername}")
     public ResponseEntity<Map<String, Object>> canOperatorAuthorize(@PathVariable("targetUsername") String targetUsername, Principal principal) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         Users users = SessionUtil.getUserFromOauth(principal);
@@ -70,7 +70,7 @@ public class AttendReleaseApiController {
      * @param id 发布id
      * @return true or false
      */
-    @GetMapping("/api/attend/attend_condition/review/{id}")
+    @GetMapping("/api/campus/attend/review-condition/review/{id}")
     public ResponseEntity<Map<String, Object>> canReview(@PathVariable("id") String id, Principal principal) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         Users users = SessionUtil.getUserFromOauth(principal);
@@ -89,8 +89,8 @@ public class AttendReleaseApiController {
      * @param principal          当前用户信息
      * @return true or false
      */
-    @ApiLoggingRecord(remark = "校园签到保存", channel = Workbook.channel.API, needLogin = true)
-    @PostMapping("/api/attend/save")
+    @ApiLoggingRecord(remark = "校园签到发布保存", channel = Workbook.channel.API, needLogin = true)
+    @PostMapping("/api/campus/attend/release/save")
     public ResponseEntity<Map<String, Object>> save(AttendReleaseAddVo attendReleaseAddVo, Principal principal, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromOauth(principal);
         attendReleaseAddVo.setUsername(users.getUsername());
@@ -105,8 +105,8 @@ public class AttendReleaseApiController {
      * @param principal            当前用户信息
      * @return true or false
      */
-    @ApiLoggingRecord(remark = "校园签到数据", channel = Workbook.channel.API, needLogin = true)
-    @GetMapping("/api/attend/data")
+    @ApiLoggingRecord(remark = "校园签到发布数据", channel = Workbook.channel.API, needLogin = true)
+    @GetMapping("/api/campus/attend/release/data")
     public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil, Principal principal, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromOauth(principal);
         simplePaginationUtil.setUsername(users.getUsername());
@@ -120,8 +120,8 @@ public class AttendReleaseApiController {
      * @param attendReleaseEditVo 数据
      * @return true or false
      */
-    @ApiLoggingRecord(remark = "校园签到更新", channel = Workbook.channel.API, needLogin = true)
-    @PostMapping("/api/attend/update")
+    @ApiLoggingRecord(remark = "校园签到发布更新", channel = Workbook.channel.API, needLogin = true)
+    @PostMapping("/api/campus/attend/release/update")
     public ResponseEntity<Map<String, Object>> update(AttendReleaseEditVo attendReleaseEditVo, Principal principal, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromOauth(principal);
         attendReleaseEditVo.setUsername(users.getUsername());

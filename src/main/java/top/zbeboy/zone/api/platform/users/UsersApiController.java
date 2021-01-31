@@ -51,7 +51,7 @@ public class UsersApiController {
      * @return 数据
      */
     @ApiLoggingRecord(remark = "用户数据", channel = Workbook.channel.API, needLogin = true)
-    @GetMapping("/api/users")
+    @GetMapping("/api/platform/users")
     public ResponseEntity<Map<String, Object>> users(Principal principal, HttpServletRequest request) {
         AjaxUtil<Object> ajaxUtil = AjaxUtil.of();
         Users users = SessionUtil.getUserFromOauth(principal);
@@ -84,7 +84,7 @@ public class UsersApiController {
      * @param bindingResult      检验
      * @return 重置
      */
-    @PostMapping("/overt/reset_password")
+    @PostMapping("/overt/reset-password")
     public ResponseEntity<Map<String, Object>> resetPassword(@Valid ResetPasswordApiVo resetPasswordApiVo, BindingResult bindingResult) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (!bindingResult.hasErrors()) {

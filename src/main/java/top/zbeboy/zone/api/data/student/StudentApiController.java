@@ -76,8 +76,8 @@ public class StudentApiController {
      * @return 数据
      */
     @ApiLoggingRecord(remark = "学生数据", channel = Workbook.channel.API, needLogin = true)
-    @GetMapping("/api/student")
-    public ResponseEntity<Map<String, Object>> users(Principal principal, HttpServletRequest request) {
+    @GetMapping("/api/data/student")
+    public ResponseEntity<Map<String, Object>> student(Principal principal, HttpServletRequest request) {
         AjaxUtil<Object> ajaxUtil = AjaxUtil.of();
         Users users = SessionUtil.getUserFromOauth(principal);
         if (Objects.nonNull(users)) {
@@ -106,8 +106,8 @@ public class StudentApiController {
      * @param studentNumber 学号
      * @return 数据
      */
-    @PostMapping("/api/student/check/number")
-    public ResponseEntity<Map<String, Object>> update(@RequestParam("studentNumber") String studentNumber) {
+    @PostMapping("/api/data/student/check-student-number")
+    public ResponseEntity<Map<String, Object>> checkStudentNumber(@RequestParam("studentNumber") String studentNumber) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         Student student = studentService.findByStudentNumber(studentNumber);
         if (Objects.nonNull(student.getStudentId()) && student.getStudentId() > 0) {
@@ -165,7 +165,7 @@ public class StudentApiController {
 
         if (canRegister) {
             Optional<UsersType> optionalUsersType = usersTypeService.findByUsersTypeName(Workbook.STAFF_USERS_TYPE);
-            if(optionalUsersType.isPresent()){
+            if (optionalUsersType.isPresent()) {
                 UsersType usersType = optionalUsersType.get();
                 studentAddVo.setEnabled(BooleanUtil.toByte(true));
                 studentAddVo.setAccountNonExpired(BooleanUtil.toByte(true));
@@ -195,8 +195,8 @@ public class StudentApiController {
                 ajaxUtil = studentService.save(studentAddVo);
                 if (ajaxUtil.getState()) {
                     // 注册微信
-                    if(StringUtils.isNotBlank(studentAddVo.getResCode()) && StringUtils.isNotBlank(studentAddVo.getAppId())
-                            &&StringUtils.isNotBlank(studentAddVo.getSecret())){
+                    if (StringUtils.isNotBlank(studentAddVo.getResCode()) && StringUtils.isNotBlank(studentAddVo.getAppId())
+                            && StringUtils.isNotBlank(studentAddVo.getSecret())) {
                         weiXinService.save(studentAddVo.getResCode(), studentAddVo.getAppId(), studentAddVo.getSecret(), studentAddVo.getUsername());
                     }
 
@@ -215,10 +215,5 @@ public class StudentApiController {
         }
 
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
-    }
-
-    private boolean checkUsername(String username) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = usersService.anyoneCheckUsername(username);
-        return ajaxUtil.getState();
     }
 }

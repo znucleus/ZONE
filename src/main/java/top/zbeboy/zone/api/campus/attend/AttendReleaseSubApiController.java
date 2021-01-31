@@ -31,7 +31,7 @@ public class AttendReleaseSubApiController {
      * @return true or false
      */
     @ApiLoggingRecord(remark = "校园签到子表数据", channel = Workbook.channel.API, needLogin = true)
-    @GetMapping("/api/attend/sub/data")
+    @GetMapping("/api/campus/attend/sub/data")
     public ResponseEntity<Map<String, Object>> subData(SimplePaginationUtil simplePaginationUtil, Principal principal, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromOauth(principal);
         simplePaginationUtil.setUsername(users.getUsername());
@@ -46,7 +46,7 @@ public class AttendReleaseSubApiController {
      * @return 数据
      */
     @ApiLoggingRecord(remark = "校园签到子表查询", channel = Workbook.channel.API, needLogin = true)
-    @GetMapping("/api/attend/sub/query/{id}")
+    @GetMapping("/api/campus/attend/sub/query/{id}")
     public ResponseEntity<Map<String, Object>> subQuery(@PathVariable("id") int attendReleaseSubId, Principal principal, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = attendReleaseSubService.subQuery(attendReleaseSubId);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -59,7 +59,7 @@ public class AttendReleaseSubApiController {
      * @return 数据
      */
     @ApiLoggingRecord(remark = "校园签到子表删除", channel = Workbook.channel.API, needLogin = true)
-    @PostMapping("/api/attend/sub/delete")
+    @PostMapping("/api/campus/attend/sub/delete")
     public ResponseEntity<Map<String, Object>> subDelete(@RequestParam("id") int attendReleaseSubId, Principal principal, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromOauth(principal);
         AjaxUtil<Map<String, Object>> ajaxUtil = attendReleaseSubService.subDelete(attendReleaseSubId, users.getUsername());

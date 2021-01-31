@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.bean.educational.calendar.SchoolCalendarBean;
@@ -34,10 +35,10 @@ public class CalendarApiController {
      * @return 数据
      */
     @ApiLoggingRecord(remark = "教务校历数据", channel = Workbook.channel.API, needLogin = true)
-    @GetMapping("/api/educational/calendars")
-    public ResponseEntity<Map<String, Object>> calendars(@RequestParam("collegeId") int collegeId, Principal principal, HttpServletRequest request) {
+    @GetMapping("/api/educational/calendar/query-with-college-id/{collegeId}")
+    public ResponseEntity<Map<String, Object>> calendars(@PathVariable("collegeId") int collegeId, Principal principal, HttpServletRequest request) {
         AjaxUtil<SchoolCalendar> ajaxUtil = AjaxUtil.of();
-        List<SchoolCalendar> schoolCalendars = schoolCalendarService.findByCollegeIdRecently(collegeId);
+        List<SchoolCalendar> schoolCalendars = schoolCalendarService.findRecentlyByCollegeId(collegeId);
         ajaxUtil.success().list(schoolCalendars).msg("获取数据成功");
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
@@ -48,9 +49,9 @@ public class CalendarApiController {
      * @param calendarId id
      * @return 数据
      */
-    @ApiLoggingRecord(remark = "教务校历查看", channel = Workbook.channel.API, needLogin = true)
-    @GetMapping("/api/educational/calendar/look")
-    public ResponseEntity<Map<String, Object>> look(@RequestParam("calendarId") String calendarId, Principal principal, HttpServletRequest request) {
+    @ApiLoggingRecord(remark = "教务校历查询", channel = Workbook.channel.API, needLogin = true)
+    @GetMapping("/api/educational/calendar/query/{calendarId}")
+    public ResponseEntity<Map<String, Object>> query(@PathVariable("calendarId") String calendarId, Principal principal, HttpServletRequest request) {
         SchoolCalendarBean bean = schoolCalendarService.findByIdRelation(calendarId);
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (Objects.nonNull(bean) && StringUtils.isNotBlank(bean.getCalendarId())) {

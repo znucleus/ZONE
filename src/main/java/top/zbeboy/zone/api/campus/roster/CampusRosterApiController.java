@@ -46,7 +46,7 @@ public class CampusRosterApiController {
      * @return 数据
      */
     @ApiLoggingRecord(remark = "校园花名册数据", channel = Workbook.channel.API, needLogin = true)
-    @GetMapping("/api/campus/roster/data")
+    @GetMapping("/api/campus/roster/release/data")
     public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil, Principal principal, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromOauth(principal);
         simplePaginationUtil.setUsername(users.getUsername());
@@ -119,7 +119,7 @@ public class CampusRosterApiController {
      * @return true or false
      */
     @ApiLoggingRecord(remark = "校园开学内部数据查询", channel = Workbook.channel.API, needLogin = true)
-    @PostMapping("/api/campus/roster/data/query_roster_release_id")
+    @GetMapping("/api/campus/roster/data/query-with-roster-release-id")
     public ResponseEntity<Map<String, Object>> dataQuery(@RequestParam("rosterReleaseId") String rosterReleaseId, Principal principal, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = new AjaxUtil<>();
         Users users = SessionUtil.getUserFromOauth(principal);

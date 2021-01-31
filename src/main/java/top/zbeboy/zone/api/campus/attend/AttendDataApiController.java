@@ -32,7 +32,7 @@ public class AttendDataApiController {
      * @return true or false
      */
     @ApiLoggingRecord(remark = "校园签到数据保存", channel = Workbook.channel.API, needLogin = true)
-    @PostMapping("/api/attend/data/save")
+    @PostMapping("/api/campus/attend/data/save")
     public ResponseEntity<Map<String, Object>> save(AttendDataAddVo attendDataAddVo, Principal principal, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromOauth(principal);
         attendDataAddVo.setUsername(users.getUsername());
@@ -49,7 +49,7 @@ public class AttendDataApiController {
      * @return true or false
      */
     @ApiLoggingRecord(remark = "校园签到数据删除", channel = Workbook.channel.API, needLogin = true)
-    @PostMapping("/api/attend/data/delete")
+    @PostMapping("/api/campus/attend/data/delete")
     public ResponseEntity<Map<String, Object>> delete(@RequestParam("attendReleaseSubId") int attendReleaseSubId,
                                                       @RequestParam("attendUsersId") String attendUsersId, Principal principal,
                                                       HttpServletRequest request) {

@@ -31,7 +31,7 @@ public class WeiXinApiController {
      * @return true or false
      */
     @ApiLoggingRecord(remark = "校园签到微信保存", channel = Workbook.channel.API, needLogin = true)
-    @PostMapping("/api/weixin/save")
+    @PostMapping("/api/data/wei-xin/save")
     public ResponseEntity<Map<String, Object>> save(@RequestParam("resCode") String resCode,
                                                     @RequestParam("appId") String appId,
                                                     @RequestParam("secret") String secret,

@@ -47,7 +47,7 @@ public class RegisterLeaverApiController {
      * @return 数据
      */
     @ApiLoggingRecord(remark = "离校登记数据", channel = Workbook.channel.API, needLogin = true)
-    @GetMapping("/api/register/leaver/data")
+    @GetMapping("/api/register/leaver/release/data")
     public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil,
                                                     Principal principal, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromOauth(principal);
@@ -196,7 +196,7 @@ public class RegisterLeaverApiController {
      * @return true or false
      */
     @ApiLoggingRecord(remark = "离校登记数据删除", channel = Workbook.channel.API, needLogin = true)
-    @PostMapping("/api/register/leaver/data/delete")
+    @PostMapping("/api/register/leaver/data/delete-with-leaver-register-releaseId")
     public ResponseEntity<Map<String, Object>> dataDelete(@RequestParam("leaverRegisterReleaseId") String leaverRegisterReleaseId,
                                                           Principal principal, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromOauth(principal);
@@ -211,8 +211,8 @@ public class RegisterLeaverApiController {
      * @return true or false
      */
     @ApiLoggingRecord(remark = "离校登记列表登记删除", channel = Workbook.channel.API, needLogin = true)
-    @PostMapping("/api/register/leaver/data/list/delete")
-    public ResponseEntity<Map<String, Object>> dataListDelete(@RequestParam("leaverRegisterReleaseId") String leaverRegisterReleaseId,
+    @PostMapping("/api/register/leaver/data/delete-with-leaver-register-releaseId-and-leaver-register-data-id")
+    public ResponseEntity<Map<String, Object>> dataDelete(@RequestParam("leaverRegisterReleaseId") String leaverRegisterReleaseId,
                                                               @RequestParam("leaverRegisterDataId") String leaverRegisterDataId,
                                                               Principal principal, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromOauth(principal);

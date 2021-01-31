@@ -164,7 +164,7 @@ public class CalendarRestController {
     @GetMapping("/web/educational/calendars")
     public ResponseEntity<Map<String, Object>> calendars(@RequestParam("collegeId") int collegeId, HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
-        List<SchoolCalendar> schoolCalendars = schoolCalendarService.findByCollegeIdRecently(collegeId);
+        List<SchoolCalendar> schoolCalendars = schoolCalendarService.findRecentlyByCollegeId(collegeId);
         schoolCalendars.forEach(schoolCalendar -> select2Data.add(schoolCalendar.getCalendarId(), schoolCalendar.getTitle()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }

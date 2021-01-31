@@ -32,7 +32,7 @@ public class AttendAuthoritiesApiController {
      * @return true or false
      */
     @ApiLoggingRecord(remark = "校园签到权限数据", channel = Workbook.channel.API, needLogin = true)
-    @GetMapping("/api/attend/authorize/data")
+    @GetMapping("/api/campus/attend/authorize/data")
     public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil, Principal principal, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromOauth(principal);
         simplePaginationUtil.setUsername(users.getUsername());
@@ -48,7 +48,7 @@ public class AttendAuthoritiesApiController {
      * @return true or false
      */
     @ApiLoggingRecord(remark = "校园签到权限保存", channel = Workbook.channel.API, needLogin = true)
-    @PostMapping("/api/attend/authorize/save")
+    @PostMapping("/api/campus/attend/authorize/save")
     public ResponseEntity<Map<String, Object>> save(AttendAuthoritiesAddVo attendAuthoritiesAddVo, Principal principal, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromOauth(principal);
         attendAuthoritiesAddVo.setUsername(users.getUsername());
@@ -63,7 +63,7 @@ public class AttendAuthoritiesApiController {
      * @return 数据
      */
     @ApiLoggingRecord(remark = "校园签到权限删除", channel = Workbook.channel.API, needLogin = true)
-    @PostMapping("/api/attend/authorize/delete")
+    @PostMapping("/api/campus/attend/authorize/delete")
     public ResponseEntity<Map<String, Object>> delete(@RequestParam("id") String authoritiesId, Principal principal, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromOauth(principal);
         AjaxUtil<Map<String, Object>> ajaxUtil = attendAuthoritiesService.delete(users.getUsername(), authoritiesId);

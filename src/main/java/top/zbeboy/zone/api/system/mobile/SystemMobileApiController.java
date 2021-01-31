@@ -95,7 +95,7 @@ public class SystemMobileApiController {
      * @return 验证结果
      */
     @ApiLoggingRecord(remark = "验证手机验证码", channel = Workbook.channel.API)
-    @PostMapping("/overt/check/mobile/code")
+    @PostMapping("/overt/check/mobile-code")
     public ResponseEntity<Map<String, Object>> overtCheckMobileCode(@RequestParam("mobile") String mobile,
                                                                     @RequestParam("verificationCode") String verificationCode) {
         String param = StringUtils.trim(mobile);
@@ -130,7 +130,7 @@ public class SystemMobileApiController {
      * @param verificationCode 验证码
      * @return 是否验证通过
      */
-    @PostMapping("/overt/forget_password/mobile")
+    @PostMapping("/overt/forget-password/mobile")
     public ResponseEntity<Map<String, Object>> forgetPassword(@RequestParam("mobile") String mobile, @RequestParam("verificationCode") String verificationCode) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         String param = StringUtils.deleteWhitespace(mobile);

@@ -32,7 +32,7 @@ public class MapApiController {
      * @return 数据
      */
     @ApiLoggingRecord(remark = "系统地图KEY", channel = Workbook.channel.API, needLogin = true)
-    @GetMapping("/api/map_key_factory_business/{factory}/{business}")
+    @GetMapping("/api/system/map-key/{factory}/{business}")
     public ResponseEntity<Map<String, Object>> mapKey(@PathVariable("factory") String factory, @PathVariable("business") String business,
                                                       Principal principal, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();

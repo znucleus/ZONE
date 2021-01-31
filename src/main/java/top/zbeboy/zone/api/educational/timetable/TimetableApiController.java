@@ -119,7 +119,7 @@ public class TimetableApiController {
      * @return 数据
      */
     @ApiLoggingRecord(remark = "教务课表班级", channel = Workbook.channel.API, needLogin = true)
-    @GetMapping("/api/educational/timetable/attend_class/{identification}")
+    @GetMapping("/api/educational/timetable/attend-class/{identification}")
     public ResponseEntity<Map<String, Object>> attendClass(@PathVariable("identification") String identification,
                                                            Principal principal, HttpServletRequest request) {
         AjaxUtil<TimetableAttendClassElastic> ajaxUtil = AjaxUtil.of();
@@ -134,7 +134,7 @@ public class TimetableApiController {
      * @return 数据
      */
     @ApiLoggingRecord(remark = "教务课表课程", channel = Workbook.channel.API, needLogin = true)
-    @GetMapping("/api/educational/timetable/course_name/{identification}")
+    @GetMapping("/api/educational/timetable/course-name/{identification}")
     public ResponseEntity<Map<String, Object>> courseName(@PathVariable("identification") String identification,
                                                           Principal principal, HttpServletRequest request) {
         AjaxUtil<TimetableCourseNameElastic> ajaxUtil = AjaxUtil.of();
@@ -149,7 +149,7 @@ public class TimetableApiController {
      * @return 数据
      */
     @ApiLoggingRecord(remark = "教务课表教师", channel = Workbook.channel.API, needLogin = true)
-    @GetMapping("/api/educational/timetable/teacher_name/{identification}")
+    @GetMapping("/api/educational/timetable/teacher-name/{identification}")
     public ResponseEntity<Map<String, Object>> teacherName(@PathVariable("identification") String identification,
                                                            Principal principal, HttpServletRequest request) {
         AjaxUtil<TimetableTeacherNameElastic> ajaxUtil = AjaxUtil.of();

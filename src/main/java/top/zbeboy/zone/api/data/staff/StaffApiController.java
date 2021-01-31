@@ -69,8 +69,8 @@ public class StaffApiController {
      * @return 数据
      */
     @ApiLoggingRecord(remark = "教职工数据", channel = Workbook.channel.API, needLogin = true)
-    @GetMapping("/api/staff")
-    public ResponseEntity<Map<String, Object>> users(Principal principal, HttpServletRequest request) {
+    @GetMapping("/api/data/staff")
+    public ResponseEntity<Map<String, Object>> staff(Principal principal, HttpServletRequest request) {
         AjaxUtil<Object> ajaxUtil = AjaxUtil.of();
         Users users = SessionUtil.getUserFromOauth(principal);
         if (Objects.nonNull(users)) {

@@ -34,7 +34,7 @@ public class AttendUsersApiController {
      * @return 数据
      */
     @ApiLoggingRecord(remark = "校园签到名单数据", channel = Workbook.channel.API, needLogin = true)
-    @GetMapping("/api/attend/users/data")
+    @GetMapping("/api/campus/attend/users/data")
     public ResponseEntity<Map<String, Object>> data(@RequestParam("attendReleaseSubId") int attendReleaseSubId,
                                                     int type, Principal principal, HttpServletRequest request) {
         AjaxUtil<AttendUsersBean> ajaxUtil = attendUsersService.data(attendReleaseSubId, type);
@@ -48,7 +48,7 @@ public class AttendUsersApiController {
      * @return true or false
      */
     @ApiLoggingRecord(remark = "校园签到名单保存", channel = Workbook.channel.API, needLogin = true)
-    @PostMapping("/api/attend/users/save")
+    @PostMapping("/api/campus/attend/users/save")
     public ResponseEntity<Map<String, Object>> save(AttendUsersAddVo attendUsersAddVo, Principal principal, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromOauth(principal);
         attendUsersAddVo.setUsername(users.getUsername());
@@ -63,7 +63,7 @@ public class AttendUsersApiController {
      * @return true or false
      */
     @ApiLoggingRecord(remark = "校园签到名单删除", channel = Workbook.channel.API, needLogin = true)
-    @PostMapping("/api/attend/users/delete")
+    @PostMapping("/api/campus/attend/users/delete")
     public ResponseEntity<Map<String, Object>> delete(@RequestParam("attendUsersId") String attendUsersId, Principal principal, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromOauth(principal);
         AjaxUtil<Map<String, Object>> ajaxUtil = attendUsersService.delete(attendUsersId, users.getUsername());
@@ -77,7 +77,7 @@ public class AttendUsersApiController {
      * @return true or false
      */
     @ApiLoggingRecord(remark = "校园签到名单重置", channel = Workbook.channel.API, needLogin = true)
-    @PostMapping("/api/attend/users/reset")
+    @PostMapping("/api/campus/attend/users/reset")
     public ResponseEntity<Map<String, Object>> reset(@RequestParam("attendReleaseId") String attendReleaseId, Principal principal, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromOauth(principal);
         AjaxUtil<Map<String, Object>> ajaxUtil = attendUsersService.reset(attendReleaseId, users.getUsername());
@@ -92,7 +92,7 @@ public class AttendUsersApiController {
      * @return true or false
      */
     @ApiLoggingRecord(remark = "校园签到名单备注", channel = Workbook.channel.API, needLogin = true)
-    @PostMapping("/api/attend/users/remark")
+    @PostMapping("/api/campus/attend/users/remark")
     public ResponseEntity<Map<String, Object>> remark(@RequestParam("attendUsersId") String attendUsersId, String remark, Principal principal, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromOauth(principal);
         AjaxUtil<Map<String, Object>> ajaxUtil = attendUsersService.remark(attendUsersId, remark, users.getUsername());
