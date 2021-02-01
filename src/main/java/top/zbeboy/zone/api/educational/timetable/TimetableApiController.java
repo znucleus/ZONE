@@ -18,10 +18,7 @@ import top.zbeboy.zone.web.util.SessionUtil;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 public class TimetableApiController {
@@ -56,11 +53,14 @@ public class TimetableApiController {
     public ResponseEntity<Map<String, Object>> uniques(Principal principal, HttpServletRequest request) {
         AjaxUtil<TimetableUniqueElastic> ajaxUtil = AjaxUtil.of();
         // 排序
-        List<TimetableUniqueElastic> list = educationalTimetableService.uniques();
-        if (Objects.nonNull(list) && !list.isEmpty()) {
+        Optional<List<TimetableUniqueElastic>> optionalTimetableUniqueElastics = educationalTimetableService.uniques();
+        List<TimetableUniqueElastic> list = new ArrayList<>();
+        if (optionalTimetableUniqueElastics.isPresent()) {
+            list = optionalTimetableUniqueElastics.get();
             list.sort((o1, o2) -> o2.getIdentification().compareTo(o1.getIdentification()));
         }
         ajaxUtil.success().msg("获取数据成功").list(list);
+
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -90,7 +90,10 @@ public class TimetableApiController {
                             StringUtils.isNotBlank(classroom) ||
                             StringUtils.isNotBlank(teacherName) ||
                             StringUtils.isNotBlank(teacherNumber))) {
-                timetableElastics = educationalTimetableService.search(elasticUtil);
+                Optional<List<TimetableElastic>> optionalTimetableElastics = educationalTimetableService.search(elasticUtil);
+                if(optionalTimetableElastics.isPresent()){
+                    timetableElastics = optionalTimetableElastics.get();
+                }
             }
         }
         timetableElastics.forEach(timetableElastic -> timetableElastic.setTeacherNumber(""));
@@ -108,7 +111,11 @@ public class TimetableApiController {
     public ResponseEntity<Map<String, Object>> classroom(@PathVariable("identification") String identification,
                                                          Principal principal, HttpServletRequest request) {
         AjaxUtil<TimetableClassroomElastic> ajaxUtil = AjaxUtil.of();
-        List<TimetableClassroomElastic> timetableClassroomElastics = educationalTimetableService.classrooms(identification);
+        List<TimetableClassroomElastic> timetableClassroomElastics = new ArrayList<>();
+        Optional<List<TimetableClassroomElastic>> optionalTimetableClassroomElastics = educationalTimetableService.classrooms(identification);
+        if(optionalTimetableClassroomElastics.isPresent()){
+            timetableClassroomElastics = optionalTimetableClassroomElastics.get();
+        }
         ajaxUtil.success().msg("获取数据成功").list(timetableClassroomElastics);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
@@ -123,7 +130,11 @@ public class TimetableApiController {
     public ResponseEntity<Map<String, Object>> attendClass(@PathVariable("identification") String identification,
                                                            Principal principal, HttpServletRequest request) {
         AjaxUtil<TimetableAttendClassElastic> ajaxUtil = AjaxUtil.of();
-        List<TimetableAttendClassElastic> timetableAttendClassElastics = educationalTimetableService.attendClasses(identification);
+        List<TimetableAttendClassElastic> timetableAttendClassElastics = new ArrayList<>();
+        Optional<List<TimetableAttendClassElastic>> optionalTimetableAttendClassElastics = educationalTimetableService.attendClasses(identification);
+        if(optionalTimetableAttendClassElastics.isPresent()){
+            timetableAttendClassElastics = optionalTimetableAttendClassElastics.get();
+        }
         ajaxUtil.success().msg("获取数据成功").list(timetableAttendClassElastics);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
@@ -138,7 +149,11 @@ public class TimetableApiController {
     public ResponseEntity<Map<String, Object>> courseName(@PathVariable("identification") String identification,
                                                           Principal principal, HttpServletRequest request) {
         AjaxUtil<TimetableCourseNameElastic> ajaxUtil = AjaxUtil.of();
-        List<TimetableCourseNameElastic> timetableCourseNameElastics = educationalTimetableService.courseNames(identification);
+        List<TimetableCourseNameElastic> timetableCourseNameElastics = new ArrayList<>();
+        Optional<List<TimetableCourseNameElastic>> optionalTimetableCourseNameElastics = educationalTimetableService.courseNames(identification);
+        if(optionalTimetableCourseNameElastics.isPresent()){
+            timetableCourseNameElastics = optionalTimetableCourseNameElastics.get();
+        }
         ajaxUtil.success().msg("获取数据成功").list(timetableCourseNameElastics);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
@@ -153,7 +168,11 @@ public class TimetableApiController {
     public ResponseEntity<Map<String, Object>> teacherName(@PathVariable("identification") String identification,
                                                            Principal principal, HttpServletRequest request) {
         AjaxUtil<TimetableTeacherNameElastic> ajaxUtil = AjaxUtil.of();
-        List<TimetableTeacherNameElastic> timetableTeacherNameElastics = educationalTimetableService.teacherNames(identification);
+        List<TimetableTeacherNameElastic> timetableTeacherNameElastics =  new ArrayList<>();
+        Optional<List<TimetableTeacherNameElastic>> optionalTimetableTeacherNameElastics = educationalTimetableService.teacherNames(identification);
+        if(optionalTimetableTeacherNameElastics.isPresent()){
+            timetableTeacherNameElastics = optionalTimetableTeacherNameElastics.get();
+        }
         ajaxUtil.success().msg("获取数据成功").list(timetableTeacherNameElastics);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }

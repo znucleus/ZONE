@@ -20,10 +20,7 @@ import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 public class TimetableRestController {
@@ -62,8 +59,10 @@ public class TimetableRestController {
     public ResponseEntity<Map<String, Object>> uniques(HttpServletRequest request) {
         AjaxUtil<TimetableUniqueElastic> ajaxUtil = AjaxUtil.of();
         // 排序
-        List<TimetableUniqueElastic> list = educationalTimetableService.uniques();
-        if (Objects.nonNull(list) && !list.isEmpty()) {
+        List<TimetableUniqueElastic> list = new ArrayList<>();
+        Optional<List<TimetableUniqueElastic>> optionalTimetableUniqueElastics = educationalTimetableService.uniques();
+        if (optionalTimetableUniqueElastics.isPresent()) {
+            list = optionalTimetableUniqueElastics.get();
             list.sort((o1, o2) -> o2.getIdentification().compareTo(o1.getIdentification()));
         }
         ajaxUtil.success().msg("获取数据成功").list(list);
@@ -95,7 +94,10 @@ public class TimetableRestController {
                             StringUtils.isNotBlank(classroom) ||
                             StringUtils.isNotBlank(teacherName) ||
                             StringUtils.isNotBlank(teacherNumber))) {
-                timetableElastics = educationalTimetableService.search(elasticUtil);
+                Optional<List<TimetableElastic>> optionalTimetableElastics = educationalTimetableService.search(elasticUtil);
+                if(optionalTimetableElastics.isPresent()){
+                    timetableElastics = optionalTimetableElastics.get();
+                }
             }
         }
         timetableElastics.forEach(timetableElastic -> timetableElastic.setTeacherNumber(""));
@@ -112,7 +114,11 @@ public class TimetableRestController {
     @GetMapping("/web/educational/timetable/classroom/{identification}")
     public ResponseEntity<Map<String, Object>> classroom(@PathVariable("identification") String identification, HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
-        List<TimetableClassroomElastic> timetableClassroomElastics = educationalTimetableService.classrooms(identification);
+        List<TimetableClassroomElastic> timetableClassroomElastics = new ArrayList<>();
+        Optional<List<TimetableClassroomElastic>> optionalTimetableClassroomElastics = educationalTimetableService.classrooms(identification);
+        if(optionalTimetableClassroomElastics.isPresent()){
+            timetableClassroomElastics = optionalTimetableClassroomElastics.get();
+        }
         timetableClassroomElastics.forEach(data -> select2Data.add(data.getClassroom(), data.getClassroom()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
@@ -126,7 +132,11 @@ public class TimetableRestController {
     @GetMapping("/web/educational/timetable/attend_class/{identification}")
     public ResponseEntity<Map<String, Object>> attendClass(@PathVariable("identification") String identification, HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
-        List<TimetableAttendClassElastic> timetableAttendClassElastics = educationalTimetableService.attendClasses(identification);
+        List<TimetableAttendClassElastic> timetableAttendClassElastics = new ArrayList<>();
+        Optional<List<TimetableAttendClassElastic>> optionalTimetableAttendClassElastics = educationalTimetableService.attendClasses(identification);
+        if(optionalTimetableAttendClassElastics.isPresent()){
+            timetableAttendClassElastics = optionalTimetableAttendClassElastics.get();
+        }
         timetableAttendClassElastics.forEach(data -> select2Data.add(data.getAttendClass(), data.getAttendClass()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
@@ -140,7 +150,11 @@ public class TimetableRestController {
     @GetMapping("/web/educational/timetable/course_name/{identification}")
     public ResponseEntity<Map<String, Object>> courseName(@PathVariable("identification") String identification, HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
-        List<TimetableCourseNameElastic> timetableCourseNameElastics = educationalTimetableService.courseNames(identification);
+        List<TimetableCourseNameElastic> timetableCourseNameElastics = new ArrayList<>();
+        Optional<List<TimetableCourseNameElastic>> optionalTimetableCourseNameElastics = educationalTimetableService.courseNames(identification);
+        if(optionalTimetableCourseNameElastics.isPresent()){
+            timetableCourseNameElastics = optionalTimetableCourseNameElastics.get();
+        }
         timetableCourseNameElastics.forEach(data -> select2Data.add(data.getCourseName(), data.getCourseName()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
@@ -154,7 +168,11 @@ public class TimetableRestController {
     @GetMapping("/web/educational/timetable/teacher_name/{identification}")
     public ResponseEntity<Map<String, Object>> teacherName(@PathVariable("identification") String identification, HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
-        List<TimetableTeacherNameElastic> timetableTeacherNameElastics = educationalTimetableService.teacherNames(identification);
+        List<TimetableTeacherNameElastic> timetableTeacherNameElastics = new ArrayList<>();
+        Optional<List<TimetableTeacherNameElastic>> optionalTimetableTeacherNameElastics = educationalTimetableService.teacherNames(identification);
+        if(optionalTimetableTeacherNameElastics.isPresent()){
+            timetableTeacherNameElastics = optionalTimetableTeacherNameElastics.get();
+        }
         timetableTeacherNameElastics.forEach(data -> select2Data.add(data.getTeacherName(), data.getTeacherName()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
