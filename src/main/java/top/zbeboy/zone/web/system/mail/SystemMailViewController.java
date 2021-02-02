@@ -127,10 +127,10 @@ public class SystemMailViewController {
                             }
                         }
                         if (collegeId > 0) {
-                            List<Role> roles = roleService.findDefaultRoleByCollegeIdAndUsersTypeId(collegeId, usersType.getUsersTypeId());
-                            if (Objects.nonNull(roles) && !roles.isEmpty()) {
+                            Optional<List<Role>> optionalRoles = roleService.findDefaultRoleByCollegeIdAndUsersTypeId(collegeId, usersType.getUsersTypeId());
+                            if (optionalRoles.isPresent()) {
                                 List<Authorities> authorities = new ArrayList<>();
-                                roles.forEach(role -> authorities.add(new Authorities(username, role.getRoleEnName())));
+                                optionalRoles.get().forEach(role -> authorities.add(new Authorities(username, role.getRoleEnName())));
                                 authorizeService.authoritiesBatchSave(authorities);
                                 subTitle = "邮箱已验证成功，请及时登录系统进行资料完善。";
                             }

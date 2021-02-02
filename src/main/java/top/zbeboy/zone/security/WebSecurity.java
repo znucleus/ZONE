@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Spring security 路径权限控制器
@@ -50,25 +51,27 @@ public class WebSecurity {
         boolean hasRole = false;
 
         List<String> roles = new ArrayList<>();
-        List<Role> roleList = roleService.findByUsername(users.getUsername());
-        if (Objects.nonNull(roleList) && !roleList.isEmpty()) {
-            roleList.forEach(r -> roles.add(r.getRoleEnName()));
-        }
+        Optional<List<Role>> optionalRoles = roleService.findByUsername(users.getUsername());
+        optionalRoles.ifPresent(roleList -> roleList.forEach(r -> roles.add(r.getRoleEnName())));
 
         if (!roles.isEmpty()) {
-            List<Application> applications = roleService.findInRoleEnNamesRelation(roles, users.getUsername());
-            for (Application application : applications) {
-                if (uri.endsWith(application.getApplicationUrl())) {
-                    hasRole = true;
-                    break;
-                }
+            Optional<List<Application>> optionalApplications = roleService.findInRoleEnNamesRelation(roles, users.getUsername());
+            if(optionalApplications.isPresent()){
+                List<Application> applications = optionalApplications.get();
+                for (Application application : applications) {
+                    if (uri.endsWith(application.getApplicationUrl())) {
+                        hasRole = true;
+                        break;
+                    }
 
-                if (StringUtils.isNotBlank(application.getApplicationDataUrlStartWith()) &&
-                        uri.startsWith(application.getApplicationDataUrlStartWith())) {
-                    hasRole = true;
-                    break;
+                    if (StringUtils.isNotBlank(application.getApplicationDataUrlStartWith()) &&
+                            uri.startsWith(application.getApplicationDataUrlStartWith())) {
+                        hasRole = true;
+                        break;
+                    }
                 }
             }
+
         }
 
         return hasRole;

@@ -586,7 +586,12 @@ public class UsersRestController {
     public ResponseEntity<Map<String, Object>> roleData(@RequestParam("username") String username) {
         AjaxUtil<Role> ajaxUtil = AjaxUtil.of();
         Users users = SessionUtil.getUserFromSession();
-        ajaxUtil.success().list(usersService.roleData(users.getUsername(), username)).msg("获取数据成功");
+        List<Role> roles = new ArrayList<>();
+        Optional<List<Role>> optionalRoles = usersService.roleData(users.getUsername(), username);
+        if(optionalRoles.isPresent()){
+            roles = optionalRoles.get();
+        }
+        ajaxUtil.success().list(roles).msg("获取数据成功");
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 

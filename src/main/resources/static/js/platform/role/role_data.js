@@ -29,7 +29,7 @@ require(["jquery", "lodash_plugin", "sweetalert2", "handlebars", "nav.active", "
          */
         function getAjaxUrl() {
             return {
-                data: web_path + '/web/platform/role/data',
+                data: web_path + '/web/platform/role/paging',
                 del: web_path + '/web/platform/role/delete',
                 add: '/web/platform/role/add',
                 edit: '/web/platform/role/edit',

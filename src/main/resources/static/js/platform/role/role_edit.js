@@ -9,7 +9,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
         application_json_data: web_path + '/web/platform/role/application/json',
         role_application_data: web_path + '/web/platform/role/application/data',
         update: web_path + '/web/platform/role/update',
-        check_name: web_path + '/web/platform/role/check/edit/name',
+        check_name: web_path + '/web/platform/role/check-edit-name',
         page: '/web/menu/platform/role'
     };
 

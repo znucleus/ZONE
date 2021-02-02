@@ -152,10 +152,10 @@ public class MainController {
             modelMap.addAttribute("mapKey", mapKey.getMapKey());
         }
 
-        List<Role> roleList = roleService.findByUsername(users.getUsername());
-        if (Objects.nonNull(roleList) && !roleList.isEmpty()) {
+        Optional<List<Role>> optionalRoles = roleService.findByUsername(users.getUsername());
+        if (optionalRoles.isPresent()) {
             List<String> roles = new ArrayList<>();
-            roleList.forEach(r -> roles.add(r.getRoleEnName()));
+            optionalRoles.get().forEach(r -> roles.add(r.getRoleEnName()));
             modelMap.addAttribute("menu", menuService.getMenu(roles, users.getUsername()));
         } else {
             modelMap.addAttribute("menu", "");

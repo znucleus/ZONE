@@ -11,6 +11,7 @@ import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 
 import javax.annotation.Resource;
 import java.util.Objects;
+import java.util.Optional;
 
 @Controller
 public class SystemRoleViewController {
@@ -37,9 +38,9 @@ public class SystemRoleViewController {
     public String roleEdit(@PathVariable("id") String roleId, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        Role role = roleService.findById(roleId);
-        if (Objects.nonNull(role) && StringUtils.isNotBlank(role.getRoleId())) {
-            modelMap.addAttribute("role", role);
+        Optional<Role> optionalRole = roleService.findById(roleId);
+        if (optionalRole.isPresent()) {
+            modelMap.addAttribute("role", optionalRole.get());
             page = "web/system/role/system_role_edit::#page-wrapper";
         } else {
             config.buildDangerTip("查询错误", "未查询到角色数据");

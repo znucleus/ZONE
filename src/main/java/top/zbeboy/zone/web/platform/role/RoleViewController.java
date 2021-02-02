@@ -123,9 +123,9 @@ public class RoleViewController {
         String page;
         Users users = SessionUtil.getUserFromSession();
         if (roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_SYSTEM.name())) {
-            RoleBean role = roleService.findCollegeRoleByRoleIdRelation(id);
-            if (Objects.nonNull(role) && StringUtils.isNotBlank(role.getRoleId())) {
-                modelMap.addAttribute("role", role);
+            Optional<RoleBean> optionalRoleBean = roleService.findCollegeRoleByRoleIdRelation(id);
+            if (optionalRoleBean.isPresent()) {
+                modelMap.addAttribute("role", optionalRoleBean.get());
                 page = "web/platform/role/role_edit::#page-wrapper";
             } else {
                 config.buildDangerTip("查询错误", "未查询到角色数据");
@@ -150,8 +150,9 @@ public class RoleViewController {
                     }
                 }
                 if (collegeId > 0) {
-                    RoleBean role = roleService.findCollegeRoleByRoleIdRelation(id);
-                    if (Objects.nonNull(role) && StringUtils.isNotBlank(role.getRoleId())) {
+                    Optional<RoleBean> optionalRoleBean = roleService.findCollegeRoleByRoleIdRelation(id);
+                    if (optionalRoleBean.isPresent()) {
+                        RoleBean role = optionalRoleBean.get();
                         if (collegeId == role.getCollegeId()) {
                             modelMap.addAttribute("role", role);
                             page = "web/platform/role/role_edit::#page-wrapper";
@@ -196,13 +197,15 @@ public class RoleViewController {
         String page;
         Users users = SessionUtil.getUserFromSession();
         if (roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_SYSTEM.name())) {
-            RoleBean role = roleService.findCollegeRoleByRoleIdRelation(id);
-            if (Objects.nonNull(role) && StringUtils.isNotBlank(role.getRoleId())) {
-                List<DefaultRole> defaultRoles = roleService.findDefaultRoleByRoleId(role.getRoleId());
+            Optional<RoleBean> optionalRoleBean = roleService.findCollegeRoleByRoleIdRelation(id);
+            if (optionalRoleBean.isPresent()) {
+                RoleBean role = optionalRoleBean.get();
+                Optional<List<DefaultRole>> optionalDefaultRoles = roleService.findDefaultRoleByRoleId(role.getRoleId());
                 List<Integer> usersTypeIds = new ArrayList<>();
-                defaultRoles.forEach(defaultRole -> {
-                    usersTypeIds.add(defaultRole.getUsersTypeId());
-                });
+                optionalDefaultRoles.ifPresent(defaultRoles -> defaultRoles.forEach(defaultRole ->
+                    usersTypeIds.add(defaultRole.getUsersTypeId())
+                ));
+
                 modelMap.addAttribute("usersTypeIds", StringUtils.join(usersTypeIds, ","));
                 modelMap.addAttribute("role", role);
                 page = "web/platform/role/role_auto::#page-wrapper";
@@ -229,14 +232,16 @@ public class RoleViewController {
                     }
                 }
                 if (collegeId > 0) {
-                    RoleBean role = roleService.findCollegeRoleByRoleIdRelation(id);
-                    if (Objects.nonNull(role) && StringUtils.isNotBlank(role.getRoleId())) {
+                    Optional<RoleBean> optionalRoleBean = roleService.findCollegeRoleByRoleIdRelation(id);
+                    if (optionalRoleBean.isPresent()) {
+                        RoleBean role = optionalRoleBean.get();
                         if (collegeId == role.getCollegeId()) {
-                            List<DefaultRole> defaultRoles = roleService.findDefaultRoleByRoleId(role.getRoleId());
+                            Optional<List<DefaultRole>> optionalDefaultRoles = roleService.findDefaultRoleByRoleId(role.getRoleId());
                             List<Integer> usersTypeIds = new ArrayList<>();
-                            defaultRoles.forEach(defaultRole -> {
-                                usersTypeIds.add(defaultRole.getUsersTypeId());
-                            });
+                            optionalDefaultRoles.ifPresent(defaultRoles -> defaultRoles.forEach(defaultRole ->
+                                usersTypeIds.add(defaultRole.getUsersTypeId())
+                            ));
+
                             modelMap.addAttribute("usersTypeIds", StringUtils.join(usersTypeIds, ","));
                             modelMap.addAttribute("role", role);
                             page = "web/platform/role/role_auto::#page-wrapper";
@@ -279,9 +284,9 @@ public class RoleViewController {
     public String see(@PathVariable("id") String id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        RoleBean role = roleService.findCollegeRoleByRoleIdRelation(id);
-        if (Objects.nonNull(role) && StringUtils.isNotBlank(role.getRoleId())) {
-            modelMap.addAttribute("role", role);
+        Optional<RoleBean> optionalRoleBean = roleService.findCollegeRoleByRoleIdRelation(id);
+        if (optionalRoleBean.isPresent()) {
+            modelMap.addAttribute("role", optionalRoleBean.get());
             page = "web/platform/role/role_see::#page-wrapper";
         } else {
             config.buildDangerTip("查询错误", "未查询到角色数据");

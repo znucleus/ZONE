@@ -10,7 +10,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
         obtain_college_data: web_path + '/anyone/data/college',
         application_json_data: web_path + '/web/platform/role/application/json',
         save: web_path + '/web/platform/role/save',
-        check_name: web_path + '/web/platform/role/check/add/name',
+        check_name: web_path + '/web/platform/role/check-add-name',
         page: '/web/menu/platform/role'
     };
 

@@ -133,9 +133,10 @@ public class UsersViewController {
         }
 
         // roles.
-        List<Role> roles = roleService.findByUsername(users.getUsername());
+        Optional<List<Role>> optionalRoles = roleService.findByUsername(users.getUsername());
         List<String> rList = new ArrayList<>();
-        roles.forEach(r -> rList.add(r.getRoleName()));
+        optionalRoles.ifPresent(roles -> roles.forEach(r -> rList.add(r.getRoleName())));
+
         modelMap.addAttribute("roles", String.join(",", rList));
 
         Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());

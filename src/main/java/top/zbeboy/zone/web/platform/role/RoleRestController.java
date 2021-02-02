@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class RoleRestController {
@@ -35,7 +36,7 @@ public class RoleRestController {
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/platform/role/data")
+    @GetMapping("/web/platform/role/paging")
     public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         List<String> headers = new ArrayList<>();
@@ -57,7 +58,7 @@ public class RoleRestController {
      * @param collegeId 院id
      * @return true 合格 false 不合格
      */
-    @PostMapping("/web/platform/role/check/add/name")
+    @PostMapping("/web/platform/role/check-add-name")
     public ResponseEntity<Map<String, Object>> checkAddName(@RequestParam("roleName") String roleName,
                                                             int collegeId) {
         Users users = SessionUtil.getUserFromSession();
@@ -73,7 +74,7 @@ public class RoleRestController {
      * @param roleId    角色id
      * @return true 合格 false 不合格
      */
-    @PostMapping("/web/platform/role/check/edit/name")
+    @PostMapping("/web/platform/role/check-edit-name")
     public ResponseEntity<Map<String, Object>> checkEditName(@RequestParam("roleName") String roleName,
                                                              int collegeId,
                                                              @RequestParam("roleId") String roleId) {
@@ -146,7 +147,12 @@ public class RoleRestController {
     @GetMapping("/web/platform/role/application/json")
     public ResponseEntity<Map<String, Object>> applicationJson(@RequestParam("collegeId") int collegeId) {
         AjaxUtil<TreeViewData> ajaxUtil = AjaxUtil.of();
-        ajaxUtil.success().list(roleService.applicationJson(collegeId)).msg("获取数据成功");
+        List<TreeViewData> list = new ArrayList<>();
+        Optional<List<TreeViewData>> optionalTreeViewData = roleService.applicationJson(collegeId);
+        if(optionalTreeViewData.isPresent()){
+            list = optionalTreeViewData.get();
+        }
+        ajaxUtil.success().list(list).msg("获取数据成功");
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -159,7 +165,12 @@ public class RoleRestController {
     @PostMapping("/web/platform/role/application/data")
     public ResponseEntity<Map<String, Object>> roleApplicationData(@RequestParam("roleId") String roleId) {
         AjaxUtil<RoleApplication> ajaxUtil = AjaxUtil.of();
-        ajaxUtil.success().list(roleService.roleApplicationData(roleId)).msg("获取数据成功");
+        List<RoleApplication> list = new ArrayList<>();
+        Optional<List<RoleApplication>> optionalRoleApplications = roleService.roleApplicationData(roleId);
+        if(optionalRoleApplications.isPresent()){
+            list = optionalRoleApplications.get();
+        }
+        ajaxUtil.success().list(list).msg("获取数据成功");
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }
