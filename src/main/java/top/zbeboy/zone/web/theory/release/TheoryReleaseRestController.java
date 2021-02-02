@@ -30,10 +30,7 @@ import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 public class TheoryReleaseRestController {
@@ -313,8 +310,8 @@ public class TheoryReleaseRestController {
                 List<String> authorities = new ArrayList<>();
                 authorities.add(Workbook.authorities.ROLE_SYSTEM.name());
                 authorities.add(Workbook.authorities.ROLE_ADMIN.name());
-                List<Authorities> authoritiesList = authorizeService.findByUsernameAndInAuthorities(theoryAuthoritiesAddVo.getUsername(), authorities);
-                if (Objects.isNull(authoritiesList) || authoritiesList.isEmpty()) {
+                Optional<List<Authorities>> optionalAuthorities = authorizeService.findByUsernameAndInAuthorities(theoryAuthoritiesAddVo.getUsername(), authorities);
+                if (!optionalAuthorities.isPresent()) {
                     // 本人无需添加权限
                     Users users = SessionUtil.getUserFromSession();
                     if (!StringUtils.equals(users.getUsername(), theoryAuthoritiesAddVo.getUsername())) {
@@ -359,8 +356,8 @@ public class TheoryReleaseRestController {
                 List<String> authorities = new ArrayList<>();
                 authorities.add(Workbook.authorities.ROLE_SYSTEM.name());
                 authorities.add(Workbook.authorities.ROLE_ADMIN.name());
-                List<Authorities> authoritiesList = authorizeService.findByUsernameAndInAuthorities(theoryAuthoritiesEditVo.getUsername(), authorities);
-                if (Objects.isNull(authoritiesList) || authoritiesList.isEmpty()) {
+                Optional<List<Authorities>> optionalAuthorities = authorizeService.findByUsernameAndInAuthorities(theoryAuthoritiesEditVo.getUsername(), authorities);
+                if (!optionalAuthorities.isPresent()) {
                     // 本人无需添加权限
                     Users users = SessionUtil.getUserFromSession();
                     if (!StringUtils.equals(users.getUsername(), theoryAuthoritiesEditVo.getUsername())) {

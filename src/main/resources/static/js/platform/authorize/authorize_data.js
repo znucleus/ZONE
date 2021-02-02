@@ -50,10 +50,10 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "workbook", "respo
          */
         function getAjaxUrl() {
             return {
-                data: web_path + '/web/platform/authorize/data',
+                data: web_path + '/web/platform/authorize/paging',
                 del: web_path + '/web/platform/authorize/delete',
                 status: web_path + '/web/platform/authorize/status',
-                check_edit_access: web_path + '/web/platform/authorize/check/edit/access',
+                check_edit_access: web_path + '/web/platform/authorize/check-edit-access',
                 add: '/web/platform/authorize/add',
                 edit: '/web/platform/authorize/edit',
                 page: '/web/menu/platform/authorize'

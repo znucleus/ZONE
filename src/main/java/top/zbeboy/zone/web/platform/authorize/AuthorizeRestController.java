@@ -10,6 +10,7 @@ import top.zbeboy.zbase.feign.data.StaffService;
 import top.zbeboy.zbase.feign.data.StudentService;
 import top.zbeboy.zbase.feign.notify.UserNotifyService;
 import top.zbeboy.zbase.feign.platform.AuthorizeService;
+import top.zbeboy.zbase.feign.platform.RoleService;
 import top.zbeboy.zbase.feign.platform.UsersService;
 import top.zbeboy.zbase.feign.system.SystemConfigureService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
@@ -52,13 +53,16 @@ public class AuthorizeRestController {
     @Resource
     private UserNotifyService userNotifyService;
 
+    @Resource
+    private RoleService roleService;
+
     /**
      * 数据
      *
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/platform/authorize/data")
+    @GetMapping("/web/platform/authorize/paging")
     public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         List<String> headers = new ArrayList<>();
@@ -90,8 +94,8 @@ public class AuthorizeRestController {
     @GetMapping("/web/platform/authorize/type")
     public ResponseEntity<Map<String, Object>> authorizeTypeData() {
         Select2Data select2Data = Select2Data.of();
-        List<AuthorizeType> all = authorizeService.authorizeTypeData();
-        all.forEach(authorizeType -> select2Data.add(authorizeType.getAuthorizeTypeId().toString(), authorizeType.getAuthorizeTypeName()));
+        Optional<List<AuthorizeType>> optionalAuthorizeTypes = authorizeService.authorizeTypeData();
+        optionalAuthorizeTypes.ifPresent(authorizeTypes -> authorizeTypes.forEach(authorizeType -> select2Data.add(authorizeType.getAuthorizeTypeId().toString(), authorizeType.getAuthorizeTypeName())));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
 
@@ -104,8 +108,8 @@ public class AuthorizeRestController {
     @GetMapping("/web/platform/authorize/role/{id}")
     public ResponseEntity<Map<String, Object>> roleData(@PathVariable("id") int collegeId) {
         Select2Data select2Data = Select2Data.of();
-        List<Role> roles = authorizeService.findCollegeRoleByCollegeIdRelation(collegeId);
-        roles.forEach(role -> select2Data.add(role.getRoleId(), role.getRoleName()));
+        Optional<List<Role>> optionalRoles = roleService.findCollegeRoleByCollegeIdRelation(collegeId);
+        optionalRoles.ifPresent(roles -> roles.forEach(role -> select2Data.add(role.getRoleId(), role.getRoleName())));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
 
@@ -115,7 +119,7 @@ public class AuthorizeRestController {
      * @param targetUsername 账号
      * @return true 合格 false 不合格
      */
-    @PostMapping("/web/platform/authorize/check/username")
+    @PostMapping("/web/platform/authorize/check-add-username")
     public ResponseEntity<Map<String, Object>> checkAddUsername(@RequestParam("targetUsername") String targetUsername, @RequestParam("collegeId") int collegeId) {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Map<String, Object>> ajaxUtil = authorizeService.checkAddUsername(users.getUsername(), targetUsername, collegeId);
@@ -207,7 +211,7 @@ public class AuthorizeRestController {
      * @param roleApplyId id
      * @return 条件
      */
-    @PostMapping("/web/platform/authorize/check/edit/access")
+    @PostMapping("/web/platform/authorize/check-edit-access")
     public ResponseEntity<Map<String, Object>> checkEditAccess(@RequestParam("roleApplyId") String roleApplyId) {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Map<String, Object>> ajaxUtil = authorizeService.checkEditAccess(users.getUsername(), roleApplyId);
@@ -241,8 +245,9 @@ public class AuthorizeRestController {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Map<String, Object>> ajaxUtil = authorizeService.status(users.getUsername(), roleApplyId, applyStatus, refuse);
         if (ajaxUtil.getState()) {
-            RoleApply roleApply = authorizeService.findRoleApplyById(roleApplyId);
-            if (Objects.nonNull(roleApply) && StringUtils.isNotBlank(roleApply.getRoleApplyId())) {
+            Optional<RoleApply> optionalRoleApply = authorizeService.findRoleApplyById(roleApplyId);
+            if (optionalRoleApply.isPresent()) {
+                RoleApply roleApply = optionalRoleApply.get();
                 Optional<Users> result = usersService.findByUsername(roleApply.getUsername());
                 if(result.isPresent()){
                     Users applyUser = result.get();

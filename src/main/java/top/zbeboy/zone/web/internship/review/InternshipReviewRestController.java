@@ -199,8 +199,8 @@ public class InternshipReviewRestController {
             List<String> authorities = new ArrayList<>();
             authorities.add(Workbook.authorities.ROLE_SYSTEM.name());
             authorities.add(Workbook.authorities.ROLE_ADMIN.name());
-            List<Authorities> authoritiesList = authorizeService.findByUsernameAndInAuthorities(param, authorities);
-            if (Objects.isNull(authoritiesList) || authoritiesList.isEmpty()) {
+            Optional<List<Authorities>> optionalAuthorities = authorizeService.findByUsernameAndInAuthorities(param, authorities);
+            if (!optionalAuthorities.isPresent()) {
                 // 本人无需添加权限
                 Users users = SessionUtil.getUserFromSession();
                 if (!StringUtils.equals(users.getUsername(), param)) {

@@ -14,7 +14,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
         obtain_organize_data: web_path + '/anyone/data/organize',
         obtain_authorize_type_data: web_path + '/web/platform/authorize/type',
         obtain_college_role_data: web_path + '/web/platform/authorize/role',
-        check_username: web_path + '/web/platform/authorize/check/username',
+        check_username: web_path + '/web/platform/authorize/check-add-username',
         save: web_path + '/web/platform/authorize/save',
         page: '/web/menu/platform/authorize'
     };

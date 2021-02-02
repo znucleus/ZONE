@@ -131,17 +131,19 @@ public class AuthorizeViewController {
         String page;
 
         boolean canEdit = false;
-        RoleApplyBean roleApplyBean;
+        RoleApplyBean roleApplyBean = null;
         Users own = SessionUtil.getUserFromSession();
         if (roleService.isCurrentUserInRole(own.getUsername(), Workbook.authorities.ROLE_SYSTEM.name()) ||
                 roleService.isCurrentUserInRole(own.getUsername(), Workbook.authorities.ROLE_ADMIN.name())) {
-            roleApplyBean = authorizeService.findRoleApplyByIdRelation(roleUsersId);
-            if (Objects.nonNull(roleApplyBean) && StringUtils.isNotBlank(roleApplyBean.getRoleApplyId())) {
+            Optional<RoleApplyBean> optionalRoleApplyBean = authorizeService.findRoleApplyByIdRelation(roleUsersId);
+            if (optionalRoleApplyBean.isPresent()) {
+                roleApplyBean = optionalRoleApplyBean.get();
                 canEdit = true;
             }
         } else {
-            roleApplyBean = authorizeService.findRoleApplyByIdRelation(roleUsersId);
-            if (Objects.nonNull(roleApplyBean) && StringUtils.isNotBlank(roleApplyBean.getRoleApplyId())) {
+            Optional<RoleApplyBean> optionalRoleApplyBean = authorizeService.findRoleApplyByIdRelation(roleUsersId);
+            if (optionalRoleApplyBean.isPresent()) {
+                roleApplyBean = optionalRoleApplyBean.get();
                 if (StringUtils.equals(own.getUsername(), roleApplyBean.getUsername())) {
                     canEdit = true;
                 }

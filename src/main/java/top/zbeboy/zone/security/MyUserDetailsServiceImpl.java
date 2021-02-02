@@ -62,7 +62,11 @@ public class MyUserDetailsServiceImpl implements UserDetailsService {
         }
         assert result.isPresent();
         Users users = result.get();
-        List<GrantedAuthority> authorities = buildUserAuthority(authorizeService.findByUsername(users.getUsername()));
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        Optional<List<Authorities>> optionalAuthorities = authorizeService.findByUsername(users.getUsername());
+        if(optionalAuthorities.isPresent()){
+            authorities = buildUserAuthority(optionalAuthorities.get());
+        }
         return buildUserForAuthentication(users, authorities);
     }
 
