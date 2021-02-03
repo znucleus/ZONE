@@ -32,7 +32,7 @@ public class AppRestController {
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/platform/app/data")
+    @GetMapping("/web/platform/app/paging")
     public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         List<String> headers = new ArrayList<>();

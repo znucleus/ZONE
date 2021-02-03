@@ -15,6 +15,7 @@ import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import java.util.Objects;
+import java.util.Optional;
 
 @Controller
 public class AppViewController {
@@ -56,9 +57,9 @@ public class AppViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         Users users = SessionUtil.getUserFromSession();
-        OauthClientUsersBean oauthClientUsersBean = appService.findOauthClientUsersByIdAndUsernameRelation(id, users.getUsername());
-        if (Objects.nonNull(oauthClientUsersBean) && StringUtils.isNotBlank(oauthClientUsersBean.getClientId())) {
-            modelMap.addAttribute("oauthClientUsers", oauthClientUsersBean);
+        Optional<OauthClientUsersBean> optionalOauthClientUsersBean = appService.findOauthClientUsersByIdAndUsernameRelation(id, users.getUsername());
+        if (optionalOauthClientUsersBean.isPresent()) {
+            modelMap.addAttribute("oauthClientUsers", optionalOauthClientUsersBean.get());
             page = "web/platform/app/app_edit::#page-wrapper";
         } else {
             config.buildDangerTip("查询错误", "未查询到应用数据");

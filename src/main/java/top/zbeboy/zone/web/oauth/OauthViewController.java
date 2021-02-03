@@ -21,6 +21,7 @@ import java.security.Principal;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @Controller
 @SessionAttributes("authorizationRequest")
@@ -45,10 +46,8 @@ public class OauthViewController {
             model.put("auth_request", clientAuth);
             model.put("client", client);
 
-            OauthClientUsers oauthClientUsers = appService.findOauthClientUsersById(clientAuth.getClientId());
-            if (Objects.nonNull(oauthClientUsers) && StringUtils.isNotBlank(oauthClientUsers.getClientId())) {
-                model.put("appName", oauthClientUsers.getAppName());
-            }
+            Optional<OauthClientUsers> optionalOauthClientUsers = appService.findOauthClientUsersById(clientAuth.getClientId());
+            optionalOauthClientUsers.ifPresent(oauthClientUsers -> model.put("appName", oauthClientUsers.getAppName()));
             Map<String, String> scopes = new LinkedHashMap<>();
             for (String scope : clientAuth.getScope()) {
                 scopes.put(OAuth2Utils.SCOPE_PREFIX + scope, "false");
