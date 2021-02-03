@@ -165,8 +165,9 @@ public class InternshipApplyRestController {
      */
     @GetMapping("/web/internship/apply/download/{id}")
     public void download(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
-        Files files = filesService.findById(id);
-        if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())) {
+        Optional<Files> optionalFiles = filesService.findById(id);
+        if (optionalFiles.isPresent()) {
+            Files files = optionalFiles.get();
             uploadService.download(files.getOriginalFileName(), files.getRelativePath(), response, request);
         }
     }
@@ -478,8 +479,9 @@ public class InternshipApplyRestController {
                             RequestUtil.getRealPath(request) + path, RequestUtil.getIpAddress(request));
                     for (FileBean fileBean : fileBeens) {
                         if (StringUtils.isNotBlank(internshipApply.getFileId())) {
-                            Files oldFile = filesService.findById(internshipApply.getFileId());
-                            if (Objects.nonNull(oldFile) && StringUtils.isNotBlank(oldFile.getFileId())) {
+                            Optional<Files> optionalFiles = filesService.findById(internshipApply.getFileId());
+                            if (optionalFiles.isPresent()) {
+                                Files oldFile = optionalFiles.get();
                                 FilesUtil.deleteFile(RequestUtil.getRealPath(request) + oldFile.getRelativePath());
                                 filesService.deleteById(oldFile.getFileId());
                             }
@@ -529,8 +531,9 @@ public class InternshipApplyRestController {
                 InternshipApply internshipApply = internshipApplyRecord.get().into(InternshipApply.class);
                 if (StringUtils.isNotBlank(internshipApply.getFileId())) {
                     String fileId = internshipApply.getFileId();
-                    Files files = filesService.findById(fileId);
-                    if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())) {
+                    Optional<Files> optionalFiles = filesService.findById(fileId);
+                    if (optionalFiles.isPresent()) {
+                        Files files = optionalFiles.get();
                         internshipApply.setFileId("");
                         internshipApplyService.update(internshipApply);
                         FilesUtil.deleteFile(RequestUtil.getRealPath(request) + files.getRelativePath());

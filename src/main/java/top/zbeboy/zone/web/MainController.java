@@ -125,10 +125,8 @@ public class MainController {
         // avatar.
         Users users = SessionUtil.getUserFromSession();
         if (StringUtils.isNotBlank(users.getAvatar())) {
-            Files files = filesService.findById(users.getAvatar());
-            if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())) {
-                modelMap.addAttribute("avatar", Workbook.DIRECTORY_SPLIT + files.getRelativePath());
-            }
+            Optional<Files> optionalFiles = filesService.findById(users.getAvatar());
+            optionalFiles.ifPresent(files -> modelMap.addAttribute("avatar", Workbook.DIRECTORY_SPLIT + files.getRelativePath()));
         }
 
         boolean isPotential = false;

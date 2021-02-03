@@ -57,10 +57,8 @@ public class TrainingSpecialViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         if (trainingConditionCommon.specialCondition()) {
-            Files files = filesService.findById(Workbook.SYSTEM_COVER);
-            if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())) {
-                modelMap.addAttribute("cover", Workbook.DIRECTORY_SPLIT + files.getRelativePath());
-            }
+            Optional<Files> optionalFiles = filesService.findById(Workbook.SYSTEM_COVER);
+            optionalFiles.ifPresent(files -> modelMap.addAttribute("cover", Workbook.DIRECTORY_SPLIT + files.getRelativePath()));
             page = "web/training/special/training_special_add::#page-wrapper";
         } else {
             config.buildWarningTip("操作警告", "您无权限操作");

@@ -493,8 +493,9 @@ public class TrainingSpecialRestController {
             TrainingSpecialFile trainingSpecialFile = trainingSpecialFileService.findById(trainingSpecialFileId);
             if (Objects.nonNull(trainingSpecialFile)) {
                 trainingSpecialFileService.deleteById(trainingSpecialFileId);
-                Files files = filesService.findById(trainingSpecialFile.getFileId());
-                if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())) {
+                Optional<Files> optionalFiles = filesService.findById(trainingSpecialFile.getFileId());
+                if (optionalFiles.isPresent()) {
+                    Files files = optionalFiles.get();
                     FilesUtil.deleteFile(RequestUtil.getRealPath(request) + files.getRelativePath());
                     filesService.delete(files);
                     ajaxUtil.success().msg("删除成功");
@@ -522,8 +523,9 @@ public class TrainingSpecialRestController {
         TrainingSpecialFile trainingSpecialFile = trainingSpecialFileService.findById(id);
         if (Objects.nonNull(trainingSpecialFile)) {
             trainingSpecialFileService.updateDownloads(id);
-            Files files = filesService.findById(trainingSpecialFile.getFileId());
-            if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())) {
+            Optional<Files> optionalFiles = filesService.findById(trainingSpecialFile.getFileId());
+            if (optionalFiles.isPresent()) {
+                Files files = optionalFiles.get();
                 uploadService.download(files.getNewName(), files.getRelativePath(), response, request);
             }
         }
@@ -569,8 +571,9 @@ public class TrainingSpecialRestController {
                 String realPath = RequestUtil.getRealPath(request);
                 File file = new File(realPath + trainingSpecialFileMappingVo.getRelativePath());
                 if (file.exists()) {
-                    Files files = filesService.findById(trainingSpecialFileMappingVo.getFileId());
-                    if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())) {
+                    Optional<Files> optionalFiles = filesService.findById(trainingSpecialFileMappingVo.getFileId());
+                    if (optionalFiles.isPresent()) {
+                        Files files = optionalFiles.get();
                         files.setRelativePath(trainingSpecialFileMappingVo.getRelativePath());
                         files.setOriginalFileName(trainingSpecialFileMappingVo.getOriginalFileName());
                         files.setNewName(trainingSpecialFileMappingVo.getNewName());

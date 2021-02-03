@@ -39,10 +39,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 public class TrainingDocumentRestController {
@@ -307,8 +304,9 @@ public class TrainingDocumentRestController {
         if (Objects.nonNull(trainingDocumentFile)) {
             if (trainingConditionCommon.canOperator(trainingDocumentFile.getTrainingReleaseId())) {
                 trainingDocumentFileService.deleteById(trainingDocumentFileId);
-                Files files = filesService.findById(trainingDocumentFile.getFileId());
-                if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())) {
+                Optional<Files> optionalFiles = filesService.findById(trainingDocumentFile.getFileId());
+                if (optionalFiles.isPresent()) {
+                    Files files = optionalFiles.get();
                     FilesUtil.deleteFile(RequestUtil.getRealPath(request) + files.getRelativePath());
                     filesService.delete(files);
                 }
@@ -334,8 +332,9 @@ public class TrainingDocumentRestController {
         TrainingDocumentFile trainingDocumentFile = trainingDocumentFileService.findById(id);
         if (Objects.nonNull(trainingDocumentFile)) {
             trainingDocumentFileService.updateDownloads(id);
-            Files files = filesService.findById(trainingDocumentFile.getFileId());
-            if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())) {
+            Optional<Files> optionalFiles = filesService.findById(trainingDocumentFile.getFileId());
+            if (optionalFiles.isPresent()) {
+                Files files = optionalFiles.get();
                 uploadService.download(files.getOriginalFileName(), files.getRelativePath(), response, request);
             }
         }

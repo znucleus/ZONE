@@ -64,10 +64,8 @@ public class UsersApiController {
             outPut.put("enabled", users.getEnabled());
             outPut.put("accountNonLocked", users.getAccountNonLocked());
             if (StringUtils.isNotBlank(users.getAvatar())) {
-                Files files = filesService.findById(users.getAvatar());
-                if (Objects.nonNull(files) && StringUtils.isNotBlank(files.getFileId())) {
-                    outPut.put("avatar", Workbook.DIRECTORY_SPLIT + files.getRelativePath());
-                }
+                Optional<Files> optionalFiles = filesService.findById(users.getAvatar());
+                optionalFiles.ifPresent(files -> outPut.put("avatar", Workbook.DIRECTORY_SPLIT + files.getRelativePath()));
             }
             outPut.put("authorities", ((OAuth2Authentication) principal).getUserAuthentication().getAuthorities());
             ajaxUtil.success().msg("获取用户信息成功").map(outPut);
