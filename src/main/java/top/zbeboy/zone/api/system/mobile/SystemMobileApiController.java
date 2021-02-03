@@ -60,26 +60,31 @@ public class SystemMobileApiController {
         String param = StringUtils.trim(mobile);
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (Pattern.matches(Workbook.MOBILE_REGEX, param)) {
-            SystemConfigure systemConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MOBILE_SWITCH.name());
-            if (StringUtils.equals("1", systemConfigure.getDataValue())) {
-                boolean isSend = false;
-                ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();
-                if (!stringRedisTemplate.hasKey(param + SystemMobileConfig.MOBILE_CODE)) {
-                    isSend = true;
-                } else {
-                    ajaxUtil.fail().msg("验证码不可重复发送(" + ZoneProperties.getMobile().getValidCodeTime() + "分钟内)");
-                }
+            Optional<SystemConfigure> optionalSystemConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MOBILE_SWITCH.name());
+            if(optionalSystemConfigure.isPresent()){
+                SystemConfigure systemConfigure = optionalSystemConfigure.get();
+                if (StringUtils.equals("1", systemConfigure.getDataValue())) {
+                    boolean isSend = false;
+                    ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();
+                    if (!stringRedisTemplate.hasKey(param + SystemMobileConfig.MOBILE_CODE)) {
+                        isSend = true;
+                    } else {
+                        ajaxUtil.fail().msg("验证码不可重复发送(" + ZoneProperties.getMobile().getValidCodeTime() + "分钟内)");
+                    }
 
-                if (isSend) {
-                    String mobileKey = RandomUtil.generateMobileKey();
-                    ops.set(param + SystemMobileConfig.MOBILE_CODE, mobileKey,
-                            ZoneProperties.getMobile().getValidCodeTime(),
-                            TimeUnit.MINUTES);
-                    systemMobileService.sendValidMobileShortMessage(param, mobileKey);
-                    ajaxUtil.success().msg("短信验证码已发送...");
+                    if (isSend) {
+                        String mobileKey = RandomUtil.generateMobileKey();
+                        ops.set(param + SystemMobileConfig.MOBILE_CODE, mobileKey,
+                                ZoneProperties.getMobile().getValidCodeTime(),
+                                TimeUnit.MINUTES);
+                        systemMobileService.sendValidMobileShortMessage(param, mobileKey);
+                        ajaxUtil.success().msg("短信验证码已发送...");
+                    }
+                } else {
+                    ajaxUtil.fail().msg("管理员已关闭短信发送");
                 }
             } else {
-                ajaxUtil.fail().msg("管理员已关闭短信发送");
+                ajaxUtil.fail().msg("查询系统配置错误");
             }
         } else {
             ajaxUtil.fail().msg("手机号不正确");

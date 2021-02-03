@@ -30,6 +30,7 @@ import top.zbeboy.zone.web.system.mail.SystemMailConfig;
 import javax.annotation.Resource;
 import javax.mail.internet.MimeMessage;
 import java.util.Locale;
+import java.util.Optional;
 
 @Service("systemMailService")
 public class SystemMailServiceImpl implements SystemMailService {
@@ -57,9 +58,15 @@ public class SystemMailServiceImpl implements SystemMailService {
     @Async
     @Override
     public void sendEmail(String to, String subject, String content, Boolean isMultipart, Boolean isHtml) {
-        SystemConfigure systemConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
-        if (StringUtils.equals("0", systemConfigure.getDataValue())) {
-            log.info(" 管理员已关闭邮件发送 ");
+        Optional<SystemConfigure> optionalSystemConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
+        if(!optionalSystemConfigure.isPresent()){
+            log.error("查询系统配置错误");
+            return;
+        }
+
+        SystemConfigure systemConfigure = optionalSystemConfigure.get();
+        if ( StringUtils.equals("0", systemConfigure.getDataValue())) {
+            log.info("管理员已关闭邮件发送");
             return;
         }
 

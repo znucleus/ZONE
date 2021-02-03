@@ -270,8 +270,8 @@ public class StudentRestController {
             String notify = "您的权限已发生变更，请登录查看。";
 
             // 检查邮件推送是否被关闭
-            SystemConfigure mailConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
-            if (StringUtils.equals("1", mailConfigure.getDataValue())) {
+            Optional<SystemConfigure> optionalSystemConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
+            if (optionalSystemConfigure.isPresent() && StringUtils.equals("1", optionalSystemConfigure.get().getDataValue())) {
                 Optional<Users> result = usersService.findByUsername(username);
                 result.ifPresent(value -> systemMailService.sendNotifyMail(value, RequestUtil.getBaseUrl(request), notify));
             }

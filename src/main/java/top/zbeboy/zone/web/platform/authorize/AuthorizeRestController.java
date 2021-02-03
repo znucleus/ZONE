@@ -168,8 +168,8 @@ public class AuthorizeRestController {
                         "提交了新的权限申请，请及时到平台授权菜单审核。";
                 for (Users u : admins) {
                     // 检查邮件推送是否被关闭
-                    SystemConfigure mailConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
-                    if (StringUtils.equals("1", mailConfigure.getDataValue())) {
+                    Optional<SystemConfigure> optionalSystemConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
+                    if (optionalSystemConfigure.isPresent() && StringUtils.equals("1", optionalSystemConfigure.get().getDataValue())) {
                         systemMailService.sendNotifyMail(u, RequestUtil.getBaseUrl(request), notify);
                     }
 
@@ -259,8 +259,8 @@ public class AuthorizeRestController {
                     }
 
                     // 检查邮件推送是否被关闭
-                    SystemConfigure mailConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
-                    if (StringUtils.equals("1", mailConfigure.getDataValue())) {
+                    Optional<SystemConfigure> optionalSystemConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
+                    if (optionalSystemConfigure.isPresent() && StringUtils.equals("1", optionalSystemConfigure.get().getDataValue())) {
                         systemMailService.sendNotifyMail(applyUser, RequestUtil.getBaseUrl(request), notify);
                     }
 

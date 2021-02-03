@@ -359,10 +359,14 @@ public class InternshipReviewRestController {
 
                             String notify = "您的实习 " + internshipRelease.getInternshipTitle() + " 申请已通过。";
                             // 检查邮件推送是否被关闭
-                            SystemConfigure mailConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
-                            if (StringUtils.equals("1", mailConfigure.getDataValue())) {
-                                systemMailService.sendNotifyMail(acceptUsers, RequestUtil.getBaseUrl(request), notify);
+                            Optional<SystemConfigure> optionalSystemConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
+                            if(optionalSystemConfigure.isPresent()){
+                                SystemConfigure systemConfigure = optionalSystemConfigure.get();
+                                if (StringUtils.equals("1", systemConfigure.getDataValue())) {
+                                    systemMailService.sendNotifyMail(acceptUsers, RequestUtil.getBaseUrl(request), notify);
+                                }
                             }
+
 
                             UserNotify userNotify = new UserNotify();
                             userNotify.setUserNotifyId(UUIDUtil.getUUID());
@@ -431,9 +435,12 @@ public class InternshipReviewRestController {
 
                         String notify = "您的实习 " + internshipRelease.getInternshipTitle() + " 申请未通过。原因：" + reason;
                         // 检查邮件推送是否被关闭
-                        SystemConfigure mailConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
-                        if (StringUtils.equals("1", mailConfigure.getDataValue())) {
-                            systemMailService.sendNotifyMail(acceptUsers, RequestUtil.getBaseUrl(request), notify);
+                        Optional<SystemConfigure> optionalSystemConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
+                        if(optionalSystemConfigure.isPresent()){
+                            SystemConfigure systemConfigure = optionalSystemConfigure.get();
+                            if (StringUtils.equals("1", systemConfigure.getDataValue())) {
+                                systemMailService.sendNotifyMail(acceptUsers, RequestUtil.getBaseUrl(request), notify);
+                            }
                         }
 
                         UserNotify userNotify = new UserNotify();
@@ -493,9 +500,12 @@ public class InternshipReviewRestController {
 
                     String notify = "您的实习 " + internshipRelease.getInternshipTitle() + " 申请已被删除！本次申请将完全废除，若您有任何疑问，请及时联系指导教师。";
                     // 检查邮件推送是否被关闭
-                    SystemConfigure mailConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
-                    if (StringUtils.equals("1", mailConfigure.getDataValue())) {
-                        systemMailService.sendNotifyMail(acceptUsers, RequestUtil.getBaseUrl(request), notify);
+                    Optional<SystemConfigure> optionalSystemConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
+                    if(optionalSystemConfigure.isPresent()){
+                        SystemConfigure systemConfigure = optionalSystemConfigure.get();
+                        if (StringUtils.equals("1", systemConfigure.getDataValue())) {
+                            systemMailService.sendNotifyMail(acceptUsers, RequestUtil.getBaseUrl(request), notify);
+                        }
                     }
 
                     UserNotify userNotify = new UserNotify();
@@ -602,9 +612,12 @@ public class InternshipReviewRestController {
 
                             String notify = "您的实习 " + internshipRelease.getInternshipTitle() + " 变更申请已通过。请尽快登录系统在填写时间范围内变更您的内容。";
                             // 检查邮件推送是否被关闭
-                            SystemConfigure mailConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
-                            if (StringUtils.equals("1", mailConfigure.getDataValue())) {
-                                systemMailService.sendNotifyMail(acceptUsers, RequestUtil.getBaseUrl(request), notify);
+                            Optional<SystemConfigure> optionalSystemConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
+                            if(optionalSystemConfigure.isPresent()){
+                                SystemConfigure systemConfigure = optionalSystemConfigure.get();
+                                if (StringUtils.equals("1", systemConfigure.getDataValue())) {
+                                    systemMailService.sendNotifyMail(acceptUsers, RequestUtil.getBaseUrl(request), notify);
+                                }
                             }
 
                             UserNotify userNotify = new UserNotify();
@@ -672,9 +685,12 @@ public class InternshipReviewRestController {
 
                             String notify = "您的实习 " + internshipRelease.getInternshipTitle() + " 变更申请被拒绝！若您有任何疑问，请及时联系指导教师。";
                             // 检查邮件推送是否被关闭
-                            SystemConfigure mailConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
-                            if (StringUtils.equals("1", mailConfigure.getDataValue())) {
-                                systemMailService.sendNotifyMail(acceptUsers, RequestUtil.getBaseUrl(request), notify);
+                            Optional<SystemConfigure> optionalSystemConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
+                            if(optionalSystemConfigure.isPresent()){
+                                SystemConfigure systemConfigure = optionalSystemConfigure.get();
+                                if (StringUtils.equals("1", systemConfigure.getDataValue())) {
+                                    systemMailService.sendNotifyMail(acceptUsers, RequestUtil.getBaseUrl(request), notify);
+                                }
                             }
 
                             UserNotify userNotify = new UserNotify();

@@ -33,7 +33,7 @@ public class SystemConfigureRestController {
      */
     @GetMapping("/anyone/data/configure")
     public ResponseEntity<Map<String, Object>> anyoneConfigure() {
-        AjaxUtil<Map<String, Object>> ajaxUtil = systemConfigureService.anyoneConfigure();
+        AjaxUtil<Map<String, Object>> ajaxUtil = systemConfigureService.anyoneConfig();
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 

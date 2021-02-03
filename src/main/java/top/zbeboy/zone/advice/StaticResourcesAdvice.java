@@ -8,6 +8,7 @@ import top.zbeboy.zbase.feign.system.SystemConfigureService;
 
 import javax.annotation.Resource;
 import java.util.Objects;
+import java.util.Optional;
 
 @ControllerAdvice
 public class StaticResourcesAdvice {
@@ -22,7 +23,7 @@ public class StaticResourcesAdvice {
      */
     @ModelAttribute("staticResourceVersion")
     public String version() {
-        SystemConfigure systemConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.STATIC_RESOURCES_VERSION.name());
-        return Objects.nonNull(systemConfigure) ? systemConfigure.getDataValue() : "";
+        Optional<SystemConfigure> optionalSystemConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.STATIC_RESOURCES_VERSION.name());
+        return optionalSystemConfigure.isPresent() ? optionalSystemConfigure.get().getDataValue() : "";
     }
 }

@@ -51,41 +51,45 @@ public class SystemMobileRestController {
         String param = StringUtils.trim(mobile);
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (Pattern.matches(Workbook.MOBILE_REGEX, param)) {
-            SystemConfigure systemConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MOBILE_SWITCH.name());
-            if (StringUtils.equals("1", systemConfigure.getDataValue())) {
-                boolean isSend = false;
-                if (Objects.nonNull(session.getAttribute(SystemMobileConfig.MOBILE))) {
-                    String tempMobile = (String) session.getAttribute(SystemMobileConfig.MOBILE);
-                    if (!StringUtils.equals(tempMobile, param)) {
-                        isSend = true;
-                    } else {
-                        if (Objects.nonNull(session.getAttribute(param + SystemMobileConfig.MOBILE_EXPIRE))) {
-                            Date mobileExpiry = (Date) session.getAttribute(param + SystemMobileConfig.MOBILE_EXPIRE);
-                            if (DateTimeUtil.nowBeforeUtilDate(mobileExpiry)) {
-                                ajaxUtil.fail().msg("验证码不可重复发送(" + ZoneProperties.getMobile().getValidCodeTime() + "分钟内)");
+            Optional<SystemConfigure> optionalSystemConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MOBILE_SWITCH.name());
+            if(optionalSystemConfigure.isPresent()){
+                if (StringUtils.equals("1", optionalSystemConfigure.get().getDataValue())) {
+                    boolean isSend = false;
+                    if (Objects.nonNull(session.getAttribute(SystemMobileConfig.MOBILE))) {
+                        String tempMobile = (String) session.getAttribute(SystemMobileConfig.MOBILE);
+                        if (!StringUtils.equals(tempMobile, param)) {
+                            isSend = true;
+                        } else {
+                            if (Objects.nonNull(session.getAttribute(param + SystemMobileConfig.MOBILE_EXPIRE))) {
+                                Date mobileExpiry = (Date) session.getAttribute(param + SystemMobileConfig.MOBILE_EXPIRE);
+                                if (DateTimeUtil.nowBeforeUtilDate(mobileExpiry)) {
+                                    ajaxUtil.fail().msg("验证码不可重复发送(" + ZoneProperties.getMobile().getValidCodeTime() + "分钟内)");
+                                } else {
+                                    isSend = true;
+                                }
                             } else {
                                 isSend = true;
                             }
-                        } else {
-                            isSend = true;
                         }
+                    } else {
+                        isSend = true;
+                    }
+
+                    if (isSend) {
+                        DateTime dateTime = DateTime.now();
+                        dateTime = dateTime.plusMinutes(ZoneProperties.getMobile().getValidCodeTime());
+                        String mobileKey = RandomUtil.generateMobileKey();
+                        session.setAttribute(SystemMobileConfig.MOBILE, param);
+                        session.setAttribute(param + SystemMobileConfig.MOBILE_EXPIRE, dateTime.toDate());
+                        session.setAttribute(param + SystemMobileConfig.MOBILE_CODE, mobileKey);
+                        systemMobileService.sendValidMobileShortMessage(param, mobileKey);
+                        ajaxUtil.success().msg("短信验证码已发送...");
                     }
                 } else {
-                    isSend = true;
-                }
-
-                if (isSend) {
-                    DateTime dateTime = DateTime.now();
-                    dateTime = dateTime.plusMinutes(ZoneProperties.getMobile().getValidCodeTime());
-                    String mobileKey = RandomUtil.generateMobileKey();
-                    session.setAttribute(SystemMobileConfig.MOBILE, param);
-                    session.setAttribute(param + SystemMobileConfig.MOBILE_EXPIRE, dateTime.toDate());
-                    session.setAttribute(param + SystemMobileConfig.MOBILE_CODE, mobileKey);
-                    systemMobileService.sendValidMobileShortMessage(param, mobileKey);
-                    ajaxUtil.success().msg("短信验证码已发送...");
+                    ajaxUtil.fail().msg("管理员已关闭短信发送");
                 }
             } else {
-                ajaxUtil.fail().msg("管理员已关闭短信发送");
+                ajaxUtil.fail().msg("查询系统配置错误");
             }
         } else {
             ajaxUtil.fail().msg("手机号不正确");

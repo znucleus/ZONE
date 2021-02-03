@@ -340,21 +340,26 @@ public class UsersRestController {
                             Optional<List<Users>> optionalUsers = usersService.usersNeOwn(paramMap);
                             if (!optionalUsers.isPresent()) {
                                 // 检查邮件推送是否被关闭
-                                SystemConfigure mailConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
-                                if (StringUtils.equals("1", mailConfigure.getDataValue())) {
-                                    DateTime dateTime = DateTime.now();
-                                    dateTime = dateTime.plusDays(ZoneProperties.getMail().getValidCodeTime());
+                                Optional<SystemConfigure> optionalSystemConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
+                                if(optionalSystemConfigure.isPresent()){
+                                    SystemConfigure systemConfigure = optionalSystemConfigure.get();
+                                    if (StringUtils.equals("1", systemConfigure.getDataValue())) {
+                                        DateTime dateTime = DateTime.now();
+                                        dateTime = dateTime.plusDays(ZoneProperties.getMail().getValidCodeTime());
 
-                                    Users users = SessionUtil.getUserFromSession();
-                                    users.setEmail(value);
-                                    users.setMailboxVerifyCode(RandomUtil.generateEmailCheckKey());
-                                    users.setMailboxVerifyValid(DateTimeUtil.utilDateToSqlTimestamp(dateTime.toDate()));
-                                    users.setVerifyMailbox(BooleanUtil.toByte(false));
-                                    usersService.update(users);
-                                    systemMailService.sendValidEmailMail(users, RequestUtil.getBaseUrl(request));
-                                    ajaxUtil.success().msg("邮箱更新成功");
+                                        Users users = SessionUtil.getUserFromSession();
+                                        users.setEmail(value);
+                                        users.setMailboxVerifyCode(RandomUtil.generateEmailCheckKey());
+                                        users.setMailboxVerifyValid(DateTimeUtil.utilDateToSqlTimestamp(dateTime.toDate()));
+                                        users.setVerifyMailbox(BooleanUtil.toByte(false));
+                                        usersService.update(users);
+                                        systemMailService.sendValidEmailMail(users, RequestUtil.getBaseUrl(request));
+                                        ajaxUtil.success().msg("邮箱更新成功");
+                                    } else {
+                                        ajaxUtil.fail().msg("邮件推送已被管理员关闭");
+                                    }
                                 } else {
-                                    ajaxUtil.fail().msg("邮件推送已被管理员关闭");
+                                    ajaxUtil.fail().msg("查询系统配置错误");
                                 }
                             } else {
                                 ajaxUtil.fail().msg("邮箱已被使用");
@@ -614,8 +619,8 @@ public class UsersRestController {
             String notify = "您的权限已发生变更，请登录查看。";
 
             // 检查邮件推送是否被关闭
-            SystemConfigure mailConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
-            if (StringUtils.equals("1", mailConfigure.getDataValue())) {
+            Optional<SystemConfigure> optionalSystemConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
+            if (optionalSystemConfigure.isPresent() && StringUtils.equals("1", optionalSystemConfigure.get().getDataValue())) {
                 Optional<Users> result = usersService.findByUsername(username);
                 result.ifPresent(value -> systemMailService.sendNotifyMail(value, RequestUtil.getBaseUrl(request), notify));
 

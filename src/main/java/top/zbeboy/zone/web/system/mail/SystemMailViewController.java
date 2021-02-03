@@ -211,8 +211,8 @@ public class SystemMailViewController {
         if (hasUser) {
             Users users = result.get();
             if (!Objects.equals(users.getVerifyMailbox(), BooleanUtil.toByte(true))) {
-                SystemConfigure mailConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
-                if (StringUtils.equals("1", mailConfigure.getDataValue())) {
+                Optional<SystemConfigure> optionalSystemConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
+                if (optionalSystemConfigure.isPresent() && StringUtils.equals("1", optionalSystemConfigure.get().getDataValue())) {
                     DateTime dateTime = DateTime.now();
                     dateTime = dateTime.plusDays(ZoneProperties.getMail().getValidCodeTime());
                     users.setMailboxVerifyCode(RandomUtil.generateEmailCheckKey());

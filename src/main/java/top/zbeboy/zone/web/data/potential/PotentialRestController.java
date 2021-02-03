@@ -237,11 +237,15 @@ public class PotentialRestController {
             String notify = "您的权限已发生变更，请登录查看。";
 
             // 检查邮件推送是否被关闭
-            SystemConfigure mailConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
-            if (StringUtils.equals("1", mailConfigure.getDataValue())) {
-                Optional<Users> result = usersService.findByUsername(username);
-                result.ifPresent(value -> systemMailService.sendNotifyMail(value, RequestUtil.getBaseUrl(request), notify));
+            Optional<SystemConfigure> optionalSystemConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
+            if(optionalSystemConfigure.isPresent()){
+                SystemConfigure systemConfigure = optionalSystemConfigure.get();
+                if (StringUtils.equals("1", systemConfigure.getDataValue())) {
+                    Optional<Users> result = usersService.findByUsername(username);
+                    result.ifPresent(value -> systemMailService.sendNotifyMail(value, RequestUtil.getBaseUrl(request), notify));
+                }
             }
+
         }
 
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);

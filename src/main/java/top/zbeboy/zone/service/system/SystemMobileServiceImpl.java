@@ -25,6 +25,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Arrays;
+import java.util.Optional;
 
 @Service("systemMobileService")
 public class SystemMobileServiceImpl implements SystemMobileService {
@@ -91,13 +92,18 @@ public class SystemMobileServiceImpl implements SystemMobileService {
     @Override
     public void sendValidMobileShortMessage(String mobile, String verificationCode) {
         log.debug(" mobile valid : {} : {}", mobile, verificationCode);
-        SystemConfigure systemConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MOBILE_SWITCH.name());
-        if (StringUtils.equals("1", systemConfigure.getDataValue())) {
-            String content = "【" + zoneProperties.getMobile().getSign() + "】 您的验证码是:" + verificationCode + "，感谢您的使用！";
-            sendShortMessage(mobile, content, "", "", "", "");
+        Optional<SystemConfigure> optionalSystemConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MOBILE_SWITCH.name());
+        if(optionalSystemConfigure.isPresent()){
+            if (StringUtils.equals("1", optionalSystemConfigure.get().getDataValue())) {
+                String content = "【" + zoneProperties.getMobile().getSign() + "】 您的验证码是:" + verificationCode + "，感谢您的使用！";
+                sendShortMessage(mobile, content, "", "", "", "");
+            } else {
+                log.debug("管理员已关闭短信发送");
+            }
         } else {
-            log.debug(" 管理员已关闭短信发送 ");
+            log.error("查询系统配置错误");
         }
+
     }
 
     static class SmsClientAccessTool {

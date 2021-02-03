@@ -57,24 +57,29 @@ public class SystemMailRestController {
             if (Pattern.matches(Workbook.MAIL_REGEX, param)) {
                 HashMap<String, String> paramMap = new HashMap<>();
                 paramMap.put("email", param);
-                Optional<Users>  result = usersService.findByCondition(paramMap);
+                Optional<Users> result = usersService.findByCondition(paramMap);
                 if (result.isPresent()) {
                     Users users = result.get();
                     if (Objects.isNull(users.getVerifyMailbox()) || !BooleanUtil.toBoolean(users.getVerifyMailbox())) {
                         ajaxUtil.fail().msg("邮箱未验证通过");
                     } else {
                         // 检查邮件推送是否被关闭
-                        SystemConfigure mailConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
-                        if ("1".equals(mailConfigure.getDataValue())) {
-                            DateTime dateTime = DateTime.now();
-                            dateTime = dateTime.plusDays(ZoneProperties.getMail().getPasswordResetTime());
-                            users.setPasswordResetKey(RandomUtil.generateResetKey());
-                            users.setPasswordResetKeyValid(DateTimeUtil.utilDateToSqlTimestamp(dateTime.toDate()));
-                            usersService.update(users);
-                            systemMailService.sendPasswordResetMail(users, RequestUtil.getBaseUrl(request));
-                            ajaxUtil.success().msg("验证通过");
+                        Optional<SystemConfigure> optionalSystemConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
+                        if (optionalSystemConfigure.isPresent()) {
+                            SystemConfigure systemConfigure = optionalSystemConfigure.get();
+                            if (StringUtils.equals("1", systemConfigure.getDataValue())) {
+                                DateTime dateTime = DateTime.now();
+                                dateTime = dateTime.plusDays(ZoneProperties.getMail().getPasswordResetTime());
+                                users.setPasswordResetKey(RandomUtil.generateResetKey());
+                                users.setPasswordResetKeyValid(DateTimeUtil.utilDateToSqlTimestamp(dateTime.toDate()));
+                                usersService.update(users);
+                                systemMailService.sendPasswordResetMail(users, RequestUtil.getBaseUrl(request));
+                                ajaxUtil.success().msg("验证通过");
+                            } else {
+                                ajaxUtil.fail().msg("邮件推送已被管理员关闭");
+                            }
                         } else {
-                            ajaxUtil.fail().msg("邮件推送已被管理员关闭");
+                            ajaxUtil.fail().msg("查询系统配置错误");
                         }
                     }
                 } else {
