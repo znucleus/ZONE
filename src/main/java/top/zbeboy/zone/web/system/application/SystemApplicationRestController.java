@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class SystemApplicationRestController {
@@ -33,7 +34,7 @@ public class SystemApplicationRestController {
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/system/application/data")
+    @GetMapping("/web/system/application/paging")
     public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
         List<String> headers = new ArrayList<>();
         headers.add("#");
@@ -61,7 +62,12 @@ public class SystemApplicationRestController {
     @GetMapping("/web/system/application/pids")
     public ResponseEntity<Map<String, Object>> pids() {
         AjaxUtil<Application> ajaxUtil = AjaxUtil.of();
-        ajaxUtil.success().list(applicationService.pids()).msg("获取数据成功");
+        List<Application> applications = new ArrayList<>();
+        Optional<List<Application>> optionalApplications = applicationService.pids();
+        if(optionalApplications.isPresent()){
+            applications = optionalApplications.get();
+        }
+        ajaxUtil.success().list(applications).msg("获取数据成功");
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -71,7 +77,7 @@ public class SystemApplicationRestController {
      * @param applicationName 应用名
      * @return true 不重复 false重复
      */
-    @PostMapping("/web/system/application/check/add/name")
+    @GetMapping("/web/system/application/check-add-name")
     public ResponseEntity<Map<String, Object>> checkAddName(@RequestParam("applicationName") String applicationName) {
         AjaxUtil<Map<String, Object>> ajaxUtil = applicationService.checkAddName(applicationName);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -84,7 +90,7 @@ public class SystemApplicationRestController {
      * @param applicationId   应用id
      * @return true 不重复 false重复
      */
-    @PostMapping("/web/system/application/check/edit/name")
+    @GetMapping("/web/system/application/check-edit-name")
     public ResponseEntity<Map<String, Object>> checkEditName(@RequestParam("applicationName") String applicationName,
                                                              @RequestParam("applicationId") String applicationId) {
         AjaxUtil<Map<String, Object>> ajaxUtil = applicationService.checkEditName(applicationName, applicationId);
@@ -97,7 +103,7 @@ public class SystemApplicationRestController {
      * @param applicationEnName 应用英文名
      * @return true 不重复 false重复
      */
-    @PostMapping("/web/system/application/check/add/en_name")
+    @GetMapping("/web/system/application/check-add-en-name")
     public ResponseEntity<Map<String, Object>> checkAddEnName(@RequestParam("applicationEnName") String applicationEnName) {
         AjaxUtil<Map<String, Object>> ajaxUtil = applicationService.checkAddEnName(applicationEnName);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -110,7 +116,7 @@ public class SystemApplicationRestController {
      * @param applicationId     应用id
      * @return true 不重复 false重复
      */
-    @PostMapping("/web/system/application/check/edit/en_name")
+    @GetMapping("/web/system/application/check-edit-en_name")
     public ResponseEntity<Map<String, Object>> checkEditEnName(@RequestParam("applicationEnName") String applicationEnName,
                                                                @RequestParam("applicationId") String applicationId) {
         AjaxUtil<Map<String, Object>> ajaxUtil = applicationService.checkEditEnName(applicationEnName, applicationId);
@@ -123,7 +129,7 @@ public class SystemApplicationRestController {
      * @param applicationUrl 应用链接
      * @return true 不重复 false重复
      */
-    @PostMapping("/web/system/application/check/add/url")
+    @GetMapping("/web/system/application/check-add-url")
     public ResponseEntity<Map<String, Object>> checkAddUrl(@RequestParam("applicationUrl") String applicationUrl) {
         AjaxUtil<Map<String, Object>> ajaxUtil = applicationService.checkAddUrl(applicationUrl);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -136,7 +142,7 @@ public class SystemApplicationRestController {
      * @param applicationId  应用id
      * @return true 不重复 false重复
      */
-    @PostMapping("/web/system/application/check/edit/url")
+    @GetMapping("/web/system/application/check-edit-url")
     public ResponseEntity<Map<String, Object>> checkEditUrl(@RequestParam("applicationUrl") String applicationUrl,
                                                             @RequestParam("applicationId") String applicationId) {
         AjaxUtil<Map<String, Object>> ajaxUtil = applicationService.checkEditUrl(applicationUrl, applicationId);
@@ -149,7 +155,7 @@ public class SystemApplicationRestController {
      * @param applicationCode 应用识别码
      * @return true 不重复 false重复
      */
-    @PostMapping("/web/system/application/check/add/code")
+    @GetMapping("/web/system/application/check-add-code")
     public ResponseEntity<Map<String, Object>> checkAddCode(@RequestParam("applicationCode") String applicationCode) {
         AjaxUtil<Map<String, Object>> ajaxUtil = applicationService.checkAddCode(applicationCode);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -162,7 +168,7 @@ public class SystemApplicationRestController {
      * @param applicationId   应用id
      * @return true 不重复 false重复
      */
-    @PostMapping("/web/system/application/check/edit/code")
+    @GetMapping("/web/system/application/check-edit-code")
     public ResponseEntity<Map<String, Object>> checkEditCode(@RequestParam("applicationCode") String applicationCode,
                                                              @RequestParam("applicationId") String applicationId) {
         AjaxUtil<Map<String, Object>> ajaxUtil = applicationService.checkEditCode(applicationCode, applicationId);
@@ -199,9 +205,9 @@ public class SystemApplicationRestController {
      * @param applicationIds 应用ids
      * @return true删除成功
      */
-    @PostMapping("/web/system/application/status")
-    public ResponseEntity<Map<String, Object>> status(String applicationIds) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = applicationService.status(applicationIds);
+    @PostMapping("/web/system/application/delete")
+    public ResponseEntity<Map<String, Object>> delete(String applicationIds) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = applicationService.delete(applicationIds);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

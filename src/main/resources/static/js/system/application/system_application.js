@@ -25,8 +25,8 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
          */
         function getAjaxUrl() {
             return {
-                data: web_path + '/web/system/application/data',
-                status: web_path + '/web/system/application/status',
+                data: web_path + '/web/system/application/paging',
+                status: web_path + '/web/system/application/delete',
                 add: '/web/system/application/add',
                 edit: '/web/system/application/edit',
                 page: '/web/menu/system/application'

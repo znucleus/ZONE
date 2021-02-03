@@ -8,10 +8,10 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
         var ajax_url = {
             pids: web_path + '/web/system/application/pids',
             update: web_path + '/web/system/application/update',
-            check_name: web_path + '/web/system/application/check/edit/name',
-            check_en_name: web_path + '/web/system/application/check/edit/en_name',
-            check_url: web_path + '/web/system/application/check/edit/url',
-            check_code: web_path + '/web/system/application/check/edit/code',
+            check_name: web_path + '/web/system/application/check-edit-name',
+            check_en_name: web_path + '/web/system/application/check-edit-en_name',
+            check_url: web_path + '/web/system/application/check-edit-url',
+            check_code: web_path + '/web/system/application/check-edit-code',
             back: '/web/menu/system/application'
         };
 
@@ -145,7 +145,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
             if (applicationName.length <= 0 || applicationName.length > 30) {
                 tools.validErrorDom(param_id.applicationName, '应用中文名为1~30个字符');
             } else {
-                $.post(ajax_url.check_name, param, function (data) {
+                $.get(ajax_url.check_name, param, function (data) {
                     if (data.state) {
                         tools.validSuccessDom(param_id.applicationName);
                     } else {
@@ -162,7 +162,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
             if (applicationEnName.length <= 0 || applicationEnName.length > 100) {
                 tools.validErrorDom(param_id.applicationEnName, '应用英文名为1~100个字符');
             } else {
-                $.post(ajax_url.check_en_name, param, function (data) {
+                $.get(ajax_url.check_en_name, param, function (data) {
                     if (data.state) {
                         tools.validSuccessDom(param_id.applicationEnName);
                     } else {
@@ -182,7 +182,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
                 if (applicationUrl === '#') {
                     tools.validSuccessDom(param_id.applicationUrl);
                 } else {
-                    $.post(ajax_url.check_url, param, function (data) {
+                    $.get(ajax_url.check_url, param, function (data) {
                         if (data.state) {
                             tools.validSuccessDom(param_id.applicationUrl);
                         } else {
@@ -200,7 +200,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
             if (applicationCode.length <= 0 || applicationCode.length > 100) {
                 tools.validErrorDom(param_id.applicationCode, '应用识别码为1~100个字符');
             } else {
-                $.post(ajax_url.check_code, param, function (data) {
+                $.get(ajax_url.check_code, param, function (data) {
                     if (data.state) {
                         tools.validSuccessDom(param_id.applicationCode);
                     } else {
@@ -226,7 +226,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
             if (applicationName.length <= 0 || applicationName.length > 30) {
                 tools.validErrorDom(param_id.applicationName, '应用中文名为1~30个字符');
             } else {
-                $.post(ajax_url.check_name, param, function (data) {
+                $.get(ajax_url.check_name, param, function (data) {
                     if (data.state) {
                         tools.validSuccessDom(param_id.applicationName);
                         validApplicationEnName();
@@ -245,7 +245,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
             if (applicationEnName.length <= 0 || applicationEnName.length > 100) {
                 tools.validErrorDom(param_id.applicationEnName, '应用英文名为1~100个字符');
             } else {
-                $.post(ajax_url.check_en_name, param, function (data) {
+                $.get(ajax_url.check_en_name, param, function (data) {
                     if (data.state) {
                         tools.validSuccessDom(param_id.applicationEnName);
                         validApplicationUrl();
@@ -265,7 +265,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
                 tools.validErrorDom(param_id.applicationUrl, '应用链接url为1~300个字符');
             } else {
                 if (applicationUrl !== '#') {
-                    $.post(ajax_url.check_url, param, function (data) {
+                    $.get(ajax_url.check_url, param, function (data) {
                         if (data.state) {
                             tools.validSuccessDom(param_id.applicationUrl);
                             validApplicationCode();
@@ -287,7 +287,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
             if (applicationCode.length <= 0 || applicationCode.length > 100) {
                 tools.validErrorDom(param_id.applicationCode, '应用识别码为1~100个字符');
             } else {
-                $.post(ajax_url.check_code, param, function (data) {
+                $.get(ajax_url.check_code, param, function (data) {
                     if (data.state) {
                         tools.validSuccessDom(param_id.applicationCode);
                         sendAjax();

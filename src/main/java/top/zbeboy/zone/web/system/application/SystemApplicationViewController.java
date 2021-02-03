@@ -11,6 +11,7 @@ import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 
 import javax.annotation.Resource;
 import java.util.Objects;
+import java.util.Optional;
 
 @Controller
 public class SystemApplicationViewController {
@@ -49,9 +50,9 @@ public class SystemApplicationViewController {
     public String edit(@PathVariable("id") String id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        Application application = applicationService.findById(id);
-        if (Objects.nonNull(application) && StringUtils.isNotBlank(application.getApplicationId())) {
-            modelMap.addAttribute("systemApplication", application);
+        Optional<Application> optionalApplication = applicationService.findById(id);
+        if (optionalApplication.isPresent()) {
+            modelMap.addAttribute("systemApplication", optionalApplication.get());
             page = "web/system/application/system_application_edit::#page-wrapper";
         } else {
             config.buildDangerTip("查询错误", "未查询到应用数据");
