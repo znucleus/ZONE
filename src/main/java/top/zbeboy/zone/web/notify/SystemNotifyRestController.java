@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class SystemNotifyRestController {
@@ -34,7 +35,12 @@ public class SystemNotifyRestController {
     @GetMapping("/users/system/notify")
     public ResponseEntity<Map<String, Object>> userSystemNotify() {
         AjaxUtil<SystemNotify> ajaxUtil = AjaxUtil.of();
-        ajaxUtil.success().list(systemNotifyService.findByEffective()).msg("获取数据成功");
+        List<SystemNotify> list = new ArrayList<>();
+        Optional<List<SystemNotify>> optionalSystemNotifies = systemNotifyService.findByEffective();
+        if(optionalSystemNotifies.isPresent()){
+            list = optionalSystemNotifies.get();
+        }
+        ajaxUtil.success().list(list).msg("获取数据成功");
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -44,7 +50,7 @@ public class SystemNotifyRestController {
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/system/notify/data")
+    @GetMapping("/web/system/notify/paging")
     public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         List<String> headers = new ArrayList<>();

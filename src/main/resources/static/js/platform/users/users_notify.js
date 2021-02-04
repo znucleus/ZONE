@@ -6,7 +6,7 @@ require(["jquery", "tools", "handlebars", "moment-with-locales", "bootstrap",
         moment.locale('zh-cn');
 
         var ajax_url = {
-            user_notify: web_path + '/users/data/notify',
+            user_notify: web_path + '/users/notify/paging',
             user_notify_reads: web_path + '/users/notify/reads'
         };
 

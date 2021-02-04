@@ -13,7 +13,10 @@ import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class SystemNotifyApiController {
@@ -30,7 +33,12 @@ public class SystemNotifyApiController {
     @GetMapping("/api/system/notify")
     public ResponseEntity<Map<String, Object>> userSystemNotify(Principal principal, HttpServletRequest request) {
         AjaxUtil<SystemNotify> ajaxUtil = AjaxUtil.of();
-        ajaxUtil.success().list(systemNotifyService.findByEffective()).msg("获取数据成功");
+        List<SystemNotify> list = new ArrayList<>();
+        Optional<List<SystemNotify>> optionalSystemNotifies = systemNotifyService.findByEffective();
+        if(optionalSystemNotifies.isPresent()){
+            list = optionalSystemNotifies.get();
+        }
+        ajaxUtil.success().list(list).msg("获取数据成功");
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

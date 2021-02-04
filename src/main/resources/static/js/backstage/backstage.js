@@ -242,7 +242,7 @@ require(["jquery", "requirejs-domready", "moment-with-locales", "handlebars", "a
             }
 
             var ajax_url = {
-                user_notify: web_path + '/users/data/notify',
+                user_notify: web_path + '/users/notify/paging',
                 user_notify_detail: web_path + '/users/notify/detail',
                 user_notify_reads: web_path + '/users/notify/reads',
                 system_notify: web_path + '/users/system/notify',

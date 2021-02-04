@@ -25,11 +25,11 @@ public class UserNotifyRestController {
      * @param simplePaginationUtil 分页工具
      * @return 数据
      */
-    @GetMapping("/users/data/notify")
+    @GetMapping("/users/notify/paging")
     public ResponseEntity<Map<String, Object>> userDataNotify(SimplePaginationUtil simplePaginationUtil) {
         Users users = SessionUtil.getUserFromSession();
         simplePaginationUtil.setUsername(users.getUsername());
-        AjaxUtil<UserNotifyBean> ajaxUtil = userNotifyService.userDataNotify(simplePaginationUtil);
+        AjaxUtil<UserNotifyBean> ajaxUtil = userNotifyService.data(simplePaginationUtil);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 

@@ -27,7 +27,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
          */
         function getAjaxUrl() {
             return {
-                data: web_path + '/web/system/notify/data',
+                data: web_path + '/web/system/notify/paging',
                 del: web_path + '/web/system/notify/delete',
                 add: '/web/system/notify/add',
                 edit: '/web/system/notify/edit',

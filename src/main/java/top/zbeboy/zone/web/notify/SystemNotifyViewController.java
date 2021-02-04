@@ -12,6 +12,7 @@ import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 
 import javax.annotation.Resource;
 import java.util.Objects;
+import java.util.Optional;
 
 @Controller
 public class SystemNotifyViewController {
@@ -50,8 +51,9 @@ public class SystemNotifyViewController {
     public String edit(@PathVariable("id") String id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        SystemNotifyBean bean = systemNotifyService.findByIdRelation(id);
-        if (Objects.nonNull(bean) && StringUtils.isNotBlank(bean.getSystemNotifyId())) {
+        Optional<SystemNotifyBean> optionalSystemNotifyBean = systemNotifyService.findByIdRelation(id);
+        if (optionalSystemNotifyBean.isPresent()) {
+            SystemNotifyBean bean = optionalSystemNotifyBean.get();
             bean.setValidDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getValidDate()));
             bean.setExpireDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getExpireDate()));
             modelMap.addAttribute("systemNotify", bean);
