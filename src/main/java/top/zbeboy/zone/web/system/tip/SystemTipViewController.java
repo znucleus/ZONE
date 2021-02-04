@@ -30,7 +30,7 @@ public class SystemTipViewController {
      * @param modelMap 页面数据
      * @return 忘记密码验证成功
      */
-    @GetMapping("/tip/forget_password/success")
+    @GetMapping("/tip/forget-password/success")
     public String forgetPasswordSuccess(ModelMap modelMap) {
         SystemTipConfig config = new SystemTipConfig(
                 "您的邮箱已验证成功",
@@ -47,7 +47,7 @@ public class SystemTipViewController {
      * @param modelMap 页面对象
      * @return 成功
      */
-    @GetMapping("/tip/reset_password/success")
+    @GetMapping("/tip/reset-password/success")
     public String resetPasswordSuccess(ModelMap modelMap) {
         SystemTipConfig config = new SystemTipConfig(
                 "您的密码已重置成功",

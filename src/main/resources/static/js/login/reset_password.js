@@ -41,7 +41,7 @@ require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf",
 
             var ajax_url = {
                 reset_password: web_path + '/reset-password',
-                reset_password_success: web_path + '/tip/reset_password/success'
+                reset_password_success: web_path + '/tip/reset-password/success'
             };
 
             var param_id = {

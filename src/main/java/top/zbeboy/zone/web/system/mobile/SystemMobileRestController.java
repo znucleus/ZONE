@@ -105,7 +105,7 @@ public class SystemMobileRestController {
      * @param session          用户session
      * @return 验证结果
      */
-    @PostMapping("/anyone/check/mobile/code")
+    @PostMapping("/anyone/check/mobile-code")
     public ResponseEntity<Map<String, Object>> anyoneCheckMobileCode(@RequestParam("mobile") String mobile,
                                                                      @RequestParam("verificationCode") String verificationCode, HttpSession session) {
         String param = StringUtils.trim(mobile);
@@ -157,7 +157,7 @@ public class SystemMobileRestController {
      * @param session 用户session
      * @return 有效性结果
      */
-    @PostMapping("/anyone/data/mobile/code")
+    @PostMapping("/anyone/effectiveness/mobile-code")
     public ResponseEntity<Map<String, Object>> anyoneDataMobileCode(@RequestParam("mobile") String mobile, HttpSession session) {
         String param = StringUtils.trim(mobile);
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
@@ -188,7 +188,7 @@ public class SystemMobileRestController {
      * @param mobile 手机号
      * @return 是否验证通过
      */
-    @PostMapping("/forget_password/mobile")
+    @PostMapping("/forget-password/mobile")
     public ResponseEntity<Map<String, Object>> forgetPassword(@RequestParam("mobile") String mobile, HttpSession session) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         String param = StringUtils.deleteWhitespace(mobile);

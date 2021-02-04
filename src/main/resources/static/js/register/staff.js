@@ -54,8 +54,8 @@ require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf",
                 check_staff_number: web_path + '/anyone/check/staff/number',
                 check_mobile: web_path + '/anyone/check-mobile',
                 send_mobile: web_path + '/anyone/send/mobile',
-                check_mobile_verification_code: web_path + '/anyone/check/mobile/code',
-                obtain_mobile_code_valid: web_path + '/anyone/data/mobile/code',
+                check_mobile_verification_code: web_path + '/anyone/check/mobile-code',
+                obtain_mobile_code_valid: web_path + '/anyone/effectiveness/mobile-code',
                 register_staff: web_path + '/anyone/data/register/staff',
                 register_success: web_path + '/tip/register/success'
             };

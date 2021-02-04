@@ -25,7 +25,7 @@ public class SystemMobileViewController {
      * @param modelMap 页面对象
      * @return 消息
      */
-    @GetMapping("/anyone/reset_password/mobile")
+    @GetMapping("/anyone/reset-password/mobile")
     public String resetPasswordMobile(HttpSession session, ModelMap modelMap) {
         SystemTipConfig config = new SystemTipConfig();
         if (Objects.nonNull(session.getAttribute(SystemMobileConfig.MOBILE))) {

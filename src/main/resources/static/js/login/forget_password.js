@@ -38,14 +38,14 @@ require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf"]
             //DOM nodes in this function.
 
             var ajax_url = {
-                forget_password_mail: web_path + '/forget_password/mail',
-                forget_password_mobile: web_path + '/forget_password/mobile',
+                forget_password_mail: web_path + '/forget-password/mail',
+                forget_password_mobile: web_path + '/forget-password/mobile',
                 forget_password_dynamic_password: web_path + '/forget-password/dynamic-password',
-                forget_password_success: web_path + '/tip/forget_password/success',
-                reset_password_mobile: web_path + '/anyone/reset_password/mobile',
+                forget_password_success: web_path + '/tip/forget-password/success',
+                reset_password_mobile: web_path + '/anyone/reset-password/mobile',
                 reset_password_dynamic_password: web_path + '/anyone/reset-password/dynamic-password',
                 send_mobile: web_path + '/anyone/send/mobile',
-                check_mobile_verification_code: web_path + '/anyone/check/mobile/code',
+                check_mobile_verification_code: web_path + '/anyone/check/mobile-code',
                 check_exist_username: web_path + '/anyone/check-exist-username'
             };
 
