@@ -29,7 +29,7 @@ require(["jquery", "nav.active", "responsive.bootstrap4", "select2-zh-CN"],
          */
         function getAjaxUrl() {
             return {
-                logs: web_path + '/web/system/log/api/data',
+                logs: web_path + '/web/system/log/api/paging',
                 obtain_channel_data: web_path + "/users/data/channel",
                 page: '/web/menu/system/log'
             };

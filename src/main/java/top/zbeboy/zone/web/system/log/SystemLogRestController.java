@@ -26,7 +26,7 @@ public class SystemLogRestController {
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/system/log/login/data")
+    @GetMapping("/web/system/log/login/paging")
     public ResponseEntity<DataTablesUtil> loginData(HttpServletRequest request) {
         List<String> headers = new ArrayList<>();
         headers.add("username");
@@ -45,7 +45,7 @@ public class SystemLogRestController {
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/system/log/api/data")
+    @GetMapping("/web/system/log/api/paging")
     public ResponseEntity<DataTablesUtil> apiData(HttpServletRequest request) {
         List<String> headers = new ArrayList<>();
         headers.add("username");
@@ -66,7 +66,7 @@ public class SystemLogRestController {
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/system/log/operator/data")
+    @GetMapping("/web/system/log/operator/paging")
     public ResponseEntity<DataTablesUtil> operatorData(HttpServletRequest request) {
         List<String> headers = new ArrayList<>();
         headers.add("username");

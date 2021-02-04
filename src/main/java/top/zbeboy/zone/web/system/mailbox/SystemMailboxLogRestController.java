@@ -26,7 +26,7 @@ public class SystemMailboxLogRestController {
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/system/mailbox/data")
+    @GetMapping("/web/system/mailbox/paging")
     public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
         List<String> headers = new ArrayList<>();
         headers.add("acceptMail");

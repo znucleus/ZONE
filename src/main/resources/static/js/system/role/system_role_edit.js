@@ -9,7 +9,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
         application_json_data: web_path + '/web/system/role/application/json',
         role_application_data: web_path + '/web/system/role/application/data',
         update: web_path + '/web/system/role/update',
-        check_name: web_path + '/web/system/role/check/edit/name',
+        check_name: web_path + '/web/system/role/check-edit-name',
         page: '/web/menu/system/role'
     };
 
@@ -73,7 +73,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
         if (roleName.length <= 0 || roleName.length > 50) {
             tools.validErrorDom(param_id.roleName, '角色名为1~50个字符');
         } else {
-            $.post(ajax_url.check_name, param, function (data) {
+            $.get(ajax_url.check_name, param, function (data) {
                 if (data.state) {
                     tools.validSuccessDom(param_id.roleName);
                 } else {
@@ -99,7 +99,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "handlebars", "nav.active",
         if (roleName.length <= 0 || roleName.length > 50) {
             tools.validErrorDom(param_id.roleName, '角色名为1~50个字符');
         } else {
-            $.post(ajax_url.check_name, param, function (data) {
+            $.get(ajax_url.check_name, param, function (data) {
                 if (data.state) {
                     tools.validSuccessDom(param_id.roleName);
                     sendAjax();

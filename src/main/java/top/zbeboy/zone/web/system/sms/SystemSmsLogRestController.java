@@ -26,7 +26,7 @@ public class SystemSmsLogRestController {
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/system/sms/data")
+    @GetMapping("/web/system/sms/paging")
     public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
         List<String> headers = new ArrayList<>();
         headers.add("acceptPhone");

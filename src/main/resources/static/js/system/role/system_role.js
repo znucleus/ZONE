@@ -20,7 +20,7 @@ require(["jquery", "handlebars", "nav.active", "responsive.bootstrap4", "jquery.
          */
         function getAjaxUrl() {
             return {
-                roles: web_path + '/web/system/role/data',
+                roles: web_path + '/web/system/role/paging',
                 edit: '/web/system/role/edit',
                 page: '/web/menu/system/role'
             };

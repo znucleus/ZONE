@@ -22,7 +22,7 @@ require(["jquery", "nav.active", "responsive.bootstrap4"],
 
         function getAjaxUrl() {
             return {
-                logs: web_path + '/web/system/log/operator/data',
+                logs: web_path + '/web/system/log/operator/paging',
                 page: '/web/menu/system/log'
             }
         }

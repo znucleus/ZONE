@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class SystemRoleRestController {
@@ -32,7 +33,7 @@ public class SystemRoleRestController {
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/system/role/data")
+    @GetMapping("/web/system/role/paging")
     public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
         List<String> headers = new ArrayList<>();
         headers.add("roleName");
@@ -51,7 +52,7 @@ public class SystemRoleRestController {
      * @param roleId   角色id
      * @return true 合格 false 不合格
      */
-    @PostMapping("/web/system/role/check/edit/name")
+    @GetMapping("/web/system/role/check-edit-name")
     public ResponseEntity<Map<String, Object>> checkName(@RequestParam("roleName") String roleName, @RequestParam("roleId") String roleId) {
         AjaxUtil<Map<String, Object>> ajaxUtil = systemRoleService.checkName(roleName, roleId);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -82,7 +83,12 @@ public class SystemRoleRestController {
     @PostMapping("/web/system/role/application/data")
     public ResponseEntity<Map<String, Object>> roleApplicationData(@RequestParam("roleId") String roleId) {
         AjaxUtil<RoleApplication> ajaxUtil = AjaxUtil.of();
-        ajaxUtil.success().list(systemRoleService.roleApplicationData(roleId)).msg("获取数据成功");
+        List<RoleApplication> list = new ArrayList<>();
+        Optional<List<RoleApplication>> optionalRoleApplications = systemRoleService.roleApplicationData(roleId);
+        if(optionalRoleApplications.isPresent()){
+            list = optionalRoleApplications.get();
+        }
+        ajaxUtil.success().list(list).msg("获取数据成功");
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -94,7 +100,12 @@ public class SystemRoleRestController {
     @GetMapping("/web/system/role/application/json")
     public ResponseEntity<Map<String, Object>> applicationJson() {
         AjaxUtil<TreeViewData> ajaxUtil = AjaxUtil.of();
-        ajaxUtil.success().list(systemRoleService.applicationJson()).msg("获取数据成功");
+        List<TreeViewData> list = new ArrayList<>();
+        Optional<List<TreeViewData>> optionalTreeViewData = systemRoleService.applicationJson();
+        if(optionalTreeViewData.isPresent()){
+            list = optionalTreeViewData.get();
+        }
+        ajaxUtil.success().list(list).msg("获取数据成功");
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

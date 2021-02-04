@@ -17,7 +17,7 @@ require(["jquery", "nav.active", "responsive.bootstrap4"], function ($, navActiv
 
     function getAjaxUrl() {
         return {
-            smses: web_path + '/web/system/sms/data',
+            smses: web_path + '/web/system/sms/paging',
             page: '/web/menu/system/sms'
         }
     }
