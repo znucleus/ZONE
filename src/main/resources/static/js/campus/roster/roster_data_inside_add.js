@@ -8,7 +8,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "nav
         var ajax_url = {
             obtain_nation_data: web_path + '/anyone/data/nation',
             obtain_political_landscape_data: web_path + '/anyone/data/politics',
-            convert_name: web_path + '/anyone/campus/roster/convert_name',
+            convert_name: web_path + '/anyone/campus/roster/convert-name',
             save: web_path + '/web/campus/roster/data/save',
             page: '/web/menu/campus/roster'
         };

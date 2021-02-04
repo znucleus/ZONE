@@ -56,7 +56,7 @@ public class CourseRestController {
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/data/course/data")
+    @GetMapping("/web/data/course/paging")
     public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         List<String> headers = new ArrayList<>();
@@ -88,7 +88,7 @@ public class CourseRestController {
      * @param collegeId  院id
      * @return true 合格 false 不合格
      */
-    @PostMapping("/web/data/course/check/add/name")
+    @GetMapping("/web/data/course/check-add-name")
     public ResponseEntity<Map<String, Object>> checkAddName(@RequestParam("courseName") String courseName, @RequestParam(value = "collegeId") int collegeId) {
         AjaxUtil<Map<String, Object>> ajaxUtil = courseService.checkAddName(courseName, collegeId);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -120,7 +120,7 @@ public class CourseRestController {
      * @param collegeId  院id
      * @return true 合格 false 不合格
      */
-    @PostMapping("/web/data/course/check/edit/name")
+    @GetMapping("/web/data/course/check-edit-name")
     public ResponseEntity<Map<String, Object>> checkEditName(@RequestParam("courseId") int courseId,
                                                              @RequestParam("courseName") String courseName,
                                                              @RequestParam(value = "collegeId") int collegeId) {

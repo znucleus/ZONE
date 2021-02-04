@@ -67,7 +67,7 @@ public class TheoryUsersRestController {
      * @param simplePaginationUtil 请求
      * @return 数据
      */
-    @GetMapping("/web/theory/users/theory/data")
+    @GetMapping("/web/theory/users/theory/paging")
     public ResponseEntity<Map<String, Object>> theoryData(SimplePaginationUtil simplePaginationUtil) {
         AjaxUtil<TheoryReleaseBean> ajaxUtil = theoryControllerCommon.theoryData(simplePaginationUtil);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -79,7 +79,7 @@ public class TheoryUsersRestController {
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/theory/users/data")
+    @GetMapping("/web/theory/users/paging")
     public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         List<String> headers = new ArrayList<>();

@@ -6,7 +6,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
          ajax url.
          */
         var ajax_url = {
-            data: web_path + '/web/training/users/training/data',
+            data: web_path + '/web/training/users/training/paging',
             list: '/web/training/users/list',
             page: '/web/menu/training/users'
         };

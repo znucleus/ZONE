@@ -7,7 +7,7 @@ require(["jquery", "lodash_plugin", "tools", "handlebars", "nav.active", "sweeta
      */
     function getAjaxUrl() {
         return {
-            data: web_path + '/web/data/potential/data',
+            data: web_path + '/web/data/potential/paging',
             role_data: web_path + '/web/data/potential/role/data',
             setting_role: web_path + '/web/data/potential/role/save',
             update_enabled: web_path + '/web/data/potential/update/enabled',

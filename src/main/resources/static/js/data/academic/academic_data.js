@@ -52,11 +52,11 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
          */
         function getAjaxUrl() {
             return {
-                data: web_path + '/web/data/academic/data',
+                data: web_path + '/web/data/academic/paging',
                 save: web_path + '/web/data/academic/save',
-                check_add_name: web_path + '/web/data/academic/check/add/name',
+                check_add_name: web_path + '/web/data/academic/check-add-name',
                 update: web_path + '/web/data/academic/update',
-                check_edit_name: web_path + '/web/data/academic/check/edit/name',
+                check_edit_name: web_path + '/web/data/academic/check-edit-name',
                 page: '/web/menu/data/academic'
             };
         }
@@ -278,7 +278,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             if (academicTitleName.length <= 0 || academicTitleName.length > 30) {
                 tools.validErrorDom(add_param_id.academicTitleName, '职称30个字符以内');
             } else {
-                $.post(getAjaxUrl().check_add_name, add_param, function (data) {
+                $.get(getAjaxUrl().check_add_name, add_param, function (data) {
                     if (data.state) {
                         tools.validSuccessDom(add_param_id.academicTitleName);
                     } else {
@@ -294,7 +294,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             if (academicTitleName.length <= 0 || academicTitleName.length > 30) {
                 tools.validErrorDom(edit_param_id.academicTitleName, '职称30个字符以内');
             } else {
-                $.post(getAjaxUrl().check_edit_name, edit_param, function (data) {
+                $.get(getAjaxUrl().check_edit_name, edit_param, function (data) {
                     if (data.state) {
                         tools.validSuccessDom(edit_param_id.academicTitleName);
                     } else {
@@ -319,7 +319,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             if (academicTitleName.length <= 0 || academicTitleName.length > 30) {
                 tools.validErrorDom(add_param_id.academicTitleName, '职称30个字符以内');
             } else {
-                $.post(getAjaxUrl().check_add_name, add_param, function (data) {
+                $.get(getAjaxUrl().check_add_name, add_param, function (data) {
                     if (data.state) {
                         tools.validSuccessDom(add_param_id.academicTitleName);
                         sendAddAjax();
@@ -335,7 +335,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             if (academicTitleName.length <= 0 || academicTitleName.length > 30) {
                 tools.validErrorDom(edit_param_id.academicTitleName, '职称30个字符以内');
             } else {
-                $.post(getAjaxUrl().check_edit_name, edit_param, function (data) {
+                $.get(getAjaxUrl().check_edit_name, edit_param, function (data) {
                     if (data.state) {
                         tools.validSuccessDom(edit_param_id.academicTitleName);
                         sendEditAjax();

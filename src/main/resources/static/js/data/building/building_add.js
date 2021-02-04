@@ -8,9 +8,9 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
         var ajax_url = {
             obtain_school_data: web_path + '/anyone/data/school',
             obtain_college_data: web_path + '/anyone/data/college',
-            obtain_building_classifies_data: web_path + '/users/data/building_classifies',
+            obtain_building_classifies_data: web_path + '/users/data/building-classifies',
             save: web_path + '/web/data/building/save',
-            check_name: web_path + '/web/data/building/check/add/name',
+            check_name: web_path + '/web/data/building/check-add-name',
             page: '/web/menu/data/building'
         };
 
@@ -169,7 +169,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             if (buildingName.length <= 0 || buildingName.length > 30) {
                 tools.validErrorDom(param_id.buildingName, '楼名30个字符以内');
             } else {
-                $.post(ajax_url.check_name, param, function (data) {
+                $.get(ajax_url.check_name, param, function (data) {
                     if (data.state) {
                         tools.validSuccessDom(param_id.buildingName);
                     } else {
@@ -249,7 +249,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             if (buildingName.length <= 0 || buildingName.length > 30) {
                 tools.validErrorDom(param_id.buildingName, '楼名30个字符以内');
             } else {
-                $.post(ajax_url.check_name, param, function (data) {
+                $.get(ajax_url.check_name, param, function (data) {
                     if (data.state) {
                         tools.validSuccessDom(param_id.buildingName);
                         validCoordinate();

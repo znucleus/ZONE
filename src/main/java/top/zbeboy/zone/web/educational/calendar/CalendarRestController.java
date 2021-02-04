@@ -39,7 +39,7 @@ public class CalendarRestController {
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/educational/calendar/data")
+    @GetMapping("/web/educational/calendar/paging")
     public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         List<String> headers = new ArrayList<>();
@@ -115,7 +115,7 @@ public class CalendarRestController {
      * @param tableSawUtil 请求
      * @return 数据
      */
-    @GetMapping("/web/educational/calendar/authorize/data")
+    @GetMapping("/web/educational/calendar/authorize/paging")
     public ResponseEntity<Map<String, Object>> authorizeData(TableSawUtil tableSawUtil) {
         Users users = SessionUtil.getUserFromSession();
         tableSawUtil.setUsername(users.getUsername());

@@ -71,7 +71,7 @@ public class SchoolRestController {
      * @param schoolName 学校名
      * @return true 合格 false 不合格
      */
-    @GetMapping("/web/data/school/check-add/name")
+    @GetMapping("/web/data/school/check-add-name")
     public ResponseEntity<Map<String, Object>> checkAddName(@RequestParam("schoolName") String schoolName) {
         AjaxUtil<Map<String, Object>> ajaxUtil = schoolService.checkAddName(schoolName);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -96,7 +96,7 @@ public class SchoolRestController {
      * @param schoolName 学校名
      * @return true 合格 false 不合格
      */
-    @GetMapping("/web/data/school/check-edit/name")
+    @GetMapping("/web/data/school/check-edit-name")
     public ResponseEntity<Map<String, Object>> checkEditName(@RequestParam("schoolId") int id,
                                                              @RequestParam("schoolName") String schoolName) {
         AjaxUtil<Map<String, Object>> ajaxUtil = schoolService.checkEditName(id, schoolName);

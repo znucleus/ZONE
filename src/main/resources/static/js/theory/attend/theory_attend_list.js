@@ -6,7 +6,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "messenge
          ajax url.
          */
         var ajax_url = {
-            data: web_path + '/web/theory/attend/data',
+            data: web_path + '/web/theory/attend/paging',
             configure_data: web_path + '/web/theory/attend/configure/data',
             configure_release: web_path + '/web/theory/attend/configure/release',
             release: '/web/theory/attend/release',

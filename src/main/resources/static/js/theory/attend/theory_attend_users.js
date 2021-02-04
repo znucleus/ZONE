@@ -33,13 +33,13 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
          */
         function getAjaxUrl() {
             return {
-                data: web_path + '/web/theory/attend/users/data',
+                data: web_path + '/web/theory/attend/users/paging',
                 export_data_url: web_path + '/web/theory/attend/users/export',
                 operate: web_path + '/web/theory/attend/users/operate',
                 del: web_path + '/web/theory/attend/users/delete',
                 remark: web_path + '/web/theory/attend/users/remark',
                 reset: web_path + '/web/theory/attend/users/reset',
-                all_ok: web_path + '/web/theory/attend/users/all_ok',
+                all_ok: web_path + '/web/theory/attend/users/full-attendance',
                 page: '/web/menu/theory/attend'
             };
         }

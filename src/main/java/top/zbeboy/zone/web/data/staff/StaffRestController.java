@@ -66,7 +66,7 @@ public class StaffRestController {
      * @param staffNumber 工号
      * @return 是否被注册
      */
-    @PostMapping("/anyone/check/staff/number")
+    @PostMapping("/anyone/check-staff-number")
     public ResponseEntity<Map<String, Object>> anyoneCheckStaffNumber(@RequestParam("staffNumber") String staffNumber) {
         AjaxUtil<Map<String, Object>> ajaxUtil = staffService.anyoneCheckStaffNumber(staffNumber);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -78,7 +78,7 @@ public class StaffRestController {
      * @param staffNumber 工号
      * @return 是否被注册
      */
-    @PostMapping("/users/check/staff/number")
+    @PostMapping("/users/check-staff-number")
     public ResponseEntity<Map<String, Object>> userCheckStaffNumber(@RequestParam("staffNumber") String staffNumber) {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Map<String, Object>> ajaxUtil = staffService.userCheckStaffNumber(users.getUsername(), staffNumber);
@@ -172,7 +172,7 @@ public class StaffRestController {
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/data/staff/data")
+    @GetMapping("/web/data/staff/paging")
     public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         List<String> headers = new ArrayList<>();

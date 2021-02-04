@@ -9,7 +9,7 @@ require(["jquery", "lodash", "tools", "moment-with-locales", "handlebars", "swee
          */
         function getAjaxUrl() {
             return {
-                data: web_path + '/web/campus/opens/authorize/data',
+                data: web_path + '/web/campus/opens/authorize/paging',
                 save: web_path + '/web/campus/opens/authorize/save',
                 del: web_path + '/web/campus/opens/authorize/delete',
                 page: '/web/menu/campus/opens'

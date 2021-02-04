@@ -32,7 +32,7 @@ require(["jquery", "nav.active", "responsive.bootstrap4", "jquery.address", "mes
          */
         function getAjaxUrl() {
             return {
-                data: web_path + '/web/theory/attend/situation/data',
+                data: web_path + '/web/theory/attend/situation/paging',
                 export_data_url: web_path + '/web/theory/attend/situation/export',
                 page: '/web/menu/theory/attend'
             };

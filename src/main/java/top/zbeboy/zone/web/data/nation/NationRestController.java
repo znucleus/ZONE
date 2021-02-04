@@ -47,7 +47,7 @@ public class NationRestController {
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/data/nation/data")
+    @GetMapping("/web/data/nation/paging")
     public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         List<String> headers = new ArrayList<>();
@@ -66,7 +66,7 @@ public class NationRestController {
      * @param nationName 民族
      * @return true 合格 false 不合格
      */
-    @PostMapping("/web/data/nation/check/add/name")
+    @GetMapping("/web/data/nation/check-add-name")
     public ResponseEntity<Map<String, Object>> checkAddName(@RequestParam("nationName") String nationName) {
         AjaxUtil<Map<String, Object>> ajaxUtil = nationService.checkAddName(nationName);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -91,7 +91,7 @@ public class NationRestController {
      * @param nationName 民族名
      * @return true 合格 false 不合格
      */
-    @PostMapping("/web/data/nation/check/edit/name")
+    @GetMapping("/web/data/nation/check-edit-name")
     public ResponseEntity<Map<String, Object>> checkEditName(@RequestParam("nationId") int nationId,
                                                              @RequestParam("nationName") String nationName) {
         AjaxUtil<Map<String, Object>> ajaxUtil = nationService.checkEditName(nationId, nationName);

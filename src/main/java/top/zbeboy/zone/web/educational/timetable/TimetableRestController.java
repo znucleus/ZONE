@@ -129,7 +129,7 @@ public class TimetableRestController {
      * @return 数据
      */
     @ApiLoggingRecord(remark = "教务课表班级", channel = Workbook.channel.WEB, needLogin = true)
-    @GetMapping("/web/educational/timetable/attend_class/{identification}")
+    @GetMapping("/web/educational/timetable/attend-class/{identification}")
     public ResponseEntity<Map<String, Object>> attendClass(@PathVariable("identification") String identification, HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
         List<TimetableAttendClassElastic> timetableAttendClassElastics = new ArrayList<>();
@@ -147,7 +147,7 @@ public class TimetableRestController {
      * @return 数据
      */
     @ApiLoggingRecord(remark = "教务课表课程", channel = Workbook.channel.WEB, needLogin = true)
-    @GetMapping("/web/educational/timetable/course_name/{identification}")
+    @GetMapping("/web/educational/timetable/course-name/{identification}")
     public ResponseEntity<Map<String, Object>> courseName(@PathVariable("identification") String identification, HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
         List<TimetableCourseNameElastic> timetableCourseNameElastics = new ArrayList<>();
@@ -165,7 +165,7 @@ public class TimetableRestController {
      * @return 数据
      */
     @ApiLoggingRecord(remark = "教务课表教师", channel = Workbook.channel.WEB, needLogin = true)
-    @GetMapping("/web/educational/timetable/teacher_name/{identification}")
+    @GetMapping("/web/educational/timetable/teacher-name/{identification}")
     public ResponseEntity<Map<String, Object>> teacherName(@PathVariable("identification") String identification, HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
         List<TimetableTeacherNameElastic> timetableTeacherNameElastics = new ArrayList<>();

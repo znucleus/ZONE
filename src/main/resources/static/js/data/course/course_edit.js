@@ -9,7 +9,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             obtain_school_data: web_path + '/anyone/data/school',
             obtain_college_data: web_path + '/anyone/data/college',
             update: web_path + '/web/data/course/update',
-            check_name: web_path + '/web/data/course/check/edit/name',
+            check_name: web_path + '/web/data/course/check-edit-name',
             page: '/web/menu/data/course'
         };
 
@@ -203,7 +203,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             if (courseName.length <= 0 || courseName.length > 100) {
                 tools.validErrorDom(param_id.courseName, '课程名100个字符以内');
             } else {
-                $.post(ajax_url.check_name, param, function (data) {
+                $.get(ajax_url.check_name, param, function (data) {
                     if (data.state) {
                         tools.validSuccessDom(param_id.courseName);
                     } else {
@@ -257,7 +257,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             if (courseName.length <= 0 || courseName.length > 100) {
                 tools.validErrorDom(param_id.courseName, '课程名100个字符以内');
             } else {
-                $.post(ajax_url.check_name, param, function (data) {
+                $.get(ajax_url.check_name, param, function (data) {
                     if (data.state) {
                         tools.validSuccessDom(param_id.courseName);
                         validCourseType();

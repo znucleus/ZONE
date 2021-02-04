@@ -73,7 +73,7 @@ public class TrainingSpecialRestController {
      * @param simplePaginationUtil 请求
      * @return 数据
      */
-    @GetMapping("/web/training/special/data")
+    @GetMapping("/web/training/special/paging")
     public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil) {
         AjaxUtil<TrainingSpecialBean> ajaxUtil = AjaxUtil.of();
         List<TrainingSpecialBean> beans = new ArrayList<>();
@@ -213,7 +213,7 @@ public class TrainingSpecialRestController {
      * @param simplePaginationUtil 请求
      * @return 数据
      */
-    @GetMapping("/web/training/special/document/data")
+    @GetMapping("/web/training/special/document/paging")
     public ResponseEntity<Map<String, Object>> documentListData(SimplePaginationUtil simplePaginationUtil) {
         AjaxUtil<TrainingSpecialDocumentBean> ajaxUtil = AjaxUtil.of();
         List<TrainingSpecialDocumentBean> beans = new ArrayList<>();

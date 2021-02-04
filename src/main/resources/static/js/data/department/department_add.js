@@ -9,7 +9,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             obtain_school_data: web_path + '/anyone/data/school',
             obtain_college_data: web_path + '/anyone/data/college',
             save: web_path + '/web/data/department/save',
-            check_name: web_path + '/web/data/department/check/add/name',
+            check_name: web_path + '/web/data/department/check-add-name',
             page: '/web/menu/data/department'
         };
 
@@ -141,7 +141,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             if (departmentName.length <= 0 || departmentName.length > 200) {
                 tools.validErrorDom(param_id.departmentName, '系名200个字符以内');
             } else {
-                $.post(ajax_url.check_name, param, function (data) {
+                $.get(ajax_url.check_name, param, function (data) {
                     if (data.state) {
                         tools.validSuccessDom(param_id.departmentName);
                     } else {
@@ -198,7 +198,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             if (departmentName.length <= 0 || departmentName.length > 200) {
                 tools.validErrorDom(param_id.departmentName, '系名200个字符以内');
             } else {
-                $.post(ajax_url.check_name, param, function (data) {
+                $.get(ajax_url.check_name, param, function (data) {
                     if (data.state) {
                         tools.validSuccessDom(param_id.departmentName);
                         sendAjax();

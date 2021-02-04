@@ -27,7 +27,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
          */
         function getAjaxUrl() {
             return {
-                data: web_path + '/web/data/science/data',
+                data: web_path + '/web/data/science/paging',
                 status: web_path + '/web/data/science/status',
                 add: '/web/data/science/add',
                 edit: '/web/data/science/edit',

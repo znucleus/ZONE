@@ -69,7 +69,7 @@ public class StudentRestController {
      * @param studentNumber 学号
      * @return 是否被注册
      */
-    @PostMapping("/anyone/check/student/number")
+    @PostMapping("/anyone/check-student-number")
     public ResponseEntity<Map<String, Object>> anyoneCheckStudentNumber(@RequestParam("studentNumber") String studentNumber) {
         AjaxUtil<Map<String, Object>> ajaxUtil = studentService.anyoneCheckStudentNumber(studentNumber);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -81,7 +81,7 @@ public class StudentRestController {
      * @param studentNumber 学号
      * @return 是否被注册
      */
-    @PostMapping("/users/check/student/number")
+    @PostMapping("/users/check-student-number")
     public ResponseEntity<Map<String, Object>> userCheckStudentNumber(@RequestParam("studentNumber") String studentNumber) {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Map<String, Object>> ajaxUtil = studentService.userCheckStudentNumber(users.getUsername(), studentNumber);
@@ -94,7 +94,7 @@ public class StudentRestController {
      * @param studentNumber 学号
      * @return 是否存在以及该用户状态是否正常
      */
-    @PostMapping("/users/check/student/status")
+    @PostMapping("/users/check-student-status")
     public ResponseEntity<Map<String, Object>> userCheckStatusByStudentNumber(@RequestParam("studentNumber") String studentNumber) {
         AjaxUtil<Map<String, Object>> ajaxUtil = studentService.userCheckStatusByStudentNumber(studentNumber);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -199,7 +199,7 @@ public class StudentRestController {
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/data/student/data")
+    @GetMapping("/web/data/student/paging")
     public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         List<String> headers = new ArrayList<>();

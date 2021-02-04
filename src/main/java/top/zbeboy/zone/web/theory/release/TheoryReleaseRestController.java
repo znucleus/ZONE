@@ -61,7 +61,7 @@ public class TheoryReleaseRestController {
      * @param simplePaginationUtil 请求
      * @return 数据
      */
-    @GetMapping("/web/theory/release/data")
+    @GetMapping("/web/theory/release/paging")
     public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil) {
         AjaxUtil<TheoryReleaseBean> ajaxUtil = AjaxUtil.of();
         List<TheoryReleaseBean> beans = new ArrayList<>();

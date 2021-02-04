@@ -41,7 +41,7 @@ require(["jquery", "requirejs-domready", "tools", "handlebars", "csrf", "bootstr
         domready(function () {
 
             var ajax_url = {
-                courses: web_path + '/anyone/campus/timetable/share_courses',
+                courses: web_path + '/anyone/campus/timetable/share-courses',
             };
 
             var page_param = {

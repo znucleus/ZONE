@@ -67,7 +67,7 @@ public class TrainingUsersRestController {
      * @param simplePaginationUtil 请求
      * @return 数据
      */
-    @GetMapping("/web/training/users/training/data")
+    @GetMapping("/web/training/users/training/paging")
     public ResponseEntity<Map<String, Object>> trainingData(SimplePaginationUtil simplePaginationUtil) {
         AjaxUtil<TrainingReleaseBean> ajaxUtil = trainingControllerCommon.trainingData(simplePaginationUtil);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -79,7 +79,7 @@ public class TrainingUsersRestController {
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/training/users/data")
+    @GetMapping("/web/training/users/paging")
     public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         List<String> headers = new ArrayList<>();

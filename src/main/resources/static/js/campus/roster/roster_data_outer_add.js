@@ -77,8 +77,8 @@ require(["jquery", "requirejs-domready", "tools", "sweetalert2", "moment-with-lo
                 obtain_organize_data: web_path + '/anyone/data/organize',
                 obtain_nation_data: web_path + '/anyone/data/nation',
                 obtain_political_landscape_data: web_path + '/anyone/data/politics',
-                check_student_number: web_path + '/anyone/campus/roster/check_student_number',
-                convert_name: web_path + '/anyone/campus/roster/convert_name',
+                check_student_number: web_path + '/anyone/campus/roster/check-student-number',
+                convert_name: web_path + '/anyone/campus/roster/convert-name',
                 save: web_path + '/anyone/campus/roster/data/save',
                 success: web_path + '/anyone/campus/roster/data/save/success'
             };

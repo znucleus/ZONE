@@ -21,7 +21,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
          */
         function getAjaxUrl() {
             return {
-                data: web_path + '/web/educational/calendar/data',
+                data: web_path + '/web/educational/calendar/paging',
                 add: '/web/educational/calendar/add',
                 edit: '/web/educational/calendar/edit',
                 del: web_path + '/web/educational/calendar/delete',

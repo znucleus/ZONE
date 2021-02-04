@@ -37,7 +37,7 @@ public class CampusOpensRestController {
      * @return 数据
      */
     @ApiLoggingRecord(remark = "校园开学数据", channel = Workbook.channel.WEB, needLogin = true)
-    @GetMapping("/web/campus/opens/data")
+    @GetMapping("/web/campus/opens/paging")
     public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
         simplePaginationUtil.setUsername(users.getUsername());
@@ -92,7 +92,7 @@ public class CampusOpensRestController {
      * @param tableSawUtil 请求
      * @return 数据
      */
-    @GetMapping("/web/campus/opens/authorize/data")
+    @GetMapping("/web/campus/opens/authorize/paging")
     public ResponseEntity<Map<String, Object>> authorizeData(TableSawUtil tableSawUtil) {
         Users users = SessionUtil.getUserFromSession();
         tableSawUtil.setUsername(users.getUsername());

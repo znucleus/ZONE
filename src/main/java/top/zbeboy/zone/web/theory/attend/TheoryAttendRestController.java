@@ -87,7 +87,7 @@ public class TheoryAttendRestController {
      * @param simplePaginationUtil 请求
      * @return 数据
      */
-    @GetMapping("/web/theory/attend/theory/data")
+    @GetMapping("/web/theory/attend/theory/paging")
     public ResponseEntity<Map<String, Object>> theoryData(SimplePaginationUtil simplePaginationUtil) {
         AjaxUtil<TheoryReleaseBean> ajaxUtil = theoryControllerCommon.theoryData(simplePaginationUtil);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -99,7 +99,7 @@ public class TheoryAttendRestController {
      * @param simplePaginationUtil 请求
      * @return 数据
      */
-    @GetMapping("/web/theory/attend/data")
+    @GetMapping("/web/theory/attend/paging")
     public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil) {
         AjaxUtil<TheoryAttendBean> ajaxUtil = AjaxUtil.of();
         List<TheoryAttendBean> beans = new ArrayList<>();
@@ -305,7 +305,7 @@ public class TheoryAttendRestController {
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/theory/attend/users/data")
+    @GetMapping("/web/theory/attend/users/paging")
     public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         List<String> headers = new ArrayList<>();
@@ -423,7 +423,7 @@ public class TheoryAttendRestController {
      * @param theoryAttendId  考勤id
      * @return true or false
      */
-    @PostMapping("/web/theory/attend/users/all_ok")
+    @PostMapping("/web/theory/attend/users/full-attendance")
     public ResponseEntity<Map<String, Object>> allOk(@RequestParam("theoryReleaseId") String theoryReleaseId, @RequestParam("theoryAttendId") String theoryAttendId) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (theoryConditionCommon.usersCondition(theoryReleaseId)) {
@@ -507,7 +507,7 @@ public class TheoryAttendRestController {
      * @param tableSawUtil 请求
      * @return 数据
      */
-    @GetMapping("/web/theory/attend/my/data")
+    @GetMapping("/web/theory/attend/my/paging")
     public ResponseEntity<Map<String, Object>> myData(TableSawUtil tableSawUtil) {
         AjaxUtil<TheoryAttendUsersBean> ajaxUtil = AjaxUtil.of();
         List<TheoryAttendUsersBean> beans = new ArrayList<>();
@@ -539,7 +539,7 @@ public class TheoryAttendRestController {
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/theory/attend/situation/data")
+    @GetMapping("/web/theory/attend/situation/paging")
     public ResponseEntity<DataTablesUtil> situationData(HttpServletRequest request) {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         List<String> headers = new ArrayList<>();

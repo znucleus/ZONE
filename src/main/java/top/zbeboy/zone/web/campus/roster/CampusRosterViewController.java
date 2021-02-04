@@ -60,7 +60,7 @@ public class CampusRosterViewController {
      * @param modelMap 页面对象
      * @return 添加页面
      */
-    @GetMapping("/web/campus/roster/add")
+    @GetMapping("/web/campus/roster/release/add")
     public String add(ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
@@ -103,7 +103,7 @@ public class CampusRosterViewController {
      * @param modelMap 页面对象
      * @return 编辑页面
      */
-    @GetMapping("/web/campus/roster/edit/{id}")
+    @GetMapping("/web/campus/roster/release/edit/{id}")
     public String edit(@PathVariable("id") String id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;

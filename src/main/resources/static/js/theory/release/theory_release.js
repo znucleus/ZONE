@@ -6,7 +6,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
          ajax url.
          */
         var ajax_url = {
-            data: web_path + '/web/theory/release/data',
+            data: web_path + '/web/theory/release/paging',
             add: '/web/theory/release/add',
             edit: '/web/theory/release/edit',
             del: web_path + '/web/theory/release/delete',

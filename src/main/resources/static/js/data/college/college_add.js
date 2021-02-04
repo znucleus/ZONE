@@ -8,8 +8,8 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
         var ajax_url = {
             obtain_school_data: web_path + '/anyone/data/school',
             save: web_path + '/web/data/college/save',
-            check_name: web_path + '/web/data/college/check/add/name',
-            check_code: web_path + '/web/data/college/check/add/code',
+            check_name: web_path + '/web/data/college/check-add-name',
+            check_code: web_path + '/web/data/college/check-add-code',
             page: '/web/menu/data/college'
         };
 
@@ -122,7 +122,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             if (collegeName.length <= 0 || collegeName.length > 200) {
                 tools.validErrorDom(param_id.collegeName, '院名200个字符以内');
             } else {
-                $.post(ajax_url.check_name, param, function (data) {
+                $.get(ajax_url.check_name, param, function (data) {
                     if (data.state) {
                         tools.validSuccessDom(param_id.collegeName);
                     } else {
@@ -141,7 +141,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             if (collegeCode.length <= 0 || collegeCode.length > 20) {
                 tools.validErrorDom(param_id.collegeCode, '院代码20个字符以内');
             } else {
-                $.post(ajax_url.check_code, param, function (data) {
+                $.get(ajax_url.check_code, param, function (data) {
                     if (data.state) {
                         tools.validSuccessDom(param_id.collegeCode);
                     } else {
@@ -181,7 +181,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             if (collegeName.length <= 0 || collegeName.length > 200) {
                 tools.validErrorDom(param_id.collegeName, '院名200个字符以内');
             } else {
-                $.post(ajax_url.check_name, param, function (data) {
+                $.get(ajax_url.check_name, param, function (data) {
                     if (data.state) {
                         tools.validSuccessDom(param_id.collegeName);
                         validCollegeCode();
@@ -200,7 +200,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             if (collegeCode.length <= 0 || collegeCode.length > 20) {
                 tools.validErrorDom(param_id.collegeCode, '院代码20个字符以内');
             } else {
-                $.post(ajax_url.check_code, param, function (data) {
+                $.get(ajax_url.check_code, param, function (data) {
                     if (data.state) {
                         tools.validSuccessDom(param_id.collegeCode);
                         validCollegeAddress();

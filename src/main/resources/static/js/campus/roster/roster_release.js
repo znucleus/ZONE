@@ -6,10 +6,10 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
          ajax url.
          */
         var ajax_url = {
-            data: web_path + '/web/campus/roster/data',
-            add: '/web/campus/roster/add',
-            edit: '/web/campus/roster/edit',
-            del: web_path + '/web/campus/roster/delete',
+            data: web_path + '/web/campus/roster/release/paging',
+            add: '/web/campus/roster/release/add',
+            edit: '/web/campus/roster/release/edit',
+            del: web_path + '/web/campus/roster/release/delete',
             review: '/web/campus/roster/review/list',
             register: '/web/campus/roster/data/add',
             data_edit: '/web/campus/roster/data/edit',

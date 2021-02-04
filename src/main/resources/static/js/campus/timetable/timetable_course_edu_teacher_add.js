@@ -6,10 +6,10 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
          ajax url.
          */
         var ajax_url = {
-            teacher_name: web_path + '/web/educational/timetable/teacher_name',
+            teacher_name: web_path + '/web/educational/timetable/teacher-name',
             uniques: web_path + '/web/educational/timetable/uniques',
             data: web_path + '/web/educational/timetable/search',
-            save: web_path + '/web/campus/timetable/course/batch_save',
+            save: web_path + '/web/campus/timetable/course/batch-save',
             page: '/web/menu/campus/timetable'
         };
 

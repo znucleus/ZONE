@@ -9,8 +9,8 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             obtain_college_data: web_path + '/anyone/data/college',
             obtain_department_data: web_path + '/anyone/data/department',
             save: web_path + '/web/data/science/save',
-            check_name: web_path + '/web/data/science/check/add/name',
-            check_code: web_path + '/web/data/science/check/add/code',
+            check_name: web_path + '/web/data/science/check-add-name',
+            check_code: web_path + '/web/data/science/check-add-code',
             page: '/web/menu/data/science'
         };
 
@@ -175,7 +175,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             if (scienceName.length <= 0 || scienceName.length > 200) {
                 tools.validErrorDom(param_id.scienceName, '专业名200个字符以内');
             } else {
-                $.post(ajax_url.check_name, param, function (data) {
+                $.get(ajax_url.check_name, param, function (data) {
                     if (data.state) {
                         tools.validSuccessDom(param_id.scienceName);
                     } else {
@@ -194,7 +194,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             if (scienceCode.length <= 0 || scienceCode.length > 20) {
                 tools.validErrorDom(param_id.scienceCode, '专业代码20个字符以内');
             } else {
-                $.post(ajax_url.check_code, param, function (data) {
+                $.get(ajax_url.check_code, param, function (data) {
                     if (data.state) {
                         tools.validSuccessDom(param_id.scienceCode);
                     } else {
@@ -263,7 +263,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             if (scienceName.length <= 0 || scienceName.length > 200) {
                 tools.validErrorDom(param_id.scienceName, '专业名200个字符以内');
             } else {
-                $.post(ajax_url.check_name, param, function (data) {
+                $.get(ajax_url.check_name, param, function (data) {
                     if (data.state) {
                         tools.validSuccessDom(param_id.scienceName);
                         validScienceCode();
@@ -283,7 +283,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             if (scienceCode.length <= 0 || scienceCode.length > 20) {
                 tools.validErrorDom(param_id.scienceCode, '专业代码200个字符以内');
             } else {
-                $.post(ajax_url.check_code, param, function (data) {
+                $.get(ajax_url.check_code, param, function (data) {
                     if (data.state) {
                         tools.validSuccessDom(param_id.scienceCode);
                         sendAjax();

@@ -54,7 +54,7 @@ public class CollegeRestController {
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/data/college/data")
+    @GetMapping("/web/data/college/paging")
     public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         List<String> headers = new ArrayList<>();
@@ -80,7 +80,7 @@ public class CollegeRestController {
      * @param schoolId    学校id
      * @return true 合格 false 不合格
      */
-    @PostMapping("/web/data/college/check/add/name")
+    @GetMapping("/web/data/college/check-add-name")
     public ResponseEntity<Map<String, Object>> checkAddName(@RequestParam("collegeName") String collegeName,
                                                             @RequestParam("schoolId") int schoolId) {
         AjaxUtil<Map<String, Object>> ajaxUtil = collegeService.checkAddName(collegeName, schoolId);
@@ -93,7 +93,7 @@ public class CollegeRestController {
      * @param collegeCode 院代码
      * @return true 合格 false 不合格
      */
-    @PostMapping("/web/data/college/check/add/code")
+    @GetMapping("/web/data/college/check-add-code")
     public ResponseEntity<Map<String, Object>> checkAddCode(@RequestParam("collegeCode") String collegeCode) {
         AjaxUtil<Map<String, Object>> ajaxUtil = collegeService.checkAddCode(collegeCode);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -119,7 +119,7 @@ public class CollegeRestController {
      * @param schoolId    学校id
      * @return true 合格 false 不合格
      */
-    @PostMapping("/web/data/college/check/edit/name")
+    @GetMapping("/web/data/college/check-edit-name")
     public ResponseEntity<Map<String, Object>> checkEditName(@RequestParam("collegeId") int collegeId,
                                                              @RequestParam("collegeName") String collegeName,
                                                              @RequestParam("schoolId") int schoolId) {
@@ -134,7 +134,7 @@ public class CollegeRestController {
      * @param collegeCode 院代码
      * @return true 合格 false 不合格
      */
-    @PostMapping("/web/data/college/check/edit/code")
+    @GetMapping("/web/data/college/check-edit-code")
     public ResponseEntity<Map<String, Object>> checkEditCode(@RequestParam("collegeId") int collegeId,
                                                              @RequestParam("collegeCode") String collegeCode) {
         AjaxUtil<Map<String, Object>> ajaxUtil = collegeService.checkEditCode(collegeId, collegeCode);

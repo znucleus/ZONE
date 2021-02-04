@@ -29,8 +29,8 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
          */
         function getAjaxUrl() {
             return {
-                data: web_path + '/web/data/building/data',
-                obtain_building_classifies_data: web_path + '/users/data/building_classifies',
+                data: web_path + '/web/data/building/paging',
+                obtain_building_classifies_data: web_path + '/users/data/building-classifies',
                 status: web_path + '/web/data/building/status',
                 add: '/web/data/building/add',
                 edit: '/web/data/building/edit',

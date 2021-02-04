@@ -47,7 +47,7 @@ public class PoliticsRestController {
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/data/politics/data")
+    @GetMapping("/web/data/politics/paging")
     public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         List<String> headers = new ArrayList<>();
@@ -66,7 +66,7 @@ public class PoliticsRestController {
      * @param politicalLandscapeName 政治面貌
      * @return true 合格 false 不合格
      */
-    @PostMapping("/web/data/politics/check/add/name")
+    @GetMapping("/web/data/politics/check-add-name")
     public ResponseEntity<Map<String, Object>> checkAddName(@RequestParam("politicalLandscapeName") String politicalLandscapeName) {
         AjaxUtil<Map<String, Object>> ajaxUtil = politicalLandscapeFeignService.checkAddName(politicalLandscapeName);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -91,7 +91,7 @@ public class PoliticsRestController {
      * @param politicalLandscapeName 政治面貌名
      * @return true 合格 false 不合格
      */
-    @PostMapping("/web/data/politics/check/edit/name")
+    @GetMapping("/web/data/politics/check-edit-name")
     public ResponseEntity<Map<String, Object>> checkEditName(@RequestParam("politicalLandscapeId") int politicalLandscapeId,
                                                              @RequestParam("politicalLandscapeName") String politicalLandscapeName) {
         AjaxUtil<Map<String, Object>> ajaxUtil = politicalLandscapeFeignService.checkEditName(politicalLandscapeId, politicalLandscapeName);

@@ -32,7 +32,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
          */
         function getAjaxUrl() {
             return {
-                data: web_path + '/web/training/users/data',
+                data: web_path + '/web/training/users/paging',
                 export_data_url: web_path + '/web/training/users/export',
                 del: web_path + '/web/training/users/delete',
                 save: web_path + '/web/training/users/save',

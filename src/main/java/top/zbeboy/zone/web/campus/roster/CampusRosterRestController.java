@@ -57,7 +57,7 @@ public class CampusRosterRestController {
      * @param studentNumber 学号
      * @return 是否填写
      */
-    @PostMapping("/anyone/campus/roster/check_student_number")
+    @PostMapping("/anyone/campus/roster/check-student-number")
     public ResponseEntity<Map<String, Object>> checkStudentNumber(@RequestParam("studentNumber") String studentNumber) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         Optional<RosterData> optionalRosterData = campusRosterService.findRosterDataByStudentNumber(studentNumber);
@@ -75,7 +75,7 @@ public class CampusRosterRestController {
      * @param realName 姓名
      * @return 拼音
      */
-    @GetMapping("/anyone/campus/roster/convert_name")
+    @GetMapping("/anyone/campus/roster/convert-name")
     public ResponseEntity<Map<String, Object>> convertName(@RequestParam("realName") String realName) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         ajaxUtil.success().msg("转换成功").put("pinyin", PinYinUtil.changeToUpper(realName));
@@ -89,7 +89,7 @@ public class CampusRosterRestController {
      * @return 数据
      */
     @ApiLoggingRecord(remark = "校园花名册数据", channel = Workbook.channel.WEB, needLogin = true)
-    @GetMapping("/web/campus/roster/data")
+    @GetMapping("/web/campus/roster/release/paging")
     public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
         simplePaginationUtil.setUsername(users.getUsername());
@@ -108,7 +108,7 @@ public class CampusRosterRestController {
      * @param rosterReleaseAddVo 数据
      * @return true or false
      */
-    @PostMapping("/web/campus/roster/save")
+    @PostMapping("/web/campus/roster/release/save")
     public ResponseEntity<Map<String, Object>> save(RosterReleaseAddVo rosterReleaseAddVo, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         try {
@@ -137,7 +137,7 @@ public class CampusRosterRestController {
      * @param rosterReleaseEditVo 数据
      * @return true or false
      */
-    @PostMapping("/web/campus/roster/update")
+    @PostMapping("/web/campus/roster/release/update")
     public ResponseEntity<Map<String, Object>> update(RosterReleaseEditVo rosterReleaseEditVo) {
         Users users = SessionUtil.getUserFromSession();
         rosterReleaseEditVo.setUsername(users.getUsername());
@@ -151,7 +151,7 @@ public class CampusRosterRestController {
      * @param id 发布id
      * @return true or false
      */
-    @PostMapping("/web/campus/roster/delete")
+    @PostMapping("/web/campus/roster/release/delete")
     public ResponseEntity<Map<String, Object>> delete(@RequestParam("id") String id, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Map<String, Object>> ajaxUtil = campusRosterService.delete(users.getUsername(), id);
@@ -258,7 +258,7 @@ public class CampusRosterRestController {
      * @param tableSawUtil 请求
      * @return 数据
      */
-    @GetMapping("/web/campus/roster/authorize/data")
+    @GetMapping("/web/campus/roster/authorize/paging")
     public ResponseEntity<Map<String, Object>> authorizeData(TableSawUtil tableSawUtil) {
         Users users = SessionUtil.getUserFromSession();
         tableSawUtil.setUsername(users.getUsername());
@@ -299,7 +299,7 @@ public class CampusRosterRestController {
      * @param request 请求
      * @return 数据
      */
-    @PostMapping("/web/campus/roster/review/data")
+    @PostMapping("/web/campus/roster/review/paging")
     public ResponseEntity<DataTablesUtil> reviewData(HttpServletRequest request) {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         List<String> headers = new ArrayList<>();
@@ -379,7 +379,7 @@ public class CampusRosterRestController {
      *
      * @param request 请求
      */
-    @GetMapping("/web/campus/roster/review/data/export")
+    @GetMapping("/web/campus/roster/review/export")
     public void reviewDataExport(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, "studentNumber", "asc",
                 "花名册数据", Workbook.campusRosterFilePath());

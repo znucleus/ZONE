@@ -87,7 +87,7 @@ public class TrainingAttendRestController {
      * @param simplePaginationUtil 请求
      * @return 数据
      */
-    @GetMapping("/web/training/attend/training/data")
+    @GetMapping("/web/training/attend/training/paging")
     public ResponseEntity<Map<String, Object>> trainingData(SimplePaginationUtil simplePaginationUtil) {
         AjaxUtil<TrainingReleaseBean> ajaxUtil = trainingControllerCommon.trainingData(simplePaginationUtil);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -99,7 +99,7 @@ public class TrainingAttendRestController {
      * @param simplePaginationUtil 请求
      * @return 数据
      */
-    @GetMapping("/web/training/attend/data")
+    @GetMapping("/web/training/attend/paging")
     public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil) {
         AjaxUtil<TrainingAttendBean> ajaxUtil = AjaxUtil.of();
         List<TrainingAttendBean> beans = new ArrayList<>();
@@ -305,7 +305,7 @@ public class TrainingAttendRestController {
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/training/attend/users/data")
+    @GetMapping("/web/training/attend/users/paging")
     public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         List<String> headers = new ArrayList<>();
@@ -423,7 +423,7 @@ public class TrainingAttendRestController {
      * @param trainingAttendId  考勤id
      * @return true or false
      */
-    @PostMapping("/web/training/attend/users/all_ok")
+    @PostMapping("/web/training/attend/users/full-attendance")
     public ResponseEntity<Map<String, Object>> allOk(@RequestParam("trainingReleaseId") String trainingReleaseId, @RequestParam("trainingAttendId") String trainingAttendId) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (trainingConditionCommon.usersCondition(trainingReleaseId)) {
@@ -507,7 +507,7 @@ public class TrainingAttendRestController {
      * @param tableSawUtil 请求
      * @return 数据
      */
-    @GetMapping("/web/training/attend/my/data")
+    @GetMapping("/web/training/attend/my/paging")
     public ResponseEntity<Map<String, Object>> myData(TableSawUtil tableSawUtil) {
         AjaxUtil<TrainingAttendUsersBean> ajaxUtil = AjaxUtil.of();
         List<TrainingAttendUsersBean> beans = new ArrayList<>();
@@ -539,7 +539,7 @@ public class TrainingAttendRestController {
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/training/attend/situation/data")
+    @GetMapping("/web/training/attend/situation/paging")
     public ResponseEntity<DataTablesUtil> situationData(HttpServletRequest request) {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         List<String> headers = new ArrayList<>();

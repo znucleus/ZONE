@@ -36,9 +36,9 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
          */
         function getAjaxUrl() {
             return {
-                data: web_path + '/web/campus/roster/review/data',
+                data: web_path + '/web/campus/roster/review/paging',
                 del: web_path + '/web/campus/roster/review/delete',
-                export_data: web_path + '/web/campus/roster/review/data/export',
+                export_data: web_path + '/web/campus/roster/review/export',
                 page: '/web/menu/campus/roster'
             };
         }

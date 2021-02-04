@@ -13,7 +13,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
             student_update_school: web_path + '/users/student/update/school',
             obtain_nation_data: web_path + '/anyone/data/nation',
             obtain_political_landscape_data: web_path + '/anyone/data/politics',
-            check_student_number: web_path + '/users/check/student/number',
+            check_student_number: web_path + '/users/check-student-number',
             student_update_info: web_path + '/users/student/update/info'
         };
 

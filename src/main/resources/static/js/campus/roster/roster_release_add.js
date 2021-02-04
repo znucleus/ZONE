@@ -8,7 +8,7 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
         var ajax_url = {
             obtain_school_data: web_path + '/anyone/data/school',
             obtain_college_data: web_path + '/anyone/data/college',
-            save: web_path + '/web/campus/roster/save',
+            save: web_path + '/web/campus/roster/release/save',
             page: '/web/menu/campus/roster'
         };
 

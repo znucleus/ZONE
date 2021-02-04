@@ -6,7 +6,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
          ajax url.
          */
         var ajax_url = {
-            data: web_path + '/web/theory/users/theory/data',
+            data: web_path + '/web/theory/users/theory/paging',
             list: '/web/theory/users/list',
             page: '/web/menu/theory/users'
         };

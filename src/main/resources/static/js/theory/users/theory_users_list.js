@@ -32,7 +32,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
          */
         function getAjaxUrl() {
             return {
-                data: web_path + '/web/theory/users/data',
+                data: web_path + '/web/theory/users/paging',
                 export_data_url: web_path + '/web/theory/users/export',
                 del: web_path + '/web/theory/users/delete',
                 save: web_path + '/web/theory/users/save',

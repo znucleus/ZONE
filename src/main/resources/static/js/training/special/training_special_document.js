@@ -7,7 +7,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
          ajax url.
          */
         var ajax_url = {
-            data: web_path + '/web/training/special/document/data',
+            data: web_path + '/web/training/special/document/paging',
             add: '/web/training/special/document/add',
             edit: '/web/training/special/document/edit',
             del: web_path + '/web/training/special/document/delete',

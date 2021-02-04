@@ -10,7 +10,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             obtain_college_data: web_path + '/anyone/data/college',
             obtain_building_data: web_path + '/users/data/building',
             save: web_path + '/web/data/schoolroom/save',
-            check_code: web_path + '/web/data/schoolroom/check/add/code',
+            check_code: web_path + '/web/data/schoolroom/check-add-code',
             page: '/web/menu/data/schoolroom'
         };
 
@@ -165,7 +165,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             if (buildingCode.length <= 0 || buildingCode.length > 10) {
                 tools.validErrorDom(param_id.buildingCode, '教室10个字符以内');
             } else {
-                $.post(ajax_url.check_code, param, function (data) {
+                $.get(ajax_url.check_code, param, function (data) {
                     if (data.state) {
                         tools.validSuccessDom(param_id.buildingCode);
                     } else {
@@ -232,7 +232,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             if (buildingCode.length <= 0 || buildingCode.length > 30) {
                 tools.validErrorDom(param_id.buildingCode, '教室10个字符以内');
             } else {
-                $.post(ajax_url.check_code, param, function (data) {
+                $.get(ajax_url.check_code, param, function (data) {
                     if (data.state) {
                         tools.validSuccessDom(param_id.buildingCode);
                         sendAjax();

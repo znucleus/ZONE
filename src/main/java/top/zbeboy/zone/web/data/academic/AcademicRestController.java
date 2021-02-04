@@ -47,7 +47,7 @@ public class AcademicRestController {
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/data/academic/data")
+    @GetMapping("/web/data/academic/paging")
     public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         List<String> headers = new ArrayList<>();
@@ -66,7 +66,7 @@ public class AcademicRestController {
      * @param academicTitleName 职称
      * @return true 合格 false 不合格
      */
-    @PostMapping("/web/data/academic/check/add/name")
+    @GetMapping("/web/data/academic/check-add-name")
     public ResponseEntity<Map<String, Object>> checkAddName(@RequestParam("academicTitleName") String academicTitleName) {
         AjaxUtil<Map<String, Object>> ajaxUtil = academicTitleService.checkAddName(academicTitleName);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -91,7 +91,7 @@ public class AcademicRestController {
      * @param academicTitleName 职称名
      * @return true 合格 false 不合格
      */
-    @PostMapping("/web/data/academic/check/edit/name")
+    @GetMapping("/web/data/academic/check-edit-name")
     public ResponseEntity<Map<String, Object>> checkEditName(@RequestParam("academicTitleId") int academicTitleId,
                                                              @RequestParam("academicTitleName") String academicTitleName) {
         AjaxUtil<Map<String, Object>> ajaxUtil = academicTitleService.checkEditName(academicTitleId, academicTitleName);

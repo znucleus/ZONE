@@ -23,7 +23,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
          */
         function getAjaxUrl() {
             return {
-                data: web_path + '/web/data/college/data',
+                data: web_path + '/web/data/college/paging',
                 status: web_path + '/web/data/college/status',
                 add: '/web/data/college/add',
                 edit: '/web/data/college/edit',

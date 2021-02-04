@@ -6,7 +6,7 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
          ajax url.
          */
         var ajax_url = {
-            update: web_path + '/web/campus/roster/update',
+            update: web_path + '/web/campus/roster/release/update',
             page: '/web/menu/campus/roster'
         };
 

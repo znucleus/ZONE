@@ -7,7 +7,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
          */
         var ajax_url = {
             save: web_path + '/web/data/school/save',
-            check_name: web_path + '/web/data/school/check-add/name',
+            check_name: web_path + '/web/data/school/check-add-name',
             page: '/web/menu/data/school'
         };
 

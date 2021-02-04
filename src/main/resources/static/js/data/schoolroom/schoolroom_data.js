@@ -27,7 +27,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
          */
         function getAjaxUrl() {
             return {
-                data: web_path + '/web/data/schoolroom/data',
+                data: web_path + '/web/data/schoolroom/paging',
                 status: web_path + '/web/data/schoolroom/status',
                 add: '/web/data/schoolroom/add',
                 edit: '/web/data/schoolroom/edit',

@@ -9,7 +9,7 @@ require(["jquery", "lodash", "tools", "moment-with-locales", "handlebars", "swee
          */
         function getAjaxUrl() {
             return {
-                data: web_path + '/web/educational/calendar/authorize/data',
+                data: web_path + '/web/educational/calendar/authorize/paging',
                 save: web_path + '/web/educational/calendar/authorize/save',
                 del: web_path + '/web/educational/calendar/authorize/delete',
                 page: '/web/menu/educational/calendar'

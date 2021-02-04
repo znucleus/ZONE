@@ -6,7 +6,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "select2-zh-CN"],
             obtain_school_data: web_path + '/anyone/data/school',
             obtain_college_data: web_path + '/anyone/data/college',
             obtain_department_data: web_path + '/anyone/data/department',
-            check_staff_number: web_path + '/anyone/check/staff/number',
+            check_staff_number: web_path + '/anyone/check-staff-number',
             upgrade: web_path + '/users/type/upgrade/staff'
         };
 

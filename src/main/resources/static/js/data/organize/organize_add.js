@@ -11,8 +11,8 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             obtain_department_data: web_path + '/anyone/data/department',
             obtain_science_data: web_path + '/anyone/data/science',
             save: web_path + '/web/data/organize/save',
-            check_name: web_path + '/web/data/organize/check/add/name',
-            check_staff: web_path + '/web/data/organize/check/add/staff',
+            check_name: web_path + '/web/data/organize/check-add-name',
+            check_staff: web_path + '/web/data/organize/check-staff',
             page: '/web/menu/data/organize'
         };
 
@@ -237,7 +237,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             if (organizeName.length <= 0 || organizeName.length > 200) {
                 tools.validErrorDom(param_id.organizeName, '班级名200个字符以内');
             } else {
-                $.post(ajax_url.check_name, param, function (data) {
+                $.get(ajax_url.check_name, param, function (data) {
                     if (data.state) {
                         tools.validSuccessDom(param_id.organizeName);
                     } else {
@@ -251,7 +251,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             initParam();
             var staff = param.staff;
             if (staff.length > 0) {
-                $.post(ajax_url.check_staff, param, function (data) {
+                $.get(ajax_url.check_staff, param, function (data) {
                     if (data.state) {
                         $('#staffHelp').text(data.staff.realName + " " + data.staff.mobile);
                         tools.validSuccessDom(param_id.staff);
@@ -348,7 +348,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             if (organizeName.length <= 0 || organizeName.length > 200) {
                 tools.validErrorDom(param_id.organizeName, '班级名200个字符以内');
             } else {
-                $.post(ajax_url.check_name, param, function (data) {
+                $.get(ajax_url.check_name, param, function (data) {
                     if (data.state) {
                         tools.validSuccessDom(param_id.organizeName);
                         validStaff();
@@ -362,7 +362,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
         function validStaff() {
             var staff = param.staff;
             if (staff.length > 0) {
-                $.post(ajax_url.check_staff, param, function (data) {
+                $.get(ajax_url.check_staff, param, function (data) {
                     if (data.state) {
                         $('#staffHelp').text(data.staff.realName + " " + data.staff.mobile);
                         tools.validSuccessDom(param_id.staff);

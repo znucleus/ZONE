@@ -7,7 +7,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "tablesaw", "jquery.addr
          */
         function getAjaxUrl() {
             return {
-                data: web_path + '/web/training/attend/my/data',
+                data: web_path + '/web/training/attend/my/paging',
                 page: '/web/menu/training/attend'
             };
         }

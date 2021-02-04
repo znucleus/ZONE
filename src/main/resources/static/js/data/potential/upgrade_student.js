@@ -9,7 +9,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "select2-zh-CN"],
             obtain_science_data: web_path + '/anyone/data/science',
             obtain_grade_data: web_path + '/anyone/data/grade',
             obtain_organize_data: web_path + '/anyone/data/organize',
-            check_student_number: web_path + '/anyone/check/student/number',
+            check_student_number: web_path + '/anyone/check-student-number',
             upgrade: web_path + '/users/type/upgrade/student'
         };
 

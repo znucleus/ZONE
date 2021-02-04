@@ -62,7 +62,7 @@ public class TrainingReleaseRestController {
      * @param simplePaginationUtil 请求
      * @return 数据
      */
-    @GetMapping("/web/training/release/data")
+    @GetMapping("/web/training/release/paging")
     public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil) {
         AjaxUtil<TrainingReleaseBean> ajaxUtil = AjaxUtil.of();
         List<TrainingReleaseBean> beans = new ArrayList<>();

@@ -67,7 +67,7 @@ public class OrganizeRestController {
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/data/organize/data")
+    @GetMapping("/web/data/organize/paging")
     public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         List<String> headers = new ArrayList<>();
@@ -96,7 +96,7 @@ public class OrganizeRestController {
      * @param scienceId    专业id
      * @return true 合格 false 不合格
      */
-    @PostMapping("/web/data/organize/check/add/name")
+    @GetMapping("/web/data/organize/check-add-name")
     public ResponseEntity<Map<String, Object>> checkAddName(@RequestParam("organizeName") String organizeName,
                                                             @RequestParam("scienceId") int scienceId) {
         AjaxUtil<Map<String, Object>> ajaxUtil = organizeService.checkAddName(organizeName, scienceId);
@@ -109,7 +109,7 @@ public class OrganizeRestController {
      * @param staff 账号/工号
      * @return true or false
      */
-    @PostMapping("/web/data/organize/check/add/staff")
+    @GetMapping("/web/data/organize/check-staff")
     public ResponseEntity<Map<String, Object>> checkAddStaff(@RequestParam("staff") String staff) {
         AjaxUtil<Map<String, Object>> ajaxUtil = organizeService.checkAddStaff(staff);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -141,7 +141,7 @@ public class OrganizeRestController {
      * @param scienceId    专业id
      * @return true 合格 false 不合格
      */
-    @PostMapping("/web/data/organize/check/edit/name")
+    @PostMapping("/web/data/organize/check-edit-name")
     public ResponseEntity<Map<String, Object>> checkEditName(@RequestParam("organizeId") int organizeId,
                                                              @RequestParam("organizeName") String organizeName,
                                                              @RequestParam("scienceId") int scienceId) {

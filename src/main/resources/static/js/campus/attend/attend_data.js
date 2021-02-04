@@ -26,7 +26,7 @@ require(["jquery", "handlebars", "nav.active", "responsive.bootstrap4", "flatpic
          */
         function getAjaxUrl() {
             return {
-                data: web_path + '/web/campus/attend/data',
+                data: web_path + '/web/campus/attend/paging',
                 details: '/web/campus/attend/details',
                 page: '/web/menu/campus/attend'
             };

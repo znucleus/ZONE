@@ -89,7 +89,7 @@ public class CampusTimetableViewController {
      *
      * @return 新建空白课表
      */
-    @GetMapping("/web/campus/timetable/add")
+    @GetMapping("/web/campus/timetable/release/add")
     public String add() {
         return "web/campus/timetable/timetable_release_blank::#page-wrapper";
     }

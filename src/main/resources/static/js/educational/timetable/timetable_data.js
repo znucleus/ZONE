@@ -6,10 +6,10 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         */
         var ajax_url = {
             data: web_path + '/web/educational/timetable/search',
-            course_name: web_path + '/web/educational/timetable/course_name',
-            attend_class: web_path + '/web/educational/timetable/attend_class',
+            course_name: web_path + '/web/educational/timetable/course-name',
+            attend_class: web_path + '/web/educational/timetable/attend-class',
             classroom: web_path + '/web/educational/timetable/classroom',
-            teacher_name: web_path + '/web/educational/timetable/teacher_name',
+            teacher_name: web_path + '/web/educational/timetable/teacher-name',
             uniques: web_path + '/web/educational/timetable/uniques',
             sync_data: web_path + '/web/educational/timetable/sync',
             page: '/web/menu/educational/timetable'

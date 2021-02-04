@@ -52,7 +52,7 @@ public class ScienceRestController {
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/data/science/data")
+    @GetMapping("/web/data/science/paging")
     public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         List<String> headers = new ArrayList<>();
@@ -79,7 +79,7 @@ public class ScienceRestController {
      * @param departmentId 系id
      * @return true 合格 false 不合格
      */
-    @PostMapping("/web/data/science/check/add/name")
+    @GetMapping("/web/data/science/check-add-name")
     public ResponseEntity<Map<String, Object>> checkAddName(@RequestParam("scienceName") String scienceName,
                                                             @RequestParam("departmentId") int departmentId) {
         AjaxUtil<Map<String, Object>> ajaxUtil = scienceService.checkAddName(scienceName, departmentId);
@@ -92,7 +92,7 @@ public class ScienceRestController {
      * @param scienceCode 专业代码
      * @return true 合格 false 不合格
      */
-    @PostMapping("/web/data/science/check/add/code")
+    @GetMapping("/web/data/science/check-add-code")
     public ResponseEntity<Map<String, Object>> checkAddCode(@RequestParam("scienceCode") String scienceCode) {
         AjaxUtil<Map<String, Object>> ajaxUtil = scienceService.checkAddCode(scienceCode);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -118,7 +118,7 @@ public class ScienceRestController {
      * @param departmentId 系id
      * @return true 合格 false 不合格
      */
-    @PostMapping("/web/data/science/check/edit/name")
+    @GetMapping("/web/data/science/check-edit-name")
     public ResponseEntity<Map<String, Object>> checkEditName(@RequestParam("scienceId") int scienceId,
                                                              @RequestParam("scienceName") String scienceName,
                                                              @RequestParam("departmentId") int departmentId) {
@@ -133,7 +133,7 @@ public class ScienceRestController {
      * @param scienceCode 专业代码
      * @return true 合格 false 不合格
      */
-    @PostMapping("/web/data/science/check/edit/code")
+    @GetMapping("/web/data/science/check-edit-code")
     public ResponseEntity<Map<String, Object>> checkEditCode(@RequestParam("scienceId") int scienceId, @RequestParam("scienceCode") String scienceCode) {
         AjaxUtil<Map<String, Object>> ajaxUtil = scienceService.checkEditCode(scienceId, scienceCode);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);

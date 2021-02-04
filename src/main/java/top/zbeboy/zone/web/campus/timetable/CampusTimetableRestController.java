@@ -194,7 +194,7 @@ public class CampusTimetableRestController {
      * @param data 数据
      * @return true or false
      */
-    @PostMapping("/web/campus/timetable/course/batch_save")
+    @PostMapping("/web/campus/timetable/course/batch-save")
     public ResponseEntity<Map<String, Object>> courseBatchSave(@RequestParam("data") String data) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         Users users = SessionUtil.getUserFromSession();
@@ -232,7 +232,7 @@ public class CampusTimetableRestController {
      * @param campusCourseReleaseId 发布id
      * @return 数据
      */
-    @GetMapping("/anyone/campus/timetable/share_courses/{campusCourseReleaseId}")
+    @GetMapping("/anyone/campus/timetable/share-courses/{campusCourseReleaseId}")
     public ResponseEntity<Map<String, Object>> shareCourses(@PathVariable("campusCourseReleaseId") String campusCourseReleaseId) {
         AjaxUtil<CampusCourseData> ajaxUtil = AjaxUtil.of();
         Optional<CampusCourseRelease> optionalCampusCourseRelease = campusTimetableService.findById(campusCourseReleaseId);
