@@ -49,7 +49,7 @@ public class RegisterLeaverApiController {
      * @return 数据
      */
     @ApiLoggingRecord(remark = "离校登记数据", channel = Workbook.channel.API, needLogin = true)
-    @GetMapping("/api/register/leaver/release/data")
+    @GetMapping("/api/register/leaver/release/paging")
     public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil,
                                                     Principal principal, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromOauth(principal);

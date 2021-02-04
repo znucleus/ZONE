@@ -32,7 +32,7 @@ public class AttendAuthoritiesApiController {
      * @return true or false
      */
     @ApiLoggingRecord(remark = "校园签到权限数据", channel = Workbook.channel.API, needLogin = true)
-    @GetMapping("/api/campus/attend/authorize/data")
+    @GetMapping("/api/campus/attend/authorize/paging")
     public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil, Principal principal, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromOauth(principal);
         simplePaginationUtil.setUsername(users.getUsername());

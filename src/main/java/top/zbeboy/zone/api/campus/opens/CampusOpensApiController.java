@@ -35,7 +35,7 @@ public class CampusOpensApiController {
      * @return 数据
      */
     @ApiLoggingRecord(remark = "校园开学数据", channel = Workbook.channel.API, needLogin = true)
-    @GetMapping("/api/campus/opens/data")
+    @GetMapping("/api/campus/opens/paging")
     public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil, Principal principal, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromOauth(principal);
         simplePaginationUtil.setUsername(users.getUsername());

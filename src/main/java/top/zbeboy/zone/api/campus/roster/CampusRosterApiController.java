@@ -47,7 +47,7 @@ public class CampusRosterApiController {
      * @return 数据
      */
     @ApiLoggingRecord(remark = "校园花名册数据", channel = Workbook.channel.API, needLogin = true)
-    @GetMapping("/api/campus/roster/release/data")
+    @GetMapping("/api/campus/roster/release/paging")
     public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil, Principal principal, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromOauth(principal);
         simplePaginationUtil.setUsername(users.getUsername());

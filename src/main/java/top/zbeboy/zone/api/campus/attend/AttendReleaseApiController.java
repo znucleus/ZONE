@@ -106,7 +106,7 @@ public class AttendReleaseApiController {
      * @return true or false
      */
     @ApiLoggingRecord(remark = "校园签到发布数据", channel = Workbook.channel.API, needLogin = true)
-    @GetMapping("/api/campus/attend/release/data")
+    @GetMapping("/api/campus/attend/release/paging")
     public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil, Principal principal, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromOauth(principal);
         simplePaginationUtil.setUsername(users.getUsername());
