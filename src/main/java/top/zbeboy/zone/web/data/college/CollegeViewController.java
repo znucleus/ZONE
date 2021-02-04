@@ -11,6 +11,7 @@ import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 
 import javax.annotation.Resource;
 import java.util.Objects;
+import java.util.Optional;
 
 @Controller
 public class CollegeViewController {
@@ -49,9 +50,9 @@ public class CollegeViewController {
     public String edit(@PathVariable("id") int id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        College college = collegeService.findById(id);
-        if (Objects.nonNull(college.getCollegeId()) && college.getCollegeId() > 0) {
-            modelMap.addAttribute("college", college);
+        Optional<College> optionalCollege = collegeService.findById(id);
+        if (optionalCollege.isPresent()) {
+            modelMap.addAttribute("college", optionalCollege.get());
             page = "web/data/college/college_edit::#page-wrapper";
         } else {
             config.buildDangerTip("查询错误", "未查询到院数据");
@@ -70,9 +71,9 @@ public class CollegeViewController {
     public String mount(@PathVariable("id") int id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        CollegeBean bean = collegeService.findByIdRelation(id);
-        if (Objects.nonNull(bean.getCollegeId()) && bean.getCollegeId() > 0) {
-            modelMap.addAttribute("college", bean);
+        Optional<CollegeBean> optionalCollegeBean = collegeService.findByIdRelation(id);
+        if (optionalCollegeBean.isPresent()) {
+            modelMap.addAttribute("college", optionalCollegeBean.get());
             page = "web/data/college/college_mount::#page-wrapper";
         } else {
             config.buildDangerTip("查询错误", "未查询到院数据");

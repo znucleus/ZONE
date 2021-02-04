@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class CollegeRestController {
@@ -43,8 +44,8 @@ public class CollegeRestController {
     @GetMapping("/anyone/data/college")
     public ResponseEntity<Map<String, Object>> anyoneData(CollegeSearchVo collegeSearchVo, HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
-        List<College> colleges = collegeService.findBySchoolIdAndCollegeIsDel(collegeSearchVo);
-        colleges.forEach(college -> select2Data.add(college.getCollegeId().toString(), college.getCollegeName()));
+        Optional<List<College>> optionalColleges = collegeService.findBySchoolIdAndCollegeIsDel(collegeSearchVo);
+        optionalColleges.ifPresent(colleges -> colleges.forEach(college -> select2Data.add(college.getCollegeId().toString(), college.getCollegeName())));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
 
@@ -174,7 +175,12 @@ public class CollegeRestController {
     @GetMapping("/web/data/college/application/json")
     public ResponseEntity<Map<String, Object>> applicationJson() {
         AjaxUtil<TreeViewData> ajaxUtil = AjaxUtil.of();
-        ajaxUtil.success().list(collegeService.collegeApplicationJson()).msg("获取数据成功");
+        List<TreeViewData> list = new ArrayList<>();
+        Optional<List<TreeViewData>> optionalTreeViewData = collegeService.collegeApplicationJson();
+        if(optionalTreeViewData.isPresent()){
+            list = optionalTreeViewData.get();
+        }
+        ajaxUtil.success().list(list).msg("获取数据成功");
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -187,7 +193,12 @@ public class CollegeRestController {
     @PostMapping("/web/data/college/application/data")
     public ResponseEntity<Map<String, Object>> collegeApplicationData(@RequestParam("collegeId") int collegeId) {
         AjaxUtil<CollegeApplication> ajaxUtil = AjaxUtil.of();
-        ajaxUtil.success().list(collegeService.collegeApplicationData(collegeId)).msg("获取数据成功");
+        List<CollegeApplication> list = new ArrayList<>();
+        Optional<List<CollegeApplication>> optionalCollegeApplications = collegeService.collegeApplicationData(collegeId);
+        if(optionalCollegeApplications.isPresent()){
+            list = optionalCollegeApplications.get();
+        }
+        ajaxUtil.success().list(list).msg("获取数据成功");
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
