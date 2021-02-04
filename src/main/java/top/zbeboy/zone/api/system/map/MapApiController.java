@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 public class MapApiController {
@@ -36,9 +37,9 @@ public class MapApiController {
     public ResponseEntity<Map<String, Object>> mapKey(@PathVariable("factory") String factory, @PathVariable("business") String business,
                                                       Principal principal, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        MapKey mapKey = mapKeyService.mapKey(factory, business);
-        if (Objects.nonNull(mapKey) && StringUtils.isNotBlank(mapKey.getMapKey())) {
-            ajaxUtil.success().msg("获取数据成功").put("data", mapKey);
+        Optional<MapKey> optionalMapKey = mapKeyService.mapKey(factory, business);
+        if (optionalMapKey.isPresent()) {
+            ajaxUtil.success().msg("获取数据成功").put("data", optionalMapKey.get());
         } else {
             ajaxUtil.fail().msg("获取数据失败");
         }
