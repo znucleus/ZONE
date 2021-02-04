@@ -69,8 +69,10 @@ public class TrainingReleaseRestController {
         Result<Record> records = trainingReleaseService.findAllByPage(simplePaginationUtil);
         if (records.isNotEmpty()) {
             beans = records.into(TrainingReleaseBean.class);
-            beans.forEach(bean -> bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime())));
-            beans.forEach(bean -> bean.setCanOperator(BooleanUtil.toByte(trainingConditionCommon.canOperator(bean.getTrainingReleaseId()))));
+            beans.forEach(bean -> {
+                bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime()));
+                bean.setCanOperator(BooleanUtil.toByte(trainingConditionCommon.canOperator(bean.getTrainingReleaseId())));
+            });
         }
         simplePaginationUtil.setTotalSize(trainingReleaseService.countAll(simplePaginationUtil));
         ajaxUtil.success().list(beans).page(simplePaginationUtil).msg("获取数据成功");
@@ -287,8 +289,10 @@ public class TrainingReleaseRestController {
             Result<Record> records = trainingAuthoritiesService.findByTrainingReleaseIdRelation(id);
             if (records.isNotEmpty()) {
                 beans = records.into(TrainingAuthoritiesBean.class);
-                beans.forEach(bean -> bean.setValidDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getValidDate())));
-                beans.forEach(bean -> bean.setExpireDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getExpireDate())));
+                beans.forEach(bean -> {
+                    bean.setValidDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getValidDate()));
+                    bean.setExpireDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getExpireDate()));
+                });
             }
         }
         ajaxUtil.success().list(beans).msg("获取数据成功");

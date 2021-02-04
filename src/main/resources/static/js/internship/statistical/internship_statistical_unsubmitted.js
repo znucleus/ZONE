@@ -33,7 +33,7 @@ require(["jquery", "nav.active", "responsive.bootstrap4", "jquery.address", "mes
          */
         function getAjaxUrl() {
             return {
-                data: web_path + '/web/internship/statistical/data',
+                data: web_path + '/web/internship/statistical/paging',
                 obtain_organize_data: web_path + '/web/internship/statistical/organize',
                 page: '/web/menu/internship/statistical'
             };

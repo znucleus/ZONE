@@ -7,7 +7,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
          */
         function getAjaxUrl() {
             return {
-                data: web_path + '/web/internship/review/authorize/data',
+                data: web_path + '/web/internship/review/authorize/paging',
                 save: web_path + '/web/internship/review/authorize/save',
                 del: web_path + '/web/internship/review/authorize/delete',
                 page: '/web/menu/internship/review'

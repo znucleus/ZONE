@@ -36,10 +36,10 @@ require(["jquery", "nav.active", "sweetalert2", "responsive.bootstrap4", "jquery
          */
         function getAjaxUrl() {
             return {
-                data: web_path + '/web/internship/teacher_distribution/data',
-                delete_not_apply: web_path + '/web/internship/teacher_distribution/distribution/delete_not_apply',
-                export_data_url: web_path + '/web/internship/teacher_distribution/export',
-                page: '/web/menu/internship/teacher_distribution'
+                data: web_path + '/web/internship/teacher-distribution/paging',
+                delete_not_apply: web_path + '/web/internship/teacher-distribution/distribution/delete-not-apply',
+                export_data_url: web_path + '/web/internship/teacher-distribution/export',
+                page: '/web/menu/internship/teacher-distribution'
             };
         }
 

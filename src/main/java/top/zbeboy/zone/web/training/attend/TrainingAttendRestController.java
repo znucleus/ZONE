@@ -106,8 +106,10 @@ public class TrainingAttendRestController {
         Result<Record> records = trainingAttendService.findAllByPage(simplePaginationUtil);
         if (records.isNotEmpty()) {
             beans = records.into(TrainingAttendBean.class);
-            beans.forEach(bean -> bean.setPublishDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getPublishDate())));
-            beans.forEach(bean -> bean.setCanOperator(BooleanUtil.toByte(trainingConditionCommon.usersCondition(bean.getTrainingReleaseId()))));
+            beans.forEach(bean -> {
+                bean.setPublishDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getPublishDate()));
+                bean.setCanOperator(BooleanUtil.toByte(trainingConditionCommon.usersCondition(bean.getTrainingReleaseId())));
+            });
         }
         simplePaginationUtil.setTotalSize(trainingAttendService.countAll(simplePaginationUtil));
         ajaxUtil.success().list(beans).page(simplePaginationUtil).msg("获取数据成功");

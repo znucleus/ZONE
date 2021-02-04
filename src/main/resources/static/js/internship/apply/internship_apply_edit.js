@@ -8,7 +8,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
         var ajax_url = {
             update: web_path + '/web/internship/apply/update',
             obtain_staff_data: web_path + '/web/internship/apply/staff',
-            obtain_internship_file_data: web_path + '/users/data/internship_file',
+            obtain_internship_file_data: web_path + '/users/data/internship-file',
             download: web_path + '/web/internship/apply/download',
             page: '/web/menu/internship/apply',
             my_page: '/web/internship/apply/my'

@@ -74,7 +74,7 @@ public class InternshipRegulateRestController {
      * @param simplePaginationUtil 请求
      * @return 数据
      */
-    @GetMapping("/web/internship/regulate/internship/data")
+    @GetMapping("/web/internship/regulate/internship/paging")
     public ResponseEntity<Map<String, Object>> internshipData(SimplePaginationUtil simplePaginationUtil) {
         AjaxUtil<InternshipReleaseBean> ajaxUtil = AjaxUtil.of();
         List<InternshipReleaseBean> beans = new ArrayList<>();
@@ -88,9 +88,9 @@ public class InternshipRegulateRestController {
                     bean.setStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getStartTime()));
                     bean.setEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getEndTime()));
                 }
+                bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime()));
+                bean.setCanOperator(BooleanUtil.toByte(internshipConditionCommon.regulateCondition(bean.getInternshipReleaseId())));
             });
-            beans.forEach(bean -> bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime())));
-            beans.forEach(bean -> bean.setCanOperator(BooleanUtil.toByte(internshipConditionCommon.regulateCondition(bean.getInternshipReleaseId()))));
         }
         simplePaginationUtil.setTotalSize(internshipReleaseService.countAll(simplePaginationUtil));
         ajaxUtil.success().list(beans).page(simplePaginationUtil).msg("获取数据成功");
@@ -103,7 +103,7 @@ public class InternshipRegulateRestController {
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/internship/regulate/data")
+    @GetMapping("/web/internship/regulate/paging")
     public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         List<String> headers = new ArrayList<>();

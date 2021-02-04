@@ -220,8 +220,10 @@ public class TrainingSpecialRestController {
         Result<Record> records = trainingSpecialDocumentService.findAllByPage(simplePaginationUtil);
         if (records.isNotEmpty()) {
             beans = records.into(TrainingSpecialDocumentBean.class);
-            beans.forEach(bean -> bean.setCreateDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getCreateDate())));
-            beans.forEach(bean -> bean.setCanOperator(BooleanUtil.toByte(trainingConditionCommon.specialCondition())));
+            beans.forEach(bean -> {
+                bean.setCreateDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getCreateDate()));
+                bean.setCanOperator(BooleanUtil.toByte(trainingConditionCommon.specialCondition()));
+            });
         }
         simplePaginationUtil.setTotalSize(trainingSpecialDocumentService.countAll(simplePaginationUtil));
         ajaxUtil.success().list(beans).page(simplePaginationUtil).msg("获取数据成功");

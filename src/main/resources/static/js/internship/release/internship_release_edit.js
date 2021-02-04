@@ -6,7 +6,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
          ajax url.
          */
         var ajax_url = {
-            obtain_internship_file_data: web_path + '/users/data/internship_file',
+            obtain_internship_file_data: web_path + '/users/data/internship-file',
             file_upload_url: web_path + '/web/internship/release/upload/file',
             delete_file_url: web_path + '/web/internship/release/delete/file',
             update: web_path + '/web/internship/release/update',

@@ -5,10 +5,10 @@ require(["jquery", "tools", "sweetalert2", "nav.active", "messenger", "jquery.ad
          ajax url.
          */
         var ajax_url = {
-            update: web_path + '/web/internship/teacher_distribution/update',
-            obtain_staff_data: web_path + '/web/internship/teacher_distribution/staff',
-            page: '/web/menu/internship/teacher_distribution',
-            back: '/web/internship/teacher_distribution/list'
+            update: web_path + '/web/internship/teacher-distribution/update',
+            obtain_staff_data: web_path + '/web/internship/teacher-distribution/staff',
+            page: '/web/menu/internship/teacher-distribution',
+            back: '/web/internship/teacher-distribution/list'
         };
 
         // 刷新时选中菜单

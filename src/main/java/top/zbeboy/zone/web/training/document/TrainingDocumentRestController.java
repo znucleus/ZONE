@@ -95,8 +95,10 @@ public class TrainingDocumentRestController {
         Result<Record> records = trainingDocumentService.findAllByPage(simplePaginationUtil);
         if (records.isNotEmpty()) {
             beans = records.into(TrainingDocumentBean.class);
-            beans.forEach(bean -> bean.setCreateDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getCreateDate())));
-            beans.forEach(bean -> bean.setCanOperator(BooleanUtil.toByte(trainingConditionCommon.canOperator(bean.getTrainingReleaseId()))));
+            beans.forEach(bean -> {
+                bean.setCreateDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getCreateDate()));
+                bean.setCanOperator(BooleanUtil.toByte(trainingConditionCommon.canOperator(bean.getTrainingReleaseId())));
+            });
         }
         simplePaginationUtil.setTotalSize(trainingDocumentService.countAll(simplePaginationUtil));
         ajaxUtil.success().list(beans).page(simplePaginationUtil).msg("获取数据成功");
@@ -116,8 +118,10 @@ public class TrainingDocumentRestController {
         Result<Record> records = trainingDocumentFileService.findAllByPage(simplePaginationUtil);
         if (records.isNotEmpty()) {
             beans = records.into(TrainingDocumentFileBean.class);
-            beans.forEach(bean -> bean.setCreateDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getCreateDate())));
-            beans.forEach(bean -> bean.setCanOperator(BooleanUtil.toByte(trainingConditionCommon.canOperator(bean.getTrainingReleaseId()))));
+            beans.forEach(bean -> {
+                bean.setCreateDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getCreateDate()));
+                bean.setCanOperator(BooleanUtil.toByte(trainingConditionCommon.canOperator(bean.getTrainingReleaseId())));
+            });
         }
         simplePaginationUtil.setTotalSize(trainingDocumentFileService.countAll(simplePaginationUtil));
         ajaxUtil.success().list(beans).page(simplePaginationUtil).msg("获取数据成功");

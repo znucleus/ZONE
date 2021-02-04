@@ -78,7 +78,7 @@ public class InternshipReleaseRestController {
      * @param simplePaginationUtil 请求
      * @return 数据
      */
-    @GetMapping("/web/internship/release/data")
+    @GetMapping("/web/internship/release/paging")
     public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil) {
         AjaxUtil<InternshipReleaseBean> ajaxUtil = AjaxUtil.of();
         List<InternshipReleaseBean> beans = new ArrayList<>();
@@ -92,9 +92,9 @@ public class InternshipReleaseRestController {
                     bean.setStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getStartTime()));
                     bean.setEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getEndTime()));
                 }
+                bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime()));
+                bean.setCanOperator(BooleanUtil.toByte(internshipConditionCommon.canOperator(bean.getInternshipReleaseId())));
             });
-            beans.forEach(bean -> bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime())));
-            beans.forEach(bean -> bean.setCanOperator(BooleanUtil.toByte(internshipConditionCommon.canOperator(bean.getInternshipReleaseId()))));
         }
         simplePaginationUtil.setTotalSize(internshipReleaseService.countAll(simplePaginationUtil));
         ajaxUtil.success().list(beans).page(simplePaginationUtil).msg("获取数据成功");

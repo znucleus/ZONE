@@ -70,7 +70,7 @@ public class InternshipTeacherDistributionRestController {
      * @param simplePaginationUtil 请求
      * @return 数据
      */
-    @GetMapping("/web/internship/teacher_distribution/internship/data")
+    @GetMapping("/web/internship/teacher-distribution/internship/paging")
     public ResponseEntity<Map<String, Object>> internshipData(SimplePaginationUtil simplePaginationUtil) {
         AjaxUtil<InternshipReleaseBean> ajaxUtil = AjaxUtil.of();
         List<InternshipReleaseBean> beans = new ArrayList<>();
@@ -84,9 +84,9 @@ public class InternshipTeacherDistributionRestController {
                     bean.setStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getStartTime()));
                     bean.setEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getEndTime()));
                 }
+                bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime()));
+                bean.setCanOperator(BooleanUtil.toByte(internshipConditionCommon.teacherDistributionCondition(bean.getInternshipReleaseId())));
             });
-            beans.forEach(bean -> bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime())));
-            beans.forEach(bean -> bean.setCanOperator(BooleanUtil.toByte(internshipConditionCommon.teacherDistributionCondition(bean.getInternshipReleaseId()))));
         }
         simplePaginationUtil.setTotalSize(internshipReleaseService.countAll(simplePaginationUtil));
         ajaxUtil.success().list(beans).page(simplePaginationUtil).msg("获取数据成功");
@@ -99,7 +99,7 @@ public class InternshipTeacherDistributionRestController {
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/internship/teacher_distribution/data")
+    @GetMapping("/web/internship/teacher-distribution/paging")
     public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         List<String> headers = new ArrayList<>();
@@ -130,7 +130,7 @@ public class InternshipTeacherDistributionRestController {
      * @param id 实习id
      * @return 页面
      */
-    @GetMapping("/web/internship/teacher_distribution/staff/{id}")
+    @GetMapping("/web/internship/teacher-distribution/staff/{id}")
     public ResponseEntity<Map<String, Object>> staff(@PathVariable("id") String id) {
         Select2Data select2Data = Select2Data.of();
         List<StaffBean> beans = internshipControllerCommon.internshipReleaseStaffData(id);
@@ -144,7 +144,7 @@ public class InternshipTeacherDistributionRestController {
      * @param id 实习id
      * @return 页面
      */
-    @GetMapping("/web/internship/teacher_distribution/organizes/{id}")
+    @GetMapping("/web/internship/teacher-distribution/organizes/{id}")
     public ResponseEntity<Map<String, Object>> organizes(@PathVariable("id") String id) {
         Select2Data select2Data = Select2Data.of();
         List<OrganizeBean> beans = new ArrayList<>();
@@ -165,7 +165,7 @@ public class InternshipTeacherDistributionRestController {
      * @param type                检验类型
      * @return true or false
      */
-    @PostMapping("/web/internship/teacher_distribution/check/add/student")
+    @PostMapping("/web/internship/teacher-distribution/check-add-student")
     public ResponseEntity<Map<String, Object>> checkAddStudent(@RequestParam("id") String internshipReleaseId, @RequestParam("student") String info, int type) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         String param = StringUtils.deleteWhitespace(info);
@@ -203,7 +203,7 @@ public class InternshipTeacherDistributionRestController {
      * @param type                检验类型
      * @return true or false
      */
-    @PostMapping("/web/internship/teacher_distribution/save")
+    @PostMapping("/web/internship/teacher-distribution/save")
     public ResponseEntity<Map<String, Object>> save(@RequestParam("student") String info, @RequestParam("staffId") int staffId,
                                                     @RequestParam("id") String internshipReleaseId, int type) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
@@ -244,7 +244,7 @@ public class InternshipTeacherDistributionRestController {
      * @param staffId             教职工ids
      * @return true or false
      */
-    @PostMapping("/web/internship/teacher_distribution/distribution/save")
+    @PostMapping("/web/internship/teacher-distribution/distribution/save")
     public ResponseEntity<Map<String, Object>> batchSave(@RequestParam("internshipReleaseId") String internshipReleaseId, String organizeId, String staffId) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (internshipConditionCommon.teacherDistributionCondition(internshipReleaseId)) {
@@ -285,7 +285,7 @@ public class InternshipTeacherDistributionRestController {
      * @param internshipReleaseId 实习发布id
      * @return true or false
      */
-    @PostMapping("/web/internship/teacher_distribution/update")
+    @PostMapping("/web/internship/teacher-distribution/update")
     public ResponseEntity<Map<String, Object>> update(@RequestParam("studentId") int studentId, @RequestParam("staffId") int staffId,
                                                       @RequestParam("id") String internshipReleaseId) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
@@ -312,7 +312,7 @@ public class InternshipTeacherDistributionRestController {
      * @param internshipReleaseId 实习id
      * @return true or false
      */
-    @PostMapping("/web/internship/teacher_distribution/delete")
+    @PostMapping("/web/internship/teacher-distribution/delete")
     public ResponseEntity<Map<String, Object>> delete(String studentIds, @RequestParam("id") String internshipReleaseId) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (internshipConditionCommon.teacherDistributionCondition(internshipReleaseId)) {
@@ -334,7 +334,7 @@ public class InternshipTeacherDistributionRestController {
      *
      * @param request 请求
      */
-    @GetMapping("/web/internship/teacher_distribution/export")
+    @GetMapping("/web/internship/teacher-distribution/export")
     public void export(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, "studentNumber", "asc",
                 "实习指导教师分配数据表", Workbook.internshipFilePath());
@@ -352,7 +352,7 @@ public class InternshipTeacherDistributionRestController {
      * @param internshipReleaseId 实习发布id
      * @return true or false
      */
-    @PostMapping("/web/internship/teacher_distribution/distribution/delete_not_apply")
+    @PostMapping("/web/internship/teacher-distribution/distribution/delete-not-apply")
     public ResponseEntity<Map<String, Object>> deleteNotApply(@RequestParam("id") String internshipReleaseId) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (internshipConditionCommon.canOperator(internshipReleaseId)) {

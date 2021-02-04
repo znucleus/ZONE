@@ -7,7 +7,7 @@ require(["jquery", "sweetalert2", "handlebars", "nav.active", "responsive.bootst
          */
         function getAjaxUrl() {
             return {
-                data: web_path + '/web/internship/journal/data',
+                data: web_path + '/web/internship/journal/paging',
                 del: web_path + '/web/internship/journal/del',
                 edit: '/web/internship/journal/edit',
                 add: '/web/internship/journal/add',

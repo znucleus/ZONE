@@ -38,7 +38,7 @@ require(["jquery", "sweetalert2", "handlebars", "workbook", "nav.active", "respo
          */
         function getAjaxUrl() {
             return {
-                data: web_path + '/web/internship/journal/data',
+                data: web_path + '/web/internship/journal/paging',
                 obtain_staff_data: web_path + '/web/internship/journal/team/staff',
                 del: web_path + '/web/internship/journal/del',
                 edit: '/web/internship/journal/edit',

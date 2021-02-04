@@ -6,7 +6,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "workbook", "m
          ajax url.
          */
         var ajax_url = {
-            data: web_path + '/web/internship/apply/internship/data',
+            data: web_path + '/web/internship/apply/internship/paging',
             add: '/web/internship/apply/add',
             page: '/web/menu/internship/apply'
         };

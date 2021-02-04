@@ -23,7 +23,7 @@ public class InternshipTypeRestController {
      *
      * @return 实习类型
      */
-    @GetMapping("/users/data/internship_type")
+    @GetMapping("/users/data/internship-type")
     public ResponseEntity<Map<String, Object>> usersData() {
         Select2Data select2Data = Select2Data.of();
         List<InternshipType> internshipTypes = internshipTypeService.findAll();

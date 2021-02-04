@@ -70,7 +70,7 @@ public class InternshipStatisticalRestController {
      * @param simplePaginationUtil 请求
      * @return 数据
      */
-    @GetMapping("/web/internship/statistical/internship/data")
+    @GetMapping("/web/internship/statistical/internship/paging")
     public ResponseEntity<Map<String, Object>> internshipData(SimplePaginationUtil simplePaginationUtil) {
         AjaxUtil<InternshipReleaseBean> ajaxUtil = AjaxUtil.of();
         List<InternshipReleaseBean> beans = new ArrayList<>();
@@ -84,16 +84,15 @@ public class InternshipStatisticalRestController {
                     bean.setStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getStartTime()));
                     bean.setEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getEndTime()));
                 }
-            });
-            beans.forEach(bean -> bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime())));
-            beans.forEach(bean -> {
-                bean.setCanOperator(BooleanUtil.toByte(internshipConditionCommon.reviewCondition(bean.getInternshipReleaseId())));
+
                 if (BooleanUtil.toBoolean(bean.getCanOperator())) {
                     bean.setSubmittedTotalData(internshipStatisticalService.countSubmitted(bean.getInternshipReleaseId()));
                     bean.setUnsubmittedTotalData(internshipStatisticalService.countUnSubmitted(bean.getInternshipReleaseId()));
                 }
+                bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime()));
+                bean.setCanOperator(BooleanUtil.toByte(internshipConditionCommon.reviewCondition(bean.getInternshipReleaseId())));
+                bean.setCanAuthorize(BooleanUtil.toByte(internshipConditionCommon.reviewAuthorizeCondition(bean.getInternshipReleaseId())));
             });
-            beans.forEach(bean -> bean.setCanAuthorize(BooleanUtil.toByte(internshipConditionCommon.reviewAuthorizeCondition(bean.getInternshipReleaseId()))));
         }
         simplePaginationUtil.setTotalSize(internshipReleaseService.countAll(simplePaginationUtil));
         ajaxUtil.success().list(beans).page(simplePaginationUtil).msg("获取数据成功");
@@ -106,7 +105,7 @@ public class InternshipStatisticalRestController {
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/internship/statistical/data")
+    @GetMapping("/web/internship/statistical/paging")
     public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         List<String> headers = new ArrayList<>();
@@ -157,9 +156,11 @@ public class InternshipStatisticalRestController {
             Result<Record> records = internshipChangeHistoryService.findByInternshipReleaseIdAndStudentId(id, studentId);
             if (records.isNotEmpty()) {
                 beans = records.into(InternshipChangeHistoryBean.class);
-                beans.forEach(bean -> bean.setChangeFillStartTimeStr(Objects.nonNull(bean.getChangeFillStartTime()) ? DateTimeUtil.defaultFormatSqlTimestamp(bean.getChangeFillStartTime()) : ""));
-                beans.forEach(bean -> bean.setChangeFillEndTimeStr(Objects.nonNull(bean.getChangeFillEndTime()) ? DateTimeUtil.defaultFormatSqlTimestamp(bean.getChangeFillEndTime()) : ""));
-                beans.forEach(bean -> bean.setApplyTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getApplyTime())));
+                beans.forEach(bean -> {
+                    bean.setChangeFillStartTimeStr(Objects.nonNull(bean.getChangeFillStartTime()) ? DateTimeUtil.defaultFormatSqlTimestamp(bean.getChangeFillStartTime()) : "");
+                    bean.setChangeFillEndTimeStr(Objects.nonNull(bean.getChangeFillEndTime()) ? DateTimeUtil.defaultFormatSqlTimestamp(bean.getChangeFillEndTime()) : "");
+                    bean.setApplyTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getApplyTime()));
+                });
             }
             ajaxUtil.success().msg("获取数据成功").list(beans);
         } else {
@@ -198,7 +199,7 @@ public class InternshipStatisticalRestController {
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/internship/statistical/info/data")
+    @GetMapping("/web/internship/statistical/info/paging")
     public ResponseEntity<DataTablesUtil> infoData(HttpServletRequest request) {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         List<String> headers = new ArrayList<>();

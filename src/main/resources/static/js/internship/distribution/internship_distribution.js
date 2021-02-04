@@ -6,11 +6,11 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "handlebars",
          ajax url.
          */
         var ajax_url = {
-            obtain_organize_data: web_path + '/web/internship/teacher_distribution/organizes',
-            obtain_staff_data: web_path + '/web/internship/teacher_distribution/staff',
-            save: web_path + '/web/internship/teacher_distribution/distribution/save',
-            page: '/web/menu/internship/teacher_distribution',
-            back: '/web/internship/teacher_distribution/list'
+            obtain_organize_data: web_path + '/web/internship/teacher-distribution/organizes',
+            obtain_staff_data: web_path + '/web/internship/teacher-distribution/staff',
+            save: web_path + '/web/internship/teacher-distribution/distribution/save',
+            page: '/web/menu/internship/teacher-distribution',
+            back: '/web/internship/teacher-distribution/list'
         };
 
         // 刷新时选中菜单

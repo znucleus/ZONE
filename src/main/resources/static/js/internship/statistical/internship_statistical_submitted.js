@@ -36,7 +36,7 @@ require(["jquery", "handlebars", "nav.active", "responsive.bootstrap4", "jquery.
          */
         function getAjaxUrl() {
             return {
-                data: web_path + '/web/internship/statistical/data',
+                data: web_path + '/web/internship/statistical/paging',
                 obtain_organize_data: web_path + '/web/internship/statistical/organize',
                 change_history: '/web/internship/statistical/record/apply',
                 change_company: '/web/internship/statistical/record/company',

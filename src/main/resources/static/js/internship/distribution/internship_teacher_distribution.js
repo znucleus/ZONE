@@ -6,11 +6,11 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
          ajax url.
          */
         var ajax_url = {
-            data: web_path + '/web/internship/teacher_distribution/internship/data',
-            distribution_url: '/web/internship/teacher_distribution/list',
-            batch_distribution_url: '/web/internship/teacher_distribution/distribution',
-            look_distribution_url: '/web/internship/teacher_distribution/look',
-            page: '/web/menu/internship/teacher_distribution'
+            data: web_path + '/web/internship/teacher-distribution/internship/paging',
+            distribution_url: '/web/internship/teacher-distribution/list',
+            batch_distribution_url: '/web/internship/teacher-distribution/distribution',
+            look_distribution_url: '/web/internship/teacher-distribution/look',
+            page: '/web/menu/internship/teacher-distribution'
         };
 
         navActive(ajax_url.page);

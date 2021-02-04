@@ -68,8 +68,10 @@ public class TheoryReleaseRestController {
         Result<Record> records = theoryReleaseService.findAllByPage(simplePaginationUtil);
         if (records.isNotEmpty()) {
             beans = records.into(TheoryReleaseBean.class);
-            beans.forEach(bean -> bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime())));
-            beans.forEach(bean -> bean.setCanOperator(BooleanUtil.toByte(theoryConditionCommon.canOperator(bean.getTheoryReleaseId()))));
+            beans.forEach(bean -> {
+                bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime()));
+                bean.setCanOperator(BooleanUtil.toByte(theoryConditionCommon.canOperator(bean.getTheoryReleaseId())));
+            });
         }
         simplePaginationUtil.setTotalSize(theoryReleaseService.countAll(simplePaginationUtil));
         ajaxUtil.success().list(beans).page(simplePaginationUtil).msg("获取数据成功");

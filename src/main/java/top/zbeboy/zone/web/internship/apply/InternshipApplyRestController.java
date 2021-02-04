@@ -87,7 +87,7 @@ public class InternshipApplyRestController {
      * @param simplePaginationUtil 请求
      * @return 数据
      */
-    @GetMapping("/web/internship/apply/internship/data")
+    @GetMapping("/web/internship/apply/internship/paging")
     public ResponseEntity<Map<String, Object>> internshipData(SimplePaginationUtil simplePaginationUtil) {
         AjaxUtil<InternshipReleaseBean> ajaxUtil = AjaxUtil.of();
         List<InternshipReleaseBean> beans = new ArrayList<>();
@@ -101,9 +101,9 @@ public class InternshipApplyRestController {
                     bean.setStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getStartTime()));
                     bean.setEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getEndTime()));
                 }
+                bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime()));
+                bean.setCanOperator(BooleanUtil.toByte(internshipConditionCommon.applyCondition(bean.getInternshipReleaseId())));
             });
-            beans.forEach(bean -> bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime())));
-            beans.forEach(bean -> bean.setCanOperator(BooleanUtil.toByte(internshipConditionCommon.applyCondition(bean.getInternshipReleaseId()))));
         }
         simplePaginationUtil.setTotalSize(internshipReleaseService.countAll(simplePaginationUtil));
         ajaxUtil.success().list(beans).page(simplePaginationUtil).msg("获取数据成功");
@@ -116,7 +116,7 @@ public class InternshipApplyRestController {
      * @param simplePaginationUtil 请求
      * @return 数据
      */
-    @GetMapping("/web/internship/apply/data")
+    @GetMapping("/web/internship/apply/paging")
     public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil) {
         AjaxUtil<InternshipApplyBean> ajaxUtil = AjaxUtil.of();
         List<InternshipApplyBean> beans = new ArrayList<>();
@@ -130,12 +130,12 @@ public class InternshipApplyRestController {
                     bean.setStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getStartTime()));
                     bean.setEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getEndTime()));
                 }
+                bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime()));
+                bean.setApplyTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getApplyTime()));
+                bean.setChangeFillStartTimeStr(Objects.nonNull(bean.getChangeFillStartTime()) ? DateTimeUtil.defaultFormatSqlTimestamp(bean.getChangeFillStartTime()) : "");
+                bean.setChangeFillEndTimeStr(Objects.nonNull(bean.getChangeFillEndTime()) ? DateTimeUtil.defaultFormatSqlTimestamp(bean.getChangeFillEndTime()) : "");
+                bean.setCanEdit(BooleanUtil.toByte(internshipConditionCommon.applyEditCondition(bean.getInternshipReleaseId())));
             });
-            beans.forEach(bean -> bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime())));
-            beans.forEach(bean -> bean.setApplyTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getApplyTime())));
-            beans.forEach(bean -> bean.setChangeFillStartTimeStr(Objects.nonNull(bean.getChangeFillStartTime()) ? DateTimeUtil.defaultFormatSqlTimestamp(bean.getChangeFillStartTime()) : ""));
-            beans.forEach(bean -> bean.setChangeFillEndTimeStr(Objects.nonNull(bean.getChangeFillEndTime()) ? DateTimeUtil.defaultFormatSqlTimestamp(bean.getChangeFillEndTime()) : ""));
-            beans.forEach(bean -> bean.setCanEdit(BooleanUtil.toByte(internshipConditionCommon.applyEditCondition(bean.getInternshipReleaseId()))));
         }
         simplePaginationUtil.setTotalSize(internshipApplyService.countAll(simplePaginationUtil));
         ajaxUtil.success().list(beans).page(simplePaginationUtil).msg("获取数据成功");

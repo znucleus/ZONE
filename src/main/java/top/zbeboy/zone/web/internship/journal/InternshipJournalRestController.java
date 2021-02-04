@@ -80,7 +80,7 @@ public class InternshipJournalRestController {
      * @param simplePaginationUtil 请求
      * @return 数据
      */
-    @GetMapping("/web/internship/journal/internship/data")
+    @GetMapping("/web/internship/journal/internship/paging")
     public ResponseEntity<Map<String, Object>> internshipData(SimplePaginationUtil simplePaginationUtil) {
         AjaxUtil<InternshipReleaseBean> ajaxUtil = AjaxUtil.of();
         List<InternshipReleaseBean> beans = new ArrayList<>();
@@ -94,10 +94,10 @@ public class InternshipJournalRestController {
                     bean.setStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getStartTime()));
                     bean.setEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getEndTime()));
                 }
+                bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime()));
+                bean.setCanOperator(BooleanUtil.toByte(internshipConditionCommon.journalCondition(bean.getInternshipReleaseId())));
+                bean.setCanLook(BooleanUtil.toByte(internshipConditionCommon.journalLookMyCondition(bean.getInternshipReleaseId())));
             });
-            beans.forEach(bean -> bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime())));
-            beans.forEach(bean -> bean.setCanOperator(BooleanUtil.toByte(internshipConditionCommon.journalCondition(bean.getInternshipReleaseId()))));
-            beans.forEach(bean -> bean.setCanLook(BooleanUtil.toByte(internshipConditionCommon.journalLookMyCondition(bean.getInternshipReleaseId()))));
         }
         simplePaginationUtil.setTotalSize(internshipReleaseService.countAll(simplePaginationUtil));
         ajaxUtil.success().list(beans).page(simplePaginationUtil).msg("获取数据成功");
@@ -110,7 +110,7 @@ public class InternshipJournalRestController {
      * @param request 请求
      * @return 数据
      */
-    @GetMapping("/web/internship/journal/data")
+    @GetMapping("/web/internship/journal/paging")
     public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
         // 前台数据标题 注：要和前台标题顺序一致，获取order用
         List<String> headers = new ArrayList<>();

@@ -101,8 +101,8 @@ public class TrainingUsersRestController {
         List<TrainingUsersBean> beans = new ArrayList<>();
         if (Objects.nonNull(records) && records.isNotEmpty()) {
             beans = records.into(TrainingUsersBean.class);
-            beans.forEach(bean -> bean.setCreateDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getCreateDate())));
             beans.forEach(bean -> {
+                bean.setCreateDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getCreateDate()));
                 if (!trainingConditionCommon.usersCondition(bean.getTrainingReleaseId())) {
                     bean.setEmail(StringUtils.overlay(bean.getEmail(), "****", 1, bean.getEmail().lastIndexOf("@")));
                     bean.setMobile(StringUtils.overlay(bean.getMobile(), "****", 3, 6));

@@ -33,7 +33,7 @@ public class InternshipTeacherDistributionViewController {
      *
      * @return 实习教师分配页面
      */
-    @GetMapping("/web/menu/internship/teacher_distribution")
+    @GetMapping("/web/menu/internship/teacher-distribution")
     public String index() {
         return "web/internship/distribution/internship_teacher_distribution::#page-wrapper";
     }
@@ -44,7 +44,7 @@ public class InternshipTeacherDistributionViewController {
      * @param id 实习发布id
      * @return 页面
      */
-    @GetMapping("/web/internship/teacher_distribution/list/{id}")
+    @GetMapping("/web/internship/teacher-distribution/list/{id}")
     public String list(@PathVariable("id") String id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
@@ -65,7 +65,7 @@ public class InternshipTeacherDistributionViewController {
      * @param id 实习发布id
      * @return 页面
      */
-    @GetMapping("/web/internship/teacher_distribution/look/{id}")
+    @GetMapping("/web/internship/teacher-distribution/look/{id}")
     public String look(@PathVariable("id") String id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
@@ -87,7 +87,7 @@ public class InternshipTeacherDistributionViewController {
      * @param modelMap 页面对象
      * @return 页面
      */
-    @GetMapping("/web/internship/teacher_distribution/add/{id}")
+    @GetMapping("/web/internship/teacher-distribution/add/{id}")
     public String add(@PathVariable("id") String id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
@@ -109,7 +109,7 @@ public class InternshipTeacherDistributionViewController {
      * @param modelMap 页面对象
      * @return 页面
      */
-    @GetMapping("/web/internship/teacher_distribution/distribution/{id}")
+    @GetMapping("/web/internship/teacher-distribution/distribution/{id}")
     public String distribution(@PathVariable("id") String id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
@@ -132,7 +132,7 @@ public class InternshipTeacherDistributionViewController {
      * @param modelMap  页面对象
      * @return 页面
      */
-    @GetMapping("/web/internship/teacher_distribution/edit/{id}/{studentId}")
+    @GetMapping("/web/internship/teacher-distribution/edit/{id}/{studentId}")
     public String edit(@PathVariable("id") String id, @PathVariable("studentId") int studentId, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;

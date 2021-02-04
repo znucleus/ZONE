@@ -101,8 +101,8 @@ public class TheoryUsersRestController {
         List<TheoryUsersBean> beans = new ArrayList<>();
         if (Objects.nonNull(records) && records.isNotEmpty()) {
             beans = records.into(TheoryUsersBean.class);
-            beans.forEach(bean -> bean.setCreateDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getCreateDate())));
             beans.forEach(bean -> {
+                bean.setCreateDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getCreateDate()));
                 if (!theoryConditionCommon.usersCondition(bean.getTheoryReleaseId())) {
                     bean.setEmail(StringUtils.overlay(bean.getEmail(), "****", 1, bean.getEmail().lastIndexOf("@")));
                     bean.setMobile(StringUtils.overlay(bean.getMobile(), "****", 3, 6));
@@ -251,8 +251,8 @@ public class TheoryUsersRestController {
         Result<Record> records = theoryUsersService.export(dataTablesUtil);
         if (Objects.nonNull(records) && records.isNotEmpty()) {
             beans = records.into(TheoryUsersBean.class);
-            beans.forEach(bean -> bean.setCreateDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getCreateDate())));
             beans.forEach(bean -> {
+                bean.setCreateDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getCreateDate()));
                 if (!theoryConditionCommon.usersCondition(bean.getTheoryReleaseId())) {
                     bean.setEmail(StringUtils.overlay(bean.getEmail(), "****", 1, bean.getEmail().lastIndexOf("@")));
                     bean.setMobile(StringUtils.overlay(bean.getMobile(), "****", 3, 6));

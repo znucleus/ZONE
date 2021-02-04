@@ -95,7 +95,7 @@ public class InternshipReviewRestController {
      * @param simplePaginationUtil 请求
      * @return 数据
      */
-    @GetMapping("/web/internship/review/internship/data")
+    @GetMapping("/web/internship/review/internship/paging")
     public ResponseEntity<Map<String, Object>> internshipData(SimplePaginationUtil simplePaginationUtil) {
         AjaxUtil<InternshipReleaseBean> ajaxUtil = AjaxUtil.of();
         List<InternshipReleaseBean> beans = new ArrayList<>();
@@ -109,10 +109,6 @@ public class InternshipReviewRestController {
                     bean.setStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getStartTime()));
                     bean.setEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getEndTime()));
                 }
-            });
-            beans.forEach(bean -> bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime())));
-            beans.forEach(bean -> {
-                bean.setCanOperator(BooleanUtil.toByte(internshipConditionCommon.reviewCondition(bean.getInternshipReleaseId())));
                 if (BooleanUtil.toBoolean(bean.getCanOperator())) {
                     bean.setWaitTotalData(internshipReviewService.countByInternshipReleaseIdAndInternshipApplyState(bean.getInternshipReleaseId(), 1));
                     bean.setPassTotalData(internshipReviewService.countByInternshipReleaseIdAndInternshipApplyState(bean.getInternshipReleaseId(), 2));
@@ -122,8 +118,10 @@ public class InternshipReviewRestController {
                     bean.setBasicFillTotalData(internshipReviewService.countByInternshipReleaseIdAndInternshipApplyState(bean.getInternshipReleaseId(), 5));
                     bean.setCompanyFillTotalData(internshipReviewService.countByInternshipReleaseIdAndInternshipApplyState(bean.getInternshipReleaseId(), 7));
                 }
+                bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime()));
+                bean.setCanOperator(BooleanUtil.toByte(internshipConditionCommon.reviewCondition(bean.getInternshipReleaseId())));
+                bean.setCanAuthorize(BooleanUtil.toByte(internshipConditionCommon.reviewAuthorizeCondition(bean.getInternshipReleaseId())));
             });
-            beans.forEach(bean -> bean.setCanAuthorize(BooleanUtil.toByte(internshipConditionCommon.reviewAuthorizeCondition(bean.getInternshipReleaseId()))));
         }
         simplePaginationUtil.setTotalSize(internshipReleaseService.countAll(simplePaginationUtil));
         ajaxUtil.success().list(beans).page(simplePaginationUtil).msg("获取数据成功");
@@ -135,7 +133,7 @@ public class InternshipReviewRestController {
      *
      * @return 数据
      */
-    @GetMapping("/web/internship/review/authorize/data")
+    @GetMapping("/web/internship/review/authorize/paging")
     public ResponseEntity<Map<String, Object>> authorizeData(SimplePaginationUtil simplePaginationUtil) {
         AjaxUtil<InternshipReviewAuthorizeBean> ajaxUtil = AjaxUtil.of();
         List<InternshipReviewAuthorizeBean> beans = new ArrayList<>();
@@ -154,16 +152,18 @@ public class InternshipReviewRestController {
      * @param simplePaginationUtil 请求
      * @return 数据
      */
-    @GetMapping("/web/internship/review/data")
+    @GetMapping("/web/internship/review/paging")
     public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil) {
         AjaxUtil<InternshipReviewBean> ajaxUtil = AjaxUtil.of();
         List<InternshipReviewBean> beans = new ArrayList<>();
         Result<Record> records = internshipReviewService.findAllByPage(simplePaginationUtil);
         if (records.isNotEmpty()) {
             beans = records.into(InternshipReviewBean.class);
-            beans.forEach(bean -> bean.setChangeFillStartTimeStr(Objects.nonNull(bean.getChangeFillStartTime()) ? DateTimeUtil.defaultFormatSqlTimestamp(bean.getChangeFillStartTime()) : ""));
-            beans.forEach(bean -> bean.setChangeFillEndTimeStr(Objects.nonNull(bean.getChangeFillEndTime()) ? DateTimeUtil.defaultFormatSqlTimestamp(bean.getChangeFillEndTime()) : ""));
-            beans.forEach(bean -> bean.setApplyTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getApplyTime())));
+            beans.forEach(bean -> {
+                bean.setChangeFillStartTimeStr(Objects.nonNull(bean.getChangeFillStartTime()) ? DateTimeUtil.defaultFormatSqlTimestamp(bean.getChangeFillStartTime()) : "");
+                bean.setChangeFillEndTimeStr(Objects.nonNull(bean.getChangeFillEndTime()) ? DateTimeUtil.defaultFormatSqlTimestamp(bean.getChangeFillEndTime()) : "");
+                bean.setApplyTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getApplyTime()));
+            });
         }
         simplePaginationUtil.setTotalSize(internshipReviewService.countAll(simplePaginationUtil));
         ajaxUtil.success().list(beans).page(simplePaginationUtil).msg("获取数据成功");

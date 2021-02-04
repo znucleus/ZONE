@@ -6,7 +6,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "messenger", "
          ajax url.
          */
         var ajax_url = {
-            data: web_path + '/web/internship/regulate/internship/data',
+            data: web_path + '/web/internship/regulate/internship/paging',
             regulate: '/web/internship/regulate/list',
             my_regulate: '/web/internship/regulate/my/list',
             add: '/web/internship/regulate/add',

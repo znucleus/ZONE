@@ -27,7 +27,7 @@ public class InternshipFileRestController {
      *
      * @return 实习文件
      */
-    @GetMapping("/users/data/internship_file/{id}")
+    @GetMapping("/users/data/internship-file/{id}")
     public ResponseEntity<Map<String, Object>> usersData(@PathVariable("id") String id) {
         AjaxUtil<InternshipFileBean> ajaxUtil = AjaxUtil.of();
         List<InternshipFileBean> beans = new ArrayList<>();
