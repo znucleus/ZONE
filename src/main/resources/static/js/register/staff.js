@@ -292,7 +292,7 @@ require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf",
                         return;
                     }
 
-                    $.post(ajax_url.check_staff_number, {staffNumber: staffNumber}, function (data) {
+                    $.get(ajax_url.check_staff_number, {staffNumber: staffNumber}, function (data) {
                         if (data.state) {
                             tools.validSuccessDom(param_id.staffNumber);
                         } else {
@@ -549,7 +549,7 @@ require(["jquery", "requirejs-domready", "lodash", "tools", "bootstrap", "csrf",
                         return;
                     }
 
-                    $.post(ajax_url.check_staff_number, {staffNumber: staffNumber}, function (data) {
+                    $.get(ajax_url.check_staff_number, {staffNumber: staffNumber}, function (data) {
                         if (data.state) {
                             tools.validSuccessDom(param_id.staffNumber);
                             validMobile();

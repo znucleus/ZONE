@@ -39,7 +39,10 @@ public class InternshipControllerCommon {
         Optional<Record> record = internshipReleaseService.findByIdRelation(id);
         if (record.isPresent()) {
             Department department = record.get().into(Department.class);
-            beans = staffService.findNormalByDepartmentIdRelation(department.getDepartmentId());
+            Optional<List<StaffBean>> optionalStaffBeans = staffService.findNormalByDepartmentIdRelation(department.getDepartmentId());
+            if(optionalStaffBeans.isPresent()){
+                beans = optionalStaffBeans.get();
+            }
         }
 
         return beans;

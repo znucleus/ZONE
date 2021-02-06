@@ -516,9 +516,9 @@ public class TheoryAttendRestController {
         if (optionalUsersType.isPresent()) {
             UsersType usersType = optionalUsersType.get();
             if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                StudentBean studentBean = studentService.findByUsername(users.getUsername());
-                if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
-                    int studentId = studentBean.getStudentId();
+                Optional<StudentBean> optionalStudentBean = studentService.findByUsername(users.getUsername());
+                if (optionalStudentBean.isPresent()) {
+                    int studentId = optionalStudentBean.get().getStudentId();
                     tableSawUtil.setSearch("studentId", studentId);
                     Result<Record> records = theoryAttendMyService.findAll(tableSawUtil);
                     if (records.isNotEmpty()) {

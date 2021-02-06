@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 public class WeiXinDeviceApiController {
@@ -32,14 +33,14 @@ public class WeiXinDeviceApiController {
      * @return true or false
      */
     @ApiLoggingRecord(remark = "校园签到设备查询", channel = Workbook.channel.API, needLogin = true)
-    @PostMapping("/api/data/wei-xin/device/query-with-app-id")
+    @PostMapping("/api/data/wei-xin-device/query-with-app-id")
     public AjaxUtil<Map<String, Object>> query(@RequestParam("appId") String appId, Principal principal, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         Users users = SessionUtil.getUserFromOauth(principal);
         if (Objects.nonNull(users)) {
-            WeiXinDevice weiXinDevice = weiXinDeviceService.findByUsernameAndAppId(users.getUsername(), appId);
-            if (Objects.nonNull(weiXinDevice) && StringUtils.isNotBlank(weiXinDevice.getDeviceId())) {
-                ajaxUtil.success().msg("查询信息成功").put("device", weiXinDevice);
+            Optional<WeiXinDevice> optionalWeiXinDevice = weiXinDeviceService.findByUsernameAndAppId(users.getUsername(), appId);
+            if (optionalWeiXinDevice.isPresent()) {
+                ajaxUtil.success().msg("查询信息成功").put("device", optionalWeiXinDevice.get());
             } else {
                 ajaxUtil.fail().msg("未查询到设备信息");
             }

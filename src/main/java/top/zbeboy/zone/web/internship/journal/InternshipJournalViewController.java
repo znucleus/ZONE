@@ -84,15 +84,11 @@ public class InternshipJournalViewController {
             modelMap.addAttribute("usersTypeName", usersType.getUsersTypeName());
 
             if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
-                if (Objects.nonNull(bean.getStaffId()) && bean.getStaffId() > 0) {
-                    modelMap.addAttribute("staffId", bean.getStaffId());
-                }
+                Optional<StaffBean> optionalStaffBean = staffService.findByUsernameRelation(users.getUsername());
+                optionalStaffBean.ifPresent(staffBean -> modelMap.addAttribute("staffId", staffBean.getStaffId()));
             } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
-                if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
-                    modelMap.addAttribute("studentId", studentBean.getStudentId());
-                }
+                Optional<StudentBean> optionalStudentBean = studentService.findByUsernameRelation(users.getUsername());
+                optionalStudentBean.ifPresent(studentBean -> modelMap.addAttribute("studentId", studentBean.getStudentId()));
             }
         }
         if (internshipConditionCommon.journalCondition(id)) {
@@ -214,10 +210,8 @@ public class InternshipJournalViewController {
     public String statistical(@PathVariable("id") String id, @PathVariable("staffId") int staffId, ModelMap modelMap) {
         modelMap.addAttribute("internshipReleaseId", id);
         modelMap.addAttribute("staffId", staffId);
-        StaffBean bean = staffService.findByIdRelation(staffId);
-        if (Objects.nonNull(bean.getStaffId()) && bean.getStaffId() > 0) {
-            modelMap.addAttribute("realName", bean.getRealName());
-        }
+        Optional<StaffBean> optionalStaffBean = staffService.findByIdRelation(staffId);
+        optionalStaffBean.ifPresent(staffBean -> modelMap.addAttribute("realName", staffBean.getRealName()));
         return "web/internship/journal/internship_journal_statistical::#page-wrapper";
     }
 
@@ -232,8 +226,9 @@ public class InternshipJournalViewController {
         String page;
         if (internshipConditionCommon.journalLookMyCondition(id)) {
             Users users = SessionUtil.getUserFromSession();
-            StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
-            if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
+            Optional<StudentBean> optionalStudentBean = studentService.findByUsernameRelation(users.getUsername());
+            if (optionalStudentBean.isPresent()) {
+                StudentBean studentBean = optionalStudentBean.get();
                 modelMap.addAttribute("internshipReleaseId", id);
                 modelMap.addAttribute("studentId", studentBean.getStudentId());
                 page = "web/internship/journal/internship_journal_my::#page-wrapper";

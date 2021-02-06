@@ -105,10 +105,10 @@ public class TrainingReleaseRestController {
             trainingReleaseService.save(trainingRelease);
 
             // 生成名单
-            List<StudentBean> studentBeans = studentService.findNormalByOrganizeId(trainingReleaseAddVo.getOrganizeId());
-            if (Objects.nonNull(studentBeans) && studentBeans.size() > 0) {
+            Optional<List<StudentBean>> optionalStudentBeans = studentService.findNormalByOrganizeId(trainingReleaseAddVo.getOrganizeId());
+            if (optionalStudentBeans.isPresent()) {
                 List<TrainingUsers> trainingUsers = new ArrayList<>();
-                for (StudentBean student : studentBeans) {
+                for (StudentBean student : optionalStudentBeans.get()) {
                     TrainingUsers au = new TrainingUsers();
                     au.setTrainingUsersId(UUIDUtil.getUUID());
                     au.setTrainingReleaseId(trainingReleaseId);

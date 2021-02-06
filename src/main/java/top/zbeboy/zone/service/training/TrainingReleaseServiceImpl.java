@@ -190,15 +190,15 @@ public class TrainingReleaseServiceImpl implements TrainingReleaseService, Pagin
                 if (optionalUsersType.isPresent()) {
                     UsersType usersType = optionalUsersType.get();
                     if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                        StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
-                        if (Objects.nonNull(bean.getStaffId()) && bean.getStaffId() > 0) {
-                            int departmentId = bean.getDepartmentId();
+                        Optional<StaffBean> optionalStaffBean = staffService.findByUsernameRelation(users.getUsername());
+                        if (optionalStaffBean.isPresent()) {
+                            int departmentId = optionalStaffBean.get().getDepartmentId();
                             a = a.or(DEPARTMENT.DEPARTMENT_ID.eq(departmentId));
                         }
                     } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                        StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
-                        if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
-                            int organizeId = studentBean.getOrganizeId();
+                        Optional<StudentBean> optionalStudentBean = studentService.findByUsernameRelation(users.getUsername());
+                        if (optionalStudentBean.isPresent()) {
+                            int organizeId = optionalStudentBean.get().getOrganizeId();
                             a = a.or(ORGANIZE.ORGANIZE_ID.eq(organizeId));
                         }
                     }
@@ -211,14 +211,14 @@ public class TrainingReleaseServiceImpl implements TrainingReleaseService, Pagin
                         UsersType usersType = optionalUsersType.get();
                         int collegeId = 0;
                         if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                            StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
-                            if (Objects.nonNull(bean.getStaffId()) && bean.getStaffId() > 0) {
-                                collegeId = bean.getCollegeId();
+                            Optional<StaffBean> optionalStaffBean = staffService.findByUsernameRelation(users.getUsername());
+                            if (optionalStaffBean.isPresent()) {
+                                collegeId = optionalStaffBean.get().getCollegeId();
                             }
                         } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                            StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
-                            if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
-                                collegeId = studentBean.getCollegeId();
+                            Optional<StudentBean> optionalStudentBean = studentService.findByUsernameRelation(users.getUsername());
+                            if (optionalStudentBean.isPresent()) {
+                                collegeId = optionalStudentBean.get().getCollegeId();
                             }
                         }
 

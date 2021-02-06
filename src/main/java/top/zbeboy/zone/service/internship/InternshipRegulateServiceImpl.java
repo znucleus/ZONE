@@ -162,9 +162,9 @@ public class InternshipRegulateServiceImpl implements InternshipRegulateService,
                 if (optionalUsersType.isPresent()) {
                     UsersType usersType = optionalUsersType.get();
                     if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                        StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
-                        if (Objects.nonNull(bean.getStaffId()) && bean.getStaffId() > 0) {
-                            staffId = bean.getStaffId();
+                        Optional<StaffBean> optionalStaffBean = staffService.findByUsernameRelation(users.getUsername());
+                        if (optionalStaffBean.isPresent()) {
+                            staffId = optionalStaffBean.get().getStaffId();
                         }
                     }
                 }

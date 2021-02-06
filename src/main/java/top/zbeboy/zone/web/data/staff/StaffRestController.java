@@ -66,7 +66,7 @@ public class StaffRestController {
      * @param staffNumber 工号
      * @return 是否被注册
      */
-    @PostMapping("/anyone/check-staff-number")
+    @GetMapping("/anyone/check-staff-number")
     public ResponseEntity<Map<String, Object>> anyoneCheckStaffNumber(@RequestParam("staffNumber") String staffNumber) {
         AjaxUtil<Map<String, Object>> ajaxUtil = staffService.anyoneCheckStaffNumber(staffNumber);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -78,7 +78,7 @@ public class StaffRestController {
      * @param staffNumber 工号
      * @return 是否被注册
      */
-    @PostMapping("/users/check-staff-number")
+    @GetMapping("/users/check-staff-number")
     public ResponseEntity<Map<String, Object>> userCheckStaffNumber(@RequestParam("staffNumber") String staffNumber) {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Map<String, Object>> ajaxUtil = staffService.userCheckStaffNumber(users.getUsername(), staffNumber);
@@ -216,7 +216,12 @@ public class StaffRestController {
     public ResponseEntity<Map<String, Object>> roleData(@RequestParam("username") String username) {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Role> ajaxUtil = AjaxUtil.of();
-        ajaxUtil.success().list(staffService.roleData(users.getUsername(), username)).msg("获取数据成功");
+        List<Role> roles = new ArrayList<>();
+        Optional<List<Role>> optionalRoles = staffService.roleData(users.getUsername(), username);
+        if(optionalRoles.isPresent()){
+            roles = optionalRoles.get();
+        }
+        ajaxUtil.success().list(roles).msg("获取数据成功");
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 

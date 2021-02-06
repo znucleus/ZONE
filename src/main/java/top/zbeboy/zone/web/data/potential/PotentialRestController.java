@@ -217,7 +217,12 @@ public class PotentialRestController {
     public ResponseEntity<Map<String, Object>> roleData(@RequestParam("username") String username) {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Role> ajaxUtil = AjaxUtil.of();
-        ajaxUtil.success().list(potentialService.roleData(users.getUsername(), username)).msg("获取数据成功");
+        List<Role> list = new ArrayList<>();
+        Optional<List<Role>> optionalRoles = potentialService.roleData(users.getUsername(), username);
+        if(optionalRoles.isPresent()){
+            list = optionalRoles.get();
+        }
+        ajaxUtil.success().list(list).msg("获取数据成功");
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 

@@ -173,9 +173,9 @@ public class InternshipApplyServiceImpl implements InternshipApplyService, Pagin
         if (optionalUsersType.isPresent()) {
             UsersType usersType = optionalUsersType.get();
             if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
-                if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
-                    int studentId = studentBean.getStudentId();
+                Optional<StudentBean> optionalStudentBean = studentService.findByUsernameRelation(users.getUsername());
+                if (optionalStudentBean.isPresent()) {
+                    int studentId = optionalStudentBean.get().getStudentId();
                     a = STUDENT.STUDENT_ID.eq(studentId);
                 }
             }

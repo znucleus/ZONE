@@ -26,10 +26,7 @@ import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 public class OrganizeRestController {
@@ -50,14 +47,8 @@ public class OrganizeRestController {
     @GetMapping("/anyone/data/organize")
     public ResponseEntity<Map<String, Object>> anyoneData(OrganizeSearchVo organizeSearchVo, HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
-        List<Organize> organizes = new ArrayList<>();
-        if (Objects.nonNull(organizeSearchVo.getGradeId()) && organizeSearchVo.getGradeId() > 0) {
-            organizes = organizeService.findByGradeIdAndOrganizeIsDel(organizeSearchVo);
-        } else if (Objects.nonNull(organizeSearchVo.getGrade()) && organizeSearchVo.getGrade() > 0 &&
-                Objects.nonNull(organizeSearchVo.getCollegeId()) && organizeSearchVo.getCollegeId() > 0) {
-            organizes = organizeService.findByGradeAndCollegeIdAndOrganizeIsDel(organizeSearchVo);
-        }
-        organizes.forEach(organize -> select2Data.add(organize.getOrganizeId().toString(), organize.getOrganizeName()));
+        Optional<List<Organize>> organizes = organizeService.search(organizeSearchVo);
+        organizes.ifPresent(organizeList -> organizeList.forEach(organize -> select2Data.add(organize.getOrganizeId().toString(), organize.getOrganizeName())));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
 
@@ -110,8 +101,8 @@ public class OrganizeRestController {
      * @return true or false
      */
     @GetMapping("/web/data/organize/check-staff")
-    public ResponseEntity<Map<String, Object>> checkAddStaff(@RequestParam("staff") String staff) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = organizeService.checkAddStaff(staff);
+    public ResponseEntity<Map<String, Object>> checkStaff(@RequestParam("staff") String staff) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = organizeService.checkStaff(staff);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 

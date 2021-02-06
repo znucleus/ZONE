@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import top.zbeboy.zbase.bean.data.student.StudentBean;
 import top.zbeboy.zbase.config.SessionBook;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.config.ZoneProperties;
@@ -318,13 +319,15 @@ public class UsersRestController {
                     // 学生需要同步花名册
                     Optional<UsersType> optionalUsersType = usersTypeService.findById(own.getUsersTypeId());
                     if (optionalUsersType.isPresent() && StringUtils.equals(Workbook.STUDENT_USERS_TYPE, optionalUsersType.get().getUsersTypeName())) {
-                        Student student = studentService.findByUsername(own.getUsername());
-                        Optional<RosterData> optionalRosterData = campusRosterService.findRosterDataByStudentNumber(student.getStudentNumber());
-                        if (optionalRosterData.isPresent()) {
-                            RosterData rosterData = optionalRosterData.get();
-                            rosterData.setRealName(value);
-                            rosterData.setNamePinyin(PinYinUtil.changeToUpper(value));
-                            campusRosterService.dataSync(rosterData);
+                        Optional<StudentBean> optionalStudentBean = studentService.findByUsername(own.getUsername());
+                        if(optionalStudentBean.isPresent()){
+                            Optional<RosterData> optionalRosterData = campusRosterService.findRosterDataByStudentNumber(optionalStudentBean.get().getStudentNumber());
+                            if (optionalRosterData.isPresent()) {
+                                RosterData rosterData = optionalRosterData.get();
+                                rosterData.setRealName(value);
+                                rosterData.setNamePinyin(PinYinUtil.changeToUpper(value));
+                                campusRosterService.dataSync(rosterData);
+                            }
                         }
                     }
                 } else {
@@ -420,12 +423,14 @@ public class UsersRestController {
                             // 学生需要同步花名册
                             Optional<UsersType> optionalUsersType = usersTypeService.findById(own.getUsersTypeId());
                             if (optionalUsersType.isPresent() && StringUtils.equals(Workbook.STUDENT_USERS_TYPE, optionalUsersType.get().getUsersTypeName())) {
-                                Student student = studentService.findByUsername(own.getUsername());
-                                Optional<RosterData> optionalRosterData = campusRosterService.findRosterDataByStudentNumber(student.getStudentNumber());
-                                if (optionalRosterData.isPresent()) {
-                                    RosterData rosterData = optionalRosterData.get();
-                                    rosterData.setIdCard(value);
-                                    campusRosterService.dataSync(rosterData);
+                                Optional<StudentBean> optionalStudentBean = studentService.findByUsername(own.getUsername());
+                                if(optionalStudentBean.isPresent()){
+                                    Optional<RosterData> optionalRosterData = campusRosterService.findRosterDataByStudentNumber(optionalStudentBean.get().getStudentNumber());
+                                    if (optionalRosterData.isPresent()) {
+                                        RosterData rosterData = optionalRosterData.get();
+                                        rosterData.setIdCard(value);
+                                        campusRosterService.dataSync(rosterData);
+                                    }
                                 }
                             }
                         } else {

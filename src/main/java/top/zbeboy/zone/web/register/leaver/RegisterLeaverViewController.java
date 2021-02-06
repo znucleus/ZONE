@@ -70,14 +70,14 @@ public class RegisterLeaverViewController {
                 UsersType usersType = optionalUsersType.get();
                 int schoolId = 0;
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                    StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
-                    if (Objects.nonNull(bean.getStaffId()) && bean.getStaffId() > 0) {
-                        schoolId = bean.getSchoolId();
+                    Optional<StaffBean> optionalStaffBean = staffService.findByUsernameRelation(users.getUsername());
+                    if (optionalStaffBean.isPresent()) {
+                        schoolId = optionalStaffBean.get().getSchoolId();
                     }
                 } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                    StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
-                    if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
-                        schoolId = studentBean.getSchoolId();
+                    Optional<StudentBean> optionalStudentBean = studentService.findByUsernameRelation(users.getUsername());
+                    if (optionalStudentBean.isPresent()) {
+                        schoolId = optionalStudentBean.get().getSchoolId();
                     }
                 }
 
@@ -119,14 +119,14 @@ public class RegisterLeaverViewController {
                     UsersType usersType = optionalUsersType.get();
                     int schoolId = 0;
                     if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                        StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
-                        if (Objects.nonNull(bean.getStaffId()) && bean.getStaffId() > 0) {
-                            schoolId = bean.getSchoolId();
+                        Optional<StaffBean> optionalStaffBean = staffService.findByUsernameRelation(users.getUsername());
+                        if (optionalStaffBean.isPresent()) {
+                            schoolId = optionalStaffBean.get().getSchoolId();
                         }
                     } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                        StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
-                        if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
-                            schoolId = studentBean.getSchoolId();
+                        Optional<StudentBean> optionalStudentBean = studentService.findByUsernameRelation(users.getUsername());
+                        if (optionalStudentBean.isPresent()) {
+                            schoolId = optionalStudentBean.get().getSchoolId();
                         }
                     }
 

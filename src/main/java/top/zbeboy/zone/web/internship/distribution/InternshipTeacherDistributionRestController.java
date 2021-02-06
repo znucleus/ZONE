@@ -147,13 +147,12 @@ public class InternshipTeacherDistributionRestController {
     @GetMapping("/web/internship/teacher-distribution/organizes/{id}")
     public ResponseEntity<Map<String, Object>> organizes(@PathVariable("id") String id) {
         Select2Data select2Data = Select2Data.of();
-        List<OrganizeBean> beans = new ArrayList<>();
         Optional<Record> record = internshipReleaseService.findByIdRelation(id);
         if (record.isPresent()) {
             Science science = record.get().into(Science.class);
-            beans = organizeService.findNormalByScienceId(science.getScienceId());
+            Optional<List<OrganizeBean>> beans = organizeService.findNormalByScienceId(science.getScienceId());
+            beans.ifPresent(organizeBeans -> organizeBeans.forEach(bean -> select2Data.add(bean.getOrganizeId().toString(), bean.getOrganizeName())));
         }
-        beans.forEach(bean -> select2Data.add(bean.getOrganizeId().toString(), bean.getOrganizeName()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
 
@@ -172,14 +171,14 @@ public class InternshipTeacherDistributionRestController {
         Optional<Record> record = internshipReleaseService.findByIdRelation(internshipReleaseId);
         if (record.isPresent()) {
             Department department = record.get().into(Department.class);
-            StudentBean studentBean = new StudentBean();
+            Optional<StudentBean> optionalStudentBean = Optional.empty();
             if (type == 0) {
-                studentBean = studentService.findNormalByUsernameAndDepartmentId(param, department.getDepartmentId());
+                optionalStudentBean = studentService.findNormalByUsernameAndDepartmentId(param, department.getDepartmentId());
             } else if (type == 1) {
-                studentBean = studentService.findNormalByStudentNumberAndDepartmentId(param, department.getDepartmentId());
+                optionalStudentBean = studentService.findNormalByStudentNumberAndDepartmentId(param, department.getDepartmentId());
             }
-            if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
-                Optional<Record> distribution = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
+            if (optionalStudentBean.isPresent()) {
+                Optional<Record> distribution = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, optionalStudentBean.get().getStudentId());
                 if (distribution.isPresent()) {
                     ajaxUtil.fail().msg("该学生账号已分配指导教师");
                 } else {
@@ -212,13 +211,14 @@ public class InternshipTeacherDistributionRestController {
         if (record.isPresent()) {
             if (internshipConditionCommon.teacherDistributionCondition(internshipReleaseId)) {
                 Department department = record.get().into(Department.class);
-                StudentBean studentBean = new StudentBean();
+                Optional<StudentBean> optionalStudentBean = Optional.empty();
                 if (type == 0) {
-                    studentBean = studentService.findNormalByUsernameAndDepartmentId(param, department.getDepartmentId());
+                    optionalStudentBean = studentService.findNormalByUsernameAndDepartmentId(param, department.getDepartmentId());
                 } else if (type == 1) {
-                    studentBean = studentService.findNormalByStudentNumberAndDepartmentId(param, department.getDepartmentId());
+                    optionalStudentBean = studentService.findNormalByStudentNumberAndDepartmentId(param, department.getDepartmentId());
                 }
-                if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
+                if (optionalStudentBean.isPresent()) {
+                    StudentBean studentBean = optionalStudentBean.get();
                     Users users = SessionUtil.getUserFromSession();
                     InternshipTeacherDistribution internshipTeacherDistribution = new InternshipTeacherDistribution(staffId, studentBean.getStudentId(), internshipReleaseId, users.getUsername(), studentBean.getRealName(), users.getUsername());
                     internshipTeacherDistributionService.save(internshipTeacherDistribution);
@@ -255,11 +255,11 @@ public class InternshipTeacherDistributionRestController {
             internshipTeacherDistributionService.deleteByInternshipReleaseId(internshipReleaseId);
 
             List<InternshipTeacherDistribution> internshipTeacherDistributions = new ArrayList<>();
-            List<StudentBean> students = studentService.findNormalInOrganizeIds(organizeIds);
-            if (Objects.nonNull(students) && staffIds.size() > 0) {
+            Optional<List<StudentBean>> optionalStudentBeans = studentService.findNormalInOrganizeIds(organizeIds);
+            if (optionalStudentBeans.isPresent() && staffIds.size() > 0) {
                 int i = 0;
                 Users users = SessionUtil.getUserFromSession();
-                for (StudentBean student : students) {
+                for (StudentBean student : optionalStudentBeans.get()) {
                     if (i >= staffIds.size()) {
                         i = 0;
                     }

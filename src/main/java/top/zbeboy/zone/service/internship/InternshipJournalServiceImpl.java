@@ -227,9 +227,9 @@ public class InternshipJournalServiceImpl implements InternshipJournalService, P
                 if (optionalUsersType.isPresent()) {
                     UsersType usersType = optionalUsersType.get();
                     if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                        StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
-                        if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
-                            studentId = studentBean.getStudentId();
+                        Optional<StudentBean> optionalStudentBean = studentService.findByUsernameRelation(users.getUsername());
+                        if (optionalStudentBean.isPresent()) {
+                            studentId = optionalStudentBean.get().getStudentId();
                         }
                     }
                 }

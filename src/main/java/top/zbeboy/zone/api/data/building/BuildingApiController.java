@@ -14,8 +14,10 @@ import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class BuildingApiController {
@@ -34,7 +36,11 @@ public class BuildingApiController {
     public ResponseEntity<Map<String, Object>> data(BuildingSearchVo buildingSearchVo,
                                                     Principal principal, HttpServletRequest request) {
         AjaxUtil<BuildingBean> ajaxUtil = AjaxUtil.of();
-        List<BuildingBean> buildings = buildingService.search(buildingSearchVo);
+        List<BuildingBean> buildings = new ArrayList<>();
+        Optional<List<BuildingBean>> optionalBuildingBeans = buildingService.search(buildingSearchVo);
+        if(optionalBuildingBeans.isPresent()){
+            buildings = optionalBuildingBeans.get();
+        }
         ajaxUtil.success().msg("获取数据成功").list(buildings);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }

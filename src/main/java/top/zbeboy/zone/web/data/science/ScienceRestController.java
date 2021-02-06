@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class ScienceRestController {
@@ -41,8 +42,8 @@ public class ScienceRestController {
     @GetMapping("/anyone/data/science")
     public ResponseEntity<Map<String, Object>> anyoneData(ScienceSearchVo scienceSearchVo, HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
-        List<Science> sciences = scienceService.findByDepartmentIdAndScienceIsDel(scienceSearchVo);
-        sciences.forEach(science -> select2Data.add(science.getScienceId().toString(), science.getScienceName()));
+        Optional<List<Science>> sciences = scienceService.findByDepartmentIdAndScienceIsDel(scienceSearchVo);
+        sciences.ifPresent(scienceList -> scienceList.forEach(science -> select2Data.add(science.getScienceId().toString(), science.getScienceName())));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
 

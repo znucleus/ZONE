@@ -81,8 +81,9 @@ public class InternshipApplyViewController {
         String page;
         if (internshipConditionCommon.applyCondition(id)) {
             Users users = SessionUtil.getUserFromSession();
-            StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
-            if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
+            Optional<StudentBean> optionalStudentBean = studentService.findByUsernameRelation(users.getUsername());
+            if (optionalStudentBean.isPresent()) {
+                StudentBean studentBean = optionalStudentBean.get();
                 String qqMail = "";
                 if (studentBean.getEmail().toLowerCase().contains("@qq.com")) {
                     qqMail = studentBean.getEmail();
@@ -90,10 +91,11 @@ public class InternshipApplyViewController {
                 modelMap.addAttribute("qqMail", qqMail);
                 modelMap.addAttribute("student", studentBean);
 
-                Organize organize = organizeService.findById(studentBean.getOrganizeId());
-                if (Objects.nonNull(organize.getStaffId())) {
-                    StaffBean bean = staffService.findByIdRelation(organize.getStaffId());
-                    if (Objects.nonNull(bean.getStaffId()) && bean.getStaffId() > 0) {
+                Optional<Organize> optionalOrganize = organizeService.findById(studentBean.getOrganizeId());
+                if (optionalOrganize.isPresent() && Objects.nonNull(optionalOrganize.get().getStaffId())) {
+                    Optional<StaffBean> optionalStaffBean = staffService.findByIdRelation(optionalOrganize.get().getStaffId());
+                    if (optionalStaffBean.isPresent()) {
+                        StaffBean bean = optionalStaffBean.get();
                         modelMap.addAttribute("headmaster", bean.getRealName());
                         modelMap.addAttribute("headmasterTel", bean.getMobile());
                     }
@@ -103,8 +105,9 @@ public class InternshipApplyViewController {
                 Optional<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(id, studentBean.getStudentId());
                 if (internshipTeacherDistributionRecord.isPresent()) {
                     InternshipTeacherDistribution internshipTeacherDistribution = internshipTeacherDistributionRecord.get().into(InternshipTeacherDistribution.class);
-                    StaffBean bean = staffService.findByIdRelation(internshipTeacherDistribution.getStaffId());
-                    if (Objects.nonNull(bean.getStaffId()) && bean.getStaffId() > 0) {
+                    Optional<StaffBean> optionalStaffBean = staffService.findByIdRelation(internshipTeacherDistribution.getStaffId());
+                    if (optionalStaffBean.isPresent()) {
+                        StaffBean bean = optionalStaffBean.get();
                         modelMap.put("internshipTeacherName", bean.getRealName());
                         modelMap.put("internshipTeacherMobile", bean.getMobile());
                         modelMap.put("internshipTeacher", bean.getRealName() + " " + bean.getMobile());
@@ -162,8 +165,9 @@ public class InternshipApplyViewController {
         String page;
         if (internshipConditionCommon.applyEditCondition(id)) {
             Users users = SessionUtil.getUserFromSession();
-            StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
-            if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
+            Optional<StudentBean> optionalStudentBean = studentService.findByUsernameRelation(users.getUsername());
+            if (optionalStudentBean.isPresent()) {
+                StudentBean studentBean = optionalStudentBean.get();
                 Optional<Record> internshipInfoRecord = internshipInfoService.findByInternshipReleaseIdAndStudentId(id, studentBean.getStudentId());
                 if (internshipInfoRecord.isPresent()) {
                     InternshipInfo internshipInfo = internshipInfoRecord.get().into(InternshipInfo.class);
@@ -208,8 +212,9 @@ public class InternshipApplyViewController {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
         Users users = SessionUtil.getUserFromSession();
-        StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
-        if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
+        Optional<StudentBean> optionalStudentBean = studentService.findByUsernameRelation(users.getUsername());
+        if (optionalStudentBean.isPresent()) {
+            StudentBean studentBean = optionalStudentBean.get();
             Optional<Record> internshipInfoRecord = internshipInfoService.findByInternshipReleaseIdAndStudentId(id, studentBean.getStudentId());
             if (internshipInfoRecord.isPresent()) {
                 InternshipInfo internshipInfo = internshipInfoRecord.get().into(InternshipInfo.class);

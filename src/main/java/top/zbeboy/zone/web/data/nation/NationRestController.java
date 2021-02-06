@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class NationRestController {
@@ -36,8 +37,8 @@ public class NationRestController {
     @GetMapping("/anyone/data/nation")
     public ResponseEntity<Map<String, Object>> anyoneData() {
         Select2Data select2Data = Select2Data.of();
-        List<Nation> nations = nationService.findAll();
-        nations.forEach(nation -> select2Data.add(nation.getNationId().toString(), nation.getNationName()));
+        Optional<List<Nation>> nations = nationService.findAll();
+        nations.ifPresent(nationList -> nationList.forEach(nation -> select2Data.add(nation.getNationId().toString(), nation.getNationName())));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
 

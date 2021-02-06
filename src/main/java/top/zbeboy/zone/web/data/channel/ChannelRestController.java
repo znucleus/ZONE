@@ -12,6 +12,7 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 public class ChannelRestController {
@@ -27,10 +28,8 @@ public class ChannelRestController {
     @GetMapping("/users/data/channel")
     public ResponseEntity<Map<String, Object>> usersData() {
         Select2Data select2Data = Select2Data.of();
-        List<Channel> channels = channelService.findAll();
-        if (Objects.nonNull(channels) && !channels.isEmpty()) {
-            channels.forEach(channel -> select2Data.add(channel.getChannelId().toString(), channel.getChannelName()));
-        }
+        Optional<List<Channel>> optionalChannels = channelService.findAll();
+        optionalChannels.ifPresent(channels -> channels.forEach(channel -> select2Data.add(channel.getChannelId().toString(), channel.getChannelName())));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
 }

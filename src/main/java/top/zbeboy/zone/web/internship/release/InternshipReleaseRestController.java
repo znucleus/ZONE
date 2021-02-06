@@ -41,10 +41,7 @@ import top.zbeboy.zone.web.util.SessionUtil;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 public class InternshipReleaseRestController {
@@ -169,8 +166,9 @@ public class InternshipReleaseRestController {
             String title = "";
             Users users = SessionUtil.getUserFromSession();
 
-            ScienceBean scienceBean = scienceService.findByIdRelation(internshipReleaseAddVo.getScienceId());
-            if (Objects.nonNull(scienceBean.getScienceId()) && scienceBean.getScienceId() > 0) {
+            Optional<ScienceBean> optionalScienceBean = scienceService.findByIdRelation(internshipReleaseAddVo.getScienceId());
+            if (optionalScienceBean.isPresent()) {
+                ScienceBean scienceBean = optionalScienceBean.get();
                 title = scienceBean.getSchoolName()
                         + "-" + scienceBean.getCollegeName()
                         + "-" + scienceBean.getDepartmentName()

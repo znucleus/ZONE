@@ -133,11 +133,13 @@ public class SecurityLoginFilter implements Filter {
             switch (usersType.getUsersTypeName()) {
                 case Workbook.STUDENT_USERS_TYPE:
                     StudentService studentService = SpringBootUtil.getBean(StudentService.class);
-                    StudentBean studentBean = studentService.findByUsername(users.getUsername());
-                    if (Objects.nonNull(studentBean) && Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
+                    Optional<StudentBean> optionalStudentBean = studentService.findByUsername(users.getUsername());
+                    if (optionalStudentBean.isPresent()) {
+                        StudentBean studentBean = optionalStudentBean.get();
                         OrganizeService organizeService = SpringBootUtil.getBean(OrganizeService.class);
-                        OrganizeBean organizeBean = organizeService.findByIdRelation(studentBean.getOrganizeId());
-                        if (Objects.nonNull(organizeBean) && Objects.nonNull(organizeBean.getOrganizeId()) && organizeBean.getOrganizeId() > 0) {
+                        Optional<OrganizeBean> optionalOrganizeBean = organizeService.findByIdRelation(studentBean.getOrganizeId());
+                        if (optionalOrganizeBean.isPresent()) {
+                            OrganizeBean organizeBean = optionalOrganizeBean.get();
                             schoolIsNotDel = !BooleanUtil.toBoolean(organizeBean.getSchoolIsDel()) && !BooleanUtil.toBoolean(organizeBean.getCollegeIsDel()) &&
                                     !BooleanUtil.toBoolean(organizeBean.getDepartmentIsDel()) && !BooleanUtil.toBoolean(organizeBean.getScienceIsDel()) &&
                                     !BooleanUtil.toBoolean(organizeBean.getGradeIsDel()) && !BooleanUtil.toBoolean(organizeBean.getOrganizeIsDel());
@@ -147,11 +149,13 @@ public class SecurityLoginFilter implements Filter {
                 case Workbook.STAFF_USERS_TYPE:
 
                     StaffService staffService = SpringBootUtil.getBean(StaffService.class);
-                    StaffBean staffBean = staffService.findByUsername(users.getUsername());
-                    if (Objects.nonNull(staffBean) && Objects.nonNull(staffBean.getStaffId()) && staffBean.getStaffId() > 0) {
+                    Optional<StaffBean> optionalStaffBean = staffService.findByUsername(users.getUsername());
+                    if (optionalStaffBean.isPresent()) {
+                        StaffBean staffBean = optionalStaffBean.get();
                         DepartmentService departmentService = SpringBootUtil.getBean(DepartmentService.class);
-                        DepartmentBean departmentBean = departmentService.findByIdRelation(staffBean.getDepartmentId());
-                        if (Objects.nonNull(departmentBean) && Objects.nonNull(departmentBean.getDepartmentId()) && departmentBean.getDepartmentId() > 0) {
+                        Optional<DepartmentBean> optionalDepartmentBean = departmentService.findByIdRelation(staffBean.getDepartmentId());
+                        if (optionalDepartmentBean.isPresent()) {
+                            DepartmentBean departmentBean = optionalDepartmentBean.get();
                             schoolIsNotDel = !BooleanUtil.toBoolean(departmentBean.getSchoolIsDel()) && !BooleanUtil.toBoolean(departmentBean.getCollegeIsDel()) &&
                                     !BooleanUtil.toBoolean(departmentBean.getDepartmentIsDel());
                         }

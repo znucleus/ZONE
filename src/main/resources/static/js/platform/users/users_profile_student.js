@@ -335,7 +335,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
             var studentNumber = param.studentNumber;
             if (studentNumber !== '') {
                 if (tools.regex.studentNumber.test(studentNumber)) {
-                    $.post(ajax_url.check_student_number, {studentNumber: studentNumber}, function (data) {
+                    $.get(ajax_url.check_student_number, {studentNumber: studentNumber}, function (data) {
                         if (data.state) {
                             tools.validSuccessDom(param_id.studentNumber);
                             validDormitoryNumber();

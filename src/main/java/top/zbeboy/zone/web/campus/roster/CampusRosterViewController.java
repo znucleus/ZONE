@@ -71,14 +71,14 @@ public class CampusRosterViewController {
                 UsersType usersType = optionalUsersType.get();
                 int collegeId = 0;
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                    StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
-                    if (Objects.nonNull(bean.getStaffId()) && bean.getStaffId() > 0) {
-                        collegeId = bean.getCollegeId();
+                    Optional<StaffBean> optionalStaffBean = staffService.findByUsernameRelation(users.getUsername());
+                    if (optionalStaffBean.isPresent()) {
+                        collegeId = optionalStaffBean.get().getCollegeId();
                     }
                 } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                    StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
-                    if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
-                        collegeId = studentBean.getCollegeId();
+                    Optional<StudentBean> optionalStudentBean = studentService.findByUsernameRelation(users.getUsername());
+                    if (optionalStudentBean.isPresent()) {
+                        collegeId = optionalStudentBean.get().getCollegeId();
                     }
                 }
 
@@ -143,8 +143,9 @@ public class CampusRosterViewController {
         if (campusRosterService.canRegister(users.getUsername(), id) &&
                 !campusRosterService.canDataEdit(users.getUsername(), id)) {
             // 添加
-            StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
-            if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
+            Optional<StudentBean> optionalStudentBean = studentService.findByUsernameRelation(users.getUsername());
+            if (optionalStudentBean.isPresent()) {
+                StudentBean studentBean = optionalStudentBean.get();
                 studentBean.setNamePinyin(PinYinUtil.changeToUpper(studentBean.getRealName()));
                 modelMap.addAttribute("student", studentBean);
                 modelMap.addAttribute("rosterReleaseId", id);
@@ -213,9 +214,9 @@ public class CampusRosterViewController {
         String page;
         Users users = SessionUtil.getUserFromSession();
         if (campusRosterService.canDataEdit(users.getUsername(), id)) {
-            StudentBean studentBean = studentService.findByUsername(users.getUsername());
-            if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
-                Optional<RosterDataBean> optionalRosterDataBean = campusRosterService.findRosterDataByStudentNumberAndRosterReleaseIdRelation(studentBean.getStudentNumber(), id);
+            Optional<StudentBean> optionalStudentBean = studentService.findByUsername(users.getUsername());
+            if (optionalStudentBean.isPresent()) {
+                Optional<RosterDataBean> optionalRosterDataBean = campusRosterService.findRosterDataByStudentNumberAndRosterReleaseIdRelation(optionalStudentBean.get().getStudentNumber(), id);
                 if (optionalRosterDataBean.isPresent()) {
                     RosterDataBean rosterDataBean = optionalRosterDataBean.get();
                     rosterDataBean.setBusSection(rosterDataBean.getBusSection().substring(rosterDataBean.getBusSection().indexOf("-") + 1));
@@ -251,9 +252,9 @@ public class CampusRosterViewController {
         String page;
         Users users = SessionUtil.getUserFromSession();
         if (campusRosterService.canDataLook(users.getUsername(), id)) {
-            StudentBean studentBean = studentService.findByUsername(users.getUsername());
-            if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
-                Optional<RosterDataBean> optionalRosterDataBean = campusRosterService.findRosterDataByStudentNumberAndRosterReleaseIdRelation(studentBean.getStudentNumber(), id);
+            Optional<StudentBean> optionalStudentBean = studentService.findByUsername(users.getUsername());
+            if (optionalStudentBean.isPresent()) {
+                Optional<RosterDataBean> optionalRosterDataBean = campusRosterService.findRosterDataByStudentNumberAndRosterReleaseIdRelation(optionalStudentBean.get().getStudentNumber(), id);
                 if (optionalRosterDataBean.isPresent()) {
                     RosterDataBean rosterDataBean = optionalRosterDataBean.get();
                     rosterDataBean.setBusSection(rosterDataBean.getBusSection().substring(rosterDataBean.getBusSection().indexOf("-") + 1));

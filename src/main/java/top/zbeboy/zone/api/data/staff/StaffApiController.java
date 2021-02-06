@@ -74,8 +74,9 @@ public class StaffApiController {
         AjaxUtil<Object> ajaxUtil = AjaxUtil.of();
         Users users = SessionUtil.getUserFromOauth(principal);
         if (Objects.nonNull(users)) {
-            StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
-            if (Objects.nonNull(bean.getStaffId()) && bean.getStaffId() > 0) {
+            Optional<StaffBean> optionalStaffBean = staffService.findByUsernameRelation(users.getUsername());
+            if (optionalStaffBean.isPresent()) {
+                StaffBean bean = optionalStaffBean.get();
                 Map<String, Object> outPut = new HashMap<>();
                 outPut.put("staffId", bean.getStaffId());
                 outPut.put("staffNumber", bean.getStaffNumber());

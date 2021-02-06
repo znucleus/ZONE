@@ -152,15 +152,11 @@ public class AuthorizeRestController {
             if(Objects.nonNull(applyUser)){
                 // 查询该申请人所在院所有院管理员
                 List<Users> admins = new ArrayList<>();
-                List<Users> staffAdmin = staffService.findByAuthorityAndCollegeId(Workbook.authorities.ROLE_ADMIN.name(), authorizeAddVo.getCollegeId());
-                if (Objects.nonNull(staffAdmin) && staffAdmin.size() > 0) {
-                    admins.addAll(staffAdmin);
-                }
+                Optional<List<Users>> staffAdmin = staffService.findByAuthorityAndCollegeId(Workbook.authorities.ROLE_ADMIN.name(), authorizeAddVo.getCollegeId());
+                staffAdmin.ifPresent(admins::addAll);
 
-                List<Users> studentAdmin = studentService.findByAuthorityAndCollegeId(Workbook.authorities.ROLE_ADMIN.name(), authorizeAddVo.getCollegeId());
-                if (Objects.nonNull(studentAdmin) && studentAdmin.size() > 0) {
-                    admins.addAll(studentAdmin);
-                }
+                Optional<List<Users>> studentAdmin = studentService.findByAuthorityAndCollegeId(Workbook.authorities.ROLE_ADMIN.name(), authorizeAddVo.getCollegeId());
+                studentAdmin.ifPresent(admins::addAll);
 
                 String notify = "用户【" + applyUser.getRealName() +
                         "-" + applyUser.getUsername() + "】于" +

@@ -89,14 +89,14 @@ public class AuthorizeViewController {
                 UsersType usersType = optionalUsersType.get();
                 int collegeId = 0;
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                    StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
-                    if (Objects.nonNull(bean.getStaffId()) && bean.getStaffId() > 0) {
-                        collegeId = bean.getCollegeId();
+                    Optional<StaffBean> optionalStaffBean = staffService.findByUsernameRelation(users.getUsername());
+                    if (optionalStaffBean.isPresent()) {
+                        collegeId = optionalStaffBean.get().getCollegeId();
                     }
                 } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                    StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
-                    if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
-                        collegeId = studentBean.getCollegeId();
+                    Optional<StudentBean> optionalStudentBean = studentService.findByUsernameRelation(users.getUsername());
+                    if (optionalStudentBean.isPresent()) {
+                        collegeId = optionalStudentBean.get().getCollegeId();
                     }
                 }
 
@@ -161,14 +161,14 @@ public class AuthorizeViewController {
                     if (optionalUsersType.isPresent()) {
                         UsersType usersType = optionalUsersType.get();
                         if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                            StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
-                            if (Objects.nonNull(bean.getStaffId()) && bean.getStaffId() > 0) {
-                                collegeId = bean.getCollegeId();
+                            Optional<StaffBean> optionalStaffBean = staffService.findByUsernameRelation(users.getUsername());
+                            if (optionalStaffBean.isPresent()) {
+                                collegeId = optionalStaffBean.get().getCollegeId();
                             }
                         } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                            StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
-                            if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
-                                collegeId = studentBean.getCollegeId();
+                            Optional<StudentBean> optionalStudentBean = studentService.findByUsernameRelation(users.getUsername());
+                            if (optionalStudentBean.isPresent()) {
+                                collegeId = optionalStudentBean.get().getCollegeId();
                             }
                         }
                     }
@@ -177,24 +177,24 @@ public class AuthorizeViewController {
                         modelMap.addAttribute("collegeId", collegeId);
                         roleApplyBean.setDurationInt(getDuration(roleApplyBean.getDuration()));
                         if (roleApplyBean.getDataScope() == 1) {
-                            Department department = departmentService.findById(roleApplyBean.getDataId());
-                            if (Objects.nonNull(department.getDepartmentId())) {
-                                roleApplyBean.setDataName(department.getDepartmentName());
+                            Optional<Department> optionalDepartment = departmentService.findById(roleApplyBean.getDataId());
+                            if (optionalDepartment.isPresent()) {
+                                roleApplyBean.setDataName(optionalDepartment.get().getDepartmentName());
                             }
                         } else if (roleApplyBean.getDataScope() == 2) {
-                            Science science = scienceService.findById(roleApplyBean.getDataId());
-                            if (Objects.nonNull(science.getScienceId())) {
-                                roleApplyBean.setDataName(science.getScienceName());
+                            Optional<Science> optionalScience = scienceService.findById(roleApplyBean.getDataId());
+                            if (optionalScience.isPresent()) {
+                                roleApplyBean.setDataName(optionalScience.get().getScienceName());
                             }
                         } else if (roleApplyBean.getDataScope() == 3) {
-                            Grade grade = gradeService.findById(roleApplyBean.getDataId());
-                            if (Objects.nonNull(grade.getGradeId())) {
-                                roleApplyBean.setDataName(grade.getGrade() + "");
+                            Optional<Grade> optionalGrade = gradeService.findById(roleApplyBean.getDataId());
+                            if (optionalGrade.isPresent()) {
+                                roleApplyBean.setDataName(optionalGrade.get().getGrade() + "");
                             }
                         } else if (roleApplyBean.getDataScope() == 4) {
-                            Organize organize = organizeService.findById(roleApplyBean.getDataId());
-                            if (Objects.nonNull(organize.getOrganizeId())) {
-                                roleApplyBean.setDataName(organize.getOrganizeName());
+                            Optional<Organize> optionalOrganize = organizeService.findById(roleApplyBean.getDataId());
+                            if (optionalOrganize.isPresent()) {
+                                roleApplyBean.setDataName(optionalOrganize.get().getOrganizeName());
                             }
                         }
                         modelMap.addAttribute("roleApply", roleApplyBean);

@@ -6,6 +6,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import top.zbeboy.zbase.config.Workbook;
+import top.zbeboy.zbase.domain.tables.pojos.Channel;
 import top.zbeboy.zbase.domain.tables.pojos.SystemApiLog;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.data.ChannelService;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.security.Principal;
 import java.util.Objects;
+import java.util.Optional;
 
 @Aspect
 public class ApiLoggingAspect {
@@ -84,13 +86,17 @@ public class ApiLoggingAspect {
                             }
                         }
                     }
-                    SystemApiLog systemLog =
-                            new SystemApiLog(UUIDUtil.getUUID(),
-                                    uri,
-                                    method.getAnnotation(ApiLoggingRecord.class).remark(),
-                                    channelService.findByChannelName(channel.name()).getChannelId(),
-                                    DateTimeUtil.getNowSqlTimestamp(), username, ip);
-                    systemLogService.save(systemLog);
+
+                    Optional<Channel> optionalChannel = channelService.findByChannelName(channel.name());
+                    if(optionalChannel.isPresent()){
+                        SystemApiLog systemLog =
+                                new SystemApiLog(UUIDUtil.getUUID(),
+                                        uri,
+                                        method.getAnnotation(ApiLoggingRecord.class).remark(),
+                                        optionalChannel.get().getChannelId(),
+                                        DateTimeUtil.getNowSqlTimestamp(), username, ip);
+                        systemLogService.save(systemLog);
+                    }
                     break;
                 }
             }

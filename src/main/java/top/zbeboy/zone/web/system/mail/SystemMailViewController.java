@@ -100,18 +100,17 @@ public class SystemMailViewController {
                         UsersType usersType = optionalUsersType.get();
                         int collegeId = 0;
                         if (StringUtils.equals(usersType.getUsersTypeName(), Workbook.STAFF_USERS_TYPE)) {
-                            StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
-                            if (Objects.nonNull(bean.getCollegeId())) {
-                                collegeId = bean.getCollegeId();
+                            Optional<StaffBean> optionalStaffBean = staffService.findByUsernameRelation(users.getUsername());
+                            if (optionalStaffBean.isPresent()) {
+                                collegeId = optionalStaffBean.get().getCollegeId();
                             }
                         } else if (StringUtils.equals(usersType.getUsersTypeName(), Workbook.STUDENT_USERS_TYPE)) {
-                            StudentBean bean = studentService.findByUsernameRelation(users.getUsername());
-                            if (Objects.nonNull(bean.getCollegeId())) {
+                            Optional<StudentBean> optionalStudentBean = studentService.findByUsernameRelation(users.getUsername());
+                            if (optionalStudentBean.isPresent()) {
+                                StudentBean bean = optionalStudentBean.get();
                                 collegeId = bean.getCollegeId();
-                            }
 
-                            // 进行花名册同步
-                            if (StringUtils.isNotBlank(bean.getStudentNumber())) {
+                                // 进行花名册同步
                                 Optional<RosterData> optionalRosterData = campusRosterService.findRosterDataByStudentNumber(bean.getStudentNumber());
                                 if (optionalRosterData.isPresent()) {
                                     RosterData rosterData = optionalRosterData.get();
@@ -120,10 +119,12 @@ public class SystemMailViewController {
                                     campusRosterService.dataSync(rosterData);
                                 }
                             }
+
+
                         } else if (StringUtils.equals(usersType.getUsersTypeName(), Workbook.POTENTIAL_USERS_TYPE)) {
-                            PotentialBean bean = potentialService.findByUsernameRelation(users.getUsername());
-                            if (Objects.nonNull(bean.getCollegeId())) {
-                                collegeId = bean.getCollegeId();
+                            Optional<PotentialBean> optionalPotentialBean = potentialService.findByUsernameRelation(users.getUsername());
+                            if (optionalPotentialBean.isPresent()) {
+                                collegeId = optionalPotentialBean.get().getCollegeId();
                             }
                         }
                         if (collegeId > 0) {

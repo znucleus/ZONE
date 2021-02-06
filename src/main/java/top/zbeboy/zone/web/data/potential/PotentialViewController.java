@@ -52,14 +52,20 @@ public class PotentialViewController {
             if (optionalUsersType.isPresent()) {
                 UsersType usersType = optionalUsersType.get();
                 if (StringUtils.equals(usersType.getUsersTypeName(), Workbook.POTENTIAL_USERS_TYPE)) {
-                    PotentialBean bean = potentialService.findByUsernameRelation(users.getUsername());
-                    modelMap.addAttribute("potential", bean);
-                    if (StringUtils.equals(type, Workbook.UPGRADE_STUDENT)) {
-                        page = "web/data/potential/upgrade_student::#page-wrapper";
-                    } else if (StringUtils.equals(type, Workbook.UPGRADE_STAFF)) {
-                        page = "web/data/potential/upgrade_staff::#page-wrapper";
+                    Optional<PotentialBean> optionalPotentialBean = potentialService.findByUsernameRelation(users.getUsername());
+                    if(optionalPotentialBean.isPresent()){
+                        modelMap.addAttribute("potential", optionalPotentialBean.get());
+                        if (StringUtils.equals(type, Workbook.UPGRADE_STUDENT)) {
+                            page = "web/data/potential/upgrade_student::#page-wrapper";
+                        } else if (StringUtils.equals(type, Workbook.UPGRADE_STAFF)) {
+                            page = "web/data/potential/upgrade_staff::#page-wrapper";
+                        } else {
+                            config.buildDangerTip("升级错误", "暂不支持升级其它类型");
+                            config.dataMerging(modelMap);
+                            page = "inline_tip::#page-wrapper";
+                        }
                     } else {
-                        config.buildDangerTip("升级错误", "暂不支持升级其它类型");
+                        config.buildDangerTip("查询错误", "未查询到临时用户信息");
                         config.dataMerging(modelMap);
                         page = "inline_tip::#page-wrapper";
                     }

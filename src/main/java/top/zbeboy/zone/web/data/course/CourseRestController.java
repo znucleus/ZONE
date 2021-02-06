@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class CourseRestController {
@@ -45,8 +46,8 @@ public class CourseRestController {
     @GetMapping("/users/data/course")
     public ResponseEntity<Map<String, Object>> usersData(CourseSearchVo courseSearchVo) {
         Select2Data select2Data = Select2Data.of();
-        List<Course> courses = courseService.findByCollegeIdAndCourseIsDel(courseSearchVo);
-        courses.forEach(course -> select2Data.add(course.getCourseId().toString(), course.getCourseName()));
+        Optional<List<Course>> optionalCourses = courseService.findByCollegeIdAndCourseIsDel(courseSearchVo);
+        optionalCourses.ifPresent(courses -> courses.forEach(course -> select2Data.add(course.getCourseId().toString(), course.getCourseName())));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
 

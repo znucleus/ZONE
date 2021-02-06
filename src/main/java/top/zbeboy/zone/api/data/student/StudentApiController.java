@@ -81,8 +81,9 @@ public class StudentApiController {
         AjaxUtil<Object> ajaxUtil = AjaxUtil.of();
         Users users = SessionUtil.getUserFromOauth(principal);
         if (Objects.nonNull(users)) {
-            StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
-            if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
+            Optional<StudentBean> optionalStudentBean = studentService.findByUsernameRelation(users.getUsername());
+            if (optionalStudentBean.isPresent()) {
+                StudentBean studentBean = optionalStudentBean.get();
                 Map<String, Object> outPut = new HashMap<>();
                 outPut.put("studentId", studentBean.getStudentId());
                 outPut.put("studentNumber", studentBean.getStudentNumber());
@@ -109,8 +110,8 @@ public class StudentApiController {
     @PostMapping("/api/data/student/check-student-number")
     public ResponseEntity<Map<String, Object>> checkStudentNumber(@RequestParam("studentNumber") String studentNumber) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        Student student = studentService.findByStudentNumber(studentNumber);
-        if (Objects.nonNull(student.getStudentId()) && student.getStudentId() > 0) {
+        Optional<Student> optionalStudent = studentService.findByStudentNumber(studentNumber);
+        if (optionalStudent.isPresent()) {
             ajaxUtil.success().msg("查询正常");
         } else {
             ajaxUtil.fail().msg("根据学号未查询到学生信息");

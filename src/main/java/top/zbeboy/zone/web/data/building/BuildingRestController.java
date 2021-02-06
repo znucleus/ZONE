@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class BuildingRestController {
@@ -40,8 +41,8 @@ public class BuildingRestController {
     @GetMapping("/users/data/building-classifies")
     public ResponseEntity<Map<String, Object>> classifies() {
         Select2Data select2Data = Select2Data.of();
-        List<BuildingClassify> classifies = buildingService.classifies();
-        classifies.forEach(classify -> select2Data.add(classify.getBuildingClassifyId().toString(), classify.getBuildingClassifyName()));
+        Optional<List<BuildingClassify>> optionalBuildingClassifies = buildingService.classifies();
+        optionalBuildingClassifies.ifPresent(buildingClassifies -> buildingClassifies.forEach(classify -> select2Data.add(classify.getBuildingClassifyId().toString(), classify.getBuildingClassifyName())));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
 
@@ -55,8 +56,8 @@ public class BuildingRestController {
     @GetMapping("/users/data/building")
     public ResponseEntity<Map<String, Object>> search(BuildingSearchVo buildingSearchVo, HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
-        List<BuildingBean> buildings = buildingService.search(buildingSearchVo);
-        buildings.forEach(building -> select2Data.add(building.getBuildingId().toString(), building.getBuildingName()));
+        Optional<List<BuildingBean>> optionalBuildingBeans = buildingService.search(buildingSearchVo);
+        optionalBuildingBeans.ifPresent(buildingBeans -> buildingBeans.forEach(building -> select2Data.add(building.getBuildingId().toString(), building.getBuildingName())));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
 

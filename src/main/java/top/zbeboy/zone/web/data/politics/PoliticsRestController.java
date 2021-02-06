@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class PoliticsRestController {
@@ -36,8 +37,8 @@ public class PoliticsRestController {
     @GetMapping("/anyone/data/politics")
     public ResponseEntity<Map<String, Object>> anyoneData() {
         Select2Data select2Data = Select2Data.of();
-        List<PoliticalLandscape> politicalLandscapes = politicalLandscapeFeignService.findAll();
-        politicalLandscapes.forEach(politicalLandscape -> select2Data.add(politicalLandscape.getPoliticalLandscapeId().toString(), politicalLandscape.getPoliticalLandscapeName()));
+        Optional<List<PoliticalLandscape>> politicalLandscapes = politicalLandscapeFeignService.findAll();
+        politicalLandscapes.ifPresent(landscapes -> landscapes.forEach(politicalLandscape -> select2Data.add(politicalLandscape.getPoliticalLandscapeId().toString(), politicalLandscape.getPoliticalLandscapeName())));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
 

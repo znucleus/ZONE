@@ -351,8 +351,9 @@ public class InternshipReviewRestController {
                     InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReviewBean.getInternshipReleaseId());
                     if (Objects.nonNull(internshipRelease)) {
                         Users sendUser = SessionUtil.getUserFromSession();
-                        StudentBean studentBean = studentService.findByIdRelation(internshipReviewBean.getStudentId());
-                        if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
+                        Optional<StudentBean> optionalStudentBean = studentService.findByIdRelation(internshipReviewBean.getStudentId());
+                        if (optionalStudentBean.isPresent()) {
+                            StudentBean studentBean = optionalStudentBean.get();
                             Users acceptUsers = new Users();
                             acceptUsers.setUsername(studentBean.getUsername());
                             acceptUsers.setRealName(studentBean.getRealName());
@@ -427,8 +428,9 @@ public class InternshipReviewRestController {
                 InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
                 if (Objects.nonNull(internshipRelease)) {
                     Users sendUser = SessionUtil.getUserFromSession();
-                    StudentBean studentBean = studentService.findByIdRelation(studentId);
-                    if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
+                    Optional<StudentBean> optionalStudentBean = studentService.findByIdRelation(studentId);
+                    if (optionalStudentBean.isPresent()) {
+                        StudentBean studentBean = optionalStudentBean.get();
                         Users acceptUsers = new Users();
                         acceptUsers.setUsername(studentBean.getUsername());
                         acceptUsers.setRealName(studentBean.getRealName());
@@ -492,8 +494,9 @@ public class InternshipReviewRestController {
             InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
             if (Objects.nonNull(internshipRelease)) {
                 Users sendUser = SessionUtil.getUserFromSession();
-                StudentBean studentBean = studentService.findByIdRelation(studentId);
-                if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
+                Optional<StudentBean> optionalStudentBean = studentService.findByIdRelation(studentId);
+                if (optionalStudentBean.isPresent()) {
+                    StudentBean studentBean = optionalStudentBean.get();
                     Users acceptUsers = new Users();
                     acceptUsers.setUsername(studentBean.getUsername());
                     acceptUsers.setRealName(studentBean.getRealName());
@@ -604,8 +607,9 @@ public class InternshipReviewRestController {
                     InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
                     if (Objects.nonNull(internshipRelease)) {
                         Users sendUser = SessionUtil.getUserFromSession();
-                        StudentBean studentBean = studentService.findByIdRelation(studentId);
-                        if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
+                        Optional<StudentBean> optionalStudentBean = studentService.findByIdRelation(studentId);
+                        if (optionalStudentBean.isPresent()) {
+                            StudentBean studentBean = optionalStudentBean.get();
                             Users acceptUsers = new Users();
                             acceptUsers.setUsername(studentBean.getUsername());
                             acceptUsers.setRealName(studentBean.getRealName());
@@ -677,8 +681,9 @@ public class InternshipReviewRestController {
                     InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReleaseId);
                     if (Objects.nonNull(internshipRelease)) {
                         Users sendUser = SessionUtil.getUserFromSession();
-                        StudentBean studentBean = studentService.findByIdRelation(studentId);
-                        if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
+                        Optional<StudentBean> optionalStudentBean = studentService.findByIdRelation(studentId);
+                        if (optionalStudentBean.isPresent()) {
+                            StudentBean studentBean = optionalStudentBean.get();
                             Users acceptUsers = new Users();
                             acceptUsers.setUsername(studentBean.getUsername());
                             acceptUsers.setRealName(studentBean.getRealName());

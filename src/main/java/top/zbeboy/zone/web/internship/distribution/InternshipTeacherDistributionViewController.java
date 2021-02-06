@@ -140,8 +140,9 @@ public class InternshipTeacherDistributionViewController {
             Optional<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(id, studentId);
             if (internshipTeacherDistributionRecord.isPresent()) {
                 InternshipTeacherDistribution internshipTeacherDistribution = internshipTeacherDistributionRecord.get().into(InternshipTeacherDistribution.class);
-                StudentBean studentBean = studentService.findByIdRelation(studentId);
-                if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
+                Optional<StudentBean> optionalStudentBean = studentService.findByIdRelation(studentId);
+                if (optionalStudentBean.isPresent()) {
+                    StudentBean studentBean = optionalStudentBean.get();
                     modelMap.addAttribute("internshipReleaseId", internshipTeacherDistribution.getInternshipReleaseId());
                     modelMap.addAttribute("staffId", internshipTeacherDistribution.getStaffId());
                     modelMap.addAttribute("studentRealName", studentBean.getRealName());

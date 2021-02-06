@@ -138,7 +138,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "select2-zh-CN"],
                     return;
                 }
 
-                $.post(ajax_url.check_staff_number, {staffNumber: staffNumber}, function (data) {
+                $.get(ajax_url.check_staff_number, {staffNumber: staffNumber}, function (data) {
                     if (data.state) {
                         tools.validSuccessDom(param_id.staffNumber);
                     } else {
@@ -194,7 +194,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "select2-zh-CN"],
                     return;
                 }
 
-                $.post(ajax_url.check_staff_number, {staffNumber: staffNumber}, function (data) {
+                $.get(ajax_url.check_staff_number, {staffNumber: staffNumber}, function (data) {
                     if (data.state) {
                         tools.validSuccessDom(param_id.staffNumber);
                         sendAjax();

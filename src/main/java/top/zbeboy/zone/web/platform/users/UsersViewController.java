@@ -143,17 +143,35 @@ public class UsersViewController {
             if (StringUtils.equals(Workbook.SYSTEM_USERS_TYPE, usersType.getUsersTypeName())) {
                 page = "web/platform/users/users_profile_system::#page-wrapper";
             } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
-                modelMap.addAttribute("student", studentBean);
-                page = "web/platform/users/users_profile_student::#page-wrapper";
+                Optional<StudentBean> optionalStudentBean = studentService.findByUsernameRelation(users.getUsername());
+                if (optionalStudentBean.isPresent()) {
+                    modelMap.addAttribute("student", optionalStudentBean.get());
+                    page = "web/platform/users/users_profile_student::#page-wrapper";
+                } else {
+                    config.buildDangerTip("查询错误", "未查询到学生信息");
+                    config.dataMerging(modelMap);
+                    page = "inline_tip::#page-wrapper";
+                }
             } else if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
-                modelMap.addAttribute("staff", bean);
-                page = "web/platform/users/users_profile_staff::#page-wrapper";
+                Optional<StaffBean> optionalStaffBean = staffService.findByUsernameRelation(users.getUsername());
+                if (optionalStaffBean.isPresent()) {
+                    modelMap.addAttribute("staff", optionalStaffBean.get());
+                    page = "web/platform/users/users_profile_staff::#page-wrapper";
+                } else {
+                    config.buildDangerTip("查询错误", "未查询到教职工信息");
+                    config.dataMerging(modelMap);
+                    page = "inline_tip::#page-wrapper";
+                }
             } else if (StringUtils.equals(Workbook.POTENTIAL_USERS_TYPE, usersType.getUsersTypeName())) {
-                PotentialBean bean = potentialService.findByUsernameRelation(users.getUsername());
-                modelMap.addAttribute("potential", bean);
-                page = "web/platform/users/users_profile_potential::#page-wrapper";
+                Optional<PotentialBean> optionalPotentialBean = potentialService.findByUsernameRelation(users.getUsername());
+                if (optionalPotentialBean.isPresent()) {
+                    modelMap.addAttribute("potential", optionalPotentialBean.get());
+                    page = "web/platform/users/users_profile_potential::#page-wrapper";
+                } else {
+                    config.buildDangerTip("查询错误", "未查询到临时用户信息");
+                    config.dataMerging(modelMap);
+                    page = "inline_tip::#page-wrapper";
+                }
             } else {
                 config.buildDangerTip("数据错误", "暂不支持您的用户类型进行修改");
                 config.dataMerging(modelMap);

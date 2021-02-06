@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class AcademicRestController {
@@ -36,8 +37,8 @@ public class AcademicRestController {
     @GetMapping("/anyone/data/academic")
     public ResponseEntity<Map<String, Object>> anyoneData() {
         Select2Data select2Data = Select2Data.of();
-        List<AcademicTitle> academicTitles = academicTitleService.findAll();
-        academicTitles.forEach(academicTitle -> select2Data.add(academicTitle.getAcademicTitleId().toString(), academicTitle.getAcademicTitleName()));
+        Optional<List<AcademicTitle>> optionalAcademicTitles = academicTitleService.findAll();
+        optionalAcademicTitles.ifPresent(academicTitles -> academicTitles.forEach(academicTitle -> select2Data.add(academicTitle.getAcademicTitleId().toString(), academicTitle.getAcademicTitleName())));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
 

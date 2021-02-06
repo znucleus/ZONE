@@ -67,14 +67,14 @@ public class ScienceViewController {
                 UsersType usersType = optionalUsersType.get();
                 int collegeId = 0;
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                    StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
-                    if (Objects.nonNull(bean.getStaffId()) && bean.getStaffId() > 0) {
-                        collegeId = bean.getCollegeId();
+                    Optional<StaffBean> optionalStaffBean = staffService.findByUsernameRelation(users.getUsername());
+                    if (optionalStaffBean.isPresent()) {
+                        collegeId = optionalStaffBean.get().getCollegeId();
                     }
                 } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                    StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
-                    if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
-                        collegeId = studentBean.getCollegeId();
+                    Optional<StudentBean> optionalStudentBean = studentService.findByUsernameRelation(users.getUsername());
+                    if (optionalStudentBean.isPresent()) {
+                        collegeId = optionalStudentBean.get().getCollegeId();
                     }
                 }
 
@@ -109,8 +109,9 @@ public class ScienceViewController {
     public String edit(@PathVariable("id") int id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        ScienceBean scienceBean = scienceService.findByIdRelation(id);
-        if (Objects.nonNull(scienceBean.getScienceId()) && scienceBean.getScienceId() > 0) {
+        Optional<ScienceBean> optionalScienceBean = scienceService.findByIdRelation(id);
+        if (optionalScienceBean.isPresent()) {
+            ScienceBean scienceBean = optionalScienceBean.get();
             modelMap.addAttribute("science", scienceBean);
             Users users = SessionUtil.getUserFromSession();
             if (!roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_SYSTEM.name())) {

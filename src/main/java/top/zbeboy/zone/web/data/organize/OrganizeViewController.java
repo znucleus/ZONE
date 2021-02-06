@@ -67,14 +67,14 @@ public class OrganizeViewController {
                 UsersType usersType = optionalUsersType.get();
                 int collegeId = 0;
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                    StaffBean bean = staffService.findByUsernameRelation(users.getUsername());
-                    if (Objects.nonNull(bean.getStaffId()) && bean.getStaffId() > 0) {
-                        collegeId = bean.getCollegeId();
+                    Optional<StaffBean> optionalStaffBean = staffService.findByUsernameRelation(users.getUsername());
+                    if (optionalStaffBean.isPresent()) {
+                        collegeId = optionalStaffBean.get().getCollegeId();
                     }
                 } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                    StudentBean studentBean = studentService.findByUsernameRelation(users.getUsername());
-                    if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
-                        collegeId = studentBean.getCollegeId();
+                    Optional<StudentBean> optionalStudentBean = studentService.findByUsernameRelation(users.getUsername());
+                    if (optionalStudentBean.isPresent()) {
+                        collegeId = optionalStudentBean.get().getCollegeId();
                     }
                 }
 
@@ -109,11 +109,13 @@ public class OrganizeViewController {
     public String edit(@PathVariable("id") int id, ModelMap modelMap) {
         SystemInlineTipConfig config = new SystemInlineTipConfig();
         String page;
-        OrganizeBean organizeBean = organizeService.findByIdRelation(id);
-        if (Objects.nonNull(organizeBean.getOrganizeId()) && organizeBean.getOrganizeId() > 0) {
+        Optional<OrganizeBean> optionalOrganizeBean = organizeService.findByIdRelation(id);
+        if (optionalOrganizeBean.isPresent()) {
+            OrganizeBean organizeBean = optionalOrganizeBean.get();
             if (Objects.nonNull(organizeBean.getStaffId())) {
-                StaffBean bean = staffService.findByIdRelation(organizeBean.getStaffId());
-                if (Objects.nonNull(bean.getStaffId()) && bean.getStaffId() > 0) {
+                Optional<StaffBean> optionalStaffBean = staffService.findByIdRelation(organizeBean.getStaffId());
+                if (optionalStaffBean.isPresent()) {
+                    StaffBean bean = optionalStaffBean.get();
                     modelMap.addAttribute("username", bean.getUsername());
                     modelMap.addAttribute("realName", bean.getRealName());
                     modelMap.addAttribute("mobile", bean.getMobile());

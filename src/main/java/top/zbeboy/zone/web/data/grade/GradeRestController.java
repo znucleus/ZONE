@@ -15,6 +15,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class GradeRestController {
@@ -32,8 +33,8 @@ public class GradeRestController {
     @GetMapping("/anyone/data/grade")
     public ResponseEntity<Map<String, Object>> anyoneData(GradeSearchVo gradeSearchVo, HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
-        List<Grade> grades = gradeService.findByScienceIdAndGradeIsDel(gradeSearchVo);
-        grades.forEach(grade -> select2Data.add(grade.getGradeId().toString(), grade.getGrade().toString()));
+        Optional<List<Grade>> grades = gradeService.findByScienceIdAndGradeIsDel(gradeSearchVo);
+        grades.ifPresent(gradeList -> gradeList.forEach(grade -> select2Data.add(grade.getGradeId().toString(), grade.getGrade().toString())));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
 }

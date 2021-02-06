@@ -166,9 +166,9 @@ public class InternshipRegulateRestController {
             if (optionalUsersType.isPresent()) {
                 UsersType usersType = optionalUsersType.get();
                 if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                    StaffBean staffBean = staffService.findByUsernameRelation(users.getUsername());
-                    if (Objects.nonNull(staffBean) && Objects.nonNull(staffBean.getStaffId()) && staffBean.getStaffId() > 0) {
-                        Result<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStaffId(id, staffBean.getStaffId());
+                    Optional<StaffBean> optionalStaffBean = staffService.findByUsernameRelation(users.getUsername());
+                    if (optionalStaffBean.isPresent()) {
+                        Result<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStaffId(id, optionalStaffBean.get().getStaffId());
                         if (internshipTeacherDistributionRecord.isNotEmpty()) {
                             List<InternshipTeacherDistribution> beans = internshipTeacherDistributionRecord.into(InternshipTeacherDistribution.class);
                             beans.forEach(bean -> select2Data.add(bean.getStudentId().toString(), bean.getStudentRealName()));
@@ -221,8 +221,9 @@ public class InternshipRegulateRestController {
                 if (optionalUsersType.isPresent()) {
                     UsersType usersType = optionalUsersType.get();
                     if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
-                        StaffBean staffBean = staffService.findByUsernameRelation(users.getUsername());
-                        if (Objects.nonNull(staffBean) && Objects.nonNull(staffBean.getStaffId()) && staffBean.getStaffId() > 0) {
+                        Optional<StaffBean> optionalStaffBean = staffService.findByUsernameRelation(users.getUsername());
+                        if (optionalStaffBean.isPresent()) {
+                            StaffBean staffBean = optionalStaffBean.get();
                             InternshipRegulate internshipRegulate = new InternshipRegulate();
                             internshipRegulate.setInternshipRegulateId(UUIDUtil.getUUID());
                             internshipRegulate.setStudentName(internshipRegulateAddVo.getStudentName());

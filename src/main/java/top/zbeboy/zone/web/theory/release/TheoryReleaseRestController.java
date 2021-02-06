@@ -104,10 +104,10 @@ public class TheoryReleaseRestController {
             theoryReleaseService.save(theoryRelease);
 
             // 生成名单
-            List<StudentBean> studentBeans = studentService.findNormalByOrganizeId(theoryReleaseAddVo.getOrganizeId());
-            if (Objects.nonNull(studentBeans) && studentBeans.size() > 0) {
+            Optional<List<StudentBean>> optionalStudentBeans = studentService.findNormalByOrganizeId(theoryReleaseAddVo.getOrganizeId());
+            if (optionalStudentBeans.isPresent()) {
                 List<TheoryUsers> theoryUsers = new ArrayList<>();
-                for (StudentBean student : studentBeans) {
+                for (StudentBean student : optionalStudentBeans.get()) {
                     TheoryUsers au = new TheoryUsers();
                     au.setTheoryUsersId(UUIDUtil.getUUID());
                     au.setTheoryReleaseId(theoryReleaseId);

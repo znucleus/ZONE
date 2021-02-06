@@ -128,8 +128,9 @@ public class TheoryUsersRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (theoryConditionCommon.usersCondition(theoryReleaseId)) {
             String param = StringUtils.deleteWhitespace(studentNumber);
-            StudentBean studentBean = studentService.findNormalByStudentNumberRelation(param);
-            if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
+            Optional<StudentBean> optionalStudentBean = studentService.findNormalByStudentNumberRelation(param);
+            if (optionalStudentBean.isPresent()) {
+                StudentBean studentBean = optionalStudentBean.get();
                 Optional<TheoryUsersRecord> theoryUsersRecord = theoryUsersService.findByTheoryReleaseIdAndStudentId(theoryReleaseId, studentBean.getStudentId());
                 if (!theoryUsersRecord.isPresent()) {
                     TheoryUsers theoryUsers = new TheoryUsers();

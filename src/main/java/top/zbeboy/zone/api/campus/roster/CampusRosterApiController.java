@@ -124,9 +124,9 @@ public class CampusRosterApiController {
     public ResponseEntity<Map<String, Object>> dataQuery(@RequestParam("rosterReleaseId") String rosterReleaseId, Principal principal, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = new AjaxUtil<>();
         Users users = SessionUtil.getUserFromOauth(principal);
-        StudentBean studentBean = studentService.findByUsername(users.getUsername());
-        if (Objects.nonNull(studentBean.getStudentId()) && studentBean.getStudentId() > 0) {
-            Optional<RosterDataBean> optionalRosterDataBean = campusRosterService.findRosterDataByStudentNumberAndRosterReleaseIdRelation(studentBean.getStudentNumber(), rosterReleaseId);
+        Optional<StudentBean> optionalStudentBean = studentService.findByUsername(users.getUsername());
+        if (optionalStudentBean.isPresent()) {
+            Optional<RosterDataBean> optionalRosterDataBean = campusRosterService.findRosterDataByStudentNumberAndRosterReleaseIdRelation(optionalStudentBean.get().getStudentNumber(), rosterReleaseId);
             if(optionalRosterDataBean.isPresent()){
                 RosterDataBean rosterDataBean = optionalRosterDataBean.get();
                 rosterDataBean.setBusSection(rosterDataBean.getBusSection().substring(rosterDataBean.getBusSection().indexOf("-") + 1));

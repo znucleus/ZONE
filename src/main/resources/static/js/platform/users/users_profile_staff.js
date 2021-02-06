@@ -205,7 +205,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
             var staffNumber = param.staffNumber;
             if (staffNumber !== '') {
                 if (tools.regex.staffNumber.test(staffNumber)) {
-                    $.post(ajax_url.check_staff_number, {staffNumber: staffNumber}, function (data) {
+                    $.get(ajax_url.check_staff_number, {staffNumber: staffNumber}, function (data) {
                         if (data.state) {
                             tools.validSuccessDom(param_id.staffNumber);
                             validPost();
