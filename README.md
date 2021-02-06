@@ -4,8 +4,8 @@
 [![GitHub stars](https://img.shields.io/github/stars/zbeboy/ZONE.svg)](https://github.com/zbeboy/ZONE/stargazers) 
 [![Build Status](https://travis-ci.org/zbeboy/ZONE.svg?branch=master)](https://travis-ci.org/zbeboy/ZONE)
 # 开发环境
-1.JDK 1.8.*;  
-2.Intellij IDEA 2020.*;  
+1.JDK 1.8.0_281;  
+2.Intellij IDEA 2020.3.2;  
 3.MySQL 8.0.11;  
 4.Maven 3.6.0 +;  
 5.Node 10 +;  
