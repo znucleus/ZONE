@@ -32,7 +32,7 @@ public class WeiXinDeviceApiController {
      * @param principal 当前用户信息
      * @return true or false
      */
-    @ApiLoggingRecord(remark = "校园签到设备查询", channel = Workbook.channel.API, needLogin = true)
+    @ApiLoggingRecord(remark = "微信设备查询", channel = Workbook.channel.API, needLogin = true)
     @PostMapping("/api/data/wei-xin-device/query-with-app-id")
     public AjaxUtil<Map<String, Object>> query(@RequestParam("appId") String appId, Principal principal, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();

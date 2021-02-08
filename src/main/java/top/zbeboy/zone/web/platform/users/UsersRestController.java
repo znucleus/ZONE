@@ -16,11 +16,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.bean.data.student.StudentBean;
 import top.zbeboy.zbase.config.SessionBook;
+import top.zbeboy.zbase.config.WeiXinAppBook;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.config.ZoneProperties;
 import top.zbeboy.zbase.domain.tables.pojos.*;
 import top.zbeboy.zbase.feign.campus.roster.CampusRosterService;
 import top.zbeboy.zbase.feign.data.StudentService;
+import top.zbeboy.zbase.feign.data.WeiXinSubscribeService;
 import top.zbeboy.zbase.feign.platform.UsersService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zbase.feign.system.FilesService;
@@ -34,6 +36,7 @@ import top.zbeboy.zbase.tools.web.util.BooleanUtil;
 import top.zbeboy.zbase.tools.web.util.GoogleOauthUtil;
 import top.zbeboy.zbase.tools.web.util.PinYinUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zbase.vo.data.weixin.WeiXinSubscribeSendVo;
 import top.zbeboy.zbase.vo.platform.user.ResetPasswordVo;
 import top.zbeboy.zbase.vo.platform.user.UsersProfileVo;
 import top.zbeboy.zone.service.system.SystemMailService;
@@ -78,6 +81,9 @@ public class UsersRestController {
 
     @Resource
     private SystemMailService systemMailService;
+
+    @Resource
+    private WeiXinSubscribeService weiXinSubscribeService;
 
     /**
      * 检验账号是否被注册
@@ -320,7 +326,7 @@ public class UsersRestController {
                     Optional<UsersType> optionalUsersType = usersTypeService.findById(own.getUsersTypeId());
                     if (optionalUsersType.isPresent() && StringUtils.equals(Workbook.STUDENT_USERS_TYPE, optionalUsersType.get().getUsersTypeName())) {
                         Optional<StudentBean> optionalStudentBean = studentService.findByUsername(own.getUsername());
-                        if(optionalStudentBean.isPresent()){
+                        if (optionalStudentBean.isPresent()) {
                             Optional<RosterData> optionalRosterData = campusRosterService.findRosterDataByStudentNumber(optionalStudentBean.get().getStudentNumber());
                             if (optionalRosterData.isPresent()) {
                                 RosterData rosterData = optionalRosterData.get();
@@ -344,7 +350,7 @@ public class UsersRestController {
                             if (!optionalUsers.isPresent()) {
                                 // 检查邮件推送是否被关闭
                                 Optional<SystemConfigure> optionalSystemConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
-                                if(optionalSystemConfigure.isPresent()){
+                                if (optionalSystemConfigure.isPresent()) {
                                     SystemConfigure systemConfigure = optionalSystemConfigure.get();
                                     if (StringUtils.equals("1", systemConfigure.getDataValue())) {
                                         DateTime dateTime = DateTime.now();
@@ -424,7 +430,7 @@ public class UsersRestController {
                             Optional<UsersType> optionalUsersType = usersTypeService.findById(own.getUsersTypeId());
                             if (optionalUsersType.isPresent() && StringUtils.equals(Workbook.STUDENT_USERS_TYPE, optionalUsersType.get().getUsersTypeName())) {
                                 Optional<StudentBean> optionalStudentBean = studentService.findByUsername(own.getUsername());
-                                if(optionalStudentBean.isPresent()){
+                                if (optionalStudentBean.isPresent()) {
                                     Optional<RosterData> optionalRosterData = campusRosterService.findRosterDataByStudentNumber(optionalStudentBean.get().getStudentNumber());
                                     if (optionalRosterData.isPresent()) {
                                         RosterData rosterData = optionalRosterData.get();
@@ -599,7 +605,7 @@ public class UsersRestController {
         Users users = SessionUtil.getUserFromSession();
         List<Role> roles = new ArrayList<>();
         Optional<List<Role>> optionalRoles = usersService.roleData(users.getUsername(), username);
-        if(optionalRoles.isPresent()){
+        if (optionalRoles.isPresent()) {
             roles = optionalRoles.get();
         }
         ajaxUtil.success().list(roles).msg("获取数据成功");
@@ -621,15 +627,27 @@ public class UsersRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = usersService.roleSave(users.getUsername(), username, roles);
 
         if (ajaxUtil.getState()) {
+            Optional<Users> result = usersService.findByUsername(username);
             String notify = "您的权限已发生变更，请登录查看。";
-
             // 检查邮件推送是否被关闭
             Optional<SystemConfigure> optionalSystemConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
             if (optionalSystemConfigure.isPresent() && StringUtils.equals("1", optionalSystemConfigure.get().getDataValue())) {
-                Optional<Users> result = usersService.findByUsername(username);
                 result.ifPresent(value -> systemMailService.sendNotifyMail(value, RequestUtil.getBaseUrl(request), notify));
-
             }
+
+            // 微信订阅通知
+            if (result.isPresent()) {
+                WeiXinSubscribeSendVo weiXinSubscribeSendVo = new WeiXinSubscribeSendVo();
+                weiXinSubscribeSendVo.setUsername(username);
+                weiXinSubscribeSendVo.setBusiness(WeiXinAppBook.subscribeBusiness.REGISTRATION_REVIEW_RESULT.name());
+                weiXinSubscribeSendVo.setThing1("审核通过");
+                weiXinSubscribeSendVo.setName4(result.get().getRealName());
+                weiXinSubscribeSendVo.setDate2(DateTimeUtil.getNowLocalDateTime(DateTimeUtil.YEAR_MONTH_DAY_HOUR_MINUTE_FORMAT));
+                weiXinSubscribeSendVo.setThing3(notify);
+                weiXinSubscribeSendVo.setStartTime(DateTimeUtil.getNowSqlTimestamp());
+                weiXinSubscribeService.sendByBusinessAndUsername(weiXinSubscribeSendVo);
+            }
+
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
