@@ -37,14 +37,11 @@ public class WeiXinSubscribeApiController {
      * 订阅
      *
      * @param weiXinSubscribeAddVo 订阅数据
-     * @param principal            当前用户信息
      * @return true or false
      */
-    @ApiLoggingRecord(remark = "微信小程序订阅", channel = Workbook.channel.API, needLogin = true)
-    @PostMapping("/api/data/wei-xin-subscribe/save")
-    public ResponseEntity<Map<String, Object>> subscribe(WeiXinSubscribeAddVo weiXinSubscribeAddVo, Principal principal, HttpServletRequest request) {
-        Users users = SessionUtil.getUserFromOauth(principal);
-        weiXinSubscribeAddVo.setUsername(users.getUsername());
+    @ApiLoggingRecord(remark = "微信小程序订阅", channel = Workbook.channel.API)
+    @PostMapping("/overt/data/wei-xin-subscribe/save")
+    public ResponseEntity<Map<String, Object>> subscribe(WeiXinSubscribeAddVo weiXinSubscribeAddVo, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = weiXinSubscribeService.subscribe(weiXinSubscribeAddVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
@@ -54,18 +51,17 @@ public class WeiXinSubscribeApiController {
      *
      * @param business  业务编码
      * @param appId     appId
-     * @param principal 用户
      * @param request   请求
      * @return 是否订阅
      */
-    @ApiLoggingRecord(remark = "微信小程序订阅查询", channel = Workbook.channel.API, needLogin = true)
-    @GetMapping("/api/data/wei-xin-subscribe/query")
+    @ApiLoggingRecord(remark = "微信小程序订阅查询", channel = Workbook.channel.API)
+    @GetMapping("/overt/data/wei-xin-subscribe/query")
     public ResponseEntity<Map<String, Object>> query(@RequestParam("business") String business,
                                                      @RequestParam("appId") String appId,
-                                                     Principal principal, HttpServletRequest request) {
+                                                     @RequestParam("username") String username,
+                                                     HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        Users users = SessionUtil.getUserFromOauth(principal);
-        Optional<WeiXin> optionalWeiXin = weiXinService.findByUsernameAndAppId(users.getUsername(), appId);
+        Optional<WeiXin> optionalWeiXin = weiXinService.findByUsernameAndAppId(username, appId);
         if (optionalWeiXin.isPresent()) {
             WeiXin weiXin = optionalWeiXin.get();
             Optional<List<WeiXinSubscribe>> optionalWeiXinSubscribes = weiXinSubscribeService.findSubscribeByTouserAndBusiness(weiXin.getOpenId(), business);
