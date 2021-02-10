@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import top.zbeboy.zbase.config.WeiXinAppBook;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.config.ZoneProperties;
 import top.zbeboy.zbase.domain.tables.pojos.Role;
@@ -16,6 +17,7 @@ import top.zbeboy.zbase.domain.tables.pojos.SystemConfigure;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.domain.tables.pojos.UsersType;
 import top.zbeboy.zbase.feign.data.StaffService;
+import top.zbeboy.zbase.feign.data.WeiXinSubscribeService;
 import top.zbeboy.zbase.feign.platform.UsersService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zbase.feign.system.SystemConfigureService;
@@ -27,6 +29,7 @@ import top.zbeboy.zbase.tools.web.util.BooleanUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zbase.vo.data.staff.StaffAddVo;
 import top.zbeboy.zbase.vo.data.staff.StaffEditVo;
+import top.zbeboy.zbase.vo.data.weixin.WeiXinSubscribeSendVo;
 import top.zbeboy.zone.service.system.SystemMailService;
 import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
 import top.zbeboy.zone.web.util.SessionUtil;
@@ -59,6 +62,9 @@ public class StaffRestController {
 
     @Resource
     private SystemConfigureService systemConfigureService;
+
+    @Resource
+    private WeiXinSubscribeService weiXinSubscribeService;
 
     /**
      * 检验工号是否被注册
@@ -238,13 +244,26 @@ public class StaffRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = staffService.roleSave(users.getUsername(), username, roles);
 
         if (ajaxUtil.getState()) {
+            Optional<Users> result = usersService.findByUsername(username);
             String notify = "您的权限已发生变更，请登录查看。";
 
             // 检查邮件推送是否被关闭
             Optional<SystemConfigure> optionalSystemConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
             if (optionalSystemConfigure.isPresent() && StringUtils.equals("1", optionalSystemConfigure.get().getDataValue())) {
-                Optional<Users> result = usersService.findByUsername(username);
                 result.ifPresent(value -> systemMailService.sendNotifyMail(value, RequestUtil.getBaseUrl(request), notify));
+            }
+
+            // 微信订阅通知
+            if (result.isPresent()) {
+                WeiXinSubscribeSendVo weiXinSubscribeSendVo = new WeiXinSubscribeSendVo();
+                weiXinSubscribeSendVo.setUsername(username);
+                weiXinSubscribeSendVo.setBusiness(WeiXinAppBook.subscribeBusiness.REGISTRATION_REVIEW_RESULT.name());
+                weiXinSubscribeSendVo.setThing1("审核通过");
+                weiXinSubscribeSendVo.setName4(result.get().getRealName());
+                weiXinSubscribeSendVo.setDate2(DateTimeUtil.getNowLocalDateTime(DateTimeUtil.YEAR_MONTH_DAY_HOUR_MINUTE_FORMAT));
+                weiXinSubscribeSendVo.setThing3(notify);
+                weiXinSubscribeSendVo.setStartTime(DateTimeUtil.getNowSqlTimestamp());
+                weiXinSubscribeService.sendByBusinessAndUsername(weiXinSubscribeSendVo);
             }
         }
 
