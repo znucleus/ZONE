@@ -7,6 +7,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -80,9 +81,25 @@ public class StaffApiController {
                 Map<String, Object> outPut = new HashMap<>();
                 outPut.put("staffId", bean.getStaffId());
                 outPut.put("staffNumber", bean.getStaffNumber());
-                outPut.put("departmentId", bean.getDepartmentId());
                 outPut.put("schoolId", bean.getSchoolId());
-                outPut.put("realName", bean.getRealName());
+                outPut.put("schoolName", bean.getSchoolName());
+                outPut.put("collegeId", bean.getCollegeId());
+                outPut.put("collegeName", bean.getCollegeName());
+                outPut.put("departmentId", bean.getDepartmentId());
+                outPut.put("departmentName", bean.getDepartmentName());
+                String clientId = ((OAuth2Authentication) principal).getOAuth2Request().getClientId();
+                if (StringUtils.isNotBlank(clientId) && Workbook.advancedApp().contains(clientId)) {
+                    outPut.put("nationId", bean.getNationId());
+                    outPut.put("nationName", bean.getNationName());
+                    outPut.put("politicalLandscapeId", bean.getPoliticalLandscapeId());
+                    outPut.put("politicalLandscapeName", bean.getPoliticalLandscapeName());
+                    outPut.put("birthday", DateTimeUtil.formatSqlDate(bean.getBirthday(), DateTimeUtil.YEAR_MONTH_DAY_FORMAT));
+                    outPut.put("sex", bean.getSex());
+                    outPut.put("familyResidence", bean.getFamilyResidence());
+                    outPut.put("post", bean.getPost());
+                    outPut.put("academicTitleId", bean.getAcademicTitleId());
+                    outPut.put("academicTitleName", bean.getAcademicTitleName());
+                }
                 ajaxUtil.success().msg("获取用户信息成功").map(outPut);
             } else {
                 ajaxUtil.fail().msg("未查询到教职工信息");
@@ -140,7 +157,7 @@ public class StaffApiController {
 
         if (canRegister) {
             Optional<UsersType> optionalUsersType = usersTypeService.findByUsersTypeName(Workbook.STAFF_USERS_TYPE);
-            if(optionalUsersType.isPresent()){
+            if (optionalUsersType.isPresent()) {
                 UsersType usersType = optionalUsersType.get();
                 staffAddVo.setEnabled(BooleanUtil.toByte(true));
                 staffAddVo.setAccountNonExpired(BooleanUtil.toByte(true));
@@ -159,8 +176,8 @@ public class StaffApiController {
 
                 if (ajaxUtil.getState()) {
                     // 注册微信
-                    if(StringUtils.isNotBlank(staffAddVo.getResCode()) && StringUtils.isNotBlank(staffAddVo.getAppId())
-                            &&StringUtils.isNotBlank(staffAddVo.getSecret())){
+                    if (StringUtils.isNotBlank(staffAddVo.getResCode()) && StringUtils.isNotBlank(staffAddVo.getAppId())
+                            && StringUtils.isNotBlank(staffAddVo.getSecret())) {
                         weiXinService.save(staffAddVo.getResCode(), staffAddVo.getAppId(), staffAddVo.getSecret(), staffAddVo.getUsername());
                     }
 

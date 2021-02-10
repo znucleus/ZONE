@@ -68,6 +68,12 @@ public class UsersApiController {
                 optionalFiles.ifPresent(files -> outPut.put("avatar", Workbook.DIRECTORY_SPLIT + files.getRelativePath()));
             }
             outPut.put("authorities", ((OAuth2Authentication) principal).getUserAuthentication().getAuthorities());
+            String clientId = ((OAuth2Authentication) principal).getOAuth2Request().getClientId();
+            if(StringUtils.isNotBlank(clientId) && Workbook.advancedApp().contains(clientId)){
+                outPut.put("email", users.getEmail());
+                outPut.put("mobile", users.getMobile());
+                outPut.put("idCard", users.getIdCard());
+            }
             ajaxUtil.success().msg("获取用户信息成功").map(outPut);
         } else {
             ajaxUtil.fail().msg("获取用户信息失败");

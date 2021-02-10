@@ -7,6 +7,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -87,10 +88,32 @@ public class StudentApiController {
                 Map<String, Object> outPut = new HashMap<>();
                 outPut.put("studentId", studentBean.getStudentId());
                 outPut.put("studentNumber", studentBean.getStudentNumber());
+                outPut.put("schoolId", studentBean.getSchoolId());
+                outPut.put("schoolName", studentBean.getSchoolName());
+                outPut.put("collegeId", studentBean.getCollegeId());
+                outPut.put("collegeName", studentBean.getCollegeName());
+                outPut.put("departmentId", studentBean.getDepartmentId());
+                outPut.put("departmentName", studentBean.getDepartmentName());
+                outPut.put("scienceId", studentBean.getScienceId());
+                outPut.put("scienceName", studentBean.getScienceName());
+                outPut.put("gradeId", studentBean.getGradeId());
+                outPut.put("grade", studentBean.getGrade());
                 outPut.put("organizeId", studentBean.getOrganizeId());
                 outPut.put("organizeName", studentBean.getOrganizeName());
-                outPut.put("schoolId", studentBean.getSchoolId());
-                outPut.put("realName", studentBean.getRealName());
+                String clientId = ((OAuth2Authentication) principal).getOAuth2Request().getClientId();
+                if(StringUtils.isNotBlank(clientId) && Workbook.advancedApp().contains(clientId)){
+                    outPut.put("nationId", studentBean.getNationId());
+                    outPut.put("nationName", studentBean.getNationName());
+                    outPut.put("politicalLandscapeId", studentBean.getPoliticalLandscapeId());
+                    outPut.put("politicalLandscapeName", studentBean.getPoliticalLandscapeName());
+                    outPut.put("birthday", DateTimeUtil.formatSqlDate(studentBean.getBirthday(),DateTimeUtil.YEAR_MONTH_DAY_FORMAT));
+                    outPut.put("sex", studentBean.getSex());
+                    outPut.put("familyResidence", studentBean.getFamilyResidence());
+                    outPut.put("dormitoryNumber", studentBean.getDormitoryNumber());
+                    outPut.put("parentName", studentBean.getParentName());
+                    outPut.put("parentContactPhone", studentBean.getParentContactPhone());
+                    outPut.put("placeOrigin", studentBean.getPlaceOrigin());
+                }
                 ajaxUtil.success().msg("获取用户信息成功").map(outPut);
             } else {
                 ajaxUtil.fail().msg("未查询到学生信息");
