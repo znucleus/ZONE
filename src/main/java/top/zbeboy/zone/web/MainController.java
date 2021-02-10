@@ -145,7 +145,7 @@ public class MainController {
         modelMap.addAttribute("realName", users.getRealName());
 
         // map key
-        Optional<MapKey> optionalMapKey = mapKeyService.mapKey(Workbook.mapFactory.GD.name(), Workbook.mapBusiness.WEB_GD_KEY.name());
+        Optional<MapKey> optionalMapKey = mapKeyService.mapKey(Workbook.mapFactory.GD.name(), Workbook.mapBusiness.GD_WEB_IP_LOCATION_KEY.name());
         optionalMapKey.ifPresent(mapKey -> modelMap.addAttribute("mapKey", mapKey.getMapKey()));
 
         Optional<List<Role>> optionalRoles = roleService.findByUsername(users.getUsername());
