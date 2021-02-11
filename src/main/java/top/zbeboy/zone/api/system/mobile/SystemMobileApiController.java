@@ -24,6 +24,7 @@ import top.zbeboy.zone.service.system.SystemMobileService;
 import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -56,7 +57,7 @@ public class SystemMobileApiController {
      */
     @ApiLoggingRecord(remark = "获取手机验证码", channel = Workbook.channel.API)
     @GetMapping("/overt/send/mobile")
-    public ResponseEntity<Map<String, Object>> overtSendMobile(@RequestParam("mobile") String mobile) {
+    public ResponseEntity<Map<String, Object>> overtSendMobile(@RequestParam("mobile") String mobile, HttpServletRequest request) {
         String param = StringUtils.trim(mobile);
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (Pattern.matches(Workbook.MOBILE_REGEX, param)) {
@@ -102,7 +103,8 @@ public class SystemMobileApiController {
     @ApiLoggingRecord(remark = "验证手机验证码", channel = Workbook.channel.API)
     @PostMapping("/overt/check/mobile-code")
     public ResponseEntity<Map<String, Object>> overtCheckMobileCode(@RequestParam("mobile") String mobile,
-                                                                    @RequestParam("verificationCode") String verificationCode) {
+                                                                    @RequestParam("verificationCode") String verificationCode,
+                                                                    HttpServletRequest request) {
         String param = StringUtils.trim(mobile);
         String code = StringUtils.trim(verificationCode);
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
@@ -135,8 +137,9 @@ public class SystemMobileApiController {
      * @param verificationCode 验证码
      * @return 是否验证通过
      */
+    @ApiLoggingRecord(remark = "忘记密码手机号验证", channel = Workbook.channel.API)
     @PostMapping("/overt/forget-password/mobile")
-    public ResponseEntity<Map<String, Object>> forgetPassword(@RequestParam("mobile") String mobile, @RequestParam("verificationCode") String verificationCode) {
+    public ResponseEntity<Map<String, Object>> forgetPassword(@RequestParam("mobile") String mobile, @RequestParam("verificationCode") String verificationCode, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         String param = StringUtils.deleteWhitespace(mobile);
         String code = StringUtils.trim(verificationCode);
