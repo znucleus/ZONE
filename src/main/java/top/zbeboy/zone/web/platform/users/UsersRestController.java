@@ -5,6 +5,7 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.joda.time.DateTime;
+import org.jooq.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -31,10 +32,7 @@ import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.service.util.FilesUtil;
 import top.zbeboy.zbase.tools.service.util.RandomUtil;
 import top.zbeboy.zbase.tools.service.util.RequestUtil;
-import top.zbeboy.zbase.tools.web.util.AjaxUtil;
-import top.zbeboy.zbase.tools.web.util.BooleanUtil;
-import top.zbeboy.zbase.tools.web.util.GoogleOauthUtil;
-import top.zbeboy.zbase.tools.web.util.PinYinUtil;
+import top.zbeboy.zbase.tools.web.util.*;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zbase.vo.data.weixin.WeiXinSubscribeSendVo;
 import top.zbeboy.zbase.vo.platform.user.ResetPasswordVo;
@@ -698,7 +696,30 @@ public class UsersRestController {
      */
     @PostMapping("/web/platform/users/delete")
     public ResponseEntity<Map<String, Object>> delete(String userIds) {
+        if (StringUtils.isNotBlank(userIds)) {
+            List<String> usersList = SmallPropsUtil.StringIdsToStringList(userIds);
+            for(String user : usersList){
+                Optional<Users> result = usersService.findByUsername(user);
+                String notify = "您因不满足审核条件，注册信息已被删除。";
+                // 微信订阅通知
+                if (result.isPresent()) {
+                    Users users = result.get();
+                    WeiXinSubscribeSendVo weiXinSubscribeSendVo = new WeiXinSubscribeSendVo();
+                    weiXinSubscribeSendVo.setUsername(users.getUsername());
+                    weiXinSubscribeSendVo.setBusiness(WeiXinAppBook.subscribeBusiness.REGISTRATION_REVIEW_RESULT.name());
+                    weiXinSubscribeSendVo.setThing1("审核未通过");
+                    weiXinSubscribeSendVo.setName4(result.get().getRealName());
+                    weiXinSubscribeSendVo.setDate2(DateTimeUtil.getNowLocalDateTime(DateTimeUtil.YEAR_MONTH_DAY_HOUR_MINUTE_FORMAT));
+                    weiXinSubscribeSendVo.setThing3(notify);
+                    weiXinSubscribeSendVo.setStartTime(DateTimeUtil.getNowSqlTimestamp());
+                    weiXinSubscribeService.sendByBusinessAndUsername(weiXinSubscribeSendVo);
+                }
+            }
+        }
+
         AjaxUtil<Map<String, Object>> ajaxUtil = usersService.delete(userIds);
+
+
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
