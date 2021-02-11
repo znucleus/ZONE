@@ -21,9 +21,9 @@
             <div class="row">
                 <div class="col-md-4">
                     <input type="file" class="dropify" name="file" th:data-default-file="@{${avatar}}"
-                           data-max-file-size="1M" data-allowed-file-extensions="jpg png gif jpeg bmp"
-                           data-max-width="500"
-                           data-max-height="500"/>
+                           data-max-file-size="2M" data-allowed-file-extensions="jpg png gif jpeg bmp"
+                           data-max-width="2000"
+                           data-max-height="2000"/>
                     <input type="hidden" id="avatar" th:value="${avatar}"/>
                     <div class="col-md-12 text-danger text-center" id="globalAvatarError">
                     </div>

@@ -107,7 +107,7 @@ public class TrainingSpecialRestController {
                     TrainingSpecial trainingSpecial = new TrainingSpecial();
                     if (StringUtils.isNotBlank(trainingSpecialAddVo.getFile())) {
                         Files files = BaseImgUtil.generateImage(trainingSpecialAddVo.getFile(),
-                                trainingSpecialAddVo.getFileName(), request, Workbook.trainingSpecialCoverPath(), request.getRemoteAddr());
+                                trainingSpecialAddVo.getFileName(), request, Workbook.trainingSpecialCoverPath());
                         filesService.save(files);
                         trainingSpecial.setCover(files.getFileId());
                     } else {
@@ -157,7 +157,7 @@ public class TrainingSpecialRestController {
                         if (StringUtils.isNotBlank(trainingSpecialEditVo.getFile())) {
                             if (!StringUtils.equals(bean.getNewName() + "." + bean.getExt(), trainingSpecialEditVo.getFileName())) {
                                 Files files = BaseImgUtil.generateImage(trainingSpecialEditVo.getFile(),
-                                        trainingSpecialEditVo.getFileName(), request, Workbook.trainingSpecialCoverPath(), request.getRemoteAddr());
+                                        trainingSpecialEditVo.getFileName(), request, Workbook.trainingSpecialCoverPath());
                                 filesService.save(files);
                                 trainingSpecial.setCover(files.getFileId());
                                 updateCover = true;

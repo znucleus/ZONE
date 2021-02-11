@@ -514,8 +514,20 @@ public class UsersRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         try {
             Users users = SessionUtil.getUserFromSession();
-            Files files = BaseImgUtil.generateImage(file, fileName, request, Workbook.avatarPath(users.getUsername()), request.getRemoteAddr());
+            Files files = BaseImgUtil.generateImage(file, fileName, request, Workbook.avatarPath(users.getUsername()), 500, 500, 0.5f);
             filesService.save(files);
+
+            String avatar = users.getAvatar();
+            if (!StringUtils.equals(avatar, Workbook.USERS_AVATAR)) {
+                Optional<Files> optionalFiles = filesService.findById(avatar);
+                if (optionalFiles.isPresent()) {
+                    Files oldFiles = optionalFiles.get();
+                    // delete file.
+                    FilesUtil.deleteFile(RequestUtil.getRealPath(request) + oldFiles.getRelativePath());
+                    filesService.delete(oldFiles);
+                }
+            }
+
             users.setAvatar(files.getFileId());
             usersService.update(users);
             ajaxUtil.success().msg("更新头像成功");
@@ -698,7 +710,7 @@ public class UsersRestController {
     public ResponseEntity<Map<String, Object>> delete(String userIds) {
         if (StringUtils.isNotBlank(userIds)) {
             List<String> usersList = SmallPropsUtil.StringIdsToStringList(userIds);
-            for(String user : usersList){
+            for (String user : usersList) {
                 Optional<Users> result = usersService.findByUsername(user);
                 String notify = "您因不满足审核条件，注册信息已被删除。";
                 // 微信订阅通知

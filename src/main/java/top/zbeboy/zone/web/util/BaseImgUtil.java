@@ -7,8 +7,10 @@ import top.zbeboy.zbase.domain.tables.pojos.Files;
 import top.zbeboy.zbase.tools.service.util.IPTimeStamp;
 import top.zbeboy.zbase.tools.service.util.RequestUtil;
 import top.zbeboy.zbase.tools.service.util.UUIDUtil;
+import top.zbeboy.zbase.tools.web.util.ImageUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import java.awt.*;
 import java.io.*;
 import java.util.Base64;
 import java.util.Objects;
@@ -20,7 +22,7 @@ public class BaseImgUtil {
      * @param path     图片路径-具体到文件
      * @return files object.
      */
-    public static Files generateImage(String imgStr, String fileName, HttpServletRequest request, String path, String address) throws IOException {
+    public static Files generateImage(String imgStr, String fileName, HttpServletRequest request, String path) throws IOException {
         assert StringUtils.isNotBlank(imgStr);
         assert StringUtils.isNotBlank(fileName) && fileName.contains(".");
         assert StringUtils.isNotBlank(path);
@@ -47,7 +49,7 @@ public class BaseImgUtil {
             files.setContentType(MediaType.IMAGE_PNG_VALUE);
         }
 
-        IPTimeStamp ipTimeStamp = new IPTimeStamp(address);
+        IPTimeStamp ipTimeStamp = new IPTimeStamp(RequestUtil.getIpAddress(request));
 
         String fileTempName = ipTimeStamp.getIPTimeRand() + "." + ext;
         if (fileTempName.contains(":")) {
@@ -74,13 +76,74 @@ public class BaseImgUtil {
                 }
             }
             out.write(b);
-        } catch (IOException e) {
-            throw e;
         }
 
 
         files.setFileSize(file.length());
 
+        return files;
+    }
+
+    /**
+     * 转换成图片，并且尺寸调整，压缩
+     *
+     * @param imgStr    base64编码字符串
+     * @param fileName  file name include ext.
+     * @param path      图片路径-具体到文件
+     * @param maxWidth  最大宽度
+     * @param maxHeight 最大高度
+     * @param quality   压缩率
+     * @return files object.
+     */
+    public static Files generateImage(String imgStr, String fileName, HttpServletRequest request, String path, int maxWidth, int maxHeight, float quality) throws Exception {
+        Files files = generateImage(imgStr, fileName, request, path);
+        if(StringUtils.equals(files.getExt().toUpperCase(), Workbook.imageSuffix.GIF.name())){
+            return files;
+        }
+        String srcFilePath = RequestUtil.getRealPath(request) + files.getRelativePath();
+        String resizeFilePath = RequestUtil.getRealPath(request) + path + files.getNewName() + "_resize." + files.getExt();
+
+        File srcFile = new File(srcFilePath);
+        File resizeFile = new File(resizeFilePath);
+        // 尺寸变小
+        int[] fileSizes = ImageUtil.getSizeInfo(srcFile);
+        if (fileSizes.length > 1) {
+            int width = fileSizes[0];
+            int height = fileSizes[1];
+            if (width > maxWidth && height > maxHeight) {
+                ImageUtil.resize(srcFilePath, resizeFilePath, -1, -1, maxWidth, maxHeight);
+            } else if (width > maxWidth) {
+                ImageUtil.resize(srcFilePath, resizeFilePath, maxWidth, -1);
+            } else if (height > maxHeight) {
+                ImageUtil.resize(srcFilePath, resizeFilePath, -1, maxHeight);
+            }
+
+            if (resizeFile.exists()) {
+                if (srcFile.exists() && srcFile.delete()) {
+                    resizeFile.renameTo(srcFile);
+                }
+            }
+        }
+
+        String compressFilePath = RequestUtil.getRealPath(request) + path + files.getNewName() + "_compress." + files.getExt();
+        File compressFile = new File(compressFilePath);
+        if (resizeFile.exists()) {
+            ImageUtil.optimize(resizeFile, compressFile, quality);
+            if (compressFile.exists()) {
+                if (resizeFile.delete()) {
+                    compressFile.renameTo(resizeFile);
+                }
+            }
+        } else {
+            if (srcFile.exists()) {
+                ImageUtil.optimize(srcFile, compressFile, quality);
+                if (compressFile.exists()) {
+                    if (srcFile.delete()) {
+                        compressFile.renameTo(srcFile);
+                    }
+                }
+            }
+        }
         return files;
     }
 
@@ -101,9 +164,9 @@ public class BaseImgUtil {
         return encoder.encodeToString(Objects.requireNonNull(data));
     }
 
-   /* public static void main(String[] args) {
+    /*public static void main(String[] args) {
         String strImg = getImageStr("/home/zhaoyin/图片/1.jpg");
         System.out.println(strImg);
-//        generateImage(strImg, "F:/86619-107.jpg");
+        generateImage(strImg, "F:/86619-107.jpg");
     }*/
 }
