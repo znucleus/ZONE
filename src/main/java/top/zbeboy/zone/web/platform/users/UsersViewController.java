@@ -214,8 +214,8 @@ public class UsersViewController {
     public String userSetting(ModelMap modelMap) {
         Users users = SessionUtil.getUserFromSession();
         modelMap.addAttribute("username", users.getUsername());
-        modelMap.addAttribute("email", StringUtils.overlay(users.getEmail(), "****", 1, users.getEmail().lastIndexOf("@")));
-        modelMap.addAttribute("mobile", StringUtils.overlay(users.getMobile(), "****", 3, 7));
+        modelMap.addAttribute("email", StringUtils.isNotBlank(users.getEmail()) ? StringUtils.overlay(users.getEmail(), "****", 1, users.getEmail().lastIndexOf("@")) : "");
+        modelMap.addAttribute("mobile", StringUtils.isNotBlank(users.getMobile()) ? StringUtils.overlay(users.getMobile(), "****", 3, 7) : "");
         modelMap.addAttribute("idCard", StringUtils.isNotBlank(users.getIdCard()) ? StringUtils.overlay(users.getIdCard(), "****", 3, users.getIdCard().length() - 4) : "");
         modelMap.addAttribute("plaintextIdCard", users.getIdCard());
 
