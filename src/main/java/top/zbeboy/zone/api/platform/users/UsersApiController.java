@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.Files;
 import top.zbeboy.zbase.domain.tables.pojos.Role;
@@ -19,11 +20,17 @@ import top.zbeboy.zbase.feign.platform.RoleService;
 import top.zbeboy.zbase.feign.platform.UsersService;
 import top.zbeboy.zbase.feign.system.FilesService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
+import top.zbeboy.zbase.tools.service.util.FilesUtil;
+import top.zbeboy.zbase.tools.service.util.RequestUtil;
+import top.zbeboy.zbase.tools.service.util.UUIDUtil;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.vo.platform.user.ResetPasswordApiVo;
 import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
+import top.zbeboy.zone.service.upload.FileBean;
+import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zone.service.util.BCryptUtil;
 import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
+import top.zbeboy.zone.web.util.BaseImgUtil;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
@@ -46,6 +53,9 @@ public class UsersApiController {
 
     @Resource
     private RoleService roleService;
+
+    @Resource
+    private UploadService uploadService;
 
     /**
      * API:获取用户信息
@@ -132,6 +142,62 @@ public class UsersApiController {
             }
         } else {
             ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 上传头像
+     *
+     * @param request 数据
+     * @return true or false
+     */
+    @PostMapping("/api/platform/users/avatar/upload")
+    public ResponseEntity<Map<String, Object>> userAvatarUpload(Principal principal, MultipartHttpServletRequest request) {
+        AjaxUtil<FileBean> ajaxUtil = AjaxUtil.of();
+        try {
+            Users users = SessionUtil.getUserFromOauth(principal);
+            if (Objects.nonNull(users)) {
+                String path = Workbook.avatarPath(users.getUsername());
+                List<FileBean> fileBeens = uploadService.upload(request,
+                        RequestUtil.getRealPath(request) + path, RequestUtil.getIpAddress(request));
+                if(!fileBeens.isEmpty()){
+                    FileBean fileBean = fileBeens.get(0);
+                    fileBean.setRelativePath(path + fileBean.getNewName());
+
+                    Files files = new Files();
+                    files.setFileId(UUIDUtil.getUUID());
+                    files.setFileSize(fileBean.getFileSize());
+                    files.setContentType(fileBean.getContentType());
+                    files.setOriginalFileName(fileBean.getOriginalFileName());
+                    files.setNewName(fileBean.getNewName());
+                    files.setRelativePath(fileBean.getRelativePath());
+                    files.setExt(fileBean.getExt());
+                    BaseImgUtil.optimizeImage(files,request,path,500, 500, 0.5f);
+                    filesService.save(files);
+
+                    String avatar = users.getAvatar();
+                    if (!StringUtils.equals(avatar, Workbook.USERS_AVATAR)) {
+                        Optional<Files> optionalFiles = filesService.findById(avatar);
+                        if (optionalFiles.isPresent()) {
+                            Files oldFiles = optionalFiles.get();
+                            // delete file.
+                            FilesUtil.deleteFile(RequestUtil.getRealPath(request) + oldFiles.getRelativePath());
+                            filesService.delete(oldFiles);
+                        }
+                    }
+
+                    users.setAvatar(files.getFileId());
+                    usersService.update(users);
+                    ajaxUtil.success().msg("上传头像成功").put("avatar",  Workbook.DIRECTORY_SPLIT + files.getRelativePath());
+                } else {
+                    ajaxUtil.fail().msg("上传失败，未获取到文件");
+                }
+            } else {
+                ajaxUtil.fail().msg("获取用户信息失败");
+            }
+        } catch (Exception e) {
+            ajaxUtil.fail().msg("上传头像失败： " + e.getMessage());
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
