@@ -13,9 +13,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.Files;
+import top.zbeboy.zbase.domain.tables.pojos.Role;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
+import top.zbeboy.zbase.feign.platform.RoleService;
 import top.zbeboy.zbase.feign.platform.UsersService;
 import top.zbeboy.zbase.feign.system.FilesService;
+import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.vo.platform.user.ResetPasswordApiVo;
 import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
@@ -27,10 +30,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 public class UsersApiController {
@@ -43,6 +43,9 @@ public class UsersApiController {
 
     @Resource
     private StringRedisTemplate stringRedisTemplate;
+
+    @Resource
+    private RoleService roleService;
 
     /**
      * API:获取用户信息
@@ -67,12 +70,21 @@ public class UsersApiController {
                 Optional<Files> optionalFiles = filesService.findById(users.getAvatar());
                 optionalFiles.ifPresent(files -> outPut.put("avatar", Workbook.DIRECTORY_SPLIT + files.getRelativePath()));
             }
-            outPut.put("authorities", ((OAuth2Authentication) principal).getUserAuthentication().getAuthorities());
+
             String clientId = ((OAuth2Authentication) principal).getOAuth2Request().getClientId();
             if(StringUtils.isNotBlank(clientId) && Workbook.advancedApp().contains(clientId)){
                 outPut.put("email", users.getEmail());
                 outPut.put("mobile", users.getMobile());
                 outPut.put("idCard", users.getIdCard());
+                outPut.put("joinDate", DateTimeUtil.defaultFormatSqlDate(users.getJoinDate()));
+
+                outPut.put("authorities", ((OAuth2Authentication) principal).getUserAuthentication().getAuthorities());
+                // roles.
+                Optional<List<Role>> optionalRoles = roleService.findByUsername(users.getUsername());
+                List<String> rList = new ArrayList<>();
+                optionalRoles.ifPresent(roles -> roles.forEach(r -> rList.add(r.getRoleName())));
+
+                outPut.put("roles", String.join(",", rList));
             }
             ajaxUtil.success().msg("获取用户信息成功").map(outPut);
         } else {
