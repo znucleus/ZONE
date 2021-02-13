@@ -585,7 +585,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "responsi
             tools.buttonEndLoading(button_id.saveRole.id, button_id.saveRole.text);
             if (data.state) {
                 $('#roleModal').modal('toggle');
-                myTable.ajax.reload();
+                myTable.ajax.reload(null, false);
             } else {
                 $('#globalRoleError').text(data.msg);
             }
@@ -720,7 +720,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "responsi
                 });
 
                 if (data.state) {
-                    myTable.ajax.reload();
+                    myTable.ajax.reload(null, false);
                 }
             },
             error: function (XMLHttpRequest) {
@@ -861,7 +861,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "responsi
                 });
 
                 if (data.state) {
-                    myTable.ajax.reload();
+                    myTable.ajax.reload(null, false);
                 }
             },
             error: function (XMLHttpRequest) {
@@ -938,7 +938,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "responsi
                 });
 
                 if (data.state) {
-                    myTable.ajax.reload();
+                    myTable.ajax.reload(null, false);
                 }
             },
             error: function (XMLHttpRequest) {
@@ -978,7 +978,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "responsi
                     confirmButtonText: "确定",
                     preConfirm: function () {
                         if (data.state) {
-                            myTable.ajax.reload();
+                            myTable.ajax.reload(null, false);
                         }
                     }
                 });
