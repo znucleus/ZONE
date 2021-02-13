@@ -518,6 +518,8 @@ public class UsersRestController {
             filesService.save(files);
 
             String avatar = users.getAvatar();
+            users.setAvatar(files.getFileId());
+            usersService.update(users);
             if (!StringUtils.equals(avatar, Workbook.USERS_AVATAR)) {
                 Optional<Files> optionalFiles = filesService.findById(avatar);
                 if (optionalFiles.isPresent()) {
@@ -528,8 +530,6 @@ public class UsersRestController {
                 }
             }
 
-            users.setAvatar(files.getFileId());
-            usersService.update(users);
             ajaxUtil.success().msg("更新头像成功");
         } catch (Exception e) {
             log.error("User upload avatar error.", e);

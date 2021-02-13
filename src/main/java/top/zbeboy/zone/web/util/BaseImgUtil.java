@@ -97,9 +97,6 @@ public class BaseImgUtil {
      */
     public static Files generateImage(String imgStr, String fileName, HttpServletRequest request, String path, int maxWidth, int maxHeight, float quality) throws Exception {
         Files files = generateImage(imgStr, fileName, request, path);
-        if (StringUtils.equals(files.getExt().toUpperCase(), Workbook.imageSuffix.GIF.name())) {
-            return files;
-        }
         optimizeImage(files, request, path, maxWidth, maxHeight, quality);
         return files;
     }
@@ -116,6 +113,9 @@ public class BaseImgUtil {
      * @throws Exception 异常
      */
     public static void optimizeImage(Files files, HttpServletRequest request, String path, int maxWidth, int maxHeight, float quality) throws Exception {
+        if (StringUtils.equals(files.getExt().toUpperCase(), Workbook.imageSuffix.GIF.name())) {
+            return;
+        }
         String srcFilePath = RequestUtil.getRealPath(request) + files.getRelativePath();
         String resizeFilePath = RequestUtil.getRealPath(request) + path + files.getNewName() + "_resize." + files.getExt();
 

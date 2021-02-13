@@ -177,6 +177,8 @@ public class UsersApiController {
                     filesService.save(files);
 
                     String avatar = users.getAvatar();
+                    users.setAvatar(files.getFileId());
+                    usersService.update(users);
                     if (!StringUtils.equals(avatar, Workbook.USERS_AVATAR)) {
                         Optional<Files> optionalFiles = filesService.findById(avatar);
                         if (optionalFiles.isPresent()) {
@@ -187,8 +189,6 @@ public class UsersApiController {
                         }
                     }
 
-                    users.setAvatar(files.getFileId());
-                    usersService.update(users);
                     ajaxUtil.success().msg("上传头像成功").put("avatar",  Workbook.DIRECTORY_SPLIT + files.getRelativePath());
                 } else {
                     ajaxUtil.fail().msg("上传失败，未获取到文件");
