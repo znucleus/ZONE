@@ -105,7 +105,7 @@ public class TrainingUsersRestController {
                 bean.setCreateDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getCreateDate()));
                 if (!trainingConditionCommon.usersCondition(bean.getTrainingReleaseId())) {
                     bean.setEmail(StringUtils.overlay(bean.getEmail(), "****", 1, bean.getEmail().lastIndexOf("@")));
-                    bean.setMobile(StringUtils.overlay(bean.getMobile(), "****", 3, 6));
+                    bean.setMobile(StringUtils.overlay(bean.getMobile(), "****", 3, 7));
                 }
             });
         }
@@ -256,7 +256,7 @@ public class TrainingUsersRestController {
             beans.forEach(bean -> {
                 if (!trainingConditionCommon.usersCondition(bean.getTrainingReleaseId())) {
                     bean.setEmail(StringUtils.overlay(bean.getEmail(), "****", 1, bean.getEmail().lastIndexOf("@")));
-                    bean.setMobile(StringUtils.overlay(bean.getMobile(), "****", 3, 6));
+                    bean.setMobile(StringUtils.overlay(bean.getMobile(), "****", 3, 7));
                 }
             });
         }

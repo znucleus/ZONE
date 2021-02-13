@@ -332,7 +332,7 @@ public class TheoryAttendRestController {
             beans.forEach(bean -> {
                 if (!theoryConditionCommon.usersCondition(bean.getTheoryReleaseId())) {
                     bean.setEmail(StringUtils.overlay(bean.getEmail(), "****", 1, bean.getEmail().lastIndexOf("@")));
-                    bean.setMobile(StringUtils.overlay(bean.getMobile(), "****", 3, 6));
+                    bean.setMobile(StringUtils.overlay(bean.getMobile(), "****", 3, 7));
                 }
             });
         }
@@ -489,7 +489,7 @@ public class TheoryAttendRestController {
             beans.forEach(bean -> {
                 if (!theoryConditionCommon.usersCondition(bean.getTheoryReleaseId())) {
                     bean.setEmail(StringUtils.overlay(bean.getEmail(), "****", 1, bean.getEmail().lastIndexOf("@")));
-                    bean.setMobile(StringUtils.overlay(bean.getMobile(), "****", 3, 6));
+                    bean.setMobile(StringUtils.overlay(bean.getMobile(), "****", 3, 7));
                 }
             });
         }
