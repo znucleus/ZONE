@@ -433,7 +433,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                     });
 
                     if (data.state) {
-                        myTable.ajax.reload();
+                        myTable.ajax.reload(null, false);
                     }
                 },
                 error: function (XMLHttpRequest) {
@@ -554,7 +554,8 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
 
                     if (data.state) {
                         $('#remarkModal').modal('hide');
-                        myTable.ajax.reload();
+                        // 重新加载，不刷新页码
+                        myTable.ajax.reload(null, false);
                     }
                 },
                 error: function (XMLHttpRequest) {
