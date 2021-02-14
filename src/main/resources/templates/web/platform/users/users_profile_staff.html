@@ -44,18 +44,16 @@
                             <div class="row">
                                 <div class="col-lg-4">
                                     <div class="form-group">
-                                        <select class="form-control select2-show-search" id="school"
-                                                th:data-placeholder="${staff.schoolName}" disabled>
-                                            <option th:label="${staff.schoolName}"></option>
+                                        <select class="form-control select2-show-search" id="school" data-placeholder="请选择学校">
+                                            <option label="请选择学校"></option>
                                         </select>
                                         <div class="invalid-feedback"></div>
                                     </div>
                                 </div><!-- col-4 -->
                                 <div class="col-lg-4 mg-t-20 mg-lg-t-0">
                                     <div class="form-group">
-                                        <select class="form-control select2-show-search" id="college"
-                                                th:data-placeholder="${staff.collegeName}" disabled>
-                                            <option th:label="${staff.collegeName}"></option>
+                                        <select class="form-control select2-show-search" id="college" data-placeholder="请选择院">
+                                            <option label="请选择院"></option>
                                         </select>
                                         <div class="invalid-feedback"></div>
                                     </div>
@@ -187,6 +185,7 @@
         </div><!-- br-pagebody -->
     </div>
 
+    <input type="hidden" id="schoolId" th:value="${staff.schoolId}"/>
     <input type="hidden" id="collegeId" th:value="${staff.collegeId}"/>
     <input type="hidden" id="departmentId" th:value="${staff.departmentId}"/>
     <input type="hidden" id="sexParam" th:value="${staff.sex}"/>

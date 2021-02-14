@@ -6,6 +6,8 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
         moment.locale('zh-cn');
 
         var ajax_url = {
+            obtain_school_data: web_path + '/anyone/data/school',
+            obtain_college_data: web_path + '/anyone/data/college',
             obtain_department_data: web_path + '/anyone/data/department',
             obtain_academic_title_data: web_path + '/anyone/data/academic',
             staff_update_school: web_path + '/users/staff/update/school',
@@ -16,6 +18,8 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
         };
 
         var param_id = {
+            school: '#school',
+            college: '#college',
             department: '#department',
             staffNumber: '#staffNumber',
             sex: '#sex',
@@ -41,6 +45,8 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
         };
 
         var param = {
+            schoolId: '',
+            collegeId: '',
             departmentId: '',
             staffNumber: '',
             sex: '',
@@ -53,6 +59,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
         };
 
         var page_param = {
+            schoolId:$('#schoolId').val(),
             collegeId: $('#collegeId').val(),
             departmentId: $('#departmentId').val(),
             sex: $('#sexParam').val(),
@@ -62,10 +69,14 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
         };
 
         var init_configure = {
+            init_school: false,
+            init_college: false,
             init_department: false
         };
 
         function initParam() {
+            param.schoolId = $(param_id.school).val();
+            param.collegeId = $(param_id.college).val();
             param.departmentId = $(param_id.department).val();
             param.staffNumber = _.trim($(param_id.staffNumber).val());
             param.sex = $(param_id.sex).val();
@@ -76,6 +87,25 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
             param.post = _.trim($(param_id.post).val());
             param.familyResidence = _.trim($(param_id.familyResidence).val());
         }
+
+        $(param_id.school).change(function () {
+            var v = $(this).val();
+            initCollege(v);
+            initDepartment(0);
+
+            if (Number(v) > 0) {
+                tools.validSelect2SuccessDom(param_id.school);
+            }
+        });
+
+        $(param_id.college).change(function () {
+            var v = $(this).val();
+            initDepartment(v);
+
+            if (Number(v) > 0) {
+                tools.validSelect2SuccessDom(param_id.college);
+            }
+        });
 
         $(param_id.department).change(function () {
             var v = $(this).val();
@@ -88,7 +118,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
         init();
 
         function init() {
-            initDepartment(page_param.collegeId);
+            initSchool();
             initSelect2();
 
             initSex();
@@ -103,16 +133,41 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
             });
         }
 
+        function initSchool() {
+            $.get(ajax_url.obtain_school_data, function (data) {
+                var sl = $(param_id.school).select2({data: data.results});
+
+                if (!init_configure.init_school) {
+                    sl.val(page_param.schoolId).trigger("change");
+                    init_configure.init_school = true;
+                }
+            });
+        }
+
+        function initCollege(schoolId) {
+            if (Number(schoolId) > 0) {
+                $.get(ajax_url.obtain_college_data, {schoolId: schoolId}, function (data) {
+                    $(param_id.college).html('<option label="请选择院"></option>');
+                    var sl = $(param_id.college).select2({data: data.results});
+
+                    if (!init_configure.init_college) {
+                        sl.val(page_param.collegeId).trigger("change");
+                        init_configure.init_college = true;
+                    }
+                });
+            } else {
+                $(param_id.college).html('<option label="请选择院"></option>');
+            }
+        }
+
         function initDepartment(collegeId) {
             if (Number(collegeId) > 0) {
                 $.get(ajax_url.obtain_department_data, {collegeId: collegeId}, function (data) {
                     $(param_id.department).html('<option label="请选择系"></option>');
-                    $.each(data.results, function (i, n) {
-                        $(param_id.department).append('<option value="' + n.id + '">' + n.text + '</option>');
-                    });
+                    var sl = $(param_id.department).select2({data: data.results});
 
                     if (!init_configure.init_department) {
-                        $(param_id.department).val(page_param.departmentId);
+                        sl.val(page_param.departmentId).trigger("change");
                         init_configure.init_department = true;
                     }
                 });
@@ -157,8 +212,28 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
 
         $(button_id.saveSchool.id).click(function () {
             initParam();
-            validDepartment();
+            validSchool();
         });
+
+        function validSchool() {
+            var schoolId = param.schoolId;
+            if (Number(schoolId) > 0) {
+                tools.validSelect2SuccessDom(param_id.school);
+                validCollege();
+            } else {
+                tools.validSelect2ErrorDom(param_id.school, '请选择您所在的学校');
+            }
+        }
+
+        function validCollege() {
+            var collegeId = param.collegeId;
+            if (Number(collegeId) > 0) {
+                tools.validSelect2SuccessDom(param_id.college);
+                validDepartment();
+            } else {
+                tools.validSelect2ErrorDom(param_id.college, '请选择您所在的院');
+            }
+        }
 
         function validDepartment() {
             var departmentId = param.departmentId;

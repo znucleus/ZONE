@@ -6,6 +6,8 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
         moment.locale('zh-cn');
 
         var ajax_url = {
+            obtain_school_data: web_path + '/anyone/data/school',
+            obtain_college_data: web_path + '/anyone/data/college',
             obtain_department_data: web_path + '/anyone/data/department',
             obtain_science_data: web_path + '/anyone/data/science',
             obtain_grade_data: web_path + '/anyone/data/grade',
@@ -18,6 +20,8 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
         };
 
         var param_id = {
+            school: '#school',
+            college: '#college',
             department: '#department',
             science: '#science',
             grade: '#grade',
@@ -48,6 +52,8 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
         };
 
         var param = {
+            schoolId: '',
+            collegeId: '',
             departmentId: '',
             scienceId: '',
             gradeId: '',
@@ -65,6 +71,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
         };
 
         var page_param = {
+            schoolId: $('#schoolId').val(),
             collegeId: $('#collegeId').val(),
             departmentId: $('#departmentId').val(),
             scienceId: $('#scienceId').val(),
@@ -76,6 +83,8 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
         };
 
         var init_configure = {
+            init_school: false,
+            init_college: false,
             init_department: false,
             init_science: false,
             init_grade: false,
@@ -83,6 +92,8 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
         };
 
         function initParam() {
+            param.schoolId = $(param_id.school).val();
+            param.collegeId = $(param_id.college).val();
             param.departmentId = $(param_id.department).val();
             param.scienceId = $(param_id.science).val();
             param.gradeId = $(param_id.grade).val();
@@ -98,6 +109,31 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
             param.familyResidence = _.trim($(param_id.familyResidence).val());
             param.placeOrigin = _.trim($(param_id.placeOrigin).val());
         }
+
+        $(param_id.school).change(function () {
+            var v = $(this).val();
+            initCollege(v);
+            initDepartment(0);
+            initScience(0);
+            initGrade(0);
+            initOrganize(0);
+
+            if (Number(v) > 0) {
+                tools.validSelect2SuccessDom(param_id.school);
+            }
+        });
+
+        $(param_id.college).change(function () {
+            var v = $(this).val();
+            initDepartment(v);
+            initScience(0);
+            initGrade(0);
+            initOrganize(0);
+
+            if (Number(v) > 0) {
+                tools.validSelect2SuccessDom(param_id.college);
+            }
+        });
 
         $(param_id.department).change(function () {
             var v = $(this).val();
@@ -140,10 +176,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
         init();
 
         function init() {
-            initDepartment(page_param.collegeId);
-            initScience(page_param.departmentId);
-            initGrade(page_param.scienceId);
-            initOrganize(page_param.gradeId);
+            initSchool();
             initSelect2();
 
             initSex();
@@ -157,16 +190,41 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
             });
         }
 
+        function initSchool() {
+            $.get(ajax_url.obtain_school_data, function (data) {
+                var sl = $(param_id.school).select2({data: data.results});
+
+                if (!init_configure.init_school) {
+                    sl.val(page_param.schoolId).trigger("change");
+                    init_configure.init_school = true;
+                }
+            });
+        }
+
+        function initCollege(schoolId) {
+            if (Number(schoolId) > 0) {
+                $.get(ajax_url.obtain_college_data, {schoolId: schoolId}, function (data) {
+                    $(param_id.college).html('<option label="请选择院"></option>');
+                    var sl = $(param_id.college).select2({data: data.results});
+
+                    if (!init_configure.init_college) {
+                        sl.val(page_param.collegeId).trigger("change");
+                        init_configure.init_college = true;
+                    }
+                });
+            } else {
+                $(param_id.college).html('<option label="请选择院"></option>');
+            }
+        }
+
         function initDepartment(collegeId) {
             if (Number(collegeId) > 0) {
                 $.get(ajax_url.obtain_department_data, {collegeId: collegeId}, function (data) {
                     $(param_id.department).html('<option label="请选择系"></option>');
-                    $.each(data.results, function (i, n) {
-                        $(param_id.department).append('<option value="' + n.id + '">' + n.text + '</option>');
-                    });
+                    var sl = $(param_id.department).select2({data: data.results});
 
                     if (!init_configure.init_department) {
-                        $(param_id.department).val(page_param.departmentId);
+                        sl.val(page_param.departmentId).trigger("change");
                         init_configure.init_department = true;
                     }
                 });
@@ -179,11 +237,10 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
             if (Number(departmentId) > 0) {
                 $.get(ajax_url.obtain_science_data, {departmentId: departmentId}, function (data) {
                     $(param_id.science).html('<option label="请选择专业"></option>');
-                    $.each(data.results, function (i, n) {
-                        $(param_id.science).append('<option value="' + n.id + '">' + n.text + '</option>');
-                    });
+                    var sl = $(param_id.science).select2({data: data.results});
+
                     if (!init_configure.init_science) {
-                        $(param_id.science).val(page_param.scienceId);
+                        sl.val(page_param.scienceId).trigger("change");
                         init_configure.init_science = true;
                     }
                 });
@@ -196,11 +253,10 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
             if (Number(scienceId) > 0) {
                 $.get(ajax_url.obtain_grade_data, {scienceId: scienceId}, function (data) {
                     $(param_id.grade).html('<option label="请选择年级"></option>');
-                    $.each(data.results, function (i, n) {
-                        $(param_id.grade).append('<option value="' + n.id + '">' + n.text + '</option>');
-                    });
+                    var sl = $(param_id.grade).select2({data: data.results});
+
                     if (!init_configure.init_grade) {
-                        $(param_id.grade).val(page_param.gradeId);
+                        sl.val(page_param.gradeId).trigger("change");
                         init_configure.init_grade = true;
                     }
                 });
@@ -213,11 +269,10 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
             if (Number(gradeId) > 0) {
                 $.get(ajax_url.obtain_organize_data, {gradeId: gradeId}, function (data) {
                     $(param_id.organize).html('<option label="请选择班级"></option>');
-                    $.each(data.results, function (i, n) {
-                        $(param_id.organize).append('<option value="' + n.id + '">' + n.text + '</option>');
-                    });
+                    var sl = $(param_id.organize).select2({data: data.results});
+
                     if (!init_configure.init_organize) {
-                        $(param_id.organize).val(page_param.organizeId);
+                        sl.val(page_param.organizeId).trigger("change");
                         init_configure.init_organize = true;
                     }
                 });
@@ -252,8 +307,28 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
 
         $(button_id.saveSchool.id).click(function () {
             initParam();
-            validDepartment();
+            validSchool();
         });
+
+        function validSchool() {
+            var schoolId = param.schoolId;
+            if (Number(schoolId) > 0) {
+                tools.validSelect2SuccessDom(param_id.school);
+                validCollege();
+            } else {
+                tools.validSelect2ErrorDom(param_id.school, '请选择您所在的学校');
+            }
+        }
+
+        function validCollege() {
+            var collegeId = param.collegeId;
+            if (Number(collegeId) > 0) {
+                tools.validSelect2SuccessDom(param_id.college);
+                validDepartment();
+            } else {
+                tools.validSelect2ErrorDom(param_id.college, '请选择您所在的院');
+            }
+        }
 
         function validDepartment() {
             var departmentId = param.departmentId;
