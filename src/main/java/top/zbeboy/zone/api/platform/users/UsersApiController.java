@@ -10,6 +10,7 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import top.zbeboy.zbase.config.Workbook;
@@ -204,6 +205,23 @@ public class UsersApiController {
         } catch (Exception e) {
             ajaxUtil.fail().msg("上传头像失败： " + e.getMessage());
         }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 更新密码
+     *
+     * @param oldPassword     旧密码
+     * @param newPassword     新密码
+     * @param confirmPassword 确认密码
+     * @return 是否成功
+     */
+    @ApiLoggingRecord(remark = "用户密码更新", channel = Workbook.channel.API, needLogin = true)
+    @PostMapping("/api/platform/users/password/update")
+    public ResponseEntity<Map<String, Object>> userPasswordUpdate(@RequestParam("oldPassword") String oldPassword, @RequestParam("newPassword") String newPassword,
+                                                                  @RequestParam("confirmPassword") String confirmPassword, Principal principal, HttpServletRequest request) {
+        Users users = SessionUtil.getUserFromOauth(principal);
+        AjaxUtil<Map<String, Object>> ajaxUtil = usersService.userPasswordUpdate(users.getUsername(), oldPassword, newPassword, confirmPassword);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
