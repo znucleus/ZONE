@@ -25,10 +25,12 @@ import top.zbeboy.zbase.tools.service.util.RequestUtil;
 import top.zbeboy.zbase.tools.service.util.UUIDUtil;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.vo.platform.user.ResetPasswordApiVo;
+import top.zbeboy.zbase.vo.platform.user.UsersProfileVo;
 import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
 import top.zbeboy.zone.service.upload.FileBean;
 import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zone.service.util.BCryptUtil;
+import top.zbeboy.zone.web.platform.common.PlatformControllerCommon;
 import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
 import top.zbeboy.zone.web.util.BaseImgUtil;
 import top.zbeboy.zone.web.util.SessionUtil;
@@ -57,6 +59,9 @@ public class UsersApiController {
     @Resource
     private UploadService uploadService;
 
+    @Resource
+    private PlatformControllerCommon platformControllerCommon;
+
     /**
      * API:获取用户信息
      *
@@ -82,7 +87,7 @@ public class UsersApiController {
             }
 
             String clientId = ((OAuth2Authentication) principal).getOAuth2Request().getClientId();
-            if(StringUtils.isNotBlank(clientId) && Workbook.advancedApp().contains(clientId)){
+            if (StringUtils.isNotBlank(clientId) && Workbook.advancedApp().contains(clientId)) {
                 outPut.put("email", users.getEmail());
                 outPut.put("mobile", users.getMobile());
                 outPut.put("idCard", users.getIdCard());
@@ -122,7 +127,7 @@ public class UsersApiController {
                     if (isValid) {
                         HashMap<String, String> paramMap = new HashMap<>();
                         paramMap.put("mobile", resetPasswordApiVo.getMobile());
-                        Optional<Users>  result = usersService.findByCondition(paramMap);
+                        Optional<Users> result = usersService.findByCondition(paramMap);
                         if (result.isPresent()) {
                             Users users = result.get();
                             users.setPassword(BCryptUtil.bCryptPassword(resetPasswordApiVo.getPassword()));
@@ -161,7 +166,7 @@ public class UsersApiController {
                 String path = Workbook.avatarPath(users.getUsername());
                 List<FileBean> fileBeens = uploadService.upload(request,
                         RequestUtil.getRealPath(request) + path, RequestUtil.getIpAddress(request));
-                if(!fileBeens.isEmpty()){
+                if (!fileBeens.isEmpty()) {
                     FileBean fileBean = fileBeens.get(0);
                     fileBean.setRelativePath(path + fileBean.getNewName());
 
@@ -173,7 +178,7 @@ public class UsersApiController {
                     files.setNewName(fileBean.getNewName());
                     files.setRelativePath(fileBean.getRelativePath());
                     files.setExt(fileBean.getExt());
-                    BaseImgUtil.optimizeImage(files,request,path,500, 500, 0.5f);
+                    BaseImgUtil.optimizeImage(files, request, path, 500, 500, 0.5f);
                     filesService.save(files);
 
                     String avatar = users.getAvatar();
@@ -189,7 +194,7 @@ public class UsersApiController {
                         }
                     }
 
-                    ajaxUtil.success().msg("上传头像成功").put("avatar",  Workbook.DIRECTORY_SPLIT + files.getRelativePath());
+                    ajaxUtil.success().msg("上传头像成功").put("avatar", Workbook.DIRECTORY_SPLIT + files.getRelativePath());
                 } else {
                     ajaxUtil.fail().msg("上传失败，未获取到文件");
                 }
@@ -198,6 +203,26 @@ public class UsersApiController {
             }
         } catch (Exception e) {
             ajaxUtil.fail().msg("上传头像失败： " + e.getMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 用户基本信息更新
+     *
+     * @param usersProfileVo 信息
+     * @param bindingResult  检验
+     * @return 是否更新成功
+     */
+    @ApiLoggingRecord(remark = "用户基本信息更新", channel = Workbook.channel.API, needLogin = true)
+    @PostMapping("/api/platform/users/update")
+    public ResponseEntity<Map<String, Object>> usersUpdate(@Valid UsersProfileVo usersProfileVo, BindingResult bindingResult, Principal principal, HttpServletRequest request) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        if (!bindingResult.hasErrors()) {
+            Users own = SessionUtil.getUserFromOauth(principal);
+            ajaxUtil = platformControllerCommon.usersUpdate(usersProfileVo, own, null, request, Workbook.channel.API.name());
+        } else {
+            ajaxUtil.fail().msg(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
