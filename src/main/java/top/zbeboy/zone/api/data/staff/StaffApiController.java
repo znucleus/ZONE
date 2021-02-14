@@ -26,6 +26,7 @@ import top.zbeboy.zbase.tools.service.util.RequestUtil;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.BooleanUtil;
 import top.zbeboy.zbase.vo.data.staff.StaffAddVo;
+import top.zbeboy.zbase.vo.data.staff.StaffEditVo;
 import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
 import top.zbeboy.zone.service.system.SystemMailService;
 import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
@@ -194,6 +195,36 @@ public class StaffApiController {
                 ajaxUtil.fail().msg("未查询到用户类型信息");
             }
         }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 教职工信息更新
+     *
+     * @param staffEditVo 数据
+     * @return 成功与否
+     */
+    @ApiLoggingRecord(remark = "教职工更新学校", channel = Workbook.channel.API, needLogin = true)
+    @PostMapping("/api/data/staff/update/school")
+    public ResponseEntity<Map<String, Object>> userStaffUpdateSchool(StaffEditVo staffEditVo, Principal principal, HttpServletRequest request) {
+        Users users = SessionUtil.getUserFromOauth(principal);
+        staffEditVo.setUsername(users.getUsername());
+        AjaxUtil<Map<String, Object>> ajaxUtil = staffService.userStaffUpdateSchool(staffEditVo);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 更新信息
+     *
+     * @param staffEditVo 数据
+     * @return 更新信息
+     */
+    @ApiLoggingRecord(remark = "教职工更新信息", channel = Workbook.channel.API, needLogin = true)
+    @PostMapping("/api/data/staff/update/info")
+    public ResponseEntity<Map<String, Object>> userStaffUpdateInfo(StaffEditVo staffEditVo, Principal principal, HttpServletRequest request) {
+        Users users = SessionUtil.getUserFromOauth(principal);
+        staffEditVo.setUsername(users.getUsername());
+        AjaxUtil<Map<String, Object>> ajaxUtil = staffService.userStaffUpdateInfo(staffEditVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

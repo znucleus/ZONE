@@ -30,6 +30,7 @@ import top.zbeboy.zbase.tools.service.util.RequestUtil;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.BooleanUtil;
 import top.zbeboy.zbase.vo.data.student.StudentAddVo;
+import top.zbeboy.zbase.vo.data.student.StudentEditVo;
 import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
 import top.zbeboy.zone.service.system.SystemMailService;
 import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
@@ -101,12 +102,12 @@ public class StudentApiController {
                 outPut.put("organizeId", studentBean.getOrganizeId());
                 outPut.put("organizeName", studentBean.getOrganizeName());
                 String clientId = ((OAuth2Authentication) principal).getOAuth2Request().getClientId();
-                if(StringUtils.isNotBlank(clientId) && Workbook.advancedApp().contains(clientId)){
+                if (StringUtils.isNotBlank(clientId) && Workbook.advancedApp().contains(clientId)) {
                     outPut.put("nationId", studentBean.getNationId());
                     outPut.put("nationName", studentBean.getNationName());
                     outPut.put("politicalLandscapeId", studentBean.getPoliticalLandscapeId());
                     outPut.put("politicalLandscapeName", studentBean.getPoliticalLandscapeName());
-                    outPut.put("birthday", DateTimeUtil.formatSqlDate(studentBean.getBirthday(),DateTimeUtil.YEAR_MONTH_DAY_FORMAT));
+                    outPut.put("birthday", DateTimeUtil.formatSqlDate(studentBean.getBirthday(), DateTimeUtil.YEAR_MONTH_DAY_FORMAT));
                     outPut.put("sex", studentBean.getSex());
                     outPut.put("familyResidence", studentBean.getFamilyResidence());
                     outPut.put("dormitoryNumber", studentBean.getDormitoryNumber());
@@ -239,6 +240,36 @@ public class StudentApiController {
             }
         }
 
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 学生班级更新
+     *
+     * @param studentEditVo 数据
+     * @return 成功与否
+     */
+    @ApiLoggingRecord(remark = "学生更新学校", channel = Workbook.channel.API, needLogin = true)
+    @PostMapping("/api/data/student/update/school")
+    public ResponseEntity<Map<String, Object>> userStudentUpdateSchool(StudentEditVo studentEditVo, Principal principal, HttpServletRequest request) {
+        Users users = SessionUtil.getUserFromOauth(principal);
+        studentEditVo.setUsername(users.getUsername());
+        AjaxUtil<Map<String, Object>> ajaxUtil = studentService.userStudentUpdateSchool(studentEditVo);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 更新信息
+     *
+     * @param studentEditVo 数据
+     * @return 更新信息
+     */
+    @ApiLoggingRecord(remark = "学生更新信息", channel = Workbook.channel.API, needLogin = true)
+    @PostMapping("/api/data/student/update/info")
+    public ResponseEntity<Map<String, Object>> userStudentUpdateInfo(StudentEditVo studentEditVo, Principal principal, HttpServletRequest request) {
+        Users users = SessionUtil.getUserFromOauth(principal);
+        studentEditVo.setUsername(users.getUsername());
+        AjaxUtil<Map<String, Object>> ajaxUtil = studentService.userStudentUpdateInfo(studentEditVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }
