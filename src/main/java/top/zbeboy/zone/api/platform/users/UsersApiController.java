@@ -244,4 +244,23 @@ public class UsersApiController {
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
+
+    /**
+     * 用户检验密码
+     *
+     * @param password 密码
+     * @return 是否更新成功
+     */
+    @ApiLoggingRecord(remark = "用户检验密码", channel = Workbook.channel.API, needLogin = true)
+    @PostMapping("/api/platform/users/check-password")
+    public ResponseEntity<Map<String, Object>> checkPassword(@RequestParam("password") String password, Principal principal, HttpServletRequest request) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        Users own = SessionUtil.getUserFromOauth(principal);
+        if (BCryptUtil.bCryptPasswordMatches(password, own.getPassword())) {
+            ajaxUtil.success().msg("检验成功");
+        } else {
+            ajaxUtil.fail().msg("登录密码错误");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
 }
