@@ -107,7 +107,7 @@ public class StudentApiController {
                     outPut.put("nationName", studentBean.getNationName());
                     outPut.put("politicalLandscapeId", studentBean.getPoliticalLandscapeId());
                     outPut.put("politicalLandscapeName", studentBean.getPoliticalLandscapeName());
-                    outPut.put("birthday", DateTimeUtil.formatSqlDate(studentBean.getBirthday(), DateTimeUtil.YEAR_MONTH_DAY_FORMAT));
+                    outPut.put("birthday", Objects.nonNull(studentBean.getBirthday()) ? DateTimeUtil.formatSqlDate(studentBean.getBirthday(), DateTimeUtil.YEAR_MONTH_DAY_FORMAT) : studentBean.getBirthday());
                     outPut.put("sex", studentBean.getSex());
                     outPut.put("familyResidence", studentBean.getFamilyResidence());
                     outPut.put("dormitoryNumber", studentBean.getDormitoryNumber());

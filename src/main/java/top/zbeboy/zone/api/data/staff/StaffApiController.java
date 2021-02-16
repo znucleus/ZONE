@@ -94,7 +94,7 @@ public class StaffApiController {
                     outPut.put("nationName", bean.getNationName());
                     outPut.put("politicalLandscapeId", bean.getPoliticalLandscapeId());
                     outPut.put("politicalLandscapeName", bean.getPoliticalLandscapeName());
-                    outPut.put("birthday", DateTimeUtil.formatSqlDate(bean.getBirthday(), DateTimeUtil.YEAR_MONTH_DAY_FORMAT));
+                    outPut.put("birthday", Objects.nonNull(bean.getBirthday()) ? DateTimeUtil.formatSqlDate(bean.getBirthday(), DateTimeUtil.YEAR_MONTH_DAY_FORMAT) : bean.getBirthday());
                     outPut.put("sex", bean.getSex());
                     outPut.put("familyResidence", bean.getFamilyResidence());
                     outPut.put("post", bean.getPost());
