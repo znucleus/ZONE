@@ -86,6 +86,9 @@ public class StaffApiController {
                 outPut.put("schoolName", bean.getSchoolName());
                 outPut.put("collegeId", bean.getCollegeId());
                 outPut.put("collegeName", bean.getCollegeName());
+                outPut.put("collegeAddress", bean.getCollegeAddress());
+                outPut.put("collegeCoordinate", bean.getCollegeCoordinate());
+                outPut.put("collegeZipCode", bean.getCollegeZipCode());
                 outPut.put("departmentId", bean.getDepartmentId());
                 outPut.put("departmentName", bean.getDepartmentName());
                 String clientId = ((OAuth2Authentication) principal).getOAuth2Request().getClientId();

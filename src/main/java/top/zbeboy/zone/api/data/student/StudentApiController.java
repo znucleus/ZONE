@@ -93,6 +93,9 @@ public class StudentApiController {
                 outPut.put("schoolName", studentBean.getSchoolName());
                 outPut.put("collegeId", studentBean.getCollegeId());
                 outPut.put("collegeName", studentBean.getCollegeName());
+                outPut.put("collegeAddress", studentBean.getCollegeAddress());
+                outPut.put("collegeCoordinate", studentBean.getCollegeCoordinate());
+                outPut.put("collegeZipCode", studentBean.getCollegeZipCode());
                 outPut.put("departmentId", studentBean.getDepartmentId());
                 outPut.put("departmentName", studentBean.getDepartmentName());
                 outPut.put("scienceId", studentBean.getScienceId());
