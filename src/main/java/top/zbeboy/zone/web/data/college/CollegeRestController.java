@@ -67,6 +67,7 @@ public class CollegeRestController {
         headers.add("collegeCode");
         headers.add("collegeAddress");
         headers.add("collegeCoordinate");
+        headers.add("collegeZipCode");
         headers.add("collegeIsDel");
         headers.add("operator");
         DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);

@@ -76,6 +76,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                 {"data": "collegeCode"},
                 {"data": "collegeAddress"},
                 {"data": "collegeCoordinate"},
+                {"data": "collegeZipCode"},
                 {"data": "collegeIsDel"},
                 {"data": null}
             ],
@@ -95,7 +96,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                     }
                 },
                 {
-                    targets: 9,
+                    targets: 10,
                     orderable: false,
                     render: function (a, b, c, d) {
 
@@ -140,7 +141,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                     }
                 },
                 {
-                    targets: 8,
+                    targets: 9,
                     render: function (a, b, c, d) {
                         if (c.collegeIsDel === 0 || c.collegeIsDel == null) {
                             return "<span class='text-info'>正常</span>";

@@ -54,6 +54,12 @@
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
+                            <label>邮政编码（选填）</label>
+                            <input class="form-control" name="collegeZipCode" id="collegeZipCode"
+                                   placeholder="邮政编码" th:value="${college.collegeZipCode}"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
                             <label class="ckbox">
                                 <input type="checkbox" name="collegeIsDel" value="1"
                                        th:if="${college.collegeIsDel == 0 || college.collegeIsDel == null}"/>
