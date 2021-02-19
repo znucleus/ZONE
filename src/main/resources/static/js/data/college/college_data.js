@@ -75,6 +75,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                 {"data": "collegeName"},
                 {"data": "collegeCode"},
                 {"data": "collegeAddress"},
+                {"data": "collegeCoordinate"},
                 {"data": "collegeIsDel"},
                 {"data": null}
             ],
@@ -94,7 +95,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                     }
                 },
                 {
-                    targets: 8,
+                    targets: 9,
                     orderable: false,
                     render: function (a, b, c, d) {
 
@@ -139,7 +140,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                     }
                 },
                 {
-                    targets: 7,
+                    targets: 8,
                     render: function (a, b, c, d) {
                         if (c.collegeIsDel === 0 || c.collegeIsDel == null) {
                             return "<span class='text-info'>正常</span>";
@@ -231,11 +232,9 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
 
             if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.SCHOOL_NAME, param.schoolName);
-            }
-
-            if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.COLLEGE_NAME, param.collegeName);
             }
+
         }
 
         /*

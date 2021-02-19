@@ -36,23 +36,15 @@
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
-                            <select class="form-control select2-show-search" id="buildingClassify"
-                                    name="buildingClassifyId"
-                                    data-placeholder="请选择类型">
-                                <option label="请选择类型"></option>
-                            </select>
-                            <div class="invalid-feedback"></div>
-                        </div>
-                        <div class="form-group">
                             <label>楼</label>
                             <input class="form-control" name="buildingName" id="buildingName" maxlength="30"
                                    placeholder="楼名" th:value="${building.buildingName}"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
-                            <label>坐标</label>
-                            <input class="form-control" name="coordinate" id="coordinate" maxlength="1000"
-                                   placeholder="坐标" th:value="${building.coordinate}"/>
+                            <label>坐标（选填）</label>
+                            <input class="form-control" name="buildingCoordinate" id="buildingCoordinate"
+                                   placeholder="坐标" th:value="${building.buildingCoordinate}"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
@@ -76,7 +68,6 @@
 
     <input type="hidden" id="paramSchoolId" th:value="${building.schoolId}"/>
     <input type="hidden" id="paramCollegeId" th:value="${building.collegeId}"/>
-    <input type="hidden" id="paramBuildingClassifyId" th:value="${building.buildingClassifyId}"/>
     <input type="hidden" id="collegeId" th:value="${collegeId}"/>
     <input type="hidden" id="paramBuildingId" th:value="${building.buildingId}"/>
     <input type="hidden" class="dy_script"

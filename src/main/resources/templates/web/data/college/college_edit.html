@@ -48,6 +48,12 @@
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
+                            <label>坐标（选填）</label>
+                            <input class="form-control" name="collegeCoordinate" id="collegeCoordinate"
+                                   placeholder="坐标" th:value="${college.collegeCoordinate}"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
                             <label class="ckbox">
                                 <input type="checkbox" name="collegeIsDel" value="1"
                                        th:if="${college.collegeIsDel == 0 || college.collegeIsDel == null}"/>

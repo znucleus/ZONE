@@ -8,9 +8,8 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
         var param = {
             schoolName: '',
             collegeName: '',
-            buildingClassifyId: '',
             buildingName: '',
-            coordinate: ''
+            buildingCoordinate: ''
         };
 
         /*
@@ -19,9 +18,8 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
         var webStorageKey = {
             SCHOOL_NAME: 'DATA_BUILDING_SCHOOL_NAME_SEARCH',
             COLLEGE_NAME: 'DATA_BUILDING_COLLEGE_NAME_SEARCH',
-            BUILDING_CLASSIFY_ID: 'DATA_BUILDING_CLASSIFY_ID_SEARCH',
             BUILDING_NAME: 'DATA_BUILDING_BUILDING_NAME_SEARCH',
-            COORDINATE: 'DATA_BUILDING_COORDINATE_SEARCH',
+            BUILDING_COORDINATE: 'DATA_BUILDING_BUILDING_COORDINATE_SEARCH',
         };
 
         /*
@@ -30,7 +28,6 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
         function getAjaxUrl() {
             return {
                 data: web_path + '/web/data/building/paging',
-                obtain_building_classifies_data: web_path + '/users/data/building-classifies',
                 status: web_path + '/web/data/building/status',
                 add: '/web/data/building/add',
                 edit: '/web/data/building/edit',
@@ -79,9 +76,8 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
                 {"data": "buildingId"},
                 {"data": "schoolName"},
                 {"data": "collegeName"},
-                {"data": "buildingClassifyName"},
                 {"data": "buildingName"},
-                {"data": "coordinate"},
+                {"data": "buildingCoordinate"},
                 {"data": "buildingIsDel"},
                 {"data": null}
             ],
@@ -101,7 +97,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
                     }
                 },
                 {
-                    targets: 9,
+                    targets: 8,
                     orderable: false,
                     render: function (a, b, c, d) {
 
@@ -139,7 +135,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
                     }
                 },
                 {
-                    targets: 8,
+                    targets: 7,
                     render: function (a, b, c, d) {
                         if (c.buildingIsDel === 0 || c.buildingIsDel == null) {
                             return "<span class='text-info'>正常</span>";
@@ -208,9 +204,8 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
             return {
                 schoolName: '#search_school',
                 collegeName: '#search_college',
-                buildingClassifyId: '#search_building_classify_id',
                 buildingName: '#search_building',
-                coordinate: '#search_coordinate'
+                buildingCoordinate: '#search_coordinate'
             };
         }
 
@@ -221,59 +216,20 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
             return param;
         }
 
-        var init_configure = {
-            init_building_classify_id: false
-        };
-
         /*
          初始化参数
          */
         function initParam() {
             param.schoolName = $(getParamId().schoolName).val();
             param.collegeName = $(getParamId().collegeName).val();
-            param.buildingClassifyId = $(getParamId().buildingClassifyId).val();
             param.buildingName = $(getParamId().buildingName).val();
-            param.coordinate = $(getParamId().coordinate).val();
+            param.buildingCoordinate = $(getParamId().buildingCoordinate).val();
             if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.SCHOOL_NAME, DP.defaultUndefinedValue(param.schoolName, ''));
                 sessionStorage.setItem(webStorageKey.COLLEGE_NAME, DP.defaultUndefinedValue(param.collegeName, ''));
-                sessionStorage.setItem(webStorageKey.BUILDING_CLASSIFY_ID, param.buildingClassifyId != null ? param.buildingClassifyId : '');
                 sessionStorage.setItem(webStorageKey.BUILDING_NAME, param.buildingName);
-                sessionStorage.setItem(webStorageKey.COORDINATE, param.coordinate);
+                sessionStorage.setItem(webStorageKey.BUILDING_COORDINATE, param.buildingCoordinate);
             }
-        }
-
-        init();
-
-        function init() {
-            initSearchBuildingClassifyId();
-            initSelect2();
-        }
-
-        var buildingClassifySelect2 = null;
-
-        /**
-         * 初始化类型
-         */
-        function initSearchBuildingClassifyId() {
-            $.get(getAjaxUrl().obtain_building_classifies_data, function (data) {
-                $(getParamId().buildingClassifyId).html('<option label="请选择类型"></option>');
-                buildingClassifySelect2 = $(getParamId().buildingClassifyId).select2({data: data.results});
-
-                if (!init_configure.init_building_classify_id) {
-                    if (typeof (Storage) !== "undefined") {
-                        var buildingClassifyId = sessionStorage.getItem(webStorageKey.BUILDING_CLASSIFY_ID);
-                        buildingClassifySelect2.val(Number(buildingClassifyId)).trigger("change");
-                    }
-                    init_configure.init_building_classify_id = true;
-                }
-            });
-        }
-
-        function initSelect2() {
-            $('.select2-show-search').select2({
-                language: "zh-CN"
-            });
         }
 
         /*
@@ -283,14 +239,12 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
             var schoolName = null;
             var collegeName = null;
             var buildingName = null;
-            var buildingClassifyId = null;
-            var coordinate = null;
+            var buildingCoordinate = null;
             if (typeof (Storage) !== "undefined") {
                 schoolName = sessionStorage.getItem(webStorageKey.SCHOOL_NAME);
                 collegeName = sessionStorage.getItem(webStorageKey.COLLEGE_NAME);
-                buildingClassifyId = sessionStorage.getItem(webStorageKey.BUILDING_CLASSIFY_ID);
                 buildingName = sessionStorage.getItem(webStorageKey.BUILDING_NAME);
-                coordinate = sessionStorage.getItem(webStorageKey.COORDINATE);
+                buildingCoordinate = sessionStorage.getItem(webStorageKey.BUILDING_COORDINATE);
             }
             if (schoolName !== null) {
                 param.schoolName = schoolName;
@@ -300,16 +254,12 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
                 param.collegeName = collegeName;
             }
 
-            if (buildingClassifyId !== null) {
-                param.buildingClassifyId = buildingClassifyId;
-            }
-
             if (buildingName !== null) {
                 param.buildingName = buildingName;
             }
 
-            if (coordinate !== null) {
-                param.coordinate = coordinate;
+            if (buildingCoordinate !== null) {
+                param.buildingCoordinate = buildingCoordinate;
             }
         }
 
@@ -319,15 +269,13 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
         function initSearchInput() {
             var schoolName = null;
             var collegeName = null;
-            var buildingClassifyId = null;
             var buildingName = null;
-            var coordinate = null;
+            var buildingCoordinate = null;
             if (typeof (Storage) !== "undefined") {
                 schoolName = sessionStorage.getItem(webStorageKey.SCHOOL_NAME);
                 collegeName = sessionStorage.getItem(webStorageKey.COLLEGE_NAME);
-                buildingClassifyId = sessionStorage.getItem(webStorageKey.BUILDING_CLASSIFY_ID);
                 buildingName = sessionStorage.getItem(webStorageKey.BUILDING_NAME);
-                coordinate = sessionStorage.getItem(webStorageKey.COORDINATE);
+                buildingCoordinate = sessionStorage.getItem(webStorageKey.BUILDING_COORDINATE);
             }
             if (schoolName !== null) {
                 $(getParamId().schoolName).val(schoolName);
@@ -337,16 +285,12 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
                 $(getParamId().collegeName).val(collegeName);
             }
 
-            if (buildingClassifyId !== null) {
-                $(getParamId().buildingClassifyId).val(buildingClassifyId);
-            }
-
             if (buildingName !== null) {
                 $(getParamId().buildingName).val(buildingName);
             }
 
-            if (coordinate !== null) {
-                $(getParamId().coordinate).val(coordinate);
+            if (buildingCoordinate !== null) {
+                $(getParamId().buildingCoordinate).val(buildingCoordinate);
             }
         }
 
@@ -357,9 +301,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
             $(getParamId().schoolName).val('');
             $(getParamId().collegeName).val('');
             $(getParamId().buildingName).val('');
-            $(getParamId().coordinate).val('');
-
-            buildingClassifySelect2.val('').trigger("change");
+            $(getParamId().buildingCoordinate).val('');
         }
 
         $(getParamId().schoolName).keyup(function (event) {
@@ -376,11 +318,6 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
             }
         });
 
-        $(getParamId().buildingClassifyId).on('select2:select', function (e) {
-            initParam();
-            myTable.ajax.reload();
-        });
-
         $(getParamId().buildingName).keyup(function (event) {
             if (event.keyCode === 13) {
                 initParam();
@@ -388,7 +325,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
             }
         });
 
-        $(getParamId().coordinate).keyup(function (event) {
+        $(getParamId().buildingCoordinate).keyup(function (event) {
             if (event.keyCode === 13) {
                 initParam();
                 myTable.ajax.reload();

@@ -22,17 +22,10 @@
                         <div class="col-md-6 mt-2" sec:authorize="hasRole('ROLE_SYSTEM')">
                             <input type="text" id="search_college" class="form-control" placeholder="院"/>
                         </div>
-                        <div class="col-md-4 mt-2">
-                            <select class="form-control select2-show-search" id="search_building_classify_id"
-                                    name="buildingClassifyId"
-                                    data-placeholder="请选择类型">
-                                <option label="请选择类型"></option>
-                            </select>
-                        </div>
-                        <div class="col-md-4 mt-2">
+                        <div class="col-md-6 mt-2">
                             <input type="text" id="search_building" class="form-control" placeholder="楼名"/>
                         </div>
-                        <div class="col-md-4 mt-2">
+                        <div class="col-md-6 mt-2">
                             <input type="text" id="search_coordinate" class="form-control" placeholder="坐标"/>
                         </div>
                     </div>
@@ -58,7 +51,6 @@
                             <th class="not-mobile">id</th>
                             <th>学校</th>
                             <th>院</th>
-                            <th>类型</th>
                             <th>楼名</th>
                             <th class="none">坐标</th>
                             <th>状态</th>
