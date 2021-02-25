@@ -10,6 +10,7 @@ import org.springframework.core.env.Profiles;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import top.zbeboy.zbase.config.Workbook;
+import top.zbeboy.zbase.config.ZoneProperties;
 import top.zbeboy.zbase.domain.tables.pojos.*;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.service.util.UUIDUtil;
@@ -61,7 +62,7 @@ public class ScheduledConfiguration {
     private final Logger log = LoggerFactory.getLogger(ScheduledConfiguration.class);
 
     @Resource
-    private Environment env;
+    private ZoneProperties ZoneProperties;
 
     @Resource
     private InternshipApplyService internshipApplyService;
@@ -95,7 +96,7 @@ public class ScheduledConfiguration {
      */
     @Scheduled(cron = "0 15 02 * * ?") // 每天 晚间2点15分
     public void internshipApply() {
-        if (env.acceptsProfiles(Profiles.of(Workbook.SPRING_PROFILE_DEVELOPMENT, Workbook.SPRING_PROFILE_PRODUCTION))) {
+        if (ZoneProperties.getScheduled().getRun()) {
             // 更改实习提交状态
             internshipApplyService.updateState(0, 1);
             List<Integer> states = new ArrayList<>();
@@ -110,7 +111,7 @@ public class ScheduledConfiguration {
      */
     @Scheduled(cron = "0 30 00 * * ?") // 每天 晚间12点30分
     public void generateTrainingAttend() {
-        if (env.acceptsProfiles(Profiles.of(Workbook.SPRING_PROFILE_DEVELOPMENT, Workbook.SPRING_PROFILE_PRODUCTION))) {
+        if (ZoneProperties.getScheduled().getRun()) {
             Result<Record> records = trainingConfigureService.findIsAuto(ByteUtil.toByte(DateTimeUtil.getNowDayOfWeek()));
             if (records.isNotEmpty()) {
                 List<TrainingConfigure> trainingConfigures = records.into(TrainingConfigure.class);
@@ -155,7 +156,7 @@ public class ScheduledConfiguration {
      */
     @Scheduled(cron = "0 0 01 * * ?") // 每天 晚间01
     public void generateTheoryAttend() {
-        if (env.acceptsProfiles(Profiles.of(Workbook.SPRING_PROFILE_DEVELOPMENT, Workbook.SPRING_PROFILE_PRODUCTION))) {
+        if (ZoneProperties.getScheduled().getRun()) {
             Result<Record> records = theoryConfigureService.findIsAuto(ByteUtil.toByte(DateTimeUtil.getNowDayOfWeek()));
             if (records.isNotEmpty()) {
                 List<TheoryConfigure> theoryConfigures = records.into(TheoryConfigure.class);

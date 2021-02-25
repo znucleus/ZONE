@@ -1,7 +1,5 @@
 # spring setting
 spring:
-  profiles:
-    active: secrecy,dev
   application:
     name: web-server
   main:
