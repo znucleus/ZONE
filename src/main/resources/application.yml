@@ -20,6 +20,10 @@ info:
     artifactId: @project.artifactId@
     version: @project.version@
 
+jasypt:
+  encryptor:
+    password: piWo83yh
+
 # zone setting
 zone:
   async:
