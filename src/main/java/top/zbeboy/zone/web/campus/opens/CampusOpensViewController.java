@@ -152,7 +152,7 @@ public class CampusOpensViewController {
         String page;
         Users users = SessionUtil.getUserFromSession();
         if (campusOpensService.opensConditionAuthorize(users.getUsername())) {
-            page = "web/campus/opens/open_authorize::#page-wrapper";
+            page = "web/campus/opens/opens_authorize::#page-wrapper";
         } else {
             config.buildWarningTip("操作警告", "您无权限操作");
             config.dataMerging(modelMap);

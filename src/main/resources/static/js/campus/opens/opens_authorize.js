@@ -1,4 +1,4 @@
-//# sourceURL=open_authorize.js
+//# sourceURL=opens_authorize.js
 require(["jquery", "lodash", "tools", "moment-with-locales", "handlebars", "sweetalert2", "nav.active", "tablesaw", "messenger", "flatpickr-zh"],
     function ($, _, tools, moment, Handlebars, Swal, navActive) {
 
