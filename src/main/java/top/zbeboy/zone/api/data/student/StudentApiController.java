@@ -192,7 +192,7 @@ public class StudentApiController {
         }
 
         if (canRegister) {
-            Optional<UsersType> optionalUsersType = usersTypeService.findByUsersTypeName(Workbook.STAFF_USERS_TYPE);
+            Optional<UsersType> optionalUsersType = usersTypeService.findByUsersTypeName(Workbook.STUDENT_USERS_TYPE);
             if (optionalUsersType.isPresent()) {
                 UsersType usersType = optionalUsersType.get();
                 studentAddVo.setEnabled(BooleanUtil.toByte(true));

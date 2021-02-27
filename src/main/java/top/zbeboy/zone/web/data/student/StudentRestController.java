@@ -119,7 +119,7 @@ public class StudentRestController {
         if (!ObjectUtils.isEmpty(session.getAttribute(studentAddVo.getMobile() + SystemMobileConfig.MOBILE_VALID))) {
             boolean isValid = (boolean) session.getAttribute(studentAddVo.getMobile() + SystemMobileConfig.MOBILE_VALID);
             if (isValid) {
-                Optional<UsersType> optionalUsersType = usersTypeService.findByUsersTypeName(Workbook.STAFF_USERS_TYPE);
+                Optional<UsersType> optionalUsersType = usersTypeService.findByUsersTypeName(Workbook.STUDENT_USERS_TYPE);
                 if(optionalUsersType.isPresent()){
                     UsersType usersType = optionalUsersType.get();
                     studentAddVo.setEnabled(BooleanUtil.toByte(true));
