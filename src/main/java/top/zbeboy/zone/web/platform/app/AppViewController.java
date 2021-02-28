@@ -78,4 +78,14 @@ public class AppViewController {
     public String articlesCreate() {
         return "web/platform/app/articles/create::#page-wrapper";
     }
+
+    /**
+     * API 文档
+     *
+     * @return 页面
+     */
+    @GetMapping("/web/platform/app/articles/api")
+    public String articlesApi() {
+        return "web/platform/app/articles/api::#page-wrapper";
+    }
 }
