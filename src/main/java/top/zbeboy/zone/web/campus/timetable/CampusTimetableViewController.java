@@ -119,7 +119,7 @@ public class CampusTimetableViewController {
         Users users = SessionUtil.getUserFromSession();
         if (campusTimetableService.canOperator(users.getUsername(), id)) {
             Optional<CampusCourseRelease> optionalCampusCourseRelease = campusTimetableService.findById(id);
-            if(optionalCampusCourseRelease.isPresent()){
+            if (optionalCampusCourseRelease.isPresent()) {
                 modelMap.addAttribute("campusCourseRelease", optionalCampusCourseRelease.get());
                 page = "web/campus/timetable/timetable_release_edit::#page-wrapper";
             } else {
@@ -242,6 +242,29 @@ public class CampusTimetableViewController {
             }
         } else {
             config.buildDangerTip("查询错误", "未查询到课程信息");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
+
+    /**
+     * 新教务系统数据导入
+     *
+     * @param id       课表id
+     * @param modelMap 页面对象
+     * @return 页面
+     */
+    @GetMapping("/web/campus/timetable/course/new-edu/add/{id}")
+    public String newEduAdd(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        Users users = SessionUtil.getUserFromSession();
+        if (campusTimetableService.canOperator(users.getUsername(), id)) {
+            modelMap.addAttribute("campusCourseReleaseId", id);
+            page = "web/campus/timetable/timetable_course_new_edu_add::#page-wrapper";
+        } else {
+            config.buildWarningTip("操作警告", "您无权限操作");
             config.dataMerging(modelMap);
             page = "inline_tip::#page-wrapper";
         }

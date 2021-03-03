@@ -16,6 +16,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
             course_add: '/web/campus/timetable/course/add',
             course_edu_attend_class_add: '/web/campus/timetable/course/edu/organize/add',
             course_edu_teacher_add: '/web/campus/timetable/course/edu/teacher/add',
+            course_new_edu_add: '/web/campus/timetable/course/new-edu/add',
             course_share_add: '/web/campus/timetable/course/share/add',
             course_edit: '/web/campus/timetable/course/edit',
             course_del: '/web/campus/timetable/course/delete',
@@ -341,6 +342,18 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
                 }
                 return new Handlebars.SafeString(Handlebars.escapeExpression(bgColor));
             });
+
+            Handlebars.registerHelper('weekUnit', function () {
+                var weekUnit = '';
+                var startWeek = this.startWeek;
+                var endWeek = this.endWeek;
+                if (!endWeek || endWeek === '') {
+                    weekUnit = startWeek + '周';
+                } else {
+                    weekUnit = startWeek + '-' + endWeek + '周';
+                }
+                return new Handlebars.SafeString(Handlebars.escapeExpression(weekUnit));
+            });
             return template(d);
         }
 
@@ -353,6 +366,18 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
                 }
                 bgColor += ' tx-white';
                 return new Handlebars.SafeString(Handlebars.escapeExpression(bgColor));
+            });
+
+            Handlebars.registerHelper('weekUnit', function () {
+                var weekUnit = '';
+                var startWeek = this.startWeek;
+                var endWeek = this.endWeek;
+                if (!endWeek || endWeek === '') {
+                    weekUnit = startWeek + '周';
+                } else {
+                    weekUnit = startWeek + '-' + endWeek + '周';
+                }
+                return new Handlebars.SafeString(Handlebars.escapeExpression(weekUnit));
             });
             return template(d);
         }
@@ -454,6 +479,15 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
             var id = $('#shareId').text();
             if (id !== '') {
                 $.address.value(ajax_url.course_edu_teacher_add + '/' + id);
+            } else {
+                tools.validSelect2ErrorDom('#timetable', '请选择课表');
+            }
+        });
+
+        $('#addNewEdu').click(function () {
+            var id = $('#shareId').text();
+            if (id !== '') {
+                $.address.value(ajax_url.course_new_edu_add + '/' + id);
             } else {
                 tools.validSelect2ErrorDom('#timetable', '请选择课表');
             }

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="br-pageheader pd-y-15 pd-l-20">
+        <nav class="breadcrumb pd-0 mg-0 tx-12">
+            <a class="breadcrumb-item dy_href" href="#/web/menu/campus/timetable">课表</a>
+            <span class="breadcrumb-item active">导入新教务系统</span>
+        </nav>
+    </div><!-- br-pageheader -->
+    <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
+        <h4 class="tx-gray-800 mg-b-5">课表</h4>
+        <p class="mg-b-0">导入新教务系统。</p>
+    </div>
+
+    <div class="br-pagebody">
+        <div class="br-section-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <form>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="新教务系统账号" id="username" name="username"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" class="form-control" placeholder="新教务系统密码" id="password" name="password"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group text-danger" id="globalError"></div>
+                        <div class="form-group text-center">
+                            <button type="button" class="btn btn-primary text-center" id="loginQuery">登录查询</button>
+                        </div>
+                    </form>
+                    <form id="app_form">
+                        <div class="form-group">
+                            <label>请选择课程导入(无班级，课程，上课星期信息的记录示为无效记录，不进行导入)
+                            </label>
+                            <div class="bd bd-gray-300 rounded table-responsive" id="dataId">
+                                <table class="table mg-b-0">
+                                    <thead>
+                                    <tr>
+                                        <th>
+                                            <input type="checkbox" name="checkall" id="checkall"/>
+                                        </th>
+                                        <th>班级</th>
+                                        <th>课程</th>
+                                        <th>教室</th>
+                                        <th>开始上课周</th>
+                                        <th>结束上课周</th>
+                                        <th>上课星期</th>
+                                        <th>当天上课开始时间</th>
+                                        <th>当天上课结束时间</th>
+                                        <th>教师姓名</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="selectData">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group text-center">
+                            <button type="button" class="btn btn-primary text-center" id="save">保存</button>
+                            <button type="reset" class="btn btn-default">重置</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--定义数据模板-->
+    <script id="data-template" type="text/x-handlebars-template">
+        {{#each listResult}}
+        <tr>
+            <th scope="row">
+                <input type="checkbox" value="{{@index}}" name="check"/>
+            </th>
+            <td>{{attendClass}}</td>
+            <td>
+                {{courseName}}
+            </td>
+            <td>
+                {{classroom}}
+            </td>
+            <td>
+                {{openDate}}
+            </td>
+            <td>
+                {{closeDate}}
+            </td>
+            <td>
+                {{week}}
+            </td>
+            <td>
+                {{classTime}}
+            </td>
+            <td>
+                {{overTime}}
+            </td>
+            <td>
+                {{teacherName}}
+            </td>
+        </tr>
+        {{/each}}
+    </script>
+
+    <input type="hidden" id="campusCourseReleaseId" th:value="${campusCourseReleaseId}"/>
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/campus/timetable/timetable_course_new_edu_add.js')}"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>

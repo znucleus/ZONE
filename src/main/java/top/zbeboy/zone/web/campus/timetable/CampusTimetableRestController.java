@@ -1,6 +1,7 @@
 package top.zbeboy.zone.web.campus.timetable;
 
 import com.alibaba.fastjson.JSON;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ import top.zbeboy.zbase.vo.campus.timetable.CampusCourseDataAddVo;
 import top.zbeboy.zbase.vo.campus.timetable.CampusCourseDataEditVo;
 import top.zbeboy.zbase.vo.campus.timetable.CampusCourseReleaseAddVo;
 import top.zbeboy.zbase.vo.campus.timetable.CampusCourseReleaseEditVo;
+import top.zbeboy.zone.service.campus.CampusTimetableEduService;
 import top.zbeboy.zone.web.campus.common.CampusUrlCommon;
 import top.zbeboy.zone.web.util.SessionUtil;
 
@@ -35,6 +37,9 @@ public class CampusTimetableRestController {
 
     @Resource
     private CampusTimetableService campusTimetableService;
+
+    @Resource
+    private CampusTimetableEduService campusTimetableEduService;
 
     /**
      * 通过主键查询
@@ -276,6 +281,37 @@ public class CampusTimetableRestController {
     public ResponseEntity<Map<String, Object>> courseDelete(@RequestParam("id") String id) {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Map<String, Object>> ajaxUtil = campusTimetableService.courseDelete(users.getUsername(), id);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 新教务系统数据
+     *
+     * @param username 账号
+     * @param password 密码
+     * @return 数据
+     */
+    @GetMapping("/web/campus/timetable/course/new-edu/data")
+    public ResponseEntity<Map<String, Object>> courseNewEduData(@RequestParam("username") String username, @RequestParam("password") String password) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        try{
+            Map<String, Object> result = campusTimetableEduService.data(username, password);
+            Boolean hasError = (Boolean) result.get("hasError");
+            if(!hasError){
+                List<Map<String, Object>> list = (List<Map<String, Object>>) result.get("data");
+                ajaxUtil.success().msg("获取数据成功").list(list);
+            } else {
+                String statusCode = (String) result.get("statusCode");
+                String reasonPhrase = (String) result.get("reasonPhrase");
+                if(StringUtils.contains(reasonPhrase, "【LOGIN_FAIL】")){
+                    ajaxUtil.fail().msg("用户名或密码错误");
+                } else {
+                    ajaxUtil.fail().msg("登录失败，请稍后重试或联系管理员，错误：" + statusCode + " error:" + reasonPhrase);
+                }
+            }
+        } catch (Exception e){
+            ajaxUtil.fail().msg("登录异常，error: " + e.getMessage());
+        }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

@@ -124,6 +124,18 @@ require(["jquery", "requirejs-domready", "tools", "handlebars", "csrf", "bootstr
                     }
                     return new Handlebars.SafeString(Handlebars.escapeExpression(bgColor));
                 });
+
+                Handlebars.registerHelper('weekUnit', function () {
+                    var weekUnit = '';
+                    var startWeek = this.startWeek;
+                    var endWeek = this.endWeek;
+                    if (!endWeek || endWeek === '') {
+                        weekUnit = startWeek + '周';
+                    } else {
+                        weekUnit = startWeek + '-' + endWeek + '周';
+                    }
+                    return new Handlebars.SafeString(Handlebars.escapeExpression(weekUnit));
+                });
                 return template(d);
             }
 
@@ -136,6 +148,18 @@ require(["jquery", "requirejs-domready", "tools", "handlebars", "csrf", "bootstr
                     }
                     bgColor += ' tx-white';
                     return new Handlebars.SafeString(Handlebars.escapeExpression(bgColor));
+                });
+
+                Handlebars.registerHelper('weekUnit', function () {
+                    var weekUnit = '';
+                    var startWeek = this.startWeek;
+                    var endWeek = this.endWeek;
+                    if (!endWeek || endWeek === '') {
+                        weekUnit = startWeek + '周';
+                    } else {
+                        weekUnit = startWeek + '-' + endWeek + '周';
+                    }
+                    return new Handlebars.SafeString(Handlebars.escapeExpression(weekUnit));
                 });
                 return template(d);
             }
