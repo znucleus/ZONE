@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import top.zbeboy.zbase.bean.data.staff.StaffBean;
 import top.zbeboy.zbase.bean.data.student.StudentBean;
+import top.zbeboy.zbase.bean.internship.release.InternshipReleaseBean;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.*;
 import top.zbeboy.zbase.feign.data.OrganizeService;
@@ -16,6 +17,7 @@ import top.zbeboy.zbase.feign.data.StudentService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zone.service.internship.InternshipApplyService;
 import top.zbeboy.zone.service.internship.InternshipInfoService;
+import top.zbeboy.zone.service.internship.InternshipReleaseService;
 import top.zbeboy.zone.service.internship.InternshipTeacherDistributionService;
 import top.zbeboy.zone.web.internship.common.InternshipConditionCommon;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
@@ -39,6 +41,9 @@ public class InternshipApplyViewController {
 
     @Resource
     private InternshipApplyService internshipApplyService;
+
+    @Resource
+    private InternshipReleaseService internshipReleaseService;
 
     @Resource
     private StudentService studentService;
@@ -108,11 +113,23 @@ public class InternshipApplyViewController {
                     Optional<StaffBean> optionalStaffBean = staffService.findByIdRelation(internshipTeacherDistribution.getStaffId());
                     if (optionalStaffBean.isPresent()) {
                         StaffBean bean = optionalStaffBean.get();
-                        modelMap.put("internshipTeacherName", bean.getRealName());
-                        modelMap.put("internshipTeacherMobile", bean.getMobile());
                         modelMap.put("internshipTeacher", bean.getRealName() + " " + bean.getMobile());
+
+                        Optional<Record> internshipReleaseRecord = internshipReleaseService.findByIdRelation(id);
+                        if (internshipReleaseRecord.isPresent()) {
+                            InternshipReleaseBean internshipRelease = internshipReleaseRecord.get().into(InternshipReleaseBean.class);
+                            if(StringUtils.equals(Workbook.POST_PRACTICE_INTERNSHIP_TYPE, internshipRelease.getInternshipTypeName()) ||
+                                    StringUtils.equals(Workbook.GRADUATION_PRACTICE_IN_SCHOOL_INTERNSHIP_TYPE, internshipRelease.getInternshipTypeName())){
+                                modelMap.put("companyName", studentBean.getSchoolName() + studentBean.getCollegeName());
+                                modelMap.put("companyAddress", studentBean.getCollegeAddress());
+                                modelMap.put("companyContact", bean.getRealName());
+                                modelMap.put("companyMobile", bean.getMobile());
+                            }
+                        }
                     }
                 }
+
+
             }
             modelMap.addAttribute("internshipReleaseId", id);
             page = "web/internship/apply/internship_apply_add::#page-wrapper";
