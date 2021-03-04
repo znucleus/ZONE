@@ -42,6 +42,15 @@ public class TestDate {
         System.out.print(Weeks.weeksBetween(dt1, dt2).getWeeks() + 1 + " 周 ");
     }
 
+    @Test
+    public void calcWeekNextDay(){
+        java.sql.Date data1 = DateTimeUtil.defaultParseSqlDate("2021-03-01");
+        DateTime dt1 = new DateTime(data1);
+        dt1 = dt1.plusWeeks(4);
+        dt1 = dt1.withDayOfWeek(4);
+        System.out.println(DateFormatUtils.format(dt1.toDate(), DateTimeUtil.STANDARD_FORMAT));
+    }
+
     private LocalDate calcNextFriday(LocalDate d) {
         return d.with(TemporalAdjusters.next(DayOfWeek.TUESDAY));
     }

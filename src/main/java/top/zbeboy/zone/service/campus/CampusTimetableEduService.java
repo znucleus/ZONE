@@ -1,5 +1,7 @@
 package top.zbeboy.zone.service.campus;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Map;
 
 public interface CampusTimetableEduService {
@@ -12,4 +14,13 @@ public interface CampusTimetableEduService {
      * @return 数据
      */
     Map<String, Object> data(String username, String password) throws Exception;
+
+    /**
+     * 生成日历
+     *
+     * @param campusCourseReleaseId 课表发布id
+     * @param calendarId            校历id
+     * @param path                  ics路径
+     */
+    void generateIcs(String campusCourseReleaseId, String calendarId, String path) throws IOException;
 }

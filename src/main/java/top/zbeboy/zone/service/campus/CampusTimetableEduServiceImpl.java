@@ -3,8 +3,18 @@ package top.zbeboy.zone.service.campus;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import net.fortuna.ical4j.data.CalendarOutputter;
+import net.fortuna.ical4j.model.TimeZone;
+import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.component.VAlarm;
+import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.component.VTimeZone;
+import net.fortuna.ical4j.model.property.*;
+import net.fortuna.ical4j.util.RandomUidGenerator;
+import net.fortuna.ical4j.util.UidGenerator;
 import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.http.HttpEntity;
@@ -21,14 +31,26 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
+import top.zbeboy.zbase.bean.educational.calendar.SchoolCalendarBean;
+import top.zbeboy.zbase.domain.tables.pojos.CampusCourseData;
+import top.zbeboy.zbase.feign.campus.timetable.CampusTimetableService;
+import top.zbeboy.zbase.feign.educational.calendar.EducationalCalendarService;
+import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.annotation.Resource;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.*;
 
 @Service("campusTimetableEduService")
 public class CampusTimetableEduServiceImpl implements CampusTimetableEduService {
+
+    @Resource
+    private CampusTimetableService campusTimetableService;
+
+    @Resource
+    private EducationalCalendarService educationalCalendarService;
 
     @Override
     public Map<String, Object> data(String username, String password) throws Exception {
@@ -115,6 +137,146 @@ public class CampusTimetableEduServiceImpl implements CampusTimetableEduService 
             result.put("reasonPhrase", response.getStatusLine().getReasonPhrase() + "【LOGIN_SALT】");
         }
         return result;
+    }
+
+    @Override
+    public void generateIcs(String campusCourseReleaseId, String calendarId, String path) throws IOException {
+        // Create a calendar
+        net.fortuna.ical4j.model.Calendar icsCalendar = new net.fortuna.ical4j.model.Calendar();
+        icsCalendar.getProperties().add(new ProdId("-//Timetable Calendar//iCal4j 1.0//EN"));
+        icsCalendar.getProperties().add(Version.VERSION_2_0);
+        icsCalendar.getProperties().add(CalScale.GREGORIAN);
+        //校历
+        Optional<SchoolCalendarBean> optionalSchoolCalendarBean = educationalCalendarService.findByIdRelation(calendarId);
+        if (optionalSchoolCalendarBean.isPresent()) {
+            SchoolCalendarBean schoolCalendarBean = optionalSchoolCalendarBean.get();
+            // Create a TimeZone
+            TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
+            TimeZone timezone = registry.getTimeZone("Asia/Shanghai");
+            VTimeZone tz = timezone.getVTimeZone();
+
+            Optional<List<CampusCourseData>> optionalCampusCourseDataList = campusTimetableService.findCourseByCampusCourseReleaseId(campusCourseReleaseId);
+            if (optionalCampusCourseDataList.isPresent()) {
+                List<CampusCourseData> campusCourseDataList = optionalCampusCourseDataList.get();
+                if (CollectionUtils.isNotEmpty(campusCourseDataList)) {
+                    for (CampusCourseData campusCourseData : campusCourseDataList) {
+                        // Start Date is on: April 1, 2008, 9:00 am
+                        java.util.Calendar startDate = new GregorianCalendar();
+                        startDate.setTimeZone(timezone);
+
+                        // End Date is on: April 1, 2008, 13:00
+                        java.util.Calendar endDate = new GregorianCalendar();
+                        endDate.setTimeZone(timezone);
+
+                        String courseName = campusCourseData.getCourseName();
+                        String buildingName = campusCourseData.getBuildingName();
+
+                        java.sql.Time startTime = campusCourseData.getStartTime();
+                        if(Objects.isNull(startTime)){
+                            startTime = DateTimeUtil.getNowSqlTime();
+                        }
+
+                        java.sql.Time endTime = campusCourseData.getEndTime();
+                        if(Objects.isNull(endTime)){
+                            endTime = DateTimeUtil.getNowSqlTime();
+                        }
+
+                        Integer startWeek = campusCourseData.getStartWeek();
+                        if(Objects.isNull(startWeek)){
+                            startWeek = 1;
+                        }
+                        Integer endWeek = campusCourseData.getEndWeek();
+                        if(Objects.isNull(endWeek)){
+                            endWeek = 1;
+                        }
+
+                        Byte weekDay = campusCourseData.getWeekDay();
+                        if(Objects.isNull(weekDay)){
+                            weekDay = 1;
+                        }
+
+                        // 1.日历偏移开始周数 算开始时间
+                        java.util.Date deviationCalendarStartDate = calcDeviationDate(schoolCalendarBean.getStartDate(), startWeek, weekDay);
+                        String finishStartDate = DateTimeUtil.formatUtilDate(deviationCalendarStartDate, DateTimeUtil.YEAR_MONTH_DAY_FORMAT) + " " + DateTimeUtil.defaultFormatSqlTime(startTime);
+                        startDate.setTime(DateTimeUtil.parseUtilDate(finishStartDate, DateTimeUtil.STANDARD_FORMAT));
+
+                        String finishEndDate = DateTimeUtil.formatUtilDate(deviationCalendarStartDate, DateTimeUtil.YEAR_MONTH_DAY_FORMAT) + " " + DateTimeUtil.defaultFormatSqlTime(endTime);
+                        endDate.setTime(DateTimeUtil.parseUtilDate(finishEndDate, DateTimeUtil.STANDARD_FORMAT));
+
+                        // Create the event
+                        DateTime start = new DateTime(startDate.getTime());
+                        DateTime end = new DateTime(endDate.getTime());
+                        VEvent meeting = new VEvent(start, end, courseName);
+                        meeting.getProperties().add(new Location(buildingName));
+
+                        String startWeekContent = "";
+                        if(Objects.nonNull(campusCourseData.getStartWeek())){
+                            startWeekContent = campusCourseData.getStartWeek() + "";
+                        }
+
+                        String endWeekContent = "";
+                        if(Objects.nonNull(campusCourseData.getEndWeek())){
+                            endWeekContent = campusCourseData.getEndWeek() + "";
+                        }
+
+                        String startTimeContent = "";
+                        if(Objects.nonNull(campusCourseData.getStartTime())){
+                            startTimeContent = DateTimeUtil.defaultFormatSqlTime(campusCourseData.getStartTime());
+                        }
+
+                        String endTimeContent = "";
+                        if(Objects.nonNull(campusCourseData.getEndTime())){
+                            endTimeContent = DateTimeUtil.defaultFormatSqlTime(campusCourseData.getEndTime());
+                        }
+
+                        String description = startWeekContent + "-" + endWeekContent + "周 " + startTimeContent + "-" + endTimeContent;
+
+                        meeting.getProperties().add(new Description(description));
+
+                        int count = endWeek - startWeek;
+
+                        // 重复事件
+                        if (count > 0) {
+                            Recur recur = new Recur(Recur.Frequency.WEEKLY, count + 1);
+                            recur.getDayList().add(getWeekday(campusCourseData.getWeekDay()));
+                            RRule rule = new RRule(recur);
+                            meeting.getProperties().add(rule);
+                        }
+
+                        // 提醒,提前15分钟
+                        VAlarm valarm = new VAlarm(java.time.Duration.ofMinutes(-15));
+                        valarm.getProperties().add(new Summary(courseName));
+                        valarm.getProperties().add(Action.DISPLAY);
+                        valarm.getProperties().add(new Location(buildingName));
+                        valarm.getProperties().add(new Description(description));
+                        // 将VAlarm加入VEvent
+                        meeting.getAlarms().add(valarm);
+
+                        // add timezone info..
+                        meeting.getProperties().add(tz.getTimeZoneId());
+
+                        // generate unique identifier..
+                        UidGenerator ug = new RandomUidGenerator();
+                        Uid uid = ug.generateUid();
+                        meeting.getProperties().add(uid);
+
+                        // Add the event and print
+                        icsCalendar.getComponents().add(meeting);
+                        // 验证
+                        icsCalendar.validate();
+                    }
+                }
+            }
+        }
+
+        File saveFile = new File(path);
+        if (!saveFile.getParentFile().exists()) {//create file
+            saveFile.getParentFile().mkdirs();
+        }
+
+        FileOutputStream fout = new FileOutputStream(saveFile);
+        CalendarOutputter outputter = new CalendarOutputter();
+        outputter.output(icsCalendar, fout);
     }
 
     private String getSemesters(String str) {
@@ -322,5 +484,53 @@ public class CampusTimetableEduServiceImpl implements CampusTimetableEduService 
         }
         return eu;
 
+    }
+
+    /**
+     * 计算时间偏移
+     *
+     * @param date    开始日期
+     * @param week    偏移周
+     * @param weekDay 那一周的周几
+     * @return 时间
+     */
+    private java.util.Date calcDeviationDate(java.sql.Date date, int week, int weekDay) {
+        int deviationWeek = week - 1;
+        org.joda.time.DateTime dt1 = new org.joda.time.DateTime(date);
+        if (deviationWeek > 0) {
+            dt1 = dt1.plusWeeks(deviationWeek);
+        }
+        dt1 = dt1.withDayOfWeek(weekDay);
+        return dt1.toDate();
+    }
+
+    private WeekDay getWeekday(int weekDay) {
+        WeekDay wv;
+        switch (weekDay) {
+            case 1:
+                wv = WeekDay.MO;
+                break;
+            case 2:
+                wv = WeekDay.TU;
+                break;
+            case 3:
+                wv = WeekDay.WE;
+                break;
+            case 4:
+                wv = WeekDay.TH;
+                break;
+            case 5:
+                wv = WeekDay.FR;
+                break;
+            case 6:
+                wv = WeekDay.SA;
+                break;
+            case 7:
+                wv = WeekDay.SU;
+                break;
+            default:
+                wv = WeekDay.MO;
+        }
+        return wv;
     }
 }

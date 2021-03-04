@@ -23,6 +23,7 @@ import top.zbeboy.zone.web.util.SpringBootUtil;
 public class Application {
 
     public static void main(String[] args) {
+        System.setProperty("net.fortuna.ical4j.timezone.cache.impl", "net.fortuna.ical4j.util.MapTimeZoneCache");
         SpringApplication.run(Application.class, args);
     }
 }

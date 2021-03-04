@@ -22,11 +22,14 @@ import top.zbeboy.zbase.vo.campus.timetable.CampusCourseDataEditVo;
 import top.zbeboy.zbase.vo.campus.timetable.CampusCourseReleaseAddVo;
 import top.zbeboy.zbase.vo.campus.timetable.CampusCourseReleaseEditVo;
 import top.zbeboy.zone.service.campus.CampusTimetableEduService;
+import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zone.web.campus.common.CampusUrlCommon;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -40,6 +43,9 @@ public class CampusTimetableRestController {
 
     @Resource
     private CampusTimetableEduService campusTimetableEduService;
+
+    @Resource
+    private UploadService uploadService;
 
     /**
      * 通过主键查询
@@ -68,7 +74,7 @@ public class CampusTimetableRestController {
         Users users = SessionUtil.getUserFromSession();
         Select2Data select2Data = Select2Data.of();
         Optional<List<CampusCourseRelease>> optionalCampusCourseReleases = campusTimetableService.findByUsername(users.getUsername());
-        if(optionalCampusCourseReleases.isPresent()){
+        if (optionalCampusCourseReleases.isPresent()) {
             List<CampusCourseRelease> campusCourseReleases = optionalCampusCourseReleases.get();
             campusCourseReleases.forEach(release -> select2Data.add(release.getCampusCourseReleaseId(), release.getTitle()));
         }
@@ -223,7 +229,7 @@ public class CampusTimetableRestController {
     public ResponseEntity<Map<String, Object>> courses(@PathVariable("campusCourseReleaseId") String campusCourseReleaseId) {
         AjaxUtil<CampusCourseData> ajaxUtil = AjaxUtil.of();
         Optional<List<CampusCourseData>> optionalCampusCourseData = campusTimetableService.findCourseByCampusCourseReleaseId(campusCourseReleaseId);
-        if(optionalCampusCourseData.isPresent()){
+        if (optionalCampusCourseData.isPresent()) {
             ajaxUtil.success().msg("获取数据成功").list(optionalCampusCourseData.get()).put("weekDay", DateTimeUtil.getNowDayOfWeek());
         } else {
             ajaxUtil.fail().msg("获取数据失败");
@@ -244,7 +250,7 @@ public class CampusTimetableRestController {
         if (optionalCampusCourseRelease.isPresent()) {
             CampusCourseRelease release = optionalCampusCourseRelease.get();
             Optional<List<CampusCourseData>> optionalCampusCourseData = campusTimetableService.findCourseByCampusCourseReleaseId(campusCourseReleaseId);
-            if(optionalCampusCourseData.isPresent()){
+            if (optionalCampusCourseData.isPresent()) {
                 ajaxUtil.success().msg("获取数据成功").list(optionalCampusCourseData.get())
                         .put("release", release)
                         .put("weekDay", DateTimeUtil.getNowDayOfWeek());
@@ -294,23 +300,43 @@ public class CampusTimetableRestController {
     @GetMapping("/web/campus/timetable/course/new-edu/data")
     public ResponseEntity<Map<String, Object>> courseNewEduData(@RequestParam("username") String username, @RequestParam("password") String password) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        try{
+        try {
             Map<String, Object> result = campusTimetableEduService.data(username, password);
             Boolean hasError = (Boolean) result.get("hasError");
-            if(!hasError){
+            if (!hasError) {
                 List<Map<String, Object>> list = (List<Map<String, Object>>) result.get("data");
                 ajaxUtil.success().msg("获取数据成功").list(list);
             } else {
                 String statusCode = (String) result.get("statusCode");
                 String reasonPhrase = (String) result.get("reasonPhrase");
-                if(StringUtils.contains(reasonPhrase, "【LOGIN_FAIL】")){
+                if (StringUtils.contains(reasonPhrase, "【LOGIN_FAIL】")) {
                     ajaxUtil.fail().msg("用户名或密码错误");
                 } else {
                     ajaxUtil.fail().msg("登录失败，请稍后重试或联系管理员，错误：" + statusCode + " error:" + reasonPhrase);
                 }
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             ajaxUtil.fail().msg("登录异常，error: " + e.getMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 导出数据为日历格式
+     *
+     * @param request 请求
+     */
+    @GetMapping("/web/campus/timetable/course/generate-ics")
+    public ResponseEntity<Map<String, Object>> generateIcs(@RequestParam("campusCourseReleaseId") String campusCourseReleaseId, @RequestParam("calendarId") String calendarId,
+                          HttpServletRequest request) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        try{
+            String filePath = Workbook.campusTimetableIcsFilePath() + campusCourseReleaseId + ".ics";
+            String path = RequestUtil.getRealPath(request) + filePath;
+            campusTimetableEduService.generateIcs(campusCourseReleaseId, calendarId, path);
+            ajaxUtil.success().msg("生成成功").put("path", filePath);
+        } catch (Exception e) {
+            ajaxUtil.fail().msg("生成文件异常，error: " + e.getMessage());
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
