@@ -96,7 +96,10 @@ public class CampusTimetableEduServiceImpl implements CampusTimetableEduService 
                     if (courseTableResponse.getStatusLine().getStatusCode() == 200) {
                         HttpEntity courseTableResponseEntity = courseTableResponse.getEntity();
                         String courseTableResult = EntityUtils.toString(courseTableResponseEntity);
-                        String semesterId = getSemesters(courseTableResult);
+                        Map<String, String> semesters = getSemesters(courseTableResult);
+                        String semesterId = semesters.get("id");
+                        result.put("schoolYear", semesters.get("schoolYear"));
+                        result.put("semesters", semesters.get("semesters"));
 
                         if (StringUtils.isNotBlank(semesterId)) {
                             HttpGet semesterGet = new HttpGet(String.format(semesterUri, semesterId, semesterId));
@@ -172,26 +175,26 @@ public class CampusTimetableEduServiceImpl implements CampusTimetableEduService 
                         String buildingName = campusCourseData.getBuildingName();
 
                         java.sql.Time startTime = campusCourseData.getStartTime();
-                        if(Objects.isNull(startTime)){
+                        if (Objects.isNull(startTime)) {
                             startTime = DateTimeUtil.getNowSqlTime();
                         }
 
                         java.sql.Time endTime = campusCourseData.getEndTime();
-                        if(Objects.isNull(endTime)){
+                        if (Objects.isNull(endTime)) {
                             endTime = DateTimeUtil.getNowSqlTime();
                         }
 
                         Integer startWeek = campusCourseData.getStartWeek();
-                        if(Objects.isNull(startWeek)){
+                        if (Objects.isNull(startWeek)) {
                             startWeek = 1;
                         }
                         Integer endWeek = campusCourseData.getEndWeek();
-                        if(Objects.isNull(endWeek)){
+                        if (Objects.isNull(endWeek)) {
                             endWeek = 1;
                         }
 
                         Byte weekDay = campusCourseData.getWeekDay();
-                        if(Objects.isNull(weekDay)){
+                        if (Objects.isNull(weekDay)) {
                             weekDay = 1;
                         }
 
@@ -210,22 +213,22 @@ public class CampusTimetableEduServiceImpl implements CampusTimetableEduService 
                         meeting.getProperties().add(new Location(buildingName));
 
                         String startWeekContent = "";
-                        if(Objects.nonNull(campusCourseData.getStartWeek())){
+                        if (Objects.nonNull(campusCourseData.getStartWeek())) {
                             startWeekContent = campusCourseData.getStartWeek() + "";
                         }
 
                         String endWeekContent = "";
-                        if(Objects.nonNull(campusCourseData.getEndWeek())){
+                        if (Objects.nonNull(campusCourseData.getEndWeek())) {
                             endWeekContent = campusCourseData.getEndWeek() + "";
                         }
 
                         String startTimeContent = "";
-                        if(Objects.nonNull(campusCourseData.getStartTime())){
+                        if (Objects.nonNull(campusCourseData.getStartTime())) {
                             startTimeContent = DateTimeUtil.defaultFormatSqlTime(campusCourseData.getStartTime());
                         }
 
                         String endTimeContent = "";
-                        if(Objects.nonNull(campusCourseData.getEndTime())){
+                        if (Objects.nonNull(campusCourseData.getEndTime())) {
                             endTimeContent = DateTimeUtil.defaultFormatSqlTime(campusCourseData.getEndTime());
                         }
 
@@ -279,10 +282,10 @@ public class CampusTimetableEduServiceImpl implements CampusTimetableEduService 
         outputter.output(icsCalendar, fout);
     }
 
-    private String getSemesters(String str) {
+    private Map<String, String> getSemesters(String str) {
+        Map<String, String> params = new HashMap<>();
         Document doc = Jsoup.parse(str, CharEncoding.UTF_8);
 
-        String valueId = "";
         boolean isV = false;
         Elements allSemestersSelects = doc.getElementsByAttributeValue("id", "allSemesters");
         for (Element as : allSemestersSelects) {
@@ -290,17 +293,30 @@ public class CampusTimetableEduServiceImpl implements CampusTimetableEduService 
             for (Element op : options) {
                 String selected = op.attr("selected");
                 String value = op.attr("value");
+                String text = op.text();
                 if (!isV) {
-                    valueId = value;
                     isV = true;
+                    if (text.contains("-")) {
+                        String schoolYear = text.substring(0, text.lastIndexOf("-"));
+                        String semesters = text.substring(text.lastIndexOf("-") + 1);
+                        params.put("id", value);
+                        params.put("schoolYear", schoolYear);
+                        params.put("semesters", semesters);
+                    }
                 }
                 if (StringUtils.equals(selected, "selected")) {
-                    valueId = value;
+                    if (text.contains("-")) {
+                        String schoolYear = text.substring(0, text.lastIndexOf("-"));
+                        String semesters = text.substring(text.lastIndexOf("-") + 1);
+                        params.put("id", value);
+                        params.put("schoolYear", schoolYear);
+                        params.put("semesters", semesters);
+                    }
                     break;
                 }
             }
         }
-        return valueId;
+        return params;
     }
 
     private List<Map<String, Object>> getTableData(String str) {
