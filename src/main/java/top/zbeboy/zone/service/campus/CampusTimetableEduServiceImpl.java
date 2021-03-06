@@ -99,7 +99,6 @@ public class CampusTimetableEduServiceImpl implements CampusTimetableEduService 
                         Map<String, String> semesters = getSemesters(courseTableResult);
                         String semesterId = semesters.get("id");
                         result.put("schoolYear", semesters.get("schoolYear"));
-                        result.put("semesters", semesters.get("semesters"));
 
                         if (StringUtils.isNotBlank(semesterId)) {
                             HttpGet semesterGet = new HttpGet(String.format(semesterUri, semesterId, semesterId));
@@ -296,22 +295,12 @@ public class CampusTimetableEduServiceImpl implements CampusTimetableEduService 
                 String text = op.text();
                 if (!isV) {
                     isV = true;
-                    if (text.contains("-")) {
-                        String schoolYear = text.substring(0, text.lastIndexOf("-"));
-                        String semesters = text.substring(text.lastIndexOf("-") + 1);
-                        params.put("id", value);
-                        params.put("schoolYear", schoolYear);
-                        params.put("semesters", semesters);
-                    }
+                    params.put("id", value);
+                    params.put("schoolYear", text);
                 }
                 if (StringUtils.equals(selected, "selected")) {
-                    if (text.contains("-")) {
-                        String schoolYear = text.substring(0, text.lastIndexOf("-"));
-                        String semesters = text.substring(text.lastIndexOf("-") + 1);
-                        params.put("id", value);
-                        params.put("schoolYear", schoolYear);
-                        params.put("semesters", semesters);
-                    }
+                    params.put("id", value);
+                    params.put("schoolYear", text);
                     break;
                 }
             }
