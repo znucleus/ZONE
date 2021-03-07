@@ -1,4 +1,4 @@
-//# sourceURL=timetable_course_add.js
+//# sourceURL=timetable_import.js
 require(["jquery", "tools", "sweetalert2", "nav.active", "messenger", "jquery.address", "flatpickr-zh"],
     function ($, tools, Swal, navActive) {
 

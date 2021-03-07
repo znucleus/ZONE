@@ -2,20 +2,27 @@ package top.zbeboy.zone.web.educational.timetable;
 
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
+import org.jooq.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.config.Workbook;
+import top.zbeboy.zbase.domain.tables.pojos.TimetableSemester;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
+import top.zbeboy.zbase.domain.tables.pojos.UsersType;
+import top.zbeboy.zbase.domain.tables.records.TimetableSemesterRecord;
 import top.zbeboy.zbase.elastic.*;
 import top.zbeboy.zbase.feign.city.educational.EducationalTimetableService;
-import top.zbeboy.zbase.feign.platform.RoleService;
+import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zbase.tools.web.plugin.select2.Select2Data;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.ElasticUtil;
 import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
+import top.zbeboy.zone.service.educational.TimetableSemesterService;
+import top.zbeboy.zone.service.educational.TimetableService;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
@@ -29,44 +36,59 @@ public class TimetableRestController {
     private EducationalTimetableService educationalTimetableService;
 
     @Resource
-    private RoleService roleService;
+    private TimetableService timetableService;
+
+    @Resource
+    private TimetableSemesterService timetableSemesterService;
+
+    @Resource
+    private UsersTypeService usersTypeService;
 
     /**
-     * 同步数据
+     * 导入数据
      *
      * @return 数据
      */
-    @ApiLoggingRecord(remark = "教务课表同步", channel = Workbook.channel.WEB, needLogin = true)
-    @GetMapping("/web/educational/timetable/sync")
-    public ResponseEntity<Map<String, Object>> sync(HttpServletRequest request) {
+    @ApiLoggingRecord(remark = "教务课表导入", channel = Workbook.channel.WEB, needLogin = true)
+    @GetMapping("/web/educational/timetable/import/save")
+    public ResponseEntity<Map<String, Object>> timetableImportSave(@RequestParam("username") String username, @RequestParam("password") String password) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        Users users = SessionUtil.getUserFromSession();
-        if (roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_SYSTEM.name())) {
-            ajaxUtil = educationalTimetableService.sync();
-        } else {
-            ajaxUtil.fail().msg("您无权限操作");
+        try {
+            Users users = SessionUtil.getUserFromSession();
+            Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+            if (optionalUsersType.isPresent()) {
+                UsersType usersType = optionalUsersType.get();
+                if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
+                    timetableService.syncWithStudent(username, password);
+                    ajaxUtil.success().msg("导入成功");
+                } else {
+                    ajaxUtil.fail().msg("抱歉，暂时仅支持学生用户导入");
+                }
+            } else {
+                ajaxUtil.fail().msg("未查询到用户类型信息");
+            }
+        } catch (Exception e) {
+            ajaxUtil.fail().msg("导入失败，error: " + e.getMessage());
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
     /**
-     * 标识数据
+     * 学年数据
      *
      * @return 数据
      */
-    @ApiLoggingRecord(remark = "教务课表标识", channel = Workbook.channel.WEB, needLogin = true)
-    @GetMapping("/web/educational/timetable/uniques")
-    public ResponseEntity<Map<String, Object>> uniques(HttpServletRequest request) {
-        AjaxUtil<TimetableUniqueElastic> ajaxUtil = AjaxUtil.of();
-        // 排序
-        List<TimetableUniqueElastic> list = new ArrayList<>();
-        Optional<List<TimetableUniqueElastic>> optionalTimetableUniqueElastics = educationalTimetableService.uniques();
-        if (optionalTimetableUniqueElastics.isPresent()) {
-            list = optionalTimetableUniqueElastics.get();
-            list.sort((o1, o2) -> o2.getIdentification().compareTo(o1.getIdentification()));
+    @ApiLoggingRecord(remark = "教务课表学年", channel = Workbook.channel.WEB, needLogin = true)
+    @GetMapping("/web/educational/timetable/school-year")
+    public ResponseEntity<Map<String, Object>> schoolYear(HttpServletRequest request) {
+        Select2Data select2Data = Select2Data.of();
+        Result<TimetableSemesterRecord> timetableSemesterRecords = timetableSemesterService.findAll();
+        List<TimetableSemester> timetableSemesters = new ArrayList<>();
+        if (timetableSemesterRecords.isNotEmpty()) {
+            timetableSemesters = timetableSemesterRecords.into(TimetableSemester.class);
         }
-        ajaxUtil.success().msg("获取数据成功").list(list);
-        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+        timetableSemesters.forEach(timetableSemester -> select2Data.add(timetableSemester.getTimetableSemesterId() + "", timetableSemester.getName()));
+        return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
 
     /**
@@ -95,7 +117,7 @@ public class TimetableRestController {
                             StringUtils.isNotBlank(teacherName) ||
                             StringUtils.isNotBlank(teacherNumber))) {
                 Optional<List<TimetableElastic>> optionalTimetableElastics = educationalTimetableService.search(elasticUtil);
-                if(optionalTimetableElastics.isPresent()){
+                if (optionalTimetableElastics.isPresent()) {
                     timetableElastics = optionalTimetableElastics.get();
                 }
             }
@@ -116,7 +138,7 @@ public class TimetableRestController {
         Select2Data select2Data = Select2Data.of();
         List<TimetableClassroomElastic> timetableClassroomElastics = new ArrayList<>();
         Optional<List<TimetableClassroomElastic>> optionalTimetableClassroomElastics = educationalTimetableService.classrooms(identification);
-        if(optionalTimetableClassroomElastics.isPresent()){
+        if (optionalTimetableClassroomElastics.isPresent()) {
             timetableClassroomElastics = optionalTimetableClassroomElastics.get();
         }
         timetableClassroomElastics.forEach(data -> select2Data.add(data.getClassroom(), data.getClassroom()));
@@ -134,7 +156,7 @@ public class TimetableRestController {
         Select2Data select2Data = Select2Data.of();
         List<TimetableAttendClassElastic> timetableAttendClassElastics = new ArrayList<>();
         Optional<List<TimetableAttendClassElastic>> optionalTimetableAttendClassElastics = educationalTimetableService.attendClasses(identification);
-        if(optionalTimetableAttendClassElastics.isPresent()){
+        if (optionalTimetableAttendClassElastics.isPresent()) {
             timetableAttendClassElastics = optionalTimetableAttendClassElastics.get();
         }
         timetableAttendClassElastics.forEach(data -> select2Data.add(data.getAttendClass(), data.getAttendClass()));
@@ -152,7 +174,7 @@ public class TimetableRestController {
         Select2Data select2Data = Select2Data.of();
         List<TimetableCourseNameElastic> timetableCourseNameElastics = new ArrayList<>();
         Optional<List<TimetableCourseNameElastic>> optionalTimetableCourseNameElastics = educationalTimetableService.courseNames(identification);
-        if(optionalTimetableCourseNameElastics.isPresent()){
+        if (optionalTimetableCourseNameElastics.isPresent()) {
             timetableCourseNameElastics = optionalTimetableCourseNameElastics.get();
         }
         timetableCourseNameElastics.forEach(data -> select2Data.add(data.getCourseName(), data.getCourseName()));
@@ -170,7 +192,7 @@ public class TimetableRestController {
         Select2Data select2Data = Select2Data.of();
         List<TimetableTeacherNameElastic> timetableTeacherNameElastics = new ArrayList<>();
         Optional<List<TimetableTeacherNameElastic>> optionalTimetableTeacherNameElastics = educationalTimetableService.teacherNames(identification);
-        if(optionalTimetableTeacherNameElastics.isPresent()){
+        if (optionalTimetableTeacherNameElastics.isPresent()) {
             timetableTeacherNameElastics = optionalTimetableTeacherNameElastics.get();
         }
         timetableTeacherNameElastics.forEach(data -> select2Data.add(data.getTeacherName(), data.getTeacherName()));

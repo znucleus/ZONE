@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -42,8 +43,8 @@ public class TestNewEduTimetable {
             String str = EntityUtils.toString(entity);
 
             Map<String, Object> params = new HashMap<>();
-            params.put("username", "{username}");
-            params.put("password", DigestUtils.sha1Hex(str + "-" + "{password}"));
+            params.put("username", "2018118543129");
+            params.put("password", DigestUtils.sha1Hex(str + "-" + "301618"));
             params.put("captcha", "");
 
             HttpPost loginPost = new HttpPost("http://cityjw.kust.edu.cn/integration/login");
@@ -64,6 +65,7 @@ public class TestNewEduTimetable {
                     if (courseTableResponse.getStatusLine().getStatusCode() == 200) {
                         HttpEntity courseTableResponseEntity = courseTableResponse.getEntity();
                         String courseTableResult = EntityUtils.toString(courseTableResponseEntity);
+//                        System.out.println(courseTableResult);
                         String semesterId = getSemesters(courseTableResult);
 
                         HttpGet semesterGet = new HttpGet("http://cityjw.kust.edu.cn/integration/for-std/course-table/semester/" + semesterId + "/print?semesterId=" + semesterId);
@@ -105,12 +107,45 @@ public class TestNewEduTimetable {
                 String selected = op.attr("selected");
                 String value = op.attr("value");
                 String text = op.text();
-                System.out.println(text + ":" + value + ":" + selected);
                 if (StringUtils.equals(selected, "selected")) {
                     valueId = value;
+                    break;
                 }
             }
         }
+
+        Elements elements = doc.getElementsByTag("script");
+
+        String semesters = "";
+        for (Element element : elements) {
+
+            /*取得JS变量数组*/
+            String[] data = StringUtils.deleteWhitespace(element.data().toString()).split("var");
+            /*取得单个JS变量*/
+            for (String variable : data) {
+                if (variable.contains("semesters")) {
+                    semesters = variable.substring(variable.indexOf("=") + 1, variable.lastIndexOf(";")).trim();
+                    semesters = semesters.substring(semesters.indexOf("'") + 1, semesters.lastIndexOf("'"));
+                    semesters = semesters.replaceAll("\\\\\"", "\\\"");
+                    break;
+                }
+            }
+        }
+
+        System.out.println(semesters);
+        String startDate = "";
+        if(StringUtils.isNotBlank(semesters)){
+            JSONArray arr1 = JSON.parseArray(semesters);
+            for (int i = 0; i < arr1.size(); i++) {
+                JSONObject j1 = arr1.getJSONObject(i);
+                if(NumberUtils.toInt(valueId) == j1.getIntValue("id")){
+                    startDate = j1.getString("startDate");
+                    break;
+                }
+            }
+        }
+
+        System.out.println(valueId + ":" + startDate);
         return valueId;
     }
 
@@ -131,32 +166,37 @@ public class TestNewEduTimetable {
                 }
             }
         }
-        studentTableVms = studentTableVms.substring(studentTableVms.indexOf("[") + 1, studentTableVms.indexOf("adminclass"));
-        studentTableVms = studentTableVms.substring(0, studentTableVms.lastIndexOf(","));
 
-        studentTableVms = studentTableVms.replaceAll("'", "\\\"");
-        studentTableVms += "}";
-        System.out.println(studentTableVms);
-        JSONObject jsonObject = JSON.parseObject(studentTableVms);
-        JSONArray jsonArray = jsonObject.getJSONArray("activities");
+        if(StringUtils.isNotBlank(studentTableVms)){
+            studentTableVms = studentTableVms.replaceAll("\"", "@");
+            studentTableVms = studentTableVms.replaceAll("'", "\\\"");
 
-        for (int i = 0; i < jsonArray.size(); i++) {
-            JSONObject j1 = jsonArray.getJSONObject(i);
-            System.out.println("周" + j1.getString("weekday"));
-            System.out.println(j1.getString("courseName"));
-            System.out.println(j1.getString("lessonCode"));
-            System.out.println(j1.getString("weeksStr"));
-            System.out.println(j1.getString("room"));
+            System.out.println(studentTableVms);
+            JSONArray arr1 = JSON.parseArray(studentTableVms);
+            for (int i = 0; i < arr1.size(); i++) {
+                JSONObject j1 = arr1.getJSONObject(i);
+                JSONArray arr2 = j1.getJSONArray("activities");
+                System.out.println("adminclass : " + j1.getString("adminclass"));
+                for (int j = 0; j < arr2.size(); j++) {
+                    JSONObject j2 = arr2.getJSONObject(i);
+                    System.out.println("周" + j2.getString("weekday"));
+                    System.out.println(j2.getString("courseName"));
+                    System.out.println(j2.getString("lessonCode"));
+                    System.out.println(j2.getString("weeksStr"));
+                    System.out.println(j2.getString("room"));
 
-            StringBuilder sb = new StringBuilder();
-            JSONArray ja1 = j1.getJSONArray("teachers");
-            for (int j = 0; j < ja1.size(); j++) {
-                sb.append(ja1.getString(j)).append(" ");
+                    StringBuilder sb = new StringBuilder();
+                    JSONArray arr3 = j2.getJSONArray("teachers");
+                    for (int k = 0; k < arr3.size(); k++) {
+                        sb.append(arr3.getString(k)).append(" ");
+                    }
+                    System.out.println(sb.toString());
+
+                    System.out.println(j2.getString("startUnit") + "-" + j2.getString("endUnit") + "节");
+                    System.out.println();
+                }
             }
-            System.out.println(sb.toString());
-
-            System.out.println(j1.getString("startUnit") + "-" + j1.getString("endUnit") + "节");
-            System.out.println();
         }
+
     }
 }
