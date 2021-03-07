@@ -43,8 +43,8 @@ public class TestNewEduTimetable {
             String str = EntityUtils.toString(entity);
 
             Map<String, Object> params = new HashMap<>();
-            params.put("username", "2018118543129");
-            params.put("password", DigestUtils.sha1Hex(str + "-" + "301618"));
+            params.put("username", "{{username}}");
+            params.put("password", DigestUtils.sha1Hex(str + "-" + "{{password}}"));
             params.put("captcha", "");
 
             HttpPost loginPost = new HttpPost("http://cityjw.kust.edu.cn/integration/login");
