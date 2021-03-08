@@ -3,6 +3,14 @@ package top.zbeboy.zone.service.educational;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import net.fortuna.ical4j.data.CalendarOutputter;
+import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.component.VAlarm;
+import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.component.VTimeZone;
+import net.fortuna.ical4j.model.property.*;
+import net.fortuna.ical4j.util.RandomUidGenerator;
+import net.fortuna.ical4j.util.UidGenerator;
 import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections4.CollectionUtils;
@@ -22,13 +30,20 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
+import top.zbeboy.zbase.bean.educational.calendar.SchoolCalendarBean;
+import top.zbeboy.zbase.domain.tables.pojos.CampusCourseData;
 import top.zbeboy.zbase.domain.tables.pojos.TimetableCourse;
 import top.zbeboy.zbase.domain.tables.pojos.TimetableSemester;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.service.util.UUIDUtil;
 
 import javax.annotation.Resource;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
 
 @Service("timetableService")
 public class TimetableServiceImpl implements TimetableService {
@@ -44,6 +59,137 @@ public class TimetableServiceImpl implements TimetableService {
         Map<String, Object> eduData = eduData(username, password);
         dealSemester(eduData);
         dealCourseWithStudent(eduData);
+    }
+
+    @Override
+    public void generateIcs(List<TimetableCourse> timetableCourses, String path) throws IOException {
+        // Create a calendar
+        net.fortuna.ical4j.model.Calendar icsCalendar = new net.fortuna.ical4j.model.Calendar();
+        icsCalendar.getProperties().add(new ProdId("-//Timetable Calendar//iCal4j 1.0//EN"));
+        icsCalendar.getProperties().add(Version.VERSION_2_0);
+        icsCalendar.getProperties().add(CalScale.GREGORIAN);
+        // Create a TimeZone
+        TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
+        net.fortuna.ical4j.model.TimeZone timezone = registry.getTimeZone("Asia/Shanghai");
+        VTimeZone tz = timezone.getVTimeZone();
+
+        for (TimetableCourse timetableCourse : timetableCourses) {
+            // Start Date is on: April 1, 2008, 9:00 am
+            java.util.Calendar startDate = new GregorianCalendar();
+            startDate.setTimeZone(timezone);
+
+            // End Date is on: April 1, 2008, 13:00
+            java.util.Calendar endDate = new GregorianCalendar();
+            endDate.setTimeZone(timezone);
+
+            String courseName = timetableCourse.getCourseName();
+            String room = timetableCourse.getRoom();
+
+            java.sql.Time startTime = Objects.nonNull(timetableCourse.getStartUnit()) ? DateTimeUtil.defaultParseSqlTime(getStartUnit(timetableCourse.getStartUnit())) : null;
+            if (Objects.isNull(startTime)) {
+                startTime = DateTimeUtil.getNowSqlTime();
+            }
+
+            java.sql.Time endTime = Objects.nonNull(timetableCourse.getEndUnit()) ? DateTimeUtil.defaultParseSqlTime(getEndUnit(timetableCourse.getEndUnit())) : null;
+            if (Objects.isNull(endTime)) {
+                endTime = DateTimeUtil.getNowSqlTime();
+            }
+
+            Byte startWeek = timetableCourse.getStartWeek();
+            if (Objects.isNull(startWeek)) {
+                startWeek = 1;
+            }
+            Byte endWeek = timetableCourse.getEndWeek();
+            if (Objects.isNull(endWeek)) {
+                endWeek = 1;
+            }
+
+            Byte weekDay = timetableCourse.getWeekday();
+            if (Objects.isNull(weekDay)) {
+                weekDay = 1;
+            }
+
+            java.sql.Date calendarStartDate = null;
+            TimetableSemester timetableSemester = timetableSemesterService.findById(timetableCourse.getTimetableSemesterId());
+            if(Objects.nonNull(timetableSemester) && Objects.nonNull(timetableSemester.getStartDate())){
+                calendarStartDate = timetableSemester.getStartDate();
+            } else {
+                calendarStartDate = DateTimeUtil.getNowSqlDate();
+            }
+
+            // 1.日历偏移开始周数 算开始时间
+            java.util.Date deviationCalendarStartDate = calcDeviationDate(calendarStartDate, startWeek, weekDay);
+            String finishStartDate = DateTimeUtil.formatUtilDate(deviationCalendarStartDate, DateTimeUtil.YEAR_MONTH_DAY_FORMAT) + " " + DateTimeUtil.defaultFormatSqlTime(startTime);
+            startDate.setTime(DateTimeUtil.parseUtilDate(finishStartDate, DateTimeUtil.STANDARD_FORMAT));
+
+            String finishEndDate = DateTimeUtil.formatUtilDate(deviationCalendarStartDate, DateTimeUtil.YEAR_MONTH_DAY_FORMAT) + " " + DateTimeUtil.defaultFormatSqlTime(endTime);
+            endDate.setTime(DateTimeUtil.parseUtilDate(finishEndDate, DateTimeUtil.STANDARD_FORMAT));
+
+            // Create the event
+            DateTime start = new DateTime(startDate.getTime());
+            DateTime end = new DateTime(endDate.getTime());
+            VEvent meeting = new VEvent(start, end, courseName);
+            meeting.getProperties().add(new Location(room));
+
+            String startWeekContent = "";
+            if (Objects.nonNull(timetableCourse.getStartWeek())) {
+                startWeekContent = timetableCourse.getStartWeek() + "";
+            }
+
+            String endWeekContent = "";
+            if (Objects.nonNull(timetableCourse.getEndWeek())) {
+                endWeekContent = timetableCourse.getEndWeek() + "";
+            }
+
+            String startTimeContent = DateTimeUtil.defaultFormatSqlTime(startTime);
+
+            String endTimeContent = DateTimeUtil.defaultFormatSqlTime(endTime);
+
+            String description = startWeekContent + "-" + endWeekContent + "周 " + startTimeContent + "-" + endTimeContent;
+
+            meeting.getProperties().add(new Description(description));
+
+            int count = endWeek - startWeek;
+
+            // 重复事件
+            if (count > 0) {
+                Recur recur = new Recur(Recur.Frequency.WEEKLY, count + 1);
+                recur.getDayList().add(getWeekday(timetableCourse.getWeekday()));
+                RRule rule = new RRule(recur);
+                meeting.getProperties().add(rule);
+            }
+
+            // 提醒,提前15分钟
+            VAlarm valarm = new VAlarm(java.time.Duration.ofMinutes(-15));
+            valarm.getProperties().add(new Summary(courseName));
+            valarm.getProperties().add(Action.DISPLAY);
+            valarm.getProperties().add(new Location(room));
+            valarm.getProperties().add(new Description(description));
+            // 将VAlarm加入VEvent
+            meeting.getAlarms().add(valarm);
+
+            // add timezone info..
+            meeting.getProperties().add(tz.getTimeZoneId());
+
+            // generate unique identifier..
+            UidGenerator ug = new RandomUidGenerator();
+            Uid uid = ug.generateUid();
+            meeting.getProperties().add(uid);
+
+            // Add the event and print
+            icsCalendar.getComponents().add(meeting);
+            // 验证
+            icsCalendar.validate();
+        }
+
+        File saveFile = new File(path);
+        if (!saveFile.getParentFile().exists()) {//create file
+            saveFile.getParentFile().mkdirs();
+        }
+
+        FileOutputStream fout = new FileOutputStream(saveFile);
+        CalendarOutputter outputter = new CalendarOutputter();
+        outputter.output(icsCalendar, fout);
     }
 
     public void dealSemester(Map<String, Object> eduData) {
@@ -397,5 +543,149 @@ public class TimetableServiceImpl implements TimetableService {
             }
         }
         return firstList;
+    }
+
+
+    private String getStartUnit(Byte startUnit) {
+        String su = "";
+        if (Objects.nonNull(startUnit)) {
+            switch (startUnit) {
+                case 1:
+                    su = "08:00:00";
+                    break;
+                case 2:
+                    su = "08:50:00";
+                    break;
+                case 3:
+                    su = "09:50:00";
+                    break;
+                case 4:
+                    su = "10:40:00";
+                    break;
+                case 5:
+                    su = "11:30:00";
+                    break;
+                case 6:
+                    su = "13:30:00";
+                    break;
+                case 7:
+                    su = "14:20:00";
+                    break;
+                case 8:
+                    su = "15:20:00";
+                    break;
+                case 9:
+                    su = "16:10:00";
+                    break;
+                case 10:
+                    su = "17:00:00";
+                    break;
+                case 11:
+                    su = "19:00:00";
+                    break;
+                case 12:
+                    su = "19:50:00";
+                    break;
+                case 13:
+                    su = "20:40:00";
+                    break;
+            }
+        }
+        return su;
+
+    }
+
+    private String getEndUnit(Byte endUnit) {
+        String eu = "";
+        if (Objects.nonNull(endUnit)) {
+            switch (endUnit) {
+                case 1:
+                    eu = "08:45:00";
+                    break;
+                case 2:
+                    eu = "09:35:00";
+                    break;
+                case 3:
+                    eu = "10:35:00";
+                    break;
+                case 4:
+                    eu = "11:25:00";
+                    break;
+                case 5:
+                    eu = "12:15:00";
+                    break;
+                case 6:
+                    eu = "14:15:00";
+                    break;
+                case 7:
+                    eu = "15:05:00";
+                    break;
+                case 8:
+                    eu = "16:05:00";
+                    break;
+                case 9:
+                    eu = "16:55:00";
+                    break;
+                case 10:
+                    eu = "17:45:00";
+                    break;
+                case 11:
+                    eu = "19:45:00";
+                    break;
+                case 13:
+                    eu = "21:25:00";
+                    break;
+            }
+        }
+        return eu;
+
+    }
+
+    /**
+     * 计算时间偏移
+     *
+     * @param date    开始日期
+     * @param week    偏移周
+     * @param weekDay 那一周的周几
+     * @return 时间
+     */
+    private java.util.Date calcDeviationDate(java.sql.Date date, int week, int weekDay) {
+        int deviationWeek = week - 1;
+        org.joda.time.DateTime dt1 = new org.joda.time.DateTime(date);
+        if (deviationWeek > 0) {
+            dt1 = dt1.plusWeeks(deviationWeek);
+        }
+        dt1 = dt1.withDayOfWeek(weekDay);
+        return dt1.toDate();
+    }
+
+    private WeekDay getWeekday(int weekDay) {
+        WeekDay wv;
+        switch (weekDay) {
+            case 1:
+                wv = WeekDay.MO;
+                break;
+            case 2:
+                wv = WeekDay.TU;
+                break;
+            case 3:
+                wv = WeekDay.WE;
+                break;
+            case 4:
+                wv = WeekDay.TH;
+                break;
+            case 5:
+                wv = WeekDay.FR;
+                break;
+            case 6:
+                wv = WeekDay.SA;
+                break;
+            case 7:
+                wv = WeekDay.SU;
+                break;
+            default:
+                wv = WeekDay.MO;
+        }
+        return wv;
     }
 }

@@ -1,5 +1,6 @@
 package top.zbeboy.zone.web.educational.timetable;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.Result;
 import org.springframework.http.HttpStatus;
@@ -15,10 +16,11 @@ import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.domain.tables.pojos.UsersType;
 import top.zbeboy.zbase.domain.tables.records.TimetableCourseRecord;
 import top.zbeboy.zbase.domain.tables.records.TimetableSemesterRecord;
-import top.zbeboy.zbase.elastic.TimetableElastic;
 import top.zbeboy.zbase.feign.city.educational.EducationalTimetableService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
+import top.zbeboy.zbase.tools.service.util.IPTimeStamp;
+import top.zbeboy.zbase.tools.service.util.RequestUtil;
 import top.zbeboy.zbase.tools.web.plugin.select2.Select2Data;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
@@ -129,24 +131,7 @@ public class TimetableRestController {
     @GetMapping("/web/educational/timetable/search")
     public ResponseEntity<Map<String, Object>> search(TimetableCourse timetableCourse, HttpServletRequest request) {
         AjaxUtil<TimetableCourse> ajaxUtil = AjaxUtil.of();
-        List<TimetableCourse> timetableCourses = new ArrayList<>();
-        String courseName = timetableCourse.getCourseName();
-        String lessonName = timetableCourse.getLessonName();
-        String room = timetableCourse.getRoom();
-        String teachers = timetableCourse.getTeachers();
-        Integer timetableSemesterId = timetableCourse.getTimetableSemesterId();
-
-        if (Objects.nonNull(timetableSemesterId) &&
-                (StringUtils.isNotBlank(courseName) ||
-                        StringUtils.isNotBlank(lessonName) ||
-                        StringUtils.isNotBlank(room) ||
-                        StringUtils.isNotBlank(teachers))) {
-            Result<TimetableCourseRecord> timetableCourseRecords = timetableCourseService.search(timetableCourse);
-            if (timetableCourseRecords.isNotEmpty()) {
-                timetableCourses = timetableCourseRecords.into(TimetableCourse.class);
-            }
-        }
-        ajaxUtil.success().msg("获取数据成功").list(timetableCourses);
+        ajaxUtil.success().msg("获取数据成功").list(search(timetableCourse));
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -204,5 +189,62 @@ public class TimetableRestController {
         List<TimetableCourse> timetableCourses = timetableCourseService.findByTimetableSemesterIdDistinctTeachers(timetableSemesterId);
         timetableCourses.forEach(data -> select2Data.add(data.getTeachers(), data.getTeachers()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
+    }
+
+    /**
+     * 导出数据为日历格式
+     *
+     * @param request 请求
+     */
+    @ApiLoggingRecord(remark = "教务课表导出日历", channel = Workbook.channel.WEB, needLogin = true)
+    @GetMapping("/web/educational/timetable/generate-ics")
+    public ResponseEntity<Map<String, Object>> generateIcs(TimetableCourse timetableCourse, HttpServletRequest request) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        try {
+            List<TimetableCourse> timetableCourses = search(timetableCourse);
+            if (CollectionUtils.isNotEmpty(timetableCourses)) {
+                IPTimeStamp ipTimeStamp = new IPTimeStamp(RequestUtil.getIpAddress(request));
+                String filename = ipTimeStamp.getIPTimeRand() + ".ics";
+                if (filename.contains(":")) {
+                    filename = filename.substring(filename.lastIndexOf(':') + 1);
+                }
+                String filePath = Workbook.educationalTimetableIcsFilePath() + filename;
+                String path = RequestUtil.getRealPath(request) + filePath;
+                timetableService.generateIcs(timetableCourses, path);
+                ajaxUtil.success().msg("生成成功").put("path", filePath);
+            } else {
+                ajaxUtil.fail().msg("无数据可生成");
+            }
+        } catch (Exception e) {
+            ajaxUtil.fail().msg("生成文件异常，error: " + e.getMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 数据搜索
+     *
+     * @param timetableCourse 搜索条件
+     * @return 数据
+     */
+    private List<TimetableCourse> search(TimetableCourse timetableCourse) {
+        List<TimetableCourse> timetableCourses = new ArrayList<>();
+        String courseName = timetableCourse.getCourseName();
+        String lessonName = timetableCourse.getLessonName();
+        String room = timetableCourse.getRoom();
+        String teachers = timetableCourse.getTeachers();
+        Integer timetableSemesterId = timetableCourse.getTimetableSemesterId();
+
+        if (Objects.nonNull(timetableSemesterId) &&
+                (StringUtils.isNotBlank(courseName) ||
+                        StringUtils.isNotBlank(lessonName) ||
+                        StringUtils.isNotBlank(room) ||
+                        StringUtils.isNotBlank(teachers))) {
+            Result<TimetableCourseRecord> timetableCourseRecords = timetableCourseService.search(timetableCourse);
+            if (timetableCourseRecords.isNotEmpty()) {
+                timetableCourses = timetableCourseRecords.into(TimetableCourse.class);
+            }
+        }
+        return timetableCourses;
     }
 }

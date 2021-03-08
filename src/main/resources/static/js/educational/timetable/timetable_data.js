@@ -1,5 +1,5 @@
 //# sourceURL=timetable_data.js
-require(["jquery", "tools", "handlebars", "nav.active", "select2-zh-CN"],
+require(["jquery", "tools", "handlebars", "nav.active", "select2-zh-CN", "messenger"],
     function ($, tools, Handlebars, navActive) {
         /*
          ajax url.
@@ -93,7 +93,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "select2-zh-CN"],
                 localStorage.setItem(webStorageKey.COURSE_NAME, param.courseName != null ? param.courseName : '');
                 localStorage.setItem(webStorageKey.LESSON_NAME, param.lessonName != null ? param.lessonName : '');
                 localStorage.setItem(webStorageKey.ROOM, param.room != null ? param.room : '');
-                localStorage.setItem(webStorageKey.TEACHER_NAME, param.teacherName != null ? param.teacherName : '');
+                localStorage.setItem(webStorageKey.TEACHER_NAME, param.teachers != null ? param.teachers : '');
                 localStorage.setItem(webStorageKey.SCHOOL_YEAR, param.timetableSemesterId != null ? param.timetableSemesterId : '');
             }
         }
@@ -373,5 +373,20 @@ require(["jquery", "tools", "handlebars", "nav.active", "select2-zh-CN"],
 
         $('#importCourse').click(function () {
             $.address.value(ajax_url.timetable_import);
+        });
+
+        $('#exportIcs').click(function () {
+            $.get(ajax_url.generate_ics, param, function (data) {
+                if (data.state) {
+                    window.location.href = web_path + '/' + data.path;
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+
+            });
         });
     });
