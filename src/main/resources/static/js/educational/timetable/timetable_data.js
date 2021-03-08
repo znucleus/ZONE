@@ -1,6 +1,6 @@
 //# sourceURL=timetable_data.js
-require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2", "select2-zh-CN", "jquery-labelauty"],
-    function ($, _, tools, Handlebars, navActive, Swal) {
+require(["jquery", "tools", "handlebars", "nav.active", "select2-zh-CN"],
+    function ($, tools, Handlebars, navActive) {
         /*
          ajax url.
         */
@@ -12,6 +12,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             teacher_name: web_path + '/web/educational/timetable/teacher-name',
             school_year: web_path + '/web/educational/timetable/school-year',
             timetable_import: web_path + '/web/educational/timetable/import',
+            school_year_info: web_path + '/web/educational/timetable/school-year-info',
             generate_ics: web_path + '/web/educational/timetable/generate-ics',
             page: '/web/menu/educational/timetable'
         };
@@ -141,6 +142,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         $(param_id.schoolYear).on('select2:select', function (e) {
             refreshSearch();
             initData();
+            getSchoolYearInfo(param.timetableSemesterId);
         });
 
         init();
@@ -291,8 +293,18 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                     initLessonName(timetableSemesterId);
                     initRoom(timetableSemesterId);
                     initTeacherName(timetableSemesterId);
+                    getSchoolYearInfo(timetableSemesterId);
                     init_configure.init_school_year = true;
                 }
+            });
+        }
+
+        function getSchoolYearInfo(timetableSemesterId) {
+            $.get(ajax_url.school_year_info + '/' + timetableSemesterId, function (data) {
+                $('#week').text('今日 ' + tools.weekDay(data.mapResult.week));
+                $('#weeks').text('第' + data.mapResult.curWeeks + '周（共' + data.mapResult.totalWeeks + '周）');
+                $('#startDate').text('开始日期：' + data.mapResult.startDate);
+                $('#endDate').text('结束日期：' + data.mapResult.endDate);
             });
         }
 

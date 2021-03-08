@@ -18,6 +18,7 @@ import top.zbeboy.zbase.domain.tables.records.TimetableSemesterRecord;
 import top.zbeboy.zbase.elastic.TimetableElastic;
 import top.zbeboy.zbase.feign.city.educational.EducationalTimetableService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
+import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.web.plugin.select2.Select2Data;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
@@ -93,6 +94,30 @@ public class TimetableRestController {
         }
         timetableSemesters.forEach(timetableSemester -> select2Data.add(timetableSemester.getTimetableSemesterId() + "", timetableSemester.getName()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
+    }
+
+    /**
+     * 学年信息
+     *
+     * @return 数据
+     */
+    @ApiLoggingRecord(remark = "教务课表学年", channel = Workbook.channel.WEB, needLogin = true)
+    @GetMapping("/web/educational/timetable/school-year-info/{timetableSemesterId}")
+    public ResponseEntity<Map<String, Object>> schoolYearInfo(@PathVariable("timetableSemesterId") int timetableSemesterId, HttpServletRequest request) {
+        AjaxUtil<Object> ajaxUtil = AjaxUtil.of();
+        Map<String, Object> map = new HashMap<>();
+        TimetableSemester timetableSemester = timetableSemesterService.findById(timetableSemesterId);
+        map.put("startDate", timetableSemester.getStartDate());
+        map.put("endDate", timetableSemester.getEndDate());
+        map.put("totalWeeks", DateTimeUtil.calculationTwoDateDifferWeeks(timetableSemester.getStartDate(), timetableSemester.getEndDate()));
+        map.put("week", DateTimeUtil.getNowDayOfWeek());
+        if (DateTimeUtil.nowRangeSqlDate(timetableSemester.getStartDate(), timetableSemester.getEndDate())) {
+            map.put("curWeeks", DateTimeUtil.calculationTwoDateDifferWeeks(timetableSemester.getStartDate(), DateTimeUtil.getNowSqlDate()));
+        } else {
+            map.put("curWeeks", "0");
+        }
+        ajaxUtil.success().msg("获取数据成功").map(map);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
     /**
