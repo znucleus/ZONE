@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.config.Workbook;
+import top.zbeboy.zbase.domain.tables.pojos.TimetableCourse;
 import top.zbeboy.zbase.domain.tables.pojos.TimetableSemester;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.domain.tables.pojos.UsersType;
@@ -21,6 +22,7 @@ import top.zbeboy.zbase.tools.web.plugin.select2.Select2Data;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.ElasticUtil;
 import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
+import top.zbeboy.zone.service.educational.TimetableCourseService;
 import top.zbeboy.zone.service.educational.TimetableSemesterService;
 import top.zbeboy.zone.service.educational.TimetableService;
 import top.zbeboy.zone.web.util.SessionUtil;
@@ -40,6 +42,9 @@ public class TimetableRestController {
 
     @Resource
     private TimetableSemesterService timetableSemesterService;
+
+    @Resource
+    private TimetableCourseService timetableCourseService;
 
     @Resource
     private UsersTypeService usersTypeService;
@@ -133,15 +138,11 @@ public class TimetableRestController {
      * @return 数据
      */
     @ApiLoggingRecord(remark = "教务课表教室", channel = Workbook.channel.WEB, needLogin = true)
-    @GetMapping("/web/educational/timetable/classroom/{identification}")
-    public ResponseEntity<Map<String, Object>> classroom(@PathVariable("identification") String identification, HttpServletRequest request) {
+    @GetMapping("/web/educational/timetable/room/{timetableSemesterId}")
+    public ResponseEntity<Map<String, Object>> room(@PathVariable("timetableSemesterId") int timetableSemesterId, HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
-        List<TimetableClassroomElastic> timetableClassroomElastics = new ArrayList<>();
-        Optional<List<TimetableClassroomElastic>> optionalTimetableClassroomElastics = educationalTimetableService.classrooms(identification);
-        if (optionalTimetableClassroomElastics.isPresent()) {
-            timetableClassroomElastics = optionalTimetableClassroomElastics.get();
-        }
-        timetableClassroomElastics.forEach(data -> select2Data.add(data.getClassroom(), data.getClassroom()));
+        List<TimetableCourse> timetableCourses = timetableCourseService.findByTimetableSemesterIdDistinctRoom(timetableSemesterId);
+        timetableCourses.forEach(data -> select2Data.add(data.getRoom(), data.getRoom()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
 
@@ -151,15 +152,11 @@ public class TimetableRestController {
      * @return 数据
      */
     @ApiLoggingRecord(remark = "教务课表班级", channel = Workbook.channel.WEB, needLogin = true)
-    @GetMapping("/web/educational/timetable/attend-class/{identification}")
-    public ResponseEntity<Map<String, Object>> attendClass(@PathVariable("identification") String identification, HttpServletRequest request) {
+    @GetMapping("/web/educational/timetable/lesson-name/{timetableSemesterId}")
+    public ResponseEntity<Map<String, Object>> attendClass(@PathVariable("timetableSemesterId") int timetableSemesterId, HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
-        List<TimetableAttendClassElastic> timetableAttendClassElastics = new ArrayList<>();
-        Optional<List<TimetableAttendClassElastic>> optionalTimetableAttendClassElastics = educationalTimetableService.attendClasses(identification);
-        if (optionalTimetableAttendClassElastics.isPresent()) {
-            timetableAttendClassElastics = optionalTimetableAttendClassElastics.get();
-        }
-        timetableAttendClassElastics.forEach(data -> select2Data.add(data.getAttendClass(), data.getAttendClass()));
+        List<TimetableCourse> timetableCourses = timetableCourseService.findByTimetableSemesterIdDistinctLessonName(timetableSemesterId);
+        timetableCourses.forEach(data -> select2Data.add(data.getLessonName(), data.getLessonName()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
 
@@ -169,15 +166,11 @@ public class TimetableRestController {
      * @return 数据
      */
     @ApiLoggingRecord(remark = "教务课表课程", channel = Workbook.channel.WEB, needLogin = true)
-    @GetMapping("/web/educational/timetable/course-name/{identification}")
-    public ResponseEntity<Map<String, Object>> courseName(@PathVariable("identification") String identification, HttpServletRequest request) {
+    @GetMapping("/web/educational/timetable/course-name/{timetableSemesterId}")
+    public ResponseEntity<Map<String, Object>> courseName(@PathVariable("timetableSemesterId") int timetableSemesterId, HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
-        List<TimetableCourseNameElastic> timetableCourseNameElastics = new ArrayList<>();
-        Optional<List<TimetableCourseNameElastic>> optionalTimetableCourseNameElastics = educationalTimetableService.courseNames(identification);
-        if (optionalTimetableCourseNameElastics.isPresent()) {
-            timetableCourseNameElastics = optionalTimetableCourseNameElastics.get();
-        }
-        timetableCourseNameElastics.forEach(data -> select2Data.add(data.getCourseName(), data.getCourseName()));
+        List<TimetableCourse> timetableCourses = timetableCourseService.findByTimetableSemesterIdDistinctCourseName(timetableSemesterId);
+        timetableCourses.forEach(data -> select2Data.add(data.getCourseName(), data.getCourseName()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
 
@@ -187,15 +180,11 @@ public class TimetableRestController {
      * @return 数据
      */
     @ApiLoggingRecord(remark = "教务课表教师", channel = Workbook.channel.WEB, needLogin = true)
-    @GetMapping("/web/educational/timetable/teacher-name/{identification}")
-    public ResponseEntity<Map<String, Object>> teacherName(@PathVariable("identification") String identification, HttpServletRequest request) {
+    @GetMapping("/web/educational/timetable/teacher-name/{timetableSemesterId}")
+    public ResponseEntity<Map<String, Object>> teacherName(@PathVariable("timetableSemesterId") int timetableSemesterId, HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
-        List<TimetableTeacherNameElastic> timetableTeacherNameElastics = new ArrayList<>();
-        Optional<List<TimetableTeacherNameElastic>> optionalTimetableTeacherNameElastics = educationalTimetableService.teacherNames(identification);
-        if (optionalTimetableTeacherNameElastics.isPresent()) {
-            timetableTeacherNameElastics = optionalTimetableTeacherNameElastics.get();
-        }
-        timetableTeacherNameElastics.forEach(data -> select2Data.add(data.getTeacherName(), data.getTeacherName()));
+        List<TimetableCourse> timetableCourses = timetableCourseService.findByTimetableSemesterIdDistinctTeachers(timetableSemesterId);
+        timetableCourses.forEach(data -> select2Data.add(data.getTeachers(), data.getTeachers()));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
 }

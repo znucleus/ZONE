@@ -178,7 +178,7 @@ public class TestNewEduTimetable {
                 JSONArray arr2 = j1.getJSONArray("activities");
                 System.out.println("adminclass : " + j1.getString("adminclass"));
                 for (int j = 0; j < arr2.size(); j++) {
-                    JSONObject j2 = arr2.getJSONObject(i);
+                    JSONObject j2 = arr2.getJSONObject(j);
                     System.out.println("周" + j2.getString("weekday"));
                     System.out.println(j2.getString("courseName"));
                     System.out.println(j2.getString("lessonCode"));

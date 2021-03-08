@@ -12,7 +12,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             teacher_name: web_path + '/web/educational/timetable/teacher-name',
             school_year: web_path + '/web/educational/timetable/school-year',
             timetable_import: web_path + '/web/educational/timetable/import',
-            generate_ics:web_path + '/web/educational/timetable/generate-ics',
+            generate_ics: web_path + '/web/educational/timetable/generate-ics',
             page: '/web/menu/educational/timetable'
         };
 
@@ -65,7 +65,6 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             lessonNameSelect2.val('').trigger("change");
             roomSelect2.val('').trigger("change");
             teacherNameSelect2.val('').trigger("change");
-            schoolYearSelect2.val('').trigger("change");
         }
 
         function initParam() {
@@ -150,8 +149,6 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
          * 初始化数据
          */
         function init() {
-            initSearchInput();
-            initSearchContent();
             initSchoolYear();
             initSelect2();
         }
@@ -164,64 +161,76 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             });
         }
 
-        function initCourseName() {
-            $.get(ajax_url.course_name, function (data) {
-                $(param_id.courseName).html('<option label="请选择课程"></option>');
-                courseNameSelect2 = $(param_id.courseName).select2({data: data.results});
+        function initCourseName(timetableSemesterId) {
+            if (Number(timetableSemesterId) > 0) {
+                $.get(ajax_url.course_name + '/' + timetableSemesterId, function (data) {
+                    $(param_id.courseName).html('<option label="请选择课程"></option>');
+                    courseNameSelect2 = $(param_id.courseName).select2({data: data.results});
 
-                if (!init_configure.init_course_name) {
-                    if (localStorage) {
-                        var courseName = localStorage.getItem(webStorageKey.COURSE_NAME);
-                        courseNameSelect2.val(courseName).trigger("change");
+                    if (!init_configure.init_course_name) {
+                        if (localStorage) {
+                            var courseName = localStorage.getItem(webStorageKey.COURSE_NAME);
+                            courseNameSelect2.val(courseName).trigger("change");
+                        }
+                        init_configure.init_course_name = true;
                     }
-                    init_configure.init_course_name = true;
-                }
-            });
+                });
+            }
+
         }
 
-        function initLessonName() {
-            $.get(ajax_url.lesson_name, function (data) {
-                $(param_id.lessonName).html('<option label="请选择班级"></option>');
-                lessonNameSelect2 = $(param_id.lessonName).select2({data: data.results});
+        function initLessonName(timetableSemesterId) {
+            if (Number(timetableSemesterId) > 0) {
+                $.get(ajax_url.lesson_name + '/' + timetableSemesterId, function (data) {
+                    $(param_id.lessonName).html('<option label="请选择班级"></option>');
+                    lessonNameSelect2 = $(param_id.lessonName).select2({data: data.results});
 
-                if (!init_configure.init_lesson_name) {
-                    if (localStorage) {
-                        var lessonName = localStorage.getItem(webStorageKey.LESSON_NAME);
-                        lessonNameSelect2.val(lessonName).trigger("change");
+                    if (!init_configure.init_lesson_name) {
+                        if (localStorage) {
+                            var lessonName = localStorage.getItem(webStorageKey.LESSON_NAME);
+                            lessonNameSelect2.val(lessonName).trigger("change");
+                        }
+                        init_configure.init_lesson_name = true;
                     }
-                    init_configure.init_lesson_name = true;
-                }
-            });
+                });
+            }
+
         }
 
-        function initRoom() {
-            $.get(ajax_url.room, function (data) {
-                $(param_id.room).html('<option label="请选择教室"></option>');
-                roomSelect2 = $(param_id.room).select2({data: data.results});
+        function initRoom(timetableSemesterId) {
+            if (Number(timetableSemesterId) > 0) {
+                $.get(ajax_url.room + '/' + timetableSemesterId, function (data) {
+                    $(param_id.room).html('<option label="请选择教室"></option>');
+                    roomSelect2 = $(param_id.room).select2({data: data.results});
 
-                if (!init_configure.init_room) {
-                    if (localStorage) {
-                        var room = localStorage.getItem(webStorageKey.ROOM);
-                        roomSelect2.val(room).trigger("change");
+                    if (!init_configure.init_room) {
+                        if (localStorage) {
+                            var room = localStorage.getItem(webStorageKey.ROOM);
+                            roomSelect2.val(room).trigger("change");
+                        }
+                        init_configure.init_room = true;
                     }
-                    init_configure.init_room = true;
-                }
-            });
+                });
+            }
+
         }
 
-        function initTeacherName() {
-            $.get(ajax_url.teacher_name, function (data) {
-                $(param_id.teacherName).html('<option label="请选择教师"></option>');
-                teacherNameSelect2 = $(param_id.teacherName).select2({data: data.results});
+        function initTeacherName(timetableSemesterId) {
+            if (Number(timetableSemesterId) > 0) {
+                $.get(ajax_url.teacher_name + '/' + timetableSemesterId, function (data) {
+                    $(param_id.teacherName).html('<option label="请选择教师"></option>');
+                    teacherNameSelect2 = $(param_id.teacherName).select2({data: data.results});
 
-                if (!init_configure.init_teacher_name) {
-                    if (localStorage) {
-                        var teacherName = localStorage.getItem(webStorageKey.TEACHER_NAME);
-                        teacherNameSelect2.val(teacherName).trigger("change");
+                    if (!init_configure.init_teacher_name) {
+                        if (localStorage) {
+                            var teacherName = localStorage.getItem(webStorageKey.TEACHER_NAME);
+                            teacherNameSelect2.val(teacherName).trigger("change");
+                        }
+                        init_configure.init_teacher_name = true;
                     }
-                    init_configure.init_teacher_name = true;
-                }
-            });
+                });
+            }
+
         }
 
         function initSchoolYear() {
@@ -229,14 +238,22 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 schoolYearSelect2 = $(param_id.schoolYear).select2({data: data.results});
 
                 if (!init_configure.init_school_year) {
+                    var timetableSemesterId = 0;
+                    if (data.results.length > 0) {
+                        schoolYearSelect2.val(data.results[0].id).trigger("change");
+                        timetableSemesterId = data.results[0].id;
+                    }
                     if (localStorage) {
                         var schoolYear = localStorage.getItem(webStorageKey.SCHOOL_YEAR);
-                        if(schoolYear && Number(schoolYear) > 0){
+                        if (schoolYear && Number(schoolYear) > 0) {
                             schoolYearSelect2.val(schoolYear).trigger("change");
-                        } else {
-                            schoolYearSelect2.val(data.results[0].id).trigger("change");
+                            timetableSemesterId = Number(schoolYear);
                         }
                     }
+                    initCourseName(timetableSemesterId);
+                    initLessonName(timetableSemesterId);
+                    initRoom(timetableSemesterId);
+                    initTeacherName(timetableSemesterId);
                     init_configure.init_school_year = true;
                 }
             });
@@ -246,84 +263,6 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             $('.select2-show-search').select2({
                 language: "zh-CN"
             });
-        }
-
-        /*
-        初始化搜索内容
-       */
-        function initSearchContent() {
-            initParam();
-
-            var courseName = null;
-            var lessonName = null;
-            var room = null;
-            var teacherName = null;
-            var schoolYear = null;
-            if (localStorage) {
-                courseName = localStorage.getItem(webStorageKey.COURSE_NAME);
-                lessonName = localStorage.getItem(webStorageKey.LESSON_NAME);
-                room = localStorage.getItem(webStorageKey.ROOM);
-                teacherName = localStorage.getItem(webStorageKey.TEACHER_NAME);
-                schoolYear = localStorage.getItem(webStorageKey.SCHOOL_YEAR);
-            }
-            if (courseName !== null) {
-                param.courseName = courseName;
-            }
-
-            if (lessonName !== null) {
-                param.lessonName = lessonName;
-            }
-
-            if (room !== null) {
-                param.room = room;
-            }
-
-            if (teacherName !== null) {
-                param.teacherName = teacherName;
-            }
-
-            if (schoolYear !== null) {
-                param.schoolYear = schoolYear;
-            }
-
-        }
-
-        /*
-        初始化搜索框
-        */
-        function initSearchInput() {
-            var courseName = null;
-            var lessonName = null;
-            var room = null;
-            var teacherName = null;
-            var schoolYear = null;
-            if (localStorage) {
-                courseName = localStorage.getItem(webStorageKey.COURSE_NAME);
-                lessonName = localStorage.getItem(webStorageKey.LESSON_NAME);
-                room = localStorage.getItem(webStorageKey.ROOM);
-                teacherName = localStorage.getItem(webStorageKey.TEACHER_NAME);
-                schoolYear = localStorage.getItem(webStorageKey.SCHOOL_YEAR);
-            }
-            if (courseName !== null) {
-                $(param_id.courseName).val(courseName);
-            }
-
-            if (lessonName !== null) {
-                $(param_id.lessonName).val(lessonName);
-            }
-
-            if (room !== null) {
-                $(param_id.room).val(room);
-            }
-
-            if (teacherName !== null) {
-                $(param_id.teacherName).val(teacherName);
-            }
-
-            if (schoolYear !== null) {
-                $(param_id.schoolYear).val(schoolYear);
-            }
-
         }
 
         function cleanData() {
@@ -345,7 +284,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         }
 
         function week(j, v) {
-            var isRight = j>=v.startUnit && j<=v.endUnit;
+            var isRight = j >= v.startUnit && j <= v.endUnit;
             if (isRight) {
                 generateDataHtml('#week_' + v.weekday + '_' + j, v);
             }
@@ -378,7 +317,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             $(target).html(template(v));
         }
 
-        $('#importCourse').click(function (){
+        $('#importCourse').click(function () {
             $.address.value(ajax_url.timetable_import);
         });
     });

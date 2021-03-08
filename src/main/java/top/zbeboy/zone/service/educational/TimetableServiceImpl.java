@@ -359,7 +359,7 @@ public class TimetableServiceImpl implements TimetableService {
                 List<Map<String, Object>> secondList = new ArrayList<>();
                 for (int j = 0; j < arr2.size(); j++) {
                     Map<String, Object> map = new HashMap<>();
-                    JSONObject j2 = arr2.getJSONObject(i);
+                    JSONObject j2 = arr2.getJSONObject(j);
                     map.put("courseName", j2.getString("courseName"));
                     map.put("lessonName", j2.getString("lessonName"));
                     map.put("building", j2.getString("building"));

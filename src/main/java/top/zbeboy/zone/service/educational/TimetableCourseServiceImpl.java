@@ -1,6 +1,9 @@
 package top.zbeboy.zone.service.educational;
 
 import org.jooq.DSLContext;
+import org.jooq.Record;
+import org.jooq.Record1;
+import org.jooq.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -9,6 +12,7 @@ import top.zbeboy.zbase.domain.tables.daos.TimetableCourseDao;
 import top.zbeboy.zbase.domain.tables.pojos.TimetableCourse;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 import static top.zbeboy.zbase.domain.Tables.TIMETABLE_COURSE;
@@ -25,6 +29,58 @@ public class TimetableCourseServiceImpl implements TimetableCourseService{
     @Autowired
     TimetableCourseServiceImpl(DSLContext dslContext) {
         create = dslContext;
+    }
+
+    @Override
+    public List<TimetableCourse> findByTimetableSemesterIdDistinctRoom(int timetableSemesterId) {
+        Result<Record1<String>> result = create.selectDistinct(TIMETABLE_COURSE.ROOM)
+                .from(TIMETABLE_COURSE)
+                .where(TIMETABLE_COURSE.TIMETABLE_SEMESTER_ID.eq(timetableSemesterId))
+                .fetch();
+        List<TimetableCourse> timetableCourses = new ArrayList<>();
+        if(result.isNotEmpty()){
+            timetableCourses = result.into(TimetableCourse.class);
+        }
+        return timetableCourses;
+    }
+
+    @Override
+    public List<TimetableCourse> findByTimetableSemesterIdDistinctLessonName(int timetableSemesterId) {
+        Result<Record1<String>> result = create.selectDistinct(TIMETABLE_COURSE.LESSON_NAME)
+                .from(TIMETABLE_COURSE)
+                .where(TIMETABLE_COURSE.TIMETABLE_SEMESTER_ID.eq(timetableSemesterId))
+                .fetch();
+        List<TimetableCourse> timetableCourses = new ArrayList<>();
+        if(result.isNotEmpty()){
+            timetableCourses = result.into(TimetableCourse.class);
+        }
+        return timetableCourses;
+    }
+
+    @Override
+    public List<TimetableCourse> findByTimetableSemesterIdDistinctCourseName(int timetableSemesterId) {
+        Result<Record1<String>> result = create.selectDistinct(TIMETABLE_COURSE.COURSE_NAME)
+                .from(TIMETABLE_COURSE)
+                .where(TIMETABLE_COURSE.TIMETABLE_SEMESTER_ID.eq(timetableSemesterId))
+                .fetch();
+        List<TimetableCourse> timetableCourses = new ArrayList<>();
+        if(result.isNotEmpty()){
+            timetableCourses = result.into(TimetableCourse.class);
+        }
+        return timetableCourses;
+    }
+
+    @Override
+    public List<TimetableCourse> findByTimetableSemesterIdDistinctTeachers(int timetableSemesterId) {
+        Result<Record1<String>> result = create.selectDistinct(TIMETABLE_COURSE.TEACHERS)
+                .from(TIMETABLE_COURSE)
+                .where(TIMETABLE_COURSE.TIMETABLE_SEMESTER_ID.eq(timetableSemesterId))
+                .fetch();
+        List<TimetableCourse> timetableCourses = new ArrayList<>();
+        if(result.isNotEmpty()){
+            timetableCourses = result.into(TimetableCourse.class);
+        }
+        return timetableCourses;
     }
 
     @Override
