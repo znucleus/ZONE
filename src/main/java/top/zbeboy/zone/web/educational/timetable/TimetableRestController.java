@@ -1,6 +1,5 @@
 package top.zbeboy.zone.web.educational.timetable;
 
-import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.Result;
 import org.springframework.http.HttpStatus;
@@ -14,13 +13,13 @@ import top.zbeboy.zbase.domain.tables.pojos.TimetableCourse;
 import top.zbeboy.zbase.domain.tables.pojos.TimetableSemester;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.domain.tables.pojos.UsersType;
+import top.zbeboy.zbase.domain.tables.records.TimetableCourseRecord;
 import top.zbeboy.zbase.domain.tables.records.TimetableSemesterRecord;
-import top.zbeboy.zbase.elastic.*;
+import top.zbeboy.zbase.elastic.TimetableElastic;
 import top.zbeboy.zbase.feign.city.educational.EducationalTimetableService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zbase.tools.web.plugin.select2.Select2Data;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
-import top.zbeboy.zbase.tools.web.util.pagination.ElasticUtil;
 import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
 import top.zbeboy.zone.service.educational.TimetableCourseService;
 import top.zbeboy.zone.service.educational.TimetableSemesterService;
@@ -103,32 +102,26 @@ public class TimetableRestController {
      */
     @ApiLoggingRecord(remark = "教务课表搜索", channel = Workbook.channel.WEB, needLogin = true)
     @GetMapping("/web/educational/timetable/search")
-    public ResponseEntity<Map<String, Object>> search(ElasticUtil elasticUtil, HttpServletRequest request) {
-        AjaxUtil<TimetableElastic> ajaxUtil = AjaxUtil.of();
-        List<TimetableElastic> timetableElastics = new ArrayList<>();
-        JSONObject search = elasticUtil.getSearch();
-        if (Objects.nonNull(search)) {
-            String courseName = StringUtils.trim(search.getString("courseName"));
-            String attendClass = StringUtils.trim(search.getString("attendClass"));
-            String classroom = StringUtils.trim(search.getString("classroom"));
-            String teacherName = StringUtils.trim(search.getString("teacherName"));
-            String teacherNumber = StringUtils.trim(search.getString("teacherNumber"));
-            String identification = StringUtils.trim(search.getString("identification"));
+    public ResponseEntity<Map<String, Object>> search(TimetableCourse timetableCourse, HttpServletRequest request) {
+        AjaxUtil<TimetableCourse> ajaxUtil = AjaxUtil.of();
+        List<TimetableCourse> timetableCourses = new ArrayList<>();
+        String courseName = timetableCourse.getCourseName();
+        String lessonName = timetableCourse.getLessonName();
+        String room = timetableCourse.getRoom();
+        String teachers = timetableCourse.getTeachers();
+        Integer timetableSemesterId = timetableCourse.getTimetableSemesterId();
 
-            if (StringUtils.isNotBlank(identification) &&
-                    (StringUtils.isNotBlank(courseName) ||
-                            StringUtils.isNotBlank(attendClass) ||
-                            StringUtils.isNotBlank(classroom) ||
-                            StringUtils.isNotBlank(teacherName) ||
-                            StringUtils.isNotBlank(teacherNumber))) {
-                Optional<List<TimetableElastic>> optionalTimetableElastics = educationalTimetableService.search(elasticUtil);
-                if (optionalTimetableElastics.isPresent()) {
-                    timetableElastics = optionalTimetableElastics.get();
-                }
+        if (Objects.nonNull(timetableSemesterId) &&
+                (StringUtils.isNotBlank(courseName) ||
+                        StringUtils.isNotBlank(lessonName) ||
+                        StringUtils.isNotBlank(room) ||
+                        StringUtils.isNotBlank(teachers))) {
+            Result<TimetableCourseRecord> timetableCourseRecords = timetableCourseService.search(timetableCourse);
+            if (timetableCourseRecords.isNotEmpty()) {
+                timetableCourses = timetableCourseRecords.into(TimetableCourse.class);
             }
         }
-        timetableElastics.forEach(timetableElastic -> timetableElastic.setTeacherNumber(""));
-        ajaxUtil.success().msg("获取数据成功").list(timetableElastics);
+        ajaxUtil.success().msg("获取数据成功").list(timetableCourses);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 

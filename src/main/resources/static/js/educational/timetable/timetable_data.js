@@ -25,8 +25,8 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             courseName: '',
             lessonName: '',
             room: '',
-            teacherName: '',
-            schoolYear: ''
+            teachers: '',
+            timetableSemesterId: ''
         };
 
         /*
@@ -71,8 +71,8 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             param.courseName = $(param_id.courseName).val();
             param.lessonName = $(param_id.lessonName).val();
             param.room = $(param_id.room).val();
-            param.teacherName = $(param_id.teacherName).val();
-            param.schoolYear = $(param_id.schoolYear).val();
+            param.teachers = $(param_id.teacherName).val();
+            param.timetableSemesterId = Number($(param_id.schoolYear).val());
         }
 
         var init_configure = {
@@ -93,7 +93,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 localStorage.setItem(webStorageKey.LESSON_NAME, param.lessonName != null ? param.lessonName : '');
                 localStorage.setItem(webStorageKey.ROOM, param.room != null ? param.room : '');
                 localStorage.setItem(webStorageKey.TEACHER_NAME, param.teacherName != null ? param.teacherName : '');
-                localStorage.setItem(webStorageKey.SCHOOL_YEAR, param.schoolYear != null ? param.schoolYear : '');
+                localStorage.setItem(webStorageKey.SCHOOL_YEAR, param.timetableSemesterId != null ? param.timetableSemesterId : '');
             }
         }
 
@@ -151,6 +151,43 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         function init() {
             initSchoolYear();
             initSelect2();
+            initSearchContent();
+            initData();
+        }
+
+        function initSearchContent() {
+            var timetableSemesterId = null;
+            var courseName = null;
+            var lessonName = null;
+            var room = null;
+            var teachers = null;
+            if (localStorage) {
+                timetableSemesterId = localStorage.getItem(webStorageKey.SCHOOL_YEAR);
+                courseName = localStorage.getItem(webStorageKey.COURSE_NAME);
+                lessonName = localStorage.getItem(webStorageKey.LESSON_NAME);
+                room = localStorage.getItem(webStorageKey.ROOM);
+                teachers = localStorage.getItem(webStorageKey.TEACHER_NAME);
+            }
+
+            if (timetableSemesterId !== null) {
+                param.timetableSemesterId = timetableSemesterId;
+            }
+
+            if (courseName !== null) {
+                param.courseName = courseName;
+            }
+
+            if (lessonName !== null) {
+                param.lessonName = lessonName;
+            }
+
+            if (room !== null) {
+                param.room = room;
+            }
+
+            if (teachers !== null) {
+                param.teachers = teachers;
+            }
         }
 
         function initData() {
@@ -268,7 +305,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         function cleanData() {
             // 清空之前的数据
             for (var i = 1; i <= 7; i++) {
-                for (var j = 1; j <= 12; j++) {
+                for (var j = 1; j <= 13; j++) {
                     $('#week_' + i + '_' + j).empty();
                 }
             }
@@ -277,7 +314,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         function generateData(data) {
             cleanData();
             $.each(data.listResult, function (i, v) {
-                for (var j = 1; j <= 12; j++) {
+                for (var j = 1; j <= 13; j++) {
                     week(j, v);
                 }
             })
@@ -310,7 +347,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 if (!endUnit || endUnit === '') {
                     sectionUnit = startUnit + '节';
                 } else {
-                    sectionUnit = startUnit + '-' + endUnit + '周';
+                    sectionUnit = startUnit + '-' + endUnit + '节';
                 }
                 return new Handlebars.SafeString(Handlebars.escapeExpression(sectionUnit));
             });
