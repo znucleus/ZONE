@@ -368,7 +368,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "select2-zh-CN"],
                 }
                 return new Handlebars.SafeString(Handlebars.escapeExpression(sectionUnit));
             });
-            $(target).html(template(v));
+            $(target).append(template(v));
         }
 
         $('#importCourse').click(function () {
