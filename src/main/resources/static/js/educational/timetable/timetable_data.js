@@ -142,6 +142,11 @@ require(["jquery", "tools", "handlebars", "nav.active", "select2-zh-CN"],
         $(param_id.schoolYear).on('select2:select', function (e) {
             refreshSearch();
             initData();
+            initCourseName(param.timetableSemesterId);
+            initLessonName(param.timetableSemesterId);
+            initRoom(param.timetableSemesterId);
+            initTeacherName(param.timetableSemesterId);
+            getSchoolYearInfo(param.timetableSemesterId);
             getSchoolYearInfo(param.timetableSemesterId);
         });
 
