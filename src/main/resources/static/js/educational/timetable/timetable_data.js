@@ -282,15 +282,22 @@ require(["jquery", "tools", "handlebars", "nav.active", "select2-zh-CN", "messen
 
                 if (!init_configure.init_school_year) {
                     var timetableSemesterId = '';
-                    if (data.results.length > 0) {
-                        schoolYearSelect2.val(data.results[0].id).trigger("change");
-                        timetableSemesterId = data.results[0].id;
-                    }
+
                     if (localStorage) {
                         var schoolYear = localStorage.getItem(webStorageKey.SCHOOL_YEAR);
                         if (schoolYear && schoolYear !== '') {
                             schoolYearSelect2.val(schoolYear).trigger("change");
                             timetableSemesterId = schoolYear;
+                        }  else {
+                            if (data.results.length > 0) {
+                                schoolYearSelect2.val(data.results[0].id).trigger("change");
+                                timetableSemesterId = data.results[0].id;
+                            }
+                        }
+                    } else {
+                        if (data.results.length > 0) {
+                            schoolYearSelect2.val(data.results[0].id).trigger("change");
+                            timetableSemesterId = data.results[0].id;
                         }
                     }
                     initCourseName(timetableSemesterId);

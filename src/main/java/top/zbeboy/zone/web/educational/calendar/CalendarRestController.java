@@ -47,8 +47,8 @@ public class CalendarRestController {
         headers.add("select");
         headers.add("title");
         headers.add("collegeName");
-        headers.add("academicYear");
-        headers.add("term");
+        headers.add("schoolYear");
+        headers.add("semester");
         headers.add("startDate");
         headers.add("endDate");
         headers.add("holidayStartDate");

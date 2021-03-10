@@ -45,7 +45,6 @@ public class CalendarViewController {
     @GetMapping("/web/menu/educational/calendar")
     public String index(ModelMap modelMap) {
         Users users = SessionUtil.getUserFromSession();
-        int schoolId = 0;
         int collegeId = 0;
         Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
         if (optionalUsersType.isPresent()) {
@@ -54,20 +53,17 @@ public class CalendarViewController {
                 Optional<StaffBean> optionalStaffBean = staffService.findByUsernameRelation(users.getUsername());
                 if (optionalStaffBean.isPresent()) {
                     StaffBean bean = optionalStaffBean.get();
-                    schoolId = bean.getSchoolId();
                     collegeId = bean.getCollegeId();
                 }
             } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
                 Optional<StudentBean> optionalStudentBean = studentService.findByUsernameRelation(users.getUsername());
                 if (optionalStudentBean.isPresent()) {
                     StudentBean studentBean = optionalStudentBean.get();
-                    schoolId = studentBean.getSchoolId();
                     collegeId = studentBean.getCollegeId();
                 }
             }
         }
 
-        modelMap.addAttribute("schoolId", schoolId);
         modelMap.addAttribute("collegeId", collegeId);
         modelMap.addAttribute("canRelease", educationalCalendarService.canRelease(users.getUsername()));
         return "web/educational/calendar/calendar_look::#page-wrapper";

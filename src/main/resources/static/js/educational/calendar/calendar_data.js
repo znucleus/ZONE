@@ -69,8 +69,8 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                 {"data": null},
                 {"data": "title"},
                 {"data": "collegeName"},
-                {"data": "academicYear"},
-                {"data": "term"},
+                {"data": "schoolYear"},
+                {"data": "semester"},
                 {"data": "startDate"},
                 {"data": "endDate"},
                 {"data": "holidayStartDate"},
@@ -99,10 +99,12 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                     targets: 5,
                     render: function (a, b, c, d) {
                         var v = '';
-                        if (Number(c.term) === 0) {
-                            v = '上学期';
-                        } else if (Number(c.term) === 1) {
-                            v = '下学期';
+                        if (Number(c.semester) === 1) {
+                            v = '第一学期';
+                        } else if (Number(c.semester) === 2) {
+                            v = '第二学期';
+                        } else if (Number(c.semester) === 3) {
+                            v = '第三学期';
                         }
                         return v;
                     }

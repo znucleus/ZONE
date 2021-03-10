@@ -26,7 +26,6 @@ require(["jquery", "tools", "nav.active", "jquery.address", "js-year-calendar.zh
         };
 
         var page_param = {
-            schoolId: $('#schoolId').val(),
             collegeId: $('#collegeId').val()
         };
 
@@ -47,7 +46,11 @@ require(["jquery", "tools", "nav.active", "jquery.address", "js-year-calendar.zh
         init();
 
         function init() {
-            initSchool();
+            if (Number(page_param.collegeId) > 0) {
+                initSchoolCalendar(page_param.collegeId);
+            } else {
+                initSchool();
+            }
             initSelect2();
             initData();
         }
@@ -64,8 +67,6 @@ require(["jquery", "tools", "nav.active", "jquery.address", "js-year-calendar.zh
                 }
                 if (schoolId !== null) {
                     sl.val(schoolId).trigger("change");
-                } else {
-                    sl.val(page_param.schoolId).trigger("change");
                 }
 
             });
@@ -83,8 +84,6 @@ require(["jquery", "tools", "nav.active", "jquery.address", "js-year-calendar.zh
                         }
                         if (collegeId !== null) {
                             sl.val(collegeId).trigger("change");
-                        } else {
-                            sl.val(page_param.collegeId).trigger("change");
                         }
                         init_configure.init_college = true;
                     }
@@ -101,12 +100,22 @@ require(["jquery", "tools", "nav.active", "jquery.address", "js-year-calendar.zh
                     var sl = $(param_id.schoolCalendar).select2({data: data.results});
 
                     if (!init_configure.init_school_calendar) {
+
+
                         var schoolCalendar = null;
                         if (localStorage) {
                             schoolCalendar = localStorage.getItem(webStorageKey.SCHOOL_CALENDAR);
+                        } else {
+                            if (data.results.length > 0) {
+                                sl.val(data.results[0].id).trigger("change");
+                            }
                         }
                         if (schoolCalendar !== null) {
                             sl.val(schoolCalendar).trigger("change");
+                        } else {
+                            if (data.results.length > 0) {
+                                sl.val(data.results[0].id).trigger("change");
+                            }
                         }
                         init_configure.init_school_calendar = true;
                     }
@@ -157,8 +166,15 @@ require(["jquery", "tools", "nav.active", "jquery.address", "js-year-calendar.zh
                         $('#title').text(calendar.title);
                         $('#schoolName').text('学校：' + calendar.schoolName);
                         $('#collegeName').text('院：' + calendar.collegeName);
-                        var term = calendar.term === 0 ? '上学期' : '下学期';
-                        $('#academicYear').text('学年：' + calendar.academicYear + ' ' + term);
+                        var semester = '';
+                        if (calendar.semester === 1) {
+                            semester = '第一学期';
+                        } else if (calendar.semester === 2) {
+                            semester = '第二学期';
+                        } else if (calendar.semester === 3) {
+                            semester = '第三学期';
+                        }
+                        $('#schoolYear').text('学年：' + calendar.schoolYear + ' ' + semester);
                         $('#openDate').text('开学：' + calendar.startDate + ' ~ ' + calendar.endDate + ' 共' + calendar.openWeeks + '周');
                         $('#holidayDate').text('放假：' + calendar.holidayStartDate + ' ~ ' + calendar.holidayEndDate + ' 共' + calendar.holidayWeeks + '周');
                         var nowDate = calendar.nowDate.split('-');
@@ -173,7 +189,7 @@ require(["jquery", "tools", "nav.active", "jquery.address", "js-year-calendar.zh
                         $('#title').text('');
                         $('#schoolName').text('');
                         $('#collegeName').text('');
-                        $('#academicYear').text('');
+                        $('#schoolYear').text('');
                         $('#openDate').text('');
                         $('#holidayDate').text('');
                         $('#nowDate').html('')

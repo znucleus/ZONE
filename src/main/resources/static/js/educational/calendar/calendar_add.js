@@ -26,8 +26,8 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
         var param_id = {
             school: '#school',
             college: '#college',
-            academicYear: '#academicYear',
-            term: '#term',
+            schoolYear: '#schoolYear',
+            semester: '#semester',
             startDate: '#startDate',
             endDate: '#endDate',
             holidayStartDate: '#holidayStartDate',
@@ -49,8 +49,8 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
         var param = {
             schoolId: '',
             collegeId: '',
-            academicYear: '',
-            term: '',
+            schoolYear: '',
+            semester: '',
             startDate: '',
             endDate: '',
             holidayStartDate: '',
@@ -69,8 +69,8 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
                 param.collegeId = page_param.collegeId;
             }
 
-            param.academicYear = $(param_id.academicYear).val();
-            param.term = $(param_id.term).val();
+            param.schoolYear = $(param_id.schoolYear).val();
+            param.semester = $(param_id.semester).val();
 
             param.startDate = $(param_id.startDate).val();
             param.endDate = $(param_id.endDate).val();
@@ -94,7 +94,7 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
                 $(param_id.school).parent().css('display', '');
                 $(param_id.college).parent().css('display', '');
             }
-            initAcademicYear();
+            initSchoolYear();
             initSelect2();
             initMaxLength();
         }
@@ -118,8 +118,8 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
             }
         }
 
-        function initAcademicYear() {
-            $(param_id.academicYear).html('<option value="" label="请选择学年"></option>');
+        function initSchoolYear() {
+            $(param_id.schoolYear).html('<option value="" label="请选择学年"></option>');
             var date = new Date();
             var year = date.getFullYear();
             var yearArr = [];
@@ -130,7 +130,7 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
                 });
             }
 
-            $(param_id.academicYear).select2({data: yearArr});
+            $(param_id.schoolYear).select2({data: yearArr});
         }
 
         function initSelect2() {
@@ -172,11 +172,11 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
             }
         });
 
-        $(param_id.academicYear).change(function () {
+        $(param_id.schoolYear).change(function () {
             var v = $(this).val();
 
             if (Number(v) > 0) {
-                tools.validSelect2SuccessDom(param_id.academicYear);
+                tools.validSelect2SuccessDom(param_id.schoolYear);
             }
         });
 
@@ -198,7 +198,7 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
             if (Number(page_param.collegeId) === 0) {
                 validSchoolId();
             } else {
-                validAcademicYear();
+                validSchoolYear();
             }
         });
 
@@ -224,26 +224,26 @@ require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", 
                 tools.validSelect2ErrorDom(param_id.college, '请选择院');
             } else {
                 tools.validSelect2SuccessDom(param_id.college);
-                validAcademicYear();
+                validSchoolYear();
             }
         }
 
-        function validAcademicYear() {
-            var academicYear = param.academicYear;
-            if (academicYear === '') {
-                tools.validSelect2ErrorDom(param_id.academicYear, '请选择学年');
+        function validSchoolYear() {
+            var schoolYear = param.schoolYear;
+            if (schoolYear === '') {
+                tools.validSelect2ErrorDom(param_id.schoolYear, '请选择学年');
             } else {
-                tools.validSelect2SuccessDom(param_id.academicYear);
-                validTerm();
+                tools.validSelect2SuccessDom(param_id.schoolYear);
+                validSemester();
             }
         }
 
-        function validTerm() {
-            var term = param.term;
-            if (term === '') {
-                tools.validErrorDom(param_id.term, '请选择学期');
+        function validSemester() {
+            var semester = param.semester;
+            if (semester === '') {
+                tools.validErrorDom(param_id.semester, '请选择学期');
             } else {
-                tools.validSuccessDom(param_id.term);
+                tools.validSuccessDom(param_id.semester);
                 validStartDate();
             }
         }
