@@ -17,7 +17,7 @@
 # 启动
 1.Intellij IDEA Run Application.class 或 Maven .  
 # 参与条件
-1.Known Spring boot 2.2.12;  
+1.Known Spring boot 2.2.13;  
 2.Known Spring cloud Hoxton.SR9;  
 3.Known Git;  
 4.Known Maven;  
