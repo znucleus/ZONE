@@ -137,9 +137,9 @@ public class CampusTimetableRestController {
                 campusCourseReleaseAddVo.setQrCodeUrl(path);
 
                 campusCourseReleaseAddVo.setTitle(release.getTitle());
-                campusCourseReleaseAddVo.setStartYear(release.getStartYear());
-                campusCourseReleaseAddVo.setEndYear(release.getEndYear());
-                campusCourseReleaseAddVo.setTerm(release.getTerm());
+                campusCourseReleaseAddVo.setSchoolYear(release.getSchoolYear());
+                campusCourseReleaseAddVo.setSemester(release.getSemester());
+                // TODO:有问题
                 campusCourseReleaseAddVo.setShareId(shareId);
                 ajaxUtil = campusTimetableService.shareSave(campusCourseReleaseAddVo);
             } else {

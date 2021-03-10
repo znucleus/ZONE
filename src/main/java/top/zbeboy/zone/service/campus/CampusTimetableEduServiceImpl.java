@@ -192,7 +192,7 @@ public class CampusTimetableEduServiceImpl implements CampusTimetableEduService 
                             endWeek = 1;
                         }
 
-                        Byte weekDay = campusCourseData.getWeekDay();
+                        Byte weekDay = campusCourseData.getWeekday();
                         if (Objects.isNull(weekDay)) {
                             weekDay = 1;
                         }
@@ -240,7 +240,7 @@ public class CampusTimetableEduServiceImpl implements CampusTimetableEduService 
                         // 重复事件
                         if (count > 0) {
                             Recur recur = new Recur(Recur.Frequency.WEEKLY, count + 1);
-                            recur.getDayList().add(getWeekday(campusCourseData.getWeekDay()));
+                            recur.getDayList().add(getWeekday(campusCourseData.getWeekday()));
                             RRule rule = new RRule(recur);
                             meeting.getProperties().add(rule);
                         }

@@ -30,10 +30,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
-import top.zbeboy.zbase.bean.educational.calendar.SchoolCalendarBean;
-import top.zbeboy.zbase.domain.tables.pojos.CampusCourseData;
 import top.zbeboy.zbase.domain.tables.pojos.TimetableCourse;
 import top.zbeboy.zbase.domain.tables.pojos.TimetableSemester;
+import top.zbeboy.zbase.domain.tables.records.TimetableSemesterRecord;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.service.util.UUIDUtil;
 
@@ -42,8 +41,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
-import java.util.Calendar;
-import java.util.Date;
 
 @Service("timetableService")
 public class TimetableServiceImpl implements TimetableService {
@@ -55,9 +52,20 @@ public class TimetableServiceImpl implements TimetableService {
     private TimetableCourseService timetableCourseService;
 
     @Override
-    public void syncWithStudent(String username, String password) throws Exception {
-        Map<String, Object> eduData = eduData(username, password);
-        dealSemester(eduData);
+    public List<Map<String, Object>> semesters(String username, String password) throws Exception {
+        List<Map<String, Object>> list = new ArrayList<>();
+        Map<String, Object> eduData = eduData(username, password, true, 0);
+        Boolean hasError = (Boolean) eduData.get("hasError");
+        if (!hasError) {
+            list = (List<Map<String, Object>>) eduData.get("data");
+        }
+        return list;
+    }
+
+    @Override
+    public void syncWithStudent(String username, String password, int collegeId, int semesterId) throws Exception {
+        Map<String, Object> eduData = eduData(username, password, false, semesterId);
+        dealSemester(eduData, collegeId);
         dealCourseWithStudent(eduData);
     }
 
@@ -110,8 +118,8 @@ public class TimetableServiceImpl implements TimetableService {
             }
 
             java.sql.Date calendarStartDate = null;
-            TimetableSemester timetableSemester = timetableSemesterService.findById(timetableCourse.getTimetableSemesterId());
-            if(Objects.nonNull(timetableSemester) && Objects.nonNull(timetableSemester.getStartDate())){
+            TimetableSemester timetableSemester = timetableSemesterService.findByTimetableSemesterId(timetableCourse.getTimetableSemesterId());
+            if (Objects.nonNull(timetableSemester) && Objects.nonNull(timetableSemester.getStartDate())) {
                 calendarStartDate = timetableSemester.getStartDate();
             } else {
                 calendarStartDate = DateTimeUtil.getNowSqlDate();
@@ -192,45 +200,59 @@ public class TimetableServiceImpl implements TimetableService {
         outputter.output(icsCalendar, fout);
     }
 
-    public void dealSemester(Map<String, Object> eduData) {
-        Integer timetableSemesterId = (Integer) eduData.get("timetableSemesterId");
-        if (Objects.nonNull(timetableSemesterId) && timetableSemesterId > 0) {
+    public void dealSemester(Map<String, Object> eduData, int collegeId) {
+        Boolean hasError = (Boolean) eduData.get("hasError");
+        if (!hasError) {
+            Integer id = (Integer) eduData.get("id");
             // 查询我方是否有，没有则插入
-            TimetableSemester timetableSemester = timetableSemesterService.findById(timetableSemesterId);
-            if (Objects.nonNull(timetableSemester)) {
+            Optional<TimetableSemesterRecord> optionalTimetableSemesterRecord = timetableSemesterService.findByIdAndCollegeId(id, collegeId);
+            if (optionalTimetableSemesterRecord.isPresent()) {
+                TimetableSemester timetableSemester = optionalTimetableSemesterRecord.get().into(TimetableSemester.class);
+                eduData.put("timetableSemesterId", timetableSemester.getTimetableSemesterId());
                 // 有则更新
                 boolean isUpdate = false;
-                if (Objects.nonNull(eduData.get("schoolYear"))) {
+                if (Objects.nonNull(eduData.get("schoolYear")) && !StringUtils.equals(timetableSemester.getSchoolYear(), (String) eduData.get("schoolYear"))) {
                     timetableSemester.setSchoolYear((String) eduData.get("schoolYear"));
                     isUpdate = true;
                 }
 
-                if (Objects.nonNull(eduData.get("name"))) {
+                if (Objects.nonNull(eduData.get("name")) && !StringUtils.equals(timetableSemester.getName(), (String) eduData.get("name"))) {
                     timetableSemester.setName((String) eduData.get("name"));
                     isUpdate = true;
                 }
 
-                if (Objects.nonNull(eduData.get("code"))) {
+                if (Objects.nonNull(eduData.get("code")) && !StringUtils.equals(timetableSemester.getCode(), (String) eduData.get("code"))) {
                     timetableSemester.setCode((String) eduData.get("code"));
                     isUpdate = true;
                 }
 
                 if (Objects.nonNull(eduData.get("startDate"))) {
-                    timetableSemester.setStartDate(DateTimeUtil.parseSqlDate((String) eduData.get("startDate"), DateTimeUtil.YEAR_MONTH_DAY_FORMAT));
-                    isUpdate = true;
+                    java.sql.Date startDate = DateTimeUtil.parseSqlDate((String) eduData.get("startDate"), DateTimeUtil.YEAR_MONTH_DAY_FORMAT);
+                    if (timetableSemester.getStartDate().compareTo(startDate) != 0) {
+                        timetableSemester.setStartDate(startDate);
+                        isUpdate = true;
+                    }
+
                 }
 
                 if (Objects.nonNull(eduData.get("endDate"))) {
-                    timetableSemester.setEndDate(DateTimeUtil.parseSqlDate((String) eduData.get("endDate"), DateTimeUtil.YEAR_MONTH_DAY_FORMAT));
-                    isUpdate = true;
+                    java.sql.Date endDate = DateTimeUtil.parseSqlDate((String) eduData.get("endDate"), DateTimeUtil.YEAR_MONTH_DAY_FORMAT);
+                    if (timetableSemester.getEndDate().compareTo(endDate) != 0) {
+                        timetableSemester.setEndDate(endDate);
+                        isUpdate = true;
+                    }
                 }
 
                 if (isUpdate) {
                     timetableSemesterService.update(timetableSemester);
                 }
             } else {
-                timetableSemester = new TimetableSemester();
+                TimetableSemester timetableSemester = new TimetableSemester();
+                String timetableSemesterId = UUIDUtil.getUUID();
+                eduData.put("timetableSemesterId", timetableSemesterId);
                 timetableSemester.setTimetableSemesterId(timetableSemesterId);
+                timetableSemester.setId(id);
+                timetableSemester.setCollegeId(collegeId);
                 if (Objects.nonNull(eduData.get("schoolYear"))) {
                     timetableSemester.setSchoolYear((String) eduData.get("schoolYear"));
                 }
@@ -261,8 +283,8 @@ public class TimetableServiceImpl implements TimetableService {
      * @param eduData 数据
      */
     public void dealCourseWithStudent(Map<String, Object> eduData) {
-        Integer timetableSemesterId = (Integer) eduData.get("timetableSemesterId");
-        if (Objects.nonNull(timetableSemesterId) && timetableSemesterId > 0) {
+        Boolean hasError = (Boolean) eduData.get("hasError");
+        if (!hasError) {
             List<Map<String, Object>> data = (List<Map<String, Object>>) eduData.get("data");
             if (CollectionUtils.isNotEmpty(data)) {
                 for (Map<String, Object> info : data) {
@@ -270,6 +292,7 @@ public class TimetableServiceImpl implements TimetableService {
                     List<Map<String, Object>> courseData = (List<Map<String, Object>>) info.get("data");
                     if (CollectionUtils.isNotEmpty(courseData)) {
                         // 删除旧课程
+                        String timetableSemesterId = (String) eduData.get("timetableSemesterId");
                         timetableCourseService.deleteTimetableCourseByTimetableSemesterIdAndLessonName(timetableSemesterId, adminclass);
                         List<TimetableCourse> insertData = new ArrayList<>();
                         for (Map<String, Object> param : courseData) {
@@ -318,7 +341,7 @@ public class TimetableServiceImpl implements TimetableService {
         }
     }
 
-    public Map<String, Object> eduData(String username, String password) throws Exception {
+    public Map<String, Object> eduData(String username, String password, boolean getAllSemesters, int semesterId) throws Exception {
         final String loginSaltUri = "http://cityjw.kust.edu.cn/integration/login-salt";
         final String loginUri = "http://cityjw.kust.edu.cn/integration/login";
         final String courseTableUri = "http://cityjw.kust.edu.cn/integration/for-std/course-table";
@@ -361,33 +384,38 @@ public class TimetableServiceImpl implements TimetableService {
                     if (courseTableResponse.getStatusLine().getStatusCode() == 200) {
                         HttpEntity courseTableResponseEntity = courseTableResponse.getEntity();
                         String courseTableResult = EntityUtils.toString(courseTableResponseEntity);
-                        Map<String, Object> semesters = getSemesters(courseTableResult);
-                        Integer semesterId = (Integer) semesters.get("id");
-                        result.put("timetableSemesterId", semesterId);
-                        result.put("schoolYear", semesters.get("schoolYear"));
-                        result.put("name", semesters.get("name"));
-                        result.put("code", semesters.get("code"));
-                        result.put("startDate", semesters.get("startDate"));
-                        result.put("endDate", semesters.get("endDate"));
+                        if (!getAllSemesters) {
+                            Map<String, Object> semesters = getSemesters(courseTableResult, semesterId);
+                            result.put("id", semesterId);
+                            result.put("schoolYear", semesters.get("schoolYear"));
+                            result.put("name", semesters.get("name"));
+                            result.put("code", semesters.get("code"));
+                            result.put("startDate", semesters.get("startDate"));
+                            result.put("endDate", semesters.get("endDate"));
 
-                        if (Objects.nonNull(semesterId) && semesterId > 0) {
-                            HttpGet semesterGet = new HttpGet(String.format(semesterUri, semesterId, semesterId));
-                            HttpResponse semesterResponse = client.execute(semesterGet);
-                            if (semesterResponse.getStatusLine().getStatusCode() == 200) {
-                                HttpEntity semesterResponseEntity = semesterResponse.getEntity();
-                                String semesterResult = EntityUtils.toString(semesterResponseEntity);
-                                List<Map<String, Object>> list = getTableData(semesterId, semesterResult);
-                                result.put("data", list);
+                            if (semesterId > 0) {
+                                HttpGet semesterGet = new HttpGet(String.format(semesterUri, semesterId, semesterId));
+                                HttpResponse semesterResponse = client.execute(semesterGet);
+                                if (semesterResponse.getStatusLine().getStatusCode() == 200) {
+                                    HttpEntity semesterResponseEntity = semesterResponse.getEntity();
+                                    String semesterResult = EntityUtils.toString(semesterResponseEntity);
+                                    List<Map<String, Object>> list = getTableData(semesterId, semesterResult);
+                                    result.put("data", list);
+                                } else {
+                                    result.put("hasError", true);
+                                    result.put("statusCode", semesterResponse.getStatusLine().getStatusCode());
+                                    result.put("reasonPhrase", semesterResponse.getStatusLine().getReasonPhrase() + "【SEMESTER】");
+                                }
                             } else {
                                 result.put("hasError", true);
-                                result.put("statusCode", semesterResponse.getStatusLine().getStatusCode());
-                                result.put("reasonPhrase", semesterResponse.getStatusLine().getReasonPhrase() + "【SEMESTER】");
+                                result.put("statusCode", "500");
+                                result.put("reasonPhrase", "获取学期id空" + "【SEMESTER_ID】");
                             }
                         } else {
-                            result.put("hasError", true);
-                            result.put("statusCode", "500");
-                            result.put("reasonPhrase", "获取学期id空" + "【SEMESTER_ID】");
+                            List<Map<String, Object>> list = getAllSemesters(courseTableResult);
+                            result.put("data", list);
                         }
+
                     } else {
                         result.put("hasError", true);
                         result.put("statusCode", courseTableResponse.getStatusLine().getStatusCode());
@@ -411,8 +439,48 @@ public class TimetableServiceImpl implements TimetableService {
         return result;
     }
 
-    private Map<String, Object> getSemesters(String str) {
+    private Map<String, Object> getSemesters(String str, int semesterId) {
         Map<String, Object> params = new HashMap<>();
+        Document doc = Jsoup.parse(str, CharEncoding.UTF_8);
+
+        params.put("id", semesterId);
+        Elements elements = doc.getElementsByTag("script");
+
+        String semesters = "";
+        for (Element element : elements) {
+
+            /*取得JS变量数组*/
+            String[] data = StringUtils.deleteWhitespace(element.data().toString()).split("var");
+            /*取得单个JS变量*/
+            for (String variable : data) {
+                if (variable.contains("semesters")) {
+                    semesters = variable.substring(variable.indexOf("=") + 1, variable.lastIndexOf(";")).trim();
+                    semesters = semesters.substring(semesters.indexOf("'") + 1, semesters.lastIndexOf("'"));
+                    semesters = semesters.replaceAll("\\\\\"", "\\\"");
+                    break;
+                }
+            }
+        }
+
+        if (StringUtils.isNotBlank(semesters)) {
+            JSONArray arr1 = JSON.parseArray(semesters);
+            for (int i = 0; i < arr1.size(); i++) {
+                JSONObject j1 = arr1.getJSONObject(i);
+                if (semesterId == j1.getIntValue("id")) {
+                    params.put("schoolYear", j1.getString("schoolYear"));
+                    params.put("name", j1.getString("name"));
+                    params.put("code", j1.getString("code"));
+                    params.put("startDate", j1.getString("startDate"));
+                    params.put("endDate", j1.getString("endDate"));
+                    break;
+                }
+            }
+        }
+        return params;
+    }
+
+    private List<Map<String, Object>> getAllSemesters(String str) {
+        List<Map<String, Object>> list = new ArrayList<>();
         Document doc = Jsoup.parse(str, CharEncoding.UTF_8);
 
         String valueId = "";
@@ -423,7 +491,6 @@ public class TimetableServiceImpl implements TimetableService {
             for (Element op : options) {
                 String selected = op.attr("selected");
                 String value = op.attr("value");
-                String text = op.text();
                 if (!isV) {
                     isV = true;
                     valueId = value;
@@ -436,7 +503,6 @@ public class TimetableServiceImpl implements TimetableService {
         }
 
         if (StringUtils.isNotBlank(valueId)) {
-            params.put("id", NumberUtils.toInt(valueId));
             Elements elements = doc.getElementsByTag("script");
 
             String semesters = "";
@@ -458,19 +524,26 @@ public class TimetableServiceImpl implements TimetableService {
             if (StringUtils.isNotBlank(semesters)) {
                 JSONArray arr1 = JSON.parseArray(semesters);
                 for (int i = 0; i < arr1.size(); i++) {
+                    Map<String, Object> map = new HashMap<>();
                     JSONObject j1 = arr1.getJSONObject(i);
+
+                    map.put("id", j1.getString("id"));
+                    map.put("schoolYear", j1.getString("schoolYear"));
+                    map.put("name", j1.getString("name"));
+                    map.put("code", j1.getString("code"));
+                    map.put("startDate", j1.getString("startDate"));
+                    map.put("endDate", j1.getString("endDate"));
+
                     if (NumberUtils.toInt(valueId) == j1.getIntValue("id")) {
-                        params.put("schoolYear", j1.getString("schoolYear"));
-                        params.put("name", j1.getString("name"));
-                        params.put("code", j1.getString("code"));
-                        params.put("startDate", j1.getString("startDate"));
-                        params.put("endDate", j1.getString("endDate"));
-                        break;
+                        map.put("selected", true);
+                    } else {
+                        map.put("selected", false);
                     }
+                    list.add(map);
                 }
             }
         }
-        return params;
+        return list;
     }
 
     private List<Map<String, Object>> getTableData(Integer id, String str) {
@@ -534,7 +607,7 @@ public class TimetableServiceImpl implements TimetableService {
                     map.put("lessonCode", j2.getString("lessonCode"));
                     map.put("courseCode", j2.getString("courseCode"));
                     map.put("lessonId", j2.getString("lessonId"));
-                    map.put("timetableSemesterId", id);
+                    map.put("id", id);
 
                     secondList.add(map);
                 }

@@ -34,7 +34,7 @@ public class TimetableCourseServiceImpl implements TimetableCourseService {
     }
 
     @Override
-    public List<TimetableCourse> findByTimetableSemesterIdDistinctRoom(int timetableSemesterId) {
+    public List<TimetableCourse> findByTimetableSemesterIdDistinctRoom(String timetableSemesterId) {
         Result<Record1<String>> result = create.selectDistinct(TIMETABLE_COURSE.ROOM)
                 .from(TIMETABLE_COURSE)
                 .where(TIMETABLE_COURSE.TIMETABLE_SEMESTER_ID.eq(timetableSemesterId))
@@ -47,7 +47,7 @@ public class TimetableCourseServiceImpl implements TimetableCourseService {
     }
 
     @Override
-    public List<TimetableCourse> findByTimetableSemesterIdDistinctLessonName(int timetableSemesterId) {
+    public List<TimetableCourse> findByTimetableSemesterIdDistinctLessonName(String timetableSemesterId) {
         Result<Record1<String>> result = create.selectDistinct(TIMETABLE_COURSE.LESSON_NAME)
                 .from(TIMETABLE_COURSE)
                 .where(TIMETABLE_COURSE.TIMETABLE_SEMESTER_ID.eq(timetableSemesterId))
@@ -60,7 +60,7 @@ public class TimetableCourseServiceImpl implements TimetableCourseService {
     }
 
     @Override
-    public List<TimetableCourse> findByTimetableSemesterIdDistinctCourseName(int timetableSemesterId) {
+    public List<TimetableCourse> findByTimetableSemesterIdDistinctCourseName(String timetableSemesterId) {
         Result<Record1<String>> result = create.selectDistinct(TIMETABLE_COURSE.COURSE_NAME)
                 .from(TIMETABLE_COURSE)
                 .where(TIMETABLE_COURSE.TIMETABLE_SEMESTER_ID.eq(timetableSemesterId))
@@ -73,7 +73,7 @@ public class TimetableCourseServiceImpl implements TimetableCourseService {
     }
 
     @Override
-    public List<TimetableCourse> findByTimetableSemesterIdDistinctTeachers(int timetableSemesterId) {
+    public List<TimetableCourse> findByTimetableSemesterIdDistinctTeachers(String timetableSemesterId) {
         Result<Record1<String>> result = create.selectDistinct(TIMETABLE_COURSE.TEACHERS)
                 .from(TIMETABLE_COURSE)
                 .where(TIMETABLE_COURSE.TIMETABLE_SEMESTER_ID.eq(timetableSemesterId))
@@ -91,7 +91,7 @@ public class TimetableCourseServiceImpl implements TimetableCourseService {
         String lessonName = timetableCourse.getLessonName();
         String room = timetableCourse.getRoom();
         String teachers = timetableCourse.getTeachers();
-        Integer timetableSemesterId = timetableCourse.getTimetableSemesterId();
+        String timetableSemesterId = timetableCourse.getTimetableSemesterId();
         Condition a = TIMETABLE_COURSE.TIMETABLE_SEMESTER_ID.eq(timetableSemesterId);
 
         if (StringUtils.isNotBlank(courseName)) {
@@ -120,7 +120,7 @@ public class TimetableCourseServiceImpl implements TimetableCourseService {
     }
 
     @Override
-    public void deleteTimetableCourseByTimetableSemesterIdAndLessonName(int timetableSemesterId, String lessonName) {
+    public void deleteTimetableCourseByTimetableSemesterIdAndLessonName(String timetableSemesterId, String lessonName) {
         create.deleteFrom(TIMETABLE_COURSE)
                 .where(TIMETABLE_COURSE.LESSON_NAME.eq(lessonName)
                         .and(TIMETABLE_COURSE.TIMETABLE_SEMESTER_ID.eq(timetableSemesterId)))

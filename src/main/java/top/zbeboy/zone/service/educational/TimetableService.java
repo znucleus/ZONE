@@ -4,17 +4,28 @@ import top.zbeboy.zbase.domain.tables.pojos.TimetableCourse;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public interface TimetableService {
 
     /**
-     * 学生同步课表
+     * 获取所有学年学期
      *
      * @param username 账号
      * @param password 密码
+     * @return 数据
+     */
+    List<Map<String, Object>> semesters(String username, String password) throws Exception;
+
+    /**
+     * 学生同步课表
+     *
+     * @param username   账号
+     * @param password   密码
+     * @param semesterId 学期id
      * @throws Exception 异常
      */
-    void syncWithStudent(String username, String password) throws Exception;
+    void syncWithStudent(String username, String password, int collegeId, int semesterId) throws Exception;
 
     /**
      * 生成日历

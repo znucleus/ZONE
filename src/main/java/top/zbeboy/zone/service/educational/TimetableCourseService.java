@@ -14,7 +14,7 @@ public interface TimetableCourseService {
      * @param timetableSemesterId 学年
      * @return 数据
      */
-    List<TimetableCourse> findByTimetableSemesterIdDistinctRoom(int timetableSemesterId);
+    List<TimetableCourse> findByTimetableSemesterIdDistinctRoom(String timetableSemesterId);
 
     /**
      * 通过学年查询班级
@@ -22,7 +22,7 @@ public interface TimetableCourseService {
      * @param timetableSemesterId 学年
      * @return 数据
      */
-    List<TimetableCourse> findByTimetableSemesterIdDistinctLessonName(int timetableSemesterId);
+    List<TimetableCourse> findByTimetableSemesterIdDistinctLessonName(String timetableSemesterId);
 
     /**
      * 通过学年查询课程
@@ -30,7 +30,7 @@ public interface TimetableCourseService {
      * @param timetableSemesterId 学年
      * @return 数据
      */
-    List<TimetableCourse> findByTimetableSemesterIdDistinctCourseName(int timetableSemesterId);
+    List<TimetableCourse> findByTimetableSemesterIdDistinctCourseName(String timetableSemesterId);
 
     /**
      * 通过学年查询教师
@@ -38,7 +38,7 @@ public interface TimetableCourseService {
      * @param timetableSemesterId 学年
      * @return 数据
      */
-    List<TimetableCourse> findByTimetableSemesterIdDistinctTeachers(int timetableSemesterId);
+    List<TimetableCourse> findByTimetableSemesterIdDistinctTeachers(String timetableSemesterId);
 
     /**
      * 根据条件搜索
@@ -61,5 +61,5 @@ public interface TimetableCourseService {
      * @param timetableSemesterId 学年id
      * @param lessonName          班级
      */
-    void deleteTimetableCourseByTimetableSemesterIdAndLessonName(int timetableSemesterId, String lessonName);
+    void deleteTimetableCourseByTimetableSemesterIdAndLessonName(String timetableSemesterId, String lessonName);
 }

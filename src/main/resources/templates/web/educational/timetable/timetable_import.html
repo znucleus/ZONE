@@ -26,7 +26,7 @@
                     您的登录账号与密码仅做同步用，后台不做保存。
                 </div>
                 <div class="col-md-12 mg-t-20">
-                    <form>
+                    <form id="queryForm">
                         <div class="form-group">
                             <input type="text" class="form-control" placeholder="新教务系统账号" id="username" name="username" th:value="${studentNumber}" readonly="readonly"/>
                             <div class="invalid-feedback"></div>
@@ -35,9 +35,22 @@
                             <input type="password" class="form-control" placeholder="新教务系统密码" id="password" name="password"/>
                             <div class="invalid-feedback"></div>
                         </div>
-                        <div class="form-group text-danger" id="globalError"></div>
+                        <div class="form-group text-danger" id="queryError"></div>
                         <div class="form-group text-center">
-                            <button type="button" class="btn btn-primary text-center" id="save">确定</button>
+                            <button type="button" class="btn btn-primary text-center" id="query">查询</button>
+                        </div>
+                    </form>
+
+                    <form id="saveForm" style="display: none;">
+                        <div class="form-group">
+                            <label class="form-control-label">请选择学年学期</label>
+                            <select class="form-control select2-show-search" id="schoolYear" data-placeholder="请选择学年学期" style="width: 100%">
+                            </select>
+                        </div>
+                        <div class="form-group text-danger" id="saveError"></div>
+                        <div class="form-group text-center">
+                            <button type="button" class="btn btn-primary text-center mg-r-5" id="save">确定</button>
+                            <button type="button" class="btn btn-secondary text-center" id="cancel">取消</button>
                         </div>
                     </form>
                 </div>

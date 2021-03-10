@@ -73,7 +73,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "select2-zh-CN", "messen
             param.lessonName = $(param_id.lessonName).val();
             param.room = $(param_id.room).val();
             param.teachers = $(param_id.teacherName).val();
-            param.timetableSemesterId = Number($(param_id.schoolYear).val());
+            param.timetableSemesterId = $(param_id.schoolYear).val();
         }
 
         var init_configure = {
@@ -147,7 +147,6 @@ require(["jquery", "tools", "handlebars", "nav.active", "select2-zh-CN", "messen
             initRoom(param.timetableSemesterId);
             initTeacherName(param.timetableSemesterId);
             getSchoolYearInfo(param.timetableSemesterId);
-            getSchoolYearInfo(param.timetableSemesterId);
         });
 
         init();
@@ -206,7 +205,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "select2-zh-CN", "messen
         }
 
         function initCourseName(timetableSemesterId) {
-            if (Number(timetableSemesterId) > 0) {
+            if (timetableSemesterId && timetableSemesterId !== '') {
                 $.get(ajax_url.course_name + '/' + timetableSemesterId, function (data) {
                     $(param_id.courseName).html('<option label="请选择课程"></option>');
                     courseNameSelect2 = $(param_id.courseName).select2({data: data.results});
@@ -224,7 +223,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "select2-zh-CN", "messen
         }
 
         function initLessonName(timetableSemesterId) {
-            if (Number(timetableSemesterId) > 0) {
+            if (timetableSemesterId && timetableSemesterId !== '') {
                 $.get(ajax_url.lesson_name + '/' + timetableSemesterId, function (data) {
                     $(param_id.lessonName).html('<option label="请选择班级"></option>');
                     lessonNameSelect2 = $(param_id.lessonName).select2({data: data.results});
@@ -242,7 +241,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "select2-zh-CN", "messen
         }
 
         function initRoom(timetableSemesterId) {
-            if (Number(timetableSemesterId) > 0) {
+            if (timetableSemesterId && timetableSemesterId !== '') {
                 $.get(ajax_url.room + '/' + timetableSemesterId, function (data) {
                     $(param_id.room).html('<option label="请选择教室"></option>');
                     roomSelect2 = $(param_id.room).select2({data: data.results});
@@ -260,7 +259,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "select2-zh-CN", "messen
         }
 
         function initTeacherName(timetableSemesterId) {
-            if (Number(timetableSemesterId) > 0) {
+            if (timetableSemesterId && timetableSemesterId !== '') {
                 $.get(ajax_url.teacher_name + '/' + timetableSemesterId, function (data) {
                     $(param_id.teacherName).html('<option label="请选择教师"></option>');
                     teacherNameSelect2 = $(param_id.teacherName).select2({data: data.results});
@@ -282,16 +281,16 @@ require(["jquery", "tools", "handlebars", "nav.active", "select2-zh-CN", "messen
                 schoolYearSelect2 = $(param_id.schoolYear).select2({data: data.results});
 
                 if (!init_configure.init_school_year) {
-                    var timetableSemesterId = 0;
+                    var timetableSemesterId = '';
                     if (data.results.length > 0) {
                         schoolYearSelect2.val(data.results[0].id).trigger("change");
                         timetableSemesterId = data.results[0].id;
                     }
                     if (localStorage) {
                         var schoolYear = localStorage.getItem(webStorageKey.SCHOOL_YEAR);
-                        if (schoolYear && Number(schoolYear) > 0) {
+                        if (schoolYear && schoolYear !== '') {
                             schoolYearSelect2.val(schoolYear).trigger("change");
-                            timetableSemesterId = Number(schoolYear);
+                            timetableSemesterId = schoolYear;
                         }
                     }
                     initCourseName(timetableSemesterId);
@@ -305,12 +304,14 @@ require(["jquery", "tools", "handlebars", "nav.active", "select2-zh-CN", "messen
         }
 
         function getSchoolYearInfo(timetableSemesterId) {
-            $.get(ajax_url.school_year_info + '/' + timetableSemesterId, function (data) {
-                $('#week').text('今日 ' + tools.weekDay(data.mapResult.week));
-                $('#weeks').text('第' + data.mapResult.curWeeks + '周（共' + data.mapResult.totalWeeks + '周）');
-                $('#startDate').text('开始日期：' + data.mapResult.startDate);
-                $('#endDate').text('结束日期：' + data.mapResult.endDate);
-            });
+            if (timetableSemesterId && timetableSemesterId !== '') {
+                $.get(ajax_url.school_year_info + '/' + timetableSemesterId, function (data) {
+                    $('#week').text('今日 ' + tools.weekDay(data.mapResult.week));
+                    $('#weeks').text('第' + data.mapResult.curWeeks + '周（共' + data.mapResult.totalWeeks + '周）');
+                    $('#startDate').text('开始日期：' + data.mapResult.startDate);
+                    $('#endDate').text('结束日期：' + data.mapResult.endDate);
+                });
+            }
         }
 
         function initSelect2() {

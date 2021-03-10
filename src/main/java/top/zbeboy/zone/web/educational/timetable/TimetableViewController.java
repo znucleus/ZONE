@@ -39,7 +39,14 @@ public class TimetableViewController {
         if (optionalUsersType.isPresent()) {
             UsersType usersType = optionalUsersType.get();
             if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                modelMap.addAttribute("isStudent", true);
+                Optional<StudentBean> optionalStudentBean = studentService.findByUsernameRelation(users.getUsername());
+                if(optionalStudentBean.isPresent()){
+                    // 城市学院可使用
+                    StudentBean studentBean = optionalStudentBean.get();
+                    if(studentBean.getCollegeId() == 1){
+                        modelMap.addAttribute("isStudent", true);
+                    }
+                }
             }
         }
         return "web/educational/timetable/timetable_data::#page-wrapper";
@@ -64,8 +71,14 @@ public class TimetableViewController {
                 Optional<StudentBean> optionalStudentBean = studentService.findByUsernameRelation(users.getUsername());
                 if(optionalStudentBean.isPresent()){
                     StudentBean studentBean = optionalStudentBean.get();
-                    modelMap.addAttribute("studentNumber", studentBean.getStudentNumber());
-                    page = "web/educational/timetable/timetable_import::#page-wrapper";
+                    if(studentBean.getCollegeId() == 1){
+                        modelMap.addAttribute("studentNumber", studentBean.getStudentNumber());
+                        page = "web/educational/timetable/timetable_import::#page-wrapper";
+                    } else {
+                        config.buildWarningTip("操作警告", "目前仅支持昆明理工大学城市学院使用");
+                        config.dataMerging(modelMap);
+                        page = "inline_tip::#page-wrapper";
+                    }
                 } else {
                     config.buildDangerTip("查询错误", "未查询到学生信息");
                     config.dataMerging(modelMap);
