@@ -33,8 +33,10 @@ import org.springframework.stereotype.Service;
 import top.zbeboy.zbase.domain.tables.pojos.TimetableCourse;
 import top.zbeboy.zbase.domain.tables.pojos.TimetableSemester;
 import top.zbeboy.zbase.domain.tables.records.TimetableSemesterRecord;
+import top.zbeboy.zbase.feign.educational.timetable.EducationalTimetableService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.service.util.UUIDUtil;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 
 import javax.annotation.Resource;
 import java.io.File;
@@ -46,10 +48,7 @@ import java.util.*;
 public class TimetableServiceImpl implements TimetableService {
 
     @Resource
-    private TimetableSemesterService timetableSemesterService;
-
-    @Resource
-    private TimetableCourseService timetableCourseService;
+    private EducationalTimetableService educationalTimetableService;
 
     @Override
     public List<Map<String, Object>> semesters(String username, String password) throws Exception {
@@ -118,9 +117,9 @@ public class TimetableServiceImpl implements TimetableService {
             }
 
             java.sql.Date calendarStartDate = null;
-            TimetableSemester timetableSemester = timetableSemesterService.findByTimetableSemesterId(timetableCourse.getTimetableSemesterId());
-            if (Objects.nonNull(timetableSemester) && Objects.nonNull(timetableSemester.getStartDate())) {
-                calendarStartDate = timetableSemester.getStartDate();
+            Optional<TimetableSemester> optionalTimetableSemester = educationalTimetableService.findSemesterById(timetableCourse.getTimetableSemesterId());
+            if (optionalTimetableSemester.isPresent() && Objects.nonNull(optionalTimetableSemester.get().getStartDate())) {
+                calendarStartDate = optionalTimetableSemester.get().getStartDate();
             } else {
                 calendarStartDate = DateTimeUtil.getNowSqlDate();
             }
@@ -205,9 +204,9 @@ public class TimetableServiceImpl implements TimetableService {
         if (!hasError) {
             Integer id = (Integer) eduData.get("id");
             // 查询我方是否有，没有则插入
-            Optional<TimetableSemesterRecord> optionalTimetableSemesterRecord = timetableSemesterService.findByIdAndCollegeId(id, collegeId);
-            if (optionalTimetableSemesterRecord.isPresent()) {
-                TimetableSemester timetableSemester = optionalTimetableSemesterRecord.get().into(TimetableSemester.class);
+            Optional<TimetableSemester> optionalTimetableSemester = educationalTimetableService.findSemesterByIdAndCollegeId(id, collegeId);
+            if (optionalTimetableSemester.isPresent()) {
+                TimetableSemester timetableSemester = optionalTimetableSemester.get();
                 eduData.put("timetableSemesterId", timetableSemester.getTimetableSemesterId());
                 // 有则更新
                 boolean isUpdate = false;
@@ -244,7 +243,7 @@ public class TimetableServiceImpl implements TimetableService {
                 }
 
                 if (isUpdate) {
-                    timetableSemesterService.update(timetableSemester);
+                    educationalTimetableService.semesterUpdate(timetableSemester);
                 }
             } else {
                 TimetableSemester timetableSemester = new TimetableSemester();
@@ -272,7 +271,7 @@ public class TimetableServiceImpl implements TimetableService {
                 if (Objects.nonNull(eduData.get("endDate"))) {
                     timetableSemester.setEndDate(DateTimeUtil.parseSqlDate((String) eduData.get("endDate"), DateTimeUtil.YEAR_MONTH_DAY_FORMAT));
                 }
-                timetableSemesterService.save(timetableSemester);
+                educationalTimetableService.semesterSave(timetableSemester);
             }
         }
     }
@@ -293,45 +292,48 @@ public class TimetableServiceImpl implements TimetableService {
                     if (CollectionUtils.isNotEmpty(courseData)) {
                         // 删除旧课程
                         String timetableSemesterId = (String) eduData.get("timetableSemesterId");
-                        timetableCourseService.deleteTimetableCourseByTimetableSemesterIdAndLessonName(timetableSemesterId, adminclass);
-                        List<TimetableCourse> insertData = new ArrayList<>();
-                        for (Map<String, Object> param : courseData) {
-                            String courseName = String.valueOf(param.get("courseName"));
-                            String lessonName = String.valueOf(param.get("lessonName"));
-                            String building = String.valueOf(param.get("building"));
-                            String room = String.valueOf(param.get("room"));
-                            Byte startWeek = NumberUtils.toByte(String.valueOf(param.get("startWeek")));
-                            Byte endWeek = NumberUtils.toByte(String.valueOf(param.get("endWeek")));
-                            Byte weekday = NumberUtils.toByte(String.valueOf(param.get("weekday")));
-                            Byte startUnit = NumberUtils.toByte(String.valueOf(param.get("startUnit")));
-                            Byte endUnit = NumberUtils.toByte(String.valueOf(param.get("endUnit")));
-                            String teachers = String.valueOf(param.get("teachers"));
-                            String credits = String.valueOf(param.get("credits"));
-                            String lessonCode = String.valueOf(param.get("lessonCode"));
-                            String courseCode = String.valueOf(param.get("courseCode"));
-                            String lessonId = String.valueOf(param.get("lessonId"));
+                        AjaxUtil<Map<String, Object>> ajaxUtil = educationalTimetableService.courseDeleteByTimetableSemesterIdAndLessonName(timetableSemesterId, adminclass);
+                        if (ajaxUtil.getState()) {
+                            List<TimetableCourse> insertData = new ArrayList<>();
+                            for (Map<String, Object> param : courseData) {
+                                String courseName = String.valueOf(param.get("courseName"));
+                                String lessonName = String.valueOf(param.get("lessonName"));
+                                String building = String.valueOf(param.get("building"));
+                                String room = String.valueOf(param.get("room"));
+                                Byte startWeek = NumberUtils.toByte(String.valueOf(param.get("startWeek")));
+                                Byte endWeek = NumberUtils.toByte(String.valueOf(param.get("endWeek")));
+                                Byte weekday = NumberUtils.toByte(String.valueOf(param.get("weekday")));
+                                Byte startUnit = NumberUtils.toByte(String.valueOf(param.get("startUnit")));
+                                Byte endUnit = NumberUtils.toByte(String.valueOf(param.get("endUnit")));
+                                String teachers = String.valueOf(param.get("teachers"));
+                                String credits = String.valueOf(param.get("credits"));
+                                String lessonCode = String.valueOf(param.get("lessonCode"));
+                                String courseCode = String.valueOf(param.get("courseCode"));
+                                String lessonId = String.valueOf(param.get("lessonId"));
 
-                            TimetableCourse timetableCourse = new TimetableCourse();
-                            timetableCourse.setTimetableCourseId(UUIDUtil.getUUID());
-                            timetableCourse.setCourseName(courseName);
-                            timetableCourse.setLessonName(lessonName);
-                            timetableCourse.setBuilding(building);
-                            timetableCourse.setRoom(room);
-                            timetableCourse.setStartWeek(startWeek);
-                            timetableCourse.setEndWeek(endWeek);
-                            timetableCourse.setWeekday(weekday);
-                            timetableCourse.setStartUnit(startUnit);
-                            timetableCourse.setEndUnit(endUnit);
-                            timetableCourse.setTeachers(teachers);
-                            timetableCourse.setCredits(credits);
-                            timetableCourse.setLessonCode(lessonCode);
-                            timetableCourse.setCourseCode(courseCode);
-                            timetableCourse.setLessonId(lessonId);
-                            timetableCourse.setTimetableSemesterId(timetableSemesterId);
-                            insertData.add(timetableCourse);
+                                TimetableCourse timetableCourse = new TimetableCourse();
+                                timetableCourse.setTimetableCourseId(UUIDUtil.getUUID());
+                                timetableCourse.setCourseName(courseName);
+                                timetableCourse.setLessonName(lessonName);
+                                timetableCourse.setBuilding(building);
+                                timetableCourse.setRoom(room);
+                                timetableCourse.setStartWeek(startWeek);
+                                timetableCourse.setEndWeek(endWeek);
+                                timetableCourse.setWeekday(weekday);
+                                timetableCourse.setStartUnit(startUnit);
+                                timetableCourse.setEndUnit(endUnit);
+                                timetableCourse.setTeachers(teachers);
+                                timetableCourse.setCredits(credits);
+                                timetableCourse.setLessonCode(lessonCode);
+                                timetableCourse.setCourseCode(courseCode);
+                                timetableCourse.setLessonId(lessonId);
+                                timetableCourse.setTimetableSemesterId(timetableSemesterId);
+                                insertData.add(timetableCourse);
+                            }
+
+                            educationalTimetableService.courseBatchSave(insertData);
                         }
 
-                        timetableCourseService.batchSave(insertData);
                     }
 
                 }

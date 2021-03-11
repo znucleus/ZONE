@@ -2,8 +2,6 @@ package top.zbeboy.zone.web.educational.timetable;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.jooq.Record;
-import org.jooq.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -20,9 +18,9 @@ import top.zbeboy.zbase.domain.tables.pojos.TimetableCourse;
 import top.zbeboy.zbase.domain.tables.pojos.TimetableSemester;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.domain.tables.pojos.UsersType;
-import top.zbeboy.zbase.domain.tables.records.TimetableCourseRecord;
 import top.zbeboy.zbase.feign.data.StaffService;
 import top.zbeboy.zbase.feign.data.StudentService;
+import top.zbeboy.zbase.feign.educational.timetable.EducationalTimetableService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.service.util.IPTimeStamp;
@@ -30,9 +28,6 @@ import top.zbeboy.zbase.tools.service.util.RequestUtil;
 import top.zbeboy.zbase.tools.web.plugin.select2.Select2Data;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
-import top.zbeboy.zone.config.ScheduledConfiguration;
-import top.zbeboy.zone.service.educational.TimetableCourseService;
-import top.zbeboy.zone.service.educational.TimetableSemesterService;
 import top.zbeboy.zone.service.educational.TimetableService;
 import top.zbeboy.zone.web.util.SessionUtil;
 
@@ -49,10 +44,7 @@ public class TimetableRestController {
     private TimetableService timetableService;
 
     @Resource
-    private TimetableSemesterService timetableSemesterService;
-
-    @Resource
-    private TimetableCourseService timetableCourseService;
+    private EducationalTimetableService educationalTimetableService;
 
     @Resource
     private UsersTypeService usersTypeService;
@@ -140,24 +132,24 @@ public class TimetableRestController {
                 Optional<StudentBean> optionalStudentBean = studentService.findByUsernameRelation(users.getUsername());
                 if (optionalStudentBean.isPresent()) {
                     StudentBean studentBean = optionalStudentBean.get();
-                    Result<Record> timetableSemesterRecords = timetableSemesterService.findByCollegeId(studentBean.getCollegeId());
-                    if (timetableSemesterRecords.isNotEmpty()) {
-                        timetableSemesters = timetableSemesterRecords.into(TimetableSemesterBean.class);
+                    Optional<List<TimetableSemesterBean>> optionalTimetableSemesterBeans = educationalTimetableService.findSemesterByCollegeId(studentBean.getCollegeId());
+                    if (optionalTimetableSemesterBeans.isPresent()) {
+                        timetableSemesters = optionalTimetableSemesterBeans.get();
                     }
                 }
             } else if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
                 Optional<StaffBean> optionalStaffBean = staffService.findByUsernameRelation(users.getUsername());
                 if (optionalStaffBean.isPresent()) {
                     StaffBean staffBean = optionalStaffBean.get();
-                    Result<Record> timetableSemesterRecords = timetableSemesterService.findByCollegeId(staffBean.getCollegeId());
-                    if (timetableSemesterRecords.isNotEmpty()) {
-                        timetableSemesters = timetableSemesterRecords.into(TimetableSemesterBean.class);
+                    Optional<List<TimetableSemesterBean>> optionalTimetableSemesterBeans = educationalTimetableService.findSemesterByCollegeId(staffBean.getCollegeId());
+                    if (optionalTimetableSemesterBeans.isPresent()) {
+                        timetableSemesters = optionalTimetableSemesterBeans.get();
                     }
                 }
             } else {
-                Result<Record> timetableSemesterRecords = timetableSemesterService.findAll();
-                if (timetableSemesterRecords.isNotEmpty()) {
-                    timetableSemesters = timetableSemesterRecords.into(TimetableSemesterBean.class);
+                Optional<List<TimetableSemesterBean>> optionalTimetableSemesterBeans = educationalTimetableService.semesters();
+                if (optionalTimetableSemesterBeans.isPresent()) {
+                    timetableSemesters = optionalTimetableSemesterBeans.get();
                 }
             }
         }
@@ -177,17 +169,23 @@ public class TimetableRestController {
     public ResponseEntity<Map<String, Object>> schoolYearInfo(@PathVariable("timetableSemesterId") String timetableSemesterId, HttpServletRequest request) {
         AjaxUtil<Object> ajaxUtil = AjaxUtil.of();
         Map<String, Object> map = new HashMap<>();
-        TimetableSemester timetableSemester = timetableSemesterService.findByTimetableSemesterId(timetableSemesterId);
-        map.put("startDate", timetableSemester.getStartDate());
-        map.put("endDate", timetableSemester.getEndDate());
-        map.put("totalWeeks", DateTimeUtil.calculationTwoDateDifferWeeks(timetableSemester.getStartDate(), timetableSemester.getEndDate()));
-        map.put("week", DateTimeUtil.getNowDayOfWeek());
-        if (DateTimeUtil.nowRangeSqlDate(timetableSemester.getStartDate(), timetableSemester.getEndDate())) {
-            map.put("curWeeks", DateTimeUtil.calculationTwoDateDifferWeeks(timetableSemester.getStartDate(), DateTimeUtil.getNowSqlDate()));
+        Optional<TimetableSemester> optionalTimetableSemester = educationalTimetableService.findSemesterById(timetableSemesterId);
+        if (optionalTimetableSemester.isPresent()) {
+            TimetableSemester timetableSemester = optionalTimetableSemester.get();
+            map.put("startDate", timetableSemester.getStartDate());
+            map.put("endDate", timetableSemester.getEndDate());
+            map.put("totalWeeks", DateTimeUtil.calculationTwoDateDifferWeeks(timetableSemester.getStartDate(), timetableSemester.getEndDate()));
+            map.put("week", DateTimeUtil.getNowDayOfWeek());
+            if (DateTimeUtil.nowRangeSqlDate(timetableSemester.getStartDate(), timetableSemester.getEndDate())) {
+                map.put("curWeeks", DateTimeUtil.calculationTwoDateDifferWeeks(timetableSemester.getStartDate(), DateTimeUtil.getNowSqlDate()));
+            } else {
+                map.put("curWeeks", "0");
+            }
+            ajaxUtil.success().msg("获取数据成功").map(map);
         } else {
-            map.put("curWeeks", "0");
+            ajaxUtil.fail().msg("获取数据失败");
         }
-        ajaxUtil.success().msg("获取数据成功").map(map);
+
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -213,8 +211,8 @@ public class TimetableRestController {
     @GetMapping("/web/educational/timetable/room/{timetableSemesterId}")
     public ResponseEntity<Map<String, Object>> room(@PathVariable("timetableSemesterId") String timetableSemesterId, HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
-        List<TimetableCourse> timetableCourses = timetableCourseService.findByTimetableSemesterIdDistinctRoom(timetableSemesterId);
-        timetableCourses.forEach(data -> select2Data.add(data.getRoom(), data.getRoom()));
+        Optional<List<TimetableCourse>> optionalTimetableCourses = educationalTimetableService.courseRoom(timetableSemesterId);
+        optionalTimetableCourses.ifPresent(timetableCourses -> timetableCourses.forEach(data -> select2Data.add(data.getRoom(), data.getRoom())));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
 
@@ -225,10 +223,10 @@ public class TimetableRestController {
      */
     @ApiLoggingRecord(remark = "教务课表班级", channel = Workbook.channel.WEB, needLogin = true)
     @GetMapping("/web/educational/timetable/lesson-name/{timetableSemesterId}")
-    public ResponseEntity<Map<String, Object>> attendClass(@PathVariable("timetableSemesterId") String timetableSemesterId, HttpServletRequest request) {
+    public ResponseEntity<Map<String, Object>> lessonName(@PathVariable("timetableSemesterId") String timetableSemesterId, HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
-        List<TimetableCourse> timetableCourses = timetableCourseService.findByTimetableSemesterIdDistinctLessonName(timetableSemesterId);
-        timetableCourses.forEach(data -> select2Data.add(data.getLessonName(), data.getLessonName()));
+        Optional<List<TimetableCourse>> optionalTimetableCourses = educationalTimetableService.courseLessonName(timetableSemesterId);
+        optionalTimetableCourses.ifPresent(timetableCourses -> timetableCourses.forEach(data -> select2Data.add(data.getLessonName(), data.getLessonName())));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
 
@@ -241,8 +239,8 @@ public class TimetableRestController {
     @GetMapping("/web/educational/timetable/course-name/{timetableSemesterId}")
     public ResponseEntity<Map<String, Object>> courseName(@PathVariable("timetableSemesterId") String timetableSemesterId, HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
-        List<TimetableCourse> timetableCourses = timetableCourseService.findByTimetableSemesterIdDistinctCourseName(timetableSemesterId);
-        timetableCourses.forEach(data -> select2Data.add(data.getCourseName(), data.getCourseName()));
+        Optional<List<TimetableCourse>> optionalTimetableCourses = educationalTimetableService.courseName(timetableSemesterId);
+        optionalTimetableCourses.ifPresent(timetableCourses -> timetableCourses.forEach(data -> select2Data.add(data.getCourseName(), data.getCourseName())));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
 
@@ -255,8 +253,8 @@ public class TimetableRestController {
     @GetMapping("/web/educational/timetable/teacher-name/{timetableSemesterId}")
     public ResponseEntity<Map<String, Object>> teacherName(@PathVariable("timetableSemesterId") String timetableSemesterId, HttpServletRequest request) {
         Select2Data select2Data = Select2Data.of();
-        List<TimetableCourse> timetableCourses = timetableCourseService.findByTimetableSemesterIdDistinctTeachers(timetableSemesterId);
-        timetableCourses.forEach(data -> select2Data.add(data.getTeachers(), data.getTeachers()));
+        Optional<List<TimetableCourse>> optionalTimetableCourses = educationalTimetableService.courseTeacherName(timetableSemesterId);
+        optionalTimetableCourses.ifPresent(timetableCourses -> timetableCourses.forEach(data -> select2Data.add(data.getTeachers(), data.getTeachers())));
         return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
     }
 
@@ -309,9 +307,9 @@ public class TimetableRestController {
                         StringUtils.isNotBlank(lessonName) ||
                         StringUtils.isNotBlank(room) ||
                         StringUtils.isNotBlank(teachers))) {
-            Result<TimetableCourseRecord> timetableCourseRecords = timetableCourseService.search(timetableCourse);
-            if (timetableCourseRecords.isNotEmpty()) {
-                timetableCourses = timetableCourseRecords.into(TimetableCourse.class);
+            Optional<List<TimetableCourse>> optionalTimetableCourses = educationalTimetableService.courseSearch(timetableCourse);
+            if (optionalTimetableCourses.isPresent()) {
+                timetableCourses = optionalTimetableCourses.get();
             }
         }
         return timetableCourses;
