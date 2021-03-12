@@ -28,26 +28,33 @@
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
-                            <label>开始学年</label>
-                            <select class="form-control" name="startYear" id="startYear">
-                                <option value="">请选择开始学年</option>
-                            </select>
-                            <div class="invalid-feedback"></div>
-                        </div>
-                        <div class="form-group">
-                            <label>结束学年</label>
-                            <select class="form-control" name="endYear" id="endYear">
-                                <option value="">请选择结束学年</option>
+                            <label>学年</label>
+                            <select class="form-control select2-show-search" name="schoolYear" id="schoolYear"
+                                    data-placeholder="请选择学年">
+                                <option label="请选择学年"></option>
                             </select>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>学期</label>
-                            <select class="form-control" id="term" name="term">
+                            <select class="form-control" id="semester" name="semester">
                                 <option value="">请选择学期</option>
-                                <option value="0">上学期</option>
-                                <option value="1">下学期</option>
+                                <option value="1">第一学期</option>
+                                <option value="2">第二学期</option>
+                                <option value="3">第三学期</option>
                             </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>开学日期</label>
+                            <input class="form-control flatpickr" name="startDate"
+                                   id="startDate" placeholder="开学日期"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>结束日期</label>
+                            <input class="form-control flatpickr" name="endDate"
+                                   id="endDate" placeholder="结束日期"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group text-center">

@@ -13,58 +13,6 @@
     <div class="br-pagebody mg-t-5 pd-x-30">
         <div class="br-section-wrapper">
             <div class="row">
-                <div class="col-md-12">
-                    <div class="row">
-                        <div class="col-md-4 mt-2">
-                            <select class="form-control select2-show-search" id="school"
-                                    data-placeholder="请选择学校">
-                                <option label="请选择学校"></option>
-                            </select>
-                        </div>
-                        <div class="col-md-4 mt-2">
-                            <select class="form-control select2-show-search" id="college"
-                                    data-placeholder="请选择院">
-                                <option label="请选择院"></option>
-                            </select>
-                        </div>
-                        <div class="col-md-4 mt-2">
-                            <select class="form-control select2-show-search" id="schoolCalendar"
-                                    data-placeholder="请选择校历">
-                                <option label="请选择校历"></option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-12 mg-t-7">
-                    <div class="card">
-                        <div class="card-header tx-medium bd-0 tx-white bg-primary" id="title">
-                        </div>
-                        <div class="card-body color-gray-lighter">
-                            <div class="row">
-                                <div class="col-md-4 tx-xs-center tx-sm-center tx-md-left tx-lg-left tx-xl-left tx-black mg-t-5"
-                                     id="schoolName"></div>
-                                <div class="col-md-4 tx-xs-center tx-sm-center tx-md-center tx-lg-center tx-xl-center tx-black mg-t-5"
-                                     id="collegeName"></div>
-                                <div class="col-md-4 tx-xs-center tx-sm-center tx-md-right tx-lg-right tx-xl-right tx-black mg-t-5"
-                                     id="academicYear"></div>
-                                <div class="col-md-6 tx-xs-center tx-sm-center tx-md-left tx-lg-left tx-xl-left tx-black mg-t-5"
-                                     id="openDate"></div>
-                                <div class="col-md-6 tx-xs-center tx-sm-center tx-md-right tx-lg-right tx-xl-right tx-black mg-t-5"
-                                     id="holidayDate"></div>
-                                <div class="col-md-4 tx-xs-center tx-sm-center tx-md-left tx-lg-left tx-xl-left tx-black mg-t-5"
-                                     id="nowDate"></div>
-                                <div class="col-md-4 tx-xs-center tx-sm-center tx-md-center tx-lg-center tx-xl-center tx-black mg-t-5"
-                                     id="week"></div>
-                                <div class="col-md-4 tx-xs-center tx-sm-center tx-md-right tx-lg-right tx-xl-right tx-black mg-t-5"
-                                     id="weeks"></div>
-                                <div class="col-md-12 tx-black mg-t-5" id="remark"></div>
-                            </div>
-                        </div><!-- card-body -->
-                        <div class="card-footer tx-right">
-                            <em id="releaseTimeStr"></em>
-                        </div><!-- card-footer -->
-                    </div>
-                </div>
                 <div class="col-md-12 mg-t-7">
                     <div class="float-right mg-t-5 mg-r-10">
                         <div class="dropdown">
@@ -75,6 +23,7 @@
                             </button>
                             <div class="dropdown-menu" aria-labelledby="addTimetableButton">
                                 <a class="dropdown-item" href="#/web/campus/timetable/release/add">空白课表</a>
+                                <a class="dropdown-item" href="#/web/campus/timetable/edu/add">导入教务课表</a>
                                 <a class="dropdown-item" href="#/web/campus/timetable/share/add">导入共享课表</a>
                             </div>
                         </div>
@@ -134,8 +83,6 @@
                             </button>
                             <div class="dropdown-menu" aria-labelledby="addTimetableButton">
                                 <a class="dropdown-item" href="javascript:" id="addCourse">自定义课程</a>
-                                <a class="dropdown-item" href="javascript:" id="addEduOrganize">导入教务班级课程</a>
-                                <a class="dropdown-item" href="javascript:" id="addEduTeacher">导入教务教师课程</a>
                                 <a class="dropdown-item" href="javascript:" id="addNewEdu">导入新教务课程</a>
                                 <a class="dropdown-item" href="javascript:" id="addShareCourse">导入共享课程</a>
                             </div>
@@ -336,8 +283,6 @@
         </div>
     </script>
 
-    <input type="hidden" id="schoolId" th:value="${schoolId}"/>
-    <input type="hidden" id="collegeId" th:value="${collegeId}"/>
     <input type="hidden" class="dy_script"
            th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/campus/timetable/timetable_look.js')}"/>
 </div>
