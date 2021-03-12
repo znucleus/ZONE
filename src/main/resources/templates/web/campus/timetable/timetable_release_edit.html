@@ -28,26 +28,33 @@
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
-                            <label>开始学年</label>
-                            <select class="form-control" name="startYear" id="startYear">
-                                <option value="">请选择开始学年</option>
-                            </select>
-                            <div class="invalid-feedback"></div>
-                        </div>
-                        <div class="form-group">
-                            <label>结束学年</label>
-                            <select class="form-control" name="endYear" id="endYear">
-                                <option value="">请选择结束学年</option>
+                            <label>学年</label>
+                            <select class="form-control select2-show-search" name="schoolYear" id="schoolYear"
+                                    data-placeholder="请选择学年">
+                                <option label="请选择学年"></option>
                             </select>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>学期</label>
-                            <select class="form-control" id="term" name="term">
+                            <select class="form-control" id="semester" name="semester">
                                 <option value="">请选择学期</option>
-                                <option value="0">上学期</option>
-                                <option value="1">下学期</option>
+                                <option value="1">第一学期</option>
+                                <option value="2">第二学期</option>
+                                <option value="3">第三学期</option>
                             </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>开学日期</label>
+                            <input class="form-control flatpickr" name="startDate"
+                                   id="startDate" placeholder="开学日期" th:value="${campusCourseRelease.startDate}"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>结束日期</label>
+                            <input class="form-control flatpickr" name="endDate"
+                                   id="endDate" placeholder="结束日期" th:value="${campusCourseRelease.endDate}"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group text-center">
@@ -61,9 +68,8 @@
     </div>
 
     <input type="hidden" id="campusCourseReleaseId" th:value="${campusCourseRelease.campusCourseReleaseId}"/>
-    <input type="hidden" id="startYearParam" th:value="${campusCourseRelease.startYear}"/>
-    <input type="hidden" id="endYearParam" th:value="${campusCourseRelease.endYear}"/>
-    <input type="hidden" id="termParam" th:value="${campusCourseRelease.term}"/>
+    <input type="hidden" id="schoolYearParam" th:value="${campusCourseRelease.schoolYear}"/>
+    <input type="hidden" id="semesterParam" th:value="${campusCourseRelease.semester}"/>
     <input type="hidden" class="dy_script"
            th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/campus/timetable/timetable_release_edit.js')}"/>
 </div>

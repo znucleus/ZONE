@@ -1,6 +1,6 @@
 //# sourceURL=timetable_release_blank.js
-require(["jquery", "tools", "sweetalert2", "nav.active", "messenger", "jquery.address", "bootstrap-maxlength"],
-    function ($, tools, Swal, navActive) {
+require(["jquery", "tools", "moment-with-locales", "sweetalert2", "nav.active", "messenger", "select2-zh-CN", "jquery.address", "bootstrap-maxlength", "flatpickr-zh"],
+    function ($, tools, moment, Swal, navActive) {
         /*
         ajax url.
         */
@@ -17,9 +17,10 @@ require(["jquery", "tools", "sweetalert2", "nav.active", "messenger", "jquery.ad
         */
         var param_id = {
             title: '#title',
-            startYear: '#startYear',
-            endYear: '#endYear',
-            term: '#term'
+            schoolYear: '#schoolYear',
+            semester: '#semester',
+            startDate: '#startDate',
+            endDate: '#endDate'
         };
 
         var button_id = {
@@ -32,9 +33,8 @@ require(["jquery", "tools", "sweetalert2", "nav.active", "messenger", "jquery.ad
 
         var page_param = {
             campusCourseReleaseId: $('#campusCourseReleaseId').val(),
-            startYear: $('#startYearParam').val(),
-            endYear: $('#endYearParam').val(),
-            term: $('#termParam').val()
+            schoolYear: $('#schoolYearParam').val(),
+            semester: $('#semesterParam').val()
         };
 
         /*
@@ -43,9 +43,10 @@ require(["jquery", "tools", "sweetalert2", "nav.active", "messenger", "jquery.ad
         var param = {
             campusCourseReleaseId: '',
             title: '',
-            startYear: '',
-            endYear: '',
-            term: ''
+            schoolYear: '',
+            semester: '',
+            startDate: '',
+            endDate: ''
         };
 
         /**
@@ -54,18 +55,18 @@ require(["jquery", "tools", "sweetalert2", "nav.active", "messenger", "jquery.ad
         function initParam() {
             param.campusCourseReleaseId = page_param.campusCourseReleaseId;
             param.title = $(param_id.title).val();
-            param.startYear = $(param_id.startYear).val();
-            param.endYear = $(param_id.endYear).val();
-            param.term = $(param_id.term).val();
+            param.schoolYear = $(param_id.schoolYear).val();
+            param.semester = $(param_id.semester).val();
+            param.startDate = $(param_id.startDate).val();
+            param.endDate = $(param_id.endDate).val();
         }
 
         init();
 
         function init() {
             initMaxLength();
-            initStartYear();
-            initEndYear();
-            initTerm();
+            initSchoolYear();
+            initSemester();
         }
 
         /**
@@ -80,27 +81,29 @@ require(["jquery", "tools", "sweetalert2", "nav.active", "messenger", "jquery.ad
             });
         }
 
-        function initStartYear() {
+        function initSchoolYear() {
+            $(param_id.schoolYear).html('<option value="" label="请选择学年"></option>');
             var date = new Date();
             var year = date.getFullYear();
-            for (var i = year + 2; i >= year - 4; i--) {
-                $(param_id.startYear).append('<option value="' + i + '">' + i + '</option>');
+            var yearArr = [];
+            for (var i = year + 2; i >= year - 6; i--) {
+                yearArr.push({
+                    id: (i - 1) + '-' + (i),
+                    text: (i - 1) + '-' + (i) + '学年'
+                });
             }
-            $(param_id.startYear).val(page_param.startYear);
+
+            var sl = $(param_id.schoolYear).select2({data: yearArr});
+            sl.val(page_param.schoolYear).trigger("change");
         }
 
-        function initEndYear() {
-            var date = new Date();
-            var year = date.getFullYear();
-            for (var i = year + 3; i >= year - 3; i--) {
-                $(param_id.endYear).append('<option value="' + i + '">' + i + '</option>');
-            }
-            $(param_id.endYear).val(page_param.endYear);
+        function initSemester() {
+            $(param_id.semester).val(page_param.semester);
         }
 
-        function initTerm() {
-            $(param_id.term).val(page_param.term);
-        }
+        $('.flatpickr').flatpickr({
+            locale: "zh"
+        });
 
         $(param_id.title).blur(function () {
             initParam();
@@ -109,6 +112,14 @@ require(["jquery", "tools", "sweetalert2", "nav.active", "messenger", "jquery.ad
                 tools.validErrorDom(param_id.title, '标题100个字符以内');
             } else {
                 tools.validSuccessDom(param_id.title);
+            }
+        });
+
+        $(param_id.schoolYear).change(function () {
+            var v = $(this).val();
+
+            if (Number(v) > 0) {
+                tools.validSelect2SuccessDom(param_id.schoolYear);
             }
         });
 
@@ -126,37 +137,52 @@ require(["jquery", "tools", "sweetalert2", "nav.active", "messenger", "jquery.ad
                 tools.validErrorDom(param_id.title, '标题100个字符以内');
             } else {
                 tools.validSuccessDom(param_id.title);
-                validStartYear();
+                validSchoolYear();
             }
         }
 
-        function validStartYear() {
-            var startYear = param.startYear;
-            if (startYear.length <= 0) {
-                tools.validErrorDom(param_id.startYear, '请选择开始学年');
+        function validSchoolYear() {
+            var schoolYear = param.schoolYear;
+            if (schoolYear === '') {
+                tools.validSelect2ErrorDom(param_id.schoolYear, '请选择学年');
             } else {
-                tools.validSuccessDom(param_id.startYear);
-                validEndYear();
+                tools.validSelect2SuccessDom(param_id.schoolYear);
+                validSemester();
             }
         }
 
-        function validEndYear() {
-            var endYear = param.endYear;
-            if (endYear.length <= 0) {
-                tools.validErrorDom(param_id.endYear, '请选择结束学年');
+        function validSemester() {
+            var semester = param.semester;
+            if (semester === '') {
+                tools.validErrorDom(param_id.semester, '请选择学期');
             } else {
-                tools.validSuccessDom(param_id.endYear);
-                validTerm();
+                tools.validSuccessDom(param_id.semester);
+                validStartDate();
             }
         }
 
-        function validTerm() {
-            var term = param.term;
-            if (term === '') {
-                tools.validErrorDom(param_id.term, '请选择学期');
+        function validStartDate() {
+            var startDate = param.startDate;
+            if (startDate.length <= 0) {
+                tools.validErrorDom(param_id.startDate, '请选择开学日期');
             } else {
-                tools.validSuccessDom(param_id.term);
-                sendAjax();
+                tools.validSuccessDom(param_id.startDate);
+                validEndDate();
+            }
+        }
+
+        function validEndDate() {
+            var endDate = param.endDate;
+            if (endDate.length <= 0) {
+                tools.validErrorDom(param_id.endDate, '请选择结束日期');
+            } else {
+                var startDate = param.startDate;
+                if (moment(endDate, 'YYYY-MM-DD').isSameOrAfter(moment(startDate, 'YYYY-MM-DD'))) {
+                    tools.validSuccessDom(param_id.endDate);
+                    sendAjax();
+                } else {
+                    tools.validErrorDom(param_id.endDate, '开始日期应小于或等于结束日期');
+                }
             }
         }
 
