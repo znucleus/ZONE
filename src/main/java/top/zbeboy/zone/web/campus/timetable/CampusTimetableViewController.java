@@ -1,17 +1,12 @@
 package top.zbeboy.zone.web.campus.timetable;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import top.zbeboy.zbase.bean.data.staff.StaffBean;
-import top.zbeboy.zbase.bean.data.student.StudentBean;
-import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.CampusCourseData;
 import top.zbeboy.zbase.domain.tables.pojos.CampusCourseRelease;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
-import top.zbeboy.zbase.domain.tables.pojos.UsersType;
 import top.zbeboy.zbase.feign.campus.timetable.CampusTimetableService;
 import top.zbeboy.zbase.feign.data.StaffService;
 import top.zbeboy.zbase.feign.data.StudentService;
@@ -21,7 +16,6 @@ import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
-import java.util.Objects;
 import java.util.Optional;
 
 @Controller
@@ -123,48 +117,6 @@ public class CampusTimetableViewController {
         if (campusTimetableService.canOperator(users.getUsername(), id)) {
             modelMap.addAttribute("campusCourseReleaseId", id);
             page = "web/campus/timetable/timetable_course_add::#page-wrapper";
-        } else {
-            config.buildWarningTip("操作警告", "您无权限操作");
-            config.dataMerging(modelMap);
-            page = "inline_tip::#page-wrapper";
-        }
-        return page;
-    }
-
-    /**
-     * 添加教务班级课程
-     *
-     * @return 添加教务班级课程
-     */
-    @GetMapping("/web/campus/timetable/course/edu/organize/add/{id}")
-    public String courseEduOrganizeAdd(@PathVariable("id") String id, ModelMap modelMap) {
-        SystemInlineTipConfig config = new SystemInlineTipConfig();
-        String page;
-        Users users = SessionUtil.getUserFromSession();
-        if (campusTimetableService.canOperator(users.getUsername(), id)) {
-            modelMap.addAttribute("campusCourseReleaseId", id);
-            page = "web/campus/timetable/timetable_course_edu_organize_add::#page-wrapper";
-        } else {
-            config.buildWarningTip("操作警告", "您无权限操作");
-            config.dataMerging(modelMap);
-            page = "inline_tip::#page-wrapper";
-        }
-        return page;
-    }
-
-    /**
-     * 添加教务教师课程
-     *
-     * @return 添加教务教师课程
-     */
-    @GetMapping("/web/campus/timetable/course/edu/teacher/add/{id}")
-    public String courseEduTeacherAdd(@PathVariable("id") String id, ModelMap modelMap) {
-        SystemInlineTipConfig config = new SystemInlineTipConfig();
-        String page;
-        Users users = SessionUtil.getUserFromSession();
-        if (campusTimetableService.canOperator(users.getUsername(), id)) {
-            modelMap.addAttribute("campusCourseReleaseId", id);
-            page = "web/campus/timetable/timetable_course_edu_teacher_add::#page-wrapper";
         } else {
             config.buildWarningTip("操作警告", "您无权限操作");
             config.dataMerging(modelMap);

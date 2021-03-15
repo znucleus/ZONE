@@ -70,6 +70,7 @@ public class CampusTimetableRestController {
             map.put("campusCourseReleaseId", campusCourseRelease.getCampusCourseReleaseId());
             map.put("shareNumber", campusCourseRelease.getShareNumber());
             map.put("qrCodeUrl", campusCourseRelease.getQrCodeUrl());
+            map.put("publisher", campusCourseRelease.getPublisher());
             ajaxUtil.success().msg("查询课表成功").map(map);
         } else {
             ajaxUtil.fail().msg("未查询到数据");
@@ -152,7 +153,8 @@ public class CampusTimetableRestController {
                 campusCourseReleaseAddVo.setTitle(release.getTitle());
                 campusCourseReleaseAddVo.setSchoolYear(release.getSchoolYear());
                 campusCourseReleaseAddVo.setSemester(release.getSemester());
-                // TODO:有问题
+                campusCourseReleaseAddVo.setStartDate(DateTimeUtil.defaultFormatSqlDate(release.getStartDate()));
+                campusCourseReleaseAddVo.setEndDate(DateTimeUtil.defaultFormatSqlDate(release.getEndDate()));
                 campusCourseReleaseAddVo.setShareId(shareId);
                 ajaxUtil = campusTimetableService.shareSave(campusCourseReleaseAddVo);
             } else {

@@ -46,14 +46,16 @@ require(["jquery", "tools", "sweetalert2", "nav.active", "messenger", "jquery.ad
             initParam();
             $.get(ajax_url.release + '/' + param.shareId, function (data) {
                 if (data.state) {
-                    var term = data.release.term;
+                    var semester = data.mapResult.semester;
                     var t;
-                    if (Number(term) === 0) {
-                        t = '上学期';
-                    } else if (Number(term) === 1) {
-                        t = '下学期';
+                    if (Number(semester) === 1) {
+                        t = '第一学期';
+                    } else if (Number(semester) === 2) {
+                        t = '第二学期';
+                    } else if (Number(semester) === 3) {
+                        t = '第三学期';
                     }
-                    $('#shareIdHelp').text('由 ' + data.release.publisher + ' 分享，分享次数: ' + data.release.shareNumber + ' 学期: ' + data.release.startYear + '~' + data.release.endYear + ' ' + t);
+                    $('#shareIdHelp').text('由 ' + data.mapResult.publisher + ' 分享，分享次数: ' + data.mapResult.shareNumber + ' 学年学期: ' + data.mapResult.schoolYear + ' ' + t);
                     $('#save').css('display', '');
                     tools.validCustomerSingleSuccessDom(param_id.shareId);
                 } else {
