@@ -133,23 +133,33 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
             if (id !== '') {
                 $.get(ajax_url.release + '/' + id, function (data) {
                     if (data.state) {
-                        var term = data.release.term;
+                        var semester = data.mapResult.semester;
                         var t;
-                        if (Number(term) === 0) {
-                            t = '上学期';
-                        } else if (Number(term) === 1) {
-                            t = '下学期';
+                        if (Number(semester) === 1) {
+                            t = '第一学期';
+                        } else if (Number(semester) === 2) {
+                            t = '第二学期';
+                        } else if (Number(semester) === 3) {
+                            t = '第三学期';
                         }
-                        $('#yearAndTerm').text(data.release.startYear + '~' + data.release.endYear + ' ' + t);
-                        $('#shareId').text(data.release.campusCourseReleaseId);
-                        $('#shareNumber').text(data.release.shareNumber);
-                        $('#qrCodeUrl').attr('src', web_path + '/' + data.release.qrCodeUrl);
-                        initCourseData(data.release.campusCourseReleaseId);
+                        $('#yearAndTerm').text(data.mapResult.schoolYear + ' ' + t);
+                        $('#shareId').text(data.mapResult.campusCourseReleaseId);
+                        $('#shareNumber').text(data.mapResult.shareNumber);
+                        $('#qrCodeUrl').attr('src', web_path + '/' + data.mapResult.qrCodeUrl);
+                        $('#week').text('今日 ' + tools.weekDay(data.mapResult.week));
+                        $('#weeks').text('第' + data.mapResult.curWeeks + '周（共' + data.mapResult.totalWeeks + '周）');
+                        $('#startDate').text('开始日期：' + data.mapResult.startDate);
+                        $('#endDate').text('结束日期：' + data.mapResult.endDate);
+                        initCourseData(data.mapResult.campusCourseReleaseId);
                     } else {
                         $('#yearAndTerm').text('');
                         $('#shareId').text('');
                         $('#shareNumber').text('');
                         $('#qrCodeUrl').attr('src', '');
+                        $('#week').text('');
+                        $('#weeks').text('');
+                        $('#startDate').text('');
+                        $('#endDate').text('');
                     }
                 });
             }

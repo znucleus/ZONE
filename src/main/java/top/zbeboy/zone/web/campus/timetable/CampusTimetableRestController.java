@@ -30,10 +30,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 public class CampusTimetableRestController {
@@ -54,10 +51,26 @@ public class CampusTimetableRestController {
      */
     @GetMapping("/web/campus/timetable/release/{id}")
     public ResponseEntity<Map<String, Object>> release(@PathVariable("id") String id, HttpServletRequest request) {
-        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        AjaxUtil<Object> ajaxUtil = AjaxUtil.of();
         Optional<CampusCourseRelease> optionalCampusCourseRelease = campusTimetableService.findById(id);
         if (optionalCampusCourseRelease.isPresent()) {
-            ajaxUtil.success().msg("查询课表成功").put("release", optionalCampusCourseRelease.get());
+            CampusCourseRelease campusCourseRelease = optionalCampusCourseRelease.get();
+            Map<String, Object> map = new HashMap<>();
+            map.put("startDate", campusCourseRelease.getStartDate());
+            map.put("endDate", campusCourseRelease.getEndDate());
+            map.put("totalWeeks", DateTimeUtil.calculationTwoDateDifferWeeks(campusCourseRelease.getStartDate(), campusCourseRelease.getEndDate()));
+            map.put("week", DateTimeUtil.getNowDayOfWeek());
+            if (DateTimeUtil.nowRangeSqlDate(campusCourseRelease.getStartDate(), campusCourseRelease.getEndDate())) {
+                map.put("curWeeks", DateTimeUtil.calculationTwoDateDifferWeeks(campusCourseRelease.getStartDate(), DateTimeUtil.getNowSqlDate()));
+            } else {
+                map.put("curWeeks", "0");
+            }
+            map.put("schoolYear", campusCourseRelease.getSchoolYear());
+            map.put("semester", campusCourseRelease.getSemester());
+            map.put("campusCourseReleaseId", campusCourseRelease.getCampusCourseReleaseId());
+            map.put("shareNumber", campusCourseRelease.getShareNumber());
+            map.put("qrCodeUrl", campusCourseRelease.getQrCodeUrl());
+            ajaxUtil.success().msg("查询课表成功").map(map);
         } else {
             ajaxUtil.fail().msg("未查询到数据");
         }
