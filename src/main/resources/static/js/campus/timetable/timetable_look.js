@@ -15,7 +15,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
             course_edit: '/web/campus/timetable/course/edit',
             course_del: web_path + '/web/campus/timetable/course/delete',
             courses: web_path + '/web/campus/timetable/courses',
-            generate_ics:web_path + '/web/campus/timetable/course/generate-ics',
+            generate_ics: web_path + '/web/campus/timetable/course/generate-ics',
             page: '/web/menu/campus/timetable'
         };
 
@@ -35,10 +35,6 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
             TIMETABLE: 'CAMPUS_TIMETABLE_TIMETABLE_SEARCH',
             SHOW_SCREEN: 'CAMPUS_TIMETABLE_SHOW_SCREEN',
             SHOW_EFFECTIVE_COURSE: 'CAMPUS_TIMETABLE_SHOW_EFFECTIVE_COURSE'
-        };
-
-        var init_configure = {
-            init_simple_screen: false
         };
 
         init();
@@ -340,36 +336,26 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
             }
         });
 
-        $('#exportIcs').click(function (){
-            var schoolCalendar = $(param_id.schoolCalendar).val();
-            if(schoolCalendar !== ''){
-                var timetable = $(param_id.timetable).val();
-                if(timetable !== ''){
-                    $.get(ajax_url.generate_ics, {
-                        campusCourseReleaseId:timetable,
-                        calendarId:schoolCalendar
-                    },function (data) {
-                        if(data.state){
-                            window.location.href = web_path + '/' + data.path;
-                        } else {
-                            Messenger().post({
-                                message: data.msg,
-                                type: 'error',
-                                showCloseButton: true
-                            });
-                        }
+        $('#exportIcs').click(function () {
+            var timetable = $(param_id.timetable).val();
+            if (timetable !== '') {
+                $.get(ajax_url.generate_ics, {
+                    campusCourseReleaseId: timetable
+                }, function (data) {
+                    if (data.state) {
+                        window.location.href = web_path + '/' + data.path;
+                    } else {
+                        Messenger().post({
+                            message: data.msg,
+                            type: 'error',
+                            showCloseButton: true
+                        });
+                    }
 
-                    });
-                } else {
-                    Messenger().post({
-                        message: '请选择课表',
-                        type: 'error',
-                        showCloseButton: true
-                    });
-                }
+                });
             } else {
                 Messenger().post({
-                    message: '请选择校历',
+                    message: '请选择课表',
                     type: 'error',
                     showCloseButton: true
                 });

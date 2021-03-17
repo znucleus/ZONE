@@ -370,14 +370,20 @@ public class CampusTimetableRestController {
      * @param request 请求
      */
     @GetMapping("/web/campus/timetable/course/generate-ics")
-    public ResponseEntity<Map<String, Object>> generateIcs(@RequestParam("campusCourseReleaseId") String campusCourseReleaseId, @RequestParam("calendarId") String calendarId,
+    public ResponseEntity<Map<String, Object>> generateIcs(@RequestParam("campusCourseReleaseId") String campusCourseReleaseId,
                                                            HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         try {
-            String filePath = Workbook.campusTimetableIcsFilePath() + campusCourseReleaseId + ".ics";
-            String path = RequestUtil.getRealPath(request) + filePath;
-            campusTimetableEduService.generateIcs(campusCourseReleaseId, calendarId, path);
-            ajaxUtil.success().msg("生成成功").put("path", filePath);
+            Optional<List<CampusCourseData>> optionalCampusCourseDataList = campusTimetableService.findCourseByCampusCourseReleaseId(campusCourseReleaseId);
+            if (optionalCampusCourseDataList.isPresent()) {
+                List<CampusCourseData> campusCourseData = optionalCampusCourseDataList.get();
+                String filePath = Workbook.campusTimetableIcsFilePath() + campusCourseReleaseId + ".ics";
+                String path = RequestUtil.getRealPath(request) + filePath;
+                campusTimetableEduService.generateIcs(campusCourseData, path);
+                ajaxUtil.success().msg("生成成功").put("path", filePath);
+            } else {
+                ajaxUtil.fail().msg("无数据可生成");
+            }
         } catch (Exception e) {
             ajaxUtil.fail().msg("生成文件异常，error: " + e.getMessage());
         }

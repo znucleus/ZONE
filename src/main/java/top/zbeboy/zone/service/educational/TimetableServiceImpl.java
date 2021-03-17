@@ -32,7 +32,6 @@ import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 import top.zbeboy.zbase.domain.tables.pojos.TimetableCourse;
 import top.zbeboy.zbase.domain.tables.pojos.TimetableSemester;
-import top.zbeboy.zbase.domain.tables.records.TimetableSemesterRecord;
 import top.zbeboy.zbase.feign.educational.timetable.EducationalTimetableService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.service.util.UUIDUtil;
@@ -85,6 +84,7 @@ public class TimetableServiceImpl implements TimetableService {
         net.fortuna.ical4j.model.TimeZone timezone = registry.getTimeZone("Asia/Shanghai");
         VTimeZone tz = timezone.getVTimeZone();
 
+        java.sql.Date calendarStartDate = null;
         for (TimetableCourse timetableCourse : timetableCourses) {
             // Start Date is on: April 1, 2008, 9:00 am
             java.util.Calendar startDate = new GregorianCalendar();
@@ -121,12 +121,13 @@ public class TimetableServiceImpl implements TimetableService {
                 weekDay = 1;
             }
 
-            java.sql.Date calendarStartDate = null;
-            Optional<TimetableSemester> optionalTimetableSemester = educationalTimetableService.findSemesterById(timetableCourse.getTimetableSemesterId());
-            if (optionalTimetableSemester.isPresent() && Objects.nonNull(optionalTimetableSemester.get().getStartDate())) {
-                calendarStartDate = optionalTimetableSemester.get().getStartDate();
-            } else {
-                calendarStartDate = DateTimeUtil.getNowSqlDate();
+            if (Objects.isNull(calendarStartDate)) {
+                Optional<TimetableSemester> optionalTimetableSemester = educationalTimetableService.findSemesterById(timetableCourse.getTimetableSemesterId());
+                if (optionalTimetableSemester.isPresent() && Objects.nonNull(optionalTimetableSemester.get().getStartDate())) {
+                    calendarStartDate = optionalTimetableSemester.get().getStartDate();
+                } else {
+                    calendarStartDate = DateTimeUtil.getNowSqlDate();
+                }
             }
 
             // 1.日历偏移开始周数 算开始时间
@@ -329,11 +330,11 @@ public class TimetableServiceImpl implements TimetableService {
                                 timetableCourse.setWeekday(weekday);
                                 timetableCourse.setStartUnit(startUnit);
                                 timetableCourse.setEndUnit(endUnit);
-                                if(StringUtils.isNotBlank(startTime)){
+                                if (StringUtils.isNotBlank(startTime)) {
                                     timetableCourse.setStartTime(DateTimeUtil.defaultParseSqlTime(startTime));
                                 }
 
-                                if(StringUtils.isNotBlank(endTime)){
+                                if (StringUtils.isNotBlank(endTime)) {
                                     timetableCourse.setEndTime(DateTimeUtil.defaultParseSqlTime(endTime));
                                 }
                                 timetableCourse.setTeachers(teachers);
@@ -654,9 +655,9 @@ public class TimetableServiceImpl implements TimetableService {
         return dt1.toDate();
     }
 
-    private WeekDay getWeekday(int weekDay) {
+    private WeekDay getWeekday(int weekday) {
         WeekDay wv;
-        switch (weekDay) {
+        switch (weekday) {
             case 1:
                 wv = WeekDay.MO;
                 break;
