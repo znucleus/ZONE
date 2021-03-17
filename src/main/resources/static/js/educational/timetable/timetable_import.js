@@ -89,7 +89,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
         });
 
         function initSchoolYear() {
-            $('#queryError').val('');
+            $('#queryError').text('');
             tools.buttonLoading(button_id.query.id, button_id.query.tip);
             $.get(ajax_url.query, param, function (data) {
                 // 去除遮罩
@@ -104,7 +104,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
                     $('#saveForm').css('display', '');
                     $('#queryForm').css('display', 'none');
                 } else {
-                    $('#queryError').val('未查询到数据，请检查账号密码或稍后重试');
+                    $('#queryError').text('未查询到数据，请检查账号密码或稍后重试');
                 }
             });
 
@@ -162,7 +162,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
         }
 
         function sendAjax() {
-            $('#saveError').val('');
+            $('#saveError').text('');
             tools.buttonLoading(button_id.save.id, button_id.save.tip);
             $.get(ajax_url.save, param, function (data) {
                 // 去除遮罩
