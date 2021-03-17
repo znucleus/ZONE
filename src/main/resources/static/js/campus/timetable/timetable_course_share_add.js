@@ -53,14 +53,16 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             initParam();
             $.get(ajax_url.courses + '/' + param.shareId, function (data) {
                 if (data.state) {
-                    var term = data.release.term;
+                    var semester = data.release.semester;
                     var t;
-                    if (Number(term) === 0) {
-                        t = '上学期';
-                    } else if (Number(term) === 1) {
-                        t = '下学期';
+                    if (Number(semester) === 1) {
+                        t = '第一学期';
+                    } else if (Number(semester) === 2) {
+                        t = '第二学期';
+                    } else if (Number(semester) === 3) {
+                        t = '第三学期';
                     }
-                    $('#shareIdHelp').text('由 ' + data.release.publisher + ' 分享，分享次数: ' + data.release.shareNumber + ' 学期: ' + data.release.startYear + '~' + data.release.endYear + ' ' + t);
+                    $('#shareIdHelp').text('由 ' + data.release.publisher + ' 分享，分享次数: ' + data.release.shareNumber + ' 学年学期: ' + data.release.schoolYear + ' ' + t);
                     tools.validCustomerSingleSuccessDom(param_id.shareId);
                     globalData = data.listResult;
                     generateDataHtml(data);
@@ -74,8 +76,8 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
 
         function generateDataHtml(data) {
             var template = Handlebars.compile($("#data-template").html());
-            Handlebars.registerHelper('weekDay', function () {
-                return new Handlebars.SafeString(Handlebars.escapeExpression(tools.weekday(this.weekDay)));
+            Handlebars.registerHelper('weekday', function () {
+                return new Handlebars.SafeString(Handlebars.escapeExpression(tools.weekday(this.weekday)));
             });
             $('#selectData').html(template(data));
             // 调用全选插件
@@ -109,7 +111,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
                     startTime: g.startTime,
                     endTime: g.endTime,
                     teacherName: g.teacherName,
-                    weekDay: g.weekDay
+                    weekday: g.weekday
                 });
             }
 
