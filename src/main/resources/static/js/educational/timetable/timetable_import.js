@@ -6,7 +6,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
          ajax url.
          */
         var ajax_url = {
-            query:web_path + '/web/educational/timetable/import/semesters',
+            query: web_path + '/web/educational/timetable/import/semesters',
             save: web_path + '/web/educational/timetable/import/save',
             page: '/web/menu/educational/timetable'
         };
@@ -20,7 +20,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
         var param_id = {
             username: '#username',
             password: '#password',
-            schoolYear:'#schoolYear'
+            schoolYear: '#schoolYear'
         };
 
         var button_id = {
@@ -45,7 +45,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
         var param = {
             username: '',
             password: '',
-            schoolYear:''
+            schoolYear: ''
         };
 
         /**
@@ -57,9 +57,9 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             param.schoolYear = $(param_id.schoolYear).val();
         }
 
-        $(param_id.username).blur(function (){
+        $(param_id.username).blur(function () {
             initParam();
-           var username =  param.username;
+            var username = param.username;
             if (username !== '') {
                 tools.validSuccessDom(param_id.username);
             } else {
@@ -67,9 +67,9 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             }
         });
 
-        $(param_id.password).blur(function (){
+        $(param_id.password).blur(function () {
             initParam();
-            var password =  param.password;
+            var password = param.password;
             if (password !== '') {
                 tools.validSuccessDom(param_id.password);
             } else {
@@ -79,11 +79,11 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
 
         init();
 
-        function init(){
+        function init() {
             initSelect2();
         }
 
-        $(button_id.query.id).click(function (){
+        $(button_id.query.id).click(function () {
             initParam();
             validUsername('query');
         });
@@ -94,10 +94,10 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             $.get(ajax_url.query, param, function (data) {
                 // 去除遮罩
                 tools.buttonEndLoading(button_id.query.id, button_id.query.text);
-                if(data.results.length > 0){
+                if (data.results.length > 0) {
                     var schoolYearSelect2 = $(param_id.schoolYear).select2({data: data.results});
                     $.each(data.results, function (i, v) {
-                        if(v.selected){
+                        if (v.selected) {
                             schoolYearSelect2.val(v.id).trigger("change");
                         }
                     });
@@ -116,12 +116,12 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             });
         }
 
-        $(button_id.save.id).click(function (){
+        $(button_id.save.id).click(function () {
             initParam();
             validUsername('save');
         });
 
-        $(button_id.cancel.id).click(function (){
+        $(button_id.cancel.id).click(function () {
             $('#saveForm').css('display', 'none');
             $('#queryForm').css('display', '');
         });
@@ -140,7 +140,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             var password = param.password;
             if (password !== '') {
                 tools.validSuccessDom(param_id.password);
-                if(type === 'save'){
+                if (type === 'save') {
                     validSchoolYear();
                 } else {
                     initSchoolYear();
@@ -167,7 +167,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             $.get(ajax_url.save, param, function (data) {
                 // 去除遮罩
                 tools.buttonEndLoading(button_id.save.id, button_id.save.text);
-                if(data.state){
+                if (data.state) {
                     Swal.fire({
                         title: data.msg,
                         type: "success",
