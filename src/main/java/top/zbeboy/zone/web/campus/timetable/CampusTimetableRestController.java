@@ -270,8 +270,15 @@ public class CampusTimetableRestController {
             CampusCourseRelease release = optionalCampusCourseRelease.get();
             Optional<List<CampusCourseData>> optionalCampusCourseData = campusTimetableService.findCourseByCampusCourseReleaseId(campusCourseReleaseId);
             if (optionalCampusCourseData.isPresent()) {
+                int curWeeks = 0;
+                if (DateTimeUtil.nowRangeSqlDate(release.getStartDate(), release.getEndDate())) {
+                    curWeeks = DateTimeUtil.calculationTwoDateDifferWeeks(release.getStartDate(), DateTimeUtil.getNowSqlDate());
+                }
                 ajaxUtil.success().msg("获取数据成功").list(optionalCampusCourseData.get())
-                        .put("release", release);
+                        .put("release", release)
+                        .put("totalWeeks", DateTimeUtil.calculationTwoDateDifferWeeks(release.getStartDate(), release.getEndDate()))
+                        .put("week", DateTimeUtil.getNowDayOfWeek())
+                        .put("curWeeks", curWeeks);
             } else {
                 ajaxUtil.fail().msg("未查询到课表数据");
             }

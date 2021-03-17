@@ -42,6 +42,7 @@ public class CampusTimetableViewController {
     @GetMapping(CampusUrlCommon.ANYONE_TIMETABLE_LOOK_URL + "/{id}")
     public String anyoneLook(@PathVariable("id") String id, ModelMap modelMap) {
         modelMap.addAttribute("id", id);
+        modelMap.addAttribute("weekday", DateTimeUtil.getNowDayOfWeek());
         return "web/campus/timetable/timetable_outer_look";
     }
 

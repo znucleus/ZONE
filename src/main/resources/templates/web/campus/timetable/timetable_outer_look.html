@@ -10,7 +10,7 @@
     <!-- Bracket CSS -->
     <link rel="stylesheet" href="plugins/css/bracket.css" th:href="@{/plugins/bracket/css/bracket.min.css}"/>
 
-    <link rel="stylesheet" href="static/css/footer/sticky-footer.css" th:href="@{/static/css/footer/sticky-footer.css}"/>
+    <link rel="stylesheet" href="css/footer/sticky-footer.css" th:href="@{/css/footer/sticky-footer.css}"/>
 </head>
 <body>
 
@@ -27,6 +27,14 @@
             </div>
             <div class="col-md-6">
                 <span>共享ID: </span><span id="campusCourseReleaseId" th:text="${id}"></span>
+            </div>
+            <div class="col-md-3 col-sm-4 text-dark tx-bold" id="week">
+            </div>
+            <div class="col-md-3 col-sm-4 text-dark tx-bold" id="weeks">
+            </div>
+            <div class="col-md-3 col-sm-4 text-dark tx-bold" id="startDate">
+            </div>
+            <div class="col-md-3 col-sm-4 text-dark tx-bold" id="endDate">
             </div>
         </div>
         <div class="row">
@@ -196,6 +204,7 @@
         data-main="/timetable_outer_look"></script>
 <script th:inline="javascript">
     var web_path = /*[[${#httpServletRequest.getContextPath()}]]*/ '';
+    var weekday = /*[[${weekday}]]*/ '';
     require.config({
         baseUrl: web_path + "/js/campus/timetable",
         waitSeconds: 0,

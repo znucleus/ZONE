@@ -70,19 +70,24 @@ require(["jquery", "requirejs-domready", "tools", "handlebars", "csrf", "bootstr
                     if (data.state) {
                         $('#title').text(data.release.title);
                         $('#publisher').text(data.release.publisher);
-                        var term = data.release.term;
+                        var semester = data.release.semester;
                         var t;
-                        if (Number(term) === 0) {
-                            t = '上学期';
-                        } else if (Number(term) === 1) {
-                            t = '下学期';
+                        if (Number(semester) === 1) {
+                            t = '第一学期';
+                        } else if (Number(semester) === 2) {
+                            t = '第二学期';
+                        } else if (Number(semester) === 3) {
+                            t = '第三学期';
                         }
-                        $('#yearAndTerm').text(data.release.startYear + '~' + data.release.endYear + ' ' + t);
-                        $('#week' + data.weekDay).addClass('table-primary');
-                        $('.carousel').carousel(data.weekDay - 1);
+                        $('#yearAndTerm').text(data.release.schoolYear + ' ' + t);
+                        $('#week').text('今日 ' + tools.weekday(data.week));
+                        $('#weeks').text('第' + data.curWeeks + '周（共' + data.totalWeeks + '周）');
+                        $('#startDate').text('开始日期：' + data.release.startDate);
+                        $('#endDate').text('结束日期：' + data.release.endDate);
+
                         $.each(data.listResult, function (i, v) {
-                            $('#week' + v.weekDay).append(defaultHtml(v));
-                            $('#simpleWeek' + v.weekDay).append(simpleHtml(v));
+                            $('#week' + v.weekday).append(defaultHtml(v));
+                            $('#simpleWeek' + v.weekday).append(simpleHtml(v));
                         });
                     }
                 });
@@ -101,6 +106,9 @@ require(["jquery", "requirejs-domready", "tools", "handlebars", "csrf", "bootstr
                         $('#simpleData').css('display', 'none');
                     }
                 }
+
+                $('#week' + weekday).addClass('table-primary');
+                $('.carousel').carousel(weekday - 1);
             }
 
             function initMobileCarousel() {
