@@ -15,7 +15,7 @@ require(["jquery", "tools", "sweetalert2", "nav.active", "messenger", "jquery.ad
 
         var page_param = {
             campusCourseDataId: $('#campusCourseDataId').val(),
-            weekDay: $('#weekDayParam').val(),
+            weekday: $('#weekdayParam').val(),
             bgColor: $('#bgColorParam').val()
         };
 
@@ -28,7 +28,7 @@ require(["jquery", "tools", "sweetalert2", "nav.active", "messenger", "jquery.ad
             buildingName: '#buildingName',
             startWeek: '#startWeek',
             endWeek: '#endWeek',
-            weekDay: '#weekDay',
+            weekday: '#weekday',
             startTime: '#startTime',
             endTime: '#endTime',
             teacherName: '#teacherName',
@@ -54,7 +54,7 @@ require(["jquery", "tools", "sweetalert2", "nav.active", "messenger", "jquery.ad
             buildingName: '',
             startWeek: '',
             endWeek: '',
-            weekDay: '',
+            weekday: '',
             startTime: '',
             endTime: '',
             teacherName: '',
@@ -72,7 +72,7 @@ require(["jquery", "tools", "sweetalert2", "nav.active", "messenger", "jquery.ad
             param.buildingName = $(param_id.buildingName).val();
             param.startWeek = $(param_id.startWeek).val();
             param.endWeek = $(param_id.endWeek).val();
-            param.weekDay = $(param_id.weekDay).val();
+            param.weekday = $(param_id.weekday).val();
 
             var startTime = $(param_id.startTime).val();
             if (startTime.length > 0) {
@@ -108,7 +108,7 @@ require(["jquery", "tools", "sweetalert2", "nav.active", "messenger", "jquery.ad
         }
 
         function initData() {
-            $('#weekDay').val(page_param.weekDay);
+            $('#weekday').val(page_param.weekday);
             $('#bgColor').val(page_param.bgColor);
         }
 
@@ -142,19 +142,19 @@ require(["jquery", "tools", "sweetalert2", "nav.active", "messenger", "jquery.ad
                 tools.validErrorDom(param_id.courseName, '课程名220个字符以内');
             } else {
                 tools.validSuccessDom(param_id.courseName);
-                validWeekDay();
+                validWeekday();
             }
         }
 
         /**
          * 检验星期
          */
-        function validWeekDay() {
-            var weekDay = param.weekDay;
-            if (Number(weekDay) <= 0) {
-                tools.validErrorDom(param_id.weekDay, '请选择上课星期');
+        function validWeekday() {
+            var weekday = param.weekday;
+            if (Number(weekday) <= 0) {
+                tools.validErrorDom(param_id.weekday, '请选择上课星期');
             } else {
-                tools.validSuccessDom(param_id.weekDay);
+                tools.validSuccessDom(param_id.weekday);
                 sendAjax();
             }
         }

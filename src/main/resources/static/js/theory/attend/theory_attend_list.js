@@ -255,7 +255,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "messenge
             var template = Handlebars.compile($("#configure-data-template").html());
 
             Handlebars.registerHelper('week_day', function () {
-                return new Handlebars.SafeString(Handlebars.escapeExpression(tools.weekDay(this.weekDay)));
+                return new Handlebars.SafeString(Handlebars.escapeExpression(tools.weekday(this.weekDay)));
             });
             $('#dataTable > tbody').html(template(data));
         }

@@ -50,7 +50,7 @@ require(["jquery", "tools", "handlebars", "sweetalert2", "nav.active", "tablesaw
             var template = Handlebars.compile($("#data_template").html());
 
             Handlebars.registerHelper('week_day', function () {
-                return new Handlebars.SafeString(Handlebars.escapeExpression(tools.weekDay(this.weekDay)));
+                return new Handlebars.SafeString(Handlebars.escapeExpression(tools.weekday(this.weekDay)));
             });
             $('#dataTable > tbody').html(template(data));
             $('#totalSize').text(data.listResult.length);

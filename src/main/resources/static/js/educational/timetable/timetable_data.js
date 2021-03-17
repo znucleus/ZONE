@@ -314,7 +314,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "select2-zh-CN", "messen
             if (timetableSemesterId && timetableSemesterId !== '') {
                 $.get(ajax_url.school_year_info + '/' + timetableSemesterId, function (data) {
                     if(data.state){
-                        $('#week').text('今日 ' + tools.weekDay(data.mapResult.week));
+                        $('#week').text('今日 ' + tools.weekday(data.mapResult.week));
                         $('#weeks').text('第' + data.mapResult.curWeeks + '周（共' + data.mapResult.totalWeeks + '周）');
                         $('#startDate').text('开始日期：' + data.mapResult.startDate);
                         $('#endDate').text('结束日期：' + data.mapResult.endDate);

@@ -179,7 +179,7 @@ require(["jquery", "tools", "nav.active", "jquery.address", "js-year-calendar.zh
                         $('#holidayDate').text('放假：' + calendar.holidayStartDate + ' ~ ' + calendar.holidayEndDate + ' 共' + calendar.holidayWeeks + '周');
                         var nowDate = calendar.nowDate.split('-');
                         $('#nowDate').html('<span class="tx-bold tx-20 tx-primary">' + nowDate[0] + '</span> 年 <span class="tx-bold tx-20 tx-primary">' + nowDate[1] + '</span> 月 <span class="tx-bold tx-20 tx-primary">' + nowDate[2] + '</span> 日')
-                        $('#week').html('<span class="tx-bold tx-20 tx-primary">' + tools.weekDay(calendar.week) + '</span>');
+                        $('#week').html('<span class="tx-bold tx-20 tx-primary">' + tools.weekday(calendar.week) + '</span>');
                         $('#weeks').html('第 <span class="tx-bold tx-20 tx-purple"><em >' + calendar.weeks + '</em></span> 周');
                         $('#remark').text('备注：' + calendar.remark);
                         $('#releaseTimeStr').text(calendar.releaseTimeStr);

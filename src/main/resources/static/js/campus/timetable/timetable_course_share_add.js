@@ -75,7 +75,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
         function generateDataHtml(data) {
             var template = Handlebars.compile($("#data-template").html());
             Handlebars.registerHelper('weekDay', function () {
-                return new Handlebars.SafeString(Handlebars.escapeExpression(tools.weekDay(this.weekDay)));
+                return new Handlebars.SafeString(Handlebars.escapeExpression(tools.weekday(this.weekDay)));
             });
             $('#selectData').html(template(data));
             // 调用全选插件

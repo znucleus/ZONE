@@ -91,7 +91,7 @@ define(["jquery"], function ($) {
                 releaseTime: 'YYYY.MM.DD HH:mm:ss',
                 defaultTime: 'YYYY-MM-DD HH:mm:ss'
             },
-            weekDay: function (day) {
+            weekday: function (day) {
                 var v = '';
                 switch (day) {
                     case 1:

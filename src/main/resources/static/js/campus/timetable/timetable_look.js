@@ -146,7 +146,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
                         $('#shareId').text(data.mapResult.campusCourseReleaseId);
                         $('#shareNumber').text(data.mapResult.shareNumber);
                         $('#qrCodeUrl').attr('src', web_path + '/' + data.mapResult.qrCodeUrl);
-                        $('#week').text('今日 ' + tools.weekDay(data.mapResult.week));
+                        $('#week').text('今日 ' + tools.weekday(data.mapResult.week));
                         $('#weeks').text('第' + data.mapResult.curWeeks + '周（共' + data.mapResult.totalWeeks + '周）');
                         $('#startDate').text('开始日期：' + data.mapResult.startDate);
                         $('#endDate').text('结束日期：' + data.mapResult.endDate);
@@ -176,11 +176,10 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
                 }
                 if (data.state) {
                     courseData = data.listResult;
-                    effectiveCourseDataAjaxFinish = true;
                     showEffectiveCourse();
-                    $('#week' + data.weekDay).addClass('table-primary');
+                    $('#week' + data.weekday).addClass('table-primary');
                     if (!init_configure.init_simple_screen) {
-                        $('.carousel').carousel(data.weekDay - 1);
+                        $('.carousel').carousel(data.weekday - 1);
                         init_configure.init_simple_screen = true;
                     }
                 }
@@ -473,27 +472,19 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
                 $('#simpleWeek' + i).empty();
             }
             if ($('#showEffectiveCourse').prop('checked')) {
-                if (effectiveCourseCalendarAjaxFinish && effectiveCourseDataAjaxFinish) {
-                    $.each(courseData, function (i, v) {
-                        // 显示有效课程
-                        var startWeek = v.startWeek;
-                        var endWeek = v.endWeek;
-                        if (startWeek <= curWeeks && endWeek >= curWeeks) {
-                            $('#week' + v.weekDay).append(defaultHtml(v));
-                            $('#simpleWeek' + v.weekDay).append(simpleHtml(v));
-                        }
-                    });
-                } else {
-                    Messenger().post({
-                        message: '请先选择校历和课表',
-                        type: 'error',
-                        showCloseButton: true
-                    });
-                }
+                $.each(courseData, function (i, v) {
+                    // 显示有效课程
+                    var startWeek = v.startWeek;
+                    var endWeek = v.endWeek;
+                    if (startWeek <= curWeeks && endWeek >= curWeeks) {
+                        $('#week' + v.weekday).append(defaultHtml(v));
+                        $('#simpleWeek' + v.weekday).append(simpleHtml(v));
+                    }
+                });
             } else {
                 $.each(courseData, function (i, v) {
-                    $('#week' + v.weekDay).append(defaultHtml(v));
-                    $('#simpleWeek' + v.weekDay).append(simpleHtml(v));
+                    $('#week' + v.weekday).append(defaultHtml(v));
+                    $('#simpleWeek' + v.weekday).append(simpleHtml(v));
                 });
             }
 
