@@ -6,6 +6,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
          ajax url.
          */
         var ajax_url = {
+            semesters: web_path + '/web/campus/timetable/new-edu/semesters',
             data: web_path + '/web/campus/timetable/course/new-edu/data',
             save: web_path + '/web/campus/timetable/course/batch-save',
             page: '/web/menu/campus/timetable'
@@ -23,19 +24,28 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
          */
         var param_id = {
             username: '#username',
-            password: '#password'
+            password: '#password',
+            schoolYear: '#schoolYear'
         };
 
         var button_id = {
-            loginQuery: {
-                id: '#loginQuery',
-                text: '登录查询',
+            query: {
+                id: '#query',
+                text: '查询',
+                tip: '查询中...'
+            },
+            okSchoolYear: {
+                id: '#okSchoolYear',
+                text: '确定',
                 tip: '查询中...'
             },
             save: {
                 id: '#save',
                 text: '保存',
                 tip: '保存中...'
+            },
+            cancel: {
+                id: '#cancel'
             }
         };
 
@@ -43,65 +53,154 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
          参数
          */
         var param = {
-            campusCourseReleaseId: '',
             username: '',
             password: '',
-            data: ''
+            schoolYear: ''
         };
 
         /**
          * 初始化参数
          */
         function initParam() {
-            param.campusCourseReleaseId = page_param.campusCourseReleaseId;
             param.username = _.trim($(param_id.username).val());
             param.password = _.trim($(param_id.password).val());
+            param.schoolYear = $(param_id.schoolYear).val();
         }
 
-        $(button_id.loginQuery.id).click(function (){
-           initParam();
-            validUsername();
-        });
-
-        function validUsername() {
+        $(param_id.username).blur(function () {
+            initParam();
             var username = param.username;
             if (username !== '') {
                 tools.validSuccessDom(param_id.username);
-                validPassword();
+            } else {
+                tools.validErrorDom(param_id.username, '请填写新教务系统账号');
+            }
+        });
+
+        $(param_id.password).blur(function () {
+            initParam();
+            var password = param.password;
+            if (password !== '') {
+                tools.validSuccessDom(param_id.password);
+            } else {
+                tools.validErrorDom(param_id.password, '请填写新教务系统密码');
+            }
+        });
+
+        init();
+
+        function init() {
+            initSelect2();
+        }
+
+        $(button_id.query.id).click(function () {
+            initParam();
+            validUsername('query');
+        });
+
+        function initSchoolYear() {
+            $('#queryError').text('');
+            tools.buttonLoading(button_id.query.id, button_id.query.tip);
+            $.get(ajax_url.semesters, param, function (data) {
+                // 去除遮罩
+                tools.buttonEndLoading(button_id.query.id, button_id.query.text);
+                if (data.results.length > 0) {
+                    var schoolYearSelect2 = $(param_id.schoolYear).select2({data: data.results});
+                    $.each(data.results, function (i, v) {
+                        if (v.selected) {
+                            schoolYearSelect2.val(v.id).trigger("change");
+                        }
+                    });
+                    $('#saveForm').css('display', '');
+                    $('#queryForm').css('display', 'none');
+                    $('#appForm').css('display', 'none');
+                } else {
+                    $('#queryError').text('未查询到数据，请检查账号密码或稍后重试');
+                }
+            });
+
+        }
+
+        function initSelect2() {
+            $('.select2-show-search').select2({
+                language: "zh-CN"
+            });
+        }
+
+        $(button_id.okSchoolYear.id).click(function () {
+            initParam();
+            validUsername('save');
+        });
+
+        $(button_id.cancel.id).click(function () {
+            $('#saveForm').css('display', 'none');
+            $('#appForm').css('display', 'none');
+            $('#queryForm').css('display', '');
+        });
+
+        function validUsername(type) {
+            var username = param.username;
+            if (username !== '') {
+                tools.validSuccessDom(param_id.username);
+                validPassword(type);
             } else {
                 tools.validErrorDom(param_id.username, '请填写新教务系统账号');
             }
         }
 
-        function validPassword() {
+        function validPassword(type) {
             var password = param.password;
             if (password !== '') {
                 tools.validSuccessDom(param_id.password);
-                initData();
+                if (type === 'save') {
+                    validSchoolYear();
+                } else {
+                    initSchoolYear();
+                }
+
             } else {
                 tools.validErrorDom(param_id.password, '请填写新教务系统密码');
             }
         }
 
+        function validSchoolYear() {
+            var schoolYear = param.schoolYear;
+            if (schoolYear !== '') {
+                tools.validSuccessDom(param_id.password);
+                queryData();
+            } else {
+                tools.validErrorDom(param_id.password, '请选择学年学期');
+            }
+        }
+
+
         var globalData = [];
 
-        function initData() {
-            $('#globalError').val('');
+        function queryData(){
+            $('#saveError').text('');
+            tools.buttonLoading(button_id.okSchoolYear.id, button_id.okSchoolYear.tip);
             $.get(ajax_url.data, param, function (data) {
-                if(data.state){
+                tools.buttonEndLoading(button_id.okSchoolYear.id, button_id.okSchoolYear.text);
+                if (data.state) {
                     globalData = data.listResult;
                     generateDataHtml(data);
+                    $('#saveForm').css('display', '');
+                    $('#appForm').css('display', '');
                 } else {
-                    $('#globalError').val(data.msg);
+                    $('#saveError').text(data.msg);
                 }
             });
         }
 
         function generateDataHtml(data) {
             var template = Handlebars.compile($("#data-template").html());
+            Handlebars.registerHelper('weekday', function () {
+                return new Handlebars.SafeString(Handlebars.escapeExpression(tools.weekday(Number(this.weekday))));
+            });
             $('#selectData').html(template(data));
             // 调用全选插件
             $.fn.check({checkall_name: "checkall", checkbox_name: "check"});
+            $('#checkall').prop('checked', false);
         }
 
         /*
@@ -121,21 +220,18 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             for (var i = 0; i < ids.length; i++) {
                 var id = $(ids[i]).val();
                 var g = globalData[id];
-                var weekDay = getWeekDay(g.week);
-                if (weekDay > 0 && g.attendClass !== '' && g.courseName !== '') {
-                    data.push({
-                        campusCourseReleaseId: page_param.campusCourseReleaseId,
-                        organizeName: g.attendClass,
-                        courseName: g.courseName,
-                        buildingName: g.classroom,
-                        startWeek: g.openDate,
-                        endWeek: g.closeDate,
-                        startTime: getTime(g.classTime),
-                        endTime: getTime(g.overTime),
-                        teacherName: g.teacherName,
-                        weekDay: weekDay
-                    });
-                }
+                data.push({
+                    campusCourseReleaseId: page_param.campusCourseReleaseId,
+                    organizeName: g.lessonName,
+                    courseName: g.courseName,
+                    buildingName: g.room,
+                    startWeek: g.startWeek,
+                    endWeek: g.endWeek,
+                    startTime: g.startTime,
+                    endTime: g.endTime,
+                    teacherName: g.teachers,
+                    weekday: g.weekday
+                });
             }
 
             if (data.length > 0) {
@@ -143,52 +239,6 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             } else {
                 Messenger().post("未发现有选中的课程!");
             }
-        }
-
-        function getWeekDay(week) {
-            var w = 0;
-            if (_.trim(week) === '星期一') {
-                w = 1;
-            }
-
-            if (_.trim(week) === '星期二') {
-                w = 2;
-            }
-
-            if (_.trim(week) === '星期三') {
-                w = 3;
-            }
-
-            if (_.trim(week) === '星期四') {
-                w = 4;
-            }
-
-            if (_.trim(week) === '星期五') {
-                w = 5;
-            }
-
-            if (_.trim(week) === '星期六') {
-                w = 6;
-            }
-
-            if (_.trim(week) === '星期天') {
-                w = 7;
-            }
-
-            return w;
-        }
-
-        function getTime(t) {
-            var v = '';
-            if (t !== '') {
-                var trr = t.split(":")[0];
-                if (Number(trr) < 10) {
-                    v = "0" + t + ":00";
-                } else {
-                    v = t + ":00";
-                }
-            }
-            return v;
         }
 
         /**

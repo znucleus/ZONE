@@ -1,7 +1,10 @@
 package top.zbeboy.zone.web.campus.timetable;
 
 import com.alibaba.fastjson.JSON;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,19 +24,20 @@ import top.zbeboy.zbase.vo.campus.timetable.CampusCourseDataAddVo;
 import top.zbeboy.zbase.vo.campus.timetable.CampusCourseDataEditVo;
 import top.zbeboy.zbase.vo.campus.timetable.CampusCourseReleaseAddVo;
 import top.zbeboy.zbase.vo.campus.timetable.CampusCourseReleaseEditVo;
+import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
 import top.zbeboy.zone.service.campus.CampusTimetableEduService;
-import top.zbeboy.zone.service.upload.UploadService;
+import top.zbeboy.zone.service.educational.TimetableService;
 import top.zbeboy.zone.web.campus.common.CampusUrlCommon;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.*;
 
 @RestController
 public class CampusTimetableRestController {
+
+    private final Logger log = LoggerFactory.getLogger(CampusTimetableRestController.class);
 
     @Resource
     private CampusTimetableService campusTimetableService;
@@ -42,7 +46,7 @@ public class CampusTimetableRestController {
     private CampusTimetableEduService campusTimetableEduService;
 
     @Resource
-    private UploadService uploadService;
+    private TimetableService timetableService;
 
     /**
      * 通过主键查询
@@ -305,6 +309,24 @@ public class CampusTimetableRestController {
     }
 
     /**
+     * 新教务系统学年数据
+     *
+     * @return 数据
+     */
+    @ApiLoggingRecord(remark = "新教务课表学期", channel = Workbook.channel.WEB, needLogin = true)
+    @GetMapping("/web/campus/timetable/new-edu/semesters")
+    public ResponseEntity<Map<String, Object>> semesters(@RequestParam("username") String username, @RequestParam("password") String password, HttpServletRequest request) {
+        Select2Data select2Data = Select2Data.of();
+        try {
+            List<Map<String, Object>> semesters = timetableService.semesters(username, password);
+            semesters.forEach(s -> select2Data.add((String) s.get("id"), (String) s.get("name"), (Boolean) s.get("selected")));
+        } catch (Exception e) {
+            log.error("教务课表学期查询错误", e);
+        }
+        return new ResponseEntity<>(select2Data.send(false), HttpStatus.OK);
+    }
+
+    /**
      * 新教务系统数据
      *
      * @param username 账号
@@ -312,14 +334,21 @@ public class CampusTimetableRestController {
      * @return 数据
      */
     @GetMapping("/web/campus/timetable/course/new-edu/data")
-    public ResponseEntity<Map<String, Object>> courseNewEduData(@RequestParam("username") String username, @RequestParam("password") String password) {
+    public ResponseEntity<Map<String, Object>> courseNewEduData(@RequestParam("username") String username, @RequestParam("password") String password, @RequestParam("schoolYear") int schoolYear) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         try {
-            Map<String, Object> result = campusTimetableEduService.data(username, password);
+            Map<String, Object> result = timetableService.data(username, password, schoolYear);
             Boolean hasError = (Boolean) result.get("hasError");
             if (!hasError) {
-                List<Map<String, Object>> list = (List<Map<String, Object>>) result.get("data");
-                ajaxUtil.success().msg("获取数据成功").list(list);
+                List<Map<String, Object>> data = (List<Map<String, Object>>) result.get("data");
+                if (CollectionUtils.isNotEmpty(data)) {
+                    for (Map<String, Object> info : data) {
+                        List<Map<String, Object>> courseData = (List<Map<String, Object>>) info.get("data");
+                        ajaxUtil.success().msg("获取数据成功").list(courseData);
+                    }
+                } else {
+                    ajaxUtil.fail().msg("未获取到数据");
+                }
             } else {
                 String statusCode = (String) result.get("statusCode");
                 String reasonPhrase = (String) result.get("reasonPhrase");
@@ -342,9 +371,9 @@ public class CampusTimetableRestController {
      */
     @GetMapping("/web/campus/timetable/course/generate-ics")
     public ResponseEntity<Map<String, Object>> generateIcs(@RequestParam("campusCourseReleaseId") String campusCourseReleaseId, @RequestParam("calendarId") String calendarId,
-                          HttpServletRequest request) {
+                                                           HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
-        try{
+        try {
             String filePath = Workbook.campusTimetableIcsFilePath() + campusCourseReleaseId + ".ics";
             String path = RequestUtil.getRealPath(request) + filePath;
             campusTimetableEduService.generateIcs(campusCourseReleaseId, calendarId, path);

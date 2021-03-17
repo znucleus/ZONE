@@ -18,6 +18,15 @@ public interface TimetableService {
     List<Map<String, Object>> semesters(String username, String password) throws Exception;
 
     /**
+     * 获取所有课程数据
+     *
+     * @param username 账号
+     * @param password 密码
+     * @return 数据
+     */
+    Map<String, Object> data(String username, String password, int semesterId) throws Exception;
+
+    /**
      * 学生同步课表
      *
      * @param username   账号

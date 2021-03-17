@@ -62,6 +62,11 @@ public class TimetableServiceImpl implements TimetableService {
     }
 
     @Override
+    public Map<String, Object> data(String username, String password, int semesterId) throws Exception {
+        return eduData(username, password, false, semesterId);
+    }
+
+    @Override
     public void syncWithStudent(String username, String password, int collegeId, int semesterId) throws Exception {
         Map<String, Object> eduData = eduData(username, password, false, semesterId);
         dealSemester(eduData, collegeId);
@@ -92,12 +97,12 @@ public class TimetableServiceImpl implements TimetableService {
             String courseName = timetableCourse.getCourseName();
             String room = timetableCourse.getRoom();
 
-            java.sql.Time startTime = Objects.nonNull(timetableCourse.getStartUnit()) ? DateTimeUtil.defaultParseSqlTime(getStartUnit(timetableCourse.getStartUnit())) : null;
+            java.sql.Time startTime = timetableCourse.getStartTime();
             if (Objects.isNull(startTime)) {
                 startTime = DateTimeUtil.getNowSqlTime();
             }
 
-            java.sql.Time endTime = Objects.nonNull(timetableCourse.getEndUnit()) ? DateTimeUtil.defaultParseSqlTime(getEndUnit(timetableCourse.getEndUnit())) : null;
+            java.sql.Time endTime = timetableCourse.getEndTime();
             if (Objects.isNull(endTime)) {
                 endTime = DateTimeUtil.getNowSqlTime();
             }
@@ -305,6 +310,8 @@ public class TimetableServiceImpl implements TimetableService {
                                 Byte weekday = NumberUtils.toByte(String.valueOf(param.get("weekday")));
                                 Byte startUnit = NumberUtils.toByte(String.valueOf(param.get("startUnit")));
                                 Byte endUnit = NumberUtils.toByte(String.valueOf(param.get("endUnit")));
+                                String startTime = String.valueOf(param.get("startTime"));
+                                String endTime = String.valueOf(param.get("endTime"));
                                 String teachers = String.valueOf(param.get("teachers"));
                                 String credits = String.valueOf(param.get("credits"));
                                 String lessonCode = String.valueOf(param.get("lessonCode"));
@@ -322,6 +329,13 @@ public class TimetableServiceImpl implements TimetableService {
                                 timetableCourse.setWeekday(weekday);
                                 timetableCourse.setStartUnit(startUnit);
                                 timetableCourse.setEndUnit(endUnit);
+                                if(StringUtils.isNotBlank(startTime)){
+                                    timetableCourse.setStartTime(DateTimeUtil.defaultParseSqlTime(startTime));
+                                }
+
+                                if(StringUtils.isNotBlank(endTime)){
+                                    timetableCourse.setEndTime(DateTimeUtil.defaultParseSqlTime(endTime));
+                                }
                                 timetableCourse.setTeachers(teachers);
                                 timetableCourse.setCredits(credits);
                                 timetableCourse.setLessonCode(lessonCode);
@@ -598,6 +612,8 @@ public class TimetableServiceImpl implements TimetableService {
                     map.put("weekday", j2.getString("weekday"));
                     map.put("startUnit", j2.getString("startUnit"));
                     map.put("endUnit", j2.getString("endUnit"));
+                    map.put("startTime", getStartTime(j2.getString("startUnit")));
+                    map.put("endTime", getEndTime(j2.getString("endUnit")));
 
                     StringBuilder sb = new StringBuilder();
                     JSONArray arr3 = j2.getJSONArray("teachers");
@@ -618,102 +634,6 @@ public class TimetableServiceImpl implements TimetableService {
             }
         }
         return firstList;
-    }
-
-
-    private String getStartUnit(Byte startUnit) {
-        String su = "";
-        if (Objects.nonNull(startUnit)) {
-            switch (startUnit) {
-                case 1:
-                    su = "08:00:00";
-                    break;
-                case 2:
-                    su = "08:50:00";
-                    break;
-                case 3:
-                    su = "09:50:00";
-                    break;
-                case 4:
-                    su = "10:40:00";
-                    break;
-                case 5:
-                    su = "11:30:00";
-                    break;
-                case 6:
-                    su = "13:30:00";
-                    break;
-                case 7:
-                    su = "14:20:00";
-                    break;
-                case 8:
-                    su = "15:20:00";
-                    break;
-                case 9:
-                    su = "16:10:00";
-                    break;
-                case 10:
-                    su = "17:00:00";
-                    break;
-                case 11:
-                    su = "19:00:00";
-                    break;
-                case 12:
-                    su = "19:50:00";
-                    break;
-                case 13:
-                    su = "20:40:00";
-                    break;
-            }
-        }
-        return su;
-
-    }
-
-    private String getEndUnit(Byte endUnit) {
-        String eu = "";
-        if (Objects.nonNull(endUnit)) {
-            switch (endUnit) {
-                case 1:
-                    eu = "08:45:00";
-                    break;
-                case 2:
-                    eu = "09:35:00";
-                    break;
-                case 3:
-                    eu = "10:35:00";
-                    break;
-                case 4:
-                    eu = "11:25:00";
-                    break;
-                case 5:
-                    eu = "12:15:00";
-                    break;
-                case 6:
-                    eu = "14:15:00";
-                    break;
-                case 7:
-                    eu = "15:05:00";
-                    break;
-                case 8:
-                    eu = "16:05:00";
-                    break;
-                case 9:
-                    eu = "16:55:00";
-                    break;
-                case 10:
-                    eu = "17:45:00";
-                    break;
-                case 11:
-                    eu = "19:45:00";
-                    break;
-                case 13:
-                    eu = "21:25:00";
-                    break;
-            }
-        }
-        return eu;
-
     }
 
     /**
@@ -762,5 +682,97 @@ public class TimetableServiceImpl implements TimetableService {
                 wv = WeekDay.MO;
         }
         return wv;
+    }
+
+    private String getStartTime(String startUnit) {
+        String su = "";
+        if (StringUtils.isNotBlank(startUnit)) {
+            switch (NumberUtils.toInt(startUnit)) {
+                case 1:
+                    su = "08:00:00";
+                    break;
+                case 2:
+                    su = "08:50:00";
+                    break;
+                case 3:
+                    su = "09:50:00";
+                    break;
+                case 4:
+                    su = "10:40:00";
+                    break;
+                case 5:
+                    su = "11:30:00";
+                    break;
+                case 6:
+                    su = "13:30:00";
+                    break;
+                case 7:
+                    su = "14:20:00";
+                    break;
+                case 8:
+                    su = "15:20:00";
+                    break;
+                case 9:
+                    su = "16:10:00";
+                    break;
+                case 10:
+                    su = "17:00:00";
+                    break;
+                case 11:
+                    su = "19:00:00";
+                    break;
+                case 12:
+                    su = "19:50:00";
+                    break;
+            }
+        }
+        return su;
+
+    }
+
+    private String getEndTime(String endUnit) {
+        String eu = "";
+        if (StringUtils.isNotBlank(endUnit)) {
+            switch (NumberUtils.toInt(endUnit)) {
+                case 1:
+                    eu = "08:45:00";
+                    break;
+                case 2:
+                    eu = "09:35:00";
+                    break;
+                case 3:
+                    eu = "10:35:00";
+                    break;
+                case 4:
+                    eu = "11:25:00";
+                    break;
+                case 5:
+                    eu = "12:15:00";
+                    break;
+                case 6:
+                    eu = "14:15:00";
+                    break;
+                case 7:
+                    eu = "15:05:00";
+                    break;
+                case 8:
+                    eu = "16:05:00";
+                    break;
+                case 9:
+                    eu = "16:55:00";
+                    break;
+                case 10:
+                    eu = "17:45:00";
+                    break;
+                case 11:
+                    eu = "19:45:00";
+                    break;
+                case 12:
+                    eu = "20:35:00";
+                    break;
+            }
+        }
+        return eu;
+
     }
 }
