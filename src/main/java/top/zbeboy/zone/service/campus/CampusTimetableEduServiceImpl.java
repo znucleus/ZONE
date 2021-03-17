@@ -2,6 +2,8 @@ package top.zbeboy.zone.service.campus;
 
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VTimeZone;
@@ -9,26 +11,50 @@ import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.RandomUidGenerator;
 import net.fortuna.ical4j.util.UidGenerator;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.stereotype.Service;
+import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.CampusCourseData;
 import top.zbeboy.zbase.domain.tables.pojos.CampusCourseRelease;
+import top.zbeboy.zbase.domain.tables.pojos.TimetableCourse;
+import top.zbeboy.zbase.domain.tables.pojos.TimetableSemester;
 import top.zbeboy.zbase.feign.campus.timetable.CampusTimetableService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
+import top.zbeboy.zbase.tools.service.util.RequestUtil;
+import top.zbeboy.zbase.tools.service.util.UUIDUtil;
+import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.QRCodeUtil;
+import top.zbeboy.zbase.vo.campus.timetable.CampusCourseDataAddVo;
+import top.zbeboy.zbase.vo.campus.timetable.CampusCourseReleaseAddVo;
+import top.zbeboy.zone.service.educational.TimetableService;
+import top.zbeboy.zone.web.campus.common.CampusUrlCommon;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service("campusTimetableEduService")
 public class CampusTimetableEduServiceImpl implements CampusTimetableEduService {
 
     @Resource
     private CampusTimetableService campusTimetableService;
+
+    @Resource
+    private TimetableService timetableService;
+
+    @Override
+    public void sync(String username, String password, String targetUsername, int semesterId, HttpServletRequest request) throws Exception {
+        Map<String, Object> eduData = timetableService.eduData(username, password, false, semesterId);
+        dealSemester(eduData, targetUsername, request);
+        dealCourse(eduData, targetUsername);
+    }
 
     @Override
     public void generateIcs(List<CampusCourseData> campusCourseDataList, String path) throws IOException {
@@ -91,7 +117,7 @@ public class CampusTimetableEduServiceImpl implements CampusTimetableEduService 
                 }
 
                 // 1.日历偏移开始周数 算开始时间
-                java.util.Date deviationCalendarStartDate = calcDeviationDate(calendarStartDate, startWeek, weekDay);
+                java.util.Date deviationCalendarStartDate = timetableService.calcDeviationDate(calendarStartDate, startWeek, weekDay);
                 String finishStartDate = DateTimeUtil.formatUtilDate(deviationCalendarStartDate, DateTimeUtil.YEAR_MONTH_DAY_FORMAT) + " " + DateTimeUtil.defaultFormatSqlTime(startTime);
                 startDate.setTime(DateTimeUtil.parseUtilDate(finishStartDate, DateTimeUtil.STANDARD_FORMAT));
 
@@ -133,7 +159,7 @@ public class CampusTimetableEduServiceImpl implements CampusTimetableEduService 
                 // 重复事件
                 if (count > 0) {
                     Recur recur = new Recur(Recur.Frequency.WEEKLY, count + 1);
-                    recur.getDayList().add(getWeekday(campusCourseData.getWeekday()));
+                    recur.getDayList().add(timetableService.getWeekday(campusCourseData.getWeekday()));
                     RRule rule = new RRule(recur);
                     meeting.getProperties().add(rule);
                 }
@@ -173,51 +199,94 @@ public class CampusTimetableEduServiceImpl implements CampusTimetableEduService 
         outputter.output(icsCalendar, fout);
     }
 
-    /**
-     * 计算时间偏移
-     *
-     * @param date    开始日期
-     * @param week    偏移周
-     * @param weekDay 那一周的周几
-     * @return 时间
-     */
-    private java.util.Date calcDeviationDate(java.sql.Date date, int week, int weekDay) {
-        int deviationWeek = week - 1;
-        org.joda.time.DateTime dt1 = new org.joda.time.DateTime(date);
-        if (deviationWeek > 0) {
-            dt1 = dt1.plusWeeks(deviationWeek);
+    public void dealSemester(Map<String, Object> eduData, String targetUsername, HttpServletRequest request) throws Exception {
+        Boolean hasError = (Boolean) eduData.get("hasError");
+        if (!hasError) {
+            CampusCourseReleaseAddVo campusCourseReleaseAddVo = new CampusCourseReleaseAddVo();
+            campusCourseReleaseAddVo.setUsername(targetUsername);
+            String id = UUIDUtil.getUUID();
+            campusCourseReleaseAddVo.setCampusCourseReleaseId(id);
+            String realPath = RequestUtil.getRealPath(request);
+            String path = Workbook.campusTimetableQrCodeFilePath() + id + ".jpg";
+            String logoPath = Workbook.SYSTEM_LOGO_PATH;
+            //生成二维码
+            String text = RequestUtil.getBaseUrl(request) + CampusUrlCommon.ANYONE_TIMETABLE_LOOK_URL + id;
+            QRCodeUtil.encode(text, logoPath, realPath + path, true);
+            campusCourseReleaseAddVo.setQrCodeUrl(path);
+
+            String name = (String) eduData.get("name");
+            String schoolYear = (String) eduData.get("schoolYear");
+            campusCourseReleaseAddVo.setTitle(name);
+            campusCourseReleaseAddVo.setSchoolYear(schoolYear);
+
+            byte semester = 0;
+            if (StringUtils.contains(name, "-")) {
+                name = name.replaceAll(schoolYear, "");
+                name = name.replaceAll("-", "");
+                if (NumberUtils.isDigits(name)) {
+                    semester = NumberUtils.toByte(name);
+                }
+            }
+
+            campusCourseReleaseAddVo.setSemester(semester);
+            campusCourseReleaseAddVo.setStartDate((String) eduData.get("startDate"));
+            campusCourseReleaseAddVo.setEndDate((String) eduData.get("endDate"));
+
+            eduData.put("campusCourseReleaseId", id);
+            campusTimetableService.save(campusCourseReleaseAddVo);
         }
-        dt1 = dt1.withDayOfWeek(weekDay);
-        return dt1.toDate();
     }
 
-    private WeekDay getWeekday(int weekday) {
-        WeekDay wv;
-        switch (weekday) {
-            case 1:
-                wv = WeekDay.MO;
-                break;
-            case 2:
-                wv = WeekDay.TU;
-                break;
-            case 3:
-                wv = WeekDay.WE;
-                break;
-            case 4:
-                wv = WeekDay.TH;
-                break;
-            case 5:
-                wv = WeekDay.FR;
-                break;
-            case 6:
-                wv = WeekDay.SA;
-                break;
-            case 7:
-                wv = WeekDay.SU;
-                break;
-            default:
-                wv = WeekDay.MO;
+    /**
+     * 学生以班级同步
+     *
+     * @param eduData 数据
+     */
+    public void dealCourse(Map<String, Object> eduData, String targetUsername) {
+        Boolean hasError = (Boolean) eduData.get("hasError");
+        if (!hasError) {
+            List<Map<String, Object>> data = (List<Map<String, Object>>) eduData.get("data");
+            if (CollectionUtils.isNotEmpty(data)) {
+                for (Map<String, Object> info : data) {
+                    List<Map<String, Object>> courseData = (List<Map<String, Object>>) info.get("data");
+                    if (CollectionUtils.isNotEmpty(courseData)) {
+                        String campusCourseReleaseId = (String) eduData.get("campusCourseReleaseId");
+                        List<CampusCourseDataAddVo> insertData = new ArrayList<>();
+                        for (Map<String, Object> param : courseData) {
+                            String courseName = String.valueOf(param.get("courseName"));
+                            String lessonName = String.valueOf(param.get("lessonName"));
+                            String room = String.valueOf(param.get("room"));
+                            int startWeek = NumberUtils.toInt(String.valueOf(param.get("startWeek")));
+                            int endWeek = NumberUtils.toInt(String.valueOf(param.get("endWeek")));
+                            Byte weekday = NumberUtils.toByte(String.valueOf(param.get("weekday")));
+                            String startTime = String.valueOf(param.get("startTime"));
+                            String endTime = String.valueOf(param.get("endTime"));
+                            String teachers = String.valueOf(param.get("teachers"));
+
+                            CampusCourseDataAddVo campusCourseDataAddVo = new CampusCourseDataAddVo();
+                            campusCourseDataAddVo.setCampusCourseReleaseId(campusCourseReleaseId);
+                            campusCourseDataAddVo.setOrganizeName(lessonName);
+                            campusCourseDataAddVo.setCourseName(courseName);
+                            campusCourseDataAddVo.setUsername(targetUsername);
+                            campusCourseDataAddVo.setBuildingName(room);
+                            campusCourseDataAddVo.setStartWeek(startWeek);
+                            campusCourseDataAddVo.setEndWeek(endWeek);
+                            campusCourseDataAddVo.setWeekday(weekday);
+                            campusCourseDataAddVo.setStartTime(startTime);
+                            campusCourseDataAddVo.setEndTime(endTime);
+                            campusCourseDataAddVo.setTeacherName(teachers);
+
+                            insertData.add(campusCourseDataAddVo);
+                        }
+
+                        campusTimetableService.courseBatchSave(insertData);
+
+                    }
+
+                }
+            }
+
+
         }
-        return wv;
     }
 }

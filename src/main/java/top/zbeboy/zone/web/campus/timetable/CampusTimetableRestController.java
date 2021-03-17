@@ -24,7 +24,6 @@ import top.zbeboy.zbase.vo.campus.timetable.CampusCourseDataAddVo;
 import top.zbeboy.zbase.vo.campus.timetable.CampusCourseDataEditVo;
 import top.zbeboy.zbase.vo.campus.timetable.CampusCourseReleaseAddVo;
 import top.zbeboy.zbase.vo.campus.timetable.CampusCourseReleaseEditVo;
-import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
 import top.zbeboy.zone.service.campus.CampusTimetableEduService;
 import top.zbeboy.zone.service.educational.TimetableService;
 import top.zbeboy.zone.web.campus.common.CampusUrlCommon;
@@ -320,9 +319,8 @@ public class CampusTimetableRestController {
      *
      * @return 数据
      */
-    @ApiLoggingRecord(remark = "新教务课表学期", channel = Workbook.channel.WEB, needLogin = true)
     @GetMapping("/web/campus/timetable/new-edu/semesters")
-    public ResponseEntity<Map<String, Object>> semesters(@RequestParam("username") String username, @RequestParam("password") String password, HttpServletRequest request) {
+    public ResponseEntity<Map<String, Object>> semesters(@RequestParam("username") String username, @RequestParam("password") String password) {
         Select2Data select2Data = Select2Data.of();
         try {
             List<Map<String, Object>> semesters = timetableService.semesters(username, password);
@@ -393,6 +391,26 @@ public class CampusTimetableRestController {
             }
         } catch (Exception e) {
             ajaxUtil.fail().msg("生成文件异常，error: " + e.getMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 导入教务课表
+     *
+     * @return 数据
+     */
+    @GetMapping("/web/campus/timetable/new-edu/save")
+    public ResponseEntity<Map<String, Object>> timetableImportSave(@RequestParam("username") String username, @RequestParam("password") String password,
+                                                                   @RequestParam("schoolYear") int schoolYear, HttpServletRequest request) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        try {
+            Users users = SessionUtil.getUserFromSession();
+            campusTimetableEduService.sync(username, password, users.getUsername(), schoolYear, request);
+            ajaxUtil.success().msg("导入成功");
+        } catch (Exception e) {
+            ajaxUtil.fail().msg("导入失败，error: " + e.getMessage());
+            log.error("教务课表导入错误", e);
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }

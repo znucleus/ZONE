@@ -358,6 +358,7 @@ public class TimetableServiceImpl implements TimetableService {
         }
     }
 
+    @Override
     public Map<String, Object> eduData(String username, String password, boolean getAllSemesters, int semesterId) throws Exception {
         final String loginSaltUri = "http://cityjw.kust.edu.cn/integration/login-salt";
         final String loginUri = "http://cityjw.kust.edu.cn/integration/login";
@@ -645,7 +646,8 @@ public class TimetableServiceImpl implements TimetableService {
      * @param weekDay 那一周的周几
      * @return 时间
      */
-    private java.util.Date calcDeviationDate(java.sql.Date date, int week, int weekDay) {
+    @Override
+    public java.util.Date calcDeviationDate(java.sql.Date date, int week, int weekDay) {
         int deviationWeek = week - 1;
         org.joda.time.DateTime dt1 = new org.joda.time.DateTime(date);
         if (deviationWeek > 0) {
@@ -655,7 +657,8 @@ public class TimetableServiceImpl implements TimetableService {
         return dt1.toDate();
     }
 
-    private WeekDay getWeekday(int weekday) {
+    @Override
+    public WeekDay getWeekday(int weekday) {
         WeekDay wv;
         switch (weekday) {
             case 1:
@@ -685,7 +688,8 @@ public class TimetableServiceImpl implements TimetableService {
         return wv;
     }
 
-    private String getStartTime(String startUnit) {
+    @Override
+    public String getStartTime(String startUnit) {
         String su = "";
         if (StringUtils.isNotBlank(startUnit)) {
             switch (NumberUtils.toInt(startUnit)) {
@@ -731,7 +735,7 @@ public class TimetableServiceImpl implements TimetableService {
 
     }
 
-    private String getEndTime(String endUnit) {
+    public String getEndTime(String endUnit) {
         String eu = "";
         if (StringUtils.isNotBlank(endUnit)) {
             switch (NumberUtils.toInt(endUnit)) {

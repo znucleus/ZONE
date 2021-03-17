@@ -291,6 +291,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
                         $('#shareNumber').text('');
                         $('#qrCodeUrl').attr('src', '');
                         timetableSelect2.val('').trigger("change");
+                        courseData = [];
                         $(param_id.timetable).empty();
                         for (var i = 1; i <= 7; i++) {
                             $('#week' + i).empty();

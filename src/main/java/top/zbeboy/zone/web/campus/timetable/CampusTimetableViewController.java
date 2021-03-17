@@ -67,6 +67,16 @@ public class CampusTimetableViewController {
     }
 
     /**
+     * 导入教务课表
+     *
+     * @return 导入教务课表
+     */
+    @GetMapping("/web/campus/timetable/edu/add")
+    public String eduAdd() {
+        return "web/campus/timetable/timetable_release_edu::#page-wrapper";
+    }
+
+    /**
      * 编辑页面
      *
      * @param modelMap 页面对象
