@@ -99,7 +99,6 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
             }
         });
 
-        var effectiveCourseCalendarAjaxFinish = false;
         var curWeeks = -1;
 
         function initScreen() {
@@ -115,6 +114,10 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
                     $('#simpleData').css('display', 'none');
                 }
             }
+
+            var weekday = Number($('#weekday').val());
+            $('#week' + weekday).addClass('table-primary');
+            $('.carousel').carousel(weekday - 1);
         }
 
         function initMobileCarousel() {
@@ -150,6 +153,8 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
                         $('#weeks').text('第' + data.mapResult.curWeeks + '周（共' + data.mapResult.totalWeeks + '周）');
                         $('#startDate').text('开始日期：' + data.mapResult.startDate);
                         $('#endDate').text('结束日期：' + data.mapResult.endDate);
+
+                        curWeeks = data.mapResult.curWeeks;
                         initCourseData(data.mapResult.campusCourseReleaseId);
                     } else {
                         $('#yearAndTerm').text('');
@@ -166,7 +171,6 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
         }
 
         var courseData = [];
-        var effectiveCourseDataAjaxFinish = false;
 
         function initCourseData(id) {
             $.get(ajax_url.courses + '/' + id, function (data) {
@@ -177,11 +181,6 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
                 if (data.state) {
                     courseData = data.listResult;
                     showEffectiveCourse();
-                    $('#week' + data.weekday).addClass('table-primary');
-                    if (!init_configure.init_simple_screen) {
-                        $('.carousel').carousel(data.weekday - 1);
-                        init_configure.init_simple_screen = true;
-                    }
                 }
             });
         }

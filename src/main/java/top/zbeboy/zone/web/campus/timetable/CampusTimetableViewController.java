@@ -11,6 +11,7 @@ import top.zbeboy.zbase.feign.campus.timetable.CampusTimetableService;
 import top.zbeboy.zbase.feign.data.StaffService;
 import top.zbeboy.zbase.feign.data.StudentService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
+import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zone.web.campus.common.CampusUrlCommon;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 import top.zbeboy.zone.web.util.SessionUtil;
@@ -22,15 +23,6 @@ import java.util.Optional;
 public class CampusTimetableViewController {
 
     @Resource
-    private UsersTypeService usersTypeService;
-
-    @Resource
-    private StudentService studentService;
-
-    @Resource
-    private StaffService staffService;
-
-    @Resource
     private CampusTimetableService campusTimetableService;
 
     /**
@@ -39,7 +31,8 @@ public class CampusTimetableViewController {
      * @return 课表页面
      */
     @GetMapping("/web/menu/campus/timetable")
-    public String index() {
+    public String index(ModelMap modelMap) {
+        modelMap.addAttribute("weekday", DateTimeUtil.getNowDayOfWeek());
         return "web/campus/timetable/timetable_look::#page-wrapper";
     }
 

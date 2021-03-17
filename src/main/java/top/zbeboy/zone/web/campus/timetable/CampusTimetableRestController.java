@@ -245,7 +245,7 @@ public class CampusTimetableRestController {
         AjaxUtil<CampusCourseData> ajaxUtil = AjaxUtil.of();
         Optional<List<CampusCourseData>> optionalCampusCourseData = campusTimetableService.findCourseByCampusCourseReleaseId(campusCourseReleaseId);
         if (optionalCampusCourseData.isPresent()) {
-            ajaxUtil.success().msg("获取数据成功").list(optionalCampusCourseData.get()).put("weekDay", DateTimeUtil.getNowDayOfWeek());
+            ajaxUtil.success().msg("获取数据成功").list(optionalCampusCourseData.get());
         } else {
             ajaxUtil.fail().msg("获取数据失败");
         }
