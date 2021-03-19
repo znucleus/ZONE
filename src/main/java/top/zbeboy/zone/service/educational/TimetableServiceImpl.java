@@ -597,10 +597,10 @@ public class TimetableServiceImpl implements TimetableService {
                 for (int j = 0; j < arr2.size(); j++) {
                     Map<String, Object> map = new HashMap<>();
                     JSONObject j2 = arr2.getJSONObject(j);
-                    map.put("courseName", j2.getString("courseName"));
-                    map.put("lessonName", j2.getString("lessonName"));
-                    map.put("building", j2.getString("building"));
-                    map.put("room", j2.getString("room"));
+                    map.put("courseName", StringUtils.defaultString(j2.getString("courseName")));
+                    map.put("lessonName", StringUtils.defaultString(j2.getString("lessonName")));
+                    map.put("building", StringUtils.defaultString(j2.getString("building")));
+                    map.put("room", StringUtils.defaultString(j2.getString("room")));
 
                     String weeksStr = j2.getString("weeksStr");
                     if (StringUtils.isNotBlank(weeksStr) && StringUtils.contains(weeksStr, "~")) {
@@ -611,7 +611,7 @@ public class TimetableServiceImpl implements TimetableService {
                         map.put("startWeek", weeksStr);
                     }
 
-                    map.put("weekday", j2.getString("weekday"));
+                    map.put("weekday", StringUtils.defaultString(j2.getString("weekday")));
                     map.put("startUnit", j2.getString("startUnit"));
                     map.put("endUnit", j2.getString("endUnit"));
                     map.put("startTime", getStartTime(j2.getString("startUnit")));
