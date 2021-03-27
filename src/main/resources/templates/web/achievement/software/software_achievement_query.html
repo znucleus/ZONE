@@ -15,12 +15,23 @@
 
             <div class="row">
                 <div class="col-md-12">
+                    <ul class="nav nav-pills nav-fill">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="javascript:" id="queryTab">查询</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="javascript:" id="mySoftwareExamTab">我的成绩</a>
+                        </li>
+                    </ul>
+                    <hr/>
+                </div>
+                <div class="col-md-12" id="queryRegion">
                     <form id="queryForm">
                         <div class="form-group">
                             <label for="selectType">查询类型</label>
                             <select class="form-control" id="selectType" name="selectType">
                                 <option value="0">按准考证号查询</option>
-                                <option value="1">按证件号查询</option>
+                                <option value="1" selected="selected">按证件号查询</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -31,19 +42,19 @@
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
-                            <label for="zjhm">准考证号</label>
-                            <input type="text" class="form-control" placeholder="准考证号" id="zjhm" name="zjhm" />
+                            <label for="zjhm">证件号</label>
+                            <input type="text" class="form-control" placeholder="证件号" id="zjhm" name="zjhm"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label for="xm">姓名</label>
-                            <input type="text" class="form-control" placeholder="姓名" id="xm" name="xm" />
+                            <input type="text" class="form-control" placeholder="姓名" id="xm" name="xm"/>
                             <div class="invalid-feedback"></div>
                         </div>
 
                         <div class="form-row">
                             <div class="col-md-8 col-sm-8">
-                                <input type="text" class="form-control" placeholder="检验码" id="jym" name="jym" />
+                                <input type="text" class="form-control" placeholder="检验码" id="jym" name="jym"/>
                                 <div class="invalid-feedback"></div>
                             </div>
                             <div class="col-md-4 col-sm-4">
@@ -83,7 +94,7 @@
                         </li>
                         <li class="list-group-item">
                             <div class="row">
-                                <div class="col-md-3">姓   名：</div>
+                                <div class="col-md-3">姓 名：</div>
                                 <div class="col-md-9 tx-inverse tx-medium" id="RESULT_XM"></div>
                             </div>
                         </li>
@@ -109,19 +120,67 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="text-center">
-                                        <button type="button" class="btn btn-secondary text-center" id="back">返回</button>
+                                        <button type="button" class="btn btn-secondary text-center" id="back">返回
+                                        </button>
                                     </div>
                                 </div>
                             </div>
                         </li>
                     </ul>
                 </div>
+                <div class="col-md-12" id="mySoftwareRegion" style="display: none">
+                    <p class="text-info">
+                        提示：在<a href="#/users/setting" class="dy_href">设置</a>中完善身份证信息，系统将为您展示历史查询记录。
+                    </p>
+                    <div class="row">
+                        <div class="col-md-12" id="mySoftwareData">
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-<input type="hidden" class="dy_script"
-           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/achievement/software/software_exam_query.js')}"/>
+    <script id="software-achievement-template" type="text/x-handlebars-template">
+        {{#each listResult}}
+        <div class="card mg-t-10 text-dark">
+            <div class="card-header">
+                {{qualificationName}}
+            </div><!-- card-header -->
+            <div class="card-body color-gray-lighter">
+                <div class="row">
+                    <div class="col-md-6">
+                        姓名：{{realName}}
+                    </div>
+                    <div class="col-md-6">
+                        考试时间：{{examDate}}
+                    </div>
+                    <div class="col-md-6">
+                        准考证号：{{admissionNumber}}
+                    </div>
+                    <div class="col-md-6">
+                        证件号：{{idCard}}
+                    </div>
+                    <div class="col-md-4">
+                        上午成绩：{{morningResults}}
+                    </div>
+                    <div class="col-md-4">
+                        下午成绩：{{afternoonResults}}
+                    </div>
+                    <div class="col-md-4">
+                        论文成绩：{{thesisResults}}
+                    </div>
+                </div>
+            </div><!-- card-body -->
+            <div class="card-footer">
+                更新时间：{{createDateStr}}
+            </div><!-- card-footer -->
+        </div><!-- card -->
+        {{/each}}
+    </script>
+
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/achievement/software/software_achievement_query.js')}"/>
 </div>
 <!-- /#page-wrapper -->
 </body>

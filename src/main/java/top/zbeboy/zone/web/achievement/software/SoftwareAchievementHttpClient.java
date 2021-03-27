@@ -28,11 +28,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SoftwareHttpClient {
+public class SoftwareAchievementHttpClient {
 
     private final CloseableHttpClient httpclient;
 
-    public SoftwareHttpClient() {
+    public SoftwareAchievementHttpClient() {
         this.httpclient = HttpClients.createDefault();
     }
 

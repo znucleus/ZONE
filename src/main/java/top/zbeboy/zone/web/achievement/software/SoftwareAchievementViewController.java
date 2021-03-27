@@ -4,7 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class SoftwareViewController {
+public class SoftwareAchievementViewController {
 
     /**
      * 软考成绩
@@ -13,7 +13,7 @@ public class SoftwareViewController {
      */
     @GetMapping("/web/menu/achievement/software/query")
     public String index() {
-        return "web/achievement/software/software_exam_query::#page-wrapper";
+        return "web/achievement/software/software_achievement_query::#page-wrapper";
     }
 
 

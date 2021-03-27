@@ -1,4 +1,4 @@
-//# sourceURL=software_exam_query.js
+//# sourceURL=software_achievement_query.js
 require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active", "select2-zh-CN", "messenger", "jquery.address"],
     function ($, _, tools, Handlebars, Swal, navActive) {
 
@@ -9,6 +9,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             query: web_path + '/web/achievement/software/query/data',
             exam_date: web_path + '/web/achievement/software/query/exam-date',
             captcha: web_path + '/web/achievement/software/query/captcha',
+            history_data: web_path + '/web/achievement/software/query/history',
             page: '/web/menu/achievement/software/query'
         };
 
@@ -55,7 +56,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             param.jym = _.trim($(param_id.jym).val());
         }
 
-        var zjhmText = '准考证号';
+        var zjhmText = '证件号';
         $(param_id.selectType).change(function () {
             var v = Number($(this).val());
             if (v === 0) {
@@ -81,6 +82,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
 
         function init() {
             initExamDate();
+            initHistory();
         }
 
         function initExamDate() {
@@ -94,6 +96,19 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
                 }
                 changeCaptcha();
             });
+        }
+
+        function initHistory() {
+            $.get(ajax_url.history_data, function (data) {
+                if(data.state){
+                    generateHistoryHtml(data);
+                }
+            });
+        }
+
+        function generateHistoryHtml(data){
+            var template = Handlebars.compile($("#software-achievement-template").html());
+            $('#mySoftwareData').html(template(data));
         }
 
         $(button_id.query.id).click(function () {
@@ -112,6 +127,21 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             $('#RESULT_LWCJ').text('');
             $('#result').css('display', 'none');
             $('#queryForm').css('display', '');
+            changeCaptcha();
+        });
+
+        $('#queryTab').click(function (){
+            $(this).addClass('active');
+            $('#mySoftwareExamTab').removeClass('active');
+            $('#queryRegion').css('display','');
+            $('#mySoftwareRegion').css('display','none');
+        });
+
+        $('#mySoftwareExamTab').click(function (){
+            $(this).addClass('active');
+            $('#queryTab').removeClass('active');
+            $('#queryRegion').css('display','none');
+            $('#mySoftwareRegion').css('display','');
         });
 
         function validStage() {
@@ -177,6 +207,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
                     $('#RESULT_LWCJ').text(data.mapResult.data.LWCJ);
                     $('#result').css('display', '');
                     $('#queryForm').css('display', 'none');
+                    initHistory();
                 } else {
                     $('#queryError').text(data.msg);
                 }
