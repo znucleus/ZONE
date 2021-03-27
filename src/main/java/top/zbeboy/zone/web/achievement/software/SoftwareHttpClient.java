@@ -171,6 +171,8 @@ public class SoftwareHttpClient {
         map.put("SWCJ", StringUtils.defaultString(data.getString("SWCJ")));
         // 下午成绩
         map.put("XWCJ", StringUtils.defaultString(data.getString("XWCJ")));
+        // 论文成绩
+        map.put("LWCJ", StringUtils.defaultString(data.getString("LWCJ")));
         // 资格名称
         map.put("ZGMC", StringUtils.defaultString(data.getString("ZGMC")));
         return map;

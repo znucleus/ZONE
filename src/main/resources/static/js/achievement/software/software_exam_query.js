@@ -8,6 +8,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
         var ajax_url = {
             query: web_path + '/web/achievement/software/query/data',
             exam_date: web_path + '/web/achievement/software/query/exam-date',
+            captcha: web_path + '/web/achievement/software/query/captcha',
             page: '/web/menu/achievement/software/query'
         };
 
@@ -68,12 +69,12 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             }
         });
 
-        $('#captcha').click(function (){
+        $('#captcha').click(function () {
             changeCaptcha();
         });
 
-        function changeCaptcha(){
-            $('#captcha').attr('src',web_path + '/web/achievement/software/query/captcha?v=' + Math.random());
+        function changeCaptcha() {
+            $('#captcha').attr('src', ajax_url.captcha + '?v=' + Math.random());
         }
 
         init();
@@ -87,6 +88,10 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
                 $.each(data.listResult, function (i, v) {
                     $(param_id.stage).append($('<option>').val(v).text(v));
                 });
+                if (data.listResult.length > 0) {
+                    var index = data.listResult.length - 1;
+                    $(param_id.stage).val(data.listResult[index])
+                }
                 changeCaptcha();
             });
         }
@@ -96,7 +101,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             validStage();
         });
 
-        $('#back').click(function (){
+        $('#back').click(function () {
             $('#RESULT_KSSJ').text('');
             $('#RESULT_ZGMC').text('');
             $('#RESULT_ZKZH').text('');
@@ -104,8 +109,9 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             $('#RESULT_XM').text('');
             $('#RESULT_SWCJ').text('');
             $('#RESULT_XWCJ').text('');
-            $('#result').css('display','none');
-            $('#queryForm').css('display','');
+            $('#RESULT_LWCJ').text('');
+            $('#result').css('display', 'none');
+            $('#queryForm').css('display', '');
         });
 
         function validStage() {
@@ -168,8 +174,9 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
                     $('#RESULT_XM').text(data.mapResult.data.XM);
                     $('#RESULT_SWCJ').text(data.mapResult.data.SWCJ);
                     $('#RESULT_XWCJ').text(data.mapResult.data.XWCJ);
-                    $('#result').css('display','');
-                    $('#queryForm').css('display','none');
+                    $('#RESULT_LWCJ').text(data.mapResult.data.LWCJ);
+                    $('#result').css('display', '');
+                    $('#queryForm').css('display', 'none');
                 } else {
                     $('#queryError').text(data.msg);
                 }
