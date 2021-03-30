@@ -288,7 +288,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "select2-zh-CN", "messen
                         if (schoolYear && schoolYear !== '') {
                             schoolYearSelect2.val(schoolYear).trigger("change");
                             timetableSemesterId = schoolYear;
-                        }  else {
+                        } else {
                             if (data.results.length > 0) {
                                 schoolYearSelect2.val(data.results[0].id).trigger("change");
                                 timetableSemesterId = data.results[0].id;
@@ -313,7 +313,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "select2-zh-CN", "messen
         function getSchoolYearInfo(timetableSemesterId) {
             if (timetableSemesterId && timetableSemesterId !== '') {
                 $.get(ajax_url.school_year_info + '/' + timetableSemesterId, function (data) {
-                    if(data.state){
+                    if (data.state) {
                         $('#week').text('今日 ' + tools.weekday(data.mapResult.week));
                         $('#weeks').text('第' + data.mapResult.curWeeks + '周（共' + data.mapResult.totalWeeks + '周）');
                         $('#startDate').text('开始日期：' + data.mapResult.startDate);
@@ -332,26 +332,15 @@ require(["jquery", "tools", "handlebars", "nav.active", "select2-zh-CN", "messen
         function cleanData() {
             // 清空之前的数据
             for (var i = 1; i <= 7; i++) {
-                for (var j = 1; j <= 13; j++) {
-                    $('#week_' + i + '_' + j).empty();
-                }
+                $('#week' + i).empty();
             }
         }
 
         function generateData(data) {
             cleanData();
             $.each(data.listResult, function (i, v) {
-                for (var j = 1; j <= 13; j++) {
-                    week(j, v);
-                }
+                generateDataHtml('#week' + v.weekday, v);
             })
-        }
-
-        function week(j, v) {
-            var isRight = j >= v.startUnit && j <= v.endUnit;
-            if (isRight) {
-                generateDataHtml('#week_' + v.weekday + '_' + j, v);
-            }
         }
 
         function generateDataHtml(target, v) {
@@ -367,16 +356,32 @@ require(["jquery", "tools", "handlebars", "nav.active", "select2-zh-CN", "messen
                 }
                 return new Handlebars.SafeString(Handlebars.escapeExpression(weekUnit));
             });
-            Handlebars.registerHelper('sectionUnit', function () {
-                var sectionUnit = '';
-                var startUnit = this.startUnit;
-                var endUnit = this.endUnit;
-                if (!endUnit || endUnit === '') {
-                    sectionUnit = startUnit + '节';
-                } else {
-                    sectionUnit = startUnit + '-' + endUnit + '节';
+            Handlebars.registerHelper('color', function () {
+                var v = '';
+                switch (this.weekday) {
+                    case 1:
+                        v = 'primary';
+                        break;
+                    case 2:
+                        v = 'success';
+                        break;
+                    case 3:
+                        v = 'info';
+                        break;
+                    case 4:
+                        v = 'secondary';
+                        break;
+                    case 5:
+                        v = 'dark';
+                        break;
+                    case 6:
+                        v = 'warning';
+                        break;
+                    case 7:
+                        v = 'danger';
+                        break;
                 }
-                return new Handlebars.SafeString(Handlebars.escapeExpression(sectionUnit));
+                return new Handlebars.SafeString(Handlebars.escapeExpression(v));
             });
             $(target).append(template(v));
         }

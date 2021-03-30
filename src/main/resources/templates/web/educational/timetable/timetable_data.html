@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8"/>
 </head>
@@ -85,194 +85,50 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="col-md-12 mt-2">
-                    <div class="table-responsive">
-                        <table class="table table-hover table-bordered">
-                            <thead>
-                            <tr>
-                                <th>节次</th>
-                                <th>星期一</th>
-                                <th>星期二</th>
-                                <th>星期三</th>
-                                <th>星期四</th>
-                                <th>星期五</th>
-                                <th>星期六</th>
-                                <th>星期天</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <th scope="row">
-                                    第一大节<br/>
-                                    8:00-8:45
-                                </th>
-                                <td id="week_1_1" class="text-center"></td>
-                                <td id="week_2_1" class="text-center"></td>
-                                <td id="week_3_1" class="text-center"></td>
-                                <td id="week_4_1" class="text-center"></td>
-                                <td id="week_5_1" class="text-center"></td>
-                                <td id="week_6_1" class="text-center"></td>
-                                <td id="week_7_1" class="text-center"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">
-                                    第二大节<br/>
-                                    8:50-9:35
-                                </th>
-                                <td id="week_1_2" class="text-center">
-                                </td>
-                                <td id="week_2_2" class="text-center"></td>
-                                <td id="week_3_2" class="text-center"></td>
-                                <td id="week_4_2" class="text-center"></td>
-                                <td id="week_5_2" class="text-center"></td>
-                                <td id="week_6_2" class="text-center"></td>
-                                <td id="week_7_2" class="text-center"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">
-                                    第三大节<br/>
-                                    9:50-10:35
-                                </th>
-                                <td id="week_1_3" class="text-center"></td>
-                                <td id="week_2_3" class="text-center"></td>
-                                <td id="week_3_3" class="text-center"></td>
-                                <td id="week_4_3" class="text-center"></td>
-                                <td id="week_5_3" class="text-center"></td>
-                                <td id="week_6_3" class="text-center"></td>
-                                <td id="week_7_3" class="text-center"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">
-                                    第四大节<br/>
-                                    10:40-11:25
-                                </th>
-                                <td id="week_1_4" class="text-center"></td>
-                                <td id="week_2_4" class="text-center"></td>
-                                <td id="week_3_4" class="text-center"></td>
-                                <td id="week_4_4" class="text-center"></td>
-                                <td id="week_5_4" class="text-center"></td>
-                                <td id="week_6_4" class="text-center"></td>
-                                <td id="week_7_4" class="text-center"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">
-                                    第五大节<br/>
-                                    11:30-12:15
-                                </th>
-                                <td id="week_1_5" class="text-center"></td>
-                                <td id="week_2_5" class="text-center"></td>
-                                <td id="week_3_5" class="text-center"></td>
-                                <td id="week_4_5" class="text-center"></td>
-                                <td id="week_5_5" class="text-center"></td>
-                                <td id="week_6_5" class="text-center"></td>
-                                <td id="week_7_5" class="text-center"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">
-                                    第六大节<br/>
-                                    13:30-14:15
-                                </th>
-                                <td id="week_1_6" class="text-center"></td>
-                                <td id="week_2_6" class="text-center"></td>
-                                <td id="week_3_6" class="text-center"></td>
-                                <td id="week_4_6" class="text-center"></td>
-                                <td id="week_5_6" class="text-center"></td>
-                                <td id="week_6_6" class="text-center"></td>
-                                <td id="week_7_6" class="text-center"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">
-                                    第七大节<br/>
-                                    14:20-15:05
-                                </th>
-                                <td id="week_1_7" class="text-center"></td>
-                                <td id="week_2_7" class="text-center"></td>
-                                <td id="week_3_7" class="text-center"></td>
-                                <td id="week_4_7" class="text-center"></td>
-                                <td id="week_5_7" class="text-center"></td>
-                                <td id="week_6_7" class="text-center"></td>
-                                <td id="week_7_7" class="text-center"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">
-                                    第八大节<br/>
-                                    15:20-16:05
-                                </th>
-                                <td id="week_1_8" class="text-center"></td>
-                                <td id="week_2_8" class="text-center"></td>
-                                <td id="week_3_8" class="text-center"></td>
-                                <td id="week_4_8" class="text-center"></td>
-                                <td id="week_5_8" class="text-center"></td>
-                                <td id="week_6_8" class="text-center"></td>
-                                <td id="week_7_8" class="text-center"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">
-                                    第九大节<br/>
-                                    16:10-16:55
-                                </th>
-                                <td id="week_1_9" class="text-center"></td>
-                                <td id="week_2_9" class="text-center"></td>
-                                <td id="week_3_9" class="text-center"></td>
-                                <td id="week_4_9" class="text-center"></td>
-                                <td id="week_5_9" class="text-center"></td>
-                                <td id="week_6_9" class="text-center"></td>
-                                <td id="week_7_9" class="text-center"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">
-                                    第十大节<br/>
-                                    17:00-17:45
-                                </th>
-                                <td id="week_1_10" class="text-center"></td>
-                                <td id="week_2_10" class="text-center"></td>
-                                <td id="week_3_10" class="text-center"></td>
-                                <td id="week_4_10" class="text-center"></td>
-                                <td id="week_5_10" class="text-center"></td>
-                                <td id="week_6_10" class="text-center"></td>
-                                <td id="week_7_10" class="text-center"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">
-                                    第十一大节<br/>
-                                    19:00-19:45
-                                </th>
-                                <td id="week_1_11" class="text-center"></td>
-                                <td id="week_2_11" class="text-center"></td>
-                                <td id="week_3_11" class="text-center"></td>
-                                <td id="week_4_11" class="text-center"></td>
-                                <td id="week_5_11" class="text-center"></td>
-                                <td id="week_6_11" class="text-center"></td>
-                                <td id="week_7_11" class="text-center"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">
-                                    第十二大节<br/>
-                                    19:50-20:35
-                                </th>
-                                <td id="week_1_12" class="text-center"></td>
-                                <td id="week_2_12" class="text-center"></td>
-                                <td id="week_3_12" class="text-center"></td>
-                                <td id="week_4_12" class="text-center"></td>
-                                <td id="week_5_12" class="text-center"></td>
-                                <td id="week_6_12" class="text-center"></td>
-                                <td id="week_7_12" class="text-center"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">
-                                    第十三大节<br/>
-                                    20:40-21:25
-                                </th>
-                                <td id="week_1_13" class="text-center"></td>
-                                <td id="week_2_13" class="text-center"></td>
-                                <td id="week_3_13" class="text-center"></td>
-                                <td id="week_4_13" class="text-center"></td>
-                                <td id="week_5_13" class="text-center"></td>
-                                <td id="week_6_13" class="text-center"></td>
-                                <td id="week_7_13" class="text-center"></td>
-                            </tr>
-                            </tbody>
-                        </table>
+                    <div class="row">
+                        <div class="col-xl-10 col-lg-10 col-md-9 col-sm-8 col-8">
+                            <h4 id="list-item-1" class="text-primary">星期一</h4>
+                            <hr/>
+                            <div class="row" id="week1">
+                            </div>
+                            <h4 id="list-item-2" class="text-success">星期二</h4>
+                            <hr/>
+                            <div class="row" id="week2">
+                            </div>
+                            <h4 id="list-item-3" class="text-info">星期三</h4>
+                            <hr/>
+                            <div class="row" id="week3">
+                            </div>
+                            <h4 id="list-item-4" class="text-secondary">星期四</h4>
+                            <hr/>
+                            <div class="row" id="week4">
+                            </div>
+                            <h4 id="list-item-5" class="text-dark">星期五</h4>
+                            <hr/>
+                            <div class="row" id="week5">
+                            </div>
+                            <h4 id="list-item-6" class="text-warning">星期六</h4>
+                            <hr/>
+                            <div class="row" id="week6">
+                            </div>
+                            <h4 id="list-item-7" class="text-danger">星期天</h4>
+                            <hr/>
+                            <div class="row" id="week7">
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-2 col-md-3 col-sm-4 col-4 mg-t-50">
+                            <div id="list-example" class="list-group sticky-top" style="top:15%;">
+                                <a class="list-group-item list-group-item-action" href="javascript:;" onclick="document.getElementById('list-item-1').scrollIntoView({block:'center'});return false;">星期一</a>
+                                <a class="list-group-item list-group-item-action" href="javascript:;" onclick="document.getElementById('list-item-2').scrollIntoView({block:'center'});return false;">星期二</a>
+                                <a class="list-group-item list-group-item-action" href="javascript:;" onclick="document.getElementById('list-item-3').scrollIntoView({block:'center'});return false;">星期三</a>
+                                <a class="list-group-item list-group-item-action" href="javascript:;" onclick="document.getElementById('list-item-4').scrollIntoView({block:'center'});return false;">星期四</a>
+                                <a class="list-group-item list-group-item-action" href="javascript:;" onclick="document.getElementById('list-item-5').scrollIntoView({block:'center'});return false;">星期五</a>
+                                <a class="list-group-item list-group-item-action" href="javascript:;" onclick="document.getElementById('list-item-6').scrollIntoView({block:'center'});return false;">星期六</a>
+                                <a class="list-group-item list-group-item-action" href="javascript:;" onclick="document.getElementById('list-item-7').scrollIntoView({block:'center'});return false;">星期天</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -280,24 +136,18 @@
     </div>
 
     <script id="timetable-template" type="text/x-handlebars-template">
-        <div class="row" style="border-bottom:1px dashed #000;">
-            <div class="col-12 tx-black">
-                {{courseName}}
-            </div>
-            <div class="col-12 tx-warning">
-                {{room}}
-            </div>
-            <div class="col-12 tx-teal">
-                {{lessonName}}
-            </div>
-            <div class="col-12 tx-primary">
-                {{teachers}}
-            </div>
-            <div class="col-12 tx-danger">
-                （{{weekUnit}}）
-            </div>
-            <div class="col-12 tx-purple">
-                （{{sectionUnit}}）
+        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 col-12">
+            <div class="card text-white bg-{{color}} mb-3">
+                <div class="card-body">
+                    <h5 class="card-title text-white">{{courseName}}</h5>
+                    <p class="card-text">
+                        {{room}}<br/>
+                        {{lessonName}}<br/>
+                        {{teachers}}<br/>
+                        ({{weekUnit}})<br/>
+                        {{startTime}}-{{endTime}}
+                    </p>
+                </div>
             </div>
         </div>
     </script>
