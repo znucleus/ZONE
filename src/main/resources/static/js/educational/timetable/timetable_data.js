@@ -38,7 +38,8 @@ require(["jquery", "tools", "handlebars", "nav.active", "select2-zh-CN", "messen
             LESSON_NAME: 'EDUCATIONAL_TIMETABLE_LESSON_NAME_SEARCH',
             ROOM: 'EDUCATIONAL_TIMETABLE_ROOM_SEARCH',
             TEACHER_NAME: 'EDUCATIONAL_TIMETABLE_TEACHER_NAME_SEARCH',
-            SCHOOL_YEAR: 'EDUCATIONAL_TIMETABLE_SCHOOL_YEAR_SEARCH'
+            SCHOOL_YEAR: 'EDUCATIONAL_TIMETABLE_SCHOOL_YEAR_SEARCH',
+            SHOW_EFFECTIVE_COURSE: 'EDUCATIONAL_TIMETABLE_SHOW_EFFECTIVE_COURSE'
         };
 
         /*
@@ -155,10 +156,21 @@ require(["jquery", "tools", "handlebars", "nav.active", "select2-zh-CN", "messen
          * 初始化数据
          */
         function init() {
+            initShowEffectiveCourse();
             initSchoolYear();
             initSelect2();
             initSearchContent();
-            initData();
+        }
+
+        function initShowEffectiveCourse() {
+            if (localStorage) {
+                var showEffectiveCourse = localStorage.getItem(webStorageKey.SHOW_EFFECTIVE_COURSE);
+                if (Number(showEffectiveCourse) === 1) {
+                    $('#showEffectiveCourse').prop('checked', true);
+                } else {
+                    $('#showEffectiveCourse').prop('checked', false);
+                }
+            }
         }
 
         function initSearchContent() {
@@ -196,11 +208,13 @@ require(["jquery", "tools", "handlebars", "nav.active", "select2-zh-CN", "messen
             }
         }
 
+        var courseData = [];
         function initData() {
             tools.dataLoading();
             $.get(ajax_url.data, param, function (data) {
                 tools.dataEndLoading();
-                generateData(data);
+                courseData = data.listResult;
+                showEffectiveCourse();
             });
         }
 
@@ -310,6 +324,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "select2-zh-CN", "messen
             });
         }
 
+        var curWeeks = -1;
         function getSchoolYearInfo(timetableSemesterId) {
             if (timetableSemesterId && timetableSemesterId !== '') {
                 $.get(ajax_url.school_year_info + '/' + timetableSemesterId, function (data) {
@@ -318,6 +333,9 @@ require(["jquery", "tools", "handlebars", "nav.active", "select2-zh-CN", "messen
                         $('#weeks').text('第' + data.mapResult.curWeeks + '周（共' + data.mapResult.totalWeeks + '周）');
                         $('#startDate').text('开始日期：' + data.mapResult.startDate);
                         $('#endDate').text('结束日期：' + data.mapResult.endDate);
+
+                        curWeeks = data.mapResult.curWeeks;
+                        initData();
                     }
                 });
             }
@@ -334,13 +352,6 @@ require(["jquery", "tools", "handlebars", "nav.active", "select2-zh-CN", "messen
             for (var i = 1; i <= 7; i++) {
                 $('#week' + i).empty();
             }
-        }
-
-        function generateData(data) {
-            cleanData();
-            $.each(data.listResult, function (i, v) {
-                generateDataHtml('#week' + v.weekday, v);
-            })
         }
 
         function generateDataHtml(target, v) {
@@ -404,4 +415,44 @@ require(["jquery", "tools", "handlebars", "nav.active", "select2-zh-CN", "messen
 
             });
         });
+
+        $('#showEffectiveCourse').click(function () {
+            if ($(this).prop('checked')) {
+                if (localStorage) {
+                    localStorage.setItem(webStorageKey.SHOW_EFFECTIVE_COURSE, "1");
+                }
+            } else {
+                if (localStorage) {
+                    localStorage.setItem(webStorageKey.SHOW_EFFECTIVE_COURSE, "0");
+                }
+            }
+
+            showEffectiveCourse();
+        });
+
+        function showEffectiveCourse() {
+            // 显示有效课程
+            cleanData();
+            if ($('#showEffectiveCourse').prop('checked')) {
+                $.each(courseData, function (i, v) {
+                    // 显示有效课程
+                    var startWeek = v.startWeek;
+                    var endWeek = v.endWeek;
+                    if(endWeek && endWeek !== ''){
+                        if (startWeek <= curWeeks && endWeek >= curWeeks) {
+                            generateDataHtml('#week' + v.weekday, v);
+                        }
+                    } else {
+                        if (startWeek === curWeeks) {
+                            generateDataHtml('#week' + v.weekday, v);
+                        }
+                    }
+
+                });
+            } else {
+                $.each(courseData, function (i, v) {
+                    generateDataHtml('#week' + v.weekday, v);
+                });
+            }
+        }
     });
