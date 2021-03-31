@@ -462,10 +462,18 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
                     // 显示有效课程
                     var startWeek = v.startWeek;
                     var endWeek = v.endWeek;
-                    if (startWeek <= curWeeks && endWeek >= curWeeks) {
-                        $('#week' + v.weekday).append(defaultHtml(v));
-                        $('#simpleWeek' + v.weekday).append(simpleHtml(v));
+                    if(endWeek && endWeek !== ''){
+                        if (startWeek <= curWeeks && endWeek >= curWeeks) {
+                            $('#week' + v.weekday).append(defaultHtml(v));
+                            $('#simpleWeek' + v.weekday).append(simpleHtml(v));
+                        }
+                    } else {
+                        if (startWeek === curWeeks) {
+                            $('#week' + v.weekday).append(defaultHtml(v));
+                            $('#simpleWeek' + v.weekday).append(simpleHtml(v));
+                        }
                     }
+
                 });
             } else {
                 $.each(courseData, function (i, v) {
