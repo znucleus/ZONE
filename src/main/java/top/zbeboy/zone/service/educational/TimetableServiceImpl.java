@@ -459,7 +459,7 @@ public class TimetableServiceImpl implements TimetableService {
 
     private Map<String, Object> getSemesters(String str, int semesterId) {
         Map<String, Object> params = new HashMap<>();
-        Document doc = Jsoup.parse(str, CharEncoding.UTF_8);
+        Document doc = Jsoup.parse(str);
 
         params.put("id", semesterId);
         Elements elements = doc.getElementsByTag("script");
@@ -499,7 +499,7 @@ public class TimetableServiceImpl implements TimetableService {
 
     private List<Map<String, Object>> getAllSemesters(String str) {
         List<Map<String, Object>> list = new ArrayList<>();
-        Document doc = Jsoup.parse(str, CharEncoding.UTF_8);
+        Document doc = Jsoup.parse(str);
 
         String valueId = "";
         boolean isV = false;
@@ -566,7 +566,7 @@ public class TimetableServiceImpl implements TimetableService {
 
     private List<Map<String, Object>> getTableData(Integer id, String str) {
         List<Map<String, Object>> firstList = new ArrayList<>();
-        Document doc = Jsoup.parse(str, CharEncoding.UTF_8);
+        Document doc = Jsoup.parse(str);
         Elements elements = doc.getElementsByTag("script");
 
         String studentTableVms = "";

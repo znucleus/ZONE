@@ -96,7 +96,7 @@ public class TestNewEduTimetable {
     }
 
     public String getSemesters(String str) throws IOException {
-        Document doc = Jsoup.parse(str, CharEncoding.UTF_8);
+        Document doc = Jsoup.parse(str);
         // 获取搜索 开课学年 下拉框
         System.out.println("获取学年下拉框:");
         String valueId = "";
@@ -150,7 +150,7 @@ public class TestNewEduTimetable {
     }
 
     public void getTableData(String str) throws IOException {
-        Document doc = Jsoup.parse(str, CharEncoding.UTF_8);
+        Document doc = Jsoup.parse(str);
         Elements elements = doc.getElementsByTag("script");
 
         String studentTableVms = "";

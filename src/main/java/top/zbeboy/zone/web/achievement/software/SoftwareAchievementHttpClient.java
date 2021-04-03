@@ -23,10 +23,7 @@ import org.springframework.util.FileCopyUtils;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SoftwareAchievementHttpClient {
 
@@ -39,7 +36,7 @@ public class SoftwareAchievementHttpClient {
     public void captcha(HttpServletResponse res) throws IOException {
         HttpGet httpget = new HttpGet("https://query.ruankao.org.cn//score/captcha");
         httpget.setHeader("Referer", "https://query.ruankao.org.cn/score/main");
-
+        httpget.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36");
         HttpResponse response = httpclient.execute(httpget);
         if (response.getStatusLine().getStatusCode() == 200) {
             HttpEntity entity = response.getEntity();
@@ -53,7 +50,7 @@ public class SoftwareAchievementHttpClient {
         List<String> list = new ArrayList<>();
         HttpGet httpget = new HttpGet("https://query.ruankao.org.cn/score/main");
         httpget.setHeader("Referer", "https://query.ruankao.org.cn/score/main");
-
+        httpget.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36");
         HttpResponse response = httpclient.execute(httpget);
         if (response.getStatusLine().getStatusCode() == 200) {
             HttpEntity entity = response.getEntity();
@@ -68,6 +65,7 @@ public class SoftwareAchievementHttpClient {
         map.put("hasError", false);
         HttpPost post = new HttpPost("https://query.ruankao.org.cn//score/VerifyCaptcha");
         post.setHeader("Referer", "https://query.ruankao.org.cn/score/main");
+        post.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36");
         List<BasicNameValuePair> parameters = new ArrayList<>();
         BasicNameValuePair param1 = new BasicNameValuePair("captcha", param.get("captcha"));
         parameters.add(param1);
@@ -104,6 +102,7 @@ public class SoftwareAchievementHttpClient {
         post.setHeader("Referer", "https://query.ruankao.org.cn/score/main");
         post.setHeader("Host", "query.ruankao.org.cn");
         post.setHeader("Origin", "https://query.ruankao.org.cn");
+        post.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36");
         List<BasicNameValuePair> parameters = new ArrayList<>();
         BasicNameValuePair param1 = new BasicNameValuePair("jym", param.get("captcha"));
         parameters.add(param1);
@@ -148,10 +147,12 @@ public class SoftwareAchievementHttpClient {
 
     private List<String> getExamDate(String str){
         List<String> list = new ArrayList<>();
-        Document doc = Jsoup.parse(str, CharEncoding.UTF_8);
+        Document doc = Jsoup.parse(str);
         Elements elements = doc.getElementsByAttribute("data-value");
-        for (Element element : elements) {
-            list.add(StringUtils.trim(element.text()));
+        if(Objects.nonNull(elements)){
+            for (Element element : elements) {
+                list.add(StringUtils.trim(element.text()));
+            }
         }
         return list;
     }
