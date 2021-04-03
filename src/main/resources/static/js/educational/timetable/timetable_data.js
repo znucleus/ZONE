@@ -11,7 +11,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "select2-zh-CN", "messen
             room: web_path + '/web/educational/timetable/room',
             teacher_name: web_path + '/web/educational/timetable/teacher-name',
             school_year: web_path + '/web/educational/timetable/school-year',
-            timetable_import: web_path + '/web/educational/timetable/import',
+            timetable_import: '/web/educational/timetable/import',
             school_year_info: web_path + '/web/educational/timetable/school-year-info',
             generate_ics: web_path + '/web/educational/timetable/generate-ics',
             page: '/web/menu/educational/timetable'
