@@ -3,10 +3,13 @@ package top.zbeboy.zone.web.achievement.student;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -23,27 +26,27 @@ import java.util.*;
 
 public class StudentAchievementHttpClient {
 
-    private final CloseableHttpClient httpclient;
-
-    public StudentAchievementHttpClient() {
-        this.httpclient = HttpClients.createDefault();
-    }
-
-    public void captcha(HttpServletResponse res) throws IOException {
+    public CookieStore captcha(HttpServletResponse res) throws IOException {
+        CookieStore cookieStore = null;
+        CloseableHttpClient httpclient = HttpClients.createDefault();
+        HttpClientContext httpClientContext = HttpClientContext.create();
         HttpGet httpget = new HttpGet("http://cityxxpt.kmust.edu.cn/GXGLPT/validate.jsp");
         httpget.setHeader("Referer", "http://cityxxpt.kmust.edu.cn/GXGLPT/Login.jsp");
         httpget.setHeader("Host", "cityxxpt.kmust.edu.cn");
         httpget.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36");
-        HttpResponse response = httpclient.execute(httpget);
+        HttpResponse response = httpclient.execute(httpget, httpClientContext);
         if (response.getStatusLine().getStatusCode() == 200) {
             HttpEntity entity = response.getEntity();
             res.setContentType(MediaType.IMAGE_JPEG_VALUE);
             FileCopyUtils.copy(EntityUtils.toByteArray(entity), res.getOutputStream());
+            cookieStore = httpClientContext.getCookieStore();
         }
-
+        httpclient.close();
+        return cookieStore;
     }
 
-    public Map<String, Object> login(Map<String, String> param) throws IOException {
+    public Map<String, Object> login(CookieStore cookieStore, Map<String, String> param) throws IOException {
+        CloseableHttpClient httpclient = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
         Map<String, Object> map = new HashMap<>();
         map.put("hasError", false);
         HttpPost post = new HttpPost("http://cityxxpt.kmust.edu.cn/GXGLPT/LoginActionLogin.do");
@@ -70,17 +73,17 @@ public class StudentAchievementHttpClient {
         HttpResponse response = httpclient.execute(post);
 
         if (response.getStatusLine().getStatusCode() == 200) {
-            map = query();
+            map = query(httpclient);
         } else {
             map.put("hasError", true);
             map.put("statusCode", response.getStatusLine().getStatusCode());
             map.put("reasonPhrase", response.getStatusLine().getReasonPhrase());
         }
-
+        httpclient.close();
         return map;
     }
 
-    public Map<String, Object> query() throws IOException {
+    public Map<String, Object> query(CloseableHttpClient httpclient) throws IOException {
         Map<String, Object> map = new HashMap<>();
         map.put("hasError", false);
         HttpGet httpget = new HttpGet("http://cityxxpt.kmust.edu.cn/GXGLPT/JXGL/CJGL/CJGL_XS/CjglxscjViewCs.do");
@@ -189,9 +192,5 @@ public class StudentAchievementHttpClient {
             }
         }
         return list;
-    }
-
-    public CloseableHttpClient getHttpclient() {
-        return httpclient;
     }
 }

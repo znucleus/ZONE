@@ -2,8 +2,8 @@ package top.zbeboy.zone.web.achievement.student;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.pool2.KeyedObjectPool;
-import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
+import org.apache.http.client.CookieStore;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.bean.achievement.student.StudentAchievementBean;
 import top.zbeboy.zbase.bean.data.student.StudentBean;
+import top.zbeboy.zbase.config.CacheBook;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.StudentAchievement;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
@@ -28,11 +29,10 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 public class StudentAchievementRestController {
-
-    KeyedObjectPool<String, StudentAchievementHttpClient> objectPool = new GenericKeyedObjectPool<>(new StudentAchievementHttpClientFactory());
 
     @Resource
     private StudentAchievementService studentAchievementService;
@@ -43,6 +43,9 @@ public class StudentAchievementRestController {
     @Resource
     private StudentService studentService;
 
+    @Resource(name = "redisTemplate")
+    private ValueOperations<String, CookieStore> operations;
+
     /**
      * 获取验证码
      *
@@ -52,11 +55,17 @@ public class StudentAchievementRestController {
     @GetMapping("/web/achievement/student/query/captcha")
     public void captcha(HttpServletResponse response) throws Exception {
         Users users = SessionUtil.getUserFromSession();
-        // 从池中借走到一个对象。借走不等于删除。对象一直都属于池子，只是状态的变化。
-        StudentAchievementHttpClient studentAchievementHttpClient = objectPool.borrowObject(users.getUsername());
-        studentAchievementHttpClient.captcha(response);
-        // 归还对象，否则下次取会产生新的对象
-        objectPool.returnObject(users.getUsername(), studentAchievementHttpClient);
+        StudentAchievementHttpClient studentAchievementHttpClient = new StudentAchievementHttpClient();
+        CookieStore cookieStore = studentAchievementHttpClient.captcha(response);
+        if (Objects.nonNull(cookieStore)) {
+            // 存入集合
+            operations.set(
+                    CacheBook.ACHIEVEMENT_STUDENT + users.getUsername(),
+                    cookieStore,
+                    CacheBook.EXPIRES_MINUTES,
+                    TimeUnit.MINUTES
+            );
+        }
     }
 
     /**
@@ -84,48 +93,51 @@ public class StudentAchievementRestController {
             param.put("yhlx", yhlx);
             param.put("yzm", yzm);
             // 获得对应key的对象
-            StudentAchievementHttpClient studentAchievementHttpClient = objectPool.borrowObject(users.getUsername());
-            Map<String, Object> result = studentAchievementHttpClient.login(param);
-            studentAchievementHttpClient.getHttpclient().close();
-            objectPool.clear(users.getUsername());
-            Boolean hasError = (Boolean) result.get("hasError");
-            if (!hasError) {
+            StudentAchievementHttpClient studentAchievementHttpClient = new StudentAchievementHttpClient();
+            String cacheKey = CacheBook.ACHIEVEMENT_STUDENT + users.getUsername();
+            if (operations.getOperations().hasKey(cacheKey)) {
+                Map<String, Object> result = studentAchievementHttpClient.login(operations.get(cacheKey), param);
+                Boolean hasError = (Boolean) result.get("hasError");
+                if (!hasError) {
 
-                List<Map<String, Object>> data = (List<Map<String, Object>>) result.get("data");
+                    List<Map<String, Object>> data = (List<Map<String, Object>>) result.get("data");
 
-                if (CollectionUtils.isNotEmpty(data)) {
-                    List<StudentAchievement> list = new ArrayList<>();
-                    for (Map<String, Object> map : data) {
-                        StudentAchievement studentAchievement = new StudentAchievement();
-                        studentAchievement.setStudentNumber((String) map.get("studentNumber"));
-                        studentAchievement.setSchoolYear((String) map.get("schoolYear"));
-                        studentAchievement.setSemester((String) map.get("semester"));
-                        studentAchievement.setOrganizeName((String) map.get("organizeName"));
-                        studentAchievement.setCourseCode((String) map.get("courseCode"));
-                        studentAchievement.setCourseName((String) map.get("courseName"));
-                        studentAchievement.setCourseType((String) map.get("courseType"));
-                        studentAchievement.setTotalHours((String) map.get("totalHours"));
-                        studentAchievement.setCourseNature((String) map.get("courseNature"));
-                        studentAchievement.setAssessmentMethod((String) map.get("assessmentMethod"));
-                        studentAchievement.setRegistrationMethod((String) map.get("registrationMethod"));
-                        studentAchievement.setCreditsDue((String) map.get("creditsDue"));
-                        studentAchievement.setAchievement((String) map.get("achievement"));
-                        studentAchievement.setCreditsObtained((String) map.get("creditsObtained"));
-                        studentAchievement.setExamType((String) map.get("examType"));
-                        studentAchievement.setTurn((String) map.get("turn"));
-                        studentAchievement.setExamDate((String) map.get("examDate"));
-                        studentAchievement.setRemark((String) map.get("remark"));
-                        studentAchievement.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
-                        list.add(studentAchievement);
+                    if (CollectionUtils.isNotEmpty(data)) {
+                        List<StudentAchievement> list = new ArrayList<>();
+                        for (Map<String, Object> map : data) {
+                            StudentAchievement studentAchievement = new StudentAchievement();
+                            studentAchievement.setStudentNumber((String) map.get("studentNumber"));
+                            studentAchievement.setSchoolYear((String) map.get("schoolYear"));
+                            studentAchievement.setSemester((String) map.get("semester"));
+                            studentAchievement.setOrganizeName((String) map.get("organizeName"));
+                            studentAchievement.setCourseCode((String) map.get("courseCode"));
+                            studentAchievement.setCourseName((String) map.get("courseName"));
+                            studentAchievement.setCourseType((String) map.get("courseType"));
+                            studentAchievement.setTotalHours((String) map.get("totalHours"));
+                            studentAchievement.setCourseNature((String) map.get("courseNature"));
+                            studentAchievement.setAssessmentMethod((String) map.get("assessmentMethod"));
+                            studentAchievement.setRegistrationMethod((String) map.get("registrationMethod"));
+                            studentAchievement.setCreditsDue((String) map.get("creditsDue"));
+                            studentAchievement.setAchievement((String) map.get("achievement"));
+                            studentAchievement.setCreditsObtained((String) map.get("creditsObtained"));
+                            studentAchievement.setExamType((String) map.get("examType"));
+                            studentAchievement.setTurn((String) map.get("turn"));
+                            studentAchievement.setExamDate((String) map.get("examDate"));
+                            studentAchievement.setRemark((String) map.get("remark"));
+                            studentAchievement.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                            list.add(studentAchievement);
+                        }
+                        studentAchievementService.batchSave(list);
+                        ajaxUtil.success().msg("查询成绩成功");
+                    } else {
+                        ajaxUtil.fail().msg("未获取到成绩信息");
                     }
-                    studentAchievementService.batchSave(list);
-                    ajaxUtil.success().msg("查询成绩成功");
-                } else {
-                    ajaxUtil.fail().msg("未获取到成绩信息");
-                }
 
+                } else {
+                    ajaxUtil.fail().msg((String) result.get("reasonPhrase"));
+                }
             } else {
-                ajaxUtil.fail().msg((String) result.get("reasonPhrase"));
+                ajaxUtil.fail().msg("获取连接失败");
             }
         } catch (Exception e) {
             ajaxUtil.fail().msg("查询失败: 异常: " + e.getMessage());

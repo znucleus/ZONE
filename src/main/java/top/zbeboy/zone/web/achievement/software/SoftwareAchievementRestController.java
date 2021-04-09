@@ -1,8 +1,8 @@
 package top.zbeboy.zone.web.achievement.software;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.pool2.KeyedObjectPool;
-import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
+import org.apache.http.client.CookieStore;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.bean.achievement.software.SoftwareAchievementBean;
+import top.zbeboy.zbase.config.CacheBook;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.SoftwareAchievement;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
@@ -22,18 +23,17 @@ import top.zbeboy.zone.web.util.SessionUtil;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 public class SoftwareAchievementRestController {
 
-    KeyedObjectPool<String, SoftwareAchievementHttpClient> objectPool = new GenericKeyedObjectPool<>(new SoftwareAchievementHttpClientFactory());
-
     @Resource
     private SoftwareAchievementService softwareAchievementService;
+
+    @Resource(name = "redisTemplate")
+    private ValueOperations<String, CookieStore> operations;
 
     /**
      * 获取验证码
@@ -45,10 +45,18 @@ public class SoftwareAchievementRestController {
     public void captcha(HttpServletResponse response) throws Exception {
         Users users = SessionUtil.getUserFromSession();
         // 从池中借走到一个对象。借走不等于删除。对象一直都属于池子，只是状态的变化。
-        SoftwareAchievementHttpClient softwareAchievementHttpClient = objectPool.borrowObject(users.getUsername());
-        softwareAchievementHttpClient.captcha(response);
-        // 归还对象，否则下次取会产生新的对象
-        objectPool.returnObject(users.getUsername(), softwareAchievementHttpClient);
+        SoftwareAchievementHttpClient softwareAchievementHttpClient = new SoftwareAchievementHttpClient();
+        CookieStore cookieStore = softwareAchievementHttpClient.captcha(response);
+        if(Objects.nonNull(cookieStore)){
+            // 存入集合
+            operations.set(
+                    CacheBook.ACHIEVEMENT_SOFTWARE + users.getUsername(),
+                    cookieStore,
+                    CacheBook.EXPIRES_MINUTES,
+                    TimeUnit.MINUTES
+            );
+        }
+
     }
 
     /**
@@ -61,10 +69,12 @@ public class SoftwareAchievementRestController {
         AjaxUtil<String> ajaxUtil = AjaxUtil.of();
         Users users = SessionUtil.getUserFromSession();
         // 从池中借走到一个对象。借走不等于删除。对象一直都属于池子，只是状态的变化。
-        SoftwareAchievementHttpClient softwareAchievementHttpClient = objectPool.borrowObject(users.getUsername());
-        List<String> list = softwareAchievementHttpClient.examDate();
-        // 归还对象，否则下次取会产生新的对象
-        objectPool.returnObject(users.getUsername(), softwareAchievementHttpClient);
+        SoftwareAchievementHttpClient softwareAchievementHttpClient = new SoftwareAchievementHttpClient();
+        List<String> list = new ArrayList<>();
+        String cacheKey = CacheBook.ACHIEVEMENT_SOFTWARE + users.getUsername();
+        if (operations.getOperations().hasKey(cacheKey)) {
+            list = softwareAchievementHttpClient.examDate(operations.get(cacheKey));
+        }
         ajaxUtil.success().msg("获取数据成功").list(list);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
@@ -97,27 +107,30 @@ public class SoftwareAchievementRestController {
             param.put("zjhm", zjhm);
             param.put("select_type", selectType);
             // 获得对应key的对象
-            SoftwareAchievementHttpClient softwareAchievementHttpClient = objectPool.borrowObject(users.getUsername());
-            Map<String, Object> result = softwareAchievementHttpClient.verifyCaptcha(param);
-            softwareAchievementHttpClient.getHttpclient().close();
-            objectPool.clear(users.getUsername());
-            Boolean hasError = (Boolean) result.get("hasError");
-            if (!hasError) {
-                Map<String, Object> data = (Map<String, Object>) result.get("data");
-                SoftwareAchievement softwareAchievement = new SoftwareAchievement();
-                softwareAchievement.setExamDate((String) data.get("KSSJ"));
-                softwareAchievement.setQualificationName((String) data.get("ZGMC"));
-                softwareAchievement.setAdmissionNumber((String) data.get("ZKZH"));
-                softwareAchievement.setIdCard((String) data.get("ZJH"));
-                softwareAchievement.setRealName((String) data.get("XM"));
-                softwareAchievement.setMorningResults((String) data.get("SWCJ"));
-                softwareAchievement.setAfternoonResults((String) data.get("XWCJ"));
-                softwareAchievement.setThesisResults((String) data.get("LWCJ"));
-                softwareAchievement.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
-                softwareAchievementService.save(softwareAchievement);
-                ajaxUtil.success().msg("查询成绩成功").map(result);
+            SoftwareAchievementHttpClient softwareAchievementHttpClient = new SoftwareAchievementHttpClient();
+            String cacheKey = CacheBook.ACHIEVEMENT_SOFTWARE + users.getUsername();
+            if (operations.getOperations().hasKey(cacheKey)) {
+                Map<String, Object> result = softwareAchievementHttpClient.verifyCaptcha(operations.get(cacheKey), param);
+                Boolean hasError = (Boolean) result.get("hasError");
+                if (!hasError) {
+                    Map<String, Object> data = (Map<String, Object>) result.get("data");
+                    SoftwareAchievement softwareAchievement = new SoftwareAchievement();
+                    softwareAchievement.setExamDate((String) data.get("KSSJ"));
+                    softwareAchievement.setQualificationName((String) data.get("ZGMC"));
+                    softwareAchievement.setAdmissionNumber((String) data.get("ZKZH"));
+                    softwareAchievement.setIdCard((String) data.get("ZJH"));
+                    softwareAchievement.setRealName((String) data.get("XM"));
+                    softwareAchievement.setMorningResults((String) data.get("SWCJ"));
+                    softwareAchievement.setAfternoonResults((String) data.get("XWCJ"));
+                    softwareAchievement.setThesisResults((String) data.get("LWCJ"));
+                    softwareAchievement.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                    softwareAchievementService.save(softwareAchievement);
+                    ajaxUtil.success().msg("查询成绩成功").map(result);
+                } else {
+                    ajaxUtil.fail().msg((String) result.get("reasonPhrase"));
+                }
             } else {
-                ajaxUtil.fail().msg((String) result.get("reasonPhrase"));
+                ajaxUtil.fail().msg("获取连接失败");
             }
         } catch (Exception e) {
             ajaxUtil.fail().msg("查询失败: 异常: " + e.getMessage());
@@ -138,7 +151,7 @@ public class SoftwareAchievementRestController {
             Optional<List<SoftwareAchievementBean>> optionalSoftwareAchievements = softwareAchievementService.findByIdCard(users.getIdCard());
             if (optionalSoftwareAchievements.isPresent()) {
                 List<SoftwareAchievementBean> list = optionalSoftwareAchievements.get();
-                for(SoftwareAchievementBean bean : list){
+                for (SoftwareAchievementBean bean : list) {
                     bean.setCreateDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getCreateDate()));
                     bean.setIdCard(StringUtils.isNotBlank(bean.getIdCard()) ? StringUtils.overlay(bean.getIdCard(), "****", 3, bean.getIdCard().length() - 4) : "");
                 }

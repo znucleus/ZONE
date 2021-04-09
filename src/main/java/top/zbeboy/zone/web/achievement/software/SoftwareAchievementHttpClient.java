@@ -2,14 +2,16 @@ package top.zbeboy.zone.web.achievement.software;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -27,26 +29,27 @@ import java.util.*;
 
 public class SoftwareAchievementHttpClient {
 
-    private final CloseableHttpClient httpclient;
-
-    public SoftwareAchievementHttpClient() {
-        this.httpclient = HttpClients.createDefault();
-    }
-
-    public void captcha(HttpServletResponse res) throws IOException {
+    public CookieStore captcha(HttpServletResponse res) throws IOException {
+        CookieStore cookieStore = null;
+        CloseableHttpClient httpclient = HttpClients.createDefault();
+        HttpClientContext httpClientContext = HttpClientContext.create();
         HttpGet httpget = new HttpGet("https://query.ruankao.org.cn//score/captcha");
         httpget.setHeader("Referer", "https://query.ruankao.org.cn/score/main");
         httpget.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36");
-        HttpResponse response = httpclient.execute(httpget);
+        HttpResponse response = httpclient.execute(httpget, httpClientContext);
         if (response.getStatusLine().getStatusCode() == 200) {
             HttpEntity entity = response.getEntity();
             res.setContentType(MediaType.IMAGE_JPEG_VALUE);
             FileCopyUtils.copy(EntityUtils.toByteArray(entity), res.getOutputStream());
+            cookieStore = httpClientContext.getCookieStore();
         }
 
+        httpclient.close();
+        return cookieStore;
     }
 
-    public List<String> examDate() throws IOException {
+    public List<String> examDate(CookieStore cookieStore) throws IOException {
+        CloseableHttpClient httpclient = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
         List<String> list = new ArrayList<>();
         HttpGet httpget = new HttpGet("https://query.ruankao.org.cn/score/main");
         httpget.setHeader("Referer", "https://query.ruankao.org.cn/score/main");
@@ -57,10 +60,12 @@ public class SoftwareAchievementHttpClient {
             String str = EntityUtils.toString(entity);
             list = getExamDate(str);
         }
+        httpclient.close();
         return list;
     }
 
-    public Map<String, Object> verifyCaptcha(Map<String, String> param) throws IOException {
+    public Map<String, Object> verifyCaptcha(CookieStore cookieStore, Map<String, String> param) throws IOException {
+        CloseableHttpClient httpclient = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
         Map<String, Object> map = new HashMap<>();
         map.put("hasError", false);
         HttpPost post = new HttpPost("https://query.ruankao.org.cn//score/VerifyCaptcha");
@@ -81,7 +86,7 @@ public class SoftwareAchievementHttpClient {
             String result = EntityUtils.toString(responseEntity);
             JSONObject jsonObject = JSON.parseObject(result);
             if (jsonObject.getIntValue("flag") == 1) {
-                map = query(param);
+                map = query(httpclient, param);
             } else {
                 map.put("hasError", true);
                 map.put("statusCode", "500");
@@ -92,10 +97,11 @@ public class SoftwareAchievementHttpClient {
             map.put("statusCode", response.getStatusLine().getStatusCode());
             map.put("reasonPhrase", response.getStatusLine().getReasonPhrase());
         }
+        httpclient.close();
         return map;
     }
 
-    public Map<String, Object> query(Map<String, String> param) throws IOException {
+    public Map<String, Object> query(CloseableHttpClient httpclient, Map<String, String> param) throws IOException {
         Map<String, Object> map = new HashMap<>();
         map.put("hasError", false);
         HttpPost post = new HttpPost("https://query.ruankao.org.cn//score/result");
@@ -145,11 +151,11 @@ public class SoftwareAchievementHttpClient {
         return map;
     }
 
-    private List<String> getExamDate(String str){
+    private List<String> getExamDate(String str) {
         List<String> list = new ArrayList<>();
         Document doc = Jsoup.parse(str);
         Elements elements = doc.getElementsByAttribute("data-value");
-        if(Objects.nonNull(elements)){
+        if (Objects.nonNull(elements)) {
             for (Element element : elements) {
                 list.add(StringUtils.trim(element.text()));
             }
@@ -177,9 +183,5 @@ public class SoftwareAchievementHttpClient {
         // 资格名称
         map.put("ZGMC", StringUtils.defaultString(data.getString("ZGMC")));
         return map;
-    }
-
-    public CloseableHttpClient getHttpclient() {
-        return httpclient;
     }
 }
