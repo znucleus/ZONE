@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="br-pageheader pd-y-15 pd-l-20">
+        <nav class="breadcrumb pd-0 mg-0 tx-12">
+            <a class="breadcrumb-item dy_href" href="#/web/menu/achievement/student/query">学生成绩查询</a>
+            <span class="breadcrumb-item active">历史成绩</span>
+        </nav>
+    </div><!-- br-pageheader -->
+    <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
+        <h4 class="tx-gray-800 mg-b-5">学生成绩查询</h4>
+        <p class="mg-b-0">历史成绩。</p>
+    </div>
+
+    <div class="br-pagebody">
+        <div class="br-section-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span>数量: </span><span id="totalSize"></span>
+                            <button type="button" id="refresh" class="btn btn-light btn-sm"><i
+                                    class="fa fa-refresh"></i>刷新
+                            </button>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" id="search" class="form-control form-control-sm"
+                                   placeholder="搜索"/>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                    <table class="tablesaw tablesaw-swipe table table-striped mt-3" data-tablesaw-mode="swipe"
+                           id="dataTable">
+                        <thead>
+                        <tr>
+                            <th scope="col" data-tablesaw-priority="persist">课程名称</th>
+                            <th scope="col" data-tablesaw-priority="1">成绩</th>
+                            <th scope="col" data-tablesaw-priority="2">开课学年</th>
+                            <th scope="col" data-tablesaw-priority="3">开课学期</th>
+                            <th scope="col" data-tablesaw-priority="4">课程下达班级</th>
+                            <th scope="col" data-tablesaw-priority="5">课程代码</th>
+                            <th scope="col" data-tablesaw-priority="6">课程类别</th>
+                            <th scope="col" data-tablesaw-priority="7">总学时</th>
+                            <th scope="col" data-tablesaw-priority="8">课程性质</th>
+                            <th scope="col" data-tablesaw-priority="9">考核方式</th>
+                            <th scope="col" data-tablesaw-priority="10">成绩登记方式</th>
+                            <th scope="col" data-tablesaw-priority="11">应获学分</th>
+                            <th scope="col" data-tablesaw-priority="12">实获学分</th>
+                            <th scope="col" data-tablesaw-priority="13">考试种类</th>
+                            <th scope="col" data-tablesaw-priority="14">轮次</th>
+                            <th scope="col" data-tablesaw-priority="15">考试时间</th>
+                            <th scope="col" data-tablesaw-priority="16">备注</th>
+                            <th scope="col" data-tablesaw-priority="17">更新时间</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--定义数据模板-->
+    <script id="data_template" type="text/x-handlebars-template">
+        {{#each listResult}}
+        <tr>
+            <td>{{courseName}}</td>
+            <td>{{achievement}}</td>
+            <td>{{schoolYear}}</td>
+            <td>{{semester}}</td>
+            <td>{{organizeName}}</td>
+            <td>{{courseCode}}</td>
+            <td>{{courseType}}</td>
+            <td>{{totalHours}}</td>
+            <td>{{courseNature}}</td>
+            <td>{{assessmentMethod}}</td>
+            <td>{{registrationMethod}}</td>
+            <td>{{creditsDue}}</td>
+            <td>{{creditsObtained}}</td>
+            <td>{{examType}}</td>
+            <td>{{turn}}</td>
+            <td>{{examDate}}</td>
+            <td>{{remark}}</td>
+            <td>{{createDateStr}}</td>
+        </tr>
+        {{/each}}
+    </script>
+
+    <input type="hidden" id="studentNumber" th:value="${studentNumber}"/>
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/achievement/student/student_achievement_history.js')}"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>

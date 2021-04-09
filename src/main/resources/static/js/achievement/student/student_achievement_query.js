@@ -8,7 +8,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
         var ajax_url = {
             query: web_path + '/web/achievement/student/query/data',
             captcha: web_path + '/web/achievement/student/query/captcha',
-            my: '/web/achievement/student/query/my',
+            query_history: '/web/achievement/student/query/history',
             page: '/web/menu/achievement/student/query'
         };
 
@@ -62,6 +62,10 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             changeCaptcha();
         });
 
+        $('#history').click(function (){
+            $.address.value(ajax_url.query_history);
+        });
+
         function changeCaptcha() {
             $('#captcha').attr('src', ajax_url.captcha + '?v=' + Math.random());
         }
@@ -108,7 +112,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
                 // 去除遮罩
                 tools.buttonEndLoading(button_id.query.id, button_id.query.text);
                 if (data.state) {
-                    $.address.value(ajax_url.my);
+                    $.address.value(ajax_url.query_history);
                 } else {
                     $('#queryError').text(data.msg);
                 }

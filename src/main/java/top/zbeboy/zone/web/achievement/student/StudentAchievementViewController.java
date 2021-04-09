@@ -16,4 +16,14 @@ public class StudentAchievementViewController {
         return "web/achievement/student/student_achievement_query::#page-wrapper";
     }
 
+    /**
+     * 学生历史成绩
+     *
+     * @return 学生历史成绩页面
+     */
+    @GetMapping("/web/achievement/student/query/history")
+    public String history() {
+        return "web/achievement/student/student_achievement_history::#page-wrapper";
+    }
+
 }
