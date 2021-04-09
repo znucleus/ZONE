@@ -29,36 +29,36 @@ import java.util.*;
 
 public class SoftwareAchievementHttpClient {
 
-    public CookieStore captcha(HttpServletResponse res) throws IOException {
-        CookieStore cookieStore = null;
-        CloseableHttpClient httpclient = HttpClients.createDefault();
-        HttpClientContext httpClientContext = HttpClientContext.create();
-        HttpGet httpget = new HttpGet("https://query.ruankao.org.cn//score/captcha");
-        httpget.setHeader("Referer", "https://query.ruankao.org.cn/score/main");
-        httpget.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36");
-        HttpResponse response = httpclient.execute(httpget, httpClientContext);
-        if (response.getStatusLine().getStatusCode() == 200) {
-            HttpEntity entity = response.getEntity();
-            res.setContentType(MediaType.IMAGE_JPEG_VALUE);
-            FileCopyUtils.copy(EntityUtils.toByteArray(entity), res.getOutputStream());
-            cookieStore = httpClientContext.getCookieStore();
-        }
+    private CookieStore cookieStore;
 
-        httpclient.close();
-        return cookieStore;
-    }
-
-    public List<String> examDate(CookieStore cookieStore) throws IOException {
+    public void captcha(CookieStore cookieStore, HttpServletResponse res) throws IOException {
         CloseableHttpClient httpclient = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
-        List<String> list = new ArrayList<>();
-        HttpGet httpget = new HttpGet("https://query.ruankao.org.cn/score/main");
+        HttpGet httpget = new HttpGet("https://query.ruankao.org.cn//score/captcha");
         httpget.setHeader("Referer", "https://query.ruankao.org.cn/score/main");
         httpget.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36");
         HttpResponse response = httpclient.execute(httpget);
         if (response.getStatusLine().getStatusCode() == 200) {
             HttpEntity entity = response.getEntity();
+            res.setContentType(MediaType.IMAGE_JPEG_VALUE);
+            FileCopyUtils.copy(EntityUtils.toByteArray(entity), res.getOutputStream());
+        }
+
+        httpclient.close();
+    }
+
+    public List<String> examDate() throws IOException {
+        CloseableHttpClient httpclient = HttpClients.createDefault();
+        HttpClientContext httpClientContext = HttpClientContext.create();
+        List<String> list = new ArrayList<>();
+        HttpGet httpget = new HttpGet("https://query.ruankao.org.cn/score/main");
+        httpget.setHeader("Referer", "https://query.ruankao.org.cn/score/main");
+        httpget.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36");
+        HttpResponse response = httpclient.execute(httpget, httpClientContext);
+        if (response.getStatusLine().getStatusCode() == 200) {
+            HttpEntity entity = response.getEntity();
             String str = EntityUtils.toString(entity);
             list = getExamDate(str);
+            cookieStore = httpClientContext.getCookieStore();
         }
         httpclient.close();
         return list;
@@ -183,5 +183,9 @@ public class SoftwareAchievementHttpClient {
         // 资格名称
         map.put("ZGMC", StringUtils.defaultString(data.getString("ZGMC")));
         return map;
+    }
+
+    public CookieStore getCookieStore() {
+        return cookieStore;
     }
 }

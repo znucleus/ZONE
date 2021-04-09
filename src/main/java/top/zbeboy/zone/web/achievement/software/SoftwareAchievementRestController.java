@@ -44,17 +44,10 @@ public class SoftwareAchievementRestController {
     @GetMapping("/web/achievement/software/query/captcha")
     public void captcha(HttpServletResponse response) throws Exception {
         Users users = SessionUtil.getUserFromSession();
-        // 从池中借走到一个对象。借走不等于删除。对象一直都属于池子，只是状态的变化。
         SoftwareAchievementHttpClient softwareAchievementHttpClient = new SoftwareAchievementHttpClient();
-        CookieStore cookieStore = softwareAchievementHttpClient.captcha(response);
-        if(Objects.nonNull(cookieStore)){
-            // 存入集合
-            operations.set(
-                    CacheBook.ACHIEVEMENT_SOFTWARE + users.getUsername(),
-                    cookieStore,
-                    CacheBook.EXPIRES_MINUTES,
-                    TimeUnit.MINUTES
-            );
+        String cacheKey = CacheBook.ACHIEVEMENT_SOFTWARE + users.getUsername();
+        if (operations.getOperations().hasKey(cacheKey)) {
+            softwareAchievementHttpClient.captcha(operations.get(cacheKey), response);
         }
 
     }
@@ -68,12 +61,18 @@ public class SoftwareAchievementRestController {
     public ResponseEntity<Map<String, Object>> examDate() throws Exception {
         AjaxUtil<String> ajaxUtil = AjaxUtil.of();
         Users users = SessionUtil.getUserFromSession();
-        // 从池中借走到一个对象。借走不等于删除。对象一直都属于池子，只是状态的变化。
         SoftwareAchievementHttpClient softwareAchievementHttpClient = new SoftwareAchievementHttpClient();
-        List<String> list = new ArrayList<>();
-        String cacheKey = CacheBook.ACHIEVEMENT_SOFTWARE + users.getUsername();
-        if (operations.getOperations().hasKey(cacheKey)) {
-            list = softwareAchievementHttpClient.examDate(operations.get(cacheKey));
+        List<String> list = softwareAchievementHttpClient.examDate();
+
+        CookieStore cookieStore = softwareAchievementHttpClient.getCookieStore();
+        if (Objects.nonNull(cookieStore)) {
+            // 存入集合
+            operations.set(
+                    CacheBook.ACHIEVEMENT_SOFTWARE + users.getUsername(),
+                    cookieStore,
+                    CacheBook.EXPIRES_MINUTES,
+                    TimeUnit.MINUTES
+            );
         }
         ajaxUtil.success().msg("获取数据成功").list(list);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
