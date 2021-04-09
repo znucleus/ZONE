@@ -166,7 +166,7 @@ public class TimetableServiceImpl implements TimetableService {
 
             // 重复事件
             if (count > 0) {
-                Recur recur = new Recur(Recur.Frequency.WEEKLY, count + 1);
+                Recur recur = new Recur(Recur.Frequency.WEEKLY, 1);
                 recur.getDayList().add(getWeekday(timetableCourse.getWeekday()));
                 RRule rule = new RRule(recur);
                 meeting.getProperties().add(rule);

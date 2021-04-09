@@ -158,7 +158,7 @@ public class CampusTimetableEduServiceImpl implements CampusTimetableEduService 
 
                 // 重复事件
                 if (count > 0) {
-                    Recur recur = new Recur(Recur.Frequency.WEEKLY, count + 1);
+                    Recur recur = new Recur(Recur.Frequency.WEEKLY, 1);
                     recur.getDayList().add(timetableService.getWeekday(campusCourseData.getWeekday()));
                     RRule rule = new RRule(recur);
                     meeting.getProperties().add(rule);
