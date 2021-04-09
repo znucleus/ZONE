@@ -200,7 +200,9 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
                 var startWeek = this.startWeek;
                 var endWeek = this.endWeek;
                 if (!endWeek || endWeek === '') {
-                    weekUnit = startWeek + '周';
+                    if(startWeek && startWeek !== ''){
+                        weekUnit = startWeek + '周';
+                    }
                 } else {
                     weekUnit = startWeek + '-' + endWeek + '周';
                 }
@@ -225,7 +227,9 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
                 var startWeek = this.startWeek;
                 var endWeek = this.endWeek;
                 if (!endWeek || endWeek === '') {
-                    weekUnit = startWeek + '周';
+                    if(startWeek && startWeek !== ''){
+                        weekUnit = startWeek + '周';
+                    }
                 } else {
                     weekUnit = startWeek + '-' + endWeek + '周';
                 }

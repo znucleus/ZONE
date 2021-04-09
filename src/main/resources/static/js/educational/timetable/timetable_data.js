@@ -361,7 +361,9 @@ require(["jquery", "tools", "handlebars", "nav.active", "select2-zh-CN", "messen
                 var startWeek = this.startWeek;
                 var endWeek = this.endWeek;
                 if (!endWeek || endWeek === '') {
-                    weekUnit = startWeek + '周';
+                    if(startWeek && startWeek !== ''){
+                        weekUnit = startWeek + '周';
+                    }
                 } else {
                     weekUnit = startWeek + '-' + endWeek + '周';
                 }
