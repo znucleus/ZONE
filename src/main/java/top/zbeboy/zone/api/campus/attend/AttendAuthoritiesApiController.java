@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.bean.campus.attend.AttendAuthoritiesBean;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.Map;
 
+@RestController
 public class AttendAuthoritiesApiController {
 
     @Resource
