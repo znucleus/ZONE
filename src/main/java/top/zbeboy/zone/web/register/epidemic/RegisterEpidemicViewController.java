@@ -92,20 +92,12 @@ public class RegisterEpidemicViewController {
      */
     @GetMapping("/web/register/epidemic/data/add/{id}")
     public String dataAdd(@PathVariable("id") String id, ModelMap modelMap) {
-        SystemInlineTipConfig config = new SystemInlineTipConfig();
-        String page;
         Users users = SessionUtil.getUserFromSession();
         Optional<EpidemicRegisterData> optionalEpidemicRegisterData = registerEpidemicService.findTodayByUsernameAndEpidemicRegisterReleaseId(users.getUsername(), id);
-        if(optionalEpidemicRegisterData.isPresent()){
-            modelMap.addAttribute("epidemicRegisterData", optionalEpidemicRegisterData.get());
-            modelMap.addAttribute("epidemicRegisterReleaseId", id);
-            page = "web/register/epidemic/epidemic_data_add::#page-wrapper";
-        } else {
-            config.buildDangerTip("查询错误", "未查询到疫情登记数据");
-            config.dataMerging(modelMap);
-            page = "inline_tip::#page-wrapper";
-        }
-        return page;
+        EpidemicRegisterData epidemicRegisterData = optionalEpidemicRegisterData.orElseGet(EpidemicRegisterData::new);
+        modelMap.addAttribute("epidemicRegisterData", epidemicRegisterData);
+        modelMap.addAttribute("epidemicRegisterReleaseId", id);
+        return "web/register/epidemic/epidemic_data_add::#page-wrapper";
     }
 
     /**
