@@ -728,6 +728,8 @@ public class TimetableServiceImpl implements TimetableService {
                     break;
                 case 12:
                     su = "19:50:00";
+				case 13:
+                    su = "20:40:00";
                     break;
             }
         }
@@ -774,6 +776,8 @@ public class TimetableServiceImpl implements TimetableService {
                     break;
                 case 12:
                     eu = "20:35:00";
+				case 13:
+                    su = "21:25:00";
                     break;
             }
         }
