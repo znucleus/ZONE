@@ -58,7 +58,7 @@
         <httpclient.version>4.5.10</httpclient.version>
         <googleauth.version>1.4.0</googleauth.version>
 
-        <commons-io.verson>2.6</commons-io.verson>
+        <commons-io.verson>2.7</commons-io.verson>
         <commons-collections4.version>4.4</commons-collections4.version>
         <commons-compress.version>1.19</commons-compress.version>
 
