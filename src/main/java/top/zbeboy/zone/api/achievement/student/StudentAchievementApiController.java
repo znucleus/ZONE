@@ -6,10 +6,7 @@ import org.apache.http.client.CookieStore;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zbase.bean.achievement.student.StudentAchievementBean;
 import top.zbeboy.zbase.bean.data.student.StudentBean;
 import top.zbeboy.zbase.config.CacheBook;
@@ -54,15 +51,14 @@ public class StudentAchievementApiController {
      * @param response 响应
      * @throws Exception 异常
      */
-    @GetMapping("/api/achievement/student/query/captcha")
-    public void captcha(HttpServletResponse response,Principal principal) throws Exception {
-        Users users = SessionUtil.getUserFromOauth(principal);
+    @GetMapping("/overt/achievement/student/query/captcha/{username}")
+    public void captcha(@PathVariable("username") String username, HttpServletResponse response) throws Exception {
         StudentAchievementHttpClient studentAchievementHttpClient = new StudentAchievementHttpClient();
         CookieStore cookieStore = studentAchievementHttpClient.captcha(response);
         if (Objects.nonNull(cookieStore)) {
             // 存入集合
             operations.set(
-                    CacheBook.ACHIEVEMENT_STUDENT + users.getUsername(),
+                    CacheBook.ACHIEVEMENT_STUDENT + username,
                     cookieStore,
                     CacheBook.EXPIRES_MINUTES,
                     TimeUnit.MINUTES

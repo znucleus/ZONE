@@ -5,10 +5,7 @@ import org.apache.http.client.CookieStore;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zbase.bean.achievement.software.SoftwareAchievementBean;
 import top.zbeboy.zbase.config.CacheBook;
 import top.zbeboy.zbase.config.Workbook;
@@ -43,11 +40,10 @@ public class SoftwareAchievementApiController {
      * @param response 响应
      * @throws Exception 异常
      */
-    @GetMapping("/api/achievement/software/query/captcha")
-    public void captcha(HttpServletResponse response, Principal principal) throws Exception {
-        Users users = SessionUtil.getUserFromOauth(principal);
+    @GetMapping("/overt/achievement/software/query/captcha/{username}")
+    public void captcha(@PathVariable("username") String username, HttpServletResponse response) throws Exception {
         SoftwareAchievementHttpClient softwareAchievementHttpClient = new SoftwareAchievementHttpClient();
-        String cacheKey = CacheBook.ACHIEVEMENT_SOFTWARE + users.getUsername();
+        String cacheKey = CacheBook.ACHIEVEMENT_SOFTWARE + username;
         if (operations.getOperations().hasKey(cacheKey)) {
             softwareAchievementHttpClient.captcha(operations.get(cacheKey), response);
         }
@@ -59,10 +55,9 @@ public class SoftwareAchievementApiController {
      *
      * @throws Exception 异常
      */
-    @GetMapping("/api/achievement/software/query/exam-date")
-    public ResponseEntity<Map<String, Object>> examDate(Principal principal) throws Exception {
+    @GetMapping("/overt/achievement/software/query/exam-date/{username}")
+    public ResponseEntity<Map<String, Object>> examDate(@PathVariable("username") String username) throws Exception {
         AjaxUtil<String> ajaxUtil = AjaxUtil.of();
-        Users users = SessionUtil.getUserFromOauth(principal);
         SoftwareAchievementHttpClient softwareAchievementHttpClient = new SoftwareAchievementHttpClient();
         List<String> list = softwareAchievementHttpClient.examDate();
 
@@ -70,7 +65,7 @@ public class SoftwareAchievementApiController {
         if (Objects.nonNull(cookieStore)) {
             // 存入集合
             operations.set(
-                    CacheBook.ACHIEVEMENT_SOFTWARE + users.getUsername(),
+                    CacheBook.ACHIEVEMENT_SOFTWARE + username,
                     cookieStore,
                     CacheBook.EXPIRES_MINUTES,
                     TimeUnit.MINUTES
