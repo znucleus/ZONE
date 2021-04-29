@@ -43,7 +43,7 @@
                         </div>
                         <div class="form-group">
                             <label for="zjhm">证件号</label>
-                            <input type="text" class="form-control" placeholder="证件号" id="zjhm" name="zjhm"/>
+                            <input type="text" class="form-control" placeholder="证件号" id="zjhm" name="zjhm" th:value="${idCard}"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
@@ -179,6 +179,7 @@
         {{/each}}
     </script>
 
+    <input type="hidden" id="idCard" th:value="${idCard}"/>
     <input type="hidden" class="dy_script"
            th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/achievement/software/software_achievement_query.js')}"/>
 </div>

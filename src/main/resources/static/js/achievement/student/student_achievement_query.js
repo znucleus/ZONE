@@ -58,6 +58,10 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             changeCaptcha();
         }
 
+        $('#yhmmFill').click(function (){
+           $(param_id.yhmm).val($(param_id.yhdm).val());
+        });
+
         $('#captcha').click(function () {
             changeCaptcha();
         });

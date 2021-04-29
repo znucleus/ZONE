@@ -34,6 +34,10 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             }
         };
 
+        var page_param = {
+            idCard: $('#idCard').val()
+        }
+
         /*
          参数
          */
@@ -63,10 +67,12 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
                 zjhmText = '准考证号';
                 $(param_id.zjhm).prev().text(zjhmText);
                 $(param_id.zjhm).attr('placeholder', zjhmText);
+                $(param_id.zjhm).val('');
             } else {
                 zjhmText = '证件号';
                 $(param_id.zjhm).prev().text(zjhmText);
                 $(param_id.zjhm).attr('placeholder', zjhmText);
+                $(param_id.zjhm).val(page_param.idCard);
             }
         });
 
@@ -100,13 +106,13 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
 
         function initHistory() {
             $.get(ajax_url.history_data, function (data) {
-                if(data.state){
+                if (data.state) {
                     generateHistoryHtml(data);
                 }
             });
         }
 
-        function generateHistoryHtml(data){
+        function generateHistoryHtml(data) {
             var template = Handlebars.compile($("#software-achievement-template").html());
             $('#mySoftwareData').html(template(data));
         }
@@ -130,18 +136,18 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             changeCaptcha();
         });
 
-        $('#queryTab').click(function (){
+        $('#queryTab').click(function () {
             $(this).addClass('active');
             $('#mySoftwareExamTab').removeClass('active');
-            $('#queryRegion').css('display','');
-            $('#mySoftwareRegion').css('display','none');
+            $('#queryRegion').css('display', '');
+            $('#mySoftwareRegion').css('display', 'none');
         });
 
-        $('#mySoftwareExamTab').click(function (){
+        $('#mySoftwareExamTab').click(function () {
             $(this).addClass('active');
             $('#queryTab').removeClass('active');
-            $('#queryRegion').css('display','none');
-            $('#mySoftwareRegion').css('display','');
+            $('#queryRegion').css('display', 'none');
+            $('#mySoftwareRegion').css('display', '');
         });
 
         function validStage() {
