@@ -22,953 +22,1014 @@
                 <div class="col-md-12">
                     <h1>Z.核校园API 文档</h1>
                     <p>声明：本系统提供的所有公共API，仅供在本系统注册的所有用户使用，使用范围，包括毕业设计及个人项目等非商业性项目。此外，Z.核校园是一个开源项目，当您使用我们提供的服务时，请注明来源，并遵守开源协议。</p>
-                    <h3 class="mt-4">一、公共API（无需授权登录）</h3>
-                    <p>1. 学校数据：</p>
-                    <div class="alert alert-secondary" role="alert">
-                        GET https://www.zbeboy.top/anyone/data/school (域名 www.zbeboy.top 以您当前访问系统为准)
-                    </div>
-                    <p>出参：</p>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">参数名</th>
-                                <th scope="col">类型</th>
-                                <th scope="col">描述</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>results</td>
-                                <td>list</td>
-                                <td>结果集</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">1.1</th>
-                                <td>id</td>
-                                <td>string</td>
-                                <td>学校id</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">1.2</th>
-                                <td>text</td>
-                                <td>string</td>
-                                <td>学校名</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <p>2. 院数据：</p>
-                    <div class="alert alert-secondary" role="alert">
-                        GET https://www.zbeboy.top/anyone/data/college (域名 www.zbeboy.top 以您当前访问系统为准)
-                    </div>
-                    <p>请求时，您需要如下参数：</p>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">参数名</th>
-                                <th scope="col">类型</th>
-                                <th scope="col">描述</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>schoolId</td>
-                                <td>int</td>
-                                <td>学校id</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <p>出参：</p>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">参数名</th>
-                                <th scope="col">类型</th>
-                                <th scope="col">描述</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>results</td>
-                                <td>list</td>
-                                <td>结果集</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">1.1</th>
-                                <td>id</td>
-                                <td>string</td>
-                                <td>院id</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">1.2</th>
-                                <td>text</td>
-                                <td>string</td>
-                                <td>院名</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <p>3. 系数据：</p>
-                    <div class="alert alert-secondary" role="alert">
-                        GET https://www.zbeboy.top/anyone/data/department (域名 www.zbeboy.top 以您当前访问系统为准)
-                    </div>
-                    <p>请求时，您需要如下参数：</p>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">参数名</th>
-                                <th scope="col">类型</th>
-                                <th scope="col">描述</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>collegeId</td>
-                                <td>int</td>
-                                <td>院id</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <p>出参：</p>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">参数名</th>
-                                <th scope="col">类型</th>
-                                <th scope="col">描述</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>results</td>
-                                <td>list</td>
-                                <td>结果集</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">1.1</th>
-                                <td>id</td>
-                                <td>string</td>
-                                <td>系id</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">1.2</th>
-                                <td>text</td>
-                                <td>string</td>
-                                <td>系名</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <p>4. 专业数据：</p>
-                    <div class="alert alert-secondary" role="alert">
-                        GET https://www.zbeboy.top/anyone/data/science (域名 www.zbeboy.top 以您当前访问系统为准)
-                    </div>
-                    <p>请求时，您需要如下参数：</p>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">参数名</th>
-                                <th scope="col">类型</th>
-                                <th scope="col">描述</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>departmentId</td>
-                                <td>int</td>
-                                <td>系id</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <p>出参：</p>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">参数名</th>
-                                <th scope="col">类型</th>
-                                <th scope="col">描述</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>results</td>
-                                <td>list</td>
-                                <td>结果集</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">1.1</th>
-                                <td>id</td>
-                                <td>string</td>
-                                <td>专业id</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">1.2</th>
-                                <td>text</td>
-                                <td>string</td>
-                                <td>专业名</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <p>5. 年级数据：</p>
-                    <div class="alert alert-secondary" role="alert">
-                        GET https://www.zbeboy.top/anyone/data/grade (域名 www.zbeboy.top 以您当前访问系统为准)
-                    </div>
-                    <p>请求时，您需要如下参数：</p>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">参数名</th>
-                                <th scope="col">类型</th>
-                                <th scope="col">描述</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>scienceId</td>
-                                <td>int</td>
-                                <td>专业id</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <p>出参：</p>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">参数名</th>
-                                <th scope="col">类型</th>
-                                <th scope="col">描述</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>results</td>
-                                <td>list</td>
-                                <td>结果集</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">1.1</th>
-                                <td>id</td>
-                                <td>string</td>
-                                <td>年级id</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">1.2</th>
-                                <td>text</td>
-                                <td>string</td>
-                                <td>年级名</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <p>6. 班级数据：</p>
-                    <div class="alert alert-secondary" role="alert">
-                        GET https://www.zbeboy.top/anyone/data/organize (域名 www.zbeboy.top 以您当前访问系统为准)
-                    </div>
-                    <p>请求时，您需要如下参数：</p>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">参数名</th>
-                                <th scope="col">类型</th>
-                                <th scope="col">描述</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>gradeId</td>
-                                <td>int</td>
-                                <td>年级id</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <p>出参：</p>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">参数名</th>
-                                <th scope="col">类型</th>
-                                <th scope="col">描述</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>results</td>
-                                <td>list</td>
-                                <td>结果集</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">1.1</th>
-                                <td>id</td>
-                                <td>string</td>
-                                <td>班级id</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">1.2</th>
-                                <td>text</td>
-                                <td>string</td>
-                                <td>班级名</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <p>7. 政治面貌数据：</p>
-                    <div class="alert alert-secondary" role="alert">
-                        GET https://www.zbeboy.top/anyone/data/politics (域名 www.zbeboy.top 以您当前访问系统为准)
-                    </div>
-                    <p>出参：</p>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">参数名</th>
-                                <th scope="col">类型</th>
-                                <th scope="col">描述</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>results</td>
-                                <td>list</td>
-                                <td>结果集</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">1.1</th>
-                                <td>id</td>
-                                <td>string</td>
-                                <td>政治面貌id</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">1.2</th>
-                                <td>text</td>
-                                <td>string</td>
-                                <td>政治面貌</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <p>8. 民族数据：</p>
-                    <div class="alert alert-secondary" role="alert">
-                        GET https://www.zbeboy.top/anyone/data/nation (域名 www.zbeboy.top 以您当前访问系统为准)
-                    </div>
-                    <p>出参：</p>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">参数名</th>
-                                <th scope="col">类型</th>
-                                <th scope="col">描述</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>results</td>
-                                <td>list</td>
-                                <td>结果集</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">1.1</th>
-                                <td>id</td>
-                                <td>string</td>
-                                <td>民族id</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">1.2</th>
-                                <td>text</td>
-                                <td>string</td>
-                                <td>民族</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <h3 class="mt-4">二、授权API（需登录）</h3>
-                    <p>1. 用户基本信息：</p>
-                    <div class="alert alert-secondary" role="alert">
-                        GET https://www.zbeboy.top/api/platform/users (域名 www.zbeboy.top 以您当前访问系统为准)
-                    </div>
-                    <p>出参：</p>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">参数名</th>
-                                <th scope="col">类型</th>
-                                <th scope="col">描述</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>realName</td>
-                                <td>string</td>
-                                <td>姓名</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>username</td>
-                                <td>string</td>
-                                <td>账号</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3</th>
-                                <td>usersTypeId</td>
-                                <td>int</td>
-                                <td>用户类型（1：系统；2：学生；3：教师；4：临时用户）</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">4</th>
-                                <td>verifyMailbox</td>
-                                <td>int</td>
-                                <td>是否已验证邮箱（1：已验证；0：未验证）</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">5</th>
-                                <td>enabled</td>
-                                <td>int</td>
-                                <td>是否已注销（1：未注销；0：已注销）</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">6</th>
-                                <td>accountNonLocked</td>
-                                <td>int</td>
-                                <td>是否已锁（1：未锁；0：已锁）</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">7</th>
-                                <td>avatar</td>
-                                <td>string</td>
-                                <td>用户头像路径</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <p>2. 学生信息：</p>
-                    <div class="alert alert-secondary" role="alert">
-                        GET https://www.zbeboy.top/api/data/student (域名 www.zbeboy.top 以您当前访问系统为准)
-                    </div>
-                    <p>出参：</p>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">参数名</th>
-                                <th scope="col">类型</th>
-                                <th scope="col">描述</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>studentId</td>
-                                <td>int</td>
-                                <td>学生id</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>studentNumber</td>
-                                <td>string</td>
-                                <td>学号</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3</th>
-                                <td>schoolId</td>
-                                <td>int</td>
-                                <td>学校id</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">4</th>
-                                <td>schoolName</td>
-                                <td>string</td>
-                                <td>学校名</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">5</th>
-                                <td>collegeId</td>
-                                <td>int</td>
-                                <td>院id</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">6</th>
-                                <td>collegeName</td>
-                                <td>string</td>
-                                <td>院名</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">7</th>
-                                <td>collegeAddress</td>
-                                <td>string</td>
-                                <td>院地址</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">8</th>
-                                <td>collegeCoordinate</td>
-                                <td>string</td>
-                                <td>院坐标</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">9</th>
-                                <td>collegeZipCode</td>
-                                <td>string</td>
-                                <td>院邮编</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">10</th>
-                                <td>departmentId</td>
-                                <td>int</td>
-                                <td>系id</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">11</th>
-                                <td>departmentName</td>
-                                <td>string</td>
-                                <td>系名</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">12</th>
-                                <td>scienceId</td>
-                                <td>int</td>
-                                <td>专业id</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">13</th>
-                                <td>scienceName</td>
-                                <td>string</td>
-                                <td>专业名</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">14</th>
-                                <td>gradeId</td>
-                                <td>int</td>
-                                <td>年级id</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">15</th>
-                                <td>grade</td>
-                                <td>int</td>
-                                <td>年级</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">16</th>
-                                <td>organizeId</td>
-                                <td>int</td>
-                                <td>班级id</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">17</th>
-                                <td>organizeName</td>
-                                <td>string</td>
-                                <td>班级名</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <p>3. 教师信息：</p>
-                    <div class="alert alert-secondary" role="alert">
-                        GET https://www.zbeboy.top/api/data/staff (域名 www.zbeboy.top 以您当前访问系统为准)
-                    </div>
-                    <p>出参：</p>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">参数名</th>
-                                <th scope="col">类型</th>
-                                <th scope="col">描述</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>staffId</td>
-                                <td>int</td>
-                                <td>教师id</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>staffNumber</td>
-                                <td>string</td>
-                                <td>工号</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3</th>
-                                <td>schoolId</td>
-                                <td>int</td>
-                                <td>学校id</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">4</th>
-                                <td>schoolName</td>
-                                <td>string</td>
-                                <td>学校名</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">5</th>
-                                <td>collegeId</td>
-                                <td>int</td>
-                                <td>院id</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">6</th>
-                                <td>collegeName</td>
-                                <td>string</td>
-                                <td>院名</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">7</th>
-                                <td>collegeAddress</td>
-                                <td>string</td>
-                                <td>院地址</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">8</th>
-                                <td>collegeCoordinate</td>
-                                <td>string</td>
-                                <td>院坐标</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">9</th>
-                                <td>collegeZipCode</td>
-                                <td>string</td>
-                                <td>院邮编</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">10</th>
-                                <td>departmentId</td>
-                                <td>int</td>
-                                <td>系id</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">11</th>
-                                <td>departmentName</td>
-                                <td>string</td>
-                                <td>系名</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <p>4. 教务校历列表：</p>
-                    <div class="alert alert-secondary" role="alert">
-                        GET https://www.zbeboy.top/api/educational/calendar/query-with-college-id/{collegeId} (域名 www.zbeboy.top 以您当前访问系统为准)
-                    </div>
-                    <p>出参：</p>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">参数名</th>
-                                <th scope="col">类型</th>
-                                <th scope="col">描述</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>state</td>
-                                <td>boolean</td>
-                                <td>是否获取成功</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>msg</td>
-                                <td>string</td>
-                                <td>失败信息</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3</th>
-                                <td>listResult</td>
-                                <td>list</td>
-                                <td>数据集</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3.1</th>
-                                <td>calendarId</td>
-                                <td>string</td>
-                                <td>校历id</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3.2</th>
-                                <td>title</td>
-                                <td>string</td>
-                                <td>标题</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3.3</th>
-                                <td>schoolYear</td>
-                                <td>string</td>
-                                <td>学年</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3.4</th>
-                                <td>semester</td>
-                                <td>byte</td>
-                                <td>学期</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3.5</th>
-                                <td>startDate</td>
-                                <td>date</td>
-                                <td>开学日期</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3.6</th>
-                                <td>endDate</td>
-                                <td>date</td>
-                                <td>结课日期</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3.7</th>
-                                <td>holidayStartDate</td>
-                                <td>date</td>
-                                <td>放假日期</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3.8</th>
-                                <td>holidayEndDate</td>
-                                <td>date</td>
-                                <td>结假日期</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3.9</th>
-                                <td>collegeId</td>
-                                <td>int</td>
-                                <td>院id</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3.10</th>
-                                <td>username</td>
-                                <td>string</td>
-                                <td>发布账号</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3.11</th>
-                                <td>publisher</td>
-                                <td>string</td>
-                                <td>发布人</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3.12</th>
-                                <td>releaseTime</td>
-                                <td>string</td>
-                                <td>发布时间</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3.13</th>
-                                <td>remark</td>
-                                <td>string</td>
-                                <td>备注</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <p>5. 教务校历详情：</p>
-                    <div class="alert alert-secondary" role="alert">
-                        GET https://www.zbeboy.top/api/educational/calendar/query/{calendarId} (域名 www.zbeboy.top 以您当前访问系统为准)
-                    </div>
-                    <p>出参：</p>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">参数名</th>
-                                <th scope="col">类型</th>
-                                <th scope="col">描述</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>state</td>
-                                <td>boolean</td>
-                                <td>是否获取成功</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>msg</td>
-                                <td>string</td>
-                                <td>失败信息</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3</th>
-                                <td>listResult</td>
-                                <td>list</td>
-                                <td>数据集</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3.1</th>
-                                <td>calendarId</td>
-                                <td>string</td>
-                                <td>校历id</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3.2</th>
-                                <td>title</td>
-                                <td>string</td>
-                                <td>标题</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3.3</th>
-                                <td>schoolYear</td>
-                                <td>string</td>
-                                <td>学年</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3.4</th>
-                                <td>semester</td>
-                                <td>byte</td>
-                                <td>学期</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3.5</th>
-                                <td>startDate</td>
-                                <td>date</td>
-                                <td>开学日期</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3.6</th>
-                                <td>endDate</td>
-                                <td>date</td>
-                                <td>结课日期</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3.7</th>
-                                <td>holidayStartDate</td>
-                                <td>date</td>
-                                <td>放假日期</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3.8</th>
-                                <td>holidayEndDate</td>
-                                <td>date</td>
-                                <td>结假日期</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3.9</th>
-                                <td>collegeId</td>
-                                <td>int</td>
-                                <td>院id</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3.10</th>
-                                <td>username</td>
-                                <td>string</td>
-                                <td>发布账号</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3.11</th>
-                                <td>publisher</td>
-                                <td>string</td>
-                                <td>发布人</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3.12</th>
-                                <td>releaseTime</td>
-                                <td>string</td>
-                                <td>发布时间</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3.13</th>
-                                <td>remark</td>
-                                <td>string</td>
-                                <td>备注</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3.14</th>
-                                <td>releaseTimeStr</td>
-                                <td>string</td>
-                                <td>标准格式(yyyy-MM-dd hh:mm:ss) 发布时间</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3.15</th>
-                                <td>schoolName</td>
-                                <td>string</td>
-                                <td>学校名</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3.16</th>
-                                <td>collegeName</td>
-                                <td>string</td>
-                                <td>院名</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3.17</th>
-                                <td>nowDate</td>
-                                <td>date</td>
-                                <td>当前日期</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3.18</th>
-                                <td>openWeeks</td>
-                                <td>int</td>
-                                <td>上课总共周数</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3.19</th>
-                                <td>holidayWeeks</td>
-                                <td>int</td>
-                                <td>放假总共周数</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3.20</th>
-                                <td>weeks</td>
-                                <td>int</td>
-                                <td>当前第几周</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3.21</th>
-                                <td>week</td>
-                                <td>int</td>
-                                <td>当前星期</td>
-                            </tr>
-                            </tbody>
-                        </table>
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="tab-content" id="v-pills-tabContent">
+                                <div class="tab-pane fade show active" id="v-pills-1" role="tabpanel" aria-labelledby="v-pills-1-tab">
+                                    <div class="alert alert-secondary" role="alert" style="word-break:break-all">
+                                        GET https://www.zbeboy.top/anyone/data/school (域名 www.zbeboy.top 以您当前访问系统为准)
+                                    </div>
+                                    <p>出参：</p>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">参数名</th>
+                                                <th scope="col">类型</th>
+                                                <th scope="col">描述</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <th scope="row">1</th>
+                                                <td>results</td>
+                                                <td>list</td>
+                                                <td>结果集</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">1.1</th>
+                                                <td>id</td>
+                                                <td>string</td>
+                                                <td>学校id</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">1.2</th>
+                                                <td>text</td>
+                                                <td>string</td>
+                                                <td>学校名</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="v-pills-2" role="tabpanel" aria-labelledby="v-pills-2-tab">
+                                    <div class="alert alert-secondary" role="alert" style="word-break:break-all">
+                                        GET https://www.zbeboy.top/anyone/data/college (域名 www.zbeboy.top 以您当前访问系统为准)
+                                    </div>
+                                    <p>请求时，您需要如下参数：</p>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">参数名</th>
+                                                <th scope="col">类型</th>
+                                                <th scope="col">描述</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <th scope="row">1</th>
+                                                <td>schoolId</td>
+                                                <td>int</td>
+                                                <td>学校id</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <p>出参：</p>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">参数名</th>
+                                                <th scope="col">类型</th>
+                                                <th scope="col">描述</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <th scope="row">1</th>
+                                                <td>results</td>
+                                                <td>list</td>
+                                                <td>结果集</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">1.1</th>
+                                                <td>id</td>
+                                                <td>string</td>
+                                                <td>院id</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">1.2</th>
+                                                <td>text</td>
+                                                <td>string</td>
+                                                <td>院名</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="v-pills-3" role="tabpanel" aria-labelledby="v-pills-3-tab">
+                                    <div class="alert alert-secondary" role="alert" style="word-break:break-all">
+                                        GET https://www.zbeboy.top/anyone/data/department (域名 www.zbeboy.top 以您当前访问系统为准)
+                                    </div>
+                                    <p>请求时，您需要如下参数：</p>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">参数名</th>
+                                                <th scope="col">类型</th>
+                                                <th scope="col">描述</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <th scope="row">1</th>
+                                                <td>collegeId</td>
+                                                <td>int</td>
+                                                <td>院id</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <p>出参：</p>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">参数名</th>
+                                                <th scope="col">类型</th>
+                                                <th scope="col">描述</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <th scope="row">1</th>
+                                                <td>results</td>
+                                                <td>list</td>
+                                                <td>结果集</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">1.1</th>
+                                                <td>id</td>
+                                                <td>string</td>
+                                                <td>系id</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">1.2</th>
+                                                <td>text</td>
+                                                <td>string</td>
+                                                <td>系名</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="v-pills-4" role="tabpanel" aria-labelledby="v-pills-4-tab">
+                                    <div class="alert alert-secondary" role="alert" style="word-break:break-all">
+                                        GET https://www.zbeboy.top/anyone/data/science (域名 www.zbeboy.top 以您当前访问系统为准)
+                                    </div>
+                                    <p>请求时，您需要如下参数：</p>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">参数名</th>
+                                                <th scope="col">类型</th>
+                                                <th scope="col">描述</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <th scope="row">1</th>
+                                                <td>departmentId</td>
+                                                <td>int</td>
+                                                <td>系id</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <p>出参：</p>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">参数名</th>
+                                                <th scope="col">类型</th>
+                                                <th scope="col">描述</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <th scope="row">1</th>
+                                                <td>results</td>
+                                                <td>list</td>
+                                                <td>结果集</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">1.1</th>
+                                                <td>id</td>
+                                                <td>string</td>
+                                                <td>专业id</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">1.2</th>
+                                                <td>text</td>
+                                                <td>string</td>
+                                                <td>专业名</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="v-pills-5" role="tabpanel" aria-labelledby="v-pills-5-tab">
+                                    <div class="alert alert-secondary" role="alert" style="word-break:break-all">
+                                        GET https://www.zbeboy.top/anyone/data/grade (域名 www.zbeboy.top 以您当前访问系统为准)
+                                    </div>
+                                    <p>请求时，您需要如下参数：</p>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">参数名</th>
+                                                <th scope="col">类型</th>
+                                                <th scope="col">描述</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <th scope="row">1</th>
+                                                <td>scienceId</td>
+                                                <td>int</td>
+                                                <td>专业id</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <p>出参：</p>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">参数名</th>
+                                                <th scope="col">类型</th>
+                                                <th scope="col">描述</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <th scope="row">1</th>
+                                                <td>results</td>
+                                                <td>list</td>
+                                                <td>结果集</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">1.1</th>
+                                                <td>id</td>
+                                                <td>string</td>
+                                                <td>年级id</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">1.2</th>
+                                                <td>text</td>
+                                                <td>string</td>
+                                                <td>年级名</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="v-pills-6" role="tabpanel" aria-labelledby="v-pills-6-tab">
+                                    <div class="alert alert-secondary" role="alert" style="word-break:break-all">
+                                        GET https://www.zbeboy.top/anyone/data/organize (域名 www.zbeboy.top 以您当前访问系统为准)
+                                    </div>
+                                    <p>请求时，您需要如下参数：</p>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">参数名</th>
+                                                <th scope="col">类型</th>
+                                                <th scope="col">描述</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <th scope="row">1</th>
+                                                <td>gradeId</td>
+                                                <td>int</td>
+                                                <td>年级id</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <p>出参：</p>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">参数名</th>
+                                                <th scope="col">类型</th>
+                                                <th scope="col">描述</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <th scope="row">1</th>
+                                                <td>results</td>
+                                                <td>list</td>
+                                                <td>结果集</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">1.1</th>
+                                                <td>id</td>
+                                                <td>string</td>
+                                                <td>班级id</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">1.2</th>
+                                                <td>text</td>
+                                                <td>string</td>
+                                                <td>班级名</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="v-pills-7" role="tabpanel" aria-labelledby="v-pills-7-tab">
+                                    <div class="alert alert-secondary" role="alert" style="word-break:break-all">
+                                        GET https://www.zbeboy.top/anyone/data/politics (域名 www.zbeboy.top 以您当前访问系统为准)
+                                    </div>
+                                    <p>出参：</p>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">参数名</th>
+                                                <th scope="col">类型</th>
+                                                <th scope="col">描述</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <th scope="row">1</th>
+                                                <td>results</td>
+                                                <td>list</td>
+                                                <td>结果集</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">1.1</th>
+                                                <td>id</td>
+                                                <td>string</td>
+                                                <td>政治面貌id</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">1.2</th>
+                                                <td>text</td>
+                                                <td>string</td>
+                                                <td>政治面貌</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="v-pills-8" role="tabpanel" aria-labelledby="v-pills-8-tab">
+                                    <div class="alert alert-secondary" role="alert" style="word-break:break-all">
+                                        GET https://www.zbeboy.top/anyone/data/nation (域名 www.zbeboy.top 以您当前访问系统为准)
+                                    </div>
+                                    <p>出参：</p>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">参数名</th>
+                                                <th scope="col">类型</th>
+                                                <th scope="col">描述</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <th scope="row">1</th>
+                                                <td>results</td>
+                                                <td>list</td>
+                                                <td>结果集</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">1.1</th>
+                                                <td>id</td>
+                                                <td>string</td>
+                                                <td>民族id</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">1.2</th>
+                                                <td>text</td>
+                                                <td>string</td>
+                                                <td>民族</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="v-pills-9" role="tabpanel" aria-labelledby="v-pills-9-tab">
+                                    <div class="alert alert-secondary" role="alert" style="word-break:break-all">
+                                        GET https://www.zbeboy.top/api/platform/users (域名 www.zbeboy.top 以您当前访问系统为准)
+                                    </div>
+                                    <p>出参：</p>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">参数名</th>
+                                                <th scope="col">类型</th>
+                                                <th scope="col">描述</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <th scope="row">1</th>
+                                                <td>realName</td>
+                                                <td>string</td>
+                                                <td>姓名</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">2</th>
+                                                <td>username</td>
+                                                <td>string</td>
+                                                <td>账号</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3</th>
+                                                <td>usersTypeId</td>
+                                                <td>int</td>
+                                                <td>用户类型（1：系统；2：学生；3：教师；4：临时用户）</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">4</th>
+                                                <td>verifyMailbox</td>
+                                                <td>int</td>
+                                                <td>是否已验证邮箱（1：已验证；0：未验证）</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">5</th>
+                                                <td>enabled</td>
+                                                <td>int</td>
+                                                <td>是否已注销（1：未注销；0：已注销）</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">6</th>
+                                                <td>accountNonLocked</td>
+                                                <td>int</td>
+                                                <td>是否已锁（1：未锁；0：已锁）</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">7</th>
+                                                <td>avatar</td>
+                                                <td>string</td>
+                                                <td>用户头像路径</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="v-pills-10" role="tabpanel" aria-labelledby="v-pills-10-tab">
+                                    <div class="alert alert-secondary" role="alert" style="word-break:break-all">
+                                        GET https://www.zbeboy.top/api/data/student (域名 www.zbeboy.top 以您当前访问系统为准)
+                                    </div>
+                                    <p>出参：</p>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">参数名</th>
+                                                <th scope="col">类型</th>
+                                                <th scope="col">描述</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <th scope="row">1</th>
+                                                <td>studentId</td>
+                                                <td>int</td>
+                                                <td>学生id</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">2</th>
+                                                <td>studentNumber</td>
+                                                <td>string</td>
+                                                <td>学号</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3</th>
+                                                <td>schoolId</td>
+                                                <td>int</td>
+                                                <td>学校id</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">4</th>
+                                                <td>schoolName</td>
+                                                <td>string</td>
+                                                <td>学校名</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">5</th>
+                                                <td>collegeId</td>
+                                                <td>int</td>
+                                                <td>院id</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">6</th>
+                                                <td>collegeName</td>
+                                                <td>string</td>
+                                                <td>院名</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">7</th>
+                                                <td>collegeAddress</td>
+                                                <td>string</td>
+                                                <td>院地址</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">8</th>
+                                                <td>collegeCoordinate</td>
+                                                <td>string</td>
+                                                <td>院坐标</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">9</th>
+                                                <td>collegeZipCode</td>
+                                                <td>string</td>
+                                                <td>院邮编</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">10</th>
+                                                <td>departmentId</td>
+                                                <td>int</td>
+                                                <td>系id</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">11</th>
+                                                <td>departmentName</td>
+                                                <td>string</td>
+                                                <td>系名</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">12</th>
+                                                <td>scienceId</td>
+                                                <td>int</td>
+                                                <td>专业id</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">13</th>
+                                                <td>scienceName</td>
+                                                <td>string</td>
+                                                <td>专业名</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">14</th>
+                                                <td>gradeId</td>
+                                                <td>int</td>
+                                                <td>年级id</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">15</th>
+                                                <td>grade</td>
+                                                <td>int</td>
+                                                <td>年级</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">16</th>
+                                                <td>organizeId</td>
+                                                <td>int</td>
+                                                <td>班级id</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">17</th>
+                                                <td>organizeName</td>
+                                                <td>string</td>
+                                                <td>班级名</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="v-pills-11" role="tabpanel" aria-labelledby="v-pills-11-tab">
+                                    <div class="alert alert-secondary" role="alert" style="word-break:break-all">
+                                        GET https://www.zbeboy.top/api/data/staff (域名 www.zbeboy.top 以您当前访问系统为准)
+                                    </div>
+                                    <p>出参：</p>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">参数名</th>
+                                                <th scope="col">类型</th>
+                                                <th scope="col">描述</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <th scope="row">1</th>
+                                                <td>staffId</td>
+                                                <td>int</td>
+                                                <td>教师id</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">2</th>
+                                                <td>staffNumber</td>
+                                                <td>string</td>
+                                                <td>工号</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3</th>
+                                                <td>schoolId</td>
+                                                <td>int</td>
+                                                <td>学校id</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">4</th>
+                                                <td>schoolName</td>
+                                                <td>string</td>
+                                                <td>学校名</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">5</th>
+                                                <td>collegeId</td>
+                                                <td>int</td>
+                                                <td>院id</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">6</th>
+                                                <td>collegeName</td>
+                                                <td>string</td>
+                                                <td>院名</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">7</th>
+                                                <td>collegeAddress</td>
+                                                <td>string</td>
+                                                <td>院地址</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">8</th>
+                                                <td>collegeCoordinate</td>
+                                                <td>string</td>
+                                                <td>院坐标</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">9</th>
+                                                <td>collegeZipCode</td>
+                                                <td>string</td>
+                                                <td>院邮编</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">10</th>
+                                                <td>departmentId</td>
+                                                <td>int</td>
+                                                <td>系id</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">11</th>
+                                                <td>departmentName</td>
+                                                <td>string</td>
+                                                <td>系名</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="v-pills-12" role="tabpanel" aria-labelledby="v-pills-12-tab">
+                                    <div class="alert alert-secondary" role="alert" style="word-break:break-all">
+                                        GET https://www.zbeboy.top/api/educational/calendar/query-with-college-id/{collegeId} (域名 www.zbeboy.top 以您当前访问系统为准)
+                                    </div>
+                                    <p>出参：</p>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">参数名</th>
+                                                <th scope="col">类型</th>
+                                                <th scope="col">描述</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <th scope="row">1</th>
+                                                <td>state</td>
+                                                <td>boolean</td>
+                                                <td>是否获取成功</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">2</th>
+                                                <td>msg</td>
+                                                <td>string</td>
+                                                <td>失败信息</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3</th>
+                                                <td>listResult</td>
+                                                <td>list</td>
+                                                <td>数据集</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3.1</th>
+                                                <td>calendarId</td>
+                                                <td>string</td>
+                                                <td>校历id</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3.2</th>
+                                                <td>title</td>
+                                                <td>string</td>
+                                                <td>标题</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3.3</th>
+                                                <td>schoolYear</td>
+                                                <td>string</td>
+                                                <td>学年</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3.4</th>
+                                                <td>semester</td>
+                                                <td>byte</td>
+                                                <td>学期</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3.5</th>
+                                                <td>startDate</td>
+                                                <td>date</td>
+                                                <td>开学日期</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3.6</th>
+                                                <td>endDate</td>
+                                                <td>date</td>
+                                                <td>结课日期</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3.7</th>
+                                                <td>holidayStartDate</td>
+                                                <td>date</td>
+                                                <td>放假日期</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3.8</th>
+                                                <td>holidayEndDate</td>
+                                                <td>date</td>
+                                                <td>结假日期</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3.9</th>
+                                                <td>collegeId</td>
+                                                <td>int</td>
+                                                <td>院id</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3.10</th>
+                                                <td>username</td>
+                                                <td>string</td>
+                                                <td>发布账号</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3.11</th>
+                                                <td>publisher</td>
+                                                <td>string</td>
+                                                <td>发布人</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3.12</th>
+                                                <td>releaseTime</td>
+                                                <td>string</td>
+                                                <td>发布时间</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3.13</th>
+                                                <td>remark</td>
+                                                <td>string</td>
+                                                <td>备注</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="v-pills-13" role="tabpanel" aria-labelledby="v-pills-13-tab">
+                                    <div class="alert alert-secondary" role="alert" style="word-break:break-all">
+                                        GET https://www.zbeboy.top/api/educational/calendar/query/{calendarId} (域名 www.zbeboy.top 以您当前访问系统为准)
+                                    </div>
+                                    <p>出参：</p>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">参数名</th>
+                                                <th scope="col">类型</th>
+                                                <th scope="col">描述</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <th scope="row">1</th>
+                                                <td>state</td>
+                                                <td>boolean</td>
+                                                <td>是否获取成功</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">2</th>
+                                                <td>msg</td>
+                                                <td>string</td>
+                                                <td>失败信息</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3</th>
+                                                <td>listResult</td>
+                                                <td>list</td>
+                                                <td>数据集</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3.1</th>
+                                                <td>calendarId</td>
+                                                <td>string</td>
+                                                <td>校历id</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3.2</th>
+                                                <td>title</td>
+                                                <td>string</td>
+                                                <td>标题</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3.3</th>
+                                                <td>schoolYear</td>
+                                                <td>string</td>
+                                                <td>学年</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3.4</th>
+                                                <td>semester</td>
+                                                <td>byte</td>
+                                                <td>学期</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3.5</th>
+                                                <td>startDate</td>
+                                                <td>date</td>
+                                                <td>开学日期</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3.6</th>
+                                                <td>endDate</td>
+                                                <td>date</td>
+                                                <td>结课日期</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3.7</th>
+                                                <td>holidayStartDate</td>
+                                                <td>date</td>
+                                                <td>放假日期</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3.8</th>
+                                                <td>holidayEndDate</td>
+                                                <td>date</td>
+                                                <td>结假日期</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3.9</th>
+                                                <td>collegeId</td>
+                                                <td>int</td>
+                                                <td>院id</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3.10</th>
+                                                <td>username</td>
+                                                <td>string</td>
+                                                <td>发布账号</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3.11</th>
+                                                <td>publisher</td>
+                                                <td>string</td>
+                                                <td>发布人</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3.12</th>
+                                                <td>releaseTime</td>
+                                                <td>string</td>
+                                                <td>发布时间</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3.13</th>
+                                                <td>remark</td>
+                                                <td>string</td>
+                                                <td>备注</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3.14</th>
+                                                <td>releaseTimeStr</td>
+                                                <td>string</td>
+                                                <td>标准格式(yyyy-MM-dd hh:mm:ss) 发布时间</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3.15</th>
+                                                <td>schoolName</td>
+                                                <td>string</td>
+                                                <td>学校名</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3.16</th>
+                                                <td>collegeName</td>
+                                                <td>string</td>
+                                                <td>院名</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3.17</th>
+                                                <td>nowDate</td>
+                                                <td>date</td>
+                                                <td>当前日期</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3.18</th>
+                                                <td>openWeeks</td>
+                                                <td>int</td>
+                                                <td>上课总共周数</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3.19</th>
+                                                <td>holidayWeeks</td>
+                                                <td>int</td>
+                                                <td>放假总共周数</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3.20</th>
+                                                <td>weeks</td>
+                                                <td>int</td>
+                                                <td>当前第几周</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3.21</th>
+                                                <td>week</td>
+                                                <td>int</td>
+                                                <td>当前星期</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="nav flex-column nav-pills sticky-top" id="v-pills-tab" role="tablist" aria-orientation="vertical" style="top:15%;">
+                                <a class="nav-link active" id="v-pills-1-tab" data-toggle="pill" href="#v-pills-1" role="tab" aria-controls="v-pills-1" aria-selected="true">
+                                    一、学校数据
+                                </a>
+                                <a class="nav-link" id="v-pills-2-tab" data-toggle="pill" href="#v-pills-2" role="tab" aria-controls="v-pills-2" aria-selected="false">
+                                    二、院数据
+                                </a>
+                                <a class="nav-link" id="v-pills-3-tab" data-toggle="pill" href="#v-pills-3" role="tab" aria-controls="v-pills-3" aria-selected="false">
+                                    三、系数据
+                                </a>
+                                <a class="nav-link" id="v-pills-4-tab" data-toggle="pill" href="#v-pills-4" role="tab" aria-controls="v-pills-4" aria-selected="false">
+                                    四、专业数据
+                                </a>
+                                <a class="nav-link" id="v-pills-5-tab" data-toggle="pill" href="#v-pills-5" role="tab" aria-controls="v-pills-5" aria-selected="false">
+                                    五、年级数据
+                                </a>
+                                <a class="nav-link" id="v-pills-6-tab" data-toggle="pill" href="#v-pills-6" role="tab" aria-controls="v-pills-6" aria-selected="false">
+                                    六、班级数据
+                                </a>
+                                <a class="nav-link" id="v-pills-7-tab" data-toggle="pill" href="#v-pills-7" role="tab" aria-controls="v-pills-7" aria-selected="false">
+                                    七、政治面貌数据
+                                </a>
+                                <a class="nav-link" id="v-pills-8-tab" data-toggle="pill" href="#v-pills-8" role="tab" aria-controls="v-pills-8" aria-selected="false">
+                                    八、民族数据
+                                </a>
+                                <a class="nav-link" id="v-pills-9-tab" data-toggle="pill" href="#v-pills-9" role="tab" aria-controls="v-pills-9" aria-selected="false">
+                                    九、用户基本信息
+                                </a>
+                                <a class="nav-link" id="v-pills-10-tab" data-toggle="pill" href="#v-pills-10" role="tab" aria-controls="v-pills-10" aria-selected="false">
+                                    十、学生信息
+                                </a>
+                                <a class="nav-link" id="v-pills-11-tab" data-toggle="pill" href="#v-pills-11" role="tab" aria-controls="v-pills-11" aria-selected="false">
+                                    十一、教师信息
+                                </a>
+                                <a class="nav-link" id="v-pills-12-tab" data-toggle="pill" href="#v-pills-12" role="tab" aria-controls="v-pills-12" aria-selected="false">
+                                    十二、教务校历列表
+                                </a>
+                                <a class="nav-link" id="v-pills-13-tab" data-toggle="pill" href="#v-pills-13" role="tab" aria-controls="v-pills-13" aria-selected="false">
+                                    十三、教务校历详情
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

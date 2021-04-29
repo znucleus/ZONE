@@ -38,7 +38,7 @@
                     <h3 class="mt-4">二、用户进行授权访问（两种模式可选）</h3>
                     <h4 class="mt-4">1. 授权码模式</h4>
                     <p>1.1 请求授权链接：</p>
-                    <div class="alert alert-secondary" role="alert">
+                    <div class="alert alert-secondary" role="alert" style="word-break:break-all">
                         GET https://www.zbeboy.top/oauth/authorize (域名 www.zbeboy.top 以您当前访问系统为准)
                     </div>
                     <p>请求时，您需要如下参数：</p>
@@ -80,9 +80,8 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="alert alert-primary" role="alert">
-                        GET
-                        https://www.zbeboy.top/oauth/authorize?grant_type=authorization_code&response_type=code&client_id=zhe_client&state=1234
+                    <div class="alert alert-primary" role="alert" style="word-break:break-all">
+                        GET https://www.zbeboy.top/oauth/authorize?grant_type=authorization_code&response_type=code&client_id=zhe_client&state=1234
                     </div>
                     <p>1.2 用户授权</p>
                     <ul class="list-group">
@@ -98,7 +97,7 @@
                         <li class="list-group-item">2) 用户拒绝时，您会获取到一个 error 参数。（仅失败时有该参数）</li>
                     </ul>
                     <p class="mt-2">请求 access_token 链接：</p>
-                    <div class="alert alert-secondary" role="alert">
+                    <div class="alert alert-secondary" role="alert" style="word-break:break-all">
                         POST https://www.zbeboy.top/oauth/token (域名 www.zbeboy.top 以您当前访问系统为准)
                     </div>
                     <p>请求时，您需要如下参数：</p>
@@ -155,12 +154,12 @@
                     <p>
                         为方便您调试，我们支持除浏览器之外的工具进行调用，比如 curl
                     </p>
-                    <div class="alert alert-primary" role="alert">
+                    <div class="alert alert-primary" role="alert" style="word-break:break-all">
                         curl https://www.zbeboy.top/oauth/token -X POST -d
                         "grant_type=authorization_code&response_type=code&client_id=zhe_client&client_secret=ksdf98ErdD&code=Gz1qzy&state=1234"
                     </div>
                     <p>请求之后，您会获取到以下参数：</p>
-                    <div class="alert alert-dark" role="alert">
+                    <div class="alert alert-dark" role="alert" style="word-break:break-all">
                         {"access_token":"1dff5cb6-3d22-4644-a1ef-c1d1022a7fe9","token_type":"bearer","refresh_token":"b6e60fd2-6008-4bfa-a647-1488c381f09b","expires_in":604799,"scope":"api"}
                     </div>
                     <div class="table-responsive">
@@ -209,14 +208,13 @@
                     </div>
                     <p>1.4 获取数据</p>
                     <p>例如，获取用户信息：</p>
-                    <div class="alert alert-primary" role="alert">
-                        curl -H "Authorization: bearer 1dff5cb6-3d22-4644-a1ef-c1d1022a7fe9"
-                        https://www.zbeboy.top/api/platform/users
+                    <div class="alert alert-primary" role="alert" style="word-break:break-all">
+                        curl -H "Authorization: bearer 1dff5cb6-3d22-4644-a1ef-c1d1022a7fe9" https://www.zbeboy.top/api/platform/users
                     </div>
                     <h4 class="mt-4">2. 密码模式</h4>
                     <p>2.1 获取 access_token</p>
                     <p class="mt-2">请求 access_token 链接：</p>
-                    <div class="alert alert-secondary" role="alert">
+                    <div class="alert alert-secondary" role="alert" style="word-break:break-all">
                         POST https://www.zbeboy.top/oauth/token (域名 www.zbeboy.top 以您当前访问系统为准)
                     </div>
                     <p>请求时，您需要如下参数：</p>
@@ -270,15 +268,15 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="alert alert-primary" role="alert">
+                    <div class="alert alert-primary" role="alert" style="word-break:break-all">
                         curl https://www.zbeboy.top/oauth/token -X POST -d "grant_type=password&scope=api&username=demo&password=123456&client_id=e654e55f6a6a494993bdffc17eeec344&client_secret=zFb8v0J5mpR0z8T"
                     </div>
                     <p>请求之后，您会获取到以下参数：</p>
-                    <div class="alert alert-dark" role="alert">
+                    <div class="alert alert-dark" role="alert" style="word-break:break-all">
                         {"access_token":"78f100d2-c66e-4cf9-ae9c-ac451c43ca65","token_type":"bearer","expires_in":603385,"scope":"api"}
                     </div>
                     <p>用户账号或密码错误，失败返回：</p>
-                    <div class="alert alert-danger" role="alert">
+                    <div class="alert alert-danger" role="alert" style="word-break:break-all">
                         {
                         "error" : "invalid_grant",
                         "error_description" : "Bad credentials"
@@ -286,7 +284,7 @@
                     </div>
                     <p>2.2 获取数据</p>
                     <p>例如，获取用户信息：</p>
-                    <div class="alert alert-primary" role="alert">
+                    <div class="alert alert-primary" role="alert" style="word-break:break-all">
                         curl -H "Authorization: bearer 78f100d2-c66e-4cf9-ae9c-ac451c43ca65" https://www.zbeboy.top/api/platform/users
                     </div>
                 </div>
