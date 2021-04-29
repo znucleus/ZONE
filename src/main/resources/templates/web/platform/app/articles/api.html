@@ -692,6 +692,284 @@
                             </tbody>
                         </table>
                     </div>
+                    <p>4. 教务校历列表：</p>
+                    <div class="alert alert-secondary" role="alert">
+                        GET https://www.zbeboy.top/api/educational/calendar/query-with-college-id/{collegeId} (域名 www.zbeboy.top 以您当前访问系统为准)
+                    </div>
+                    <p>出参：</p>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">参数名</th>
+                                <th scope="col">类型</th>
+                                <th scope="col">描述</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>state</td>
+                                <td>boolean</td>
+                                <td>是否获取成功</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>msg</td>
+                                <td>string</td>
+                                <td>失败信息</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td>listResult</td>
+                                <td>list</td>
+                                <td>数据集</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3.1</th>
+                                <td>calendarId</td>
+                                <td>string</td>
+                                <td>校历id</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3.2</th>
+                                <td>title</td>
+                                <td>string</td>
+                                <td>标题</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3.3</th>
+                                <td>schoolYear</td>
+                                <td>string</td>
+                                <td>学年</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3.4</th>
+                                <td>semester</td>
+                                <td>byte</td>
+                                <td>学期</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3.5</th>
+                                <td>startDate</td>
+                                <td>date</td>
+                                <td>开学日期</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3.6</th>
+                                <td>endDate</td>
+                                <td>date</td>
+                                <td>结课日期</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3.7</th>
+                                <td>holidayStartDate</td>
+                                <td>date</td>
+                                <td>放假日期</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3.8</th>
+                                <td>holidayEndDate</td>
+                                <td>date</td>
+                                <td>结假日期</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3.9</th>
+                                <td>collegeId</td>
+                                <td>int</td>
+                                <td>院id</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3.10</th>
+                                <td>username</td>
+                                <td>string</td>
+                                <td>发布账号</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3.11</th>
+                                <td>publisher</td>
+                                <td>string</td>
+                                <td>发布人</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3.12</th>
+                                <td>releaseTime</td>
+                                <td>string</td>
+                                <td>发布时间</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3.13</th>
+                                <td>remark</td>
+                                <td>string</td>
+                                <td>备注</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p>5. 教务校历详情：</p>
+                    <div class="alert alert-secondary" role="alert">
+                        GET https://www.zbeboy.top/api/educational/calendar/query/{calendarId} (域名 www.zbeboy.top 以您当前访问系统为准)
+                    </div>
+                    <p>出参：</p>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">参数名</th>
+                                <th scope="col">类型</th>
+                                <th scope="col">描述</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>state</td>
+                                <td>boolean</td>
+                                <td>是否获取成功</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>msg</td>
+                                <td>string</td>
+                                <td>失败信息</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td>listResult</td>
+                                <td>list</td>
+                                <td>数据集</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3.1</th>
+                                <td>calendarId</td>
+                                <td>string</td>
+                                <td>校历id</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3.2</th>
+                                <td>title</td>
+                                <td>string</td>
+                                <td>标题</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3.3</th>
+                                <td>schoolYear</td>
+                                <td>string</td>
+                                <td>学年</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3.4</th>
+                                <td>semester</td>
+                                <td>byte</td>
+                                <td>学期</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3.5</th>
+                                <td>startDate</td>
+                                <td>date</td>
+                                <td>开学日期</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3.6</th>
+                                <td>endDate</td>
+                                <td>date</td>
+                                <td>结课日期</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3.7</th>
+                                <td>holidayStartDate</td>
+                                <td>date</td>
+                                <td>放假日期</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3.8</th>
+                                <td>holidayEndDate</td>
+                                <td>date</td>
+                                <td>结假日期</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3.9</th>
+                                <td>collegeId</td>
+                                <td>int</td>
+                                <td>院id</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3.10</th>
+                                <td>username</td>
+                                <td>string</td>
+                                <td>发布账号</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3.11</th>
+                                <td>publisher</td>
+                                <td>string</td>
+                                <td>发布人</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3.12</th>
+                                <td>releaseTime</td>
+                                <td>string</td>
+                                <td>发布时间</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3.13</th>
+                                <td>remark</td>
+                                <td>string</td>
+                                <td>备注</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3.14</th>
+                                <td>releaseTimeStr</td>
+                                <td>string</td>
+                                <td>标准格式(yyyy-MM-dd hh:mm:ss) 发布时间</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3.15</th>
+                                <td>schoolName</td>
+                                <td>string</td>
+                                <td>学校名</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3.16</th>
+                                <td>collegeName</td>
+                                <td>string</td>
+                                <td>院名</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3.17</th>
+                                <td>nowDate</td>
+                                <td>date</td>
+                                <td>当前日期</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3.18</th>
+                                <td>openWeeks</td>
+                                <td>int</td>
+                                <td>上课总共周数</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3.19</th>
+                                <td>holidayWeeks</td>
+                                <td>int</td>
+                                <td>放假总共周数</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3.20</th>
+                                <td>weeks</td>
+                                <td>int</td>
+                                <td>当前第几周</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3.21</th>
+                                <td>week</td>
+                                <td>int</td>
+                                <td>当前星期</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

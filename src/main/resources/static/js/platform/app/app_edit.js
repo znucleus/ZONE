@@ -32,6 +32,10 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             }
         };
 
+        var page_param = {
+            oauthType: Number($('#oauthType').val())
+        };
+
         /*
          参数
          */
@@ -63,7 +67,14 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
          * 初始化界面
          */
         function init() {
+            initPage();
             initMaxLength();
+        }
+
+        function initPage() {
+            if (page_param.oauthType === 1) {
+                $(param_id.webServerRedirectUri).parent('display', 'none');
+            }
         }
 
         /**
@@ -133,7 +144,11 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
                 tools.validErrorDom(param_id.appName, '应用名100个字符以内');
             } else {
                 tools.validSuccessDom(param_id.appName);
-                validWebServerRedirectUri();
+                if (page_param.oauthType === 0) {
+                    validWebServerRedirectUri();
+                } else {
+                    sendAjax();
+                }
             }
         }
 

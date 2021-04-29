@@ -20,6 +20,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             clientId: '#clientId',
             secret: '#secret',
             appName: '#appName',
+            oauthType:'#oauthType',
             webServerRedirectUri: '#webServerRedirectUri',
             remark: '#remark'
         };
@@ -39,6 +40,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             clientId: '',
             secret: '',
             appName: '',
+            oauthType:'',
             webServerRedirectUri: '',
             remark: ''
         };
@@ -50,6 +52,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             param.clientId = _.trim($(param_id.clientId).val());
             param.secret = _.trim($(param_id.secret).val());
             param.appName = _.trim($(param_id.appName).val());
+            param.oauthType = Number($(param_id.oauthType).val());
             param.webServerRedirectUri = _.trim($(param_id.webServerRedirectUri).val());
             param.remark = _.trim($(param_id.remark).val());
         }
@@ -65,6 +68,15 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
         function init() {
             initMaxLength();
         }
+
+        $(param_id.oauthType).change(function (){
+            var v = Number($(this).val());
+            if(v === 0){
+                $(param_id.webServerRedirectUri).parent().css('display', '');
+            } else {
+                $(param_id.webServerRedirectUri).parent().css('display', 'none');
+            }
+        });
 
         /**
          * 初始化Input max length
@@ -129,11 +141,16 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
          */
         function validAppName() {
             var appName = param.appName;
+            var oauthType = param.oauthType;
             if (appName.length <= 0 || appName.length > 100) {
                 tools.validErrorDom(param_id.appName, '应用名100个字符以内');
             } else {
                 tools.validSuccessDom(param_id.appName);
-                validWebServerRedirectUri();
+                if(oauthType === 0){
+                    validWebServerRedirectUri();
+                } else {
+                    sendAjax();
+                }
             }
         }
 

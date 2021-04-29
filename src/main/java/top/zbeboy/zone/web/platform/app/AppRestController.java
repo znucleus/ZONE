@@ -41,6 +41,7 @@ public class AppRestController {
         headers.add("realName");
         headers.add("clientId");
         headers.add("secret");
+        headers.add("oauthType");
         headers.add("webServerRedirectUri");
         headers.add("remark");
         headers.add("createDate");

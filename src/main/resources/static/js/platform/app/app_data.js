@@ -53,7 +53,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
             },
             "processing": true, // 打开数据加载时的等待效果
             "serverSide": true,// 打开后台分页
-            "aaSorting": [[7, 'desc']],// 排序
+            "aaSorting": [[8, 'desc']],// 排序
             "ajax": {
                 "url": getAjaxUrl().data,
                 "dataSrc": "data",
@@ -70,6 +70,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
                 {"data": "realName"},
                 {"data": "clientId"},
                 {"data": "secret"},
+                {"data": "oauthType"},
                 {"data": "webServerRedirectUri"},
                 {"data": "remark"},
                 {"data": "createDateStr"},
@@ -77,7 +78,19 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
             ],
             columnDefs: [
                 {
-                    targets: 8,
+                    targets: 5,
+                    render: function (a, b, c, d) {
+                        var v = '';
+                        if(c.oauthType === 0){
+                            v = '授权码模式';
+                        } else {
+                            v = '密码模式';
+                        }
+                        return v;
+                    }
+                },
+                {
+                    targets: 9,
                     orderable: false,
                     render: function (a, b, c, d) {
 

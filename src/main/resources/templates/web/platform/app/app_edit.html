@@ -65,6 +65,7 @@
         </div>
     </div>
 
+    <input type="hidden" id="oauthType" th:value="${oauthClientUsers.oauthType}"/>
     <input type="hidden" class="dy_script"
            th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/platform/app/app_edit.js')}"/>
 </div>
