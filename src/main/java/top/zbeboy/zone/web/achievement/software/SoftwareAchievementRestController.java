@@ -154,7 +154,7 @@ public class SoftwareAchievementRestController {
                     bean.setCreateDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getCreateDate()));
                     bean.setIdCard(StringUtils.isNotBlank(bean.getIdCard()) ? StringUtils.overlay(bean.getIdCard(), "****", 3, bean.getIdCard().length() - 4) : "");
                 }
-                ajaxUtil.success().list(optionalSoftwareAchievements.get());
+                ajaxUtil.success().list(list);
             } else {
                 ajaxUtil.fail().msg("查询失败");
             }
