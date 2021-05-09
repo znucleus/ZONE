@@ -143,22 +143,19 @@ public class SoftwareAchievementApiController {
     @GetMapping("/api/achievement/software/query/history")
     public ResponseEntity<Map<String, Object>> history(Principal principal) {
         AjaxUtil<SoftwareAchievementBean> ajaxUtil = AjaxUtil.of();
+        List<SoftwareAchievementBean> list = new ArrayList<>();
         Users users = SessionUtil.getUserFromOauth(principal);
         if (StringUtils.isNotBlank(users.getIdCard())) {
             Optional<List<SoftwareAchievementBean>> optionalSoftwareAchievements = softwareAchievementService.findByIdCard(users.getIdCard());
             if (optionalSoftwareAchievements.isPresent()) {
-                List<SoftwareAchievementBean> list = optionalSoftwareAchievements.get();
+                list = optionalSoftwareAchievements.get();
                 for (SoftwareAchievementBean bean : list) {
                     bean.setCreateDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getCreateDate()));
                     bean.setIdCard(StringUtils.isNotBlank(bean.getIdCard()) ? StringUtils.overlay(bean.getIdCard(), "****", 3, bean.getIdCard().length() - 4) : "");
                 }
-                ajaxUtil.success().list(optionalSoftwareAchievements.get());
-            } else {
-                ajaxUtil.fail().msg("查询失败");
             }
-        } else {
-            ajaxUtil.fail().msg("未完善身份证信息");
         }
+        ajaxUtil.success().list(list);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }
