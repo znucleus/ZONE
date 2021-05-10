@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import top.zbeboy.zbase.config.WeiXinAppBook;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.data.WeiXinService;
@@ -34,10 +35,9 @@ public class WeiXinApiController {
     @PostMapping("/api/data/wei-xin/save")
     public ResponseEntity<Map<String, Object>> save(@RequestParam("resCode") String resCode,
                                                     @RequestParam("appId") String appId,
-                                                    @RequestParam("secret") String secret,
                                                     Principal principal, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromOauth(principal);
-        AjaxUtil<Map<String, Object>> ajaxUtil = weiXinService.save(resCode, appId, secret, users.getUsername());
+        AjaxUtil<Map<String, Object>> ajaxUtil = weiXinService.save(resCode, appId, WeiXinAppBook.getAppSecret(appId), users.getUsername());
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

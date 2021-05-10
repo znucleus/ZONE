@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.bean.data.staff.StaffBean;
+import top.zbeboy.zbase.config.WeiXinAppBook;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.config.ZoneProperties;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
@@ -180,9 +181,8 @@ public class StaffApiController {
 
                 if (ajaxUtil.getState()) {
                     // 注册微信
-                    if (StringUtils.isNotBlank(staffAddVo.getResCode()) && StringUtils.isNotBlank(staffAddVo.getAppId())
-                            && StringUtils.isNotBlank(staffAddVo.getSecret())) {
-                        weiXinService.save(staffAddVo.getResCode(), staffAddVo.getAppId(), staffAddVo.getSecret(), staffAddVo.getUsername());
+                    if (StringUtils.isNotBlank(staffAddVo.getResCode()) && StringUtils.isNotBlank(staffAddVo.getAppId())) {
+                        weiXinService.save(staffAddVo.getResCode(), staffAddVo.getAppId(), WeiXinAppBook.getAppSecret(staffAddVo.getAppId()), staffAddVo.getUsername());
                     }
 
                     Users users = new Users();
