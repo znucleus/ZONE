@@ -17,6 +17,7 @@ import javax.annotation.Resource;
 import java.util.Optional;
 
 import static org.jooq.impl.DSL.currentDate;
+import static org.jooq.impl.DSL.currentLocalDate;
 import static top.zbeboy.zbase.domain.Tables.*;
 
 @Service("trainingConfigureService")
@@ -71,8 +72,8 @@ public class TrainingConfigureServiceImpl implements TrainingConfigureService {
                 .leftJoin(TRAINING_RELEASE)
                 .on(TRAINING_CONFIGURE.TRAINING_RELEASE_ID.eq(TRAINING_RELEASE.TRAINING_RELEASE_ID))
                 .where(TRAINING_CONFIGURE.WEEK_DAY.eq(dayOfWeek)
-                        .and(TRAINING_RELEASE.START_DATE.le(currentDate()))
-                        .and(TRAINING_RELEASE.END_DATE.ge(currentDate())))
+                        .and(TRAINING_RELEASE.START_DATE.le(currentLocalDate()))
+                        .and(TRAINING_RELEASE.END_DATE.ge(currentLocalDate())))
                 .fetch();
     }
 

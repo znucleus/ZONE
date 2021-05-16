@@ -174,7 +174,7 @@ public class PlatformControllerCommon {
 
                                     own.setEmail(value);
                                     own.setMailboxVerifyCode(RandomUtil.generateEmailCheckKey());
-                                    own.setMailboxVerifyValid(DateTimeUtil.utilDateToSqlTimestamp(dateTime.toDate()));
+                                    own.setMailboxVerifyValid(DateTimeUtil.utilDateToLocalDateTime(dateTime.toDate()));
                                     own.setVerifyMailbox(BooleanUtil.toByte(false));
                                     usersService.update(own);
                                     systemMailService.sendValidEmailMail(own, RequestUtil.getBaseUrl(request));

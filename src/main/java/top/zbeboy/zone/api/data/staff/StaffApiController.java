@@ -98,7 +98,7 @@ public class StaffApiController {
                     outPut.put("nationName", bean.getNationName());
                     outPut.put("politicalLandscapeId", bean.getPoliticalLandscapeId());
                     outPut.put("politicalLandscapeName", bean.getPoliticalLandscapeName());
-                    outPut.put("birthday", Objects.nonNull(bean.getBirthday()) ? DateTimeUtil.formatSqlDate(bean.getBirthday(), DateTimeUtil.YEAR_MONTH_DAY_FORMAT) : bean.getBirthday());
+                    outPut.put("birthday", Objects.nonNull(bean.getBirthday()) ? DateTimeUtil.defaultFormatLocalDate(bean.getBirthday()) : bean.getBirthday());
                     outPut.put("sex", bean.getSex());
                     outPut.put("familyResidence", bean.getFamilyResidence());
                     outPut.put("post", bean.getPost());
@@ -173,8 +173,8 @@ public class StaffApiController {
                 DateTime dateTime = DateTime.now();
                 dateTime = dateTime.plusDays(ZoneProperties.getMail().getValidCodeTime());
                 staffAddVo.setMailboxVerifyCode(RandomUtil.generateEmailCheckKey());
-                staffAddVo.setMailboxVerifyValid(DateTimeUtil.utilDateToSqlTimestamp(dateTime.toDate()));
-                staffAddVo.setJoinDate(DateTimeUtil.getNowSqlDate());
+                staffAddVo.setMailboxVerifyValid(DateTimeUtil.utilDateToLocalDateTime(dateTime.toDate()));
+                staffAddVo.setJoinDate(DateTimeUtil.getNowLocalDate());
                 staffAddVo.setLangKey(request.getLocale().toLanguageTag());
                 staffAddVo.setBaseUrl(RequestUtil.getBaseUrl(request));
                 ajaxUtil = staffService.save(staffAddVo);

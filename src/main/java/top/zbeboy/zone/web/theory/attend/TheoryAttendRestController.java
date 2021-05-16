@@ -106,7 +106,7 @@ public class TheoryAttendRestController {
         Result<Record> records = theoryAttendService.findAllByPage(simplePaginationUtil);
         if (records.isNotEmpty()) {
             beans = records.into(TheoryAttendBean.class);
-            beans.forEach(bean -> bean.setPublishDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getPublishDate())));
+            beans.forEach(bean -> bean.setPublishDateStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getPublishDate())));
             beans.forEach(bean -> bean.setCanOperator(BooleanUtil.toByte(theoryConditionCommon.usersCondition(bean.getTheoryReleaseId()))));
         }
         simplePaginationUtil.setTotalSize(theoryAttendService.countAll(simplePaginationUtil));
@@ -155,15 +155,15 @@ public class TheoryAttendRestController {
                 // 生成考勤日期
                 TheoryAttendRecord theoryAttendRecord = theoryAttendService.findByTheoryReleaseIdWithRecentlyAttendDate(theoryConfigure.getTheoryReleaseId());
                 if (Objects.nonNull(theoryAttendRecord)) {
-                    theoryAttend.setAttendDate(DateTimeUtil.calculationSqlNextWeekDay(theoryAttendRecord.getAttendDate(), theoryConfigure.getWeekDay()));
+                    theoryAttend.setAttendDate(DateTimeUtil.calculationNextWeekDay(theoryAttendRecord.getAttendDate(), theoryConfigure.getWeekDay()));
                 } else {
-                    theoryAttend.setAttendDate(DateTimeUtil.calculationSqlNextWeekDay(DateTimeUtil.getNowSqlDate(), theoryConfigure.getWeekDay()));
+                    theoryAttend.setAttendDate(DateTimeUtil.calculationNextWeekDay(DateTimeUtil.getNowLocalDate(), theoryConfigure.getWeekDay()));
                 }
 
                 theoryAttend.setAttendStartTime(theoryConfigure.getStartTime());
                 theoryAttend.setAttendEndTime(theoryConfigure.getEndTime());
                 theoryAttend.setAttendRoom(theoryConfigure.getSchoolroomId());
-                theoryAttend.setPublishDate(DateTimeUtil.getNowSqlTimestamp());
+                theoryAttend.setPublishDate(DateTimeUtil.getNowLocalDateTime());
                 theoryAttendService.save(theoryAttend);
 
                 Users user = SessionUtil.getUserFromSession();
@@ -176,7 +176,7 @@ public class TheoryAttendRestController {
                         theoryAttendUser.setTheoryAttendId(theoryAttendId);
                         theoryAttendUser.setTheoryUsersId(users.getTheoryUsersId());
                         theoryAttendUser.setOperateUser(user.getUsername());
-                        theoryAttendUser.setOperateDate(DateTimeUtil.getNowSqlTimestamp());
+                        theoryAttendUser.setOperateDate(DateTimeUtil.getNowLocalDateTime());
                         theoryAttendUser.setOperate(ByteUtil.toByte(0));
                         theoryAttendUser.setRemark(users.getRemark());
 
@@ -211,11 +211,11 @@ public class TheoryAttendRestController {
                 String theoryAttendId = UUIDUtil.getUUID();
                 theoryAttend.setTheoryAttendId(theoryAttendId);
                 theoryAttend.setTheoryReleaseId(theoryAttendAddVo.getTheoryReleaseId());
-                theoryAttend.setAttendDate(DateTimeUtil.defaultParseSqlDate(theoryAttendAddVo.getAttendDate()));
-                theoryAttend.setAttendStartTime(DateTimeUtil.defaultParseSqlTime(theoryAttendAddVo.getAttendStartTime()));
-                theoryAttend.setAttendEndTime(DateTimeUtil.defaultParseSqlTime(theoryAttendAddVo.getAttendEndTime()));
+                theoryAttend.setAttendDate(DateTimeUtil.defaultParseLocalDate(theoryAttendAddVo.getAttendDate()));
+                theoryAttend.setAttendStartTime(DateTimeUtil.defaultParseLocalTime(theoryAttendAddVo.getAttendStartTime()));
+                theoryAttend.setAttendEndTime(DateTimeUtil.defaultParseLocalTime(theoryAttendAddVo.getAttendEndTime()));
                 theoryAttend.setAttendRoom(theoryAttendAddVo.getAttendRoom());
-                theoryAttend.setPublishDate(DateTimeUtil.getNowSqlTimestamp());
+                theoryAttend.setPublishDate(DateTimeUtil.getNowLocalDateTime());
                 theoryAttend.setRemark(theoryAttendAddVo.getRemark());
                 theoryAttendService.save(theoryAttend);
 
@@ -229,7 +229,7 @@ public class TheoryAttendRestController {
                         theoryAttendUser.setTheoryAttendId(theoryAttendId);
                         theoryAttendUser.setTheoryUsersId(users.getTheoryUsersId());
                         theoryAttendUser.setOperateUser(user.getUsername());
-                        theoryAttendUser.setOperateDate(DateTimeUtil.getNowSqlTimestamp());
+                        theoryAttendUser.setOperateDate(DateTimeUtil.getNowLocalDateTime());
                         theoryAttendUser.setOperate(ByteUtil.toByte(0));
                         theoryAttendUser.setRemark(users.getRemark());
 
@@ -260,9 +260,9 @@ public class TheoryAttendRestController {
         if (!bindingResult.hasErrors()) {
             if (theoryConditionCommon.usersCondition(theoryAttendEditVo.getTheoryReleaseId())) {
                 TheoryAttend theoryAttend = theoryAttendService.findById(theoryAttendEditVo.getTheoryAttendId());
-                theoryAttend.setAttendDate(DateTimeUtil.defaultParseSqlDate(theoryAttendEditVo.getAttendDate()));
-                theoryAttend.setAttendStartTime(DateTimeUtil.defaultParseSqlTime(theoryAttendEditVo.getAttendStartTime()));
-                theoryAttend.setAttendEndTime(DateTimeUtil.defaultParseSqlTime(theoryAttendEditVo.getAttendEndTime()));
+                theoryAttend.setAttendDate(DateTimeUtil.defaultParseLocalDate(theoryAttendEditVo.getAttendDate()));
+                theoryAttend.setAttendStartTime(DateTimeUtil.defaultParseLocalTime(theoryAttendEditVo.getAttendStartTime()));
+                theoryAttend.setAttendEndTime(DateTimeUtil.defaultParseLocalTime(theoryAttendEditVo.getAttendEndTime()));
                 theoryAttend.setAttendRoom(theoryAttendEditVo.getAttendRoom());
                 theoryAttend.setRemark(theoryAttendEditVo.getRemark());
                 theoryAttendService.update(theoryAttend);
@@ -360,7 +360,7 @@ public class TheoryAttendRestController {
             TheoryAttendUsers theoryAttendUsers = theoryAttendUsersService.findById(attendUsersId);
             theoryAttendUsers.setOperate(operate);
             theoryAttendUsers.setOperateUser(users.getUsername());
-            theoryAttendUsers.setOperateDate(DateTimeUtil.getNowSqlTimestamp());
+            theoryAttendUsers.setOperateDate(DateTimeUtil.getNowLocalDateTime());
 
             theoryAttendUsersService.update(theoryAttendUsers);
             ajaxUtil.success().msg("更新成功");
@@ -457,7 +457,7 @@ public class TheoryAttendRestController {
                     au.setTheoryAttendId(theoryAttendId);
                     au.setTheoryUsersId(users.getTheoryUsersId());
                     au.setOperate(ByteUtil.toByte(0));
-                    au.setOperateDate(DateTimeUtil.getNowSqlTimestamp());
+                    au.setOperateDate(DateTimeUtil.getNowLocalDateTime());
                     au.setOperateUser(user.getUsername());
 
                     theoryAttendUsers.add(au);

@@ -122,7 +122,7 @@ public class SoftwareAchievementRestController {
                     softwareAchievement.setMorningResults((String) data.get("SWCJ"));
                     softwareAchievement.setAfternoonResults((String) data.get("XWCJ"));
                     softwareAchievement.setThesisResults((String) data.get("LWCJ"));
-                    softwareAchievement.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                    softwareAchievement.setCreateDate(DateTimeUtil.getNowLocalDateTime());
                     softwareAchievementService.save(softwareAchievement);
                     ajaxUtil.success().msg("查询成绩成功").map(result);
                 } else {
@@ -151,7 +151,7 @@ public class SoftwareAchievementRestController {
             if (optionalSoftwareAchievements.isPresent()) {
                 List<SoftwareAchievementBean> list = optionalSoftwareAchievements.get();
                 for (SoftwareAchievementBean bean : list) {
-                    bean.setCreateDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getCreateDate()));
+                    bean.setCreateDateStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getCreateDate()));
                     bean.setIdCard(StringUtils.isNotBlank(bean.getIdCard()) ? StringUtils.overlay(bean.getIdCard(), "****", 3, bean.getIdCard().length() - 4) : "");
                 }
                 ajaxUtil.success().list(list);

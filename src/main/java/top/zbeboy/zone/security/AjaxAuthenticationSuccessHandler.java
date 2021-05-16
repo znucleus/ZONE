@@ -50,7 +50,7 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
             ServletContext context = request.getSession().getServletContext();
             ApplicationContext ctx = WebApplicationContextUtils
                     .getWebApplicationContext(context);
-            SystemLoginLog systemLog = new SystemLoginLog(UUIDUtil.getUUID(), "登录系统成功", DateTimeUtil.getNowSqlTimestamp(), username, RequestUtil.getIpAddress(request));
+            SystemLoginLog systemLog = new SystemLoginLog(UUIDUtil.getUUID(), "登录系统成功", DateTimeUtil.getNowLocalDateTime(), username, RequestUtil.getIpAddress(request));
             SystemLogService systemLogService = SpringBootUtil.getBean(SystemLogService.class);
             systemLogService.save(systemLog);
             String key = username + "_login_error_count";
@@ -64,7 +64,7 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
             ServletContext context = request.getSession().getServletContext();
             ApplicationContext ctx = WebApplicationContextUtils
                     .getWebApplicationContext(context);
-            SystemLoginLog systemLog = new SystemLoginLog(UUIDUtil.getUUID(), "授权登录成功", DateTimeUtil.getNowSqlTimestamp(), username, RequestUtil.getIpAddress(request));
+            SystemLoginLog systemLog = new SystemLoginLog(UUIDUtil.getUUID(), "授权登录成功", DateTimeUtil.getNowLocalDateTime(), username, RequestUtil.getIpAddress(request));
             SystemLogService systemLogService = SpringBootUtil.getBean(SystemLogService.class);
             systemLogService.save(systemLog);
             // 会帮我们跳转到上一次请求的页面上

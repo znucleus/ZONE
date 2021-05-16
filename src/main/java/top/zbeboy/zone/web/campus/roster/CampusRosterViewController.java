@@ -113,8 +113,8 @@ public class CampusRosterViewController {
             if (optionalRosterRelease.isPresent()) {
                 RosterRelease rosterRelease = optionalRosterRelease.get();
                 modelMap.addAttribute("rosterRelease", rosterRelease);
-                modelMap.addAttribute("startTimeStr", DateTimeUtil.defaultFormatSqlTimestamp(rosterRelease.getStartTime()));
-                modelMap.addAttribute("endTimeStr", DateTimeUtil.defaultFormatSqlTimestamp(rosterRelease.getEndTime()));
+                modelMap.addAttribute("startTimeStr", DateTimeUtil.defaultFormatLocalDateTime(rosterRelease.getStartTime()));
+                modelMap.addAttribute("endTimeStr", DateTimeUtil.defaultFormatLocalDateTime(rosterRelease.getEndTime()));
                 page = "web/campus/roster/roster_release_edit::#page-wrapper";
             } else {
                 config.buildWarningTip("查询错误", "未查询到数据");
@@ -176,11 +176,11 @@ public class CampusRosterViewController {
         if (optionalRosterRelease.isPresent()) {
             RosterRelease rosterRelease = optionalRosterRelease.get();
             // 时间范围
-            if (DateTimeUtil.nowAfterSqlTimestamp(rosterRelease.getStartTime()) &&
-                    DateTimeUtil.nowBeforeSqlTimestamp(rosterRelease.getEndTime())) {
+            if (DateTimeUtil.nowAfterLocalDateTime(rosterRelease.getStartTime()) &&
+                    DateTimeUtil.nowBeforeLocalDateTime(rosterRelease.getEndTime())) {
                 modelMap.addAttribute("rosterRelease", rosterRelease);
-                modelMap.addAttribute("startTimeStr", DateTimeUtil.defaultFormatSqlTimestamp(rosterRelease.getStartTime()));
-                modelMap.addAttribute("endTimeStr", DateTimeUtil.defaultFormatSqlTimestamp(rosterRelease.getEndTime()));
+                modelMap.addAttribute("startTimeStr", DateTimeUtil.defaultFormatLocalDateTime(rosterRelease.getStartTime()));
+                modelMap.addAttribute("endTimeStr", DateTimeUtil.defaultFormatLocalDateTime(rosterRelease.getEndTime()));
                 return "web/campus/roster/roster_data_outer_add";
             } else {
 

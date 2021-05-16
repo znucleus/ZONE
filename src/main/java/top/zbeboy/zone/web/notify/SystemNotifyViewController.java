@@ -54,8 +54,8 @@ public class SystemNotifyViewController {
         Optional<SystemNotifyBean> optionalSystemNotifyBean = systemNotifyService.findByIdRelation(id);
         if (optionalSystemNotifyBean.isPresent()) {
             SystemNotifyBean bean = optionalSystemNotifyBean.get();
-            bean.setValidDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getValidDate()));
-            bean.setExpireDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getExpireDate()));
+            bean.setValidDateStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getValidDate()));
+            bean.setExpireDateStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getExpireDate()));
             modelMap.addAttribute("systemNotify", bean);
             page = "web/system/notify/system_notify_edit::#page-wrapper";
         } else {

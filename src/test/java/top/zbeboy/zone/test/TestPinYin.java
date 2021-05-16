@@ -1,6 +1,6 @@
 package top.zbeboy.zone.test;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import top.zbeboy.zbase.tools.web.util.PinYinUtil;
 
 public class TestPinYin {

@@ -83,12 +83,12 @@ public class InternshipRegulateRestController {
             beans = records.into(InternshipReleaseBean.class);
             beans.forEach(bean -> {
                 if (BooleanUtil.toBoolean(bean.getIsTimeLimit())) {
-                    bean.setTeacherDistributionStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionStartTime()));
-                    bean.setTeacherDistributionEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionEndTime()));
-                    bean.setStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getStartTime()));
-                    bean.setEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getEndTime()));
+                    bean.setTeacherDistributionStartTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getTeacherDistributionStartTime()));
+                    bean.setTeacherDistributionEndTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getTeacherDistributionEndTime()));
+                    bean.setStartTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getStartTime()));
+                    bean.setEndTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getEndTime()));
                 }
-                bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime()));
+                bean.setReleaseTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getReleaseTime()));
                 bean.setCanOperator(BooleanUtil.toByte(internshipConditionCommon.regulateCondition(bean.getInternshipReleaseId())));
             });
         }
@@ -122,7 +122,7 @@ public class InternshipRegulateRestController {
         List<InternshipRegulateBean> beans = new ArrayList<>();
         if (Objects.nonNull(records) && records.isNotEmpty()) {
             beans = records.into(InternshipRegulateBean.class);
-            beans.forEach(bean -> bean.setCreateDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getCreateDate())));
+            beans.forEach(bean -> bean.setCreateDateStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getCreateDate())));
         }
         dataTablesUtil.setData(beans);
         dataTablesUtil.setiTotalRecords(internshipRegulateService.countAll(dataTablesUtil));
@@ -232,10 +232,10 @@ public class InternshipRegulateRestController {
                             internshipRegulate.setInternshipContent(internshipRegulateAddVo.getInternshipContent());
                             internshipRegulate.setInternshipProgress(internshipRegulateAddVo.getInternshipProgress());
                             internshipRegulate.setReportWay(internshipRegulateAddVo.getReportWay());
-                            internshipRegulate.setReportDate(DateTimeUtil.defaultParseSqlDate(internshipRegulateAddVo.getReportDate()));
+                            internshipRegulate.setReportDate(DateTimeUtil.defaultParseLocalDate(internshipRegulateAddVo.getReportDate()));
                             internshipRegulate.setSchoolGuidanceTeacher(staffBean.getRealName());
                             internshipRegulate.setTliy(internshipRegulateAddVo.getTliy());
-                            internshipRegulate.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                            internshipRegulate.setCreateDate(DateTimeUtil.getNowLocalDateTime());
                             internshipRegulate.setStudentId(internshipRegulateAddVo.getStudentId());
                             internshipRegulate.setInternshipReleaseId(internshipRegulateAddVo.getInternshipReleaseId());
                             internshipRegulate.setStaffId(staffBean.getStaffId());
@@ -276,7 +276,7 @@ public class InternshipRegulateRestController {
                 internshipRegulate.setInternshipContent(internshipRegulateEditVo.getInternshipContent());
                 internshipRegulate.setInternshipProgress(internshipRegulateEditVo.getInternshipProgress());
                 internshipRegulate.setReportWay(internshipRegulateEditVo.getReportWay());
-                internshipRegulate.setReportDate(DateTimeUtil.defaultParseSqlDate(internshipRegulateEditVo.getReportDate()));
+                internshipRegulate.setReportDate(DateTimeUtil.defaultParseLocalDate(internshipRegulateEditVo.getReportDate()));
                 internshipRegulate.setTliy(internshipRegulateEditVo.getTliy());
                 internshipRegulateService.update(internshipRegulate);
                 ajaxUtil.success().msg("更新成功");

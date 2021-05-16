@@ -56,7 +56,7 @@ public class LoginLoggingAspect {
                         if (o instanceof HttpServletRequest) {
                             HttpServletRequest request = (HttpServletRequest) o;
                             Users users = SessionUtil.getUserFromSession();
-                            SystemLoginLog systemLog = new SystemLoginLog(UUIDUtil.getUUID(), method.getAnnotation(LoginLoggingRecord.class).description(), DateTimeUtil.getNowSqlTimestamp(), users.getUsername(), RequestUtil.getIpAddress(request));
+                            SystemLoginLog systemLog = new SystemLoginLog(UUIDUtil.getUUID(), method.getAnnotation(LoginLoggingRecord.class).description(), DateTimeUtil.getNowLocalDateTime(), users.getUsername(), RequestUtil.getIpAddress(request));
                             systemLogService.save(systemLog);
                             log.info(" Record operator logging to database , the module is {} , the method is {} ", method.getAnnotation(LoginLoggingRecord.class).module(), method.getAnnotation(LoginLoggingRecord.class).methods());
                             break;

@@ -81,7 +81,7 @@ public class SystemMobileServiceImpl implements SystemMobileService {
 
         SystemSmsLog systemSmsLog = new SystemSmsLog();
         systemSmsLog.setLogId(UUIDUtil.getUUID());
-        systemSmsLog.setSendTime(DateTimeUtil.getNowSqlTimestamp());
+        systemSmsLog.setSendTime(DateTimeUtil.getNowLocalDateTime());
         systemSmsLog.setSendConent(content);
         systemSmsLog.setAcceptPhone(mobile);
         systemSmsLog.setSendCondition(result);

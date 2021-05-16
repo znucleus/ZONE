@@ -16,7 +16,7 @@ import top.zbeboy.zbase.domain.tables.pojos.TheoryConfigure;
 import javax.annotation.Resource;
 import java.util.Optional;
 
-import static org.jooq.impl.DSL.currentDate;
+import static org.jooq.impl.DSL.*;
 import static top.zbeboy.zbase.domain.Tables.*;
 
 @Service("theoryConfigureService")
@@ -71,8 +71,8 @@ public class TheoryConfigureServiceImpl implements TheoryConfigureService {
                 .leftJoin(THEORY_RELEASE)
                 .on(THEORY_CONFIGURE.THEORY_RELEASE_ID.eq(THEORY_RELEASE.THEORY_RELEASE_ID))
                 .where(THEORY_CONFIGURE.WEEK_DAY.eq(dayOfWeek)
-                        .and(THEORY_RELEASE.START_DATE.le(currentDate()))
-                        .and(THEORY_RELEASE.END_DATE.ge(currentDate())))
+                        .and(THEORY_RELEASE.START_DATE.le(currentLocalDate()))
+                        .and(THEORY_RELEASE.END_DATE.ge(currentLocalDate())))
                 .fetch();
     }
 

@@ -24,6 +24,7 @@ import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -120,15 +121,15 @@ public class InternshipRegulateServiceImpl implements InternshipRegulateService,
             }
 
             if (StringUtils.isNotBlank(createDate)) {
-                Timestamp startTime;
-                Timestamp endTime;
+                LocalDateTime startTime;
+                LocalDateTime endTime;
                 if (createDate.contains("至")) {
                     String[] arr = createDate.split(" 至 ");
-                    startTime = DateTimeUtil.defaultParseSqlTimestamp(arr[0] + " 00:00:00");
-                    endTime = DateTimeUtil.defaultParseSqlTimestamp(arr[1] + " 23:59:59");
+                    startTime = DateTimeUtil.defaultParseLocalDateTime(arr[0] + " 00:00:00");
+                    endTime = DateTimeUtil.defaultParseLocalDateTime(arr[1] + " 23:59:59");
                 } else {
-                    startTime = DateTimeUtil.defaultParseSqlTimestamp(createDate + " 00:00:00");
-                    endTime = DateTimeUtil.defaultParseSqlTimestamp(createDate + " 23:59:59");
+                    startTime = DateTimeUtil.defaultParseLocalDateTime(createDate + " 00:00:00");
+                    endTime = DateTimeUtil.defaultParseLocalDateTime(createDate + " 23:59:59");
                 }
                 if (Objects.isNull(a)) {
                     a = INTERNSHIP_REGULATE.CREATE_DATE.gt(startTime).and(INTERNSHIP_REGULATE.CREATE_DATE.le(endTime));

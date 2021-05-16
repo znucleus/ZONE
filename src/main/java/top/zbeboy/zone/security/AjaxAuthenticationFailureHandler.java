@@ -53,7 +53,7 @@ public class AjaxAuthenticationFailureHandler extends ExceptionMappingAuthentica
 
         if (!needSkip) {
             String username = request.getParameter("username");
-            SystemLoginLog systemLog = new SystemLoginLog(UUIDUtil.getUUID(), "登录系统失败", DateTimeUtil.getNowSqlTimestamp(), username, RequestUtil.getIpAddress(request));
+            SystemLoginLog systemLog = new SystemLoginLog(UUIDUtil.getUUID(), "登录系统失败", DateTimeUtil.getNowLocalDateTime(), username, RequestUtil.getIpAddress(request));
             SystemLogService systemLogService = SpringBootUtil.getBean(SystemLogService.class);
             systemLogService.save(systemLog);
             int code = AjaxAuthenticationCode.AU_ERROR_CODE;
@@ -91,7 +91,7 @@ public class AjaxAuthenticationFailureHandler extends ExceptionMappingAuthentica
                         users.setAccountNonLocked(BooleanUtil.toByte(false));
                         usersService.update(users);
 
-                        systemLog = new SystemLoginLog(UUIDUtil.getUUID(), "账号锁定", DateTimeUtil.getNowSqlTimestamp(), username, RequestUtil.getIpAddress(request));
+                        systemLog = new SystemLoginLog(UUIDUtil.getUUID(), "账号锁定", DateTimeUtil.getNowLocalDateTime(), username, RequestUtil.getIpAddress(request));
                         systemLogService.save(systemLog);
                     }
 
@@ -109,7 +109,7 @@ public class AjaxAuthenticationFailureHandler extends ExceptionMappingAuthentica
             ServletContext context = request.getSession().getServletContext();
             ApplicationContext ctx = WebApplicationContextUtils
                     .getWebApplicationContext(context);
-            SystemLoginLog systemLog = new SystemLoginLog(UUIDUtil.getUUID(), "授权登录失败", DateTimeUtil.getNowSqlTimestamp(), username, RequestUtil.getIpAddress(request));
+            SystemLoginLog systemLog = new SystemLoginLog(UUIDUtil.getUUID(), "授权登录失败", DateTimeUtil.getNowLocalDateTime(), username, RequestUtil.getIpAddress(request));
             SystemLogService systemLogService = SpringBootUtil.getBean(SystemLogService.class);
             systemLogService.save(systemLog);
             // 会帮我们跳转到上一次请求的页面上

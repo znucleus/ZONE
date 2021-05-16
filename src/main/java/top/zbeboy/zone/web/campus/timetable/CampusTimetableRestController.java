@@ -63,8 +63,8 @@ public class CampusTimetableRestController {
             map.put("endDate", campusCourseRelease.getEndDate());
             map.put("totalWeeks", DateTimeUtil.calculationTwoDateDifferWeeks(campusCourseRelease.getStartDate(), campusCourseRelease.getEndDate()));
             map.put("week", DateTimeUtil.getNowDayOfWeek());
-            if (DateTimeUtil.nowRangeSqlDate(campusCourseRelease.getStartDate(), campusCourseRelease.getEndDate())) {
-                map.put("curWeeks", DateTimeUtil.calculationTwoDateDifferWeeks(campusCourseRelease.getStartDate(), DateTimeUtil.getNowSqlDate()));
+            if (DateTimeUtil.nowRangeLocalDate(campusCourseRelease.getStartDate(), campusCourseRelease.getEndDate())) {
+                map.put("curWeeks", DateTimeUtil.calculationTwoDateDifferWeeks(campusCourseRelease.getStartDate(), DateTimeUtil.getNowLocalDate()));
             } else {
                 map.put("curWeeks", "0");
             }
@@ -156,8 +156,8 @@ public class CampusTimetableRestController {
                 campusCourseReleaseAddVo.setTitle(release.getTitle());
                 campusCourseReleaseAddVo.setSchoolYear(release.getSchoolYear());
                 campusCourseReleaseAddVo.setSemester(release.getSemester());
-                campusCourseReleaseAddVo.setStartDate(DateTimeUtil.defaultFormatSqlDate(release.getStartDate()));
-                campusCourseReleaseAddVo.setEndDate(DateTimeUtil.defaultFormatSqlDate(release.getEndDate()));
+                campusCourseReleaseAddVo.setStartDate(DateTimeUtil.defaultFormatLocalDate(release.getStartDate()));
+                campusCourseReleaseAddVo.setEndDate(DateTimeUtil.defaultFormatLocalDate(release.getEndDate()));
                 campusCourseReleaseAddVo.setShareId(shareId);
                 ajaxUtil = campusTimetableService.shareSave(campusCourseReleaseAddVo);
             } else {
@@ -270,8 +270,8 @@ public class CampusTimetableRestController {
             Optional<List<CampusCourseData>> optionalCampusCourseData = campusTimetableService.findCourseByCampusCourseReleaseId(campusCourseReleaseId);
             if (optionalCampusCourseData.isPresent()) {
                 int curWeeks = 0;
-                if (DateTimeUtil.nowRangeSqlDate(release.getStartDate(), release.getEndDate())) {
-                    curWeeks = DateTimeUtil.calculationTwoDateDifferWeeks(release.getStartDate(), DateTimeUtil.getNowSqlDate());
+                if (DateTimeUtil.nowRangeLocalDate(release.getStartDate(), release.getEndDate())) {
+                    curWeeks = DateTimeUtil.calculationTwoDateDifferWeeks(release.getStartDate(), DateTimeUtil.getNowLocalDate());
                 }
                 ajaxUtil.success().msg("获取数据成功").list(optionalCampusCourseData.get())
                         .put("release", release)

@@ -45,7 +45,7 @@ public class InternshipRegulateExport extends ExportUtil<InternshipRegulateBean>
         row.createCell(4).setCellValue(t.getInternshipContent());
         row.createCell(5).setCellValue(t.getInternshipProgress());
         row.createCell(6).setCellValue(t.getReportWay());
-        row.createCell(7).setCellValue(DateTimeUtil.formatSqlDate(t.getReportDate(), DateTimeUtil.YEAR_MONTH_DAY_FORMAT));
+        row.createCell(7).setCellValue(DateTimeUtil.formatLocalDate(t.getReportDate(), DateTimeUtil.YEAR_MONTH_DAY_FORMAT));
         row.createCell(8).setCellValue(t.getSchoolGuidanceTeacher());
         row.createCell(9).setCellValue(t.getTliy());
     }

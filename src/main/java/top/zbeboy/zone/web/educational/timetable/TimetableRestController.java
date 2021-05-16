@@ -176,8 +176,8 @@ public class TimetableRestController {
             map.put("endDate", timetableSemester.getEndDate());
             map.put("totalWeeks", DateTimeUtil.calculationTwoDateDifferWeeks(timetableSemester.getStartDate(), timetableSemester.getEndDate()));
             map.put("week", DateTimeUtil.getNowDayOfWeek());
-            if (DateTimeUtil.nowRangeSqlDate(timetableSemester.getStartDate(), timetableSemester.getEndDate())) {
-                map.put("curWeeks", DateTimeUtil.calculationTwoDateDifferWeeks(timetableSemester.getStartDate(), DateTimeUtil.getNowSqlDate()));
+            if (DateTimeUtil.nowRangeLocalDate(timetableSemester.getStartDate(), timetableSemester.getEndDate())) {
+                map.put("curWeeks", DateTimeUtil.calculationTwoDateDifferWeeks(timetableSemester.getStartDate(), DateTimeUtil.getNowLocalDate()));
             } else {
                 map.put("curWeeks", "0");
             }

@@ -123,7 +123,7 @@ public class StudentAchievementApiController {
                             studentAchievement.setTurn((String) map.get("turn"));
                             studentAchievement.setExamDate((String) map.get("examDate"));
                             studentAchievement.setRemark((String) map.get("remark"));
-                            studentAchievement.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                            studentAchievement.setCreateDate(DateTimeUtil.getNowLocalDateTime());
                             list.add(studentAchievement);
                         }
                         studentAchievementService.batchSave(list);
@@ -165,7 +165,7 @@ public class StudentAchievementApiController {
                     Optional<List<StudentAchievementBean>> optionalStudentAchievementBeans = studentAchievementService.findByStudentNumber(studentBean.getStudentNumber());
                     if (optionalStudentAchievementBeans.isPresent()) {
                         list = optionalStudentAchievementBeans.get();
-                        list.forEach(s -> s.setCreateDateStr(DateTimeUtil.defaultFormatSqlTimestamp(s.getCreateDate())));
+                        list.forEach(s -> s.setCreateDateStr(DateTimeUtil.defaultFormatLocalDateTime(s.getCreateDate())));
                     }
                 }
             }

@@ -184,15 +184,15 @@ public class InternshipJournalServiceImpl implements InternshipJournalService, P
             }
 
             if (StringUtils.isNotBlank(createDate)) {
-                Timestamp startTime;
-                Timestamp endTime;
+                LocalDateTime startTime;
+                LocalDateTime endTime;
                 if (createDate.contains("至")) {
                     String[] arr = createDate.split(" 至 ");
-                    startTime = DateTimeUtil.defaultParseSqlTimestamp(arr[0] + " 00:00:00");
-                    endTime = DateTimeUtil.defaultParseSqlTimestamp(arr[1] + " 23:59:59");
+                    startTime = DateTimeUtil.defaultParseLocalDateTime(arr[0] + " 00:00:00");
+                    endTime = DateTimeUtil.defaultParseLocalDateTime(arr[1] + " 23:59:59");
                 } else {
-                    startTime = DateTimeUtil.defaultParseSqlTimestamp(createDate + " 00:00:00");
-                    endTime = DateTimeUtil.defaultParseSqlTimestamp(createDate + " 23:59:59");
+                    startTime = DateTimeUtil.defaultParseLocalDateTime(createDate + " 00:00:00");
+                    endTime = DateTimeUtil.defaultParseLocalDateTime(createDate + " 23:59:59");
                 }
 
                 if (Objects.isNull(a)) {
@@ -330,7 +330,7 @@ public class InternshipJournalServiceImpl implements InternshipJournalService, P
 
             Map<String, String> paraMap = new HashMap<>();
             paraMap.put("${internshipJournalContent}", internshipJournalContent.getInternshipJournalContent());
-            paraMap.put("${date}", DateTimeUtil.formatSqlDate(internshipJournalContent.getInternshipJournalDate(), "yyyy年MM月dd日"));
+            paraMap.put("${date}", DateTimeUtil.formatLocalDate(internshipJournalContent.getInternshipJournalDate(), "yyyy年MM月dd日"));
 
             XWPFDocument doc = new XWPFDocument(is);
 

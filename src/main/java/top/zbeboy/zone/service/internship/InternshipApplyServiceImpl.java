@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static org.jooq.impl.DSL.currentLocalDateTime;
 import static org.jooq.impl.DSL.now;
 import static top.zbeboy.zbase.domain.Tables.*;
 
@@ -130,7 +131,7 @@ public class InternshipApplyServiceImpl implements InternshipApplyService, Pagin
     @Override
     public void updateState(int curState, int updateState) {
         Select<InternshipReleaseRecord> select = create.selectFrom(INTERNSHIP_RELEASE)
-                .where(INTERNSHIP_RELEASE.END_TIME.le(now()).and(INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_ID.eq(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID))
+                .where(INTERNSHIP_RELEASE.END_TIME.le(currentLocalDateTime()).and(INTERNSHIP_RELEASE.INTERNSHIP_RELEASE_ID.eq(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID))
                         .and(INTERNSHIP_RELEASE.IS_TIME_LIMIT.eq(BooleanUtil.toByte(true))));
         create.update(INTERNSHIP_APPLY)
                 .set(INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE, updateState)
@@ -142,7 +143,7 @@ public class InternshipApplyServiceImpl implements InternshipApplyService, Pagin
     public void updateChangeState(List<Integer> curState, int updateState) {
         create.update(INTERNSHIP_APPLY)
                 .set(INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE, updateState)
-                .where(INTERNSHIP_APPLY.CHANGE_FILL_END_TIME.le(now()).and(INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE.in(curState)))
+                .where(INTERNSHIP_APPLY.CHANGE_FILL_END_TIME.le(currentLocalDateTime()).and(INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE.in(curState)))
                 .execute();
     }
 

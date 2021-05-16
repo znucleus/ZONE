@@ -89,12 +89,12 @@ public class InternshipJournalRestController {
             beans = records.into(InternshipReleaseBean.class);
             beans.forEach(bean -> {
                 if (BooleanUtil.toBoolean(bean.getIsTimeLimit())) {
-                    bean.setTeacherDistributionStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionStartTime()));
-                    bean.setTeacherDistributionEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionEndTime()));
-                    bean.setStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getStartTime()));
-                    bean.setEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getEndTime()));
+                    bean.setTeacherDistributionStartTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getTeacherDistributionStartTime()));
+                    bean.setTeacherDistributionEndTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getTeacherDistributionEndTime()));
+                    bean.setStartTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getStartTime()));
+                    bean.setEndTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getEndTime()));
                 }
-                bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime()));
+                bean.setReleaseTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getReleaseTime()));
                 bean.setCanOperator(BooleanUtil.toByte(internshipConditionCommon.journalCondition(bean.getInternshipReleaseId())));
                 bean.setCanLook(BooleanUtil.toByte(internshipConditionCommon.journalLookMyCondition(bean.getInternshipReleaseId())));
             });
@@ -129,7 +129,7 @@ public class InternshipJournalRestController {
         List<InternshipJournalBean> beans = new ArrayList<>();
         if (Objects.nonNull(records) && records.isNotEmpty()) {
             beans = records.into(InternshipJournalBean.class);
-            beans.forEach(bean -> bean.setCreateDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getCreateDate())));
+            beans.forEach(bean -> bean.setCreateDateStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getCreateDate())));
         }
         dataTablesUtil.setData(beans);
         dataTablesUtil.setiTotalRecords(internshipJournalService.countAll(dataTablesUtil));
@@ -187,7 +187,7 @@ public class InternshipJournalRestController {
                             internshipJournal.setOrganize(internshipInfo.getOrganizeName());
                             internshipJournal.setSchoolGuidanceTeacher(internshipInfo.getSchoolGuidanceTeacher());
                             internshipJournal.setGraduationPracticeCompanyName(internshipInfo.getCompanyName());
-                            internshipJournal.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                            internshipJournal.setCreateDate(DateTimeUtil.getNowLocalDateTime());
                             internshipJournal.setStudentId(internshipTeacherDistribution.getStudentId());
                             internshipJournal.setStaffId(internshipTeacherDistribution.getStaffId());
                             internshipJournal.setIsSeeStaff(ByteUtil.toByte(1).equals(internshipJournalAddVo.getIsSeeStaff()) ? ByteUtil.toByte(1) : ByteUtil.toByte(0));
@@ -198,7 +198,7 @@ public class InternshipJournalRestController {
                             internshipJournalContent.setInternshipJournalId(internshipJournalId);
                             internshipJournalContent.setInternshipJournalContent(internshipJournalAddVo.getInternshipJournalContent());
                             internshipJournalContent.setInternshipJournalHtml(internshipJournalAddVo.getInternshipJournalHtml());
-                            internshipJournalContent.setInternshipJournalDate(DateTimeUtil.defaultParseSqlDate(internshipJournalAddVo.getInternshipJournalDate()));
+                            internshipJournalContent.setInternshipJournalDate(DateTimeUtil.defaultParseLocalDate(internshipJournalAddVo.getInternshipJournalDate()));
 
                             internshipJournalContentService.save(internshipJournalContent);
                             // 异步保存word
@@ -246,7 +246,7 @@ public class InternshipJournalRestController {
                         InternshipJournalContent internshipJournalContent = record.get().into(InternshipJournalContent.class);
                         internshipJournalContent.setInternshipJournalContent(internshipJournalEditVo.getInternshipJournalContent());
                         internshipJournalContent.setInternshipJournalHtml(internshipJournalEditVo.getInternshipJournalHtml());
-                        internshipJournalContent.setInternshipJournalDate(DateTimeUtil.defaultParseSqlDate(internshipJournalEditVo.getInternshipJournalDate()));
+                        internshipJournalContent.setInternshipJournalDate(DateTimeUtil.defaultParseLocalDate(internshipJournalEditVo.getInternshipJournalDate()));
 
                         internshipJournalContentService.update(internshipJournalContent);
 
@@ -441,7 +441,7 @@ public class InternshipJournalRestController {
                     Optional<InternshipJournalContentRecord> contentRecord = internshipJournalContentService.findByInternshipJournalId(r.getInternshipJournalId());
                     contentRecord.ifPresent(internshipJournalContentRecord -> {
                         r.setInternshipJournalContent(internshipJournalContentRecord.getInternshipJournalContent());
-                        r.setInternshipJournalDateStr(DateTimeUtil.defaultFormatSqlDate(internshipJournalContentRecord.getInternshipJournalDate()));
+                        r.setInternshipJournalDateStr(DateTimeUtil.defaultFormatLocalDate(internshipJournalContentRecord.getInternshipJournalDate()));
                     });
                 }
 

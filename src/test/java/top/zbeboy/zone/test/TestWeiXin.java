@@ -2,7 +2,7 @@ package top.zbeboy.zone.test;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.service.util.HttpClientUtil;
 

@@ -178,7 +178,7 @@ public class SystemMailServiceImpl implements SystemMailService {
 
         SystemMailboxLog systemMailboxLog = new SystemMailboxLog();
         systemMailboxLog.setLogId(UUIDUtil.getUUID());
-        systemMailboxLog.setSendTime(DateTimeUtil.getNowSqlTimestamp());
+        systemMailboxLog.setSendTime(DateTimeUtil.getNowLocalDateTime());
         systemMailboxLog.setAcceptMail(to);
         systemMailboxLog.setSendCondition(sendCondition);
         systemMailboxLogService.save(systemMailboxLog);
@@ -204,7 +204,7 @@ public class SystemMailServiceImpl implements SystemMailService {
 
         SystemMailboxLog systemMailboxLog = new SystemMailboxLog();
         systemMailboxLog.setLogId(UUIDUtil.getUUID());
-        systemMailboxLog.setSendTime(DateTimeUtil.getNowSqlTimestamp());
+        systemMailboxLog.setSendTime(DateTimeUtil.getNowLocalDateTime());
         systemMailboxLog.setAcceptMail(userMail);
         systemMailboxLog.setSendCondition(sendCondition);
         systemMailboxLogService.save(systemMailboxLog);

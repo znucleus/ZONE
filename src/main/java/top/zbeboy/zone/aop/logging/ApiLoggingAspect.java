@@ -94,7 +94,7 @@ public class ApiLoggingAspect {
                                         uri,
                                         method.getAnnotation(ApiLoggingRecord.class).remark(),
                                         optionalChannel.get().getChannelId(),
-                                        DateTimeUtil.getNowSqlTimestamp(), username, ip);
+                                        DateTimeUtil.getNowLocalDateTime(), username, ip);
                         systemLogService.save(systemLog);
                     }
                     break;

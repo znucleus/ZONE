@@ -38,6 +38,8 @@ import javax.validation.constraints.Size;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 
 @Service("campusTimetableEduService")
@@ -69,7 +71,7 @@ public class CampusTimetableEduServiceImpl implements CampusTimetableEduService 
         TimeZone timezone = registry.getTimeZone("Asia/Shanghai");
         VTimeZone tz = timezone.getVTimeZone();
 
-        java.sql.Date calendarStartDate = null;
+        LocalDate calendarStartDate = null;
         if (CollectionUtils.isNotEmpty(campusCourseDataList)) {
             for (CampusCourseData campusCourseData : campusCourseDataList) {
                 // Start Date is on: April 1, 2008, 9:00 am
@@ -83,14 +85,14 @@ public class CampusTimetableEduServiceImpl implements CampusTimetableEduService 
                 String courseName = campusCourseData.getCourseName();
                 String buildingName = campusCourseData.getBuildingName();
 
-                java.sql.Time startTime = campusCourseData.getStartTime();
+                LocalTime startTime = campusCourseData.getStartTime();
                 if (Objects.isNull(startTime)) {
-                    startTime = DateTimeUtil.getNowSqlTime();
+                    startTime = DateTimeUtil.getNowLocalTime();
                 }
 
-                java.sql.Time endTime = campusCourseData.getEndTime();
+                LocalTime endTime = campusCourseData.getEndTime();
                 if (Objects.isNull(endTime)) {
-                    endTime = DateTimeUtil.getNowSqlTime();
+                    endTime = DateTimeUtil.getNowLocalTime();
                 }
 
                 Integer startWeek = campusCourseData.getStartWeek();
@@ -112,16 +114,16 @@ public class CampusTimetableEduServiceImpl implements CampusTimetableEduService 
                     if (optionalCampusCourseRelease.isPresent() && Objects.nonNull(optionalCampusCourseRelease.get().getStartDate())) {
                         calendarStartDate = optionalCampusCourseRelease.get().getStartDate();
                     } else {
-                        calendarStartDate = DateTimeUtil.getNowSqlDate();
+                        calendarStartDate = DateTimeUtil.getNowLocalDate();
                     }
                 }
 
                 // 1.日历偏移开始周数 算开始时间
                 java.util.Date deviationCalendarStartDate = timetableService.calcDeviationDate(calendarStartDate, startWeek, weekDay);
-                String finishStartDate = DateTimeUtil.formatUtilDate(deviationCalendarStartDate, DateTimeUtil.YEAR_MONTH_DAY_FORMAT) + " " + DateTimeUtil.defaultFormatSqlTime(startTime);
+                String finishStartDate = DateTimeUtil.formatUtilDate(deviationCalendarStartDate, DateTimeUtil.YEAR_MONTH_DAY_FORMAT) + " " + DateTimeUtil.defaultFormatLocalTime(startTime);
                 startDate.setTime(DateTimeUtil.parseUtilDate(finishStartDate, DateTimeUtil.STANDARD_FORMAT));
 
-                String finishEndDate = DateTimeUtil.formatUtilDate(deviationCalendarStartDate, DateTimeUtil.YEAR_MONTH_DAY_FORMAT) + " " + DateTimeUtil.defaultFormatSqlTime(endTime);
+                String finishEndDate = DateTimeUtil.formatUtilDate(deviationCalendarStartDate, DateTimeUtil.YEAR_MONTH_DAY_FORMAT) + " " + DateTimeUtil.defaultFormatLocalTime(endTime);
                 endDate.setTime(DateTimeUtil.parseUtilDate(finishEndDate, DateTimeUtil.STANDARD_FORMAT));
 
                 // Create the event
@@ -142,12 +144,12 @@ public class CampusTimetableEduServiceImpl implements CampusTimetableEduService 
 
                 String startTimeContent = "";
                 if (Objects.nonNull(campusCourseData.getStartTime())) {
-                    startTimeContent = DateTimeUtil.defaultFormatSqlTime(campusCourseData.getStartTime());
+                    startTimeContent = DateTimeUtil.defaultFormatLocalTime(campusCourseData.getStartTime());
                 }
 
                 String endTimeContent = "";
                 if (Objects.nonNull(campusCourseData.getEndTime())) {
-                    endTimeContent = DateTimeUtil.defaultFormatSqlTime(campusCourseData.getEndTime());
+                    endTimeContent = DateTimeUtil.defaultFormatLocalTime(campusCourseData.getEndTime());
                 }
 
                 String description = startWeekContent + "-" + endWeekContent + "周 " + startTimeContent + "-" + endTimeContent;

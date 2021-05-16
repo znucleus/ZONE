@@ -111,7 +111,7 @@ public class StudentApiController {
                     outPut.put("nationName", studentBean.getNationName());
                     outPut.put("politicalLandscapeId", studentBean.getPoliticalLandscapeId());
                     outPut.put("politicalLandscapeName", studentBean.getPoliticalLandscapeName());
-                    outPut.put("birthday", Objects.nonNull(studentBean.getBirthday()) ? DateTimeUtil.formatSqlDate(studentBean.getBirthday(), DateTimeUtil.YEAR_MONTH_DAY_FORMAT) : studentBean.getBirthday());
+                    outPut.put("birthday", Objects.nonNull(studentBean.getBirthday()) ? DateTimeUtil.defaultFormatLocalDate(studentBean.getBirthday()) : studentBean.getBirthday());
                     outPut.put("sex", studentBean.getSex());
                     outPut.put("familyResidence", studentBean.getFamilyResidence());
                     outPut.put("dormitoryNumber", studentBean.getDormitoryNumber());
@@ -205,9 +205,9 @@ public class StudentApiController {
                 DateTime dateTime = DateTime.now();
                 dateTime = dateTime.plusDays(ZoneProperties.getMail().getValidCodeTime());
                 studentAddVo.setMailboxVerifyCode(RandomUtil.generateEmailCheckKey());
-                studentAddVo.setMailboxVerifyValid(DateTimeUtil.utilDateToSqlTimestamp(dateTime.toDate()));
+                studentAddVo.setMailboxVerifyValid(DateTimeUtil.utilDateToLocalDateTime(dateTime.toDate()));
                 studentAddVo.setLangKey(request.getLocale().toLanguageTag());
-                studentAddVo.setJoinDate(DateTimeUtil.getNowSqlDate());
+                studentAddVo.setJoinDate(DateTimeUtil.getNowLocalDate());
 
                 // 同步花名册
                 Optional<RosterData> optionalRosterData = campusRosterService.findRosterDataByStudentNumber(studentAddVo.getStudentNumber());

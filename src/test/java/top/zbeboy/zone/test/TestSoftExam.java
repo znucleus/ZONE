@@ -2,7 +2,7 @@ package top.zbeboy.zone.test;
 
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TestSoftExam {
 

@@ -40,7 +40,7 @@ public class AuthenticationSuccessEventListener implements ApplicationListener<A
                     RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
                     HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(requestAttributes)).getRequest();
 
-                    SystemLoginLog systemLog = new SystemLoginLog(UUIDUtil.getUUID(), "OAUTH登录[" + grantType + "][" + scope + "]", DateTimeUtil.getNowSqlTimestamp(), username, RequestUtil.getIpAddress(request));
+                    SystemLoginLog systemLog = new SystemLoginLog(UUIDUtil.getUUID(), "OAUTH登录[" + grantType + "][" + scope + "]", DateTimeUtil.getNowLocalDateTime(), username, RequestUtil.getIpAddress(request));
                     systemLogService.save(systemLog);
                 }
             }

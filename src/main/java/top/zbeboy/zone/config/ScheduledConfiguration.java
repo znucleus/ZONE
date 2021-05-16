@@ -120,11 +120,11 @@ public class ScheduledConfiguration {
                     String trainingAttendId = UUIDUtil.getUUID();
                     trainingAttend.setTrainingAttendId(trainingAttendId);
                     trainingAttend.setTrainingReleaseId(trainingConfigure.getTrainingReleaseId());
-                    trainingAttend.setAttendDate(DateTimeUtil.getNowSqlDate());
+                    trainingAttend.setAttendDate(DateTimeUtil.getNowLocalDate());
                     trainingAttend.setAttendStartTime(trainingConfigure.getStartTime());
                     trainingAttend.setAttendEndTime(trainingConfigure.getEndTime());
                     trainingAttend.setAttendRoom(trainingConfigure.getSchoolroomId());
-                    trainingAttend.setPublishDate(DateTimeUtil.getNowSqlTimestamp());
+                    trainingAttend.setPublishDate(DateTimeUtil.getNowLocalDateTime());
                     trainingAttendService.save(trainingAttend);
 
                     List<TrainingUsers> trainingUsers = trainingUsersService.findByTrainingReleaseId(trainingConfigure.getTrainingReleaseId());
@@ -136,7 +136,7 @@ public class ScheduledConfiguration {
                             trainingAttendUser.setTrainingAttendId(trainingAttendId);
                             trainingAttendUser.setTrainingUsersId(users.getTrainingUsersId());
                             trainingAttendUser.setOperateUser(Workbook.username.actuator.name());
-                            trainingAttendUser.setOperateDate(DateTimeUtil.getNowSqlTimestamp());
+                            trainingAttendUser.setOperateDate(DateTimeUtil.getNowLocalDateTime());
                             trainingAttendUser.setOperate(ByteUtil.toByte(0));
                             trainingAttendUser.setRemark(users.getRemark());
 
@@ -165,11 +165,11 @@ public class ScheduledConfiguration {
                     String theoryAttendId = UUIDUtil.getUUID();
                     theoryAttend.setTheoryAttendId(theoryAttendId);
                     theoryAttend.setTheoryReleaseId(theoryConfigure.getTheoryReleaseId());
-                    theoryAttend.setAttendDate(DateTimeUtil.getNowSqlDate());
+                    theoryAttend.setAttendDate(DateTimeUtil.getNowLocalDate());
                     theoryAttend.setAttendStartTime(theoryConfigure.getStartTime());
                     theoryAttend.setAttendEndTime(theoryConfigure.getEndTime());
                     theoryAttend.setAttendRoom(theoryConfigure.getSchoolroomId());
-                    theoryAttend.setPublishDate(DateTimeUtil.getNowSqlTimestamp());
+                    theoryAttend.setPublishDate(DateTimeUtil.getNowLocalDateTime());
                     theoryAttendService.save(theoryAttend);
 
                     List<TheoryUsers> theoryUsers = theoryUsersService.findByTheoryReleaseId(theoryConfigure.getTheoryReleaseId());
@@ -181,7 +181,7 @@ public class ScheduledConfiguration {
                             theoryAttendUser.setTheoryAttendId(theoryAttendId);
                             theoryAttendUser.setTheoryUsersId(users.getTheoryUsersId());
                             theoryAttendUser.setOperateUser(Workbook.username.actuator.name());
-                            theoryAttendUser.setOperateDate(DateTimeUtil.getNowSqlTimestamp());
+                            theoryAttendUser.setOperateDate(DateTimeUtil.getNowLocalDateTime());
                             theoryAttendUser.setOperate(ByteUtil.toByte(0));
                             theoryAttendUser.setRemark(users.getRemark());
 

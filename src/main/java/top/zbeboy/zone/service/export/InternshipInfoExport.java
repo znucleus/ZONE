@@ -68,7 +68,7 @@ public class InternshipInfoExport extends ExportUtil<InternshipInfo> {
         row.createCell(13).setCellValue(t.getCompanyMobile());
         row.createCell(14).setCellValue(t.getSchoolGuidanceTeacher());
         row.createCell(15).setCellValue(t.getSchoolGuidanceTeacherTel());
-        row.createCell(16).setCellValue(DateTimeUtil.defaultFormatSqlDate(t.getStartTime()) + '至' + DateTimeUtil.defaultFormatSqlDate(t.getEndTime()));
+        row.createCell(16).setCellValue(DateTimeUtil.defaultFormatLocalDate(t.getStartTime()) + '至' + DateTimeUtil.defaultFormatLocalDate(t.getEndTime()));
         row.createCell(17).setCellValue(dealByte(t.getCommitmentBook()));
         row.createCell(18).setCellValue(dealByte(t.getSafetyResponsibilityBook()));
         row.createCell(19).setCellValue(dealByte(t.getPracticeAgreement()));

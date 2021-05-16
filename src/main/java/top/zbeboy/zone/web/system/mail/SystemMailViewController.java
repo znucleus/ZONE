@@ -33,6 +33,7 @@ import top.zbeboy.zone.web.system.tip.SystemTipConfig;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -87,9 +88,9 @@ public class SystemMailViewController {
         Optional<Users> result = usersService.findByUsername(username);
         if (result.isPresent()) {
             Users users = result.get();
-            Timestamp mailboxVerifyValid = users.getMailboxVerifyValid();
-            Timestamp now = DateTimeUtil.getNowSqlTimestamp();
-            if (now.before(mailboxVerifyValid)) {
+            LocalDateTime mailboxVerifyValid = users.getMailboxVerifyValid();
+            LocalDateTime now = DateTimeUtil.getNowLocalDateTime();
+            if (now.isBefore(mailboxVerifyValid)) {
                 if (StringUtils.equals(mailboxVerifyCode, users.getMailboxVerifyCode())) {
                     users.setVerifyMailbox(BooleanUtil.toByte(true));
                     usersService.update(users);
@@ -217,7 +218,7 @@ public class SystemMailViewController {
                     DateTime dateTime = DateTime.now();
                     dateTime = dateTime.plusDays(ZoneProperties.getMail().getValidCodeTime());
                     users.setMailboxVerifyCode(RandomUtil.generateEmailCheckKey());
-                    users.setMailboxVerifyValid(new Timestamp(dateTime.toDate().getTime()));
+                    users.setMailboxVerifyValid(DateTimeUtil.defaultParseLocalDateTime(DateTimeUtil.formatUtilDate(dateTime.toDate(), DateTimeUtil.STANDARD_FORMAT)));
                     usersService.update(users);
                     systemMailService.sendValidEmailMail(users, RequestUtil.getBaseUrl(request));
                     config.buildSuccessTip(
@@ -268,9 +269,9 @@ public class SystemMailViewController {
         Optional<Users> result = usersService.findByUsername(username);
         if (result.isPresent()) {
             Users users = result.get();
-            Timestamp passwordResetKeyValid = users.getPasswordResetKeyValid();
-            Timestamp now = DateTimeUtil.getNowSqlTimestamp();
-            if (now.before(passwordResetKeyValid)) {
+            LocalDateTime passwordResetKeyValid = users.getPasswordResetKeyValid();
+            LocalDateTime now = DateTimeUtil.getNowLocalDateTime();
+            if (now.isBefore(passwordResetKeyValid)) {
                 if (StringUtils.equals(passwordResetKey, users.getPasswordResetKey())) {
                     modelMap.addAttribute("username", username);
                     modelMap.addAttribute("verificationMode", 0);

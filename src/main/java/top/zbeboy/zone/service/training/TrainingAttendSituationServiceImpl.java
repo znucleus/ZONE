@@ -14,6 +14,7 @@ import top.zbeboy.zbase.tools.service.util.SQLQueryUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.service.plugin.PaginationPlugin;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 import static top.zbeboy.zbase.domain.Tables.*;
@@ -113,15 +114,15 @@ public class TrainingAttendSituationServiceImpl implements TrainingAttendSituati
             String realName = StringUtils.trim(search.getString("realName"));
             String studentNumber = StringUtils.trim(search.getString("studentNumber"));
             if (StringUtils.isNotBlank(attendDate)) {
-                java.sql.Date startDate;
-                java.sql.Date endDate;
+                LocalDate startDate;
+                LocalDate endDate;
                 if (attendDate.contains("至")) {
                     String[] arr = attendDate.split(" 至 ");
-                    startDate = DateTimeUtil.defaultParseSqlDate(arr[0]);
-                    endDate = DateTimeUtil.defaultParseSqlDate(arr[1]);
+                    startDate = DateTimeUtil.defaultParseLocalDate(arr[0]);
+                    endDate = DateTimeUtil.defaultParseLocalDate(arr[1]);
                 } else {
-                    startDate = DateTimeUtil.defaultParseSqlDate(attendDate);
-                    endDate = DateTimeUtil.defaultParseSqlDate(attendDate);
+                    startDate = DateTimeUtil.defaultParseLocalDate(attendDate);
+                    endDate = DateTimeUtil.defaultParseLocalDate(attendDate);
                 }
 
                 a = TRAINING_ATTEND.ATTEND_DATE.ge(startDate).and(TRAINING_ATTEND.ATTEND_DATE.le(endDate));

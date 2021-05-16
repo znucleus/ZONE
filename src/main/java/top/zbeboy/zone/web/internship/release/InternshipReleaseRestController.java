@@ -84,12 +84,12 @@ public class InternshipReleaseRestController {
             beans = records.into(InternshipReleaseBean.class);
             beans.forEach(bean -> {
                 if (BooleanUtil.toBoolean(bean.getIsTimeLimit())) {
-                    bean.setTeacherDistributionStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionStartTime()));
-                    bean.setTeacherDistributionEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionEndTime()));
-                    bean.setStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getStartTime()));
-                    bean.setEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getEndTime()));
+                    bean.setTeacherDistributionStartTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getTeacherDistributionStartTime()));
+                    bean.setTeacherDistributionEndTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getTeacherDistributionEndTime()));
+                    bean.setStartTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getStartTime()));
+                    bean.setEndTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getEndTime()));
                 }
-                bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime()));
+                bean.setReleaseTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getReleaseTime()));
                 bean.setCanOperator(BooleanUtil.toByte(internshipConditionCommon.canOperator(bean.getInternshipReleaseId())));
             });
         }
@@ -183,7 +183,7 @@ public class InternshipReleaseRestController {
             InternshipRelease internshipRelease = new InternshipRelease();
             internshipRelease.setInternshipReleaseId(internshipReleaseId);
             internshipRelease.setInternshipTitle(title);
-            internshipRelease.setReleaseTime(DateTimeUtil.getNowSqlTimestamp());
+            internshipRelease.setReleaseTime(DateTimeUtil.getNowLocalDateTime());
             internshipRelease.setUsername(users.getUsername());
             internshipRelease.setPublisher(users.getRealName());
             internshipRelease.setScienceId(internshipReleaseAddVo.getScienceId());
@@ -312,20 +312,20 @@ public class InternshipReleaseRestController {
     private void saveOrUpdateTime(InternshipRelease internshipRelease, String teacherDistributionTime, String time) {
         if (teacherDistributionTime.contains("至")) {
             String[] teacherDistributionArr = teacherDistributionTime.split(" 至 ");
-            internshipRelease.setTeacherDistributionStartTime(DateTimeUtil.defaultParseSqlTimestamp(teacherDistributionArr[0] + " 00:00:00"));
-            internshipRelease.setTeacherDistributionEndTime(DateTimeUtil.defaultParseSqlTimestamp(teacherDistributionArr[1] + " 23:59:59"));
+            internshipRelease.setTeacherDistributionStartTime(DateTimeUtil.defaultParseLocalDateTime(teacherDistributionArr[0] + " 00:00:00"));
+            internshipRelease.setTeacherDistributionEndTime(DateTimeUtil.defaultParseLocalDateTime(teacherDistributionArr[1] + " 23:59:59"));
         } else {
-            internshipRelease.setTeacherDistributionStartTime(DateTimeUtil.defaultParseSqlTimestamp(teacherDistributionTime + " 00:00:00"));
-            internshipRelease.setTeacherDistributionEndTime(DateTimeUtil.defaultParseSqlTimestamp(teacherDistributionTime + " 23:59:59"));
+            internshipRelease.setTeacherDistributionStartTime(DateTimeUtil.defaultParseLocalDateTime(teacherDistributionTime + " 00:00:00"));
+            internshipRelease.setTeacherDistributionEndTime(DateTimeUtil.defaultParseLocalDateTime(teacherDistributionTime + " 23:59:59"));
         }
 
         if (time.contains("至")) {
             String[] timeArr = time.split(" 至 ");
-            internshipRelease.setStartTime(DateTimeUtil.defaultParseSqlTimestamp(timeArr[0] + " 00:00:00"));
-            internshipRelease.setEndTime(DateTimeUtil.defaultParseSqlTimestamp(timeArr[1] + " 23:59:59"));
+            internshipRelease.setStartTime(DateTimeUtil.defaultParseLocalDateTime(timeArr[0] + " 00:00:00"));
+            internshipRelease.setEndTime(DateTimeUtil.defaultParseLocalDateTime(timeArr[1] + " 23:59:59"));
         } else {
-            internshipRelease.setStartTime(DateTimeUtil.defaultParseSqlTimestamp(time + " 00:00:00"));
-            internshipRelease.setEndTime(DateTimeUtil.defaultParseSqlTimestamp(time + " 23:59:59"));
+            internshipRelease.setStartTime(DateTimeUtil.defaultParseLocalDateTime(time + " 00:00:00"));
+            internshipRelease.setEndTime(DateTimeUtil.defaultParseLocalDateTime(time + " 23:59:59"));
         }
 
     }

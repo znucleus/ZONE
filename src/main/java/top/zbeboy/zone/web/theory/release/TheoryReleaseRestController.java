@@ -69,7 +69,7 @@ public class TheoryReleaseRestController {
         if (records.isNotEmpty()) {
             beans = records.into(TheoryReleaseBean.class);
             beans.forEach(bean -> {
-                bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime()));
+                bean.setReleaseTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getReleaseTime()));
                 bean.setCanOperator(BooleanUtil.toByte(theoryConditionCommon.canOperator(bean.getTheoryReleaseId())));
             });
         }
@@ -95,9 +95,9 @@ public class TheoryReleaseRestController {
             theoryRelease.setTitle(theoryReleaseAddVo.getTitle());
             theoryRelease.setOrganizeId(theoryReleaseAddVo.getOrganizeId());
             theoryRelease.setCourseId(theoryReleaseAddVo.getCourseId());
-            theoryRelease.setStartDate(DateTimeUtil.defaultParseSqlDate(theoryReleaseAddVo.getStartDate()));
-            theoryRelease.setEndDate(DateTimeUtil.defaultParseSqlDate(theoryReleaseAddVo.getEndDate()));
-            theoryRelease.setReleaseTime(DateTimeUtil.getNowSqlTimestamp());
+            theoryRelease.setStartDate(DateTimeUtil.defaultParseLocalDate(theoryReleaseAddVo.getStartDate()));
+            theoryRelease.setEndDate(DateTimeUtil.defaultParseLocalDate(theoryReleaseAddVo.getEndDate()));
+            theoryRelease.setReleaseTime(DateTimeUtil.getNowLocalDateTime());
             Users users = SessionUtil.getUserFromSession();
             theoryRelease.setPublisher(users.getRealName());
             theoryRelease.setUsername(users.getUsername());
@@ -112,7 +112,7 @@ public class TheoryReleaseRestController {
                     au.setTheoryUsersId(UUIDUtil.getUUID());
                     au.setTheoryReleaseId(theoryReleaseId);
                     au.setStudentId(student.getStudentId());
-                    au.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                    au.setCreateDate(DateTimeUtil.getNowLocalDateTime());
                     theoryUsers.add(au);
                 }
                 theoryUsersService.batchSave(theoryUsers);
@@ -140,8 +140,8 @@ public class TheoryReleaseRestController {
                 TheoryRelease theoryRelease = theoryReleaseService.findById(theoryReleaseEditVo.getTheoryReleaseId());
                 theoryRelease.setTitle(theoryReleaseEditVo.getTitle());
                 theoryRelease.setCourseId(theoryReleaseEditVo.getCourseId());
-                theoryRelease.setStartDate(DateTimeUtil.defaultParseSqlDate(theoryReleaseEditVo.getStartDate()));
-                theoryRelease.setEndDate(DateTimeUtil.defaultParseSqlDate(theoryReleaseEditVo.getEndDate()));
+                theoryRelease.setStartDate(DateTimeUtil.defaultParseLocalDate(theoryReleaseEditVo.getStartDate()));
+                theoryRelease.setEndDate(DateTimeUtil.defaultParseLocalDate(theoryReleaseEditVo.getEndDate()));
 
                 theoryReleaseService.update(theoryRelease);
                 ajaxUtil.success().msg("更新成功");
@@ -206,8 +206,8 @@ public class TheoryReleaseRestController {
                 TheoryConfigure theoryConfigure = new TheoryConfigure();
                 theoryConfigure.setTheoryConfigureId(UUIDUtil.getUUID());
                 theoryConfigure.setTheoryReleaseId(theoryConfigureAddVo.getTheoryReleaseId());
-                theoryConfigure.setStartTime(DateTimeUtil.defaultParseSqlTime(theoryConfigureAddVo.getStartTime()));
-                theoryConfigure.setEndTime(DateTimeUtil.defaultParseSqlTime(theoryConfigureAddVo.getEndTime()));
+                theoryConfigure.setStartTime(DateTimeUtil.defaultParseLocalTime(theoryConfigureAddVo.getStartTime()));
+                theoryConfigure.setEndTime(DateTimeUtil.defaultParseLocalTime(theoryConfigureAddVo.getEndTime()));
                 theoryConfigure.setWeekDay(theoryConfigureAddVo.getWeekDay());
                 theoryConfigure.setSchoolroomId(theoryConfigureAddVo.getSchoolroomId());
 
@@ -235,8 +235,8 @@ public class TheoryReleaseRestController {
         if (!bindingResult.hasErrors()) {
             if (theoryConditionCommon.canOperator(theoryConfigureEditVo.getTheoryReleaseId())) {
                 TheoryConfigure theoryConfigure = theoryConfigureService.findById(theoryConfigureEditVo.getTheoryConfigureId());
-                theoryConfigure.setStartTime(DateTimeUtil.defaultParseSqlTime(theoryConfigureEditVo.getStartTime()));
-                theoryConfigure.setEndTime(DateTimeUtil.defaultParseSqlTime(theoryConfigureEditVo.getEndTime()));
+                theoryConfigure.setStartTime(DateTimeUtil.defaultParseLocalTime(theoryConfigureEditVo.getStartTime()));
+                theoryConfigure.setEndTime(DateTimeUtil.defaultParseLocalTime(theoryConfigureEditVo.getEndTime()));
                 theoryConfigure.setWeekDay(theoryConfigureEditVo.getWeekDay());
                 theoryConfigure.setSchoolroomId(theoryConfigureEditVo.getSchoolroomId());
 
@@ -288,8 +288,8 @@ public class TheoryReleaseRestController {
             Result<Record> records = theoryAuthoritiesService.findByTheoryReleaseIdRelation(id);
             if (records.isNotEmpty()) {
                 beans = records.into(TheoryAuthoritiesBean.class);
-                beans.forEach(bean -> bean.setValidDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getValidDate())));
-                beans.forEach(bean -> bean.setExpireDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getExpireDate())));
+                beans.forEach(bean -> bean.setValidDateStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getValidDate())));
+                beans.forEach(bean -> bean.setExpireDateStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getExpireDate())));
             }
         }
         ajaxUtil.success().list(beans).msg("获取数据成功");
@@ -321,8 +321,8 @@ public class TheoryReleaseRestController {
                         theoryAuthorities.setAuthoritiesId(UUIDUtil.getUUID());
                         theoryAuthorities.setTheoryReleaseId(theoryAuthoritiesAddVo.getTheoryReleaseId());
                         theoryAuthorities.setUsername(theoryAuthoritiesAddVo.getUsername());
-                        theoryAuthorities.setValidDate(DateTimeUtil.defaultParseSqlTimestamp(theoryAuthoritiesAddVo.getValidDate()));
-                        theoryAuthorities.setExpireDate(DateTimeUtil.defaultParseSqlTimestamp(theoryAuthoritiesAddVo.getExpireDate()));
+                        theoryAuthorities.setValidDate(DateTimeUtil.defaultParseLocalDateTime(theoryAuthoritiesAddVo.getValidDate()));
+                        theoryAuthorities.setExpireDate(DateTimeUtil.defaultParseLocalDateTime(theoryAuthoritiesAddVo.getExpireDate()));
 
                         theoryAuthoritiesService.save(theoryAuthorities);
                         ajaxUtil.success().msg("保存成功");
@@ -365,8 +365,8 @@ public class TheoryReleaseRestController {
                     if (!StringUtils.equals(users.getUsername(), theoryAuthoritiesEditVo.getUsername())) {
                         TheoryAuthorities theoryAuthorities = theoryAuthoritiesService.findById(theoryAuthoritiesEditVo.getAuthoritiesId());
                         theoryAuthorities.setUsername(theoryAuthoritiesEditVo.getUsername());
-                        theoryAuthorities.setValidDate(DateTimeUtil.defaultParseSqlTimestamp(theoryAuthoritiesEditVo.getValidDate()));
-                        theoryAuthorities.setExpireDate(DateTimeUtil.defaultParseSqlTimestamp(theoryAuthoritiesEditVo.getExpireDate()));
+                        theoryAuthorities.setValidDate(DateTimeUtil.defaultParseLocalDateTime(theoryAuthoritiesEditVo.getValidDate()));
+                        theoryAuthorities.setExpireDate(DateTimeUtil.defaultParseLocalDateTime(theoryAuthoritiesEditVo.getExpireDate()));
 
                         theoryAuthoritiesService.update(theoryAuthorities);
                         ajaxUtil.success().msg("更新成功");

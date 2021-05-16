@@ -116,8 +116,8 @@ public class StaffRestController {
                     DateTime dateTime = DateTime.now();
                     dateTime = dateTime.plusDays(ZoneProperties.getMail().getValidCodeTime());
                     staffAddVo.setMailboxVerifyCode(RandomUtil.generateEmailCheckKey());
-                    staffAddVo.setMailboxVerifyValid(DateTimeUtil.utilDateToSqlTimestamp(dateTime.toDate()));
-                    staffAddVo.setJoinDate(DateTimeUtil.getNowSqlDate());
+                    staffAddVo.setMailboxVerifyValid(DateTimeUtil.utilDateToLocalDateTime(dateTime.toDate()));
+                    staffAddVo.setJoinDate(DateTimeUtil.getNowLocalDate());
                     staffAddVo.setLangKey(request.getLocale().toLanguageTag());
                     staffAddVo.setBaseUrl(RequestUtil.getBaseUrl(request));
                     ajaxUtil = staffService.save(staffAddVo);
@@ -262,7 +262,7 @@ public class StaffRestController {
                 weiXinSubscribeSendVo.setName4(result.get().getRealName());
                 weiXinSubscribeSendVo.setDate2(DateTimeUtil.getNowLocalDateTime(DateTimeUtil.YEAR_MONTH_DAY_HOUR_MINUTE_FORMAT));
                 weiXinSubscribeSendVo.setThing3(notify);
-                weiXinSubscribeSendVo.setStartTime(DateTimeUtil.getNowSqlTimestamp());
+                weiXinSubscribeSendVo.setStartTime(DateTimeUtil.getNowLocalDateTime());
                 weiXinSubscribeService.sendByBusinessAndUsername(weiXinSubscribeSendVo);
             }
         }

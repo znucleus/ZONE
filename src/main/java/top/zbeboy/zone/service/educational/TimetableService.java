@@ -4,6 +4,7 @@ import net.fortuna.ical4j.model.WeekDay;
 import top.zbeboy.zbase.domain.tables.pojos.TimetableCourse;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -65,7 +66,7 @@ public interface TimetableService {
      * @param weekDay 那一周的周几
      * @return 时间
      */
-    java.util.Date calcDeviationDate(java.sql.Date date, int week, int weekDay);
+    java.util.Date calcDeviationDate(LocalDate date, int week, int weekDay);
 
     /**
      * 获取日历星期

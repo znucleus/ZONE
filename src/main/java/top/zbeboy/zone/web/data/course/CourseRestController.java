@@ -107,7 +107,7 @@ public class CourseRestController {
         Users users = SessionUtil.getUserFromSession();
         SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(),
                 "添加课程[" + courseAddVo.getCourseName() + "]",
-                DateTimeUtil.getNowSqlTimestamp(), users.getUsername(),
+                DateTimeUtil.getNowLocalDateTime(), users.getUsername(),
                 RequestUtil.getIpAddress(request));
         systemLogService.save(systemLog);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -141,7 +141,7 @@ public class CourseRestController {
         Users users = SessionUtil.getUserFromSession();
         SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(),
                 "更新课程" + courseEditVo.getCourseId() + "[" + courseEditVo.getCourseName() + "]",
-                DateTimeUtil.getNowSqlTimestamp(), users.getUsername(), RequestUtil.getIpAddress(request));
+                DateTimeUtil.getNowLocalDateTime(), users.getUsername(), RequestUtil.getIpAddress(request));
         systemLogService.save(systemLog);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
@@ -159,7 +159,7 @@ public class CourseRestController {
         Users users = SessionUtil.getUserFromSession();
         SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(),
                 "修改课程状态[" + courseIds + "]" + isDel,
-                DateTimeUtil.getNowSqlTimestamp(), users.getUsername(), RequestUtil.getIpAddress(request));
+                DateTimeUtil.getNowLocalDateTime(), users.getUsername(), RequestUtil.getIpAddress(request));
         systemLogService.save(systemLog);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }

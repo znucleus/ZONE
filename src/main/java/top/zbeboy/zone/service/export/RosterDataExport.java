@@ -72,7 +72,7 @@ public class RosterDataExport extends ExportUtil<RosterDataBean> {
         row.createCell(2).setCellValue(t.getRealName());
         row.createCell(3).setCellValue(t.getNamePinyin());
         row.createCell(4).setCellValue(t.getSex());
-        row.createCell(5).setCellValue(null != t.getBirthday() ? DateTimeUtil.defaultFormatSqlDate(t.getBirthday()) : "");
+        row.createCell(5).setCellValue(null != t.getBirthday() ? DateTimeUtil.defaultFormatLocalDate(t.getBirthday()) : "");
         row.createCell(6).setCellValue(t.getIdCard());
         row.createCell(7).setCellValue(t.getNationName());
         row.createCell(8).setCellValue(t.getPoliticalLandscapeName());
@@ -99,13 +99,13 @@ public class RosterDataExport extends ExportUtil<RosterDataBean> {
         row.createCell(29).setCellValue(t.getDormitoryNumber());
         row.createCell(30).setCellValue(getStayOutsideType(t.getStayOutsideType()));
         row.createCell(31).setCellValue(t.getStayOutsideAddress());
-        row.createCell(32).setCellValue(null != t.getLeagueMemberJoinDate() ? DateTimeUtil.defaultFormatSqlDate(t.getLeagueMemberJoinDate()) : "");
+        row.createCell(32).setCellValue(null != t.getLeagueMemberJoinDate() ? DateTimeUtil.defaultFormatLocalDate(t.getLeagueMemberJoinDate()) : "");
         row.createCell(33).setCellValue(convert(t.getIsRegisteredVolunteers()));
         row.createCell(34).setCellValue(convert(t.getIsOkLeagueMembership()));
-        row.createCell(35).setCellValue(null != t.getApplyPartyMembershipDate() ? DateTimeUtil.defaultFormatSqlDate(t.getApplyPartyMembershipDate()) : "");
-        row.createCell(36).setCellValue(null != t.getBecomeActivistsDate() ? DateTimeUtil.defaultFormatSqlDate(t.getBecomeActivistsDate()) : "");
-        row.createCell(37).setCellValue(null != t.getBecomeProbationaryPartyMemberDate() ? DateTimeUtil.defaultFormatSqlDate(t.getBecomeProbationaryPartyMemberDate()) : "");
-        row.createCell(38).setCellValue(null != t.getJoiningPartyDate() ? DateTimeUtil.defaultFormatSqlDate(t.getJoiningPartyDate()) : "");
+        row.createCell(35).setCellValue(null != t.getApplyPartyMembershipDate() ? DateTimeUtil.defaultFormatLocalDate(t.getApplyPartyMembershipDate()) : "");
+        row.createCell(36).setCellValue(null != t.getBecomeActivistsDate() ? DateTimeUtil.defaultFormatLocalDate(t.getBecomeActivistsDate()) : "");
+        row.createCell(37).setCellValue(null != t.getBecomeProbationaryPartyMemberDate() ? DateTimeUtil.defaultFormatLocalDate(t.getBecomeProbationaryPartyMemberDate()) : "");
+        row.createCell(38).setCellValue(null != t.getJoiningPartyDate() ? DateTimeUtil.defaultFormatLocalDate(t.getJoiningPartyDate()) : "");
     }
 
     private String getCandidatesType(Integer candidatesType) {

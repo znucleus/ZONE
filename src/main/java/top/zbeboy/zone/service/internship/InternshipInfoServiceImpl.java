@@ -78,7 +78,7 @@ public class InternshipInfoServiceImpl implements InternshipInfoService, Paginat
                     .set(INTERNSHIP_APPLY.INTERNSHIP_APPLY_ID, UUIDUtil.getUUID())
                     .set(INTERNSHIP_APPLY.INTERNSHIP_RELEASE_ID, internshipApplyAddVo.getInternshipReleaseId())
                     .set(INTERNSHIP_APPLY.STUDENT_ID, internshipApplyAddVo.getStudentId())
-                    .set(INTERNSHIP_APPLY.APPLY_TIME, DateTimeUtil.getNowSqlTimestamp())
+                    .set(INTERNSHIP_APPLY.APPLY_TIME, DateTimeUtil.getNowLocalDateTime())
                     .set(INTERNSHIP_APPLY.INTERNSHIP_APPLY_STATE, internshipApplyAddVo.getState())
                     .execute();
 
@@ -103,8 +103,8 @@ public class InternshipInfoServiceImpl implements InternshipInfoService, Paginat
                     .set(INTERNSHIP_INFO.COMPANY_MOBILE, internshipApplyAddVo.getCompanyMobile())
                     .set(INTERNSHIP_INFO.SCHOOL_GUIDANCE_TEACHER, internshipApplyAddVo.getSchoolGuidanceTeacher())
                     .set(INTERNSHIP_INFO.SCHOOL_GUIDANCE_TEACHER_TEL, internshipApplyAddVo.getSchoolGuidanceTeacherTel())
-                    .set(INTERNSHIP_INFO.START_TIME, DateTimeUtil.defaultParseSqlDate(internshipApplyAddVo.getStartTime()))
-                    .set(INTERNSHIP_INFO.END_TIME, DateTimeUtil.defaultParseSqlDate(internshipApplyAddVo.getEndTime()))
+                    .set(INTERNSHIP_INFO.START_TIME, DateTimeUtil.defaultParseLocalDate(internshipApplyAddVo.getStartTime()))
+                    .set(INTERNSHIP_INFO.END_TIME, DateTimeUtil.defaultParseLocalDate(internshipApplyAddVo.getEndTime()))
                     .execute();
 
             DSL.using(configuration)
@@ -113,7 +113,7 @@ public class InternshipInfoServiceImpl implements InternshipInfoService, Paginat
                     .set(INTERNSHIP_CHANGE_HISTORY.INTERNSHIP_RELEASE_ID, internshipApplyAddVo.getInternshipReleaseId())
                     .set(INTERNSHIP_CHANGE_HISTORY.STUDENT_ID, internshipApplyAddVo.getStudentId())
                     .set(INTERNSHIP_CHANGE_HISTORY.STATE, internshipApplyAddVo.getState())
-                    .set(INTERNSHIP_CHANGE_HISTORY.APPLY_TIME, DateTimeUtil.getNowSqlTimestamp())
+                    .set(INTERNSHIP_CHANGE_HISTORY.APPLY_TIME, DateTimeUtil.getNowLocalDateTime())
                     .execute();
         });
     }

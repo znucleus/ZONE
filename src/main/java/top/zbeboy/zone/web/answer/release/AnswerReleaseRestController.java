@@ -37,11 +37,11 @@ public class AnswerReleaseRestController {
         if (Objects.nonNull(answerRelease)) {
             bean.setAnswerReleaseId(answerRelease.getAnswerReleaseId());
             bean.setTitle(answerRelease.getTitle());
-            bean.setStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(answerRelease.getStartTime()));
-            bean.setEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(answerRelease.getEndTime()));
+            bean.setStartTimeStr(DateTimeUtil.defaultFormatLocalDateTime(answerRelease.getStartTime()));
+            bean.setEndTimeStr(DateTimeUtil.defaultFormatLocalDateTime(answerRelease.getEndTime()));
             bean.setAnswerBankId(answerRelease.getAnswerBankId());
             bean.setUsername(answerRelease.getUsername());
-            bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(answerRelease.getReleaseTime()));
+            bean.setReleaseTimeStr(DateTimeUtil.defaultFormatLocalDateTime(answerRelease.getReleaseTime()));
             ajaxUtil.success().msg("获取数据成功").put("release", bean);
         } else {
             ajaxUtil.fail().msg("无数据").put("release", bean);

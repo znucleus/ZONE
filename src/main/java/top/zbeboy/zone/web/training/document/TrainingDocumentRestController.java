@@ -96,7 +96,7 @@ public class TrainingDocumentRestController {
         if (records.isNotEmpty()) {
             beans = records.into(TrainingDocumentBean.class);
             beans.forEach(bean -> {
-                bean.setCreateDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getCreateDate()));
+                bean.setCreateDateStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getCreateDate()));
                 bean.setCanOperator(BooleanUtil.toByte(trainingConditionCommon.canOperator(bean.getTrainingReleaseId())));
             });
         }
@@ -119,7 +119,7 @@ public class TrainingDocumentRestController {
         if (records.isNotEmpty()) {
             beans = records.into(TrainingDocumentFileBean.class);
             beans.forEach(bean -> {
-                bean.setCreateDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getCreateDate()));
+                bean.setCreateDateStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getCreateDate()));
                 bean.setCanOperator(BooleanUtil.toByte(trainingConditionCommon.canOperator(bean.getTrainingReleaseId())));
             });
         }
@@ -150,7 +150,7 @@ public class TrainingDocumentRestController {
                     trainingDocument.setUsername(users.getUsername());
                     trainingDocument.setCourseId(trainingRelease.getCourseId());
                     trainingDocument.setCreator(users.getRealName());
-                    trainingDocument.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                    trainingDocument.setCreateDate(DateTimeUtil.getNowLocalDateTime());
                     trainingDocument.setReading(0);
                     trainingDocument.setIsOriginal(trainingDocumentAddVo.getIsOriginal());
                     trainingDocument.setOrigin(trainingDocumentAddVo.getOrigin());
@@ -273,7 +273,7 @@ public class TrainingDocumentRestController {
                         trainingDocumentFile.setFileId(fileId);
                         trainingDocumentFile.setUsername(users.getUsername());
                         trainingDocumentFile.setUploader(users.getRealName());
-                        trainingDocumentFile.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                        trainingDocumentFile.setCreateDate(DateTimeUtil.getNowLocalDateTime());
                         trainingDocumentFile.setDownloads(0);
 
                         trainingDocumentFileService.save(trainingDocumentFile);

@@ -248,8 +248,8 @@ public class TrainingReleaseViewController {
         Optional<Record> record = trainingAuthoritiesService.findByIdRelation(id);
         if (record.isPresent()) {
             TrainingAuthoritiesBean bean = record.get().into(TrainingAuthoritiesBean.class);
-            bean.setValidDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getValidDate()));
-            bean.setExpireDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getExpireDate()));
+            bean.setValidDateStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getValidDate()));
+            bean.setExpireDateStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getExpireDate()));
             if (trainingConditionCommon.canOperator(bean.getTrainingReleaseId())) {
                 modelMap.addAttribute("trainingAuthorities", bean);
                 page = "web/training/release/training_authorities_edit::#page-wrapper";

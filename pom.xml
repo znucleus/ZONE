@@ -43,8 +43,8 @@
 
     <properties>
         <org.springframework.webflow.version>2.0.5.RELEASE</org.springframework.webflow.version>
-        <spring-security-oauth2.version>2.3.8.RELEASE</spring-security-oauth2.version>
-        <spring-security-oauth2-autoconfigure.version>2.2.1.RELEASE</spring-security-oauth2-autoconfigure.version>
+        <spring-security-oauth2.version>2.5.1.RELEASE</spring-security-oauth2.version>
+        <spring-security-oauth2-autoconfigure.version>2.4.5</spring-security-oauth2-autoconfigure.version>
 
         <org.apache.poi.version>4.1.0</org.apache.poi.version>
         <ooxml-schemas.version>1.4</ooxml-schemas.version>
@@ -52,13 +52,11 @@
         <xmlbeans.version>3.1.0</xmlbeans.version>
 
         <javax.inject.version>1</javax.inject.version>
-        <fastJson.version>1.2.68</fastJson.version>
         <sendcloud4j.version>0.0.5</sendcloud4j.version>
         <jsoup.version>1.12.1</jsoup.version>
         <httpclient.version>4.5.10</httpclient.version>
         <googleauth.version>1.4.0</googleauth.version>
 
-        <commons-io.verson>2.7</commons-io.verson>
         <commons-collections4.version>4.4</commons-collections4.version>
         <commons-compress.version>1.19</commons-compress.version>
 
@@ -268,12 +266,6 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
             <version>${commons-compress.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>${commons-io.verson}</version>
         </dependency>
 
         <!-- sendCloud mail -->

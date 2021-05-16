@@ -43,6 +43,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
@@ -185,9 +186,9 @@ public class UsersRestController {
                     // 检验是否已通过验证
                     boolean isValid;
                     if (resetPasswordVo.getVerificationMode() == 0) {
-                        Timestamp passwordResetKeyValid = users.getPasswordResetKeyValid();
-                        Timestamp now = DateTimeUtil.getNowSqlTimestamp();
-                        isValid = now.before(passwordResetKeyValid) && resetPasswordVo.getPasswordResetKey().equals(users.getPasswordResetKey());
+                        LocalDateTime passwordResetKeyValid = users.getPasswordResetKeyValid();
+                        LocalDateTime now = DateTimeUtil.getNowLocalDateTime();
+                        isValid = now.isBefore(passwordResetKeyValid) && resetPasswordVo.getPasswordResetKey().equals(users.getPasswordResetKey());
                     } else if (resetPasswordVo.getVerificationMode() == 1) {
                         String mobile = users.getMobile();
                         String validKey = mobile + SystemMobileConfig.MOBILE_VALID;
@@ -441,7 +442,7 @@ public class UsersRestController {
                 weiXinSubscribeSendVo.setName4(result.get().getRealName());
                 weiXinSubscribeSendVo.setDate2(DateTimeUtil.getNowLocalDateTime(DateTimeUtil.YEAR_MONTH_DAY_HOUR_MINUTE_FORMAT));
                 weiXinSubscribeSendVo.setThing3(notify);
-                weiXinSubscribeSendVo.setStartTime(DateTimeUtil.getNowSqlTimestamp());
+                weiXinSubscribeSendVo.setStartTime(DateTimeUtil.getNowLocalDateTime());
                 weiXinSubscribeService.sendByBusinessAndUsername(weiXinSubscribeSendVo);
             }
 
@@ -510,7 +511,7 @@ public class UsersRestController {
                     weiXinSubscribeSendVo.setName4(result.get().getRealName());
                     weiXinSubscribeSendVo.setDate2(DateTimeUtil.getNowLocalDateTime(DateTimeUtil.YEAR_MONTH_DAY_HOUR_MINUTE_FORMAT));
                     weiXinSubscribeSendVo.setThing3(notify);
-                    weiXinSubscribeSendVo.setStartTime(DateTimeUtil.getNowSqlTimestamp());
+                    weiXinSubscribeSendVo.setStartTime(DateTimeUtil.getNowLocalDateTime());
                     weiXinSubscribeService.sendByBusinessAndUsername(weiXinSubscribeSendVo);
                 }
             }

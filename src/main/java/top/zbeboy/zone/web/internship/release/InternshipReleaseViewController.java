@@ -123,10 +123,10 @@ public class InternshipReleaseViewController {
                 InternshipReleaseBean bean = record.get().into(InternshipReleaseBean.class);
                 boolean isTimeLimit = BooleanUtil.toBoolean(bean.getIsTimeLimit());
                 if (isTimeLimit) {
-                    bean.setTeacherDistributionStartTimeStr(DateTimeUtil.formatSqlTimestamp(bean.getTeacherDistributionStartTime(), DateTimeUtil.YEAR_MONTH_DAY_FORMAT));
-                    bean.setTeacherDistributionEndTimeStr(DateTimeUtil.formatSqlTimestamp(bean.getTeacherDistributionEndTime(), DateTimeUtil.YEAR_MONTH_DAY_FORMAT));
-                    bean.setStartTimeStr(DateTimeUtil.formatSqlTimestamp(bean.getStartTime(), DateTimeUtil.YEAR_MONTH_DAY_FORMAT));
-                    bean.setEndTimeStr(DateTimeUtil.formatSqlTimestamp(bean.getEndTime(), DateTimeUtil.YEAR_MONTH_DAY_FORMAT));
+                    bean.setTeacherDistributionStartTimeStr(DateTimeUtil.formatLocalDateTime(bean.getTeacherDistributionStartTime(), DateTimeUtil.YEAR_MONTH_DAY_FORMAT));
+                    bean.setTeacherDistributionEndTimeStr(DateTimeUtil.formatLocalDateTime(bean.getTeacherDistributionEndTime(), DateTimeUtil.YEAR_MONTH_DAY_FORMAT));
+                    bean.setStartTimeStr(DateTimeUtil.formatLocalDateTime(bean.getStartTime(), DateTimeUtil.YEAR_MONTH_DAY_FORMAT));
+                    bean.setEndTimeStr(DateTimeUtil.formatLocalDateTime(bean.getEndTime(), DateTimeUtil.YEAR_MONTH_DAY_FORMAT));
                 }
                 modelMap.addAttribute("internshipRelease", bean);
                 Users users = SessionUtil.getUserFromSession();

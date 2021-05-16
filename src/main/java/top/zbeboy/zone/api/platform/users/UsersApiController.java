@@ -92,7 +92,7 @@ public class UsersApiController {
                 outPut.put("email", users.getEmail());
                 outPut.put("mobile", users.getMobile());
                 outPut.put("idCard", users.getIdCard());
-                outPut.put("joinDate", DateTimeUtil.defaultFormatSqlDate(users.getJoinDate()));
+                outPut.put("joinDate", DateTimeUtil.defaultFormatLocalDate(users.getJoinDate()));
 
                 outPut.put("authorities", ((OAuth2Authentication) principal).getUserAuthentication().getAuthorities());
                 // roles.

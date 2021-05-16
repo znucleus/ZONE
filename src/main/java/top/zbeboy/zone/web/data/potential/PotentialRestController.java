@@ -87,8 +87,8 @@ public class PotentialRestController {
                     DateTime dateTime = DateTime.now();
                     dateTime = dateTime.plusDays(ZoneProperties.getMail().getValidCodeTime());
                     potentialAddVo.setMailboxVerifyCode(RandomUtil.generateEmailCheckKey());
-                    potentialAddVo.setMailboxVerifyValid(DateTimeUtil.utilDateToSqlTimestamp(dateTime.toDate()));
-                    potentialAddVo.setJoinDate(DateTimeUtil.getNowSqlDate());
+                    potentialAddVo.setMailboxVerifyValid(DateTimeUtil.utilDateToLocalDateTime(dateTime.toDate()));
+                    potentialAddVo.setJoinDate(DateTimeUtil.getNowLocalDate());
                     potentialAddVo.setLangKey(request.getLocale().toLanguageTag());
                     potentialAddVo.setBaseUrl(RequestUtil.getBaseUrl(request));
                     ajaxUtil = potentialService.save(potentialAddVo);

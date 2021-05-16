@@ -17,6 +17,7 @@ import top.zbeboy.zbase.domain.tables.records.TheoryAuthoritiesRecord;
 import javax.annotation.Resource;
 import java.util.Optional;
 
+import static org.jooq.impl.DSL.currentLocalDateTime;
 import static org.jooq.impl.DSL.now;
 import static top.zbeboy.zbase.domain.Tables.THEORY_AUTHORITIES;
 import static top.zbeboy.zbase.domain.Tables.USERS;
@@ -66,8 +67,8 @@ public class TheoryAuthoritiesServiceImpl implements TheoryAuthoritiesService {
         return create.selectFrom(THEORY_AUTHORITIES)
                 .where(THEORY_AUTHORITIES.THEORY_RELEASE_ID.eq(theoryReleaseId)
                         .and(THEORY_AUTHORITIES.USERNAME.eq(username))
-                        .and(THEORY_AUTHORITIES.EXPIRE_DATE.gt(now()))
-                        .and(THEORY_AUTHORITIES.VALID_DATE.le(now())))
+                        .and(THEORY_AUTHORITIES.EXPIRE_DATE.gt(currentLocalDateTime()))
+                        .and(THEORY_AUTHORITIES.VALID_DATE.le(currentLocalDateTime())))
                 .fetch();
     }
 

@@ -107,7 +107,7 @@ public class TrainingAttendRestController {
         if (records.isNotEmpty()) {
             beans = records.into(TrainingAttendBean.class);
             beans.forEach(bean -> {
-                bean.setPublishDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getPublishDate()));
+                bean.setPublishDateStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getPublishDate()));
                 bean.setCanOperator(BooleanUtil.toByte(trainingConditionCommon.usersCondition(bean.getTrainingReleaseId())));
             });
         }
@@ -157,15 +157,15 @@ public class TrainingAttendRestController {
                 // 生成考勤日期
                 TrainingAttendRecord trainingAttendRecord = trainingAttendService.findByTrainingReleaseIdWithRecentlyAttendDate(trainingConfigure.getTrainingReleaseId());
                 if (Objects.nonNull(trainingAttendRecord)) {
-                    trainingAttend.setAttendDate(DateTimeUtil.calculationSqlNextWeekDay(trainingAttendRecord.getAttendDate(), trainingConfigure.getWeekDay()));
+                    trainingAttend.setAttendDate(DateTimeUtil.calculationNextWeekDay(trainingAttendRecord.getAttendDate(), trainingConfigure.getWeekDay()));
                 } else {
-                    trainingAttend.setAttendDate(DateTimeUtil.calculationSqlNextWeekDay(DateTimeUtil.getNowSqlDate(), trainingConfigure.getWeekDay()));
+                    trainingAttend.setAttendDate(DateTimeUtil.calculationNextWeekDay(DateTimeUtil.getNowLocalDate(), trainingConfigure.getWeekDay()));
                 }
 
                 trainingAttend.setAttendStartTime(trainingConfigure.getStartTime());
                 trainingAttend.setAttendEndTime(trainingConfigure.getEndTime());
                 trainingAttend.setAttendRoom(trainingConfigure.getSchoolroomId());
-                trainingAttend.setPublishDate(DateTimeUtil.getNowSqlTimestamp());
+                trainingAttend.setPublishDate(DateTimeUtil.getNowLocalDateTime());
                 trainingAttendService.save(trainingAttend);
 
                 Users user = SessionUtil.getUserFromSession();
@@ -178,7 +178,7 @@ public class TrainingAttendRestController {
                         trainingAttendUser.setTrainingAttendId(trainingAttendId);
                         trainingAttendUser.setTrainingUsersId(users.getTrainingUsersId());
                         trainingAttendUser.setOperateUser(user.getUsername());
-                        trainingAttendUser.setOperateDate(DateTimeUtil.getNowSqlTimestamp());
+                        trainingAttendUser.setOperateDate(DateTimeUtil.getNowLocalDateTime());
                         trainingAttendUser.setOperate(ByteUtil.toByte(0));
                         trainingAttendUser.setRemark(users.getRemark());
 
@@ -213,11 +213,11 @@ public class TrainingAttendRestController {
                 String trainingAttendId = UUIDUtil.getUUID();
                 trainingAttend.setTrainingAttendId(trainingAttendId);
                 trainingAttend.setTrainingReleaseId(trainingAttendAddVo.getTrainingReleaseId());
-                trainingAttend.setAttendDate(DateTimeUtil.defaultParseSqlDate(trainingAttendAddVo.getAttendDate()));
-                trainingAttend.setAttendStartTime(DateTimeUtil.defaultParseSqlTime(trainingAttendAddVo.getAttendStartTime()));
-                trainingAttend.setAttendEndTime(DateTimeUtil.defaultParseSqlTime(trainingAttendAddVo.getAttendEndTime()));
+                trainingAttend.setAttendDate(DateTimeUtil.defaultParseLocalDate(trainingAttendAddVo.getAttendDate()));
+                trainingAttend.setAttendStartTime(DateTimeUtil.defaultParseLocalTime(trainingAttendAddVo.getAttendStartTime()));
+                trainingAttend.setAttendEndTime(DateTimeUtil.defaultParseLocalTime(trainingAttendAddVo.getAttendEndTime()));
                 trainingAttend.setAttendRoom(trainingAttendAddVo.getAttendRoom());
-                trainingAttend.setPublishDate(DateTimeUtil.getNowSqlTimestamp());
+                trainingAttend.setPublishDate(DateTimeUtil.getNowLocalDateTime());
                 trainingAttend.setRemark(trainingAttendAddVo.getRemark());
                 trainingAttendService.save(trainingAttend);
 
@@ -231,7 +231,7 @@ public class TrainingAttendRestController {
                         trainingAttendUser.setTrainingAttendId(trainingAttendId);
                         trainingAttendUser.setTrainingUsersId(users.getTrainingUsersId());
                         trainingAttendUser.setOperateUser(user.getUsername());
-                        trainingAttendUser.setOperateDate(DateTimeUtil.getNowSqlTimestamp());
+                        trainingAttendUser.setOperateDate(DateTimeUtil.getNowLocalDateTime());
                         trainingAttendUser.setOperate(ByteUtil.toByte(0));
                         trainingAttendUser.setRemark(users.getRemark());
 
@@ -262,9 +262,9 @@ public class TrainingAttendRestController {
         if (!bindingResult.hasErrors()) {
             if (trainingConditionCommon.usersCondition(trainingAttendEditVo.getTrainingReleaseId())) {
                 TrainingAttend trainingAttend = trainingAttendService.findById(trainingAttendEditVo.getTrainingAttendId());
-                trainingAttend.setAttendDate(DateTimeUtil.defaultParseSqlDate(trainingAttendEditVo.getAttendDate()));
-                trainingAttend.setAttendStartTime(DateTimeUtil.defaultParseSqlTime(trainingAttendEditVo.getAttendStartTime()));
-                trainingAttend.setAttendEndTime(DateTimeUtil.defaultParseSqlTime(trainingAttendEditVo.getAttendEndTime()));
+                trainingAttend.setAttendDate(DateTimeUtil.defaultParseLocalDate(trainingAttendEditVo.getAttendDate()));
+                trainingAttend.setAttendStartTime(DateTimeUtil.defaultParseLocalTime(trainingAttendEditVo.getAttendStartTime()));
+                trainingAttend.setAttendEndTime(DateTimeUtil.defaultParseLocalTime(trainingAttendEditVo.getAttendEndTime()));
                 trainingAttend.setAttendRoom(trainingAttendEditVo.getAttendRoom());
                 trainingAttend.setRemark(trainingAttendEditVo.getRemark());
                 trainingAttendService.update(trainingAttend);
@@ -362,7 +362,7 @@ public class TrainingAttendRestController {
             TrainingAttendUsers trainingAttendUsers = trainingAttendUsersService.findById(attendUsersId);
             trainingAttendUsers.setOperate(operate);
             trainingAttendUsers.setOperateUser(users.getUsername());
-            trainingAttendUsers.setOperateDate(DateTimeUtil.getNowSqlTimestamp());
+            trainingAttendUsers.setOperateDate(DateTimeUtil.getNowLocalDateTime());
 
             trainingAttendUsersService.update(trainingAttendUsers);
             ajaxUtil.success().msg("更新成功");
@@ -459,7 +459,7 @@ public class TrainingAttendRestController {
                     au.setTrainingAttendId(trainingAttendId);
                     au.setTrainingUsersId(users.getTrainingUsersId());
                     au.setOperate(ByteUtil.toByte(0));
-                    au.setOperateDate(DateTimeUtil.getNowSqlTimestamp());
+                    au.setOperateDate(DateTimeUtil.getNowLocalDateTime());
                     au.setOperateUser(user.getUsername());
 
                     trainingAttendUsers.add(au);

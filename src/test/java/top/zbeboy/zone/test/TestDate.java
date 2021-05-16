@@ -3,7 +3,7 @@ package top.zbeboy.zone.test;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Weeks;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 
 import java.time.DayOfWeek;

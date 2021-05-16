@@ -41,6 +41,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
@@ -96,12 +97,12 @@ public class InternshipApplyRestController {
             beans = records.into(InternshipReleaseBean.class);
             beans.forEach(bean -> {
                 if (BooleanUtil.toBoolean(bean.getIsTimeLimit())) {
-                    bean.setTeacherDistributionStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionStartTime()));
-                    bean.setTeacherDistributionEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionEndTime()));
-                    bean.setStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getStartTime()));
-                    bean.setEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getEndTime()));
+                    bean.setTeacherDistributionStartTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getTeacherDistributionStartTime()));
+                    bean.setTeacherDistributionEndTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getTeacherDistributionEndTime()));
+                    bean.setStartTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getStartTime()));
+                    bean.setEndTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getEndTime()));
                 }
-                bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime()));
+                bean.setReleaseTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getReleaseTime()));
                 bean.setCanOperator(BooleanUtil.toByte(internshipConditionCommon.applyCondition(bean.getInternshipReleaseId())));
             });
         }
@@ -125,15 +126,15 @@ public class InternshipApplyRestController {
             beans = records.into(InternshipApplyBean.class);
             beans.forEach(bean -> {
                 if (BooleanUtil.toBoolean(bean.getIsTimeLimit())) {
-                    bean.setTeacherDistributionStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionStartTime()));
-                    bean.setTeacherDistributionEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionEndTime()));
-                    bean.setStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getStartTime()));
-                    bean.setEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getEndTime()));
+                    bean.setTeacherDistributionStartTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getTeacherDistributionStartTime()));
+                    bean.setTeacherDistributionEndTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getTeacherDistributionEndTime()));
+                    bean.setStartTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getStartTime()));
+                    bean.setEndTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getEndTime()));
                 }
-                bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime()));
-                bean.setApplyTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getApplyTime()));
-                bean.setChangeFillStartTimeStr(Objects.nonNull(bean.getChangeFillStartTime()) ? DateTimeUtil.defaultFormatSqlTimestamp(bean.getChangeFillStartTime()) : "");
-                bean.setChangeFillEndTimeStr(Objects.nonNull(bean.getChangeFillEndTime()) ? DateTimeUtil.defaultFormatSqlTimestamp(bean.getChangeFillEndTime()) : "");
+                bean.setReleaseTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getReleaseTime()));
+                bean.setApplyTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getApplyTime()));
+                bean.setChangeFillStartTimeStr(Objects.nonNull(bean.getChangeFillStartTime()) ? DateTimeUtil.defaultFormatLocalDateTime(bean.getChangeFillStartTime()) : "");
+                bean.setChangeFillEndTimeStr(Objects.nonNull(bean.getChangeFillEndTime()) ? DateTimeUtil.defaultFormatLocalDateTime(bean.getChangeFillEndTime()) : "");
                 bean.setCanEdit(BooleanUtil.toByte(internshipConditionCommon.applyEditCondition(bean.getInternshipReleaseId())));
             });
         }
@@ -271,8 +272,8 @@ public class InternshipApplyRestController {
                             internshipInfo.setHeadmasterTel(internshipApplyEditVo.getHeadmasterTel());
                             internshipInfo.setSchoolGuidanceTeacher(internshipApplyEditVo.getSchoolGuidanceTeacher());
                             internshipInfo.setSchoolGuidanceTeacherTel(internshipApplyEditVo.getSchoolGuidanceTeacherTel());
-                            internshipInfo.setStartTime(DateTimeUtil.defaultParseSqlDate(internshipApplyEditVo.getStartTime()));
-                            internshipInfo.setEndTime(DateTimeUtil.defaultParseSqlDate(internshipApplyEditVo.getEndTime()));
+                            internshipInfo.setStartTime(DateTimeUtil.defaultParseLocalDate(internshipApplyEditVo.getStartTime()));
+                            internshipInfo.setEndTime(DateTimeUtil.defaultParseLocalDate(internshipApplyEditVo.getEndTime()));
 
                             internshipInfoService.update(internshipInfo);
                             ajaxUtil.success().msg("更新成功");
@@ -283,7 +284,7 @@ public class InternshipApplyRestController {
                                 internshipChangeCompanyHistory.setInternshipChangeCompanyHistoryId(UUIDUtil.getUUID());
                                 internshipChangeCompanyHistory.setInternshipReleaseId(internshipInfo.getInternshipReleaseId());
                                 internshipChangeCompanyHistory.setStudentId(internshipInfo.getStudentId());
-                                internshipChangeCompanyHistory.setChangeTime(DateTimeUtil.getNowSqlTimestamp());
+                                internshipChangeCompanyHistory.setChangeTime(DateTimeUtil.getNowLocalDateTime());
                                 internshipChangeCompanyHistory.setCompanyName(internshipInfo.getCompanyName());
                                 internshipChangeCompanyHistory.setCompanyAddress(internshipInfo.getCompanyAddress());
                                 internshipChangeCompanyHistory.setCompanyContacts(internshipInfo.getCompanyContact());
@@ -302,7 +303,7 @@ public class InternshipApplyRestController {
                             internshipChangeCompanyHistory.setInternshipChangeCompanyHistoryId(UUIDUtil.getUUID());
                             internshipChangeCompanyHistory.setInternshipReleaseId(internshipInfo.getInternshipReleaseId());
                             internshipChangeCompanyHistory.setStudentId(internshipInfo.getStudentId());
-                            internshipChangeCompanyHistory.setChangeTime(DateTimeUtil.getNowSqlTimestamp());
+                            internshipChangeCompanyHistory.setChangeTime(DateTimeUtil.getNowLocalDateTime());
                             internshipChangeCompanyHistory.setCompanyName(internshipInfo.getCompanyName());
                             internshipChangeCompanyHistory.setCompanyAddress(internshipInfo.getCompanyAddress());
                             internshipChangeCompanyHistory.setCompanyContacts(internshipInfo.getCompanyContact());
@@ -329,8 +330,8 @@ public class InternshipApplyRestController {
                             internshipInfo.setCompanyMobile(internshipApplyEditVo.getCompanyMobile());
                             internshipInfo.setSchoolGuidanceTeacher(internshipApplyEditVo.getSchoolGuidanceTeacher());
                             internshipInfo.setSchoolGuidanceTeacherTel(internshipApplyEditVo.getSchoolGuidanceTeacherTel());
-                            internshipInfo.setStartTime(DateTimeUtil.defaultParseSqlDate(internshipApplyEditVo.getStartTime()));
-                            internshipInfo.setEndTime(DateTimeUtil.defaultParseSqlDate(internshipApplyEditVo.getEndTime()));
+                            internshipInfo.setStartTime(DateTimeUtil.defaultParseLocalDate(internshipApplyEditVo.getStartTime()));
+                            internshipInfo.setEndTime(DateTimeUtil.defaultParseLocalDate(internshipApplyEditVo.getEndTime()));
                             internshipInfoService.update(internshipInfo);
                             ajaxUtil.success().msg("更新成功");
                         } else {
@@ -396,7 +397,7 @@ public class InternshipApplyRestController {
                     internshipChangeHistory.setInternshipChangeHistoryId(UUIDUtil.getUUID());
                     internshipChangeHistory.setInternshipReleaseId(internshipReleaseId);
                     internshipChangeHistory.setStudentId(studentBean.getStudentId());
-                    internshipChangeHistory.setApplyTime(DateTimeUtil.getNowSqlTimestamp());
+                    internshipChangeHistory.setApplyTime(DateTimeUtil.getNowLocalDateTime());
                     internshipChangeHistoryService.save(internshipChangeHistory);
                 } else {
                     ajaxUtil.fail().msg("当前状态异常");
@@ -432,7 +433,7 @@ public class InternshipApplyRestController {
                 int internshipApplyState = internshipApply.getInternshipApplyState();
                 // 处于 2：已通过 才可变更申请
                 if (internshipApplyState == 2) {
-                    Timestamp now = DateTimeUtil.getNowSqlTimestamp();
+                    LocalDateTime now = DateTimeUtil.getNowLocalDateTime();
                     internshipApply.setInternshipApplyState(state);
                     internshipApply.setReason(reason);
                     internshipApply.setApplyTime(now);

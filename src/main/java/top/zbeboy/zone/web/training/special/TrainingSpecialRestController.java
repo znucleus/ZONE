@@ -80,7 +80,7 @@ public class TrainingSpecialRestController {
         Result<Record> records = trainingSpecialService.findAllByPage(simplePaginationUtil);
         if (records.isNotEmpty()) {
             beans = records.into(TrainingSpecialBean.class);
-            beans.forEach(bean -> bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime())));
+            beans.forEach(bean -> bean.setReleaseTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getReleaseTime())));
             beans.forEach(bean -> bean.setCanOperator(BooleanUtil.toByte(trainingConditionCommon.specialCondition())));
             beans.forEach(bean -> bean.setRealCover(Workbook.DIRECTORY_SPLIT + bean.getRelativePath()));
         }
@@ -117,7 +117,7 @@ public class TrainingSpecialRestController {
                     trainingSpecial.setTrainingSpecialId(UUIDUtil.getUUID());
                     trainingSpecial.setUsername(users.getUsername());
                     trainingSpecial.setPublisher(users.getRealName());
-                    trainingSpecial.setReleaseTime(DateTimeUtil.getNowSqlTimestamp());
+                    trainingSpecial.setReleaseTime(DateTimeUtil.getNowLocalDateTime());
                     trainingSpecialService.save(trainingSpecial);
                     ajaxUtil.success().msg("保存成功");
                 } else {
@@ -221,7 +221,7 @@ public class TrainingSpecialRestController {
         if (records.isNotEmpty()) {
             beans = records.into(TrainingSpecialDocumentBean.class);
             beans.forEach(bean -> {
-                bean.setCreateDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getCreateDate()));
+                bean.setCreateDateStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getCreateDate()));
                 bean.setCanOperator(BooleanUtil.toByte(trainingConditionCommon.specialCondition()));
             });
         }
@@ -249,7 +249,7 @@ public class TrainingSpecialRestController {
                 trainingSpecialDocument.setTitle(trainingSpecialDocumentAddVo.getTitle());
                 trainingSpecialDocument.setUsername(users.getUsername());
                 trainingSpecialDocument.setCreator(users.getRealName());
-                trainingSpecialDocument.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                trainingSpecialDocument.setCreateDate(DateTimeUtil.getNowLocalDateTime());
                 trainingSpecialDocument.setReading(0);
                 trainingSpecialDocumentService.save(trainingSpecialDocument);
 
@@ -466,7 +466,7 @@ public class TrainingSpecialRestController {
                 trainingSpecialFile.setFileId(fileId);
                 trainingSpecialFile.setUsername(users.getUsername());
                 trainingSpecialFile.setUploader(users.getRealName());
-                trainingSpecialFile.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                trainingSpecialFile.setCreateDate(DateTimeUtil.getNowLocalDateTime());
                 trainingSpecialFile.setDownloads(0);
                 trainingSpecialFile.setMapping(BooleanUtil.toByte(false));
 

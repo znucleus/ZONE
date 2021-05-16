@@ -178,14 +178,14 @@ public class CalendarRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (optionalSchoolCalendarBean.isPresent()) {
             SchoolCalendarBean bean = optionalSchoolCalendarBean.get();
-            bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime()));
-            bean.setNowDate(DateTimeUtil.getNowSqlDate());
+            bean.setReleaseTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getReleaseTime()));
+            bean.setNowDate(DateTimeUtil.getNowLocalDate());
             bean.setOpenWeeks(DateTimeUtil.calculationTwoDateDifferWeeks(bean.getStartDate(), bean.getEndDate()));
             bean.setHolidayWeeks(DateTimeUtil.calculationTwoDateDifferWeeks(bean.getHolidayStartDate(), bean.getHolidayEndDate()));
             bean.setWeek(DateTimeUtil.getNowDayOfWeek());
-            if (DateTimeUtil.nowRangeSqlDate(bean.getStartDate(), bean.getEndDate())) {
+            if (DateTimeUtil.nowRangeLocalDate(bean.getStartDate(), bean.getEndDate())) {
                 bean.setWeeks(DateTimeUtil.calculationTwoDateDifferWeeks(bean.getStartDate(), bean.getNowDate()));
-            } else if (DateTimeUtil.nowRangeSqlDate(bean.getHolidayStartDate(), bean.getHolidayEndDate())) {
+            } else if (DateTimeUtil.nowRangeLocalDate(bean.getHolidayStartDate(), bean.getHolidayEndDate())) {
                 bean.setWeeks(DateTimeUtil.calculationTwoDateDifferWeeks(bean.getHolidayStartDate(), bean.getNowDate()));
             }
             ajaxUtil.success().msg("查询数据成功").put("calendar", bean);

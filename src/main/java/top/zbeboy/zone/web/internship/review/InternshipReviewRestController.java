@@ -104,10 +104,10 @@ public class InternshipReviewRestController {
             beans = records.into(InternshipReleaseBean.class);
             beans.forEach(bean -> {
                 if (BooleanUtil.toBoolean(bean.getIsTimeLimit())) {
-                    bean.setTeacherDistributionStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionStartTime()));
-                    bean.setTeacherDistributionEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionEndTime()));
-                    bean.setStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getStartTime()));
-                    bean.setEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getEndTime()));
+                    bean.setTeacherDistributionStartTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getTeacherDistributionStartTime()));
+                    bean.setTeacherDistributionEndTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getTeacherDistributionEndTime()));
+                    bean.setStartTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getStartTime()));
+                    bean.setEndTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getEndTime()));
                 }
                 bean.setCanOperator(BooleanUtil.toByte(internshipConditionCommon.reviewCondition(bean.getInternshipReleaseId())));
                 if (BooleanUtil.toBoolean(bean.getCanOperator())) {
@@ -119,7 +119,7 @@ public class InternshipReviewRestController {
                     bean.setBasicFillTotalData(internshipReviewService.countByInternshipReleaseIdAndInternshipApplyState(bean.getInternshipReleaseId(), 5));
                     bean.setCompanyFillTotalData(internshipReviewService.countByInternshipReleaseIdAndInternshipApplyState(bean.getInternshipReleaseId(), 7));
                 }
-                bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime()));
+                bean.setReleaseTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getReleaseTime()));
                 bean.setCanAuthorize(BooleanUtil.toByte(internshipConditionCommon.reviewAuthorizeCondition(bean.getInternshipReleaseId())));
             });
         }
@@ -160,9 +160,9 @@ public class InternshipReviewRestController {
         if (records.isNotEmpty()) {
             beans = records.into(InternshipReviewBean.class);
             beans.forEach(bean -> {
-                bean.setChangeFillStartTimeStr(Objects.nonNull(bean.getChangeFillStartTime()) ? DateTimeUtil.defaultFormatSqlTimestamp(bean.getChangeFillStartTime()) : "");
-                bean.setChangeFillEndTimeStr(Objects.nonNull(bean.getChangeFillEndTime()) ? DateTimeUtil.defaultFormatSqlTimestamp(bean.getChangeFillEndTime()) : "");
-                bean.setApplyTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getApplyTime()));
+                bean.setChangeFillStartTimeStr(Objects.nonNull(bean.getChangeFillStartTime()) ? DateTimeUtil.defaultFormatLocalDateTime(bean.getChangeFillStartTime()) : "");
+                bean.setChangeFillEndTimeStr(Objects.nonNull(bean.getChangeFillEndTime()) ? DateTimeUtil.defaultFormatLocalDateTime(bean.getChangeFillEndTime()) : "");
+                bean.setApplyTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getApplyTime()));
             });
         }
         simplePaginationUtil.setTotalSize(internshipReviewService.countAll(simplePaginationUtil));
@@ -345,7 +345,7 @@ public class InternshipReviewRestController {
                     internshipChangeHistory.setInternshipReleaseId(internshipReviewBean.getInternshipReleaseId());
                     internshipChangeHistory.setStudentId(internshipReviewBean.getStudentId());
                     internshipChangeHistory.setState(internshipReviewBean.getInternshipApplyState());
-                    internshipChangeHistory.setApplyTime(DateTimeUtil.getNowSqlTimestamp());
+                    internshipChangeHistory.setApplyTime(DateTimeUtil.getNowLocalDateTime());
                     internshipChangeHistoryService.save(internshipChangeHistory);
 
                     InternshipRelease internshipRelease = internshipReleaseService.findById(internshipReviewBean.getInternshipReleaseId());
@@ -377,7 +377,7 @@ public class InternshipReviewRestController {
                             userNotify.setNotifyType(Workbook.notifyType.success.name());
                             userNotify.setNotifyTitle("实习审核");
                             userNotify.setNotifyContent(notify);
-                            userNotify.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                            userNotify.setCreateDate(DateTimeUtil.getNowLocalDateTime());
                             userNotifyService.save(userNotify);
                         }
                     }
@@ -421,7 +421,7 @@ public class InternshipReviewRestController {
                 internshipChangeHistory.setInternshipReleaseId(internshipReleaseId);
                 internshipChangeHistory.setStudentId(studentId);
                 internshipChangeHistory.setState(internshipApplyState);
-                internshipChangeHistory.setApplyTime(DateTimeUtil.getNowSqlTimestamp());
+                internshipChangeHistory.setApplyTime(DateTimeUtil.getNowLocalDateTime());
                 internshipChangeHistory.setReason(reason);
                 internshipChangeHistoryService.save(internshipChangeHistory);
 
@@ -453,7 +453,7 @@ public class InternshipReviewRestController {
                         userNotify.setNotifyType(Workbook.notifyType.danger.name());
                         userNotify.setNotifyTitle("实习审核");
                         userNotify.setNotifyContent(notify);
-                        userNotify.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                        userNotify.setCreateDate(DateTimeUtil.getNowLocalDateTime());
                         userNotifyService.save(userNotify);
                     }
                 }
@@ -487,7 +487,7 @@ public class InternshipReviewRestController {
             internshipChangeHistory.setInternshipReleaseId(internshipReleaseId);
             internshipChangeHistory.setStudentId(studentId);
             internshipChangeHistory.setState(-1);
-            internshipChangeHistory.setApplyTime(DateTimeUtil.getNowSqlTimestamp());
+            internshipChangeHistory.setApplyTime(DateTimeUtil.getNowLocalDateTime());
             internshipChangeHistory.setReason("实习申请删除");
             internshipChangeHistoryService.save(internshipChangeHistory);
 
@@ -519,7 +519,7 @@ public class InternshipReviewRestController {
                     userNotify.setNotifyType(Workbook.notifyType.danger.name());
                     userNotify.setNotifyTitle("实习审核");
                     userNotify.setNotifyContent(notify);
-                    userNotify.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                    userNotify.setCreateDate(DateTimeUtil.getNowLocalDateTime());
                     userNotifyService.save(userNotify);
                 }
             }
@@ -566,11 +566,11 @@ public class InternshipReviewRestController {
                     if (StringUtils.isNotBlank(internshipReviewBean.getFillTime())) {
                         if (internshipReviewBean.getFillTime().contains("至")) {
                             String[] timeArr = internshipReviewBean.getFillTime().split(" 至 ");
-                            internshipApply.setChangeFillStartTime(DateTimeUtil.defaultParseSqlTimestamp(timeArr[0] + " 00:00:00"));
-                            internshipApply.setChangeFillEndTime(DateTimeUtil.defaultParseSqlTimestamp(timeArr[1] + " 23:59:59"));
+                            internshipApply.setChangeFillStartTime(DateTimeUtil.defaultParseLocalDateTime(timeArr[0] + " 00:00:00"));
+                            internshipApply.setChangeFillEndTime(DateTimeUtil.defaultParseLocalDateTime(timeArr[1] + " 23:59:59"));
                         } else {
-                            internshipApply.setChangeFillStartTime(DateTimeUtil.defaultParseSqlTimestamp(internshipReviewBean.getFillTime() + " 00:00:00"));
-                            internshipApply.setChangeFillEndTime(DateTimeUtil.defaultParseSqlTimestamp(internshipReviewBean.getFillTime() + " 23:59:59"));
+                            internshipApply.setChangeFillStartTime(DateTimeUtil.defaultParseLocalDateTime(internshipReviewBean.getFillTime() + " 00:00:00"));
+                            internshipApply.setChangeFillEndTime(DateTimeUtil.defaultParseLocalDateTime(internshipReviewBean.getFillTime() + " 23:59:59"));
                         }
 
                     }
@@ -598,7 +598,7 @@ public class InternshipReviewRestController {
                     internshipChangeHistory.setInternshipReleaseId(internshipReleaseId);
                     internshipChangeHistory.setStudentId(studentId);
                     internshipChangeHistory.setState(internshipReviewBean.getInternshipApplyState());
-                    internshipChangeHistory.setApplyTime(DateTimeUtil.getNowSqlTimestamp());
+                    internshipChangeHistory.setApplyTime(DateTimeUtil.getNowLocalDateTime());
                     internshipChangeHistory.setReason(internshipReviewBean.getReason());
                     internshipChangeHistory.setChangeFillStartTime(internshipApply.getChangeFillStartTime());
                     internshipChangeHistory.setChangeFillEndTime(internshipApply.getChangeFillEndTime());
@@ -632,7 +632,7 @@ public class InternshipReviewRestController {
                             userNotify.setNotifyType(Workbook.notifyType.success.name());
                             userNotify.setNotifyTitle("实习审核");
                             userNotify.setNotifyContent(notify);
-                            userNotify.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                            userNotify.setCreateDate(DateTimeUtil.getNowLocalDateTime());
                             userNotifyService.save(userNotify);
                         }
                     }
@@ -674,7 +674,7 @@ public class InternshipReviewRestController {
                     internshipChangeHistory.setInternshipReleaseId(internshipReleaseId);
                     internshipChangeHistory.setStudentId(studentId);
                     internshipChangeHistory.setState(internshipReviewBean.getInternshipApplyState());
-                    internshipChangeHistory.setApplyTime(DateTimeUtil.getNowSqlTimestamp());
+                    internshipChangeHistory.setApplyTime(DateTimeUtil.getNowLocalDateTime());
                     internshipChangeHistory.setReason(internshipReviewBean.getReason());
                     internshipChangeHistoryService.save(internshipChangeHistory);
 
@@ -706,7 +706,7 @@ public class InternshipReviewRestController {
                             userNotify.setNotifyType(Workbook.notifyType.danger.name());
                             userNotify.setNotifyTitle("实习审核");
                             userNotify.setNotifyContent(notify);
-                            userNotify.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                            userNotify.setCreateDate(DateTimeUtil.getNowLocalDateTime());
                             userNotifyService.save(userNotify);
                         }
                     }

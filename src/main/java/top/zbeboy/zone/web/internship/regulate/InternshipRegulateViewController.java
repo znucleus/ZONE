@@ -144,7 +144,7 @@ public class InternshipRegulateViewController {
         InternshipRegulate internshipRegulate = internshipRegulateService.findById(id);
         if (Objects.nonNull(internshipRegulate)) {
             modelMap.addAttribute("internshipRegulate", internshipRegulate);
-            modelMap.addAttribute("reportDate", DateTimeUtil.formatSqlDate(internshipRegulate.getReportDate(), DateTimeUtil.YEAR_MONTH_DAY_CN_FORMAT));
+            modelMap.addAttribute("reportDate", DateTimeUtil.formatLocalDate(internshipRegulate.getReportDate(), DateTimeUtil.YEAR_MONTH_DAY_CN_FORMAT));
             page = "web/internship/regulate/internship_regulate_look::#page-wrapper";
         } else {
             config.buildDangerTip("查询错误", "未查询到实习监管信息");

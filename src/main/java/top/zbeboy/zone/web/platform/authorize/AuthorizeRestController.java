@@ -177,7 +177,7 @@ public class AuthorizeRestController {
                     userNotify.setNotifyType(Workbook.notifyType.info.name());
                     userNotify.setNotifyTitle("平台授权审核提醒");
                     userNotify.setNotifyContent(notify);
-                    userNotify.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                    userNotify.setCreateDate(DateTimeUtil.getNowLocalDateTime());
 
                     userNotifyService.save(userNotify);
                 }
@@ -249,9 +249,9 @@ public class AuthorizeRestController {
                     Users applyUser = result.get();
                     String notify = "管理员用户【" + users.getRealName() + "】";
                     if (applyStatus == 1) {
-                        notify += " 通过了您在" + DateTimeUtil.defaultFormatSqlTimestamp(roleApply.getCreateDate()) + "时创建的平台授权申请。";
+                        notify += " 通过了您在" + DateTimeUtil.defaultFormatLocalDateTime(roleApply.getCreateDate()) + "时创建的平台授权申请。";
                     } else if (applyStatus == 2) {
-                        notify += " 拒绝了您在" + DateTimeUtil.defaultFormatSqlTimestamp(roleApply.getCreateDate()) + "时创建的平台授权申请。原因：" + refuse;
+                        notify += " 拒绝了您在" + DateTimeUtil.defaultFormatLocalDateTime(roleApply.getCreateDate()) + "时创建的平台授权申请。原因：" + refuse;
                     }
 
                     // 检查邮件推送是否被关闭
@@ -268,7 +268,7 @@ public class AuthorizeRestController {
                     userNotify.setNotifyType(Workbook.notifyType.info.name());
                     userNotify.setNotifyTitle("平台授权审核结果提醒");
                     userNotify.setNotifyContent(notify);
-                    userNotify.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                    userNotify.setCreateDate(DateTimeUtil.getNowLocalDateTime());
 
                     userNotifyService.save(userNotify);
                 }

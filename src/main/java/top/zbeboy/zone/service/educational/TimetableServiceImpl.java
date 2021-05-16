@@ -41,6 +41,8 @@ import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 
 @Service("timetableService")
@@ -84,7 +86,7 @@ public class TimetableServiceImpl implements TimetableService {
         net.fortuna.ical4j.model.TimeZone timezone = registry.getTimeZone("Asia/Shanghai");
         VTimeZone tz = timezone.getVTimeZone();
 
-        java.sql.Date calendarStartDate = null;
+        LocalDate calendarStartDate = null;
         for (TimetableCourse timetableCourse : timetableCourses) {
             // Start Date is on: April 1, 2008, 9:00 am
             java.util.Calendar startDate = new GregorianCalendar();
@@ -97,14 +99,14 @@ public class TimetableServiceImpl implements TimetableService {
             String courseName = timetableCourse.getCourseName();
             String room = timetableCourse.getRoom();
 
-            java.sql.Time startTime = timetableCourse.getStartTime();
+            LocalTime startTime = timetableCourse.getStartTime();
             if (Objects.isNull(startTime)) {
-                startTime = DateTimeUtil.getNowSqlTime();
+                startTime = DateTimeUtil.getNowLocalTime();
             }
 
-            java.sql.Time endTime = timetableCourse.getEndTime();
+            LocalTime endTime = timetableCourse.getEndTime();
             if (Objects.isNull(endTime)) {
-                endTime = DateTimeUtil.getNowSqlTime();
+                endTime = DateTimeUtil.getNowLocalTime();
             }
 
             Byte startWeek = timetableCourse.getStartWeek();
@@ -126,16 +128,16 @@ public class TimetableServiceImpl implements TimetableService {
                 if (optionalTimetableSemester.isPresent() && Objects.nonNull(optionalTimetableSemester.get().getStartDate())) {
                     calendarStartDate = optionalTimetableSemester.get().getStartDate();
                 } else {
-                    calendarStartDate = DateTimeUtil.getNowSqlDate();
+                    calendarStartDate = DateTimeUtil.getNowLocalDate();
                 }
             }
 
             // 1.日历偏移开始周数 算开始时间
             java.util.Date deviationCalendarStartDate = calcDeviationDate(calendarStartDate, startWeek, weekDay);
-            String finishStartDate = DateTimeUtil.formatUtilDate(deviationCalendarStartDate, DateTimeUtil.YEAR_MONTH_DAY_FORMAT) + " " + DateTimeUtil.defaultFormatSqlTime(startTime);
+            String finishStartDate = DateTimeUtil.formatUtilDate(deviationCalendarStartDate, DateTimeUtil.YEAR_MONTH_DAY_FORMAT) + " " + DateTimeUtil.defaultFormatLocalTime(startTime);
             startDate.setTime(DateTimeUtil.parseUtilDate(finishStartDate, DateTimeUtil.STANDARD_FORMAT));
 
-            String finishEndDate = DateTimeUtil.formatUtilDate(deviationCalendarStartDate, DateTimeUtil.YEAR_MONTH_DAY_FORMAT) + " " + DateTimeUtil.defaultFormatSqlTime(endTime);
+            String finishEndDate = DateTimeUtil.formatUtilDate(deviationCalendarStartDate, DateTimeUtil.YEAR_MONTH_DAY_FORMAT) + " " + DateTimeUtil.defaultFormatLocalTime(endTime);
             endDate.setTime(DateTimeUtil.parseUtilDate(finishEndDate, DateTimeUtil.STANDARD_FORMAT));
 
             // Create the event
@@ -154,9 +156,9 @@ public class TimetableServiceImpl implements TimetableService {
                 endWeekContent = timetableCourse.getEndWeek() + "";
             }
 
-            String startTimeContent = DateTimeUtil.defaultFormatSqlTime(startTime);
+            String startTimeContent = DateTimeUtil.defaultFormatLocalTime(startTime);
 
-            String endTimeContent = DateTimeUtil.defaultFormatSqlTime(endTime);
+            String endTimeContent = DateTimeUtil.defaultFormatLocalTime(endTime);
 
             String description = startWeekContent + "-" + endWeekContent + "周 " + startTimeContent + "-" + endTimeContent;
 
@@ -232,7 +234,7 @@ public class TimetableServiceImpl implements TimetableService {
                 }
 
                 if (Objects.nonNull(eduData.get("startDate"))) {
-                    java.sql.Date startDate = DateTimeUtil.parseSqlDate((String) eduData.get("startDate"), DateTimeUtil.YEAR_MONTH_DAY_FORMAT);
+                    LocalDate startDate = DateTimeUtil.defaultParseLocalDate((String) eduData.get("startDate"));
                     if (timetableSemester.getStartDate().compareTo(startDate) != 0) {
                         timetableSemester.setStartDate(startDate);
                         isUpdate = true;
@@ -241,7 +243,7 @@ public class TimetableServiceImpl implements TimetableService {
                 }
 
                 if (Objects.nonNull(eduData.get("endDate"))) {
-                    java.sql.Date endDate = DateTimeUtil.parseSqlDate((String) eduData.get("endDate"), DateTimeUtil.YEAR_MONTH_DAY_FORMAT);
+                    LocalDate endDate = DateTimeUtil.defaultParseLocalDate((String) eduData.get("endDate"));
                     if (timetableSemester.getEndDate().compareTo(endDate) != 0) {
                         timetableSemester.setEndDate(endDate);
                         isUpdate = true;
@@ -271,11 +273,11 @@ public class TimetableServiceImpl implements TimetableService {
                 }
 
                 if (Objects.nonNull(eduData.get("startDate"))) {
-                    timetableSemester.setStartDate(DateTimeUtil.parseSqlDate((String) eduData.get("startDate"), DateTimeUtil.YEAR_MONTH_DAY_FORMAT));
+                    timetableSemester.setStartDate(DateTimeUtil.defaultParseLocalDate((String) eduData.get("startDate")));
                 }
 
                 if (Objects.nonNull(eduData.get("endDate"))) {
-                    timetableSemester.setEndDate(DateTimeUtil.parseSqlDate((String) eduData.get("endDate"), DateTimeUtil.YEAR_MONTH_DAY_FORMAT));
+                    timetableSemester.setEndDate(DateTimeUtil.defaultParseLocalDate((String) eduData.get("endDate")));
                 }
                 educationalTimetableService.semesterSave(timetableSemester);
             }
@@ -331,11 +333,11 @@ public class TimetableServiceImpl implements TimetableService {
                                 timetableCourse.setStartUnit(startUnit);
                                 timetableCourse.setEndUnit(endUnit);
                                 if (StringUtils.isNotBlank(startTime)) {
-                                    timetableCourse.setStartTime(DateTimeUtil.defaultParseSqlTime(startTime));
+                                    timetableCourse.setStartTime(DateTimeUtil.defaultParseLocalTime(startTime));
                                 }
 
                                 if (StringUtils.isNotBlank(endTime)) {
-                                    timetableCourse.setEndTime(DateTimeUtil.defaultParseSqlTime(endTime));
+                                    timetableCourse.setEndTime(DateTimeUtil.defaultParseLocalTime(endTime));
                                 }
                                 timetableCourse.setTeachers(teachers);
                                 timetableCourse.setCredits(credits);
@@ -647,7 +649,7 @@ public class TimetableServiceImpl implements TimetableService {
      * @return 时间
      */
     @Override
-    public java.util.Date calcDeviationDate(java.sql.Date date, int week, int weekDay) {
+    public java.util.Date calcDeviationDate(LocalDate date, int week, int weekDay) {
         int deviationWeek = week - 1;
         org.joda.time.DateTime dt1 = new org.joda.time.DateTime(date);
         if (deviationWeek > 0) {

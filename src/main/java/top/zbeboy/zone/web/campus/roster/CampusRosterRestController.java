@@ -203,8 +203,8 @@ public class CampusRosterRestController {
             if (optionalRosterRelease.isPresent()) {
                 RosterRelease rosterRelease = optionalRosterRelease.get();
                 // 时间范围
-                if (DateTimeUtil.nowAfterSqlTimestamp(rosterRelease.getStartTime()) &&
-                        DateTimeUtil.nowBeforeSqlTimestamp(rosterRelease.getEndTime())) {
+                if (DateTimeUtil.nowAfterLocalDateTime(rosterRelease.getStartTime()) &&
+                        DateTimeUtil.nowBeforeLocalDateTime(rosterRelease.getEndTime())) {
                     Optional<RosterData> optionalRosterData = campusRosterService.findRosterDataByStudentNumber(rosterDataAddVo.getStudentNumber());
                     if (!optionalRosterData.isPresent()) {
                         ajaxUtil = campusRosterService.dataSave(rosterDataAddVo);

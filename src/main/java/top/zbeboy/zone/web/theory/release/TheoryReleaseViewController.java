@@ -249,8 +249,8 @@ public class TheoryReleaseViewController {
         Optional<Record> record = theoryAuthoritiesService.findByIdRelation(id);
         if (record.isPresent()) {
             TheoryAuthoritiesBean bean = record.get().into(TheoryAuthoritiesBean.class);
-            bean.setValidDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getValidDate()));
-            bean.setExpireDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getExpireDate()));
+            bean.setValidDateStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getValidDate()));
+            bean.setExpireDateStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getExpireDate()));
             if (theoryConditionCommon.canOperator(bean.getTheoryReleaseId())) {
                 modelMap.addAttribute("theoryAuthorities", bean);
                 page = "web/theory/release/theory_authorities_edit::#page-wrapper";

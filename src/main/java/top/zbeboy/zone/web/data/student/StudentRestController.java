@@ -131,9 +131,9 @@ public class StudentRestController {
                     DateTime dateTime = DateTime.now();
                     dateTime = dateTime.plusDays(ZoneProperties.getMail().getValidCodeTime());
                     studentAddVo.setMailboxVerifyCode(RandomUtil.generateEmailCheckKey());
-                    studentAddVo.setMailboxVerifyValid(DateTimeUtil.utilDateToSqlTimestamp(dateTime.toDate()));
+                    studentAddVo.setMailboxVerifyValid(DateTimeUtil.utilDateToLocalDateTime(dateTime.toDate()));
                     studentAddVo.setLangKey(request.getLocale().toLanguageTag());
-                    studentAddVo.setJoinDate(DateTimeUtil.getNowSqlDate());
+                    studentAddVo.setJoinDate(DateTimeUtil.getNowLocalDate());
 
                     // 同步花名册
                     Optional<RosterData> optionalRosterData = campusRosterService.findRosterDataByStudentNumber(studentAddVo.getStudentNumber());
@@ -296,13 +296,13 @@ public class StudentRestController {
                 weiXinSubscribeSendVo.setName4(result.get().getRealName());
                 weiXinSubscribeSendVo.setDate2(DateTimeUtil.getNowLocalDateTime(DateTimeUtil.YEAR_MONTH_DAY_HOUR_MINUTE_FORMAT));
                 weiXinSubscribeSendVo.setThing3(notify);
-                weiXinSubscribeSendVo.setStartTime(DateTimeUtil.getNowSqlTimestamp());
+                weiXinSubscribeSendVo.setStartTime(DateTimeUtil.getNowLocalDateTime());
                 weiXinSubscribeService.sendByBusinessAndUsername(weiXinSubscribeSendVo);
             }
 
             SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(),
                     users.getUsername() + "更改学生: " + username + " 角色为[" + roles + "]",
-                    DateTimeUtil.getNowSqlTimestamp(), users.getUsername(),
+                    DateTimeUtil.getNowLocalDateTime(), users.getUsername(),
                     RequestUtil.getIpAddress(request));
             systemLogService.save(systemLog);
         }
@@ -322,7 +322,7 @@ public class StudentRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = studentService.updateEnabled(users.getUsername(), userIds, enabled);
         SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(),
                 users.getUsername() + "更改学生: " + userIds + " 状态为[" + enabled + "]",
-                DateTimeUtil.getNowSqlTimestamp(), users.getUsername(),
+                DateTimeUtil.getNowLocalDateTime(), users.getUsername(),
                 RequestUtil.getIpAddress(request));
         systemLogService.save(systemLog);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -341,7 +341,7 @@ public class StudentRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = studentService.updateLocked(users.getUsername(), userIds, locked);
         SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(),
                 users.getUsername() + "更改学生: " + userIds + " 锁定为[" + locked + "]",
-                DateTimeUtil.getNowSqlTimestamp(), users.getUsername(),
+                DateTimeUtil.getNowLocalDateTime(), users.getUsername(),
                 RequestUtil.getIpAddress(request));
         systemLogService.save(systemLog);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -359,7 +359,7 @@ public class StudentRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = studentService.updatePassword(users.getUsername(), username);
         SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(),
                 users.getUsername() + "更改学生: " + username + " 密码",
-                DateTimeUtil.getNowSqlTimestamp(), users.getUsername(),
+                DateTimeUtil.getNowLocalDateTime(), users.getUsername(),
                 RequestUtil.getIpAddress(request));
         systemLogService.save(systemLog);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -377,7 +377,7 @@ public class StudentRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = studentService.delete(users.getUsername(), userIds);
         SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(),
                 users.getUsername() + "删除学生: " + userIds,
-                DateTimeUtil.getNowSqlTimestamp(), users.getUsername(),
+                DateTimeUtil.getNowLocalDateTime(), users.getUsername(),
                 RequestUtil.getIpAddress(request));
         systemLogService.save(systemLog);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);

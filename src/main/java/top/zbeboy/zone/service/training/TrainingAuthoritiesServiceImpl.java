@@ -17,6 +17,7 @@ import top.zbeboy.zbase.domain.tables.records.TrainingAuthoritiesRecord;
 import javax.annotation.Resource;
 import java.util.Optional;
 
+import static org.jooq.impl.DSL.currentLocalDateTime;
 import static org.jooq.impl.DSL.now;
 import static top.zbeboy.zbase.domain.Tables.TRAINING_AUTHORITIES;
 import static top.zbeboy.zbase.domain.Tables.USERS;
@@ -66,8 +67,8 @@ public class TrainingAuthoritiesServiceImpl implements TrainingAuthoritiesServic
         return create.selectFrom(TRAINING_AUTHORITIES)
                 .where(TRAINING_AUTHORITIES.TRAINING_RELEASE_ID.eq(trainingReleaseId)
                         .and(TRAINING_AUTHORITIES.USERNAME.eq(username))
-                        .and(TRAINING_AUTHORITIES.EXPIRE_DATE.gt(now()))
-                        .and(TRAINING_AUTHORITIES.VALID_DATE.le(now())))
+                        .and(TRAINING_AUTHORITIES.EXPIRE_DATE.gt(currentLocalDateTime()))
+                        .and(TRAINING_AUTHORITIES.VALID_DATE.le(currentLocalDateTime())))
                 .fetch();
     }
 

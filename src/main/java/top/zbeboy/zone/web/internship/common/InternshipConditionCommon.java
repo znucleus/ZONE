@@ -136,8 +136,8 @@ public class InternshipConditionCommon {
                 boolean isTimeLimit = BooleanUtil.toBoolean(internshipRelease.getIsTimeLimit());
                 if (isTimeLimit) {
                     // 检测教师分配时间
-                    if (DateTimeUtil.nowAfterSqlTimestamp(internshipRelease.getTeacherDistributionStartTime()) &&
-                            DateTimeUtil.nowBeforeSqlTimestamp(internshipRelease.getTeacherDistributionEndTime())) {
+                    if (DateTimeUtil.nowAfterLocalDateTime(internshipRelease.getTeacherDistributionStartTime()) &&
+                            DateTimeUtil.nowBeforeLocalDateTime(internshipRelease.getTeacherDistributionEndTime())) {
                         canOperator = true;
                     }
                 } else {
@@ -176,8 +176,8 @@ public class InternshipConditionCommon {
                                 boolean isTimeLimit = BooleanUtil.toBoolean(internshipRelease.getIsTimeLimit());
                                 if (isTimeLimit) {
                                     // 检测实习申请时间
-                                    if (DateTimeUtil.nowAfterSqlTimestamp(internshipRelease.getStartTime()) &&
-                                            DateTimeUtil.nowBeforeSqlTimestamp(internshipRelease.getEndTime())) {
+                                    if (DateTimeUtil.nowAfterLocalDateTime(internshipRelease.getStartTime()) &&
+                                            DateTimeUtil.nowBeforeLocalDateTime(internshipRelease.getEndTime())) {
                                         // 检测是否有指导老师
                                         Optional<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
                                         if (internshipTeacherDistributionRecord.isPresent()) {
@@ -238,8 +238,8 @@ public class InternshipConditionCommon {
                                 boolean isTimeLimit = BooleanUtil.toBoolean(internshipRelease.getIsTimeLimit());
                                 if (isTimeLimit) {
                                     // 检测实习申请时间
-                                    if (DateTimeUtil.nowAfterSqlTimestamp(internshipRelease.getStartTime()) &&
-                                            DateTimeUtil.nowBeforeSqlTimestamp(internshipRelease.getEndTime())) {
+                                    if (DateTimeUtil.nowAfterLocalDateTime(internshipRelease.getStartTime()) &&
+                                            DateTimeUtil.nowBeforeLocalDateTime(internshipRelease.getEndTime())) {
 
                                         // 检测是否有指导老师
                                         Optional<Record> internshipTeacherDistributionRecord = internshipTeacherDistributionService.findByInternshipReleaseIdAndStudentId(internshipReleaseId, studentBean.getStudentId());
@@ -256,8 +256,8 @@ public class InternshipConditionCommon {
                                                     // 检测变更时间
                                                     if (Objects.nonNull(internshipApply.getChangeFillStartTime()) &&
                                                             Objects.nonNull(internshipApply.getChangeFillEndTime()) &&
-                                                            DateTimeUtil.nowAfterSqlTimestamp(internshipApply.getChangeFillStartTime()) &&
-                                                            DateTimeUtil.nowBeforeSqlTimestamp(internshipApply.getChangeFillEndTime())) {
+                                                            DateTimeUtil.nowAfterLocalDateTime(internshipApply.getChangeFillStartTime()) &&
+                                                            DateTimeUtil.nowBeforeLocalDateTime(internshipApply.getChangeFillEndTime())) {
                                                         canOperator = true;
                                                     }
                                                 }
@@ -275,8 +275,8 @@ public class InternshipConditionCommon {
                                                 // 检测变更时间
                                                 if (Objects.nonNull(internshipApply.getChangeFillStartTime()) &&
                                                         Objects.nonNull(internshipApply.getChangeFillEndTime()) &&
-                                                        DateTimeUtil.nowAfterSqlTimestamp(internshipApply.getChangeFillStartTime()) &&
-                                                        DateTimeUtil.nowBeforeSqlTimestamp(internshipApply.getChangeFillEndTime())) {
+                                                        DateTimeUtil.nowAfterLocalDateTime(internshipApply.getChangeFillStartTime()) &&
+                                                        DateTimeUtil.nowBeforeLocalDateTime(internshipApply.getChangeFillEndTime())) {
                                                     canOperator = true;
                                                 }
                                             } else if (internshipApply.getInternshipApplyState() == 3) {
@@ -300,8 +300,8 @@ public class InternshipConditionCommon {
                                                 // 检测变更时间
                                                 if (Objects.nonNull(internshipApply.getChangeFillStartTime()) &&
                                                         Objects.nonNull(internshipApply.getChangeFillEndTime()) &&
-                                                        DateTimeUtil.nowAfterSqlTimestamp(internshipApply.getChangeFillStartTime()) &&
-                                                        DateTimeUtil.nowBeforeSqlTimestamp(internshipApply.getChangeFillEndTime())) {
+                                                        DateTimeUtil.nowAfterLocalDateTime(internshipApply.getChangeFillStartTime()) &&
+                                                        DateTimeUtil.nowBeforeLocalDateTime(internshipApply.getChangeFillEndTime())) {
                                                     canOperator = true;
                                                 }
                                             }

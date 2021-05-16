@@ -127,7 +127,7 @@ public class TrainingDocumentViewController {
         Optional<Record> record = trainingDocumentService.findByIdRelation(id);
         if (record.isPresent()) {
             TrainingDocumentBean bean = record.get().into(TrainingDocumentBean.class);
-            bean.setCreateDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getCreateDate()));
+            bean.setCreateDateStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getCreateDate()));
             trainingDocumentService.updateReading(bean.getTrainingDocumentId());
             modelMap.addAttribute("trainingDocument", bean);
             page = "web/training/document/training_document_look::#page-wrapper";

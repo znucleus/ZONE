@@ -79,10 +79,10 @@ public class InternshipStatisticalRestController {
             beans = records.into(InternshipReleaseBean.class);
             beans.forEach(bean -> {
                 if (BooleanUtil.toBoolean(bean.getIsTimeLimit())) {
-                    bean.setTeacherDistributionStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionStartTime()));
-                    bean.setTeacherDistributionEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getTeacherDistributionEndTime()));
-                    bean.setStartTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getStartTime()));
-                    bean.setEndTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getEndTime()));
+                    bean.setTeacherDistributionStartTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getTeacherDistributionStartTime()));
+                    bean.setTeacherDistributionEndTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getTeacherDistributionEndTime()));
+                    bean.setStartTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getStartTime()));
+                    bean.setEndTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getEndTime()));
                 }
 
                 bean.setCanOperator(BooleanUtil.toByte(internshipConditionCommon.reviewCondition(bean.getInternshipReleaseId())));
@@ -90,7 +90,7 @@ public class InternshipStatisticalRestController {
                     bean.setSubmittedTotalData(internshipStatisticalService.countSubmitted(bean.getInternshipReleaseId()));
                     bean.setUnsubmittedTotalData(internshipStatisticalService.countUnSubmitted(bean.getInternshipReleaseId()));
                 }
-                bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime()));
+                bean.setReleaseTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getReleaseTime()));
                 bean.setCanAuthorize(BooleanUtil.toByte(internshipConditionCommon.reviewAuthorizeCondition(bean.getInternshipReleaseId())));
             });
         }
@@ -157,9 +157,9 @@ public class InternshipStatisticalRestController {
             if (records.isNotEmpty()) {
                 beans = records.into(InternshipChangeHistoryBean.class);
                 beans.forEach(bean -> {
-                    bean.setChangeFillStartTimeStr(Objects.nonNull(bean.getChangeFillStartTime()) ? DateTimeUtil.defaultFormatSqlTimestamp(bean.getChangeFillStartTime()) : "");
-                    bean.setChangeFillEndTimeStr(Objects.nonNull(bean.getChangeFillEndTime()) ? DateTimeUtil.defaultFormatSqlTimestamp(bean.getChangeFillEndTime()) : "");
-                    bean.setApplyTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getApplyTime()));
+                    bean.setChangeFillStartTimeStr(Objects.nonNull(bean.getChangeFillStartTime()) ? DateTimeUtil.defaultFormatLocalDateTime(bean.getChangeFillStartTime()) : "");
+                    bean.setChangeFillEndTimeStr(Objects.nonNull(bean.getChangeFillEndTime()) ? DateTimeUtil.defaultFormatLocalDateTime(bean.getChangeFillEndTime()) : "");
+                    bean.setApplyTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getApplyTime()));
                 });
             }
             ajaxUtil.success().msg("获取数据成功").list(beans);
@@ -184,7 +184,7 @@ public class InternshipStatisticalRestController {
             Result<Record> records = internshipChangeCompanyHistoryService.findByInternshipReleaseIdAndStudentId(id, studentId);
             if (records.isNotEmpty()) {
                 beans = records.into(InternshipChangeCompanyHistoryBean.class);
-                beans.forEach(bean -> bean.setChangeTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getChangeTime())));
+                beans.forEach(bean -> bean.setChangeTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getChangeTime())));
             }
             ajaxUtil.success().msg("获取数据成功").list(beans);
         } else {

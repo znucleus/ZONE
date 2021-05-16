@@ -25,7 +25,7 @@ public class TheoryControllerCommon {
         Result<Record> records = theoryReleaseService.findAllByPage(simplePaginationUtil);
         if (records.isNotEmpty()) {
             beans = records.into(TheoryReleaseBean.class);
-            beans.forEach(bean -> bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime())));
+            beans.forEach(bean -> bean.setReleaseTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getReleaseTime())));
         }
         simplePaginationUtil.setTotalSize(theoryReleaseService.countAll(simplePaginationUtil));
         ajaxUtil.success().list(beans).page(simplePaginationUtil).msg("获取数据成功");

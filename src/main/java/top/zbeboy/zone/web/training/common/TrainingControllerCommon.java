@@ -25,7 +25,7 @@ public class TrainingControllerCommon {
         Result<Record> records = trainingReleaseService.findAllByPage(simplePaginationUtil);
         if (records.isNotEmpty()) {
             beans = records.into(TrainingReleaseBean.class);
-            beans.forEach(bean -> bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime())));
+            beans.forEach(bean -> bean.setReleaseTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getReleaseTime())));
         }
         simplePaginationUtil.setTotalSize(trainingReleaseService.countAll(simplePaginationUtil));
         ajaxUtil.success().list(beans).page(simplePaginationUtil).msg("获取数据成功");

@@ -31,7 +31,7 @@ public class QuestionnaireViewController {
         Optional<QuestionnaireRelease> optionalQuestionnaireRelease = questionnaireService.findById(id);
         if (optionalQuestionnaireRelease.isPresent()) {
             QuestionnaireRelease questionnaireRelease = optionalQuestionnaireRelease.get();
-            if (DateTimeUtil.nowRangeSqlDate(questionnaireRelease.getStartDate(), questionnaireRelease.getEndDate())) {
+            if (DateTimeUtil.nowRangeLocalDate(questionnaireRelease.getStartDate(), questionnaireRelease.getEndDate())) {
                 modelMap.addAttribute("questionnaireRelease", questionnaireRelease);
                 return "web/questionnaire/questionnaire_outer_add";
             } else {

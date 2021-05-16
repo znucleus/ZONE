@@ -102,7 +102,7 @@ public class TrainingUsersRestController {
         if (Objects.nonNull(records) && records.isNotEmpty()) {
             beans = records.into(TrainingUsersBean.class);
             beans.forEach(bean -> {
-                bean.setCreateDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getCreateDate()));
+                bean.setCreateDateStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getCreateDate()));
                 if (!trainingConditionCommon.usersCondition(bean.getTrainingReleaseId())) {
                     bean.setEmail(StringUtils.overlay(bean.getEmail(), "****", 1, bean.getEmail().lastIndexOf("@")));
                     bean.setMobile(StringUtils.overlay(bean.getMobile(), "****", 3, 7));
@@ -138,7 +138,7 @@ public class TrainingUsersRestController {
                     trainingUsers.setTrainingReleaseId(trainingReleaseId);
                     trainingUsers.setStudentId(studentBean.getStudentId());
                     trainingUsers.setRemark(remark);
-                    trainingUsers.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                    trainingUsers.setCreateDate(DateTimeUtil.getNowLocalDateTime());
                     trainingUsersService.save(trainingUsers);
 
                     ajaxUtil.success().msg("保存成功");
@@ -223,7 +223,7 @@ public class TrainingUsersRestController {
                         au.setTrainingUsersId(UUIDUtil.getUUID());
                         au.setTrainingReleaseId(trainingReleaseId);
                         au.setStudentId(student.getStudentId());
-                        au.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                        au.setCreateDate(DateTimeUtil.getNowLocalDateTime());
                         trainingUsers.add(au);
                     }
                     trainingUsersService.batchSave(trainingUsers);
@@ -252,7 +252,7 @@ public class TrainingUsersRestController {
         Result<Record> records = trainingUsersService.export(dataTablesUtil);
         if (Objects.nonNull(records) && records.isNotEmpty()) {
             beans = records.into(TrainingUsersBean.class);
-            beans.forEach(bean -> bean.setCreateDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getCreateDate())));
+            beans.forEach(bean -> bean.setCreateDateStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getCreateDate())));
             beans.forEach(bean -> {
                 if (!trainingConditionCommon.usersCondition(bean.getTrainingReleaseId())) {
                     bean.setEmail(StringUtils.overlay(bean.getEmail(), "****", 1, bean.getEmail().lastIndexOf("@")));

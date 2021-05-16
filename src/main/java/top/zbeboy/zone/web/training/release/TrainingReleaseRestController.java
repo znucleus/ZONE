@@ -70,7 +70,7 @@ public class TrainingReleaseRestController {
         if (records.isNotEmpty()) {
             beans = records.into(TrainingReleaseBean.class);
             beans.forEach(bean -> {
-                bean.setReleaseTimeStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getReleaseTime()));
+                bean.setReleaseTimeStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getReleaseTime()));
                 bean.setCanOperator(BooleanUtil.toByte(trainingConditionCommon.canOperator(bean.getTrainingReleaseId())));
             });
         }
@@ -96,9 +96,9 @@ public class TrainingReleaseRestController {
             trainingRelease.setTitle(trainingReleaseAddVo.getTitle());
             trainingRelease.setOrganizeId(trainingReleaseAddVo.getOrganizeId());
             trainingRelease.setCourseId(trainingReleaseAddVo.getCourseId());
-            trainingRelease.setStartDate(DateTimeUtil.defaultParseSqlDate(trainingReleaseAddVo.getStartDate()));
-            trainingRelease.setEndDate(DateTimeUtil.defaultParseSqlDate(trainingReleaseAddVo.getEndDate()));
-            trainingRelease.setReleaseTime(DateTimeUtil.getNowSqlTimestamp());
+            trainingRelease.setStartDate(DateTimeUtil.defaultParseLocalDate(trainingReleaseAddVo.getStartDate()));
+            trainingRelease.setEndDate(DateTimeUtil.defaultParseLocalDate(trainingReleaseAddVo.getEndDate()));
+            trainingRelease.setReleaseTime(DateTimeUtil.getNowLocalDateTime());
             Users users = SessionUtil.getUserFromSession();
             trainingRelease.setPublisher(users.getRealName());
             trainingRelease.setUsername(users.getUsername());
@@ -113,7 +113,7 @@ public class TrainingReleaseRestController {
                     au.setTrainingUsersId(UUIDUtil.getUUID());
                     au.setTrainingReleaseId(trainingReleaseId);
                     au.setStudentId(student.getStudentId());
-                    au.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                    au.setCreateDate(DateTimeUtil.getNowLocalDateTime());
                     trainingUsers.add(au);
                 }
                 trainingUsersService.batchSave(trainingUsers);
@@ -141,8 +141,8 @@ public class TrainingReleaseRestController {
                 TrainingRelease trainingRelease = trainingReleaseService.findById(trainingReleaseEditVo.getTrainingReleaseId());
                 trainingRelease.setTitle(trainingReleaseEditVo.getTitle());
                 trainingRelease.setCourseId(trainingReleaseEditVo.getCourseId());
-                trainingRelease.setStartDate(DateTimeUtil.defaultParseSqlDate(trainingReleaseEditVo.getStartDate()));
-                trainingRelease.setEndDate(DateTimeUtil.defaultParseSqlDate(trainingReleaseEditVo.getEndDate()));
+                trainingRelease.setStartDate(DateTimeUtil.defaultParseLocalDate(trainingReleaseEditVo.getStartDate()));
+                trainingRelease.setEndDate(DateTimeUtil.defaultParseLocalDate(trainingReleaseEditVo.getEndDate()));
 
                 trainingReleaseService.update(trainingRelease);
                 ajaxUtil.success().msg("更新成功");
@@ -207,8 +207,8 @@ public class TrainingReleaseRestController {
                 TrainingConfigure trainingConfigure = new TrainingConfigure();
                 trainingConfigure.setTrainingConfigureId(UUIDUtil.getUUID());
                 trainingConfigure.setTrainingReleaseId(trainingConfigureAddVo.getTrainingReleaseId());
-                trainingConfigure.setStartTime(DateTimeUtil.defaultParseSqlTime(trainingConfigureAddVo.getStartTime()));
-                trainingConfigure.setEndTime(DateTimeUtil.defaultParseSqlTime(trainingConfigureAddVo.getEndTime()));
+                trainingConfigure.setStartTime(DateTimeUtil.defaultParseLocalTime(trainingConfigureAddVo.getStartTime()));
+                trainingConfigure.setEndTime(DateTimeUtil.defaultParseLocalTime(trainingConfigureAddVo.getEndTime()));
                 trainingConfigure.setWeekDay(trainingConfigureAddVo.getWeekDay());
                 trainingConfigure.setSchoolroomId(trainingConfigureAddVo.getSchoolroomId());
 
@@ -236,8 +236,8 @@ public class TrainingReleaseRestController {
         if (!bindingResult.hasErrors()) {
             if (trainingConditionCommon.canOperator(trainingConfigureEditVo.getTrainingReleaseId())) {
                 TrainingConfigure trainingConfigure = trainingConfigureService.findById(trainingConfigureEditVo.getTrainingConfigureId());
-                trainingConfigure.setStartTime(DateTimeUtil.defaultParseSqlTime(trainingConfigureEditVo.getStartTime()));
-                trainingConfigure.setEndTime(DateTimeUtil.defaultParseSqlTime(trainingConfigureEditVo.getEndTime()));
+                trainingConfigure.setStartTime(DateTimeUtil.defaultParseLocalTime(trainingConfigureEditVo.getStartTime()));
+                trainingConfigure.setEndTime(DateTimeUtil.defaultParseLocalTime(trainingConfigureEditVo.getEndTime()));
                 trainingConfigure.setWeekDay(trainingConfigureEditVo.getWeekDay());
                 trainingConfigure.setSchoolroomId(trainingConfigureEditVo.getSchoolroomId());
 
@@ -290,8 +290,8 @@ public class TrainingReleaseRestController {
             if (records.isNotEmpty()) {
                 beans = records.into(TrainingAuthoritiesBean.class);
                 beans.forEach(bean -> {
-                    bean.setValidDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getValidDate()));
-                    bean.setExpireDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getExpireDate()));
+                    bean.setValidDateStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getValidDate()));
+                    bean.setExpireDateStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getExpireDate()));
                 });
             }
         }
@@ -324,8 +324,8 @@ public class TrainingReleaseRestController {
                         trainingAuthorities.setAuthoritiesId(UUIDUtil.getUUID());
                         trainingAuthorities.setTrainingReleaseId(trainingAuthoritiesAddVo.getTrainingReleaseId());
                         trainingAuthorities.setUsername(trainingAuthoritiesAddVo.getUsername());
-                        trainingAuthorities.setValidDate(DateTimeUtil.defaultParseSqlTimestamp(trainingAuthoritiesAddVo.getValidDate()));
-                        trainingAuthorities.setExpireDate(DateTimeUtil.defaultParseSqlTimestamp(trainingAuthoritiesAddVo.getExpireDate()));
+                        trainingAuthorities.setValidDate(DateTimeUtil.defaultParseLocalDateTime(trainingAuthoritiesAddVo.getValidDate()));
+                        trainingAuthorities.setExpireDate(DateTimeUtil.defaultParseLocalDateTime(trainingAuthoritiesAddVo.getExpireDate()));
 
                         trainingAuthoritiesService.save(trainingAuthorities);
                         ajaxUtil.success().msg("保存成功");
@@ -368,8 +368,8 @@ public class TrainingReleaseRestController {
                     if (!StringUtils.equals(users.getUsername(), trainingAuthoritiesEditVo.getUsername())) {
                         TrainingAuthorities trainingAuthorities = trainingAuthoritiesService.findById(trainingAuthoritiesEditVo.getAuthoritiesId());
                         trainingAuthorities.setUsername(trainingAuthoritiesEditVo.getUsername());
-                        trainingAuthorities.setValidDate(DateTimeUtil.defaultParseSqlTimestamp(trainingAuthoritiesEditVo.getValidDate()));
-                        trainingAuthorities.setExpireDate(DateTimeUtil.defaultParseSqlTimestamp(trainingAuthoritiesEditVo.getExpireDate()));
+                        trainingAuthorities.setValidDate(DateTimeUtil.defaultParseLocalDateTime(trainingAuthoritiesEditVo.getValidDate()));
+                        trainingAuthorities.setExpireDate(DateTimeUtil.defaultParseLocalDateTime(trainingAuthoritiesEditVo.getExpireDate()));
 
                         trainingAuthoritiesService.update(trainingAuthorities);
                         ajaxUtil.success().msg("更新成功");

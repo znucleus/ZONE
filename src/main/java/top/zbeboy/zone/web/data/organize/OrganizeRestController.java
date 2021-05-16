@@ -118,7 +118,7 @@ public class OrganizeRestController {
         Users users = SessionUtil.getUserFromSession();
         SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(),
                 "添加班级[" + organizeAddVo.getOrganizeName() + "]",
-                DateTimeUtil.getNowSqlTimestamp(), users.getUsername(),
+                DateTimeUtil.getNowLocalDateTime(), users.getUsername(),
                 RequestUtil.getIpAddress(request));
         systemLogService.save(systemLog);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
@@ -152,7 +152,7 @@ public class OrganizeRestController {
         Users users = SessionUtil.getUserFromSession();
         SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(),
                 "更新班级" + organizeEditVo.getOrganizeId() + "[" + organizeEditVo.getOrganizeName() + "]",
-                DateTimeUtil.getNowSqlTimestamp(), users.getUsername(), RequestUtil.getIpAddress(request));
+                DateTimeUtil.getNowLocalDateTime(), users.getUsername(), RequestUtil.getIpAddress(request));
         systemLogService.save(systemLog);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
@@ -170,7 +170,7 @@ public class OrganizeRestController {
         Users users = SessionUtil.getUserFromSession();
         SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(),
                 "修改班级状态[" + organizeIds + "]" + isDel,
-                DateTimeUtil.getNowSqlTimestamp(), users.getUsername(), RequestUtil.getIpAddress(request));
+                DateTimeUtil.getNowLocalDateTime(), users.getUsername(), RequestUtil.getIpAddress(request));
         systemLogService.save(systemLog);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }

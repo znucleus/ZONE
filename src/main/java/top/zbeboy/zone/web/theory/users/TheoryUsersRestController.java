@@ -102,7 +102,7 @@ public class TheoryUsersRestController {
         if (Objects.nonNull(records) && records.isNotEmpty()) {
             beans = records.into(TheoryUsersBean.class);
             beans.forEach(bean -> {
-                bean.setCreateDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getCreateDate()));
+                bean.setCreateDateStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getCreateDate()));
                 if (!theoryConditionCommon.usersCondition(bean.getTheoryReleaseId())) {
                     bean.setEmail(StringUtils.overlay(bean.getEmail(), "****", 1, bean.getEmail().lastIndexOf("@")));
                     bean.setMobile(StringUtils.overlay(bean.getMobile(), "****", 3, 7));
@@ -138,7 +138,7 @@ public class TheoryUsersRestController {
                     theoryUsers.setTheoryReleaseId(theoryReleaseId);
                     theoryUsers.setStudentId(studentBean.getStudentId());
                     theoryUsers.setRemark(remark);
-                    theoryUsers.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                    theoryUsers.setCreateDate(DateTimeUtil.getNowLocalDateTime());
                     theoryUsersService.save(theoryUsers);
 
                     ajaxUtil.success().msg("保存成功");
@@ -223,7 +223,7 @@ public class TheoryUsersRestController {
                         au.setTheoryUsersId(UUIDUtil.getUUID());
                         au.setTheoryReleaseId(theoryReleaseId);
                         au.setStudentId(student.getStudentId());
-                        au.setCreateDate(DateTimeUtil.getNowSqlTimestamp());
+                        au.setCreateDate(DateTimeUtil.getNowLocalDateTime());
                         theoryUsers.add(au);
                     }
                     theoryUsersService.batchSave(theoryUsers);
@@ -253,7 +253,7 @@ public class TheoryUsersRestController {
         if (Objects.nonNull(records) && records.isNotEmpty()) {
             beans = records.into(TheoryUsersBean.class);
             beans.forEach(bean -> {
-                bean.setCreateDateStr(DateTimeUtil.defaultFormatSqlTimestamp(bean.getCreateDate()));
+                bean.setCreateDateStr(DateTimeUtil.defaultFormatLocalDateTime(bean.getCreateDate()));
                 if (!theoryConditionCommon.usersCondition(bean.getTheoryReleaseId())) {
                     bean.setEmail(StringUtils.overlay(bean.getEmail(), "****", 1, bean.getEmail().lastIndexOf("@")));
                     bean.setMobile(StringUtils.overlay(bean.getMobile(), "****", 3, 7));

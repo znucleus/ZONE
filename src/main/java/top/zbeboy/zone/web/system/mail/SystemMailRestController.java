@@ -71,7 +71,7 @@ public class SystemMailRestController {
                                 DateTime dateTime = DateTime.now();
                                 dateTime = dateTime.plusDays(ZoneProperties.getMail().getPasswordResetTime());
                                 users.setPasswordResetKey(RandomUtil.generateResetKey());
-                                users.setPasswordResetKeyValid(DateTimeUtil.utilDateToSqlTimestamp(dateTime.toDate()));
+                                users.setPasswordResetKeyValid(DateTimeUtil.utilDateToLocalDateTime(dateTime.toDate()));
                                 usersService.update(users);
                                 systemMailService.sendPasswordResetMail(users, RequestUtil.getBaseUrl(request));
                                 ajaxUtil.success().msg("验证通过");
