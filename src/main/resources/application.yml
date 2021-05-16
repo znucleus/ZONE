@@ -37,9 +37,11 @@ server:
     enabled: true
   undertow:
     buffer-size: 1024
-    io-threads: 16
-    worker-threads: 256
     direct-buffers: true
+    threads:
+      io: 16
+      worker: 256
+  shutdown: graceful
 
 # web manage
 management:
