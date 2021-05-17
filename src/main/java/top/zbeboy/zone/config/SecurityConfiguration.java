@@ -13,6 +13,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.session.FindByIndexNameSessionRepository;
+import org.springframework.session.Session;
+import org.springframework.session.security.SpringSessionBackedSessionRegistry;
 import org.springframework.session.security.web.authentication.SpringSessionRememberMeServices;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zone.filter.SecurityLoginFilter;
@@ -33,7 +36,7 @@ import javax.inject.Inject;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class SecurityConfiguration<S extends Session> extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private MyUserDetailsServiceImpl myUserDetailsService;
@@ -43,6 +46,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Inject
     private AjaxAuthenticationFailureHandler ajaxAuthenticationFailureHandler;
+
+    @Autowired
+    private FindByIndexNameSessionRepository<S> sessionRepository;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -79,7 +85,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .failureHandler(this.ajaxAuthenticationFailureHandler)
                 .and().logout().logoutSuccessUrl("/")
                 .permitAll().invalidateHttpSession(true)
-                .and().rememberMe().rememberMeServices(rememberMeServices())
+                .and().sessionManagement((sessionManagement) -> sessionManagement
+                .maximumSessions(1)
+                .expiredUrl("/login")
+                .sessionRegistry(sessionRegistry()))
+                .rememberMe().rememberMeServices(rememberMeServices())
                 .and().authorizeRequests().antMatchers("/web/**").access("@webSecurity.check(authentication,request)")
                 .and().authorizeRequests().antMatchers("/special/channel/**").hasAnyRole("SYSTEM", "ADMIN") // 特别通道 跨controller调用共同方法使用
                 .and().authorizeRequests().antMatchers("/users/**", "/api/**", Workbook.OAUTH_AUTHORIZE).authenticated()
@@ -108,5 +118,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
+    }
+
+    @Bean
+    public SpringSessionBackedSessionRegistry<S> sessionRegistry() {
+        return new SpringSessionBackedSessionRegistry<>(this.sessionRepository);
     }
 }
