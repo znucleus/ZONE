@@ -651,7 +651,7 @@ public class TimetableServiceImpl implements TimetableService {
     @Override
     public java.util.Date calcDeviationDate(LocalDate date, int week, int weekDay) {
         int deviationWeek = week - 1;
-        org.joda.time.DateTime dt1 = new org.joda.time.DateTime(date);
+        org.joda.time.DateTime dt1 = new org.joda.time.DateTime(DateTimeUtil.localDateToUtilDate(date));
         if (deviationWeek > 0) {
             dt1 = dt1.plusWeeks(deviationWeek);
         }

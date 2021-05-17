@@ -218,7 +218,7 @@ public class SystemMailViewController {
                     DateTime dateTime = DateTime.now();
                     dateTime = dateTime.plusDays(ZoneProperties.getMail().getValidCodeTime());
                     users.setMailboxVerifyCode(RandomUtil.generateEmailCheckKey());
-                    users.setMailboxVerifyValid(DateTimeUtil.defaultParseLocalDateTime(DateTimeUtil.formatUtilDate(dateTime.toDate(), DateTimeUtil.STANDARD_FORMAT)));
+                    users.setMailboxVerifyValid(DateTimeUtil.utilDateToLocalDateTime(dateTime.toDate()));
                     usersService.update(users);
                     systemMailService.sendValidEmailMail(users, RequestUtil.getBaseUrl(request));
                     config.buildSuccessTip(
