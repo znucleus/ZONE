@@ -17,6 +17,7 @@ import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.achievement.software.SoftwareAchievementService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
 import top.zbeboy.zone.web.util.SessionUtil;
 
@@ -162,5 +163,40 @@ public class SoftwareAchievementRestController {
             ajaxUtil.fail().msg("未完善身份证信息");
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 数据
+     *
+     * @param request 请求
+     * @return 数据
+     */
+    @GetMapping("/web/achievement/software/statistics/paging")
+    public ResponseEntity<DataTablesUtil> data(HttpServletRequest request) {
+        // 前台数据标题 注：要和前台标题顺序一致，获取order用
+        List<String> headers = new ArrayList<>();
+        headers.add("#");
+        headers.add("select");
+        headers.add("realName");
+        headers.add("sex");
+        headers.add("idCard");
+        headers.add("mobile");
+        headers.add("scienceName");
+        headers.add("schoolName");
+        headers.add("organizeName");
+        headers.add("level");
+        headers.add("examType");
+        headers.add("morningResults");
+        headers.add("afternoonResults");
+        headers.add("thesisResults");
+        headers.add("identificationResults");
+        headers.add("payment");
+        headers.add("examDate");
+        headers.add("createDateStr");
+        headers.add("operator");
+        DataTablesUtil dataTablesUtil = new DataTablesUtil(request, headers);
+        Users users = SessionUtil.getUserFromSession();
+        dataTablesUtil.setUsername(users.getUsername());
+        return new ResponseEntity<>(softwareAchievementService.data(dataTablesUtil), HttpStatus.OK);
     }
 }

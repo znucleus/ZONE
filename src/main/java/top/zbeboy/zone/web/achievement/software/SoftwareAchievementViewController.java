@@ -21,5 +21,13 @@ public class SoftwareAchievementViewController {
         return "web/achievement/software/software_achievement_query::#page-wrapper";
     }
 
-
+    /**
+     * 软考成绩统计
+     *
+     * @return 软考成绩统计页面
+     */
+    @GetMapping("/web/menu/achievement/software/statistics")
+    public String statistics() {
+        return "web/achievement/software/software_achievement_statistics::#page-wrapper";
+    }
 }

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="pd-30">
+        <h4 class="tx-gray-800 mg-b-5">软考成绩统计</h4>
+        <p class="mg-b-0">软考成绩统计。</p>
+    </div><!-- d-flex -->
+
+    <div class="br-pagebody mg-t-5 pd-x-30">
+        <div class="br-section-wrapper">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="float-right">
+                        <button type="button" class="btn btn-light" id="downloadTemplate"><i
+                                class="fa fa-download"></i> 下载导入模板
+                        </button>
+                        <button type="button" class="btn btn-primary" id="batchImport"><i
+                                class="fa fa-arrow-circle-up"></i> 批量导入
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-12  mg-t-5">
+                    <ul class="nav nav-pills nav-fill">
+                        <li class="nav-item">
+                            <a class="nav-link" href="javascript:" id="pass">已通过</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="javascript:" id="failed">未通过</a>
+                        </li>
+                    </ul>
+                    <hr/>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-4 mt-2">
+                            <input type="text" id="search_school" class="form-control" placeholder="学校"/>
+                        </div>
+                        <div class="col-md-4 mt-2">
+                            <input type="text" id="search_science" class="form-control" placeholder="专业"/>
+                        </div>
+                        <div class="col-md-4 mt-2">
+                            <input type="text" id="search_organize" class="form-control" placeholder="班级"/>
+                        </div>
+                        <div class="col-md-4 mt-2">
+                            <input type="text" id="search_real_name" class="form-control" placeholder="姓名"/>
+                        </div>
+                        <div class="col-md-4 mt-2">
+                            <input type="text" id="search_id_card" class="form-control" placeholder="身份证号"/>
+                        </div>
+                        <div class="col-md-4 mt-2">
+                            <input type="text" id="search_mobile" class="form-control" placeholder="手机号"/>
+                        </div>
+                        <div class="col-md-4 mt-2">
+                            <input type="text" id="search_sex" class="form-control" placeholder="性别"/>
+                        </div>
+                        <div class="col-md-4 mt-2">
+                            <input type="text" id="search_level" class="form-control" placeholder="级别"/>
+                        </div>
+                        <div class="col-md-4 mt-2">
+                            <input type="text" id="search_exam_type" class="form-control" placeholder="报考类别"/>
+                        </div>
+                        <div class="col-md-4 mt-2">
+                            <input type="email" id="search_morning_results" class="form-control" placeholder="上午成绩"/>
+                        </div>
+                        <div class="col-md-4 mt-2">
+                            <input type="email" id="search_afternoon_results" class="form-control" placeholder="下午成绩"/>
+                        </div>
+                        <div class="col-md-4 mt-2">
+                            <input type="email" id="search_thesis_results" class="form-control" placeholder="论文成绩"/>
+                        </div>
+                        <div class="col-md-4 mt-2">
+                            <input type="email" id="search_identification_results" class="form-control" placeholder="鉴定结果"/>
+                        </div>
+                        <div class="col-md-4 mt-2">
+                            <input type="email" id="search_payment" class="form-control" placeholder="缴费情况"/>
+                        </div>
+                        <div class="col-md-4 mt-2">
+                            <input type="email" id="search_exam_date" class="form-control" placeholder="考试时间"/>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button type="button" id="search" class="btn btn-outline-secondary"><i
+                                class="fa fa-search"></i>搜索
+                        </button>
+                        <button type="button" id="reset_search" class="btn btn-outline-secondary"><i
+                                class="fa fa-repeat"></i>重置
+                        </button>
+                    </div>
+                </div>
+
+
+                <div class="col-md-12 mt-2">
+                    <table id="dataTable" class="table table-striped table-bordered dt-responsive nowrap"
+                           cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th data-priority="1">#</th>
+                            <th data-priority="2">
+                                <input type="checkbox" name="checkall" id="checkall"/>
+                            </th>
+                            <th data-priority="3">姓名</th>
+                            <th>性别</th>
+                            <th data-priority="7">身份证号</th>
+                            <th>电话</th>
+                            <th>专业</th>
+                            <th>学校</th>
+                            <th data-priority="4">班级</th>
+                            <th>级别</th>
+                            <th>报考类别</th>
+                            <th>上午成绩</th>
+                            <th>下午成绩</th>
+                            <th>论文成绩</th>
+                            <th data-priority="5">鉴定结果</th>
+                            <th>缴费情况</th>
+                            <th>考试时间</th>
+                            <th>创建时间</th>
+                            <th>备注</th>
+                            <th data-priority="6">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--定义操作列按钮模板-->
+    <script id="operator_button" type="text/x-handlebars-template">
+        <div class="btn-group" role="group">
+            {{#each func}}
+            <button type="button" class="btn btn-{{this.type}} btn-sm {{this.css}}" data-id="{{this.id}}">{{this.name}}
+            </button>
+            {{/each}}
+        </div>
+    </script>
+
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/achievement/software/software_achievement_statistics.js')}"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>
