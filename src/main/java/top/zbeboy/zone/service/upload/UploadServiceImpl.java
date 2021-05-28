@@ -1,10 +1,10 @@
 package top.zbeboy.zone.service.upload;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import top.zbeboy.zbase.tools.service.util.IPTimeStamp;
@@ -84,7 +84,7 @@ public class UploadServiceImpl implements UploadService {
 
     private void buildList(FileBean fileBean, List<FileBean> list, String path, String filename, MultipartFile multipartFile) {
         try {
-            if (!StringUtils.isEmpty(path.split(":")[0])) {
+            if (StringUtils.isNotEmpty(path.split(":")[0])) {
                 fileBean.setRelativePath(buildPath(path, filename, multipartFile));
                 list.add(fileBean);
             }

@@ -1,5 +1,5 @@
 //# sourceURL=software_achievement_statistics.js
-require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootstrap4", "check.all", "jquery.address", "messenger"],
+require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootstrap4", "check.all", "jquery.address", "messenger", "jquery.fileupload-validate"],
     function ($, Handlebars, navActive, Swal) {
 
         /*
@@ -21,7 +21,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
             identificationResults: '',
             payment: '',
             examDate: '',
-            dataScope:''
+            dataScope: ''
         };
 
         /*
@@ -43,7 +43,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
             IDENTIFICATION_RESULTS: 'SOFTWARE_ACHIEVEMENT_STATISTICS_IDENTIFICATION_RESULTS_SEARCH',
             PAYMENT: 'SOFTWARE_ACHIEVEMENT_STATISTICS_PAYMENT_SEARCH',
             EXAM_DATE: 'SOFTWARE_ACHIEVEMENT_EXAM_DATE_SEARCH',
-            DATA_SCOPE:'SOFTWARE_ACHIEVEMENT_DATA_SCOPE_SEARCH'
+            DATA_SCOPE: 'SOFTWARE_ACHIEVEMENT_DATA_SCOPE_SEARCH'
         };
 
         /*
@@ -55,7 +55,8 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                 del: web_path + '/web/achievement/software/statistics/delete',
                 add: '/web/achievement/software/statistics/add',
                 edit: '/web/achievement/software/statistics/edit',
-                template:web_path + '/goods/软考成绩导入模板.xls',
+                template: web_path + '/goods/软考成绩导入模板.xls',
+                file_upload_url: web_path + '/web/achievement/software/statistics/upload/file',
                 page: '/web/menu/achievement/software/statistics'
             };
         }
@@ -254,7 +255,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
             param.identificationResults = $(getParamId().identificationResults).val();
             param.payment = $(getParamId().payment).val();
             param.examDate = $(getParamId().examDate).val();
-            if($('#pass').hasClass('active')){
+            if ($('#pass').hasClass('active')) {
                 param.dataScope = 'PASS';
             } else {
                 param.dataScope = 'FAIL';
@@ -379,7 +380,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
             }
 
             if (dataScope !== null) {
-                if(dataScope === 'PASS'){
+                if (dataScope === 'PASS') {
                     $('#pass').addClass('active');
                     $('#failed').removeClass('active');
                     param.dataScope = 'PASS';
@@ -514,18 +515,61 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
             $(getParamId().examDate).val('');
         }
 
-        $('#downloadTemplate').click(function(){
-           window.location.href = getAjaxUrl().template;
+        $('#downloadTemplate').click(function () {
+            window.location.href = getAjaxUrl().template;
         });
 
-        $('#pass').click(function (){
+        // 上传组件
+        $('#batchImport').fileupload({
+            url: getAjaxUrl().file_upload_url,
+            dataType: 'json',
+            maxFileSize: 500000000,// 500MB
+            maxNumberOfFiles: 1,
+            acceptFileTypes : /(xls|XLS|xlsx|XLSX)$/i,
+            formAcceptCharset: 'utf-8',
+            messages: {
+                acceptFileTypes : '仅支持xls类型',
+                maxFileSize: '单文件上传仅允许500MB大小'
+            },
+            done: function (e, data) {
+                Messenger().post({
+                    message: data.result.msg,
+                    type: data.result.state ? 'success' : 'error',
+                    showCloseButton: true
+                });
+                $('#importBtn').text('批量导入');
+                initParam();
+                myTable.ajax.reload();
+            },
+            progressall: function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('#importBtn').text('导入中...' + progress + '%');
+            }
+        }).on('fileuploadadd', function (evt, data) {
+            var isOk = true;
+            var $this = $(this);
+            var validation = data.process(function () {
+                return $this.fileupload('process', data);
+            });
+            validation.fail(function (data) {
+                isOk = false;
+                Messenger().post({
+                    message: '上传失败: ' + data.files[0].error,
+                    type: 'error',
+                    showCloseButton: true
+                });
+            });
+            return isOk;
+        });
+
+        $('#pass').click(function () {
             $(this).addClass('active');
             $('#failed').removeClass('active');
             initParam();
             myTable.ajax.reload();
         });
 
-        $('#failed').click(function (){
+        $('#failed').click(function () {
             $(this).addClass('active');
             $('#pass').removeClass('active');
             initParam();

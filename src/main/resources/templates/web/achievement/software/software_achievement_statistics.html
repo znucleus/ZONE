@@ -19,9 +19,11 @@
                         <button type="button" class="btn btn-light" id="downloadTemplate"><i
                                 class="fa fa-download"></i> 下载导入模板
                         </button>
-                        <button type="button" class="btn btn-primary" id="batchImport"><i
-                                class="fa fa-arrow-circle-up"></i> 批量导入
-                        </button>
+                        <span class="btn btn-primary fileinput-button">
+                                <span><i class="fa fa-arrow-circle-up"></i><span id="importBtn">批量导入</span></span>
+                            <!-- The file input field used as target for the file upload widget -->
+                                <input id="batchImport" type="file" name="files[]"/>
+                        </span>
                     </div>
                 </div>
                 <div class="col-md-12  mg-t-5">
@@ -75,7 +77,8 @@
                             <input type="email" id="search_thesis_results" class="form-control" placeholder="论文成绩"/>
                         </div>
                         <div class="col-md-4 mt-2">
-                            <input type="email" id="search_identification_results" class="form-control" placeholder="鉴定结果"/>
+                            <input type="email" id="search_identification_results" class="form-control"
+                                   placeholder="鉴定结果"/>
                         </div>
                         <div class="col-md-4 mt-2">
                             <input type="email" id="search_payment" class="form-control" placeholder="缴费情况"/>
