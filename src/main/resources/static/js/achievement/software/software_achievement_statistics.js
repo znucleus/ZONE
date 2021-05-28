@@ -55,6 +55,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                 del: web_path + '/web/achievement/software/statistics/delete',
                 add: '/web/achievement/software/statistics/add',
                 edit: '/web/achievement/software/statistics/edit',
+                template:web_path + '/goods/软考成绩导入模板.xls',
                 page: '/web/menu/achievement/software/statistics'
             };
         }
@@ -512,6 +513,10 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
             $(getParamId().payment).val('');
             $(getParamId().examDate).val('');
         }
+
+        $('#downloadTemplate').click(function(){
+           window.location.href = getAjaxUrl().template;
+        });
 
         $('#pass').click(function (){
             $(this).addClass('active');
