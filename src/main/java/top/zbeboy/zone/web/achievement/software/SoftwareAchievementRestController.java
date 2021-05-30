@@ -242,4 +242,16 @@ public class SoftwareAchievementRestController {
         }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
+
+    /**
+     * 批量删除
+     *
+     * @param achievementIds ids
+     * @return true 删除成功
+     */
+    @PostMapping("/web/achievement/software/statistics/delete")
+    public ResponseEntity<Map<String, Object>> delete(String achievementIds) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = softwareAchievementService.deleteById(achievementIds);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
 }

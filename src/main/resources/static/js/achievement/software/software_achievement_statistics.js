@@ -53,8 +53,6 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
             return {
                 data: web_path + '/web/achievement/software/statistics/paging',
                 del: web_path + '/web/achievement/software/statistics/delete',
-                add: '/web/achievement/software/statistics/add',
-                edit: '/web/achievement/software/statistics/edit',
                 template: web_path + '/goods/软考成绩导入模板.xls',
                 file_upload_url: web_path + '/web/achievement/software/statistics/upload/file',
                 page: '/web/menu/achievement/software/statistics'
@@ -141,12 +139,6 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                         var context = {
                             func: [
                                 {
-                                    "name": "编辑",
-                                    "css": "edit",
-                                    "type": "primary",
-                                    "id": c.achievementId
-                                },
-                                {
                                     "name": "删除",
                                     "css": "del",
                                     "type": "danger",
@@ -188,10 +180,6 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                 "t" +
                 "<'row'<'col-sm-5'i><'col-sm-7'p>>",
             initComplete: function () {
-                tableElement.delegate('.edit', "click", function () {
-                    edit($(this).attr('data-id'));
-                });
-
                 tableElement.delegate('.del', "click", function () {
                     achievement_del($(this).attr('data-id'));
                 });
@@ -201,8 +189,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
             }
         });
 
-        var global_button = '<button type="button" id="achievement_add" class="btn btn-outline-primary btn-sm"><i class="fa fa-plus"></i>添加</button>' +
-            '  <button type="button" id="achievement_dels" class="btn btn-outline-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>' +
+        var global_button = '<button type="button" id="achievement_dels" class="btn btn-outline-danger btn-sm"><i class="fa fa-trash-o"></i>批量删除</button>' +
             '  <button type="button" id="refresh" class="btn btn-light btn-sm"><i class="fa fa-refresh"></i>刷新</button>';
         $('#global_button').append(global_button);
 
@@ -697,13 +684,6 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
         });
 
         /*
-         添加页面
-         */
-        $('#achievement_add').click(function () {
-            $.address.value(getAjaxUrl().add);
-        });
-
-        /*
          批量删除
          */
         $('#achievement_dels').click(function () {
@@ -730,13 +710,6 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                 Messenger().post("未发现有选中的成绩!");
             }
         });
-
-        /*
-         编辑页面
-         */
-        function edit(achievementId) {
-            $.address.value(getAjaxUrl().edit + '/' + achievementId);
-        }
 
         /*
          删除
