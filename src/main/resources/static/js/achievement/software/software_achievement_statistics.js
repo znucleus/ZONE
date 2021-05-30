@@ -55,6 +55,7 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                 del: web_path + '/web/achievement/software/statistics/delete',
                 template: web_path + '/goods/软考成绩导入模板.xls',
                 file_upload_url: web_path + '/web/achievement/software/statistics/upload/file',
+                export_data_url: web_path + '/web/achievement/software/statistics/data/export',
                 page: '/web/menu/achievement/software/statistics'
             };
         }
@@ -766,4 +767,24 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
                 }
             });
         }
+
+        $('#export_xls').click(function () {
+            initParam();
+            var searchParam = JSON.stringify(getParam());
+            var exportFile = {
+                fileName: $('#export_file_name').val(),
+                ext: 'xls'
+            };
+            window.location.href = encodeURI(getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&export_info=" + JSON.stringify(exportFile));
+        });
+
+        $('#export_xlsx').click(function () {
+            initParam();
+            var searchParam = JSON.stringify(getParam());
+            var exportFile = {
+                fileName: $('#export_file_name').val(),
+                ext: 'xlsx'
+            };
+            window.location.href = encodeURI(getAjaxUrl().export_data_url + "?extra_search=" + searchParam + "&export_info=" + JSON.stringify(exportFile));
+        });
     });

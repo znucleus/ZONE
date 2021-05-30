@@ -1,6 +1,5 @@
 package top.zbeboy.zone.web.achievement.software;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.CookieStore;
 import org.slf4j.Logger;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import top.zbeboy.zbase.bean.achievement.software.SoftwareAchievementBean;
+import top.zbeboy.zbase.bean.achievement.software.SoftwareSummaryAchievementBean;
 import top.zbeboy.zbase.config.CacheBook;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.SoftwareAchievement;
@@ -25,8 +25,10 @@ import top.zbeboy.zbase.tools.service.util.FilesUtil;
 import top.zbeboy.zbase.tools.service.util.RequestUtil;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.ExportInfo;
 import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
 import top.zbeboy.zone.service.excel.SoftwareAchievementExcel;
+import top.zbeboy.zone.service.export.SoftwareSummaryAchievementExport;
 import top.zbeboy.zone.service.upload.FileBean;
 import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zone.web.util.SessionUtil;
@@ -34,6 +36,7 @@ import top.zbeboy.zone.web.util.SessionUtil;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -230,7 +233,7 @@ public class SoftwareAchievementRestController {
                     RequestUtil.getRealPath(request) + path, RequestUtil.getIpAddress(request));
 
             List<SoftwareSummaryAchievement> list = new ArrayList<>();
-            for(FileBean fileBean : fileBeens){
+            for (FileBean fileBean : fileBeens) {
                 SoftwareAchievementExcel softwareAchievementExcel = new SoftwareAchievementExcel(fileBean.getRelativePath());
                 list.addAll(softwareAchievementExcel.readExcel());
                 FilesUtil.deleteFile(fileBean.getRelativePath());
@@ -253,5 +256,26 @@ public class SoftwareAchievementRestController {
     public ResponseEntity<Map<String, Object>> delete(String achievementIds) {
         AjaxUtil<Map<String, Object>> ajaxUtil = softwareAchievementService.deleteById(achievementIds);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 导出 分配列表 数据
+     *
+     * @param request 请求
+     */
+    @GetMapping("/web/achievement/software/statistics/data/export")
+    public void export(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        DataTablesUtil dataTablesUtil = new DataTablesUtil(request, "createDateStr", "desc",
+                "软考成绩统计数据表", Workbook.softwareAchievementStatisticsFilePath());
+        List<SoftwareSummaryAchievementBean> beans = new ArrayList<>();
+        Optional<List<SoftwareSummaryAchievementBean>> optionalSoftwareSummaryAchievementBeans = softwareAchievementService.export(dataTablesUtil);
+        if (optionalSoftwareSummaryAchievementBeans.isPresent()) {
+            beans = optionalSoftwareSummaryAchievementBeans.get();
+        }
+        SoftwareSummaryAchievementExport export = new SoftwareSummaryAchievementExport(beans);
+        ExportInfo exportInfo = dataTablesUtil.getExportInfo();
+        if (export.exportExcel(exportInfo.getLastPath(), exportInfo.getFileName(), exportInfo.getExt())) {
+            uploadService.download(exportInfo.getFileName(), exportInfo.getFilePath(), response, request);
+        }
     }
 }
