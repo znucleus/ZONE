@@ -75,7 +75,7 @@ public class PotentialRestController {
         if (!ObjectUtils.isEmpty(session.getAttribute(potentialAddVo.getMobile() + SystemMobileConfig.MOBILE_VALID))) {
             boolean isValid = (boolean) session.getAttribute(potentialAddVo.getMobile() + SystemMobileConfig.MOBILE_VALID);
             if (isValid) {
-                Optional<UsersType> optionalUsersType = usersTypeService.findByUsersTypeName(Workbook.STAFF_USERS_TYPE);
+                Optional<UsersType> optionalUsersType = usersTypeService.findByUsersTypeName(Workbook.POTENTIAL_USERS_TYPE);
                 if(optionalUsersType.isPresent()){
                     UsersType usersType = optionalUsersType.get();
                     potentialAddVo.setEnabled(BooleanUtil.toByte(true));
