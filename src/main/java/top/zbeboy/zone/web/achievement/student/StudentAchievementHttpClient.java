@@ -30,9 +30,9 @@ public class StudentAchievementHttpClient {
         CookieStore cookieStore = null;
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpClientContext httpClientContext = HttpClientContext.create();
-        HttpGet httpget = new HttpGet("http://cityxxpt.kmust.edu.cn/GXGLPT/validate.jsp");
-        httpget.setHeader("Referer", "http://cityxxpt.kmust.edu.cn/GXGLPT/Login.jsp");
-        httpget.setHeader("Host", "cityxxpt.kmust.edu.cn");
+        HttpGet httpget = new HttpGet("http://10.1.1.9:7002/GXGLPT/validate.jsp");
+        httpget.setHeader("Referer", "http://10.1.1.9:7002/GXGLPT/Login.jsp");
+        httpget.setHeader("Host", "10.1.1.9:7002");
         httpget.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36");
         HttpResponse response = httpclient.execute(httpget, httpClientContext);
         if (response.getStatusLine().getStatusCode() == 200) {
@@ -49,9 +49,9 @@ public class StudentAchievementHttpClient {
         CloseableHttpClient httpclient = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
         Map<String, Object> map = new HashMap<>();
         map.put("hasError", false);
-        HttpPost post = new HttpPost("http://cityxxpt.kmust.edu.cn/GXGLPT/LoginActionLogin.do");
-        post.setHeader("Referer", "http://cityxxpt.kmust.edu.cn/GXGLPT/Login.jsp");
-        post.setHeader("Host", "cityxxpt.kmust.edu.cn");
+        HttpPost post = new HttpPost("http://10.1.1.9:7002/GXGLPT/LoginActionLogin.do");
+        post.setHeader("Referer", "http://10.1.1.9:7002/GXGLPT/Login.jsp");
+        post.setHeader("Host", "10.1.1.9:7002");
         post.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36");
         List<BasicNameValuePair> parameters = new ArrayList<>();
         BasicNameValuePair param1 = new BasicNameValuePair("yhdm", param.get("yhdm"));
@@ -86,9 +86,9 @@ public class StudentAchievementHttpClient {
     public Map<String, Object> query(CloseableHttpClient httpclient) throws IOException {
         Map<String, Object> map = new HashMap<>();
         map.put("hasError", false);
-        HttpGet httpget = new HttpGet("http://cityxxpt.kmust.edu.cn/GXGLPT/JXGL/CJGL/CJGL_XS/CjglxscjViewCs.do");
-        httpget.setHeader("Referer", "http://cityxxpt.kmust.edu.cn/GXGLPT/JXGL/CJGL/Cjgl_xstop_header.html");
-        httpget.setHeader("Host", "cityxxpt.kmust.edu.cn");
+        HttpGet httpget = new HttpGet("http://10.1.1.9:7002/GXGLPT/JXGL/CJGL/CJGL_XS/CjglxscjViewCs.do");
+        httpget.setHeader("Referer", "http://10.1.1.9:7002/GXGLPT/JXGL/CJGL/Cjgl_xstop_header.html");
+        httpget.setHeader("Host", "10.1.1.9:7002");
         httpget.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36");
 
         HttpResponse response = httpclient.execute(httpget);
