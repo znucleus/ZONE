@@ -18,6 +18,7 @@ import top.zbeboy.zone.service.plugin.PaginationPlugin;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static top.zbeboy.zbase.domain.Tables.*;
 
@@ -48,6 +49,22 @@ public class TrainingAttendUsersServiceImpl implements TrainingAttendUsersServic
                 .from(TRAINING_USERS)
                 .where(TRAINING_USERS.TRAINING_RELEASE_ID.eq(trainingReleaseId).andNotExists(select))
                 .fetch();
+    }
+
+    @Override
+    public Optional<TrainingAttendUsersRecord> findByTrainingAttendIdAndTrainingUsersId(String trainingAttendId, String trainingUsersId) {
+        return create.selectFrom(TRAINING_ATTEND_USERS)
+                .where(TRAINING_ATTEND_USERS.TRAINING_ATTEND_ID.eq(trainingAttendId)
+                .and(TRAINING_ATTEND_USERS.TRAINING_USERS_ID.eq(trainingUsersId)))
+                .fetchOptional();
+    }
+
+    @Override
+    public Optional<TrainingAttendUsersRecord> findByTrainingAttendIdAndOpenId(String trainingAttendId, String openId) {
+        return create.selectFrom(TRAINING_ATTEND_USERS)
+                .where(TRAINING_ATTEND_USERS.TRAINING_ATTEND_ID.eq(trainingAttendId)
+                        .and(TRAINING_ATTEND_USERS.OPEN_ID.eq(openId)))
+                .fetchOptional();
     }
 
     @Override

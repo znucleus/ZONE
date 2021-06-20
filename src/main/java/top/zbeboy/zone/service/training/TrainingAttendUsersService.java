@@ -4,9 +4,11 @@ import org.jooq.Record;
 import org.jooq.Record11;
 import org.jooq.Result;
 import top.zbeboy.zbase.domain.tables.pojos.TrainingAttendUsers;
+import top.zbeboy.zbase.domain.tables.records.TrainingAttendUsersRecord;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TrainingAttendUsersService {
 
@@ -26,6 +28,24 @@ public interface TrainingAttendUsersService {
      * @return 数据
      */
     Result<Record> findStudentNotExistsUsers(String trainingReleaseId, String trainingAttendId);
+
+    /**
+     * 根据考勤id与名单id查询
+     *
+     * @param trainingAttendId 考勤id
+     * @param trainingUsersId  名单id
+     * @return 数据
+     */
+    Optional<TrainingAttendUsersRecord> findByTrainingAttendIdAndTrainingUsersId(String trainingAttendId, String trainingUsersId);
+
+    /**
+     * 根据考勤id与微信id查询
+     *
+     * @param trainingAttendId 考勤id
+     * @param openId           微信id
+     * @return 数据
+     */
+    Optional<TrainingAttendUsersRecord> findByTrainingAttendIdAndOpenId(String trainingAttendId, String openId);
 
     /**
      * 分页查询

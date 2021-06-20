@@ -86,6 +86,8 @@ public class TrainingReportRestController {
      */
     @GetMapping("/web/training/report/training/paging")
     public ResponseEntity<Map<String, Object>> trainingData(SimplePaginationUtil simplePaginationUtil) {
+        Users users = SessionUtil.getUserFromSession();
+        simplePaginationUtil.setUsername(users.getUsername());
         AjaxUtil<TrainingReleaseBean> ajaxUtil = trainingControllerCommon.trainingData(simplePaginationUtil);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }

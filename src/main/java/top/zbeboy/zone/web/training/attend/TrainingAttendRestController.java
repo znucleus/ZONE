@@ -30,6 +30,7 @@ import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.TableSawUtil;
 import top.zbeboy.zbase.vo.training.attend.TrainingAttendAddVo;
 import top.zbeboy.zbase.vo.training.attend.TrainingAttendEditVo;
+import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
 import top.zbeboy.zone.service.export.TrainingAttendSituationExport;
 import top.zbeboy.zone.service.export.TrainingAttendUsersExport;
 import top.zbeboy.zone.service.training.*;
@@ -87,8 +88,11 @@ public class TrainingAttendRestController {
      * @param simplePaginationUtil 请求
      * @return 数据
      */
+    @ApiLoggingRecord(remark = "实训考勤发布数据", channel = Workbook.channel.WEB, needLogin = true)
     @GetMapping("/web/training/attend/training/paging")
-    public ResponseEntity<Map<String, Object>> trainingData(SimplePaginationUtil simplePaginationUtil) {
+    public ResponseEntity<Map<String, Object>> trainingData(SimplePaginationUtil simplePaginationUtil, HttpServletRequest request) {
+        Users users = SessionUtil.getUserFromSession();
+        simplePaginationUtil.setUsername(users.getUsername());
         AjaxUtil<TrainingReleaseBean> ajaxUtil = trainingControllerCommon.trainingData(simplePaginationUtil);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
@@ -99,8 +103,9 @@ public class TrainingAttendRestController {
      * @param simplePaginationUtil 请求
      * @return 数据
      */
+    @ApiLoggingRecord(remark = "实训考勤列表数据", channel = Workbook.channel.WEB, needLogin = true)
     @GetMapping("/web/training/attend/paging")
-    public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil) {
+    public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil, HttpServletRequest request) {
         AjaxUtil<TrainingAttendBean> ajaxUtil = AjaxUtil.of();
         List<TrainingAttendBean> beans = new ArrayList<>();
         Result<Record> records = trainingAttendService.findAllByPage(simplePaginationUtil);

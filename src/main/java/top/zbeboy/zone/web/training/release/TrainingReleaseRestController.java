@@ -65,6 +65,8 @@ public class TrainingReleaseRestController {
     @GetMapping("/web/training/release/paging")
     public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil) {
         AjaxUtil<TrainingReleaseBean> ajaxUtil = AjaxUtil.of();
+        Users users = SessionUtil.getUserFromSession();
+        simplePaginationUtil.setUsername(users.getUsername());
         List<TrainingReleaseBean> beans = new ArrayList<>();
         Result<Record> records = trainingReleaseService.findAllByPage(simplePaginationUtil);
         if (records.isNotEmpty()) {

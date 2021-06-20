@@ -21,6 +21,7 @@ import top.zbeboy.zbase.domain.tables.pojos.UsersType;
 import top.zbeboy.zbase.feign.data.StaffService;
 import top.zbeboy.zbase.feign.data.StudentService;
 import top.zbeboy.zbase.feign.platform.RoleService;
+import top.zbeboy.zbase.feign.platform.UsersService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zbase.tools.service.util.SQLQueryUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
@@ -44,6 +45,9 @@ public class TrainingReleaseServiceImpl implements TrainingReleaseService, Pagin
 
     @Resource
     private UsersTypeService usersTypeService;
+
+    @Resource
+    private UsersService usersService;
 
     @Resource
     private StudentService studentService;
@@ -174,8 +178,9 @@ public class TrainingReleaseServiceImpl implements TrainingReleaseService, Pagin
         Condition a = null;
         JSONObject search = paginationUtil.getSearch();
 
-        Users users = SessionUtil.getUserFromSession();
-        if (Objects.nonNull(search)) {
+        Optional<Users> usersOptional = usersService.findByUsername(paginationUtil.getUsername());
+        if (Objects.nonNull(search) && usersOptional.isPresent()) {
+            Users users = usersOptional.get();
             String dataRange = StringUtils.trim(search.getString("dataRange"));
             if (StringUtils.isBlank(dataRange)) {
                 dataRange = "0";// 默认全部

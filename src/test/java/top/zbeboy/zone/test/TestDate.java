@@ -6,8 +6,7 @@ import org.joda.time.Weeks;
 import org.junit.jupiter.api.Test;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
+import java.time.*;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Date;
 
@@ -31,6 +30,14 @@ public class TestDate {
 
         java.sql.Date next = DateTimeUtil.calculationSqlNextWeekDay(date, 6);
         System.out.println(next);
+    }
+
+    @Test
+    public void calcMinutes(){
+        LocalDateTime date1 = DateTimeUtil.defaultParseLocalDateTime("2021-06-20 09:30:00");
+        LocalDateTime date2 = DateTimeUtil.defaultParseLocalDateTime("2021-06-20 09:00:00");
+        System.out.println("Difference is before : " + date1.isBefore(date2));
+        System.out.println("Difference in milliseconds : " + Duration.between(date1, date2).abs().toMinutes());
     }
 
     @Test
