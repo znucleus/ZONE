@@ -54,10 +54,10 @@ public class TrainingAttendSituationExport {
                 }
             }
 
+            Sheet sheet2 = wb.createSheet("考勤统计");
+            Row row2 = sheet2.createRow(0);
+            createHeader2(row2);
             if(Objects.nonNull(students) && Objects.nonNull(data2)){
-                Sheet sheet2 = wb.createSheet("考勤统计");
-                Row row2 = sheet2.createRow(0);
-                createHeader2(row2);
                 for (int i = 0; i < students.size(); i++) {
                     row2 = sheet2.createRow(i + 1);
                     createCell2(row2);
