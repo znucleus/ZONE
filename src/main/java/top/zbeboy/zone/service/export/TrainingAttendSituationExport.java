@@ -57,10 +57,10 @@ public class TrainingAttendSituationExport {
             Sheet sheet2 = wb.createSheet("考勤统计");
             Row row2 = sheet2.createRow(0);
             createHeader2(row2);
-            if(Objects.nonNull(students) && Objects.nonNull(data2)){
+            if (Objects.nonNull(students) && Objects.nonNull(data2)) {
                 for (int i = 0; i < students.size(); i++) {
                     row2 = sheet2.createRow(i + 1);
-                    createCell2(row2);
+                    createCell2(row2, students.get(i));
                 }
             }
 
@@ -111,13 +111,13 @@ public class TrainingAttendSituationExport {
                 }
 
                 boolean hasStudent = false;
-                for(Map<String, String> map : students){
-                    if(StringUtils.equals(bean.getStudentNumber(), map.get("studentNumber"))){
+                for (Map<String, String> map : students) {
+                    if (StringUtils.equals(bean.getStudentNumber(), map.get("studentNumber"))) {
                         hasStudent = true;
                         break;
                     }
                 }
-                if(!hasStudent){
+                if (!hasStudent) {
                     Map<String, String> map = new HashMap<>();
                     map.put("studentNumber", bean.getStudentNumber());
                     map.put("realName", bean.getRealName());
@@ -129,8 +129,10 @@ public class TrainingAttendSituationExport {
 
         // 默认顺序排序
         data2.sort(LocalDate::compareTo);
-        for (int i = 4; i < data2.size(); i++) {
-            row.createCell(i).setCellValue(DateTimeUtil.defaultFormatLocalDate(data2.get(i)));
+        int i = 4;
+        for (LocalDate date : data2) {
+            row.createCell(i).setCellValue(DateTimeUtil.defaultFormatLocalDate(date));
+            i++;
         }
 
     }
@@ -147,24 +149,24 @@ public class TrainingAttendSituationExport {
         row.createCell(7).setCellValue(t.getRemark());
     }
 
-    public void createCell2(Row row) {
+    public void createCell2(Row row, Map<String, String> student) {
         sequence2++;
         row.createCell(0).setCellValue(sequence2);
         // 要一组一组的按照学号
-        for(Map<String, String> student : students){
-            row.createCell(1).setCellValue(student.get("studentNumber"));
-            row.createCell(2).setCellValue(student.get("realName"));
-            row.createCell(3).setCellValue(student.get("sex"));
-            for (int i = 4; i < data2.size(); i++) {
-                row.createCell(i).setCellValue("");
-                for (TrainingAttendUsersBean bean : data) {
-                    if(StringUtils.equals(bean.getStudentNumber(), student.get("studentNumber")) &&
-                    bean.getAttendDate().isEqual(data2.get(i))){
-                        row.createCell(i).setCellValue(operate2(bean.getOperate()));
-                        break;
-                    }
+        row.createCell(1).setCellValue(student.get("studentNumber"));
+        row.createCell(2).setCellValue(student.get("realName"));
+        row.createCell(3).setCellValue(student.get("sex"));
+        int i = 4;
+        for (LocalDate date : data2) {
+            row.createCell(i).setCellValue("");
+            for (TrainingAttendUsersBean bean : data) {
+                if (StringUtils.equals(bean.getStudentNumber(), student.get("studentNumber")) &&
+                        bean.getAttendDate().isEqual(date)) {
+                    row.createCell(i).setCellValue(operate2(bean.getOperate()));
+                    break;
                 }
             }
+            i++;
         }
     }
 
