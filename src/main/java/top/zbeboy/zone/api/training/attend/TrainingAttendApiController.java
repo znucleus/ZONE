@@ -179,7 +179,7 @@ public class TrainingAttendApiController {
                                     // 请假可直接更新
                                     if (operate == 1) {
                                         // 检验时间 上课前及上课后10分钟内
-                                        if (now.isBefore(startDateTime) || DateTimeUtil.calculationTwoDateDifferMinutes(now, startDateTime) <= 10) {
+                                        if (now.isBefore(startDateTime) || Math.abs(DateTimeUtil.calculationTwoDateDifferMinutes(now, startDateTime)) <= 10) {
                                             trainingAttendUsers.setOperate(operate);
                                             trainingAttendUsers.setOperateUser(users.getUsername());
                                             trainingAttendUsers.setRemark(remark);
@@ -212,7 +212,7 @@ public class TrainingAttendApiController {
                                                                     trainingAttendUsersService.findByTrainingAttendIdAndOpenId(trainingAttend.getTrainingAttendId(), openId);
                                                             if (weiXinTrainingAttendUsersRecord.isEmpty()) {
                                                                 // 检验时间，上课前10分钟或上课后10分钟内，属于正常签到
-                                                                long minutes = DateTimeUtil.calculationTwoDateDifferMinutes(now, startDateTime);
+                                                                long minutes = Math.abs(DateTimeUtil.calculationTwoDateDifferMinutes(now, startDateTime));
                                                                 if (minutes <= 10) {
                                                                     operate = 3;
                                                                     trainingAttendUsers.setOperate(operate);
@@ -225,7 +225,7 @@ public class TrainingAttendApiController {
                                                                     trainingAttendUsersService.update(trainingAttendUsers);
 
                                                                     ajaxUtil.success().msg("状态更新成功");
-                                                                } else if (now.isAfter(startDateTime) && Math.abs(minutes) <= 30) {
+                                                                } else if (now.isAfter(startDateTime) && minutes <= 30) {
                                                                     // 上课后，超过10分钟，30分钟内属于迟到
                                                                     operate = 2;
                                                                     trainingAttendUsers.setOperate(operate);
