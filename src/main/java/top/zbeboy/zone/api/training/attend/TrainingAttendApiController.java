@@ -149,8 +149,7 @@ public class TrainingAttendApiController {
     @ApiLoggingRecord(remark = "实训考勤学生签到数据", channel = Workbook.channel.API, needLogin = true)
     @PostMapping("/api/training/attend/student/operate")
     public ResponseEntity<Map<String, Object>> operate(@RequestParam("trainingAttendId") String trainingAttendId, @RequestParam("operate") Byte operate,
-                                                       @RequestParam("location") String location, @RequestParam("resCode") String resCode,
-                                                       @RequestParam("appId") String appId, String remark, Principal principal, HttpServletRequest request) {
+                                                       String location, String resCode, String appId, String remark, Principal principal, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         // 0:缺席,1:请假,2:迟到,3:正常签到
         // 学生类型判断
@@ -195,69 +194,71 @@ public class TrainingAttendApiController {
 
                                     } else if (operate == 2 || operate == 3) {
                                         // 2:迟到,3:正常签到 需要检验微信与地址
-                                        // 检验地址
-                                        Optional<SchoolroomBean> optionalSchoolroomBean = schoolroomService.findByIdRelation(trainingAttend.getAttendRoom());
-                                        if (optionalSchoolroomBean.isPresent()) {
-                                            SchoolroomBean schoolroomBean = optionalSchoolroomBean.get();
-                                            String buildingCoordinate = schoolroomBean.getBuildingCoordinate();
-                                            if (StringUtils.isNotBlank(buildingCoordinate)) {
-                                                boolean isInCircle = MapUtil.isInCircle(buildingCoordinate, location, "25");
-                                                if (isInCircle) {
-                                                    // 检验微信
-                                                    AjaxUtil<Object> weiXinInfo = weiXinService.info(resCode, appId, WeiXinAppBook.getAppSecret(appId));
-                                                    if (weiXinInfo.getState()) {
-                                                        Map<String, Object> mapResult = weiXinInfo.getMapResult();
-                                                        String openId = (String) mapResult.get("openid");
-                                                        Optional<TrainingAttendUsersRecord> weiXinTrainingAttendUsersRecord =
-                                                                trainingAttendUsersService.findByTrainingAttendIdAndOpenId(trainingAttend.getTrainingAttendId(), openId);
-                                                        if (weiXinTrainingAttendUsersRecord.isEmpty()) {
-                                                            // 检验时间，上课前10分钟或上课后10分钟内，属于正常签到
-                                                            long minutes = DateTimeUtil.calculationTwoDateDifferMinutes(now, startDateTime);
-                                                            if (minutes <= 10) {
-                                                                Byte tmpOperate = operate;
-                                                                tmpOperate = 3;
-                                                                trainingAttendUsers.setOperate(tmpOperate);
-                                                                trainingAttendUsers.setOperateUser(users.getUsername());
-                                                                trainingAttendUsers.setOpenId(openId);
-                                                                trainingAttendUsers.setLocation(location);
-                                                                trainingAttendUsers.setRemark(remark);
-                                                                trainingAttendUsers.setOperateDate(DateTimeUtil.getNowLocalDateTime());
+                                        if (StringUtils.isNotBlank(location) && StringUtils.isNotBlank(resCode) && StringUtils.isNotBlank(appId)) {
+                                            // 检验地址
+                                            Optional<SchoolroomBean> optionalSchoolroomBean = schoolroomService.findByIdRelation(trainingAttend.getAttendRoom());
+                                            if (optionalSchoolroomBean.isPresent()) {
+                                                SchoolroomBean schoolroomBean = optionalSchoolroomBean.get();
+                                                String buildingCoordinate = schoolroomBean.getBuildingCoordinate();
+                                                if (StringUtils.isNotBlank(buildingCoordinate)) {
+                                                    boolean isInCircle = MapUtil.isInCircle(buildingCoordinate, location, "25");
+                                                    if (isInCircle) {
+                                                        // 检验微信
+                                                        AjaxUtil<Object> weiXinInfo = weiXinService.info(resCode, appId, WeiXinAppBook.getAppSecret(appId));
+                                                        if (weiXinInfo.getState()) {
+                                                            Map<String, Object> mapResult = weiXinInfo.getMapResult();
+                                                            String openId = (String) mapResult.get("openid");
+                                                            Optional<TrainingAttendUsersRecord> weiXinTrainingAttendUsersRecord =
+                                                                    trainingAttendUsersService.findByTrainingAttendIdAndOpenId(trainingAttend.getTrainingAttendId(), openId);
+                                                            if (weiXinTrainingAttendUsersRecord.isEmpty()) {
+                                                                // 检验时间，上课前10分钟或上课后10分钟内，属于正常签到
+                                                                long minutes = DateTimeUtil.calculationTwoDateDifferMinutes(now, startDateTime);
+                                                                if (minutes <= 10) {
+                                                                    operate = 3;
+                                                                    trainingAttendUsers.setOperate(operate);
+                                                                    trainingAttendUsers.setOperateUser(users.getUsername());
+                                                                    trainingAttendUsers.setOpenId(openId);
+                                                                    trainingAttendUsers.setLocation(location);
+                                                                    trainingAttendUsers.setRemark(remark);
+                                                                    trainingAttendUsers.setOperateDate(DateTimeUtil.getNowLocalDateTime());
 
-                                                                trainingAttendUsersService.update(trainingAttendUsers);
+                                                                    trainingAttendUsersService.update(trainingAttendUsers);
 
-                                                                ajaxUtil.success().msg("状态更新成功");
-                                                            } else if (now.isAfter(startDateTime) && Math.abs(minutes) <= 30) {
-                                                                // 上课后，超过10分钟，30分钟内属于迟到
-                                                                Byte tmpOperate = operate;
-                                                                tmpOperate = 2;
-                                                                trainingAttendUsers.setOperate(tmpOperate);
-                                                                trainingAttendUsers.setOperateUser(users.getUsername());
-                                                                trainingAttendUsers.setOpenId(openId);
-                                                                trainingAttendUsers.setLocation(location);
-                                                                trainingAttendUsers.setRemark(remark);
-                                                                trainingAttendUsers.setOperateDate(DateTimeUtil.getNowLocalDateTime());
+                                                                    ajaxUtil.success().msg("状态更新成功");
+                                                                } else if (now.isAfter(startDateTime) && Math.abs(minutes) <= 30) {
+                                                                    // 上课后，超过10分钟，30分钟内属于迟到
+                                                                    operate = 2;
+                                                                    trainingAttendUsers.setOperate(operate);
+                                                                    trainingAttendUsers.setOperateUser(users.getUsername());
+                                                                    trainingAttendUsers.setOpenId(openId);
+                                                                    trainingAttendUsers.setLocation(location);
+                                                                    trainingAttendUsers.setRemark(remark);
+                                                                    trainingAttendUsers.setOperateDate(DateTimeUtil.getNowLocalDateTime());
 
-                                                                trainingAttendUsersService.update(trainingAttendUsers);
+                                                                    trainingAttendUsersService.update(trainingAttendUsers);
 
-                                                                ajaxUtil.success().msg("状态更新成功");
+                                                                    ajaxUtil.success().msg("状态更新成功");
+                                                                } else {
+                                                                    ajaxUtil.fail().msg("不在时间范围，无法操作");
+                                                                }
+
                                                             } else {
-                                                                ajaxUtil.fail().msg("不在时间范围，无法操作");
+                                                                ajaxUtil.fail().msg("已签到");
                                                             }
-
                                                         } else {
-                                                            ajaxUtil.fail().msg("已签到");
+                                                            ajaxUtil.fail().msg("获取微信信息失败");
                                                         }
                                                     } else {
-                                                        ajaxUtil.fail().msg("获取微信信息失败");
+                                                        ajaxUtil.fail().msg("不在签到范围");
                                                     }
                                                 } else {
-                                                    ajaxUtil.fail().msg("不在签到范围");
+                                                    ajaxUtil.fail().msg("未获取到教室位置信息");
                                                 }
                                             } else {
-                                                ajaxUtil.fail().msg("未获取到教室位置信息");
+                                                ajaxUtil.fail().msg("未获取到教室信息");
                                             }
                                         } else {
-                                            ajaxUtil.fail().msg("未获取到教室信息");
+                                            ajaxUtil.fail().msg("缺少必要参数");
                                         }
                                     } else {
                                         ajaxUtil.fail().msg("不支持的状态类型");
