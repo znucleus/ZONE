@@ -60,10 +60,10 @@ public class TrainingAttendUsersServiceImpl implements TrainingAttendUsersServic
     }
 
     @Override
-    public Optional<TrainingAttendUsersRecord> findByTrainingAttendIdAndOpenId(String trainingAttendId, String openId) {
+    public Optional<TrainingAttendUsersRecord> findByTrainingAttendIdAndUuid(String trainingAttendId, String uuid) {
         return create.selectFrom(TRAINING_ATTEND_USERS)
                 .where(TRAINING_ATTEND_USERS.TRAINING_ATTEND_ID.eq(trainingAttendId)
-                        .and(TRAINING_ATTEND_USERS.OPEN_ID.eq(openId)))
+                        .and(TRAINING_ATTEND_USERS.UUID.eq(uuid)))
                 .fetchOptional();
     }
 

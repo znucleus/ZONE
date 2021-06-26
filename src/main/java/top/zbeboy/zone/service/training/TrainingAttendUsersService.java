@@ -45,7 +45,7 @@ public interface TrainingAttendUsersService {
      * @param openId           微信id
      * @return 数据
      */
-    Optional<TrainingAttendUsersRecord> findByTrainingAttendIdAndOpenId(String trainingAttendId, String openId);
+    Optional<TrainingAttendUsersRecord> findByTrainingAttendIdAndUuid(String trainingAttendId, String uuid);
 
     /**
      * 分页查询
