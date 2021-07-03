@@ -17,12 +17,10 @@ import top.zbeboy.zbase.feign.platform.UsersService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zbase.feign.system.SystemConfigureService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
+import top.zbeboy.zbase.tools.service.util.FilesUtil;
 import top.zbeboy.zbase.tools.service.util.RandomUtil;
 import top.zbeboy.zbase.tools.service.util.RequestUtil;
-import top.zbeboy.zbase.tools.web.util.AjaxUtil;
-import top.zbeboy.zbase.tools.web.util.BooleanUtil;
-import top.zbeboy.zbase.tools.web.util.GoogleOauthUtil;
-import top.zbeboy.zbase.tools.web.util.PinYinUtil;
+import top.zbeboy.zbase.tools.web.util.*;
 import top.zbeboy.zbase.vo.platform.user.UsersProfileVo;
 import top.zbeboy.zone.service.system.SystemMailService;
 import top.zbeboy.zone.service.util.BCryptUtil;
@@ -124,6 +122,9 @@ public class PlatformControllerCommon {
                     if (!optionalUsers.isPresent()) {
                         // 更新
                         usersService.updateUsername(own.getUsername(), value);
+
+                        String path = Workbook.qrCodePath() + MD5Util.getMD5(own.getUsername() + own.getAvatar()) + ".jpg";
+                        FilesUtil.deleteFile(RequestUtil.getRealPath(request) + path);
                         ajaxUtil.success().msg("账号更新成功");
                     } else {
                         ajaxUtil.fail().msg("账号已被注册");

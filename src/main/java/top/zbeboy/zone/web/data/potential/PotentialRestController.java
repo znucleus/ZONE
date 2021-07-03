@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import top.zbeboy.zbase.config.WeiXinAppBook;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.config.ZoneProperties;
 import top.zbeboy.zbase.domain.tables.pojos.Role;
@@ -16,19 +17,24 @@ import top.zbeboy.zbase.domain.tables.pojos.SystemConfigure;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.domain.tables.pojos.UsersType;
 import top.zbeboy.zbase.feign.data.PotentialService;
+import top.zbeboy.zbase.feign.data.WeiXinSubscribeService;
 import top.zbeboy.zbase.feign.platform.UsersService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zbase.feign.system.SystemConfigureService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
+import top.zbeboy.zbase.tools.service.util.FilesUtil;
 import top.zbeboy.zbase.tools.service.util.RandomUtil;
 import top.zbeboy.zbase.tools.service.util.RequestUtil;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.BooleanUtil;
+import top.zbeboy.zbase.tools.web.util.MD5Util;
+import top.zbeboy.zbase.tools.web.util.SmallPropsUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zbase.vo.data.potential.PotentialAddVo;
 import top.zbeboy.zbase.vo.data.potential.PotentialEditVo;
 import top.zbeboy.zbase.vo.data.potential.PotentialUpgradeStaffVo;
 import top.zbeboy.zbase.vo.data.potential.PotentialUpgradeStudentVo;
+import top.zbeboy.zbase.vo.data.weixin.WeiXinSubscribeSendVo;
 import top.zbeboy.zone.service.system.SystemMailService;
 import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
 import top.zbeboy.zone.web.util.SessionUtil;
@@ -61,6 +67,9 @@ public class PotentialRestController {
 
     @Resource
     private SystemConfigureService systemConfigureService;
+
+    @Resource
+    private WeiXinSubscribeService weiXinSubscribeService;
 
     /**
      * 临时用户注册
@@ -239,16 +248,26 @@ public class PotentialRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = potentialService.roleSave(users.getUsername(), username, roles);
 
         if (ajaxUtil.getState()) {
+            Optional<Users> result = usersService.findByUsername(username);
             String notify = "您的权限已发生变更，请登录查看。";
 
             // 检查邮件推送是否被关闭
             Optional<SystemConfigure> optionalSystemConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
-            if(optionalSystemConfigure.isPresent()){
-                SystemConfigure systemConfigure = optionalSystemConfigure.get();
-                if (StringUtils.equals("1", systemConfigure.getDataValue())) {
-                    Optional<Users> result = usersService.findByUsername(username);
-                    result.ifPresent(value -> systemMailService.sendNotifyMail(value, RequestUtil.getBaseUrl(request), notify));
-                }
+            if (optionalSystemConfigure.isPresent() && StringUtils.equals("1", optionalSystemConfigure.get().getDataValue())) {
+                result.ifPresent(value -> systemMailService.sendNotifyMail(value, RequestUtil.getBaseUrl(request), notify));
+            }
+
+            // 微信订阅通知
+            if (result.isPresent()) {
+                WeiXinSubscribeSendVo weiXinSubscribeSendVo = new WeiXinSubscribeSendVo();
+                weiXinSubscribeSendVo.setUsername(username);
+                weiXinSubscribeSendVo.setBusiness(WeiXinAppBook.subscribeBusiness.REGISTRATION_REVIEW_RESULT.name());
+                weiXinSubscribeSendVo.setThing1("审核通过");
+                weiXinSubscribeSendVo.setName4(result.get().getRealName());
+                weiXinSubscribeSendVo.setDate2(DateTimeUtil.getNowLocalDateTime(DateTimeUtil.YEAR_MONTH_DAY_HOUR_MINUTE_FORMAT));
+                weiXinSubscribeSendVo.setThing3(notify);
+                weiXinSubscribeSendVo.setStartTime(DateTimeUtil.getNowLocalDateTime());
+                weiXinSubscribeService.sendByBusinessAndUsername(weiXinSubscribeSendVo);
             }
 
         }
@@ -304,9 +323,33 @@ public class PotentialRestController {
      * @return true 成功 false 失败
      */
     @PostMapping("/web/data/potential/delete")
-    public ResponseEntity<Map<String, Object>> delete(String userIds) {
+    public ResponseEntity<Map<String, Object>> delete(String userIds, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Map<String, Object>> ajaxUtil = potentialService.delete(users.getUsername(), userIds);
+        if (StringUtils.isNotBlank(userIds)) {
+            List<String> usersList = SmallPropsUtil.StringIdsToStringList(userIds);
+            String realPath = RequestUtil.getRealPath(request);
+            for (String user : usersList) {
+                Optional<Users> result = usersService.findByUsername(user);
+                String notify = "您因不满足审核条件，注册信息已被删除。";
+                // 微信订阅通知
+                if (result.isPresent()) {
+                    Users deleteUsers = result.get();
+                    WeiXinSubscribeSendVo weiXinSubscribeSendVo = new WeiXinSubscribeSendVo();
+                    weiXinSubscribeSendVo.setUsername(deleteUsers.getUsername());
+                    weiXinSubscribeSendVo.setBusiness(WeiXinAppBook.subscribeBusiness.REGISTRATION_REVIEW_RESULT.name());
+                    weiXinSubscribeSendVo.setThing1("审核未通过");
+                    weiXinSubscribeSendVo.setName4(result.get().getRealName());
+                    weiXinSubscribeSendVo.setDate2(DateTimeUtil.getNowLocalDateTime(DateTimeUtil.YEAR_MONTH_DAY_HOUR_MINUTE_FORMAT));
+                    weiXinSubscribeSendVo.setThing3(notify);
+                    weiXinSubscribeSendVo.setStartTime(DateTimeUtil.getNowLocalDateTime());
+                    weiXinSubscribeService.sendByBusinessAndUsername(weiXinSubscribeSendVo);
+
+                    String path = Workbook.qrCodePath() + MD5Util.getMD5(users.getUsername() + users.getAvatar()) + ".jpg";
+                    FilesUtil.deleteFile(realPath + path);
+                }
+            }
+        }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

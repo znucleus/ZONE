@@ -20,12 +20,11 @@ import top.zbeboy.zbase.feign.platform.UsersService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zbase.feign.system.SystemConfigureService;
 import top.zbeboy.zbase.feign.system.SystemLogService;
-import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
-import top.zbeboy.zbase.tools.service.util.RandomUtil;
-import top.zbeboy.zbase.tools.service.util.RequestUtil;
-import top.zbeboy.zbase.tools.service.util.UUIDUtil;
+import top.zbeboy.zbase.tools.service.util.*;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.BooleanUtil;
+import top.zbeboy.zbase.tools.web.util.MD5Util;
+import top.zbeboy.zbase.tools.web.util.SmallPropsUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zbase.vo.data.student.StudentAddVo;
 import top.zbeboy.zbase.vo.data.student.StudentEditVo;
@@ -375,6 +374,32 @@ public class StudentRestController {
     public ResponseEntity<Map<String, Object>> delete(String userIds, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Map<String, Object>> ajaxUtil = studentService.delete(users.getUsername(), userIds);
+
+        if (StringUtils.isNotBlank(userIds)) {
+            List<String> usersList = SmallPropsUtil.StringIdsToStringList(userIds);
+            String realPath = RequestUtil.getRealPath(request);
+            for (String user : usersList) {
+                Optional<Users> result = usersService.findByUsername(user);
+                String notify = "您因不满足审核条件，注册信息已被删除。";
+                // 微信订阅通知
+                if (result.isPresent()) {
+                    Users deleteUsers = result.get();
+                    WeiXinSubscribeSendVo weiXinSubscribeSendVo = new WeiXinSubscribeSendVo();
+                    weiXinSubscribeSendVo.setUsername(deleteUsers.getUsername());
+                    weiXinSubscribeSendVo.setBusiness(WeiXinAppBook.subscribeBusiness.REGISTRATION_REVIEW_RESULT.name());
+                    weiXinSubscribeSendVo.setThing1("审核未通过");
+                    weiXinSubscribeSendVo.setName4(result.get().getRealName());
+                    weiXinSubscribeSendVo.setDate2(DateTimeUtil.getNowLocalDateTime(DateTimeUtil.YEAR_MONTH_DAY_HOUR_MINUTE_FORMAT));
+                    weiXinSubscribeSendVo.setThing3(notify);
+                    weiXinSubscribeSendVo.setStartTime(DateTimeUtil.getNowLocalDateTime());
+                    weiXinSubscribeService.sendByBusinessAndUsername(weiXinSubscribeSendVo);
+
+                    String path = Workbook.qrCodePath() + MD5Util.getMD5(users.getUsername() + users.getAvatar()) + ".jpg";
+                    FilesUtil.deleteFile(realPath + path);
+                }
+            }
+        }
+
         SystemOperatorLog systemLog = new SystemOperatorLog(UUIDUtil.getUUID(),
                 users.getUsername() + "删除学生: " + userIds,
                 DateTimeUtil.getNowLocalDateTime(), users.getUsername(),

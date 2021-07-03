@@ -247,7 +247,8 @@ require(["jquery", "requirejs-domready", "moment-with-locales", "handlebars", "a
                 user_notify_reads: web_path + '/users/notify/reads',
                 system_notify: web_path + '/users/system/notify',
                 upgrade_student: '/users/upgrade/student',
-                upgrade_staff: '/users/upgrade/staff'
+                upgrade_staff: '/users/upgrade/staff',
+                personal_qr_code: web_path + '/users/qr_code',
             };
 
             var user_notify_param_id = {
@@ -397,6 +398,26 @@ require(["jquery", "requirejs-domready", "moment-with-locales", "handlebars", "a
             $('#upgradeStaff').click(function () {
                 $('#upgradeModal').modal('hide');
                 $.address.value(ajax_url.upgrade_staff);
+            });
+
+            $('#personalQrCode').click(function(){
+                $.ajax({
+                    type: 'GET',
+                    url: ajax_url.personal_qr_code,
+                    success: function (data) {
+                        if (data.state) {
+                            $('#personalQrCodeImg').attr('src', web_path + '/' + data.path);
+                            $('#personalQrCodeModal').modal('show');
+                        }
+                    },
+                    error: function (XMLHttpRequest) {
+                        Messenger().post({
+                            message: 'Request error : ' + XMLHttpRequest.status + " " + XMLHttpRequest.statusText,
+                            type: 'error',
+                            showCloseButton: true
+                        });
+                    }
+                });
             });
         });
     });
