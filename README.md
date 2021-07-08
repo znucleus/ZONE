@@ -4,7 +4,7 @@
 [![GitHub stars](https://img.shields.io/github/stars/zbeboy/ZONE.svg)](https://github.com/zbeboy/ZONE/stargazers) 
 [![Build Status](https://travis-ci.org/zbeboy/ZONE.svg?branch=master)](https://travis-ci.org/zbeboy/ZONE)
 # 开发环境
-1.JDK 11.0.11;  
+1.AdoptOpenJDK 11.0.11;  
 2.Intellij IDEA 2021.1.1;  
 3.MySQL 8.0.11;  
 4.Maven 3.6.0 +;  
