@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import top.zbeboy.zbase.bean.educational.examination.ExaminationNoticeReleaseBean;
@@ -127,6 +128,19 @@ public class ExaminationRestController {
             log.error("Upload file exception,is {}", e);
             ajaxUtil.fail().msg("上传文件失败： " + e.getMessage());
         }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 删除
+     *
+     * @param id 发布id
+     * @return true or false
+     */
+    @PostMapping("/web/educational/examination/delete")
+    public ResponseEntity<Map<String, Object>> delete(@RequestParam("id") String id) {
+        Users users = SessionUtil.getUserFromSession();
+        AjaxUtil<Map<String, Object>> ajaxUtil = educationalExaminationService.delete(users.getUsername(), id);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }
