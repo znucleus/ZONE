@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import top.zbeboy.zbase.bean.educational.examination.ExaminationNoticeDetailBean;
 import top.zbeboy.zbase.bean.educational.examination.ExaminationNoticeReleaseBean;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.ExaminationNoticeDetail;
@@ -20,6 +21,7 @@ import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zbase.tools.service.util.*;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.TableSawUtil;
 import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
 import top.zbeboy.zone.service.excel.ExaminationNoticeExcel;
 import top.zbeboy.zone.service.upload.FileBean;
@@ -141,6 +143,20 @@ public class ExaminationRestController {
     public ResponseEntity<Map<String, Object>> delete(@RequestParam("id") String id) {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Map<String, Object>> ajaxUtil = educationalExaminationService.delete(users.getUsername(), id);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 详情数据
+     *
+     * @param tableSawUtil 请求
+     * @return 数据
+     */
+    @GetMapping("/web/educational/examination/detail/paging")
+    public ResponseEntity<Map<String, Object>> authorizeData(TableSawUtil tableSawUtil) {
+        Users users = SessionUtil.getUserFromSession();
+        tableSawUtil.setUsername(users.getUsername());
+        AjaxUtil<ExaminationNoticeDetailBean> ajaxUtil = educationalExaminationService.detailData(tableSawUtil);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

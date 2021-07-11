@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="br-pageheader pd-y-15 pd-l-20">
+        <nav class="breadcrumb pd-0 mg-0 tx-12">
+            <a class="breadcrumb-item dy_href" href="#/web/menu/educational/examination">教务考试</a>
+            <span class="breadcrumb-item active">详情</span>
+        </nav>
+    </div><!-- br-pageheader -->
+    <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
+        <h4 class="tx-gray-800 mg-b-5">教务考试详情</h4>
+        <p class="mg-b-0">查看详情。</p>
+    </div>
+
+    <div class="br-pagebody">
+        <div class="br-section-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-3 mt-2">
+                            <input type="text" id="search_course_name" class="form-control" placeholder="课程"/>
+                        </div>
+                        <div class="col-md-3 mt-2">
+                            <input type="text" id="search_organize_name" class="form-control" placeholder="班级"/>
+                        </div>
+                        <div class="col-md-3 mt-2">
+                            <input type="text" id="search_exam_classroom" class="form-control" placeholder="考试教室"/>
+                        </div>
+                        <div class="col-md-3 mt-2">
+                            <input type="text" id="search_chief_examiner" class="form-control" placeholder="主考教师"/>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button type="button" id="search" class="btn btn-outline-secondary"><i
+                                class="fa fa-search"></i>搜索
+                        </button>
+                        <button type="button" id="reset_search" class="btn btn-outline-secondary"><i
+                                class="fa fa-repeat"></i>重置
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-12 mt-2">
+                    <div>
+                        <div class="float-left">
+                            <span>数量: </span><span id="totalSize"></span>
+                        </div>
+                        <div class="float-right">
+                            <button type="button" id="refresh" class="btn btn-light btn-sm"><i
+                                    class="fa fa-refresh"></i>刷新
+                            </button>
+                        </div>
+                    </div>
+                    <table class="tablesaw tablesaw-stack table table-striped mt-3" data-tablesaw-mode="stack"
+                           id="dataTable">
+                        <thead>
+                        <tr>
+                            <th scope="col">序号</th>
+                            <th scope="col">课程号</th>
+                            <th scope="col" data-tablesaw-priority="persist">课程</th>
+                            <th scope="col">班级</th>
+                            <th scope="col">人数</th>
+                            <th scope="col">序号区间</th>
+                            <th scope="col">考试周</th>
+                            <th scope="col" data-tablesaw-priority="persist">考试日期</th>
+                            <th scope="col" data-tablesaw-priority="persist">星期</th>
+                            <th scope="col" data-tablesaw-priority="persist">考试时间</th>
+                            <th scope="col" data-tablesaw-priority="persist">考试教室</th>
+                            <th scope="col">主考教师</th>
+                            <th scope="col" data-tablesaw-priority="persist">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--定义数据模板-->
+    <script id="data_template" type="text/x-handlebars-template">
+        {{#each listResult}}
+        <tr>
+            <td>{{serialNumber}}</td>
+            <td>{{courseNumber}}</td>
+            <td>{{courseName}}</td>
+            <td>{{organizeName}}</td>
+            <td>{{peopleNumber}}</td>
+            <td>{{serialNumberRange}}</td>
+            <td>{{examWeek}}</td>
+            <td>{{examDate}}</td>
+            <td>{{weekday}}</td>
+            <td>{{examTime}}</td>
+            <td>{{examClassroom}}</td>
+            <td>{{chiefExaminer}}</td>
+            <td>
+                <div class="btn-group" role="group">
+                    {{#if canSubscribeSms}}
+                    <button type="button" class="btn btn-danger btn-sm subscribe_sms" data-id="{{this.examinationNoticeDetailId}}">订阅短信通知
+                    </button>
+                    {{else}}
+                    <button type="button" class="btn btn-secondary disabled btn-sm">已订阅短信通知
+                    </button>
+                    {{/if}}
+                </div>
+            </td>
+        </tr>
+        {{/each}}
+    </script>
+
+    <input type="hidden" id="examinationNoticeReleaseId" th:value="${examinationNoticeReleaseId}"/>
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/educational/examination/examination_detail.js')}"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>

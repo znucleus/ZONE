@@ -9,7 +9,8 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             data: web_path + '/web/educational/examination/paging',
             template: web_path + '/goods/教务考试导入模板.xlsx',
             file_upload_url: web_path + '/web/educational/examination/upload/file',
-            del: '/web/educational/examination/delete',
+            del: web_path + '/web/educational/examination/delete',
+            look: '/web/educational/examination/look',
             page: '/web/menu/educational/examination'
         };
 
@@ -145,6 +146,13 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             var template = Handlebars.compile($("#release-template").html());
             $(tableData).html(template(data));
         }
+
+        /*
+        查看
+        */
+        $(tableData).delegate('.look', "click", function () {
+            $.address.value(ajax_url.look + '/' + $(this).attr('data-id'));
+        });
 
         /*
          注销
