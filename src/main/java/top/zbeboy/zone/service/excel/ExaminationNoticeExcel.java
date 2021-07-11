@@ -47,7 +47,9 @@ public class ExaminationNoticeExcel extends ReadExcelUtil<ExaminationNoticeDetai
             examinationNoticeDetail.setWeekday(getValue(hssfRow.getCell(8)));
             examinationNoticeDetail.setExamTime(getValue(hssfRow.getCell(9)));
             examinationNoticeDetail.setExamClassroom(getValue(hssfRow.getCell(10)));
-            examinationNoticeDetail.setChiefExaminer(getValue(hssfRow.getCell(11)));
+            examinationNoticeDetail.setInvigilator(getValue(hssfRow.getCell(11)));
+            examinationNoticeDetail.setChiefExaminer(getValue(hssfRow.getCell(12)));
+            examinationNoticeDetail.setMobiles(getValue(hssfRow.getCell(13)));
         }
 
         return examinationNoticeDetail;
@@ -70,7 +72,9 @@ public class ExaminationNoticeExcel extends ReadExcelUtil<ExaminationNoticeDetai
             examinationNoticeDetail.setWeekday(getValue(xssfRow.getCell(8)));
             examinationNoticeDetail.setExamTime(getValue(xssfRow.getCell(9)));
             examinationNoticeDetail.setExamClassroom(getValue(xssfRow.getCell(10)));
-            examinationNoticeDetail.setChiefExaminer(getValue(xssfRow.getCell(11)));
+            examinationNoticeDetail.setInvigilator(getValue(xssfRow.getCell(11)));
+            examinationNoticeDetail.setChiefExaminer(getValue(xssfRow.getCell(12)));
+            examinationNoticeDetail.setMobiles(getValue(xssfRow.getCell(13)));
         }
         return examinationNoticeDetail;
     }
