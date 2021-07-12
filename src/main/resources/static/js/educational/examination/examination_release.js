@@ -11,6 +11,8 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             file_upload_url: web_path + '/web/educational/examination/upload/file',
             del: web_path + '/web/educational/examination/delete',
             look: '/web/educational/examination/look',
+            add: '/web/educational/examination/add',
+            edit: '/web/educational/examination/edit',
             page: '/web/menu/educational/examination'
         };
 
@@ -79,6 +81,13 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             cleanParam();
             refreshSearch();
             init();
+        });
+
+        /*
+        发布
+        */
+        $('#release').click(function () {
+            $.address.value(ajax_url.add);
         });
 
         $('#downloadTemplate').click(function () {
@@ -152,6 +161,13 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
         */
         $(tableData).delegate('.look', "click", function () {
             $.address.value(ajax_url.look + '/' + $(this).attr('data-id'));
+        });
+
+        /*
+       编辑
+       */
+        $(tableData).delegate('.edit', "click", function () {
+            $.address.value(ajax_url.edit + '/' + $(this).attr('data-id'));
         });
 
         /*

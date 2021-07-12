@@ -22,6 +22,7 @@ import top.zbeboy.zbase.tools.service.util.*;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.TableSawUtil;
+import top.zbeboy.zbase.vo.educational.examination.ExaminationNoticeReleaseAddVo;
 import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
 import top.zbeboy.zone.service.excel.ExaminationNoticeExcel;
 import top.zbeboy.zone.service.upload.FileBean;
@@ -119,7 +120,7 @@ public class ExaminationRestController {
                 }
 
                 if (!beans.isEmpty()) {
-                    ajaxUtil = educationalExaminationService.save(beans);
+                    ajaxUtil = educationalExaminationService.batchSave(beans);
                 } else {
                     ajaxUtil.fail().msg("无数据");
                 }
@@ -134,6 +135,20 @@ public class ExaminationRestController {
     }
 
     /**
+     * 发布保存
+     *
+     * @param examinationNoticeReleaseAddVo 数据
+     * @return true or false
+     */
+    @PostMapping("/web/educational/examination/release/save")
+    public ResponseEntity<Map<String, Object>> releaseSave(ExaminationNoticeReleaseAddVo examinationNoticeReleaseAddVo) {
+        Users users = SessionUtil.getUserFromSession();
+        examinationNoticeReleaseAddVo.setUsername(users.getUsername());
+        AjaxUtil<Map<String, Object>> ajaxUtil = educationalExaminationService.releaseSave(examinationNoticeReleaseAddVo);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
      * 删除
      *
      * @param id 发布id
@@ -142,7 +157,7 @@ public class ExaminationRestController {
     @PostMapping("/web/educational/examination/delete")
     public ResponseEntity<Map<String, Object>> delete(@RequestParam("id") String id) {
         Users users = SessionUtil.getUserFromSession();
-        AjaxUtil<Map<String, Object>> ajaxUtil = educationalExaminationService.delete(users.getUsername(), id);
+        AjaxUtil<Map<String, Object>> ajaxUtil = educationalExaminationService.releaseDelete(users.getUsername(), id);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
