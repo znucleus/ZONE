@@ -224,7 +224,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             }
         }
 
-        var tableElement = $('#dataTable');
+        var tableElement = $('#tableData');
 
         /**
          * 列表数据
@@ -232,9 +232,8 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
          */
         function listData(data) {
             var template = Handlebars.compile($("#data_template").html());
-            $('#dataTable > tbody').html(template(data));
             $('#totalSize').text(data.page.totalSize);
-            tableElement.tablesaw().data("tablesaw").refresh();
+            $(tableElement).html(template(data));
         }
 
         tableElement.delegate('.subscribe_sms', "click", function () {

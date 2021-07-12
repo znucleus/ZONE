@@ -179,14 +179,14 @@ public class ExaminationRestController {
     /**
      * 详情数据
      *
-     * @param tableSawUtil 请求
+     * @param simplePaginationUtil 请求
      * @return 数据
      */
     @GetMapping("/web/educational/examination/detail/paging")
-    public ResponseEntity<Map<String, Object>> authorizeData(TableSawUtil tableSawUtil) {
+    public ResponseEntity<Map<String, Object>> authorizeData(SimplePaginationUtil simplePaginationUtil) {
         Users users = SessionUtil.getUserFromSession();
-        tableSawUtil.setUsername(users.getUsername());
-        AjaxUtil<ExaminationNoticeDetailBean> ajaxUtil = educationalExaminationService.detailData(tableSawUtil);
+        simplePaginationUtil.setUsername(users.getUsername());
+        AjaxUtil<ExaminationNoticeDetailBean> ajaxUtil = educationalExaminationService.detailData(simplePaginationUtil);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

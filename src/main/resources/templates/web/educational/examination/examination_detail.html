@@ -54,29 +54,8 @@
                             </button>
                         </div>
                     </div>
-                    <table class="tablesaw tablesaw-stack table table-striped mt-3" data-tablesaw-mode="stack"
-                           id="dataTable">
-                        <thead>
-                        <tr>
-                            <th scope="col">序号</th>
-                            <th scope="col">课程号</th>
-                            <th scope="col" data-tablesaw-priority="persist">课程</th>
-                            <th scope="col">班级</th>
-                            <th scope="col">人数</th>
-                            <th scope="col">序号区间</th>
-                            <th scope="col">考试周</th>
-                            <th scope="col" data-tablesaw-priority="persist">考试日期</th>
-                            <th scope="col" data-tablesaw-priority="persist">星期</th>
-                            <th scope="col" data-tablesaw-priority="persist">考试时间</th>
-                            <th scope="col" data-tablesaw-priority="persist">考试教室</th>
-                            <th scope="col">监考教师</th>
-                            <th scope="col">主考教师</th>
-                            <th scope="col" data-tablesaw-priority="persist">操作</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
+                </div>
+                <div class="col-md-12 mt-2" id="tableData">
                 </div>
             </div>
         </div>
@@ -85,32 +64,52 @@
     <!--定义数据模板-->
     <script id="data_template" type="text/x-handlebars-template">
         {{#each listResult}}
-        <tr>
-            <td>{{serialNumber}}</td>
-            <td>{{courseNumber}}</td>
-            <td>{{courseName}}</td>
-            <td>{{organizeName}}</td>
-            <td>{{peopleNumber}}</td>
-            <td>{{serialNumberRange}}</td>
-            <td>{{examWeek}}</td>
-            <td>{{examDate}}</td>
-            <td>{{weekday}}</td>
-            <td>{{examTime}}</td>
-            <td>{{examClassroom}}</td>
-            <td>{{invigilator}}</td>
-            <td>{{chiefExaminer}}</td>
-            <td>
-                <div class="btn-group" role="group">
-                    {{#if canSubscribeSms}}
-                    <button type="button" class="btn btn-danger btn-sm subscribe_sms" data-id="{{this.examinationNoticeDetailId}}">订阅短信通知
-                    </button>
-                    {{else}}
-                    <button type="button" class="btn btn-secondary disabled btn-sm">已订阅短信通知
-                    </button>
-                    {{/if}}
+        <div class="card mg-t-10">
+            <div class="card-header bg-info tx-white">{{serialNumber}}.{{courseName}}</div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3"><span>课程号：</span><span>{{courseNumber}}</span></div>
+                    <div class="col-md-3"><span>班级：</span><span>{{organizeName}}</span></div>
+                    <div class="col-md-3"><span>人数：</span><span>{{peopleNumber}}</span></div>
+                    <div class="col-md-3"><span>序号区间：</span><span>{{serialNumberRange}}</span></div>
+                    <div class="col-md-3"><span>考试周：</span><span>{{examWeek}}</span></div>
+                    <div class="col-md-3"><span>考试日期：</span><span>{{examDate}}</span></div>
+                    <div class="col-md-3"><span>星期：</span><span>{{weekday}}</span></div>
+                    <div class="col-md-3"><span>考试时间：</span><span>{{examTime}}</span></div>
+                    <div class="col-md-3"><span>考试教室：</span><span>{{examClassroom}}</span></div>
+                    <div class="col-md-3"><span>主考教师：</span><span>{{chiefExaminer}}</span></div>
+                    <div class="col-md-3"><span>监考老师：</span><span>{{invigilator}}</span></div>
+                    <div class="col-md-3"><span>电话号码：</span><span>{{mobiles}}</span></div>
                 </div>
-            </td>
-        </tr>
+            </div>
+            <div class="card-footer text-right">
+                <div class="btn-group" role="group">
+                    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                        {{#if canOperator}}
+                        <div class="btn-group mr-2 mt-2" role="group" aria-label="First group">
+                            <button type="button" class="btn btn-primary edit" data-id="{{examinationNoticeDetailId}}">
+                                编辑
+                            </button>
+                            <button type="button" class="btn btn-outline-danger del"
+                                    data-id="{{examinationNoticeReleaseId}}"
+                                    data-name="{{title}}">删除
+                            </button>
+                        </div>
+                        {{/if}}
+                        <div class="btn-group mr-2 mt-2" role="group" aria-label="Second group">
+                            {{#if canSubscribeSms}}
+                            <button type="button" class="btn btn-danger btn-sm subscribe_sms"
+                                    data-id="{{examinationNoticeDetailId}}">订阅短信通知
+                            </button>
+                            {{else}}
+                            <button type="button" class="btn btn-secondary disabled btn-sm">已订阅短信通知
+                            </button>
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         {{/each}}
     </script>
 
