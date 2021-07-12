@@ -23,6 +23,7 @@ import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.TableSawUtil;
 import top.zbeboy.zbase.vo.educational.examination.ExaminationNoticeReleaseAddVo;
+import top.zbeboy.zbase.vo.educational.examination.ExaminationNoticeReleaseEditVo;
 import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
 import top.zbeboy.zone.service.excel.ExaminationNoticeExcel;
 import top.zbeboy.zone.service.upload.FileBean;
@@ -145,6 +146,20 @@ public class ExaminationRestController {
         Users users = SessionUtil.getUserFromSession();
         examinationNoticeReleaseAddVo.setUsername(users.getUsername());
         AjaxUtil<Map<String, Object>> ajaxUtil = educationalExaminationService.releaseSave(examinationNoticeReleaseAddVo);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 发布更新
+     *
+     * @param examinationNoticeReleaseEditVo 数据
+     * @return true or false
+     */
+    @PostMapping("/web/educational/examination/release/update")
+    public ResponseEntity<Map<String, Object>> releaseUpdate(ExaminationNoticeReleaseEditVo examinationNoticeReleaseEditVo) {
+        Users users = SessionUtil.getUserFromSession();
+        examinationNoticeReleaseEditVo.setUsername(users.getUsername());
+        AjaxUtil<Map<String, Object>> ajaxUtil = educationalExaminationService.releaseUpdate(examinationNoticeReleaseEditVo);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
