@@ -14,14 +14,10 @@ import top.zbeboy.zbase.bean.educational.examination.ExaminationNoticeReleaseBea
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.ExaminationNoticeDetail;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
-import top.zbeboy.zbase.feign.data.StaffService;
-import top.zbeboy.zbase.feign.data.StudentService;
 import top.zbeboy.zbase.feign.educational.examination.EducationalExaminationService;
-import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zbase.tools.service.util.*;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
-import top.zbeboy.zbase.tools.web.util.pagination.TableSawUtil;
 import top.zbeboy.zbase.vo.educational.examination.ExaminationNoticeReleaseAddVo;
 import top.zbeboy.zbase.vo.educational.examination.ExaminationNoticeReleaseEditVo;
 import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
@@ -44,15 +40,6 @@ public class ExaminationRestController {
 
     @Resource
     private UploadService uploadService;
-
-    @Resource
-    private UsersTypeService usersTypeService;
-
-    @Resource
-    private StaffService staffService;
-
-    @Resource
-    private StudentService studentService;
 
     /**
      * 数据
