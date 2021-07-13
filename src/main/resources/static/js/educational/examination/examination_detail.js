@@ -1,5 +1,5 @@
 //# sourceURL=examination_detail.js
-require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active", "tablesaw", "messenger"],
+require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active", "tablesaw", "messenger", "jquery.fileupload-validate"],
     function ($, _, tools, Handlebars, Swal, navActive) {
 
         /*
@@ -9,6 +9,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             return {
                 data: web_path + '/web/educational/examination/detail/paging',
                 subscribe_sms: web_path + '/web/educational/examination/detail/subscribe_sms',
+                file_upload_url: web_path + '/web/educational/examination/detail/upload/file',
                 page: '/web/menu/educational/examination'
             };
         }
@@ -16,7 +17,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
         navActive(getAjaxUrl().page);
 
         var page_param = {
-            examinationNoticeReleaseId:$('#examinationNoticeReleaseId').val()
+            examinationNoticeReleaseId: $('#examinationNoticeReleaseId').val()
         };
 
         /*
@@ -91,6 +92,53 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             cleanParam();
             refreshSearch();
             init();
+        });
+
+        // 上传组件
+        $('#batchImport').fileupload({
+            url: getAjaxUrl().file_upload_url,
+            dataType: 'json',
+            maxFileSize: 500000000,// 500MB
+            maxNumberOfFiles: 1,
+            acceptFileTypes: /(xls|XLS|xlsx|XLSX)$/i,
+            formAcceptCharset: 'utf-8',
+            messages: {
+                acceptFileTypes: '仅支持xls或xlsx类型',
+                maxFileSize: '单文件上传仅允许500MB大小'
+            },
+            submit: function (e, data) {
+                data.formData = {
+                    'examinationNoticeReleaseId': page_param.examinationNoticeReleaseId
+                };
+            },
+            done: function (e, data) {
+                Messenger().post({
+                    message: data.result.msg,
+                    type: data.result.state ? 'success' : 'error',
+                    showCloseButton: true
+                });
+                $('#importBtn').text('批量导入');
+                init();
+            },
+            progressall: function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('#importBtn').text('导入中...' + progress + '%');
+            }
+        }).on('fileuploadadd', function (evt, data) {
+            var isOk = true;
+            var $this = $(this);
+            var validation = data.process(function () {
+                return $this.fileupload('process', data);
+            });
+            validation.fail(function (data) {
+                isOk = false;
+                Messenger().post({
+                    message: '上传失败: ' + data.files[0].error,
+                    type: 'error',
+                    showCloseButton: true
+                });
+            });
+            return isOk;
         });
 
         $('#refresh').click(function () {

@@ -44,7 +44,9 @@ public class ExaminationViewController {
      */
     @GetMapping("/web/educational/examination/look/{id}")
     public String look(@PathVariable("id") String id, ModelMap modelMap) {
+        Users users = SessionUtil.getUserFromSession();
         modelMap.put("examinationNoticeReleaseId", id);
+        modelMap.addAttribute("canOperator", educationalExaminationService.canOperator(users.getUsername(), id));
         return "web/educational/examination/examination_detail::#page-wrapper";
     }
 

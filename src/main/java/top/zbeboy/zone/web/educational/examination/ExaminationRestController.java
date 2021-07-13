@@ -176,4 +176,58 @@ public class ExaminationRestController {
         AjaxUtil<ExaminationNoticeDetailBean> ajaxUtil = educationalExaminationService.detailData(simplePaginationUtil);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
+
+    /**
+     * 上传文件
+     *
+     * @param request 数据
+     * @return true or false
+     */
+    @PostMapping("/web/educational/examination/detail/upload/file")
+    public ResponseEntity<Map<String, Object>> detailUploadFile(MultipartHttpServletRequest request) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        try {
+            Users users = SessionUtil.getUserFromSession();
+            String examinationNoticeReleaseId = request.getParameter("examinationNoticeReleaseId");
+            String path = Workbook.tempPath();
+            List<FileBean> fileBeens = uploadService.upload(request,
+                    RequestUtil.getRealPath(request) + path, RequestUtil.getIpAddress(request));
+
+            Map<String, Object> map = new HashMap<>();
+            for (FileBean fileBean : fileBeens) {
+                ExaminationNoticeExcel examinationNoticeExcel = new ExaminationNoticeExcel(fileBean.getRelativePath(), 2);
+                map = examinationNoticeExcel.readExcelWithTitle();
+                FilesUtil.deleteFile(fileBean.getRelativePath());
+            }
+            if (map.containsKey(ReadExcelUtil.SHEETS_KEY)) {
+
+                List<ExaminationNoticeDetail> beans = new ArrayList<>();
+                Integer sheets = (Integer) map.get(ReadExcelUtil.SHEETS_KEY);
+                for (int i = 0; i < sheets; i++) {
+                    if (map.containsKey(ReadExcelUtil.DATA_KEY + i)) {
+                        List<ExaminationNoticeDetail> data = (List<ExaminationNoticeDetail>) map.get(ReadExcelUtil.DATA_KEY + i);
+                        if (Objects.nonNull(data)) {
+                            for (ExaminationNoticeDetail examinationNoticeDetail : data) {
+                                examinationNoticeDetail.setExaminationNoticeReleaseId(examinationNoticeReleaseId);
+                            }
+
+                            beans.addAll(data);
+                        }
+                    }
+                }
+
+                if (!beans.isEmpty()) {
+                    ajaxUtil = educationalExaminationService.detailBatchSave(beans, users.getUsername(), examinationNoticeReleaseId);
+                } else {
+                    ajaxUtil.fail().msg("无数据");
+                }
+            } else {
+                ajaxUtil.fail().msg("上传失败，无数据");
+            }
+        } catch (Exception e) {
+            log.error("Upload file exception,is {}", e);
+            ajaxUtil.fail().msg("上传文件失败： " + e.getMessage());
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
 }
