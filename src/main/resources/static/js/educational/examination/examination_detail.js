@@ -10,6 +10,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
                 data: web_path + '/web/educational/examination/detail/paging',
                 subscribe_sms: web_path + '/web/educational/examination/detail/subscribe_sms',
                 file_upload_url: web_path + '/web/educational/examination/detail/upload/file',
+                add:'/web/educational/examination/detail/add',
                 page: '/web/menu/educational/examination'
             };
         }
@@ -143,6 +144,10 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
 
         $('#refresh').click(function () {
             init();
+        });
+
+        $('#add').click(function (){
+            $.address.value(getAjaxUrl().add + "/" + page_param.examinationNoticeReleaseId);
         });
 
         $(param_id.courseName).keyup(function (event) {

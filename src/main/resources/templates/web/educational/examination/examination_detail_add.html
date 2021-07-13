@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="br-pageheader pd-y-15 pd-l-20">
+        <nav class="breadcrumb pd-0 mg-0 tx-12">
+            <a class="breadcrumb-item dy_href" href="#/web/menu/educational/examination">列表</a>
+            <a class="breadcrumb-item dy_href" href="javascript:"
+               th:href="${'#/web/educational/examination/look/' + examinationNoticeReleaseId}">详情</a>
+            <span class="breadcrumb-item active">添加</span>
+        </nav>
+    </div><!-- br-pageheader -->
+    <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
+        <h4 class="tx-gray-800 mg-b-5">教务考试详情</h4>
+        <p class="mg-b-0">添加教务考试详情。</p>
+    </div>
+
+    <div class="br-pagebody">
+        <div class="br-section-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <form id="app_form">
+                        <div class="form-group">
+                            <label>序号</label>
+                            <input class="form-control" name="serialNumber"
+                                   id="serialNumber" type="number" placeholder="序号"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>课程号</label>
+                            <input class="form-control" name="courseNumber"
+                                   id="courseNumber" placeholder="课程号"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>课程</label>
+                            <input class="form-control" name="courseName"
+                                   id="courseName" placeholder="课程"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>班级</label>
+                            <input class="form-control" name="organizeName"
+                                   id="organizeName" placeholder="班级"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>人数</label>
+                            <input class="form-control" name="peopleNumber"
+                                   id="peopleNumber" type="number" placeholder="人数"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>序号区间</label>
+                            <input class="form-control" name="serialNumberRange"
+                                   id="serialNumberRange" placeholder="序号区间"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>考试周</label>
+                            <input class="form-control" name="examWeek"
+                                   id="examWeek" type="number" placeholder="考试周"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>考试日期</label>
+                            <input class="form-control" name="examDate"
+                                   id="examDate" placeholder="考试日期"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>星期</label>
+                            <input class="form-control" name="weekday"
+                                   id="weekday" placeholder="星期"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>考试时间</label>
+                            <input class="form-control" name="examTime"
+                                   id="examTime" placeholder="考试时间"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>考试教室</label>
+                            <input class="form-control" name="examClassroom"
+                                   id="examClassroom" placeholder="考试教室"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>监考老师</label>
+                            <input class="form-control" name="invigilator"
+                                   id="invigilator" placeholder="监考老师"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>主考教师</label>
+                            <input class="form-control" name="chiefExaminer"
+                                   id="chiefExaminer" placeholder="主考教师"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>电话号码</label>
+                            <input class="form-control" name="mobiles"
+                                   id="mobiles" placeholder="电话号码"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group text-center">
+                            <button type="button" class="btn btn-primary text-center" id="save">保存</button>
+                            <button type="reset" class="btn btn-default">重置</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/educational/examination/examination_detail_add.js')}"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>
