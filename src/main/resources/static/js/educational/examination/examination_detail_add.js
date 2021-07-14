@@ -1,13 +1,14 @@
 //# sourceURL=examination_detail_add.js
-require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active", "messenger", "bootstrap-maxlength"],
+require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active", "messenger", "flatpickr-zh"],
     function ($, _, tools, Handlebars, Swal, navActive) {
 
         /*
          ajax url.
          */
         var ajax_url = {
-            save: web_path + '/web/educational/examination/release/save',
-            page: '/web/menu/educational/examination'
+            save: web_path + '/web/educational/examination/detail/save',
+            page: '/web/menu/educational/examination',
+            back: '/web/educational/examination/look'
         };
 
         // 刷新时选中菜单
@@ -17,8 +18,20 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
          参数id
          */
         var param_id = {
-            title: '#title',
-            remark:'#remark'
+            serialNumber: '#serialNumber',
+            courseNumber: '#courseNumber',
+            courseName: '#courseName',
+            organizeName: '#organizeName',
+            peopleNumber: '#peopleNumber',
+            serialNumberRange: '#serialNumberRange',
+            examWeek: '#examWeek',
+            examDate: '#examDate',
+            weekday: '#weekday',
+            examTime: '#examTime',
+            examClassroom: '#examClassroom',
+            invigilator: '#invigilator',
+            chiefExaminer: '#chiefExaminer',
+            mobiles: '#mobiles'
         };
 
         var button_id = {
@@ -29,54 +42,93 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             }
         };
 
+        var page_param = {
+            examinationNoticeReleaseId: $('#examinationNoticeReleaseId').val()
+        };
+
         /*
          参数
          */
         var param = {
-            title: '',
-            remark:''
+            serialNumber: '',
+            courseNumber: '',
+            courseName: '',
+            organizeName: '',
+            peopleNumber: '',
+            serialNumberRange: '',
+            examWeek: '',
+            examDate: '',
+            weekday: '',
+            examTime: '',
+            examClassroom: '',
+            invigilator: '',
+            chiefExaminer: '',
+            mobiles: '',
+            examinationNoticeReleaseId: ''
         };
 
         /**
          * 初始化参数
          */
         function initParam() {
-            param.title = $(param_id.title).val();
-            param.remark = $(param_id.remark).val();
+            param.serialNumber = $(param_id.serialNumber).val();
+            param.courseNumber = _.trim($(param_id.courseNumber).val());
+            param.courseName = _.trim($(param_id.courseName).val());
+            param.organizeName = _.trim($(param_id.organizeName).val());
+            param.peopleNumber = $(param_id.peopleNumber).val();
+            param.serialNumberRange = _.trim($(param_id.serialNumberRange).val());
+            param.examWeek = $(param_id.examWeek).val();
+            param.examDate = _.trim($(param_id.examDate).val());
+            param.weekday = $(param_id.weekday).val();
+            param.examTime = _.trim($(param_id.examTime).val());
+            param.examClassroom = _.trim($(param_id.examClassroom).val());
+            param.invigilator = $(param_id.invigilator).val();
+            param.chiefExaminer = $(param_id.chiefExaminer).val();
+            param.mobiles = _.trim($(param_id.mobiles).val());
+            param.examinationNoticeReleaseId = page_param.examinationNoticeReleaseId;
         }
 
-        /*
-       初始化数据
-       */
-        init();
-
-        /**
-         * 初始化界面
-         */
-        function init() {
-            initMaxLength();
-        }
-
-        /**
-         * 初始化Input max length
-         */
-        function initMaxLength() {
-            $(param_id.title).maxlength({
-                alwaysShow: true,
-                threshold: 10,
-                warningClass: "text-success",
-                limitReachedClass: "text-danger"
-            });
-        }
-
-        // 检验标题
-        $(param_id.title).blur(function () {
+        $(param_id.serialNumber).blur(function () {
             initParam();
-            var title = param.title;
-            if (title.length <= 0 || title.length > 100) {
-                tools.validErrorDom(param_id.title, '标题100个字符以内');
+            var serialNumber = param.serialNumber;
+            if (serialNumber.length <= 0) {
+                tools.validErrorDom(param_id.serialNumber, '请填写序号');
             } else {
-                tools.validSuccessDom(param_id.title);
+                tools.validSuccessDom(param_id.serialNumber);
+            }
+        });
+
+        $(param_id.courseName).blur(function () {
+            initParam();
+            var courseName = param.courseName;
+            if (courseName.length <= 0) {
+                tools.validErrorDom(param_id.courseName, '请填写课程');
+            } else {
+                tools.validSuccessDom(param_id.courseName);
+            }
+        });
+
+        $(param_id.examDate).flatpickr({
+            "locale": "zh"
+        });
+
+        $(param_id.examTime).blur(function () {
+            initParam();
+            var examTime = param.examTime;
+            if (examTime.length <= 0) {
+                tools.validErrorDom(param_id.examTime, '请填写考试时间');
+            } else {
+                tools.validSuccessDom(param_id.examTime);
+            }
+        });
+
+        $(param_id.examClassroom).blur(function () {
+            initParam();
+            var examClassroom = param.examClassroom;
+            if (examClassroom.length <= 0) {
+                tools.validErrorDom(param_id.examClassroom, '请填写考试教室');
+            } else {
+                tools.validSuccessDom(param_id.examClassroom);
             }
         });
 
@@ -85,15 +137,55 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
          */
         $(button_id.save.id).click(function () {
             initParam();
-            validTitle();
+            validSerialNumber();
         });
 
-        function validTitle() {
-            var title = param.title;
-            if (title.length <= 0 || title.length > 100) {
-                tools.validErrorDom(param_id.title, '标题100个字符以内');
+        function validSerialNumber() {
+            var serialNumber = param.serialNumber;
+            if (serialNumber.length <= 0) {
+                tools.validErrorDom(param_id.serialNumber, '请填写序号');
             } else {
-                tools.validSuccessDom(param_id.title);
+                tools.validSuccessDom(param_id.serialNumber);
+                validCourseName();
+            }
+        }
+
+        function validCourseName() {
+            var courseName = param.courseName;
+            if (courseName.length <= 0) {
+                tools.validErrorDom(param_id.courseName, '请填写课程');
+            } else {
+                tools.validSuccessDom(param_id.courseName);
+                validExamDate();
+            }
+        }
+
+        function validExamDate() {
+            var examDate = param.examDate;
+            if (examDate.length <= 0) {
+                tools.validErrorDom(param_id.examDate, '请填写考试日期');
+            } else {
+                tools.validSuccessDom(param_id.examDate);
+                validExamTime();
+            }
+        }
+
+        function validExamTime() {
+            var examTime = param.examTime;
+            if (examTime.length <= 0) {
+                tools.validErrorDom(param_id.examTime, '请填写考试时间');
+            } else {
+                tools.validSuccessDom(param_id.examTime);
+                validExamClassroom();
+            }
+        }
+
+        function validExamClassroom() {
+            var examClassroom = param.examClassroom;
+            if (examClassroom.length <= 0) {
+                tools.validErrorDom(param_id.examClassroom, '请填写考试教室');
+            } else {
+                tools.validSuccessDom(param_id.examClassroom);
                 sendAjax();
             }
         }
@@ -115,7 +207,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
                             type: "success",
                             confirmButtonText: "确定",
                             preConfirm: function () {
-                                $.address.value(ajax_url.page);
+                                $.address.value(ajax_url.back + "/" + page_param.examinationNoticeReleaseId);
                             }
                         });
                     } else {

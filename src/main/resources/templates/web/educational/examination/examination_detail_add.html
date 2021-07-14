@@ -24,7 +24,7 @@
                 <div class="col-md-12">
                     <form id="app_form">
                         <div class="form-group">
-                            <label>序号</label>
+                            <label>(必填)序号</label>
                             <input class="form-control" name="serialNumber"
                                    id="serialNumber" type="number" placeholder="序号"/>
                             <div class="invalid-feedback"></div>
@@ -36,7 +36,7 @@
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
-                            <label>课程</label>
+                            <label>(必填)课程</label>
                             <input class="form-control" name="courseName"
                                    id="courseName" placeholder="课程"/>
                             <div class="invalid-feedback"></div>
@@ -66,25 +66,33 @@
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
-                            <label>考试日期</label>
+                            <label>(必填)考试日期</label>
                             <input class="form-control" name="examDate"
                                    id="examDate" placeholder="考试日期"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>星期</label>
-                            <input class="form-control" name="weekday"
-                                   id="weekday" placeholder="星期"/>
+                            <select class="form-control" id="weekday" name="weekday">
+                                <option value="">请选择星期</option>
+                                <option value="一">星期一</option>
+                                <option value="二">星期二</option>
+                                <option value="三">星期三</option>
+                                <option value="四">星期四</option>
+                                <option value="五">星期五</option>
+                                <option value="六">星期六</option>
+                                <option value="七">星期天</option>
+                            </select>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
-                            <label>考试时间</label>
+                            <label>(必填)考试时间</label>
                             <input class="form-control" name="examTime"
                                    id="examTime" placeholder="考试时间"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
-                            <label>考试教室</label>
+                            <label>(必填)考试教室</label>
                             <input class="form-control" name="examClassroom"
                                    id="examClassroom" placeholder="考试教室"/>
                             <div class="invalid-feedback"></div>
@@ -102,7 +110,7 @@
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
-                            <label>电话号码</label>
+                            <label>电话号码(多个，请用英文逗号分隔)</label>
                             <input class="form-control" name="mobiles"
                                    id="mobiles" placeholder="电话号码"/>
                             <div class="invalid-feedback"></div>
@@ -117,6 +125,7 @@
         </div>
     </div>
 
+    <input type="hidden" id="examinationNoticeReleaseId" th:value="${examinationNoticeReleaseId}"/>
     <input type="hidden" class="dy_script"
            th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/educational/examination/examination_detail_add.js')}"/>
 </div>

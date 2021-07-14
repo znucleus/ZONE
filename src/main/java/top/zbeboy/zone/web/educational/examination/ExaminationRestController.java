@@ -18,6 +18,8 @@ import top.zbeboy.zbase.feign.educational.examination.EducationalExaminationServ
 import top.zbeboy.zbase.tools.service.util.*;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
+import top.zbeboy.zbase.vo.educational.examination.ExaminationNoticeDetailAddVo;
+import top.zbeboy.zbase.vo.educational.examination.ExaminationNoticeDetailEditVo;
 import top.zbeboy.zbase.vo.educational.examination.ExaminationNoticeReleaseAddVo;
 import top.zbeboy.zbase.vo.educational.examination.ExaminationNoticeReleaseEditVo;
 import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
@@ -228,6 +230,47 @@ public class ExaminationRestController {
             log.error("Upload file exception,is {}", e);
             ajaxUtil.fail().msg("上传文件失败： " + e.getMessage());
         }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 详情保存
+     *
+     * @param examinationNoticeDetailAddVo 数据
+     * @return true or false
+     */
+    @PostMapping("/web/educational/examination/detail/save")
+    public ResponseEntity<Map<String, Object>> detailSave(ExaminationNoticeDetailAddVo examinationNoticeDetailAddVo) {
+        Users users = SessionUtil.getUserFromSession();
+        examinationNoticeDetailAddVo.setUsername(users.getUsername());
+        AjaxUtil<Map<String, Object>> ajaxUtil = educationalExaminationService.detailSave(examinationNoticeDetailAddVo);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 详情更新
+     *
+     * @param examinationNoticeDetailEditVo 数据
+     * @return true or false
+     */
+    @PostMapping("/web/educational/examination/detail/update")
+    public ResponseEntity<Map<String, Object>> detailUpdate(ExaminationNoticeDetailEditVo examinationNoticeDetailEditVo) {
+        Users users = SessionUtil.getUserFromSession();
+        examinationNoticeDetailEditVo.setUsername(users.getUsername());
+        AjaxUtil<Map<String, Object>> ajaxUtil = educationalExaminationService.detailUpdate(examinationNoticeDetailEditVo);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 删除
+     *
+     * @param id 详情id
+     * @return true or false
+     */
+    @PostMapping("/web/educational/examination/detail/delete")
+    public ResponseEntity<Map<String, Object>> detailDelete(@RequestParam("id") String id) {
+        Users users = SessionUtil.getUserFromSession();
+        AjaxUtil<Map<String, Object>> ajaxUtil = educationalExaminationService.detailDelete(users.getUsername(), id);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }
