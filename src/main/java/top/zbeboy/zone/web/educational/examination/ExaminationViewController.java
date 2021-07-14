@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import top.zbeboy.zbase.domain.tables.pojos.ExaminationNoticeDetail;
 import top.zbeboy.zbase.domain.tables.pojos.ExaminationNoticeRelease;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.educational.examination.EducationalExaminationService;
@@ -115,6 +116,37 @@ public class ExaminationViewController {
             config.dataMerging(modelMap);
             page = "inline_tip::#page-wrapper";
         }
+        return page;
+    }
+
+    /**
+     * 详情编辑页面
+     *
+     * @param modelMap 页面对象
+     * @return 编辑页面
+     */
+    @GetMapping("/web/educational/examination/detail/edit/{id}")
+    public String detailEdit(@PathVariable("id") String id, ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        Users users = SessionUtil.getUserFromSession();
+        Optional<ExaminationNoticeDetail> optionalExaminationNoticeDetail = educationalExaminationService.findDetailById(id);
+        if (optionalExaminationNoticeDetail.isPresent()) {
+            ExaminationNoticeDetail examinationNoticeDetail = optionalExaminationNoticeDetail.get();
+            if (educationalExaminationService.canOperator(users.getUsername(), examinationNoticeDetail.getExaminationNoticeReleaseId())) {
+                modelMap.addAttribute("examinationNoticeDetail", examinationNoticeDetail);
+                page = "web/educational/examination/examination_detail_edit::#page-wrapper";
+            } else {
+                config.buildWarningTip("操作警告", "您无权限操作");
+                config.dataMerging(modelMap);
+                page = "inline_tip::#page-wrapper";
+            }
+        } else {
+            config.buildDangerTip("查询错误", "未查询到数据");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+
         return page;
     }
 }

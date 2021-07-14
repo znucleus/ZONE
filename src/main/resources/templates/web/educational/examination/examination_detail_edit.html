@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="page-wrapper">
+    <div class="br-pageheader pd-y-15 pd-l-20">
+        <nav class="breadcrumb pd-0 mg-0 tx-12">
+            <a class="breadcrumb-item dy_href" href="#/web/menu/educational/examination">列表</a>
+            <a class="breadcrumb-item dy_href" href="javascript:"
+               th:href="${'#/web/educational/examination/look/' + examinationNoticeDetail.examinationNoticeReleaseId}">详情</a>
+            <span class="breadcrumb-item active">编辑</span>
+        </nav>
+    </div><!-- br-pageheader -->
+    <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
+        <h4 class="tx-gray-800 mg-b-5">教务考试详情</h4>
+        <p class="mg-b-0">编辑教务考试详情。</p>
+    </div>
+
+    <div class="br-pagebody">
+        <div class="br-section-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <form id="app_form">
+                        <div class="form-group">
+                            <label>(必填)序号</label>
+                            <input class="form-control" name="serialNumber"
+                                   id="serialNumber" type="number" placeholder="序号" th:value="${examinationNoticeDetail.serialNumber}"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>课程号</label>
+                            <input class="form-control" name="courseNumber"
+                                   id="courseNumber" placeholder="课程号" th:value="${examinationNoticeDetail.courseNumber}"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>(必填)课程</label>
+                            <input class="form-control" name="courseName"
+                                   id="courseName" placeholder="课程" th:value="${examinationNoticeDetail.courseName}"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>班级</label>
+                            <input class="form-control" name="organizeName"
+                                   id="organizeName" placeholder="班级" th:value="${examinationNoticeDetail.organizeName}"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>人数</label>
+                            <input class="form-control" name="peopleNumber"
+                                   id="peopleNumber" type="number" placeholder="人数" th:value="${examinationNoticeDetail.peopleNumber}"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>序号区间</label>
+                            <input class="form-control" name="serialNumberRange"
+                                   id="serialNumberRange" placeholder="序号区间" th:value="${examinationNoticeDetail.serialNumberRange}"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>考试周</label>
+                            <input class="form-control" name="examWeek"
+                                   id="examWeek" type="number" placeholder="考试周" th:value="${examinationNoticeDetail.examWeek}"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>(必填)考试日期</label>
+                            <input class="form-control" name="examDate"
+                                   id="examDate" placeholder="考试日期" th:value="${examinationNoticeDetail.examDate}"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>星期</label>
+                            <select class="form-control" id="weekday" name="weekday">
+                                <option value="">请选择星期</option>
+                                <option value="一">星期一</option>
+                                <option value="二">星期二</option>
+                                <option value="三">星期三</option>
+                                <option value="四">星期四</option>
+                                <option value="五">星期五</option>
+                                <option value="六">星期六</option>
+                                <option value="七">星期天</option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>(必填)考试时间</label>
+                            <input class="form-control" name="examTime"
+                                   id="examTime" placeholder="考试时间" th:value="${examinationNoticeDetail.examTime}"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>(必填)考试教室</label>
+                            <input class="form-control" name="examClassroom"
+                                   id="examClassroom" placeholder="考试教室" th:value="${examinationNoticeDetail.examClassroom}"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>监考老师</label>
+                            <input class="form-control" name="invigilator"
+                                   id="invigilator" placeholder="监考老师" th:value="${examinationNoticeDetail.invigilator}"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>主考教师</label>
+                            <input class="form-control" name="chiefExaminer"
+                                   id="chiefExaminer" placeholder="主考教师" th:value="${examinationNoticeDetail.chiefExaminer}"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>电话号码(多个，请用英文逗号分隔)</label>
+                            <input class="form-control" name="mobiles"
+                                   id="mobiles" placeholder="电话号码" th:value="${examinationNoticeDetail.mobiles}"/>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group text-center">
+                            <button type="button" class="btn btn-primary text-center" id="save">保存</button>
+                            <button type="reset" class="btn btn-default">重置</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" id="examinationNoticeReleaseId" th:value="${examinationNoticeDetail.examinationNoticeReleaseId}"/>
+    <input type="hidden" id="examinationNoticeDetailId" th:value="${examinationNoticeDetail.examinationNoticeDetailId}"/>
+    <input type="hidden" id="paramWeekday" th:value="${examinationNoticeDetail.weekday}"/>
+    <input type="hidden" class="dy_script"
+           th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/educational/examination/examination_detail_edit.js')}"/>
+</div>
+<!-- /#page-wrapper -->
+</body>
+
+</html>

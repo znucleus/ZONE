@@ -11,6 +11,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
                 subscribe_sms: web_path + '/web/educational/examination/detail/subscribe_sms',
                 file_upload_url: web_path + '/web/educational/examination/detail/upload/file',
                 add:'/web/educational/examination/detail/add',
+                edit:'/web/educational/examination/detail/edit',
                 page: '/web/menu/educational/examination'
             };
         }
@@ -288,6 +289,10 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             $('#totalSize').text(data.page.totalSize);
             $(tableElement).html(template(data));
         }
+
+        tableElement.delegate('.edit', "click", function () {
+            $.address.value(getAjaxUrl().edit + "/" + $(this).attr('data-id'));
+        });
 
         tableElement.delegate('.subscribe_sms', "click", function () {
             sendSubscribeAjax($(this).attr('data-id'));
