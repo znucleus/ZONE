@@ -12,6 +12,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
                 file_upload_url: web_path + '/web/educational/examination/detail/upload/file',
                 add:'/web/educational/examination/detail/add',
                 edit:'/web/educational/examination/detail/edit',
+                del:'/web/educational/examination/detail/delete',
                 page: '/web/menu/educational/examination'
             };
         }
@@ -293,6 +294,68 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
         tableElement.delegate('.edit', "click", function () {
             $.address.value(getAjaxUrl().edit + "/" + $(this).attr('data-id'));
         });
+
+        tableElement.delegate('.del', "click", function () {
+            detailDel($(this).attr('data-id'), $(this).attr('data-name'));
+        });
+
+        /**
+         * 删除确认
+         * @param id 发布id
+         * @param name 标题
+         */
+        function detailDel(id, name) {
+            Swal.fire({
+                title: "确定删除 '" + name + "' 吗？",
+                text: "教务考试详情删除！",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                preConfirm: function () {
+                    del(id);
+                }
+            });
+        }
+
+        /**
+         * 删除
+         * @param id
+         */
+        function del(id) {
+            sendDelAjax(id);
+        }
+
+        /**
+         * 删除ajax
+         * @param id
+         */
+        function sendDelAjax(id) {
+            $.ajax({
+                type: 'POST',
+                url: getAjaxUrl().del,
+                data: {id: id},
+                success: function (data) {
+                    Messenger().post({
+                        message: data.msg,
+                        type: data.state ? 'success' : 'error',
+                        showCloseButton: true
+                    });
+
+                    if (data.state) {
+                        init();
+                    }
+                },
+                error: function (XMLHttpRequest) {
+                    Messenger().post({
+                        message: 'Request error : ' + XMLHttpRequest.status + " " + XMLHttpRequest.statusText,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        }
 
         tableElement.delegate('.subscribe_sms', "click", function () {
             sendSubscribeAjax($(this).attr('data-id'));
