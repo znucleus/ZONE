@@ -10,9 +10,9 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
                 data: web_path + '/web/educational/examination/detail/paging',
                 subscribe_sms: web_path + '/web/educational/examination/detail/subscribe_sms',
                 file_upload_url: web_path + '/web/educational/examination/detail/upload/file',
-                add:'/web/educational/examination/detail/add',
-                edit:'/web/educational/examination/detail/edit',
-                del:'/web/educational/examination/detail/delete',
+                add: '/web/educational/examination/detail/add',
+                edit: '/web/educational/examination/detail/edit',
+                del: '/web/educational/examination/detail/delete',
                 page: '/web/menu/educational/examination'
             };
         }
@@ -32,7 +32,12 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             extraSearch: JSON.stringify({
                 courseName: '',
                 organizeName: '',
+                examWeek: '',
+                examDate: '',
+                weekday: '',
+                examTime: '',
                 examClassroom: '',
+                invigilator: '',
                 chiefExaminer: '',
                 examinationNoticeReleaseId: page_param.examinationNoticeReleaseId
             })
@@ -42,10 +47,15 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
         web storage key.
         */
         var webStorageKey = {
-            COURSE_NAME: 'EDUCATIONAL_EXAMINATION_DETAIL_COURSE_NAME_SEARCH',
-            ORGANIZE_NAME: 'EDUCATIONAL_EXAMINATION_DETAIL_ORGANIZE_NAME_SEARCH',
-            EXAM_CLASSROOM: 'EDUCATIONAL_EXAMINATION_DETAIL_EXAM_CLASSROOM_SEARCH',
-            CHIEF_EXAMINER: 'EDUCATIONAL_EXAMINATION_DETAIL_CHIEF_EXAMINER_SEARCH'
+            COURSE_NAME: 'EDUCATIONAL_EXAMINATION_DETAIL_COURSE_NAME_SEARCH_' + page_param.examinationNoticeReleaseId,
+            ORGANIZE_NAME: 'EDUCATIONAL_EXAMINATION_DETAIL_ORGANIZE_NAME_SEARCH_' + page_param.examinationNoticeReleaseId,
+            EXAM_WEEK: 'EDUCATIONAL_EXAMINATION_DETAIL_EXAM_WEEK_SEARCH_' + page_param.examinationNoticeReleaseId,
+            EXAM_DATE: 'EDUCATIONAL_EXAMINATION_DETAIL_EXAM_DATE_SEARCH_' + page_param.examinationNoticeReleaseId,
+            WEEKDAY: 'EDUCATIONAL_EXAMINATION_DETAIL_WEEKDAY_SEARCH_' + page_param.examinationNoticeReleaseId,
+            EXAM_TIME: 'EDUCATIONAL_EXAMINATION_DETAIL_EXAM_TIME_SEARCH_' + page_param.examinationNoticeReleaseId,
+            INVIGILATOR: 'EDUCATIONAL_EXAMINATION_DETAIL_INVIGILATOR_SEARCH_' + page_param.examinationNoticeReleaseId,
+            EXAM_CLASSROOM: 'EDUCATIONAL_EXAMINATION_DETAIL_EXAM_CLASSROOM_SEARCH_' + page_param.examinationNoticeReleaseId,
+            CHIEF_EXAMINER: 'EDUCATIONAL_EXAMINATION_DETAIL_CHIEF_EXAMINER_SEARCH_' + page_param.examinationNoticeReleaseId
         };
 
         /*
@@ -54,6 +64,11 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
         var param_id = {
             courseName: '#search_course_name',
             organizeName: '#search_organize_name',
+            examWeek: '#search_exam_week',
+            examDate: '#search_exam_date',
+            weekday: '#search_weekday',
+            examTime: '#search_exam_time',
+            invigilator: '#search_invigilator',
             examClassroom: '#search_exam_classroom',
             chiefExaminer: '#search_chief_examiner',
         };
@@ -64,6 +79,11 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
         function cleanParam() {
             $(param_id.courseName).val('');
             $(param_id.organizeName).val('');
+            $(param_id.examWeek).val('');
+            $(param_id.examDate).val('');
+            $(param_id.weekday).val('');
+            $(param_id.examTime).val('');
+            $(param_id.invigilator).val('');
             $(param_id.examClassroom).val('');
             $(param_id.chiefExaminer).val('');
         }
@@ -75,6 +95,11 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             if (typeof (Storage) !== "undefined") {
                 sessionStorage.setItem(webStorageKey.COURSE_NAME, $(param_id.courseName).val());
                 sessionStorage.setItem(webStorageKey.ORGANIZE_NAME, $(param_id.organizeName).val());
+                sessionStorage.setItem(webStorageKey.EXAM_WEEK, $(param_id.examWeek).val());
+                sessionStorage.setItem(webStorageKey.EXAM_DATE, $(param_id.examDate).val());
+                sessionStorage.setItem(webStorageKey.WEEKDAY, $(param_id.weekday).val());
+                sessionStorage.setItem(webStorageKey.EXAM_TIME, $(param_id.examTime).val());
+                sessionStorage.setItem(webStorageKey.INVIGILATOR, $(param_id.invigilator).val());
                 sessionStorage.setItem(webStorageKey.EXAM_CLASSROOM, $(param_id.examClassroom).val());
                 sessionStorage.setItem(webStorageKey.CHIEF_EXAMINER, $(param_id.chiefExaminer).val());
             }
@@ -148,7 +173,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             init();
         });
 
-        $('#add').click(function (){
+        $('#add').click(function () {
             $.address.value(getAjaxUrl().add + "/" + page_param.examinationNoticeReleaseId);
         });
 
@@ -160,6 +185,41 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
         });
 
         $(param_id.organizeName).keyup(function (event) {
+            if (event.keyCode === 13) {
+                refreshSearch();
+                init();
+            }
+        });
+
+        $(param_id.examWeek).keyup(function (event) {
+            if (event.keyCode === 13) {
+                refreshSearch();
+                init();
+            }
+        });
+
+        $(param_id.examDate).keyup(function (event) {
+            if (event.keyCode === 13) {
+                refreshSearch();
+                init();
+            }
+        });
+
+        $(param_id.weekday).keyup(function (event) {
+            if (event.keyCode === 13) {
+                refreshSearch();
+                init();
+            }
+        });
+
+        $(param_id.examTime).keyup(function (event) {
+            if (event.keyCode === 13) {
+                refreshSearch();
+                init();
+            }
+        });
+
+        $(param_id.invigilator).keyup(function (event) {
             if (event.keyCode === 13) {
                 refreshSearch();
                 init();
@@ -207,11 +267,21 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
         function initSearchContent() {
             var courseName = null;
             var organizeName = null;
+            var examWeek = null;
+            var examDate = null;
+            var weekday = null;
+            var examTime = null;
+            var invigilator = null;
             var examClassroom = null;
             var chiefExaminer = null;
             var params = {
                 courseName: '',
                 organizeName: '',
+                examWeek: '',
+                examDate: '',
+                weekday: '',
+                examTime: '',
+                invigilator: '',
                 examClassroom: '',
                 chiefExaminer: '',
                 examinationNoticeReleaseId: page_param.examinationNoticeReleaseId
@@ -219,6 +289,11 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             if (typeof (Storage) !== "undefined") {
                 courseName = sessionStorage.getItem(webStorageKey.COURSE_NAME);
                 organizeName = sessionStorage.getItem(webStorageKey.ORGANIZE_NAME);
+                examWeek = sessionStorage.getItem(webStorageKey.EXAM_WEEK);
+                examDate = sessionStorage.getItem(webStorageKey.EXAM_DATE);
+                weekday = sessionStorage.getItem(webStorageKey.WEEKDAY);
+                examTime = sessionStorage.getItem(webStorageKey.EXAM_TIME);
+                invigilator = sessionStorage.getItem(webStorageKey.INVIGILATOR);
                 examClassroom = sessionStorage.getItem(webStorageKey.EXAM_CLASSROOM);
                 chiefExaminer = sessionStorage.getItem(webStorageKey.CHIEF_EXAMINER);
             }
@@ -232,6 +307,36 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
                 params.organizeName = organizeName;
             } else {
                 params.organizeName = $(param_id.organizeName).val();
+            }
+
+            if (examWeek !== null) {
+                params.examWeek = examWeek;
+            } else {
+                params.examWeek = $(param_id.examWeek).val();
+            }
+
+            if (examDate !== null) {
+                params.examDate = examDate;
+            } else {
+                params.examDate = $(param_id.examDate).val();
+            }
+
+            if (weekday !== null) {
+                params.weekday = weekday;
+            } else {
+                params.weekday = $(param_id.weekday).val();
+            }
+
+            if (examTime !== null) {
+                params.examTime = examTime;
+            } else {
+                params.examTime = $(param_id.examTime).val();
+            }
+
+            if (invigilator !== null) {
+                params.invigilator = invigilator;
+            } else {
+                params.invigilator = $(param_id.invigilator).val();
             }
 
             if (examClassroom !== null) {
@@ -254,11 +359,21 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
         function initSearchInput() {
             var courseName = null;
             var organizeName = null;
+            var examWeek = null;
+            var examDate = null;
+            var weekday = null;
+            var examTime = null;
+            var invigilator = null;
             var examClassroom = null;
             var chiefExaminer = null;
             if (typeof (Storage) !== "undefined") {
                 courseName = sessionStorage.getItem(webStorageKey.COURSE_NAME);
                 organizeName = sessionStorage.getItem(webStorageKey.ORGANIZE_NAME);
+                examWeek = sessionStorage.getItem(webStorageKey.EXAM_WEEK);
+                examDate = sessionStorage.getItem(webStorageKey.EXAM_DATE);
+                weekday = sessionStorage.getItem(webStorageKey.WEEKDAY);
+                examTime = sessionStorage.getItem(webStorageKey.EXAM_TIME);
+                invigilator = sessionStorage.getItem(webStorageKey.INVIGILATOR);
                 examClassroom = sessionStorage.getItem(webStorageKey.EXAM_CLASSROOM);
                 chiefExaminer = sessionStorage.getItem(webStorageKey.CHIEF_EXAMINER);
             }
@@ -268,6 +383,26 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
 
             if (organizeName !== null) {
                 $(param_id.organizeName).val(organizeName);
+            }
+
+            if (examWeek !== null) {
+                $(param_id.examWeek).val(examWeek);
+            }
+
+            if (examDate !== null) {
+                $(param_id.examDate).val(examDate);
+            }
+
+            if (weekday !== null) {
+                $(param_id.weekday).val(weekday);
+            }
+
+            if (examTime !== null) {
+                $(param_id.examTime).val(examTime);
+            }
+
+            if (invigilator !== null) {
+                $(param_id.invigilator).val(invigilator);
             }
 
             if (examClassroom !== null) {
