@@ -1,5 +1,6 @@
 package top.zbeboy.zone.web.educational.examination;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -271,6 +272,24 @@ public class ExaminationRestController {
     public ResponseEntity<Map<String, Object>> detailDelete(@RequestParam("id") String id) {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Map<String, Object>> ajaxUtil = educationalExaminationService.detailDelete(users.getUsername(), id);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 短信订阅
+     *
+     * @param id 详情id
+     * @return true or false
+     */
+    @PostMapping("/web/educational/examination/sms-subscribe/save")
+    public ResponseEntity<Map<String, Object>> smsSubscribe(@RequestParam("id") String id) {
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
+        Users users = SessionUtil.getUserFromSession();
+        if (StringUtils.isNotBlank(users.getMobile())) {
+            ajaxUtil = educationalExaminationService.examinationSmsSubscribeSave(id, users.getMobile());
+        } else {
+            ajaxUtil.fail().msg("手机号为空，无法订阅");
+        }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

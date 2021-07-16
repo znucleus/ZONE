@@ -8,7 +8,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
         function getAjaxUrl() {
             return {
                 data: web_path + '/web/educational/examination/detail/paging',
-                subscribe_sms: web_path + '/web/educational/examination/detail/subscribe_sms',
+                subscribe_sms: web_path + '/web/educational/examination/sms-subscribe/save',
                 file_upload_url: web_path + '/web/educational/examination/detail/upload/file',
                 add: '/web/educational/examination/detail/add',
                 edit: '/web/educational/examination/detail/edit',
@@ -501,9 +501,8 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
          * @param examinationNoticeDetailId
          */
         function sendSubscribeAjax(examinationNoticeDetailId) {
-            $.get(getAjaxUrl().subscribe_sms, {
-                examinationNoticeDetailId: examinationNoticeDetailId,
-                subscribeType: 1
+            $.post(getAjaxUrl().subscribe_sms, {
+                id: examinationNoticeDetailId
             }, function (data) {
                 if (data.state) {
                     Swal.fire('订阅成功', data.msg, 'success');
