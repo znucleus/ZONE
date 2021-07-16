@@ -13,6 +13,7 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
             look: '/web/educational/examination/look',
             add: '/web/educational/examination/add',
             edit: '/web/educational/examination/edit',
+            authorize: '/web/educational/examination/authorize/add',
             page: '/web/menu/educational/examination'
         };
 
@@ -329,5 +330,12 @@ require(["jquery", "lodash", "tools", "handlebars", "nav.active", "sweetalert2",
                 listData(data);
             });
         }
+
+        /*
+        权限分配
+        */
+        $('#authorize').click(function () {
+            $.address.value(ajax_url.authorize);
+        });
 
     });

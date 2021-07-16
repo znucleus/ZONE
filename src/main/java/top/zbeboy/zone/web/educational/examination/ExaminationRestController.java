@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import top.zbeboy.zbase.bean.educational.calendar.SchoolCalendarAuthoritiesBean;
+import top.zbeboy.zbase.bean.educational.examination.ExaminationNoticeAuthoritiesBean;
 import top.zbeboy.zbase.bean.educational.examination.ExaminationNoticeDetailBean;
 import top.zbeboy.zbase.bean.educational.examination.ExaminationNoticeReleaseBean;
 import top.zbeboy.zbase.config.Workbook;
@@ -19,10 +21,9 @@ import top.zbeboy.zbase.feign.educational.examination.EducationalExaminationServ
 import top.zbeboy.zbase.tools.service.util.*;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
-import top.zbeboy.zbase.vo.educational.examination.ExaminationNoticeDetailAddVo;
-import top.zbeboy.zbase.vo.educational.examination.ExaminationNoticeDetailEditVo;
-import top.zbeboy.zbase.vo.educational.examination.ExaminationNoticeReleaseAddVo;
-import top.zbeboy.zbase.vo.educational.examination.ExaminationNoticeReleaseEditVo;
+import top.zbeboy.zbase.tools.web.util.pagination.TableSawUtil;
+import top.zbeboy.zbase.vo.educational.calendar.SchoolCalendarAuthoritiesAddVo;
+import top.zbeboy.zbase.vo.educational.examination.*;
 import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
 import top.zbeboy.zone.service.excel.ExaminationNoticeExcel;
 import top.zbeboy.zone.service.upload.FileBean;
@@ -290,6 +291,47 @@ public class ExaminationRestController {
         } else {
             ajaxUtil.fail().msg("手机号为空，无法订阅");
         }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 权限数据
+     *
+     * @param tableSawUtil 请求
+     * @return 数据
+     */
+    @GetMapping("/web/educational/examination/authorize/paging")
+    public ResponseEntity<Map<String, Object>> authorizeData(TableSawUtil tableSawUtil) {
+        Users users = SessionUtil.getUserFromSession();
+        tableSawUtil.setUsername(users.getUsername());
+        AjaxUtil<ExaminationNoticeAuthoritiesBean> ajaxUtil = educationalExaminationService.authorizeData(tableSawUtil);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 保存
+     *
+     * @param examinationNoticeAuthoritiesAddVo 数据
+     * @return true or false
+     */
+    @PostMapping("/web/educational/examination/authorize/save")
+    public ResponseEntity<Map<String, Object>> authorizeSave(ExaminationNoticeAuthoritiesAddVo examinationNoticeAuthoritiesAddVo) {
+        Users users = SessionUtil.getUserFromSession();
+        examinationNoticeAuthoritiesAddVo.setUsername(users.getUsername());
+        AjaxUtil<Map<String, Object>> ajaxUtil = educationalExaminationService.authorizeSave(examinationNoticeAuthoritiesAddVo);
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 删除
+     *
+     * @param id 权限id
+     * @return true or false
+     */
+    @PostMapping("/web/educational/examination/authorize/delete")
+    public ResponseEntity<Map<String, Object>> authorizeDelete(@RequestParam("id") String id) {
+        Users users = SessionUtil.getUserFromSession();
+        AjaxUtil<Map<String, Object>> ajaxUtil = educationalExaminationService.authorizeDelete(users.getUsername(), id);
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

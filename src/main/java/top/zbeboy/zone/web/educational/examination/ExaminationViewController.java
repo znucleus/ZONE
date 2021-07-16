@@ -149,4 +149,25 @@ public class ExaminationViewController {
 
         return page;
     }
+
+    /**
+     * 权限分配页面
+     *
+     * @param modelMap 页面对象
+     * @return 权限分配页面
+     */
+    @GetMapping("/web/educational/examination/authorize/add")
+    public String authorizeAdd(ModelMap modelMap) {
+        SystemInlineTipConfig config = new SystemInlineTipConfig();
+        String page;
+        Users users = SessionUtil.getUserFromSession();
+        if (educationalExaminationService.canAuthorize(users.getUsername())) {
+            page = "web/educational/examination/examination_authorize::#page-wrapper";
+        } else {
+            config.buildWarningTip("操作警告", "您无权限操作");
+            config.dataMerging(modelMap);
+            page = "inline_tip::#page-wrapper";
+        }
+        return page;
+    }
 }
