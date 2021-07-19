@@ -62,7 +62,7 @@ public class SystemMobileApiController {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (Pattern.matches(Workbook.MOBILE_REGEX, param)) {
             Optional<SystemConfigure> optionalSystemConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MOBILE_SWITCH.name());
-            if(optionalSystemConfigure.isPresent()){
+            if (optionalSystemConfigure.isPresent()) {
                 SystemConfigure systemConfigure = optionalSystemConfigure.get();
                 if (StringUtils.equals("1", systemConfigure.getDataValue())) {
                     boolean isSend = false;

@@ -53,7 +53,7 @@ public class PotentialViewController {
                 UsersType usersType = optionalUsersType.get();
                 if (StringUtils.equals(usersType.getUsersTypeName(), Workbook.POTENTIAL_USERS_TYPE)) {
                     Optional<PotentialBean> optionalPotentialBean = potentialService.findByUsernameRelation(users.getUsername());
-                    if(optionalPotentialBean.isPresent()){
+                    if (optionalPotentialBean.isPresent()) {
                         modelMap.addAttribute("potential", optionalPotentialBean.get());
                         if (StringUtils.equals(type, Workbook.UPGRADE_STUDENT)) {
                             page = "web/data/potential/upgrade_student::#page-wrapper";

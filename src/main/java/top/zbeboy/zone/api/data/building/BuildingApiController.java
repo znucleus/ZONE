@@ -38,7 +38,7 @@ public class BuildingApiController {
         AjaxUtil<BuildingBean> ajaxUtil = AjaxUtil.of();
         List<BuildingBean> buildings = new ArrayList<>();
         Optional<List<BuildingBean>> optionalBuildingBeans = buildingService.search(buildingSearchVo);
-        if(optionalBuildingBeans.isPresent()){
+        if (optionalBuildingBeans.isPresent()) {
             buildings = optionalBuildingBeans.get();
         }
         ajaxUtil.success().msg("获取数据成功").list(buildings);

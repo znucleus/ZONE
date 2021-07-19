@@ -8,7 +8,6 @@ import top.zbeboy.zbase.feign.platform.RoleService;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service("menuService")
@@ -22,11 +21,11 @@ public class MenuServiceImpl implements MenuService {
     public String getMenu(List<String> roles, String username) {
         StringBuilder sb = new StringBuilder();
         Optional<List<Application>> optionalApplications = roleService.findInRoleEnNamesAndApplicationPidRelation(roles, "0");
-        if(optionalApplications.isPresent()){
+        if (optionalApplications.isPresent()) {
             List<Application> applications = optionalApplications.get();
             for (Application application : applications) {
                 Optional<List<Application>> optionalApplicationsList = roleService.findInRoleEnNamesAndApplicationPidRelation(roles, application.getApplicationId());
-                if(optionalApplicationsList.isPresent()){
+                if (optionalApplicationsList.isPresent()) {
                     List<Application> childApplications = optionalApplicationsList.get();
                     sb.append("<a href=\"").append(baseUrl(application.getApplicationUrl())).append("\" class=\"br-menu-link\">");
                     sb.append("<div class=\"br-menu-item\">");

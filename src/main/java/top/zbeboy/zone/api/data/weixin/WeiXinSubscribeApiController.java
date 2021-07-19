@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.config.Workbook;
-import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.domain.tables.pojos.WeiXin;
 import top.zbeboy.zbase.domain.tables.pojos.WeiXinSubscribe;
 import top.zbeboy.zbase.feign.data.WeiXinService;
@@ -15,11 +14,9 @@ import top.zbeboy.zbase.feign.data.WeiXinSubscribeService;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.vo.data.weixin.WeiXinSubscribeAddVo;
 import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
-import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -49,9 +46,9 @@ public class WeiXinSubscribeApiController {
     /**
      * 订阅查询
      *
-     * @param business  业务编码
-     * @param appId     appId
-     * @param request   请求
+     * @param business 业务编码
+     * @param appId    appId
+     * @param request  请求
      * @return 是否订阅
      */
     @ApiLoggingRecord(remark = "微信小程序订阅查询", channel = Workbook.channel.API)

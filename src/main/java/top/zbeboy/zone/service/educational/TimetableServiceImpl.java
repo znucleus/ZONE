@@ -11,7 +11,6 @@ import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.RandomUidGenerator;
 import net.fortuna.ical4j.util.UidGenerator;
-import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -730,7 +729,7 @@ public class TimetableServiceImpl implements TimetableService {
                     break;
                 case 12:
                     su = "19:50:00";
-				case 13:
+                case 13:
                     su = "20:40:00";
                     break;
             }
@@ -778,7 +777,7 @@ public class TimetableServiceImpl implements TimetableService {
                     break;
                 case 12:
                     eu = "20:35:00";
-				case 13:
+                case 13:
                     eu = "21:25:00";
                     break;
             }

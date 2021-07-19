@@ -67,7 +67,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             chiefExaminer: '',
             mobiles: '',
             examinationNoticeReleaseId: '',
-            examinationNoticeDetailId:''
+            examinationNoticeDetailId: ''
         };
 
         /**

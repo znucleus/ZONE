@@ -29,7 +29,7 @@ public class QuestionnaireRestController {
     public ResponseEntity<Map<String, Object>> subjects(@PathVariable("id") String id) {
         Optional<List<QuestionnaireSubjectBean>> optionalQuestionnaireSubjectBeans = questionnaireService.subjects(id);
         AjaxUtil<QuestionnaireSubjectBean> ajaxUtil = AjaxUtil.of();
-        if(optionalQuestionnaireSubjectBeans.isPresent()){
+        if (optionalQuestionnaireSubjectBeans.isPresent()) {
             ajaxUtil.success().list(optionalQuestionnaireSubjectBeans.get()).msg("获取数据成功");
         } else {
             ajaxUtil.fail().msg("获取数据失败");

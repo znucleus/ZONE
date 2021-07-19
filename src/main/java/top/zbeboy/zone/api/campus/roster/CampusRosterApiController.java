@@ -127,7 +127,7 @@ public class CampusRosterApiController {
         Optional<StudentBean> optionalStudentBean = studentService.findByUsername(users.getUsername());
         if (optionalStudentBean.isPresent()) {
             Optional<RosterDataBean> optionalRosterDataBean = campusRosterService.findRosterDataByStudentNumberAndRosterReleaseIdRelation(optionalStudentBean.get().getStudentNumber(), rosterReleaseId);
-            if(optionalRosterDataBean.isPresent()){
+            if (optionalRosterDataBean.isPresent()) {
                 RosterDataBean rosterDataBean = optionalRosterDataBean.get();
                 rosterDataBean.setBusSection(rosterDataBean.getBusSection().substring(rosterDataBean.getBusSection().indexOf("-") + 1));
                 ajaxUtil.success().msg("数据获取成功").put("rosterData", rosterDataBean);

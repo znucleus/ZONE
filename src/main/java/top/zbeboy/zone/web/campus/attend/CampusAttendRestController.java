@@ -10,14 +10,15 @@ import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.campus.attend.AttendReleaseService;
 import top.zbeboy.zbase.feign.campus.attend.AttendReleaseSubService;
 import top.zbeboy.zbase.feign.campus.attend.AttendUsersService;
-import top.zbeboy.zbase.tools.service.util.RequestUtil;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 public class CampusAttendRestController {

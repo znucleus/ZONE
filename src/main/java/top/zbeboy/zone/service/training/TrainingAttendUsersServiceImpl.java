@@ -55,7 +55,7 @@ public class TrainingAttendUsersServiceImpl implements TrainingAttendUsersServic
     public Optional<TrainingAttendUsersRecord> findByTrainingAttendIdAndTrainingUsersId(String trainingAttendId, String trainingUsersId) {
         return create.selectFrom(TRAINING_ATTEND_USERS)
                 .where(TRAINING_ATTEND_USERS.TRAINING_ATTEND_ID.eq(trainingAttendId)
-                .and(TRAINING_ATTEND_USERS.TRAINING_USERS_ID.eq(trainingUsersId)))
+                        .and(TRAINING_ATTEND_USERS.TRAINING_USERS_ID.eq(trainingUsersId)))
                 .fetchOptional();
     }
 

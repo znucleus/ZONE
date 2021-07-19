@@ -20,7 +20,6 @@ import top.zbeboy.zone.service.training.TrainingReleaseService;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
-import java.util.Objects;
 import java.util.Optional;
 
 @Component

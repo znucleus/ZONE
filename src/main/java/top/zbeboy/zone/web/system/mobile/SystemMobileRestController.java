@@ -52,7 +52,7 @@ public class SystemMobileRestController {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         if (Pattern.matches(Workbook.MOBILE_REGEX, param)) {
             Optional<SystemConfigure> optionalSystemConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MOBILE_SWITCH.name());
-            if(optionalSystemConfigure.isPresent()){
+            if (optionalSystemConfigure.isPresent()) {
                 if (StringUtils.equals("1", optionalSystemConfigure.get().getDataValue())) {
                     boolean isSend = false;
                     if (Objects.nonNull(session.getAttribute(SystemMobileConfig.MOBILE))) {

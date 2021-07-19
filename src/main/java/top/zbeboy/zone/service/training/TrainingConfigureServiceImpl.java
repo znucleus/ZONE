@@ -16,7 +16,6 @@ import top.zbeboy.zbase.domain.tables.pojos.TrainingConfigure;
 import javax.annotation.Resource;
 import java.util.Optional;
 
-import static org.jooq.impl.DSL.currentDate;
 import static org.jooq.impl.DSL.currentLocalDate;
 import static top.zbeboy.zbase.domain.Tables.*;
 

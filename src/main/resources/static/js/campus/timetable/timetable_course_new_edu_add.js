@@ -176,7 +176,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
 
         var globalData = [];
 
-        function queryData(){
+        function queryData() {
             $('#saveError').text('');
             tools.buttonLoading(button_id.okSchoolYear.id, button_id.okSchoolYear.tip);
             $.get(ajax_url.data, param, function (data) {

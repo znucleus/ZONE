@@ -22,7 +22,6 @@ import top.zbeboy.zone.web.util.SessionUtil;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Controller
@@ -203,7 +202,7 @@ public class RoleViewController {
                 Optional<List<DefaultRole>> optionalDefaultRoles = roleService.findDefaultRoleByRoleId(role.getRoleId());
                 List<Integer> usersTypeIds = new ArrayList<>();
                 optionalDefaultRoles.ifPresent(defaultRoles -> defaultRoles.forEach(defaultRole ->
-                    usersTypeIds.add(defaultRole.getUsersTypeId())
+                        usersTypeIds.add(defaultRole.getUsersTypeId())
                 ));
 
                 modelMap.addAttribute("usersTypeIds", StringUtils.join(usersTypeIds, ","));
@@ -239,7 +238,7 @@ public class RoleViewController {
                             Optional<List<DefaultRole>> optionalDefaultRoles = roleService.findDefaultRoleByRoleId(role.getRoleId());
                             List<Integer> usersTypeIds = new ArrayList<>();
                             optionalDefaultRoles.ifPresent(defaultRoles -> defaultRoles.forEach(defaultRole ->
-                                usersTypeIds.add(defaultRole.getUsersTypeId())
+                                    usersTypeIds.add(defaultRole.getUsersTypeId())
                             ));
 
                             modelMap.addAttribute("usersTypeIds", StringUtils.join(usersTypeIds, ","));

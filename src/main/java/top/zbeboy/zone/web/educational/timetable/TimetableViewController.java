@@ -48,9 +48,9 @@ public class TimetableViewController {
             UsersType usersType = optionalUsersType.get();
             if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
                 Optional<StudentBean> optionalStudentBean = studentService.findByUsernameRelation(users.getUsername());
-                if(optionalStudentBean.isPresent()){
+                if (optionalStudentBean.isPresent()) {
                     StudentBean studentBean = optionalStudentBean.get();
-                    if(studentBean.getCollegeId() == 1){
+                    if (studentBean.getCollegeId() == 1) {
                         modelMap.addAttribute("studentNumber", studentBean.getStudentNumber());
                     }
                 }

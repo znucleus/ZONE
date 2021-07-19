@@ -18,7 +18,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
          */
         var param_id = {
             title: '#title',
-            remark:'#remark'
+            remark: '#remark'
         };
 
         var button_id = {
@@ -33,9 +33,9 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
          参数
          */
         var param = {
-            examinationNoticeReleaseId:'',
+            examinationNoticeReleaseId: '',
             title: '',
-            remark:''
+            remark: ''
         };
 
         var page_param = {

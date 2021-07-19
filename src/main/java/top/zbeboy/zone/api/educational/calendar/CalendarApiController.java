@@ -37,7 +37,7 @@ public class CalendarApiController {
     public ResponseEntity<Map<String, Object>> calendars(@PathVariable("collegeId") int collegeId, Principal principal, HttpServletRequest request) {
         AjaxUtil<SchoolCalendar> ajaxUtil = AjaxUtil.of();
         Optional<List<SchoolCalendar>> optionalSchoolCalendars = educationalCalendarService.findRecentlyByCollegeId(collegeId);
-        if(optionalSchoolCalendars.isPresent()){
+        if (optionalSchoolCalendars.isPresent()) {
             ajaxUtil.success().list(optionalSchoolCalendars.get()).msg("获取数据成功");
         } else {
             ajaxUtil.fail().msg("未查询到校历数据");

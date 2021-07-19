@@ -43,7 +43,6 @@ import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.File;
@@ -561,8 +560,8 @@ public class UsersRestController {
     /**
      * 用户个人二维码信息
      *
-     * @param channel  渠道
-     * @param request  请求
+     * @param channel 渠道
+     * @param request 请求
      */
     @GetMapping(value = {"/users/qr_code", "/api/platform/users/qr_code"})
     public ResponseEntity<Map<String, Object>> qrCode(String channel, Principal principal, HttpServletRequest request) {

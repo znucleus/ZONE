@@ -108,7 +108,7 @@ public class StaffRestController {
             boolean isValid = (boolean) session.getAttribute(staffAddVo.getMobile() + SystemMobileConfig.MOBILE_VALID);
             if (isValid) {
                 Optional<UsersType> optionalUsersType = usersTypeService.findByUsersTypeName(Workbook.STAFF_USERS_TYPE);
-                if(optionalUsersType.isPresent()){
+                if (optionalUsersType.isPresent()) {
                     UsersType usersType = optionalUsersType.get();
                     staffAddVo.setEnabled(BooleanUtil.toByte(true));
                     staffAddVo.setAccountNonExpired(BooleanUtil.toByte(true));
@@ -227,7 +227,7 @@ public class StaffRestController {
         AjaxUtil<Role> ajaxUtil = AjaxUtil.of();
         List<Role> roles = new ArrayList<>();
         Optional<List<Role>> optionalRoles = staffService.roleData(users.getUsername(), username);
-        if(optionalRoles.isPresent()){
+        if (optionalRoles.isPresent()) {
             roles = optionalRoles.get();
         }
         ajaxUtil.success().list(roles).msg("获取数据成功");

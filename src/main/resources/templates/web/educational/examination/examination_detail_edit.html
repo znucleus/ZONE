@@ -26,13 +26,15 @@
                         <div class="form-group">
                             <label>(必填)序号</label>
                             <input class="form-control" name="serialNumber"
-                                   id="serialNumber" type="number" placeholder="序号" th:value="${examinationNoticeDetail.serialNumber}"/>
+                                   id="serialNumber" type="number" placeholder="序号"
+                                   th:value="${examinationNoticeDetail.serialNumber}"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>课程号</label>
                             <input class="form-control" name="courseNumber"
-                                   id="courseNumber" placeholder="课程号" th:value="${examinationNoticeDetail.courseNumber}"/>
+                                   id="courseNumber" placeholder="课程号"
+                                   th:value="${examinationNoticeDetail.courseNumber}"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
@@ -44,25 +46,29 @@
                         <div class="form-group">
                             <label>班级</label>
                             <input class="form-control" name="organizeName"
-                                   id="organizeName" placeholder="班级" th:value="${examinationNoticeDetail.organizeName}"/>
+                                   id="organizeName" placeholder="班级"
+                                   th:value="${examinationNoticeDetail.organizeName}"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>人数</label>
                             <input class="form-control" name="peopleNumber"
-                                   id="peopleNumber" type="number" placeholder="人数" th:value="${examinationNoticeDetail.peopleNumber}"/>
+                                   id="peopleNumber" type="number" placeholder="人数"
+                                   th:value="${examinationNoticeDetail.peopleNumber}"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>序号区间</label>
                             <input class="form-control" name="serialNumberRange"
-                                   id="serialNumberRange" placeholder="序号区间" th:value="${examinationNoticeDetail.serialNumberRange}"/>
+                                   id="serialNumberRange" placeholder="序号区间"
+                                   th:value="${examinationNoticeDetail.serialNumberRange}"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>考试周</label>
                             <input class="form-control" name="examWeek"
-                                   id="examWeek" type="number" placeholder="考试周" th:value="${examinationNoticeDetail.examWeek}"/>
+                                   id="examWeek" type="number" placeholder="考试周"
+                                   th:value="${examinationNoticeDetail.examWeek}"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
@@ -94,19 +100,22 @@
                         <div class="form-group">
                             <label>(必填)考试教室</label>
                             <input class="form-control" name="examClassroom"
-                                   id="examClassroom" placeholder="考试教室" th:value="${examinationNoticeDetail.examClassroom}"/>
+                                   id="examClassroom" placeholder="考试教室"
+                                   th:value="${examinationNoticeDetail.examClassroom}"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>监考老师</label>
                             <input class="form-control" name="invigilator"
-                                   id="invigilator" placeholder="监考老师" th:value="${examinationNoticeDetail.invigilator}"/>
+                                   id="invigilator" placeholder="监考老师"
+                                   th:value="${examinationNoticeDetail.invigilator}"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label>主考教师</label>
                             <input class="form-control" name="chiefExaminer"
-                                   id="chiefExaminer" placeholder="主考教师" th:value="${examinationNoticeDetail.chiefExaminer}"/>
+                                   id="chiefExaminer" placeholder="主考教师"
+                                   th:value="${examinationNoticeDetail.chiefExaminer}"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
@@ -125,8 +134,10 @@
         </div>
     </div>
 
-    <input type="hidden" id="examinationNoticeReleaseId" th:value="${examinationNoticeDetail.examinationNoticeReleaseId}"/>
-    <input type="hidden" id="examinationNoticeDetailId" th:value="${examinationNoticeDetail.examinationNoticeDetailId}"/>
+    <input type="hidden" id="examinationNoticeReleaseId"
+           th:value="${examinationNoticeDetail.examinationNoticeReleaseId}"/>
+    <input type="hidden" id="examinationNoticeDetailId"
+           th:value="${examinationNoticeDetail.examinationNoticeDetailId}"/>
     <input type="hidden" id="paramWeekday" th:value="${examinationNoticeDetail.weekday}"/>
     <input type="hidden" class="dy_script"
            th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/educational/examination/examination_detail_edit.js')}"/>

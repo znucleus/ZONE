@@ -37,7 +37,7 @@ public class SystemNotifyRestController {
         AjaxUtil<SystemNotify> ajaxUtil = AjaxUtil.of();
         List<SystemNotify> list = new ArrayList<>();
         Optional<List<SystemNotify>> optionalSystemNotifies = systemNotifyService.findByEffective();
-        if(optionalSystemNotifies.isPresent()){
+        if (optionalSystemNotifies.isPresent()) {
             list = optionalSystemNotifies.get();
         }
         ajaxUtil.success().list(list).msg("获取数据成功");

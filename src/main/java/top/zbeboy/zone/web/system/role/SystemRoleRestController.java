@@ -85,7 +85,7 @@ public class SystemRoleRestController {
         AjaxUtil<RoleApplication> ajaxUtil = AjaxUtil.of();
         List<RoleApplication> list = new ArrayList<>();
         Optional<List<RoleApplication>> optionalRoleApplications = systemRoleService.roleApplicationData(roleId);
-        if(optionalRoleApplications.isPresent()){
+        if (optionalRoleApplications.isPresent()) {
             list = optionalRoleApplications.get();
         }
         ajaxUtil.success().list(list).msg("获取数据成功");
@@ -102,7 +102,7 @@ public class SystemRoleRestController {
         AjaxUtil<TreeViewData> ajaxUtil = AjaxUtil.of();
         List<TreeViewData> list = new ArrayList<>();
         Optional<List<TreeViewData>> optionalTreeViewData = systemRoleService.applicationJson();
-        if(optionalTreeViewData.isPresent()){
+        if (optionalTreeViewData.isPresent()) {
             list = optionalTreeViewData.get();
         }
         ajaxUtil.success().list(list).msg("获取数据成功");

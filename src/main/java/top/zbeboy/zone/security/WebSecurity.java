@@ -56,7 +56,7 @@ public class WebSecurity {
 
         if (!roles.isEmpty()) {
             Optional<List<Application>> optionalApplications = roleService.findInRoleEnNamesRelation(roles, users.getUsername());
-            if(optionalApplications.isPresent()){
+            if (optionalApplications.isPresent()) {
                 List<Application> applications = optionalApplications.get();
                 for (Application application : applications) {
                     if (uri.endsWith(application.getApplicationUrl())) {

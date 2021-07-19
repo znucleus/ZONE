@@ -10,7 +10,6 @@ import top.zbeboy.zbase.tools.service.util.UUIDUtil;
 import top.zbeboy.zbase.tools.web.util.ImageUtil;
 
 import javax.servlet.http.HttpServletRequest;
-import java.awt.*;
 import java.io.*;
 import java.util.Base64;
 import java.util.Objects;

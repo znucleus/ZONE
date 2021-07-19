@@ -40,7 +40,7 @@ public class InternshipControllerCommon {
         if (record.isPresent()) {
             Department department = record.get().into(Department.class);
             Optional<List<StaffBean>> optionalStaffBeans = staffService.findNormalByDepartmentIdRelation(department.getDepartmentId());
-            if(optionalStaffBeans.isPresent()){
+            if (optionalStaffBeans.isPresent()) {
                 beans = optionalStaffBeans.get();
             }
         }

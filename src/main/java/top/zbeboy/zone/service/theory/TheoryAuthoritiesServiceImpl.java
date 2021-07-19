@@ -18,7 +18,6 @@ import javax.annotation.Resource;
 import java.util.Optional;
 
 import static org.jooq.impl.DSL.currentLocalDateTime;
-import static org.jooq.impl.DSL.now;
 import static top.zbeboy.zbase.domain.Tables.THEORY_AUTHORITIES;
 import static top.zbeboy.zbase.domain.Tables.USERS;
 

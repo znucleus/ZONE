@@ -59,13 +59,13 @@ public class SystemMailServiceImpl implements SystemMailService {
     @Override
     public void sendEmail(String to, String subject, String content, Boolean isMultipart, Boolean isHtml) {
         Optional<SystemConfigure> optionalSystemConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
-        if(!optionalSystemConfigure.isPresent()){
+        if (!optionalSystemConfigure.isPresent()) {
             log.error("查询系统配置错误");
             return;
         }
 
         SystemConfigure systemConfigure = optionalSystemConfigure.get();
-        if ( StringUtils.equals("0", systemConfigure.getDataValue())) {
+        if (StringUtils.equals("0", systemConfigure.getDataValue())) {
             log.info("管理员已关闭邮件发送");
             return;
         }

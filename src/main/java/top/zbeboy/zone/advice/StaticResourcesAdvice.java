@@ -7,7 +7,6 @@ import top.zbeboy.zbase.domain.tables.pojos.SystemConfigure;
 import top.zbeboy.zbase.feign.system.SystemConfigureService;
 
 import javax.annotation.Resource;
-import java.util.Objects;
 import java.util.Optional;
 
 @ControllerAdvice

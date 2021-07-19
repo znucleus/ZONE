@@ -2,7 +2,6 @@ package top.zbeboy.zone.test;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 import top.zbeboy.zbase.bean.training.report.TrainingReportBean;
 import top.zbeboy.zone.service.system.SystemNowApiService;
 import top.zbeboy.zone.service.training.TrainingReportService;

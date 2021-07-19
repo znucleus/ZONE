@@ -513,10 +513,10 @@ require(["jquery", "handlebars", "nav.active", "sweetalert2", "responsive.bootst
             dataType: 'json',
             maxFileSize: 500000000,// 500MB
             maxNumberOfFiles: 1,
-            acceptFileTypes : /(xls|XLS|xlsx|XLSX)$/i,
+            acceptFileTypes: /(xls|XLS|xlsx|XLSX)$/i,
             formAcceptCharset: 'utf-8',
             messages: {
-                acceptFileTypes : '仅支持xls或xlsx类型',
+                acceptFileTypes: '仅支持xls或xlsx类型',
                 maxFileSize: '单文件上传仅允许500MB大小'
             },
             done: function (e, data) {

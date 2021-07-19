@@ -20,7 +20,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             clientId: '#clientId',
             secret: '#secret',
             appName: '#appName',
-            oauthType:'#oauthType',
+            oauthType: '#oauthType',
             webServerRedirectUri: '#webServerRedirectUri',
             remark: '#remark'
         };
@@ -40,7 +40,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             clientId: '',
             secret: '',
             appName: '',
-            oauthType:'',
+            oauthType: '',
             webServerRedirectUri: '',
             remark: ''
         };
@@ -69,9 +69,9 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
             initMaxLength();
         }
 
-        $(param_id.oauthType).change(function (){
+        $(param_id.oauthType).change(function () {
             var v = Number($(this).val());
-            if(v === 0){
+            if (v === 0) {
                 $(param_id.webServerRedirectUri).parent().css('display', '');
             } else {
                 $(param_id.webServerRedirectUri).parent().css('display', 'none');
@@ -146,7 +146,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "nav.active", "messenger", 
                 tools.validErrorDom(param_id.appName, '应用名100个字符以内');
             } else {
                 tools.validSuccessDom(param_id.appName);
-                if(oauthType === 0){
+                if (oauthType === 0) {
                     validWebServerRedirectUri();
                 } else {
                     sendAjax();

@@ -1,6 +1,5 @@
 package top.zbeboy.zone.web.register.epidemic;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +12,6 @@ import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
-import java.util.Objects;
 import java.util.Optional;
 
 @Controller

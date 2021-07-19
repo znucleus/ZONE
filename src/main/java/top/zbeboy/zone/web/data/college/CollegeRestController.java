@@ -179,7 +179,7 @@ public class CollegeRestController {
         AjaxUtil<TreeViewData> ajaxUtil = AjaxUtil.of();
         List<TreeViewData> list = new ArrayList<>();
         Optional<List<TreeViewData>> optionalTreeViewData = collegeService.collegeApplicationJson();
-        if(optionalTreeViewData.isPresent()){
+        if (optionalTreeViewData.isPresent()) {
             list = optionalTreeViewData.get();
         }
         ajaxUtil.success().list(list).msg("获取数据成功");
@@ -197,7 +197,7 @@ public class CollegeRestController {
         AjaxUtil<CollegeApplication> ajaxUtil = AjaxUtil.of();
         List<CollegeApplication> list = new ArrayList<>();
         Optional<List<CollegeApplication>> optionalCollegeApplications = collegeService.collegeApplicationData(collegeId);
-        if(optionalCollegeApplications.isPresent()){
+        if (optionalCollegeApplications.isPresent()) {
             list = optionalCollegeApplications.get();
         }
         ajaxUtil.success().list(list).msg("获取数据成功");

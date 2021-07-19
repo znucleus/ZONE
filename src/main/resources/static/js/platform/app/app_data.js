@@ -81,7 +81,7 @@ require(["jquery", "lodash_plugin", "handlebars", "nav.active", "sweetalert2", "
                     targets: 5,
                     render: function (a, b, c, d) {
                         var v = '';
-                        if(c.oauthType === 0){
+                        if (c.oauthType === 0) {
                             v = '授权码模式';
                         } else {
                             v = '密码模式';

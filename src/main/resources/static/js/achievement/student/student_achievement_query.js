@@ -58,15 +58,15 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             changeCaptcha();
         }
 
-        $('#yhmmFill').click(function (){
-           $(param_id.yhmm).val($(param_id.yhdm).val());
+        $('#yhmmFill').click(function () {
+            $(param_id.yhmm).val($(param_id.yhdm).val());
         });
 
         $('#captcha').click(function () {
             changeCaptcha();
         });
 
-        $('#history').click(function (){
+        $('#history').click(function () {
             $.address.value(ajax_url.query_history);
         });
 

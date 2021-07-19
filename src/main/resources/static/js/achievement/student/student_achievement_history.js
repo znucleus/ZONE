@@ -25,6 +25,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
         }
 
         var achievementData = [];
+
         function initData() {
             $.get(getAjaxUrl().data, page_param, function (data) {
                 Messenger().post({
@@ -56,16 +57,16 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             init();
         });
 
-        $("#search").keyup(function(){
+        $("#search").keyup(function () {
             search();
         });
 
-        function search(){
+        function search() {
             var v = $('#search').val();
-            var filterData = {listResult:[]};
-            if(v !== ''){
-                $.each(achievementData,function (i, n){
-                    if(n.courseName.indexOf(v) > -1 ||
+            var filterData = {listResult: []};
+            if (v !== '') {
+                $.each(achievementData, function (i, n) {
+                    if (n.courseName.indexOf(v) > -1 ||
                         n.achievement.indexOf(v) > -1 ||
                         n.schoolYear.indexOf(v) > -1 ||
                         n.semester.indexOf(v) > -1 ||
@@ -82,7 +83,7 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
                         n.turn.indexOf(v) > -1 ||
                         n.examDate.indexOf(v) > -1 ||
                         n.remark.indexOf(v) > -1 ||
-                        n.createDateStr.indexOf(v) > -1){
+                        n.createDateStr.indexOf(v) > -1) {
                         filterData.listResult.push(n);
                     }
                 });

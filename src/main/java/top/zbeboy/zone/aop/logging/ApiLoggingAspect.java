@@ -88,7 +88,7 @@ public class ApiLoggingAspect {
                     }
 
                     Optional<Channel> optionalChannel = channelService.findByChannelName(channel.name());
-                    if(optionalChannel.isPresent()){
+                    if (optionalChannel.isPresent()) {
                         SystemApiLog systemLog =
                                 new SystemApiLog(UUIDUtil.getUUID(),
                                         uri,

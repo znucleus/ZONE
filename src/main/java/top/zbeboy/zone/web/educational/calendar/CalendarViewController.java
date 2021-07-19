@@ -19,7 +19,6 @@ import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
-import java.util.Objects;
 import java.util.Optional;
 
 @Controller
@@ -146,7 +145,7 @@ public class CalendarViewController {
         Users users = SessionUtil.getUserFromSession();
         if (educationalCalendarService.canOperator(users.getUsername(), id)) {
             Optional<SchoolCalendar> optionalSchoolCalendar = educationalCalendarService.findById(id);
-            if(optionalSchoolCalendar.isPresent()){
+            if (optionalSchoolCalendar.isPresent()) {
                 modelMap.addAttribute("schoolCalendar", optionalSchoolCalendar.get());
                 page = "web/educational/calendar/calendar_edit::#page-wrapper";
             } else {

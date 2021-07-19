@@ -16,7 +16,7 @@ import top.zbeboy.zbase.domain.tables.pojos.TheoryConfigure;
 import javax.annotation.Resource;
 import java.util.Optional;
 
-import static org.jooq.impl.DSL.*;
+import static org.jooq.impl.DSL.currentLocalDate;
 import static top.zbeboy.zbase.domain.Tables.*;
 
 @Service("theoryConfigureService")

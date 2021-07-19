@@ -200,7 +200,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
                 var startWeek = this.startWeek;
                 var endWeek = this.endWeek;
                 if (!endWeek || endWeek === '') {
-                    if(startWeek && startWeek !== ''){
+                    if (startWeek && startWeek !== '') {
                         weekUnit = startWeek + '周';
                     }
                 } else {
@@ -227,7 +227,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
                 var startWeek = this.startWeek;
                 var endWeek = this.endWeek;
                 if (!endWeek || endWeek === '') {
-                    if(startWeek && startWeek !== ''){
+                    if (startWeek && startWeek !== '') {
                         weekUnit = startWeek + '周';
                     }
                 } else {
@@ -466,7 +466,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "sweetalert2", "jquery.a
                     // 显示有效课程
                     var startWeek = v.startWeek;
                     var endWeek = v.endWeek;
-                    if(endWeek && endWeek !== ''){
+                    if (endWeek && endWeek !== '') {
                         if (startWeek <= curWeeks && endWeek >= curWeeks) {
                             $('#week' + v.weekday).append(defaultHtml(v));
                             $('#simpleWeek' + v.weekday).append(simpleHtml(v));

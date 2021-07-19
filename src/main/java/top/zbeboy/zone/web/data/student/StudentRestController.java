@@ -36,7 +36,10 @@ import top.zbeboy.zone.web.util.SessionUtil;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class StudentRestController {
@@ -119,7 +122,7 @@ public class StudentRestController {
             boolean isValid = (boolean) session.getAttribute(studentAddVo.getMobile() + SystemMobileConfig.MOBILE_VALID);
             if (isValid) {
                 Optional<UsersType> optionalUsersType = usersTypeService.findByUsersTypeName(Workbook.STUDENT_USERS_TYPE);
-                if(optionalUsersType.isPresent()){
+                if (optionalUsersType.isPresent()) {
                     UsersType usersType = optionalUsersType.get();
                     studentAddVo.setEnabled(BooleanUtil.toByte(true));
                     studentAddVo.setAccountNonExpired(BooleanUtil.toByte(true));
@@ -255,7 +258,7 @@ public class StudentRestController {
         AjaxUtil<Role> ajaxUtil = AjaxUtil.of();
         List<Role> list = new ArrayList<>();
         Optional<List<Role>> optionalRoles = studentService.roleData(users.getUsername(), username);
-        if(optionalRoles.isPresent()){
+        if (optionalRoles.isPresent()) {
             list = optionalRoles.get();
         }
         ajaxUtil.success().list(list).msg("获取数据成功");

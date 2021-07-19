@@ -3,7 +3,6 @@ package top.zbeboy.zone.test;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -134,11 +133,11 @@ public class TestNewEduTimetable {
 
         System.out.println(semesters);
         String startDate = "";
-        if(StringUtils.isNotBlank(semesters)){
+        if (StringUtils.isNotBlank(semesters)) {
             JSONArray arr1 = JSON.parseArray(semesters);
             for (int i = 0; i < arr1.size(); i++) {
                 JSONObject j1 = arr1.getJSONObject(i);
-                if(NumberUtils.toInt(valueId) == j1.getIntValue("id")){
+                if (NumberUtils.toInt(valueId) == j1.getIntValue("id")) {
                     startDate = j1.getString("startDate");
                     break;
                 }
@@ -167,7 +166,7 @@ public class TestNewEduTimetable {
             }
         }
 
-        if(StringUtils.isNotBlank(studentTableVms)){
+        if (StringUtils.isNotBlank(studentTableVms)) {
             studentTableVms = studentTableVms.replaceAll("\"", "@");
             studentTableVms = studentTableVms.replaceAll("'", "\\\"");
 

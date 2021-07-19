@@ -1,6 +1,5 @@
 package top.zbeboy.zone.api.data.weixin;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;

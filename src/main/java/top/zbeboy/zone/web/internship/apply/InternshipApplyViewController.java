@@ -118,8 +118,8 @@ public class InternshipApplyViewController {
                         Optional<Record> internshipReleaseRecord = internshipReleaseService.findByIdRelation(id);
                         if (internshipReleaseRecord.isPresent()) {
                             InternshipReleaseBean internshipRelease = internshipReleaseRecord.get().into(InternshipReleaseBean.class);
-                            if(StringUtils.equals(Workbook.POST_PRACTICE_INTERNSHIP_TYPE, internshipRelease.getInternshipTypeName()) ||
-                                    StringUtils.equals(Workbook.GRADUATION_PRACTICE_IN_SCHOOL_INTERNSHIP_TYPE, internshipRelease.getInternshipTypeName())){
+                            if (StringUtils.equals(Workbook.POST_PRACTICE_INTERNSHIP_TYPE, internshipRelease.getInternshipTypeName()) ||
+                                    StringUtils.equals(Workbook.GRADUATION_PRACTICE_IN_SCHOOL_INTERNSHIP_TYPE, internshipRelease.getInternshipTypeName())) {
                                 modelMap.put("companyName", studentBean.getSchoolName() + studentBean.getCollegeName());
                                 modelMap.put("companyAddress", studentBean.getCollegeAddress());
                                 modelMap.put("companyContact", bean.getRealName());

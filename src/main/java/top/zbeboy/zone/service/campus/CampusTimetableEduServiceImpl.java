@@ -1,9 +1,8 @@
 package top.zbeboy.zone.service.campus;
 
 import net.fortuna.ical4j.data.CalendarOutputter;
-import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.TimeZone;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VTimeZone;
@@ -17,13 +16,10 @@ import org.springframework.stereotype.Service;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.CampusCourseData;
 import top.zbeboy.zbase.domain.tables.pojos.CampusCourseRelease;
-import top.zbeboy.zbase.domain.tables.pojos.TimetableCourse;
-import top.zbeboy.zbase.domain.tables.pojos.TimetableSemester;
 import top.zbeboy.zbase.feign.campus.timetable.CampusTimetableService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.service.util.RequestUtil;
 import top.zbeboy.zbase.tools.service.util.UUIDUtil;
-import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.QRCodeUtil;
 import top.zbeboy.zbase.vo.campus.timetable.CampusCourseDataAddVo;
 import top.zbeboy.zbase.vo.campus.timetable.CampusCourseReleaseAddVo;
@@ -32,9 +28,6 @@ import top.zbeboy.zone.web.campus.common.CampusUrlCommon;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;

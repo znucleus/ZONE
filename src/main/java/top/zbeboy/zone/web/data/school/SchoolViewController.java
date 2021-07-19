@@ -9,7 +9,6 @@ import top.zbeboy.zbase.feign.data.SchoolService;
 import top.zbeboy.zone.web.system.tip.SystemInlineTipConfig;
 
 import javax.annotation.Resource;
-import java.util.Objects;
 import java.util.Optional;
 
 @Controller

@@ -209,6 +209,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "select2-zh-CN", "messen
         }
 
         var courseData = [];
+
         function initData() {
             tools.dataLoading();
             $.get(ajax_url.data, param, function (data) {
@@ -325,6 +326,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "select2-zh-CN", "messen
         }
 
         var curWeeks = -1;
+
         function getSchoolYearInfo(timetableSemesterId) {
             if (timetableSemesterId && timetableSemesterId !== '') {
                 $.get(ajax_url.school_year_info + '/' + timetableSemesterId, function (data) {
@@ -361,7 +363,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "select2-zh-CN", "messen
                 var startWeek = this.startWeek;
                 var endWeek = this.endWeek;
                 if (!endWeek || endWeek === '') {
-                    if(startWeek && startWeek !== ''){
+                    if (startWeek && startWeek !== '') {
                         weekUnit = startWeek + '周';
                     }
                 } else {
@@ -440,7 +442,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "select2-zh-CN", "messen
                     // 显示有效课程
                     var startWeek = v.startWeek;
                     var endWeek = v.endWeek;
-                    if(endWeek && endWeek !== ''){
+                    if (endWeek && endWeek !== '') {
                         if (startWeek <= curWeeks && endWeek >= curWeeks) {
                             generateDataHtml('#week' + v.weekday, v);
                         }

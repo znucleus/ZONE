@@ -85,7 +85,7 @@ public class PotentialRestController {
             boolean isValid = (boolean) session.getAttribute(potentialAddVo.getMobile() + SystemMobileConfig.MOBILE_VALID);
             if (isValid) {
                 Optional<UsersType> optionalUsersType = usersTypeService.findByUsersTypeName(Workbook.POTENTIAL_USERS_TYPE);
-                if(optionalUsersType.isPresent()){
+                if (optionalUsersType.isPresent()) {
                     UsersType usersType = optionalUsersType.get();
                     potentialAddVo.setEnabled(BooleanUtil.toByte(true));
                     potentialAddVo.setAccountNonExpired(BooleanUtil.toByte(true));
@@ -228,7 +228,7 @@ public class PotentialRestController {
         AjaxUtil<Role> ajaxUtil = AjaxUtil.of();
         List<Role> list = new ArrayList<>();
         Optional<List<Role>> optionalRoles = potentialService.roleData(users.getUsername(), username);
-        if(optionalRoles.isPresent()){
+        if (optionalRoles.isPresent()) {
             list = optionalRoles.get();
         }
         ajaxUtil.success().list(list).msg("获取数据成功");

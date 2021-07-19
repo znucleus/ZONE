@@ -400,7 +400,7 @@ require(["jquery", "requirejs-domready", "moment-with-locales", "handlebars", "a
                 $.address.value(ajax_url.upgrade_staff);
             });
 
-            $('#personalQrCode').click(function(){
+            $('#personalQrCode').click(function () {
                 $.ajax({
                     type: 'GET',
                     url: ajax_url.personal_qr_code,

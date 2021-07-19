@@ -59,7 +59,7 @@ require(["jquery", "lodash", "tools", "sweetalert2", "moment-with-locales", "boo
         };
 
         var page_param = {
-            schoolId:$('#schoolId').val(),
+            schoolId: $('#schoolId').val(),
             collegeId: $('#collegeId').val(),
             departmentId: $('#departmentId').val(),
             sex: $('#sexParam').val(),

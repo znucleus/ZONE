@@ -64,7 +64,7 @@ public class SystemApplicationRestController {
         AjaxUtil<Application> ajaxUtil = AjaxUtil.of();
         List<Application> applications = new ArrayList<>();
         Optional<List<Application>> optionalApplications = applicationService.pids();
-        if(optionalApplications.isPresent()){
+        if (optionalApplications.isPresent()) {
             applications = optionalApplications.get();
         }
         ajaxUtil.success().list(applications).msg("获取数据成功");

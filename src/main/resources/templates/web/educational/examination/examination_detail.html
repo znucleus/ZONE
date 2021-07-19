@@ -64,7 +64,9 @@
                             <span>数量: </span><span id="totalSize"></span>
                         </div>
                         <div class="float-right">
-                            <button type="button" id="add" class="btn btn-outline-primary btn-sm" th:if="${canOperator}"><i class="fa fa-plus"></i>添加</button>
+                            <button type="button" id="add" class="btn btn-outline-primary btn-sm"
+                                    th:if="${canOperator}"><i class="fa fa-plus"></i>添加
+                            </button>
                             <span class="btn btn-primary fileinput-button btn-sm" th:if="${canOperator}">
                                 <span><i class="fa fa-arrow-circle-up"></i><span id="importBtn">批量导入</span></span>
                                 <!-- The file input field used as target for the file upload widget -->

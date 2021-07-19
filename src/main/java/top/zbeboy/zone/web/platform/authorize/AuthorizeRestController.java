@@ -142,14 +142,14 @@ public class AuthorizeRestController {
             if (StringUtils.isNotBlank(authorizeAddVo.getTargetUsername())) {
                 String param = StringUtils.deleteWhitespace(authorizeAddVo.getTargetUsername());
                 Optional<Users> result = usersService.findByUsername(param);
-                if(result.isPresent()){
+                if (result.isPresent()) {
                     applyUser = result.get();
                 }
             } else {
                 applyUser = SessionUtil.getUserFromSession();
             }
 
-            if(Objects.nonNull(applyUser)){
+            if (Objects.nonNull(applyUser)) {
                 // 查询该申请人所在院所有院管理员
                 List<Users> admins = new ArrayList<>();
                 Optional<List<Users>> staffAdmin = staffService.findByAuthorityAndCollegeId(Workbook.authorities.ROLE_ADMIN.name(), authorizeAddVo.getCollegeId());
@@ -245,7 +245,7 @@ public class AuthorizeRestController {
             if (optionalRoleApply.isPresent()) {
                 RoleApply roleApply = optionalRoleApply.get();
                 Optional<Users> result = usersService.findByUsername(roleApply.getUsername());
-                if(result.isPresent()){
+                if (result.isPresent()) {
                     Users applyUser = result.get();
                     String notify = "管理员用户【" + users.getRealName() + "】";
                     if (applyStatus == 1) {
