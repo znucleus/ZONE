@@ -5,6 +5,7 @@ import org.jooq.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import top.zbeboy.zbase.config.Workbook;
@@ -92,6 +93,7 @@ public class ScheduledConfiguration {
     /**
      * 更改实习状态为申请中
      */
+    @Async
     @Scheduled(cron = "0 15 02 * * ?") // 每天 晚间2点15分
     public void internshipApply() {
         if (ZoneProperties.getScheduled().getRun()) {
@@ -107,6 +109,7 @@ public class ScheduledConfiguration {
     /**
      * 自动生成实训考勤数据
      */
+    @Async
     @Scheduled(cron = "0 30 00 * * ?") // 每天 晚间12点30分
     public void generateTrainingAttend() {
         if (ZoneProperties.getScheduled().getRun()) {
@@ -152,7 +155,8 @@ public class ScheduledConfiguration {
     /**
      * 自动生成理论考勤数据
      */
-    @Scheduled(cron = "0 0 01 * * ?") // 每天 晚间01
+    @Async
+    @Scheduled(cron = "0 30 00 * * ?") // 每天 晚间12点30分
     public void generateTheoryAttend() {
         if (ZoneProperties.getScheduled().getRun()) {
             Result<Record> records = theoryConfigureService.findIsAuto(ByteUtil.toByte(DateTimeUtil.getNowDayOfWeek()));
