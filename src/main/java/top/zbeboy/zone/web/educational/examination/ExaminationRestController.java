@@ -16,6 +16,7 @@ import top.zbeboy.zbase.bean.educational.examination.ExaminationNoticeReleaseBea
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.ExaminationNoticeDetail;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
+import top.zbeboy.zbase.feign.data.WeiXinSubscribeService;
 import top.zbeboy.zbase.feign.educational.examination.EducationalExaminationService;
 import top.zbeboy.zbase.tools.service.util.*;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
@@ -42,6 +43,9 @@ public class ExaminationRestController {
 
     @Resource
     private UploadService uploadService;
+
+    @Resource
+    private WeiXinSubscribeService weiXinSubscribeService;
 
     /**
      * 数据
@@ -161,7 +165,16 @@ public class ExaminationRestController {
     @PostMapping("/web/educational/examination/delete")
     public ResponseEntity<Map<String, Object>> delete(@RequestParam("id") String id) {
         Users users = SessionUtil.getUserFromSession();
+        // 删除订阅
+        Optional<List<ExaminationNoticeDetail>> optionalExaminationNoticeDetails = educationalExaminationService.findDetailByExaminationNoticeReleaseId(id);
         AjaxUtil<Map<String, Object>> ajaxUtil = educationalExaminationService.releaseDelete(users.getUsername(), id);
+        if(ajaxUtil.getState()){
+            if (optionalExaminationNoticeDetails.isPresent()) {
+                for (ExaminationNoticeDetail examinationNoticeDetail : optionalExaminationNoticeDetails.get()) {
+                    weiXinSubscribeService.deleteSubscribeByParamId(examinationNoticeDetail.getExaminationNoticeDetailId());
+                }
+            }
+        }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
@@ -271,6 +284,9 @@ public class ExaminationRestController {
     public ResponseEntity<Map<String, Object>> detailDelete(@RequestParam("id") String id) {
         Users users = SessionUtil.getUserFromSession();
         AjaxUtil<Map<String, Object>> ajaxUtil = educationalExaminationService.detailDelete(users.getUsername(), id);
+        if (ajaxUtil.getState()) {
+            weiXinSubscribeService.deleteSubscribeByParamId(id);
+        }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 
