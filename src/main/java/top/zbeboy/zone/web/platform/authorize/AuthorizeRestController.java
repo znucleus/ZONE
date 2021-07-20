@@ -13,6 +13,7 @@ import top.zbeboy.zbase.feign.platform.AuthorizeService;
 import top.zbeboy.zbase.feign.platform.RoleService;
 import top.zbeboy.zbase.feign.platform.UsersService;
 import top.zbeboy.zbase.feign.system.SystemConfigureService;
+import top.zbeboy.zbase.feign.system.SystemMailService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.service.util.RequestUtil;
 import top.zbeboy.zbase.tools.service.util.UUIDUtil;
@@ -22,7 +23,6 @@ import top.zbeboy.zbase.tools.web.util.BooleanUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zbase.vo.platform.authorize.AuthorizeAddVo;
 import top.zbeboy.zbase.vo.platform.authorize.AuthorizeEditVo;
-import top.zbeboy.zone.service.system.SystemMailService;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;

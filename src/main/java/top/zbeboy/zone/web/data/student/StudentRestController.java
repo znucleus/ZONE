@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.config.WeiXinAppBook;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.config.ZoneProperties;
+import top.zbeboy.zbase.config.system.mobile.SystemMobileConfig;
 import top.zbeboy.zbase.domain.tables.pojos.*;
 import top.zbeboy.zbase.feign.campus.roster.CampusRosterService;
 import top.zbeboy.zbase.feign.data.StudentService;
@@ -20,6 +21,7 @@ import top.zbeboy.zbase.feign.platform.UsersService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zbase.feign.system.SystemConfigureService;
 import top.zbeboy.zbase.feign.system.SystemLogService;
+import top.zbeboy.zbase.feign.system.SystemMailService;
 import top.zbeboy.zbase.tools.service.util.*;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.BooleanUtil;
@@ -29,8 +31,6 @@ import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zbase.vo.data.student.StudentAddVo;
 import top.zbeboy.zbase.vo.data.student.StudentEditVo;
 import top.zbeboy.zbase.vo.data.weixin.WeiXinSubscribeSendVo;
-import top.zbeboy.zone.service.system.SystemMailService;
-import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
@@ -136,6 +136,7 @@ public class StudentRestController {
                     studentAddVo.setMailboxVerifyValid(DateTimeUtil.utilDateToLocalDateTime(dateTime.toDate()));
                     studentAddVo.setLangKey(request.getLocale().toLanguageTag());
                     studentAddVo.setJoinDate(DateTimeUtil.getNowLocalDate());
+                    studentAddVo.setBaseUrl(RequestUtil.getBaseUrl(request));
 
                     // 同步花名册
                     Optional<RosterData> optionalRosterData = campusRosterService.findRosterDataByStudentNumber(studentAddVo.getStudentNumber());
@@ -151,16 +152,6 @@ public class StudentRestController {
                     }
 
                     ajaxUtil = studentService.save(studentAddVo);
-                    if (ajaxUtil.getState()) {
-                        Users users = new Users();
-                        users.setUsername(studentAddVo.getUsername());
-                        users.setLangKey(studentAddVo.getLangKey());
-                        users.setMailboxVerifyCode(studentAddVo.getMailboxVerifyCode());
-                        users.setMailboxVerifyValid(studentAddVo.getMailboxVerifyValid());
-                        users.setEmail(studentAddVo.getEmail());
-                        users.setRealName(studentAddVo.getRealName());
-                        systemMailService.sendValidEmailMail(users, RequestUtil.getBaseUrl(request));
-                    }
                 } else {
                     ajaxUtil.fail().msg("未查询到用户类型信息");
                 }

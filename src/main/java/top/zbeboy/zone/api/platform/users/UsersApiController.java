@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import top.zbeboy.zbase.config.Workbook;
+import top.zbeboy.zbase.config.system.mobile.SystemMobileConfig;
 import top.zbeboy.zbase.domain.tables.pojos.Files;
 import top.zbeboy.zbase.domain.tables.pojos.Role;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
@@ -32,7 +33,6 @@ import top.zbeboy.zone.service.upload.FileBean;
 import top.zbeboy.zone.service.upload.UploadService;
 import top.zbeboy.zone.service.util.BCryptUtil;
 import top.zbeboy.zone.web.platform.common.PlatformControllerCommon;
-import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
 import top.zbeboy.zone.web.util.BaseImgUtil;
 import top.zbeboy.zone.web.util.SessionUtil;
 

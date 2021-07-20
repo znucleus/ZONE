@@ -16,6 +16,7 @@ import top.zbeboy.zbase.bean.data.student.StudentBean;
 import top.zbeboy.zbase.config.WeiXinAppBook;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.config.ZoneProperties;
+import top.zbeboy.zbase.config.system.mobile.SystemMobileConfig;
 import top.zbeboy.zbase.domain.tables.pojos.RosterData;
 import top.zbeboy.zbase.domain.tables.pojos.Student;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
@@ -33,8 +34,6 @@ import top.zbeboy.zbase.tools.web.util.BooleanUtil;
 import top.zbeboy.zbase.vo.data.student.StudentAddVo;
 import top.zbeboy.zbase.vo.data.student.StudentEditVo;
 import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
-import top.zbeboy.zone.service.system.SystemMailService;
-import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
@@ -59,9 +58,6 @@ public class StudentApiController {
 
     @Resource
     private CampusRosterService campusRosterService;
-
-    @Resource
-    private SystemMailService systemMailService;
 
     @Resource
     private StringRedisTemplate stringRedisTemplate;
@@ -208,7 +204,7 @@ public class StudentApiController {
                 studentAddVo.setMailboxVerifyValid(DateTimeUtil.utilDateToLocalDateTime(dateTime.toDate()));
                 studentAddVo.setLangKey(request.getLocale().toLanguageTag());
                 studentAddVo.setJoinDate(DateTimeUtil.getNowLocalDate());
-
+                studentAddVo.setBaseUrl(RequestUtil.getBaseUrl(request));
                 // 同步花名册
                 Optional<RosterData> optionalRosterData = campusRosterService.findRosterDataByStudentNumber(studentAddVo.getStudentNumber());
                 if (optionalRosterData.isPresent()) {
@@ -228,15 +224,6 @@ public class StudentApiController {
                     if (StringUtils.isNotBlank(studentAddVo.getResCode()) && StringUtils.isNotBlank(studentAddVo.getAppId())) {
                         weiXinService.save(studentAddVo.getResCode(), studentAddVo.getAppId(), WeiXinAppBook.getAppSecret(studentAddVo.getAppId()), studentAddVo.getUsername());
                     }
-
-                    Users users = new Users();
-                    users.setUsername(studentAddVo.getUsername());
-                    users.setLangKey(studentAddVo.getLangKey());
-                    users.setMailboxVerifyCode(studentAddVo.getMailboxVerifyCode());
-                    users.setMailboxVerifyValid(studentAddVo.getMailboxVerifyValid());
-                    users.setEmail(studentAddVo.getEmail());
-                    users.setRealName(studentAddVo.getRealName());
-                    systemMailService.sendValidEmailMail(users, RequestUtil.getBaseUrl(request));
                 }
             } else {
                 ajaxUtil.fail().msg("未查询到用户类型信息");

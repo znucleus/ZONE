@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.config.CacheBook;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.config.ZoneProperties;
+import top.zbeboy.zbase.config.system.mobile.SystemMobileConfig;
 import top.zbeboy.zbase.domain.tables.pojos.SystemConfigure;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.platform.UsersService;
@@ -21,7 +22,6 @@ import top.zbeboy.zbase.feign.system.SystemMobileService;
 import top.zbeboy.zbase.tools.service.util.RandomUtil;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
-import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;

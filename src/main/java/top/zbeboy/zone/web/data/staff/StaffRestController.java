@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import top.zbeboy.zbase.config.WeiXinAppBook;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.config.ZoneProperties;
+import top.zbeboy.zbase.config.system.mobile.SystemMobileConfig;
 import top.zbeboy.zbase.domain.tables.pojos.Role;
 import top.zbeboy.zbase.domain.tables.pojos.SystemConfigure;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
@@ -21,6 +22,7 @@ import top.zbeboy.zbase.feign.data.WeiXinSubscribeService;
 import top.zbeboy.zbase.feign.platform.UsersService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zbase.feign.system.SystemConfigureService;
+import top.zbeboy.zbase.feign.system.SystemMailService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.service.util.FilesUtil;
 import top.zbeboy.zbase.tools.service.util.RandomUtil;
@@ -33,8 +35,6 @@ import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zbase.vo.data.staff.StaffAddVo;
 import top.zbeboy.zbase.vo.data.staff.StaffEditVo;
 import top.zbeboy.zbase.vo.data.weixin.WeiXinSubscribeSendVo;
-import top.zbeboy.zone.service.system.SystemMailService;
-import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
@@ -124,17 +124,6 @@ public class StaffRestController {
                     staffAddVo.setLangKey(request.getLocale().toLanguageTag());
                     staffAddVo.setBaseUrl(RequestUtil.getBaseUrl(request));
                     ajaxUtil = staffService.save(staffAddVo);
-
-                    if (ajaxUtil.getState()) {
-                        Users users = new Users();
-                        users.setUsername(staffAddVo.getUsername());
-                        users.setLangKey(staffAddVo.getLangKey());
-                        users.setMailboxVerifyCode(staffAddVo.getMailboxVerifyCode());
-                        users.setMailboxVerifyValid(staffAddVo.getMailboxVerifyValid());
-                        users.setEmail(staffAddVo.getEmail());
-                        users.setRealName(staffAddVo.getRealName());
-                        systemMailService.sendValidEmailMail(users, staffAddVo.getBaseUrl());
-                    }
                 } else {
                     ajaxUtil.fail().msg("未查询到用户类型信息");
                 }

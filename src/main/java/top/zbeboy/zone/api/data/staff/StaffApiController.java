@@ -15,6 +15,7 @@ import top.zbeboy.zbase.bean.data.staff.StaffBean;
 import top.zbeboy.zbase.config.WeiXinAppBook;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.config.ZoneProperties;
+import top.zbeboy.zbase.config.system.mobile.SystemMobileConfig;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.domain.tables.pojos.UsersType;
 import top.zbeboy.zbase.feign.data.StaffService;
@@ -29,8 +30,6 @@ import top.zbeboy.zbase.tools.web.util.BooleanUtil;
 import top.zbeboy.zbase.vo.data.staff.StaffAddVo;
 import top.zbeboy.zbase.vo.data.staff.StaffEditVo;
 import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
-import top.zbeboy.zone.service.system.SystemMailService;
-import top.zbeboy.zone.web.system.mobile.SystemMobileConfig;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
@@ -52,9 +51,6 @@ public class StaffApiController {
 
     @Resource
     private ZoneProperties ZoneProperties;
-
-    @Resource
-    private SystemMailService systemMailService;
 
     @Resource
     private StringRedisTemplate stringRedisTemplate;
@@ -184,15 +180,6 @@ public class StaffApiController {
                     if (StringUtils.isNotBlank(staffAddVo.getResCode()) && StringUtils.isNotBlank(staffAddVo.getAppId())) {
                         weiXinService.save(staffAddVo.getResCode(), staffAddVo.getAppId(), WeiXinAppBook.getAppSecret(staffAddVo.getAppId()), staffAddVo.getUsername());
                     }
-
-                    Users users = new Users();
-                    users.setUsername(staffAddVo.getUsername());
-                    users.setLangKey(staffAddVo.getLangKey());
-                    users.setMailboxVerifyCode(staffAddVo.getMailboxVerifyCode());
-                    users.setMailboxVerifyValid(staffAddVo.getMailboxVerifyValid());
-                    users.setEmail(staffAddVo.getEmail());
-                    users.setRealName(staffAddVo.getRealName());
-                    systemMailService.sendValidEmailMail(users, staffAddVo.getBaseUrl());
                 }
             } else {
                 ajaxUtil.fail().msg("未查询到用户类型信息");

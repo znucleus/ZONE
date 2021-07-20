@@ -13,12 +13,12 @@ import top.zbeboy.zbase.domain.tables.pojos.SystemConfigure;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.platform.UsersService;
 import top.zbeboy.zbase.feign.system.SystemConfigureService;
+import top.zbeboy.zbase.feign.system.SystemMailService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.service.util.RandomUtil;
 import top.zbeboy.zbase.tools.service.util.RequestUtil;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.BooleanUtil;
-import top.zbeboy.zone.service.system.SystemMailService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;

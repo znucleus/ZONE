@@ -39,8 +39,8 @@
                             <!-- The file input field used as target for the file upload widget -->
                                 <input id="batchImport" type="file" name="files[]"/>
                         </span>
-                        <button type="button" class="btn btn-outline-primary" id="release"><i class="fa fa-edit"
-                                                                                              th:if="${canRelease}"></i>
+                        <button type="button" class="btn btn-outline-primary" id="release" th:if="${canRelease}">
+                            <i class="fa fa-edit"></i>
                             发布
                         </button>
                         <button type="button" class="btn btn-purple" id="authorize"

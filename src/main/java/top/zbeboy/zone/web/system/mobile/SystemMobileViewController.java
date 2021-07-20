@@ -3,6 +3,7 @@ package top.zbeboy.zone.web.system.mobile;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import top.zbeboy.zbase.config.system.mobile.SystemMobileConfig;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.feign.platform.UsersService;
 import top.zbeboy.zone.web.system.tip.SystemTipConfig;
