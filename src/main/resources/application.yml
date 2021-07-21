@@ -64,14 +64,5 @@ feign:
         connectTimeout: 10000
         readTimeout: 10000
         loggerLevel: basic
-  hystrix:
+  circuitbreaker:
     enabled: true
-
-hystrix:
-  command:
-    # 全局默认的熔断设置
-    default:
-      execution:
-        isolation:
-          thread:
-            timeoutInMilliseconds: 11000
