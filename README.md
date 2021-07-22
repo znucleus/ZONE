@@ -1,7 +1,7 @@
 # Z.核
 校园协作平台  
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/zbeboy/ZONE/master/LICENSE) 
-[![GitHub stars](https://img.shields.io/github/stars/zbeboy/ZONE.svg)](https://github.com/zbeboy/ZONE/stargazers) 
+[![GitHub license](https://img.shields.io/github/license/znucleus/ZONE)](https://github.com/znucleus/ZONE/blob/master/LICENSE) 
+[![GitHub stars](https://img.shields.io/github/stars/znucleus/ZONE)](https://github.com/znucleus/ZONE/stargazers) 
 [![Build Status](https://travis-ci.org/zbeboy/ZONE.svg?branch=master)](https://travis-ci.org/zbeboy/ZONE)
 # 开发环境
 1.AdoptOpenJDK 11.0.11;  
