@@ -4,12 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import top.zbeboy.zbase.config.CacheBook;
 import top.zbeboy.zbase.domain.tables.daos.TrainingSpecialDao;
 import top.zbeboy.zbase.domain.tables.pojos.TrainingSpecial;
 import top.zbeboy.zbase.tools.service.util.SQLQueryUtil;
@@ -37,7 +34,6 @@ public class TrainingSpecialServiceImpl implements TrainingSpecialService, Pagin
         create = dslContext;
     }
 
-    @Cacheable(cacheNames = CacheBook.TRAINING_SPECIAL, key = "#id")
     @Override
     public Optional<Record> findByIdRelation(String id) {
         return create.select()
@@ -68,13 +64,11 @@ public class TrainingSpecialServiceImpl implements TrainingSpecialService, Pagin
         trainingSpecialDao.insert(trainingSpecial);
     }
 
-    @CacheEvict(cacheNames = CacheBook.TRAINING_SPECIAL, key = "#trainingSpecial.trainingSpecialId")
     @Override
     public void update(TrainingSpecial trainingSpecial) {
         trainingSpecialDao.update(trainingSpecial);
     }
 
-    @CacheEvict(cacheNames = CacheBook.TRAINING_SPECIAL, key = "#id")
     @Override
     public void deleteById(String id) {
         trainingSpecialDao.deleteById(id);

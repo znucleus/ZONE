@@ -33,12 +33,12 @@ public class TrainingConfigureServiceImpl implements TrainingConfigureService {
         create = dslContext;
     }
 
+    @Cacheable(cacheNames = CacheBook.TRAINING_CONFIGURE, key = "#id")
     @Override
     public TrainingConfigure findById(String id) {
         return trainingConfigureDao.findById(id);
     }
 
-    @Cacheable(cacheNames = CacheBook.TRAINING_CONFIGURE, key = "#id")
     @Override
     public Optional<Record> findByIdRelation(String id) {
         return create.select()
@@ -76,6 +76,7 @@ public class TrainingConfigureServiceImpl implements TrainingConfigureService {
                 .fetch();
     }
 
+    @CacheEvict(cacheNames = CacheBook.TRAINING_CONFIGURE, key = "#trainingConfigure.trainingConfigureId")
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public void save(TrainingConfigure trainingConfigure) {

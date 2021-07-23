@@ -38,6 +38,7 @@ public class TrainingAttendServiceImpl implements TrainingAttendService, Paginat
         create = dslContext;
     }
 
+    @Cacheable(cacheNames = CacheBook.TRAINING_ATTEND, key = "#id")
     @Override
     public TrainingAttend findById(String id) {
         return trainingAttendDao.findById(id);
@@ -52,7 +53,6 @@ public class TrainingAttendServiceImpl implements TrainingAttendService, Paginat
                 .fetchOne();
     }
 
-    @Cacheable(cacheNames = CacheBook.TRAINING_ATTEND, key = "#id")
     @Override
     public Optional<Record> findByIdRelation(String id) {
         return create.select()
@@ -100,6 +100,7 @@ public class TrainingAttendServiceImpl implements TrainingAttendService, Paginat
         return countAll(selectOnConditionStep, paginationUtil, false);
     }
 
+    @CacheEvict(cacheNames = CacheBook.TRAINING_ATTEND, key = "#trainingAttend.trainingAttendId")
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public void save(TrainingAttend trainingAttend) {

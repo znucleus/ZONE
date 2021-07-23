@@ -34,6 +34,7 @@ public class InternshipJournalContentServiceImpl implements InternshipJournalCon
                 .fetchOptional();
     }
 
+    @CacheEvict(cacheNames = CacheBook.INTERNSHIP_JOURNAL_CONTENT, key = "#internshipJournalContent.internshipJournalId")
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public void save(InternshipJournalContent internshipJournalContent) {

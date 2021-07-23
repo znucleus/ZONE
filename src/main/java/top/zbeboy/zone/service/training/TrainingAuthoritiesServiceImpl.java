@@ -35,12 +35,12 @@ public class TrainingAuthoritiesServiceImpl implements TrainingAuthoritiesServic
         create = dslContext;
     }
 
+    @Cacheable(cacheNames = CacheBook.TRAINING_AUTHORITIES, key = "#id")
     @Override
     public TrainingAuthorities findById(String id) {
         return trainingAuthoritiesDao.findById(id);
     }
 
-    @Cacheable(cacheNames = CacheBook.TRAINING_AUTHORITIES, key = "#id")
     @Override
     public Optional<Record> findByIdRelation(String id) {
         return create.select()
@@ -71,6 +71,7 @@ public class TrainingAuthoritiesServiceImpl implements TrainingAuthoritiesServic
                 .fetch();
     }
 
+    @CacheEvict(cacheNames = CacheBook.TRAINING_AUTHORITIES, key = "#trainingAuthorities.authoritiesId")
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public void save(TrainingAuthorities trainingAuthorities) {

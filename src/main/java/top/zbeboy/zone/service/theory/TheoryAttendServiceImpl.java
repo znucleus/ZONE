@@ -38,6 +38,7 @@ public class TheoryAttendServiceImpl implements TheoryAttendService, PaginationP
         create = dslContext;
     }
 
+    @Cacheable(cacheNames = CacheBook.THEORY_ATTEND, key = "#id")
     @Override
     public TheoryAttend findById(String id) {
         return theoryAttendDao.findById(id);
@@ -52,7 +53,6 @@ public class TheoryAttendServiceImpl implements TheoryAttendService, PaginationP
                 .fetchOne();
     }
 
-    @Cacheable(cacheNames = CacheBook.THEORY_ATTEND, key = "#id")
     @Override
     public Optional<Record> findByIdRelation(String id) {
         return create.select()
@@ -99,6 +99,7 @@ public class TheoryAttendServiceImpl implements TheoryAttendService, PaginationP
         return countAll(selectOnConditionStep, paginationUtil, false);
     }
 
+    @CacheEvict(cacheNames = CacheBook.THEORY_ATTEND, key = "#theoryAttend.theoryAttendId")
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public void save(TheoryAttend theoryAttend) {

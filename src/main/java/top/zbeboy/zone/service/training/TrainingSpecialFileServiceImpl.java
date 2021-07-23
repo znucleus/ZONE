@@ -39,12 +39,12 @@ public class TrainingSpecialFileServiceImpl implements TrainingSpecialFileServic
         create = dslContext;
     }
 
+    @Cacheable(cacheNames = CacheBook.TRAINING_SPECIAL_FILE, key = "#id")
     @Override
     public TrainingSpecialFile findById(String id) {
         return trainingSpecialFileDao.findById(id);
     }
 
-    @Cacheable(cacheNames = CacheBook.TRAINING_SPECIAL_FILE, key = "#id")
     @Override
     public Optional<Record> findByIdRelation(String id) {
         return create.select()
@@ -101,6 +101,7 @@ public class TrainingSpecialFileServiceImpl implements TrainingSpecialFileServic
         return records;
     }
 
+    @CacheEvict(cacheNames = CacheBook.TRAINING_SPECIAL_FILE, key = "#trainingSpecialFile.trainingSpecialFileId")
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public void save(TrainingSpecialFile trainingSpecialFile) {

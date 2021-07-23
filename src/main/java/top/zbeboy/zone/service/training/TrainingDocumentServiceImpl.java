@@ -37,12 +37,12 @@ public class TrainingDocumentServiceImpl implements TrainingDocumentService, Pag
         create = dslContext;
     }
 
+    @Cacheable(cacheNames = CacheBook.TRAINING_DOCUMENT, key = "#id")
     @Override
     public TrainingDocument findById(String id) {
         return trainingDocumentDao.findById(id);
     }
 
-    @Cacheable(cacheNames = CacheBook.TRAINING_DOCUMENT, key = "#id")
     @Override
     public Optional<Record> findByIdRelation(String id) {
         return create.select()
@@ -71,6 +71,7 @@ public class TrainingDocumentServiceImpl implements TrainingDocumentService, Pag
         return countAll(selectOnConditionStep, paginationUtil, false);
     }
 
+    @CacheEvict(cacheNames = CacheBook.TRAINING_DOCUMENT, key = "#trainingDocument.trainingDocumentId")
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public void save(TrainingDocument trainingDocument) {

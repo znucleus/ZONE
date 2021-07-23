@@ -59,12 +59,12 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService, P
         create = dslContext;
     }
 
+    @Cacheable(cacheNames = CacheBook.INTERNSHIP_RELEASE, key = "#id")
     @Override
     public InternshipRelease findById(String id) {
         return internshipReleaseDao.findById(id);
     }
 
-    @Cacheable(cacheNames = CacheBook.INTERNSHIP_RELEASE, key = "#id")
     @Override
     public Optional<Record> findByIdRelation(String id) {
         return create.select()
@@ -117,6 +117,7 @@ public class InternshipReleaseServiceImpl implements InternshipReleaseService, P
         return countAll(selectOnConditionStep, paginationUtil, false);
     }
 
+    @CacheEvict(cacheNames = CacheBook.INTERNSHIP_RELEASE, key = "#internshipRelease.internshipReleaseId")
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public void save(InternshipRelease internshipRelease) {

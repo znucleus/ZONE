@@ -59,12 +59,12 @@ public class TheoryReleaseServiceImpl implements TheoryReleaseService, Paginatio
         create = dslContext;
     }
 
+    @Cacheable(cacheNames = CacheBook.THEORY_RELEASE, key = "#id")
     @Override
     public TheoryRelease findById(String id) {
         return theoryReleaseDao.findById(id);
     }
 
-    @Cacheable(cacheNames = CacheBook.THEORY_RELEASE, key = "#id")
     @Override
     public Optional<Record> findByIdRelation(String id) {
         return create.select()
@@ -129,6 +129,7 @@ public class TheoryReleaseServiceImpl implements TheoryReleaseService, Paginatio
         return countAll(selectOnConditionStep, paginationUtil, false);
     }
 
+    @CacheEvict(cacheNames = CacheBook.THEORY_RELEASE, key = "#theoryRelease.theoryReleaseId")
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public void save(TheoryRelease theoryRelease) {

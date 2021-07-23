@@ -62,12 +62,12 @@ public class TrainingReleaseServiceImpl implements TrainingReleaseService, Pagin
         create = dslContext;
     }
 
+    @Cacheable(cacheNames = CacheBook.TRAINING_RELEASE, key = "#id")
     @Override
     public TrainingRelease findById(String id) {
         return trainingReleaseDao.findById(id);
     }
 
-    @Cacheable(cacheNames = CacheBook.TRAINING_RELEASE, key = "#id")
     @Override
     public Optional<Record> findByIdRelation(String id) {
         return create.select()
@@ -132,6 +132,7 @@ public class TrainingReleaseServiceImpl implements TrainingReleaseService, Pagin
         return countAll(selectOnConditionStep, paginationUtil, false);
     }
 
+    @CacheEvict(cacheNames = CacheBook.TRAINING_RELEASE, key = "#trainingRelease.trainingReleaseId")
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public void save(TrainingRelease trainingRelease) {

@@ -35,12 +35,12 @@ public class TheoryAuthoritiesServiceImpl implements TheoryAuthoritiesService {
         create = dslContext;
     }
 
+    @Cacheable(cacheNames = CacheBook.THEORY_AUTHORITIES, key = "#id")
     @Override
     public TheoryAuthorities findById(String id) {
         return theoryAuthoritiesDao.findById(id);
     }
 
-    @Cacheable(cacheNames = CacheBook.THEORY_AUTHORITIES, key = "#id")
     @Override
     public Optional<Record> findByIdRelation(String id) {
         return create.select()
@@ -71,6 +71,7 @@ public class TheoryAuthoritiesServiceImpl implements TheoryAuthoritiesService {
                 .fetch();
     }
 
+    @CacheEvict(cacheNames = CacheBook.THEORY_AUTHORITIES, key = "#theoryAuthorities.authoritiesId")
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public void save(TheoryAuthorities theoryAuthorities) {

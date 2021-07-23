@@ -37,12 +37,12 @@ public class TrainingSpecialDocumentServiceImpl implements TrainingSpecialDocume
         create = dslContext;
     }
 
+    @Cacheable(cacheNames = CacheBook.TRAINING_SPECIAL_DOCUMENT, key = "#id")
     @Override
     public TrainingSpecialDocument findById(String id) {
         return trainingSpecialDocumentDao.findById(id);
     }
 
-    @Cacheable(cacheNames = CacheBook.TRAINING_SPECIAL_DOCUMENT, key = "#id")
     @Override
     public Optional<Record> findByIdRelation(String id) {
         return create.select()
@@ -63,6 +63,7 @@ public class TrainingSpecialDocumentServiceImpl implements TrainingSpecialDocume
         return countAll(create, TRAINING_SPECIAL_DOCUMENT, paginationUtil, false);
     }
 
+    @CacheEvict(cacheNames = CacheBook.TRAINING_SPECIAL_DOCUMENT, key = "#trainingSpecialDocument.trainingSpecialDocumentId")
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public void save(TrainingSpecialDocument trainingSpecialDocument) {
