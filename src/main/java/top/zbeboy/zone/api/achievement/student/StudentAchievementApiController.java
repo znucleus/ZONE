@@ -1,23 +1,20 @@
 package top.zbeboy.zone.api.achievement.student;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.CookieStore;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import top.zbeboy.zbase.bean.achievement.student.StudentAchievementBean;
+import top.zbeboy.zbase.bean.achievement.student.StudentAchievementSemesterBean;
 import top.zbeboy.zbase.bean.data.student.StudentBean;
-import top.zbeboy.zbase.config.CacheBook;
 import top.zbeboy.zbase.config.Workbook;
-import top.zbeboy.zbase.domain.tables.pojos.StudentAchievement;
+import top.zbeboy.zbase.domain.tables.pojos.StudentAchievementNew;
+import top.zbeboy.zbase.domain.tables.pojos.StudentAchievementSemester;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
 import top.zbeboy.zbase.domain.tables.pojos.UsersType;
 import top.zbeboy.zbase.feign.achievement.student.StudentAchievementService;
 import top.zbeboy.zbase.feign.data.StudentService;
+import top.zbeboy.zbase.feign.platform.RoleService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
-import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
 import top.zbeboy.zone.web.achievement.student.StudentAchievementHttpClient;
@@ -25,10 +22,11 @@ import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class StudentAchievementApiController {
@@ -42,101 +40,31 @@ public class StudentAchievementApiController {
     @Resource
     private StudentService studentService;
 
-    @Resource(name = "redisTemplate")
-    private ValueOperations<String, CookieStore> operations;
-
-    /**
-     * 获取验证码
-     *
-     * @param response 响应
-     * @throws Exception 异常
-     */
-    @GetMapping("/overt/achievement/student/query/captcha/{username}")
-    public void captcha(@PathVariable("username") String username, HttpServletResponse response) throws Exception {
-        StudentAchievementHttpClient studentAchievementHttpClient = new StudentAchievementHttpClient();
-        CookieStore cookieStore = studentAchievementHttpClient.captcha(response);
-        if (Objects.nonNull(cookieStore)) {
-            // 存入集合
-            operations.set(
-                    CacheBook.ACHIEVEMENT_STUDENT + username,
-                    cookieStore,
-                    CacheBook.EXPIRES_MINUTES,
-                    TimeUnit.MINUTES
-            );
-        }
-    }
+    @Resource
+    private RoleService roleService;
 
     /**
      * 查询成绩
      *
-     * @param yhdm 用户名
-     * @param yhmm 密码
-     * @param yhlx 用户类型
-     * @param yzm  验证码
+     * @param username 用户名
+     * @param password 密码
      * @return 数据
      */
-    @ApiLoggingRecord(remark = "学生成绩查询", channel = Workbook.channel.API, needLogin = true)
+    @ApiLoggingRecord(remark = "教务成绩查询", channel = Workbook.channel.API, needLogin = true)
     @PostMapping("/api/achievement/student/query/data")
-    public ResponseEntity<Map<String, Object>> data(@RequestParam("yhdm") String yhdm,
-                                                    @RequestParam("yhmm") String yhmm,
-                                                    @RequestParam("yhlx") String yhlx,
-                                                    @RequestParam("yzm") String yzm,
+    public ResponseEntity<Map<String, Object>> data(@RequestParam("username") String username,
+                                                    @RequestParam("password") String password,
                                                     Principal principal,
                                                     HttpServletRequest request) {
-        AjaxUtil<Object> ajaxUtil = AjaxUtil.of();
+        AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         try {
-            Users users = SessionUtil.getUserFromOauth(principal);
-            Map<String, String> param = new HashMap<>();
-            param.put("yhdm", yhdm);
-            param.put("yhmm", yhmm);
-            param.put("yhlx", yhlx);
-            param.put("yzm", yzm);
-            // 获得对应key的对象
             StudentAchievementHttpClient studentAchievementHttpClient = new StudentAchievementHttpClient();
-            String cacheKey = CacheBook.ACHIEVEMENT_STUDENT + users.getUsername();
-            if (operations.getOperations().hasKey(cacheKey)) {
-                Map<String, Object> result = studentAchievementHttpClient.login(operations.get(cacheKey), param);
-                Boolean hasError = (Boolean) result.get("hasError");
-                if (!hasError) {
-
-                    List<Map<String, Object>> data = (List<Map<String, Object>>) result.get("data");
-
-                    if (CollectionUtils.isNotEmpty(data)) {
-                        List<StudentAchievement> list = new ArrayList<>();
-                        for (Map<String, Object> map : data) {
-                            StudentAchievement studentAchievement = new StudentAchievement();
-                            studentAchievement.setStudentNumber((String) map.get("studentNumber"));
-                            studentAchievement.setSchoolYear((String) map.get("schoolYear"));
-                            studentAchievement.setSemester((String) map.get("semester"));
-                            studentAchievement.setOrganizeName((String) map.get("organizeName"));
-                            studentAchievement.setCourseCode((String) map.get("courseCode"));
-                            studentAchievement.setCourseName((String) map.get("courseName"));
-                            studentAchievement.setCourseType((String) map.get("courseType"));
-                            studentAchievement.setTotalHours((String) map.get("totalHours"));
-                            studentAchievement.setCourseNature((String) map.get("courseNature"));
-                            studentAchievement.setAssessmentMethod((String) map.get("assessmentMethod"));
-                            studentAchievement.setRegistrationMethod((String) map.get("registrationMethod"));
-                            studentAchievement.setCreditsDue((String) map.get("creditsDue"));
-                            studentAchievement.setAchievement((String) map.get("achievement"));
-                            studentAchievement.setCreditsObtained((String) map.get("creditsObtained"));
-                            studentAchievement.setExamType((String) map.get("examType"));
-                            studentAchievement.setTurn((String) map.get("turn"));
-                            studentAchievement.setExamDate((String) map.get("examDate"));
-                            studentAchievement.setRemark((String) map.get("remark"));
-                            studentAchievement.setCreateDate(DateTimeUtil.getNowLocalDateTime());
-                            list.add(studentAchievement);
-                        }
-                        studentAchievementService.batchSave(list);
-                        ajaxUtil.success().msg("查询成绩成功");
-                    } else {
-                        ajaxUtil.fail().msg("未获取到成绩信息");
-                    }
-
-                } else {
-                    ajaxUtil.fail().msg((String) result.get("reasonPhrase"));
-                }
+            Map<String, Object> result = studentAchievementHttpClient.eduData(username, password);
+            Boolean hasError = (Boolean) result.get("hasError");
+            if (!hasError) {
+                ajaxUtil = studentAchievementService.batchSave((List<Map<String, Object>>) result.get("data"));
             } else {
-                ajaxUtil.fail().msg("获取连接失败");
+                ajaxUtil.fail().msg(result.get("statusCode") + ": " + result.get("reasonPhrase"));
             }
         } catch (Exception e) {
             ajaxUtil.fail().msg("查询失败: 异常: " + e.getMessage());
@@ -145,32 +73,117 @@ public class StudentAchievementApiController {
     }
 
     /**
-     * 历史查询成绩
+     * 查询学期数据
      *
+     * @param studentNumber 学号
      * @return 数据
      */
-    @ApiLoggingRecord(remark = "学生历史成绩查询", channel = Workbook.channel.API, needLogin = true)
-    @GetMapping("/api/achievement/student/query/history/data")
-    public ResponseEntity<Map<String, Object>> historyData(Principal principal, HttpServletRequest request) {
-        AjaxUtil<StudentAchievementBean> ajaxUtil = AjaxUtil.of();
-        List<StudentAchievementBean> list = new ArrayList<>();
+    @ApiLoggingRecord(remark = "学期查询", channel = Workbook.channel.API, needLogin = true)
+    @GetMapping("/api/achievement/student/query/history/new/semester")
+    public ResponseEntity<Map<String, Object>> semester(String studentNumber, Principal principal, HttpServletRequest request) {
+        AjaxUtil<StudentAchievementSemesterBean> ajaxUtil = AjaxUtil.of();
         Users users = SessionUtil.getUserFromOauth(principal);
-        Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
-        if (optionalUsersType.isPresent()) {
-            UsersType usersType = optionalUsersType.get();
-            if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
-                Optional<StudentBean> optionalStudentBean = studentService.findByUsernameRelation(users.getUsername());
-                if (optionalStudentBean.isPresent()) {
-                    StudentBean studentBean = optionalStudentBean.get();
-                    Optional<List<StudentAchievementBean>> optionalStudentAchievementBeans = studentAchievementService.findByStudentNumber(studentBean.getStudentNumber());
-                    if (optionalStudentAchievementBeans.isPresent()) {
-                        list = optionalStudentAchievementBeans.get();
-                        list.forEach(s -> s.setCreateDateStr(DateTimeUtil.defaultFormatLocalDateTime(s.getCreateDate())));
+        if (StringUtils.isBlank(studentNumber)) {
+            Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+            if (optionalUsersType.isPresent()) {
+                UsersType usersType = optionalUsersType.get();
+                if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
+                    Optional<StudentBean> optionalStudentBean = studentService.findByUsernameRelation(users.getUsername());
+                    if (optionalStudentBean.isPresent()) {
+                        StudentBean studentBean = optionalStudentBean.get();
+                        studentNumber = studentBean.getStudentNumber();
+                    }
+                }
+            }
+        } else {
+            boolean canQuery = false;
+            if (roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_SYSTEM.name()) ||
+                    roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_ADMIN.name())) {
+                canQuery = true;
+            } else {
+                Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+                if (optionalUsersType.isPresent()) {
+                    UsersType usersType = optionalUsersType.get();
+                    if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
+                        canQuery = true;
+                    } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
+                        Optional<StudentBean> optionalStudentBean = studentService.findByUsernameRelation(users.getUsername());
+                        if (optionalStudentBean.isPresent()) {
+                            StudentBean studentBean = optionalStudentBean.get();
+                            if(StringUtils.equals(studentNumber, studentBean.getStudentNumber())){
+                                canQuery = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (!canQuery) {
+                studentNumber = "";
+            }
+        }
+
+        if (StringUtils.isNotBlank(studentNumber)) {
+            List<StudentAchievementSemesterBean> beans = new ArrayList<>();
+            Optional<List<StudentAchievementSemesterBean>> optionalList = studentAchievementService.findSemesterByStudentNumber(studentNumber);
+            if (optionalList.isPresent()) {
+                beans = optionalList.get();
+            }
+            ajaxUtil.success().msg("获取数据成功").list(beans);
+        } else {
+            ajaxUtil.fail().msg("您无权限或非本人查询");
+        }
+        return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
+    }
+
+    /**
+     * 查询成绩数据
+     *
+     * @param semesterId 学期id
+     * @return 数据
+     */
+    @ApiLoggingRecord(remark = "成绩查询", channel = Workbook.channel.API, needLogin = true)
+    @GetMapping("/api/achievement/student/query/history/new/data/{semesterId}")
+    public ResponseEntity<Map<String, Object>> data(@PathVariable("semesterId") String semesterId, Principal principal, HttpServletRequest request) {
+        AjaxUtil<StudentAchievementNew> ajaxUtil = AjaxUtil.of();
+        boolean canQuery = false;
+        Users users = SessionUtil.getUserFromOauth(principal);
+        if (roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_SYSTEM.name()) ||
+                roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_ADMIN.name())) {
+            canQuery = true;
+        } else {
+            Optional<UsersType> optionalUsersType = usersTypeService.findById(users.getUsersTypeId());
+            if (optionalUsersType.isPresent()) {
+                UsersType usersType = optionalUsersType.get();
+                if (StringUtils.equals(Workbook.STAFF_USERS_TYPE, usersType.getUsersTypeName())) {
+                    canQuery = true;
+                } else if (StringUtils.equals(Workbook.STUDENT_USERS_TYPE, usersType.getUsersTypeName())) {
+                    Optional<StudentBean> optionalStudentBean = studentService.findByUsernameRelation(users.getUsername());
+                    if (optionalStudentBean.isPresent()) {
+                        StudentBean studentBean = optionalStudentBean.get();
+                        String studentNumber = studentBean.getStudentNumber();
+                        Optional<StudentAchievementSemester> optionalStudentAchievementSemester = studentAchievementService.findSemesterById(semesterId);
+                        if (optionalStudentAchievementSemester.isPresent()) {
+                            StudentAchievementSemester studentAchievementSemester = optionalStudentAchievementSemester.get();
+                            if (StringUtils.equals(studentNumber, studentAchievementSemester.getStudentNumber())) {
+                                canQuery = true;
+                            }
+                        }
                     }
                 }
             }
         }
-        ajaxUtil.success().msg("获取数据成功").list(list);
+
+        if (canQuery) {
+            List<StudentAchievementNew> beans = new ArrayList<>();
+            Optional<List<StudentAchievementNew>> optionalList = studentAchievementService.findAchievementBySemesterId(semesterId);
+            if (optionalList.isPresent()) {
+                beans = optionalList.get();
+            }
+            ajaxUtil.success().msg("获取数据成功").list(beans);
+        } else {
+            ajaxUtil.fail().msg("您无权限或非本人查询");
+        }
         return new ResponseEntity<>(ajaxUtil.send(), HttpStatus.OK);
     }
 }

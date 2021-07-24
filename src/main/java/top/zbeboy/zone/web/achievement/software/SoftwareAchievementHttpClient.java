@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
@@ -37,7 +38,7 @@ public class SoftwareAchievementHttpClient {
         httpget.setHeader("Referer", "https://query.ruankao.org.cn/score/main");
         httpget.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36");
         HttpResponse response = httpclient.execute(httpget);
-        if (response.getStatusLine().getStatusCode() == 200) {
+        if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
             HttpEntity entity = response.getEntity();
             res.setContentType(MediaType.IMAGE_JPEG_VALUE);
             FileCopyUtils.copy(EntityUtils.toByteArray(entity), res.getOutputStream());
@@ -54,7 +55,7 @@ public class SoftwareAchievementHttpClient {
         httpget.setHeader("Referer", "https://query.ruankao.org.cn/score/main");
         httpget.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36");
         HttpResponse response = httpclient.execute(httpget, httpClientContext);
-        if (response.getStatusLine().getStatusCode() == 200) {
+        if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
             HttpEntity entity = response.getEntity();
             String str = EntityUtils.toString(entity);
             list = getExamDate(str);
@@ -81,7 +82,7 @@ public class SoftwareAchievementHttpClient {
 
         HttpResponse response = httpclient.execute(post);
 
-        if (response.getStatusLine().getStatusCode() == 200) {
+        if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
             HttpEntity responseEntity = response.getEntity();
             String result = EntityUtils.toString(responseEntity);
             JSONObject jsonObject = JSON.parseObject(result);
@@ -131,7 +132,7 @@ public class SoftwareAchievementHttpClient {
 
         HttpResponse response = httpclient.execute(post);
 
-        if (response.getStatusLine().getStatusCode() == 200) {
+        if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
             HttpEntity responseEntity = response.getEntity();
             String result = EntityUtils.toString(responseEntity);
             JSONObject jsonObject = JSON.parseObject(result);

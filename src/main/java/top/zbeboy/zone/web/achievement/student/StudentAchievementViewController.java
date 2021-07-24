@@ -1,6 +1,7 @@
 package top.zbeboy.zone.web.achievement.student;
 
 import org.apache.commons.lang3.StringUtils;
+import org.bouncycastle.math.raw.Mod;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,9 +52,20 @@ public class StudentAchievementViewController {
      *
      * @return 学生历史成绩页面
      */
-    @GetMapping("/web/achievement/student/query/history")
-    public String history() {
+    @GetMapping("/web/achievement/student/query/history/new")
+    public String newHistory(String studentNumber, ModelMap modelMap) {
+        modelMap.put("studentNumber", studentNumber);
         return "web/achievement/student/student_achievement_history::#page-wrapper";
+    }
+
+    /**
+     * 学生历史成绩
+     *
+     * @return 学生历史成绩页面
+     */
+    @GetMapping("/web/achievement/student/query/history/old")
+    public String oldHistory() {
+        return "web/achievement/student/student_achievement_history_old::#page-wrapper";
     }
 
 }

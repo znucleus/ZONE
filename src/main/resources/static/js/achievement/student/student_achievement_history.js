@@ -1,13 +1,14 @@
 //# sourceURL=student_achievement_history.js
-require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active", "tablesaw", "messenger"],
-    function ($, _, tools, Handlebars, Swal, navActive) {
+require(["jquery", "tools", "handlebars", "nav.active", "messenger"],
+    function ($, tools, Handlebars, navActive) {
 
         /*
          ajax url
          */
         function getAjaxUrl() {
             return {
-                data: web_path + '/web/achievement/student/query/history/data',
+                semester: web_path + '/web/achievement/student/query/history/new/semester',
+                data: web_path + '/web/achievement/student/query/history/new/data',
                 page: '/web/menu/achievement/student/query'
             };
         }
@@ -15,29 +16,83 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
         navActive(getAjaxUrl().page);
 
         var page_param = {
-            studentNumber: $('#studentNumber').val()
+            studentNumber: $('#paramStudentNumber').val()
         }
 
         init();
 
         function init() {
-            initData();
+            initSemester();
         }
 
-        var achievementData = [];
+        var semesterList = [];
+        var semesterId = "";
 
-        function initData() {
-            $.get(getAjaxUrl().data, page_param, function (data) {
-                Messenger().post({
-                    message: data.msg,
-                    type: data.state ? 'success' : 'error',
-                    showCloseButton: true
-                });
+        function initSemester() {
+            $.get(getAjaxUrl().semester, page_param, function (data) {
                 if (data.state) {
-                    achievementData = data.listResult;
-                    search();
+                    semesterList = data.listResult;
+                    semesterData(data);
+                    if (semesterList.length > 0) {
+                        $('#departmentName').text(semesterList[0].departmentName);
+                        $('#organizeName').text(semesterList[0].organizeName);
+                        $('#studentNumber').text(semesterList[0].studentNumber);
+                        $('#realName').text(semesterList[0].realName);
+                        semesterId = semesterList[0].semesterId;
+                        initAchievement();
+                    }
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
                 }
             });
+        }
+
+        var semesterTableElement = $('#semesterData');
+
+        function semesterData(data) {
+            var template = Handlebars.compile($("#semester_template").html());
+            semesterTableElement.html(template(data));
+            $(semesterTableElement).children().first().children().first().addClass('active');
+        }
+
+        semesterTableElement.delegate('.semester', "click", function () {
+            $('.semester').removeClass('active');
+            $(this).addClass('active');
+            semesterId = $(this).attr('data-id');
+            $.each(semesterList, function (i, v) {
+                if (v.semesterId === semesterId) {
+                    $('#departmentName').text(v.departmentName);
+                    $('#organizeName').text(v.organizeName);
+                    $('#studentNumber').text(v.studentNumber);
+                    $('#realName').text(v.realName);
+                }
+            });
+            initAchievement();
+        });
+
+        var achievementList = [];
+
+        function initAchievement() {
+            if (semesterId !== '') {
+                tools.dataLocalLoading('#dataTable');
+                $.get(getAjaxUrl().data + '/' + semesterId, function (data) {
+                    tools.dataLocalEndLoading('#dataTable');
+                    if (data.state) {
+                        achievementList = data.listResult;
+                        search();
+                    } else {
+                        Messenger().post({
+                            message: data.msg,
+                            type: 'error',
+                            showCloseButton: true
+                        });
+                    }
+                });
+            }
         }
 
         var tableElement = $('#dataTable');
@@ -48,13 +103,11 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
          */
         function listData(data) {
             var template = Handlebars.compile($("#data_template").html());
-            $('#dataTable > tbody').html(template(data));
-            $('#totalSize').text(data.listResult.length);
-            tableElement.tablesaw().data("tablesaw").refresh();
+            tableElement.html(template(data));
         }
 
         $('#refresh').click(function () {
-            init();
+            initAchievement();
         });
 
         $("#search").keyup(function () {
@@ -65,32 +118,14 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
             var v = $('#search').val();
             var filterData = {listResult: []};
             if (v !== '') {
-                $.each(achievementData, function (i, n) {
-                    if (n.courseName.indexOf(v) > -1 ||
-                        n.achievement.indexOf(v) > -1 ||
-                        n.schoolYear.indexOf(v) > -1 ||
-                        n.semester.indexOf(v) > -1 ||
-                        n.organizeName.indexOf(v) > -1 ||
-                        n.courseCode.indexOf(v) > -1 ||
-                        n.courseType.indexOf(v) > -1 ||
-                        n.totalHours.indexOf(v) > -1 ||
-                        n.courseNature.indexOf(v) > -1 ||
-                        n.assessmentMethod.indexOf(v) > -1 ||
-                        n.registrationMethod.indexOf(v) > -1 ||
-                        n.creditsDue.indexOf(v) > -1 ||
-                        n.creditsObtained.indexOf(v) > -1 ||
-                        n.examType.indexOf(v) > -1 ||
-                        n.turn.indexOf(v) > -1 ||
-                        n.examDate.indexOf(v) > -1 ||
-                        n.remark.indexOf(v) > -1 ||
-                        n.createDateStr.indexOf(v) > -1) {
+                $.each(achievementList, function (i, n) {
+                    if (n.courseName.indexOf(v) > -1) {
                         filterData.listResult.push(n);
                     }
                 });
             } else {
-                filterData.listResult = achievementData;
+                filterData.listResult = achievementList;
             }
-
             listData(filterData);
         }
     });

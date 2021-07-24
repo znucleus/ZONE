@@ -17,38 +17,28 @@
                 <div class="col-md-12">
                     <div class="col-md-12">
                         <p class="text-info">
-                            说明：目前仅支持昆明理工大学城市学院学生查询，请输入老教务系统账号密码。
+                            说明：目前仅支持昆明理工大学城市学院学生查询，请输入新教务系统账号密码。
                         </p>
                     </div>
                     <form id="queryForm">
                         <div class="form-group">
-                            <label for="yhdm">用户名</label>
-                            <input type="text" class="form-control" placeholder="用户名" id="yhdm" name="yhdm"
+                            <label for="username">账号</label>
+                            <input type="text" class="form-control" placeholder="账号" id="username" name="username"
                                    th:value="${studentNumber}"/>
                             <div class="invalid-feedback"></div>
                         </div>
                         <div class="form-group">
-                            <label for="yhdm">密码</label>
-                            <input type="password" class="form-control" placeholder="密码" id="yhmm" name="yhmm"/>
+                            <label for="password">密码</label>
+                            <input type="password" class="form-control" placeholder="密码" id="password" name="password"/>
                             <div class="invalid-feedback"></div>
-                            <small id="yhmmHelp" class="form-text text-muted">密码与账号相同？<a href="javascript:"
-                                                                                         id="yhmmFill">填入</a></small>
-                            <input type="hidden" class="form-control" placeholder="用户类型" id="yhlx" name="yhlx"
-                                   value="2"/>
-                        </div>
-                        <div class="form-row">
-                            <div class="col-md-8 col-sm-8">
-                                <input type="text" class="form-control" placeholder="验证码" id="yzm" name="yzm"/>
-                                <div class="invalid-feedback"></div>
-                            </div>
-                            <div class="col-md-4 col-sm-4">
-                                <img alt="验证码" class="img-fluid img-thumbnail" id="captcha">
-                            </div>
+                            <small id="passwordHelp" class="form-text text-muted">密码与账号相同？<a href="javascript:"
+                                                                                         id="passwordFill">填入</a></small>
                         </div>
                         <div class="form-group text-danger" id="queryError"></div>
                         <div class="form-group text-center">
-                            <button type="button" class="btn btn-primary text-center" id="query">查询</button>
-                            <button type="button" class="btn btn-secondary text-center" id="history">历史成绩</button>
+                            <button type="button" class="btn btn-primary text-center m-2" id="query">查询</button>
+                            <button type="button" class="btn btn-info text-center m-2" id="historyNew">历史成绩</button>
+                            <button type="button" class="btn btn-secondary text-center m-2" id="historyOld">历史成绩(老教务)</button>
                         </div>
                     </form>
                 </div>

@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
@@ -374,7 +375,7 @@ public class TimetableServiceImpl implements TimetableService {
 
         HttpResponse response = client.execute(loginSaltGet);
 
-        if (response.getStatusLine().getStatusCode() == 200) {
+        if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
             //得到实体
             HttpEntity entity = response.getEntity();
 
@@ -393,14 +394,14 @@ public class TimetableServiceImpl implements TimetableService {
 
             HttpResponse loginResponse = client.execute(loginPost);
 
-            if (loginResponse.getStatusLine().getStatusCode() == 200) {
+            if (loginResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 HttpEntity responseEntity = loginResponse.getEntity();
                 String loginResult = EntityUtils.toString(responseEntity);
                 JSONObject loginJson = JSON.parseObject(loginResult);
                 if (loginJson.getBoolean("result")) {
                     HttpGet courseTableGet = new HttpGet(courseTableUri);
                     HttpResponse courseTableResponse = client.execute(courseTableGet);
-                    if (courseTableResponse.getStatusLine().getStatusCode() == 200) {
+                    if (courseTableResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                         HttpEntity courseTableResponseEntity = courseTableResponse.getEntity();
                         String courseTableResult = EntityUtils.toString(courseTableResponseEntity);
                         if (!getAllSemesters) {
@@ -415,7 +416,7 @@ public class TimetableServiceImpl implements TimetableService {
                             if (semesterId > 0) {
                                 HttpGet semesterGet = new HttpGet(String.format(semesterUri, semesterId, semesterId));
                                 HttpResponse semesterResponse = client.execute(semesterGet);
-                                if (semesterResponse.getStatusLine().getStatusCode() == 200) {
+                                if (semesterResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                                     HttpEntity semesterResponseEntity = semesterResponse.getEntity();
                                     String semesterResult = EntityUtils.toString(semesterResponseEntity);
                                     List<Map<String, Object>> list = getTableData(semesterId, semesterResult);

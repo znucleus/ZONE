@@ -20,79 +20,104 @@
         <div class="br-section-wrapper">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <span>数量: </span><span id="totalSize"></span>
-                            <button type="button" id="refresh" class="btn btn-light btn-sm"><i
-                                    class="fa fa-refresh"></i>刷新
-                            </button>
+
+                    <div class="card">
+                        <div class="card-header bg-dark">
+                            <ul class="nav nav-tabs nav-tabs-for-dark card-header-tabs " id="semesterData">
+                            </ul>
+                        </div><!-- card-header -->
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-9 col-md-10">
+                                            <input type="text" id="search" class="form-control form-control-sm"
+                                                   placeholder="搜索"/>
+                                        </div>
+                                        <div class="col-3 col-md-2 text-center">
+                                            <button type="button" id="refresh" class="btn btn-light btn-sm"><i
+                                                    class="fa fa-refresh"></i>刷新
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 mg-t-20">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-3 text-center">
+                                            院（系）/部:<span id="departmentName"></span>
+                                        </div>
+                                        <div class="col-sm-6 col-md-3 text-center">
+                                            行政班级:<span id="organizeName"></span>
+                                        </div>
+                                        <div class="col-sm-6 col-md-3 text-center">
+                                            学号:<span id="studentNumber"></span>
+                                        </div>
+                                        <div class="col-sm-6 col-md-3 text-center">
+                                            姓名:<span id="realName"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 mg-t-5">
+                                    <div class="bd bd-gray-300 rounded table-responsive">
+                                        <table class="table table-hover mg-b-0">
+                                            <thead class="thead-colored thead-info">
+                                            <tr>
+                                                <th>序号</th>
+                                                <th>课程名称</th>
+                                                <th>课程代码</th>
+                                                <th>课程类别一</th>
+                                                <th>课程类别二</th>
+                                                <th>教学班代码</th>
+                                                <th>成绩</th>
+                                                <th>学分</th>
+                                                <th>绩点</th>
+                                                <th>学分绩点</th>
+                                                <th>修读性质</th>
+                                                <th>备注</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="dataTable">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
-                        <div class="col-md-8">
-                            <input type="text" id="search" class="form-control form-control-sm"
-                                   placeholder="搜索"/>
-                        </div>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="tablesaw tablesaw-swipe table table-striped mt-3" data-tablesaw-mode="swipe"
-                               id="dataTable">
-                            <thead>
-                            <tr>
-                                <th scope="col" data-tablesaw-priority="persist">课程名称</th>
-                                <th scope="col" data-tablesaw-priority="1">成绩</th>
-                                <th scope="col" data-tablesaw-priority="2">开课学年</th>
-                                <th scope="col" data-tablesaw-priority="3">开课学期</th>
-                                <th scope="col" data-tablesaw-priority="4">课程下达班级</th>
-                                <th scope="col" data-tablesaw-priority="5">课程代码</th>
-                                <th scope="col" data-tablesaw-priority="6">课程类别</th>
-                                <th scope="col" data-tablesaw-priority="7">总学时</th>
-                                <th scope="col" data-tablesaw-priority="8">课程性质</th>
-                                <th scope="col" data-tablesaw-priority="9">考核方式</th>
-                                <th scope="col" data-tablesaw-priority="10">成绩登记方式</th>
-                                <th scope="col" data-tablesaw-priority="11">应获学分</th>
-                                <th scope="col" data-tablesaw-priority="12">实获学分</th>
-                                <th scope="col" data-tablesaw-priority="13">考试种类</th>
-                                <th scope="col" data-tablesaw-priority="14">轮次</th>
-                                <th scope="col" data-tablesaw-priority="15">考试时间</th>
-                                <th scope="col" data-tablesaw-priority="16">备注</th>
-                                <th scope="col" data-tablesaw-priority="17">更新时间</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
+                    </div><!-- card -->
                 </div>
             </div>
         </div>
     </div>
 
     <!--定义数据模板-->
+    <script id="semester_template" type="text/x-handlebars-template">
+        {{#each listResult}}
+        <li class="nav-item">
+            <a class="nav-link bd-0 pd-y-8 semester" href="javascript:" data-id="{{semesterId}}">{{semester}}</a>
+        </li>
+        {{/each}}
+    </script>
     <script id="data_template" type="text/x-handlebars-template">
         {{#each listResult}}
         <tr>
+            <td>{{serialNumber}}</td>
             <td>{{courseName}}</td>
-            <td>{{achievement}}</td>
-            <td>{{schoolYear}}</td>
-            <td>{{semester}}</td>
-            <td>{{organizeName}}</td>
             <td>{{courseCode}}</td>
-            <td>{{courseType}}</td>
-            <td>{{totalHours}}</td>
-            <td>{{courseNature}}</td>
-            <td>{{assessmentMethod}}</td>
-            <td>{{registrationMethod}}</td>
-            <td>{{creditsDue}}</td>
-            <td>{{creditsObtained}}</td>
-            <td>{{examType}}</td>
-            <td>{{turn}}</td>
-            <td>{{examDate}}</td>
+            <td>{{courseTypeOne}}</td>
+            <td>{{courseTypeTwo}}</td>
+            <td>{{teachingClassCode}}</td>
+            <td>{{achievement}}</td>
+            <td>{{credits}}</td>
+            <td>{{point}}</td>
+            <td>{{gradePoint}}</td>
+            <td>{{nature}}</td>
             <td>{{remark}}</td>
-            <td>{{createDateStr}}</td>
         </tr>
         {{/each}}
     </script>
 
-    <input type="hidden" id="studentNumber" th:value="${studentNumber}"/>
+    <input type="hidden" id="paramStudentNumber" th:value="${studentNumber}"/>
     <input type="hidden" class="dy_script"
            th:value="${@mvcResourceUrlProvider.getForLookupPath('/js/achievement/student/student_achievement_history.js')}"/>
 </div>
