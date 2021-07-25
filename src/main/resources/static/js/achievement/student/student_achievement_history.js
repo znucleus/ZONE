@@ -33,14 +33,7 @@ require(["jquery", "tools", "handlebars", "nav.active", "messenger"],
                 if (data.state) {
                     semesterList = data.listResult;
                     semesterData(data);
-                    if (semesterList.length > 0) {
-                        $('#departmentName').text(semesterList[0].departmentName);
-                        $('#organizeName').text(semesterList[0].organizeName);
-                        $('#studentNumber').text(semesterList[0].studentNumber);
-                        $('#realName').text(semesterList[0].realName);
-                        semesterId = semesterList[0].semesterId;
-                        initAchievement();
-                    }
+                    initAchievement();
                 } else {
                     Messenger().post({
                         message: data.msg,
@@ -55,44 +48,54 @@ require(["jquery", "tools", "handlebars", "nav.active", "messenger"],
 
         function semesterData(data) {
             var template = Handlebars.compile($("#semester_template").html());
-            semesterTableElement.html(template(data));
-            $(semesterTableElement).children().first().children().first().addClass('active');
+            semesterTableElement.append(template(data));
         }
 
         semesterTableElement.delegate('.semester', "click", function () {
             $('.semester').removeClass('active');
             $(this).addClass('active');
             semesterId = $(this).attr('data-id');
-            $.each(semesterList, function (i, v) {
-                if (v.semesterId === semesterId) {
-                    $('#departmentName').text(v.departmentName);
-                    $('#organizeName').text(v.organizeName);
-                    $('#studentNumber').text(v.studentNumber);
-                    $('#realName').text(v.realName);
-                }
-            });
+            if (semesterId !== '') {
+                $('#semesterInfo').css('display', '');
+                $.each(semesterList, function (i, v) {
+                    if (v.semesterId === semesterId) {
+                        $('#departmentName').text(v.departmentName);
+                        $('#organizeName').text(v.organizeName);
+                        $('#studentNumber').text(v.studentNumber);
+                        $('#realName').text(v.realName);
+                    }
+                });
+            } else {
+                $('#semesterInfo').css('display', 'none');
+            }
             initAchievement();
         });
 
         var achievementList = [];
 
         function initAchievement() {
-            if (semesterId !== '') {
-                tools.dataLocalLoading('#dataTable');
-                $.get(getAjaxUrl().data + '/' + semesterId, function (data) {
-                    tools.dataLocalEndLoading('#dataTable');
-                    if (data.state) {
-                        achievementList = data.listResult;
-                        search();
-                    } else {
-                        Messenger().post({
-                            message: data.msg,
-                            type: 'error',
-                            showCloseButton: true
-                        });
-                    }
-                });
-            }
+            var param = {
+                orderColumnName: 'semester',
+                orderDir: 'desc',
+                extraSearch: JSON.stringify({
+                    semesterId: semesterId,
+                    studentNumber: page_param.studentNumber,
+                })
+            };
+            tools.dataLocalLoading('#dataTable');
+            $.get(getAjaxUrl().data + '/', param, function (data) {
+                tools.dataLocalEndLoading('#dataTable');
+                if (data.state) {
+                    achievementList = data.listResult;
+                    search();
+                } else {
+                    Messenger().post({
+                        message: data.msg,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
         }
 
         var tableElement = $('#dataTable');
@@ -103,6 +106,11 @@ require(["jquery", "tools", "handlebars", "nav.active", "messenger"],
          */
         function listData(data) {
             var template = Handlebars.compile($("#data_template").html());
+            var i = 0;
+            Handlebars.registerHelper('serialNumber', function () {
+                i++;
+                return new Handlebars.SafeString(i);
+            });
             tableElement.html(template(data));
         }
 

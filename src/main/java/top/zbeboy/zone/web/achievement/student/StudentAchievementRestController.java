@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import top.zbeboy.zbase.bean.achievement.student.StudentAchievementBean;
+import top.zbeboy.zbase.bean.achievement.student.StudentAchievementNewBean;
 import top.zbeboy.zbase.bean.achievement.student.StudentAchievementSemesterBean;
 import top.zbeboy.zbase.bean.data.student.StudentBean;
 import top.zbeboy.zbase.config.Workbook;
@@ -18,6 +19,7 @@ import top.zbeboy.zbase.feign.platform.RoleService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
+import top.zbeboy.zbase.tools.web.util.pagination.SimplePaginationUtil;
 import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
 import top.zbeboy.zone.web.util.SessionUtil;
 
@@ -138,13 +140,13 @@ public class StudentAchievementRestController {
     /**
      * 查询成绩数据
      *
-     * @param semesterId 学期id
+     * @param simplePaginationUtil 条件
      * @return 数据
      */
     @ApiLoggingRecord(remark = "成绩查询", channel = Workbook.channel.WEB, needLogin = true)
-    @GetMapping("/web/achievement/student/query/history/new/data/{semesterId}")
-    public ResponseEntity<Map<String, Object>> data(@PathVariable("semesterId") String semesterId, HttpServletRequest request) {
-        AjaxUtil<StudentAchievementNew> ajaxUtil = AjaxUtil.of();
+    @GetMapping("/web/achievement/student/query/history/new/data")
+    public ResponseEntity<Map<String, Object>> data(SimplePaginationUtil simplePaginationUtil, HttpServletRequest request) {
+        AjaxUtil<StudentAchievementNewBean> ajaxUtil = AjaxUtil.of();
         boolean canQuery = false;
         Users users = SessionUtil.getUserFromSession();
         if (roleService.isCurrentUserInRole(users.getUsername(), Workbook.authorities.ROLE_SYSTEM.name()) ||
@@ -160,22 +162,16 @@ public class StudentAchievementRestController {
                     Optional<StudentBean> optionalStudentBean = studentService.findByUsernameRelation(users.getUsername());
                     if (optionalStudentBean.isPresent()) {
                         StudentBean studentBean = optionalStudentBean.get();
-                        String studentNumber = studentBean.getStudentNumber();
-                        Optional<StudentAchievementSemester> optionalStudentAchievementSemester = studentAchievementService.findSemesterById(semesterId);
-                        if (optionalStudentAchievementSemester.isPresent()) {
-                            StudentAchievementSemester studentAchievementSemester = optionalStudentAchievementSemester.get();
-                            if (StringUtils.equals(studentNumber, studentAchievementSemester.getStudentNumber())) {
-                                canQuery = true;
-                            }
-                        }
+                        simplePaginationUtil.setSearch("studentNumber", studentBean.getStudentNumber());
+                        canQuery = true;
                     }
                 }
             }
         }
 
         if (canQuery) {
-            List<StudentAchievementNew> beans = new ArrayList<>();
-            Optional<List<StudentAchievementNew>> optionalList = studentAchievementService.findAchievementBySemesterId(semesterId);
+            List<StudentAchievementNewBean> beans = new ArrayList<>();
+            Optional<List<StudentAchievementNewBean>> optionalList = studentAchievementService.findAchievement(simplePaginationUtil);
             if (optionalList.isPresent()) {
                 beans = optionalList.get();
             }

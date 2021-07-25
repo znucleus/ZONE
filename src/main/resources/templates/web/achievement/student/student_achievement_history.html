@@ -24,6 +24,9 @@
                     <div class="card">
                         <div class="card-header bg-dark">
                             <ul class="nav nav-tabs nav-tabs-for-dark card-header-tabs " id="semesterData">
+                                <li class="nav-item">
+                                    <a class="nav-link bd-0 pd-y-8 semester active" href="javascript:" data-id="">全部</a>
+                                </li>
                             </ul>
                         </div><!-- card-header -->
                         <div class="card-body">
@@ -41,7 +44,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-12 mg-t-20">
+                                <div class="col-md-12 mg-t-20" id="semesterInfo" style="display: none">
                                     <div class="row">
                                         <div class="col-sm-6 col-md-3 text-center">
                                             院（系）/部:<span id="departmentName"></span>
@@ -74,6 +77,7 @@
                                                 <th>学分绩点</th>
                                                 <th>修读性质</th>
                                                 <th>备注</th>
+                                                <th>学期</th>
                                             </tr>
                                             </thead>
                                             <tbody id="dataTable">
@@ -113,6 +117,7 @@
             <td>{{gradePoint}}</td>
             <td>{{nature}}</td>
             <td>{{remark}}</td>
+            <td>{{semester}}</td>
         </tr>
         {{/each}}
     </script>
