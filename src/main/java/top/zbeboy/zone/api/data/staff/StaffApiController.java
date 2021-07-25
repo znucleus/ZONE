@@ -30,6 +30,7 @@ import top.zbeboy.zbase.tools.web.util.BooleanUtil;
 import top.zbeboy.zbase.vo.data.staff.StaffAddVo;
 import top.zbeboy.zbase.vo.data.staff.StaffEditVo;
 import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
+import top.zbeboy.zone.web.platform.common.PlatformControllerCommon;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
@@ -60,6 +61,9 @@ public class StaffApiController {
 
     @Resource
     private WeiXinService weiXinService;
+
+    @Resource
+    private PlatformControllerCommon platformControllerCommon;
 
     /**
      * API:获取教职工信息
@@ -174,6 +178,8 @@ public class StaffApiController {
                 staffAddVo.setLangKey(request.getLocale().toLanguageTag());
                 staffAddVo.setBaseUrl(RequestUtil.getBaseUrl(request));
                 ajaxUtil = staffService.save(staffAddVo);
+
+                platformControllerCommon.personalQrCode(staffAddVo.getUsername(), staffAddVo.getAvatar(), staffAddVo.getUsersTypeId(), RequestUtil.getRealPath(request));
 
                 if (ajaxUtil.getState()) {
                     // 注册微信

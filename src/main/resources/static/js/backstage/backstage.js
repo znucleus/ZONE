@@ -408,6 +408,12 @@ require(["jquery", "requirejs-domready", "moment-with-locales", "handlebars", "a
                         if (data.state) {
                             $('#personalQrCodeImg').attr('src', web_path + '/' + data.path + '?time=' + new Date().getTime());
                             $('#personalQrCodeModal').modal('show');
+                        } else {
+                            Messenger().post({
+                                message: '获取失败，请稍后尝试',
+                                type: 'error',
+                                showCloseButton: true
+                            });
                         }
                     },
                     error: function (XMLHttpRequest) {

@@ -1,9 +1,12 @@
 package top.zbeboy.zone.web.platform.common;
 
+import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
@@ -16,6 +19,7 @@ import top.zbeboy.zbase.feign.campus.roster.CampusRosterService;
 import top.zbeboy.zbase.feign.data.StudentService;
 import top.zbeboy.zbase.feign.platform.UsersService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
+import top.zbeboy.zbase.feign.system.FilesService;
 import top.zbeboy.zbase.feign.system.SystemConfigureService;
 import top.zbeboy.zbase.feign.system.SystemMailService;
 import top.zbeboy.zbase.tools.service.util.DateTimeUtil;
@@ -29,11 +33,14 @@ import top.zbeboy.zone.service.util.BCryptUtil;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.util.*;
 import java.util.regex.Pattern;
 
 @Component
 public class PlatformControllerCommon {
+
+    private final Logger log = LoggerFactory.getLogger(PlatformControllerCommon.class);
 
     @Resource
     private ZoneProperties ZoneProperties;
@@ -58,6 +65,9 @@ public class PlatformControllerCommon {
 
     @Resource
     private StringRedisTemplate stringRedisTemplate;
+
+    @Resource
+    private FilesService filesService;
 
     /**
      * 用户基本信息更新
@@ -119,12 +129,13 @@ public class PlatformControllerCommon {
                     paramMap.put("own", own.getUsername());
                     paramMap.put("username", value);
                     Optional<List<Users>> optionalUsers = usersService.usersNeOwn(paramMap);
-                    if (!optionalUsers.isPresent()) {
+                    if (optionalUsers.isEmpty()) {
                         // 更新
                         usersService.updateUsername(own.getUsername(), value);
 
                         String path = Workbook.qrCodePath() + MD5Util.getMD5(own.getUsername() + own.getAvatar()) + ".jpg";
                         FilesUtil.deleteFile(RequestUtil.getRealPath(request) + path);
+                        personalQrCode(value, own.getAvatar(), own.getUsersTypeId(), RequestUtil.getRealPath(request));
                         ajaxUtil.success().msg("账号更新成功");
                     } else {
                         ajaxUtil.fail().msg("账号已被注册");
@@ -164,7 +175,7 @@ public class PlatformControllerCommon {
                         paramMap.put("own", own.getEmail());
                         paramMap.put("email", value);
                         Optional<List<Users>> optionalUsers = usersService.usersNeOwn(paramMap);
-                        if (!optionalUsers.isPresent()) {
+                        if (optionalUsers.isEmpty()) {
                             // 检查邮件推送是否被关闭
                             Optional<SystemConfigure> optionalSystemConfigure = systemConfigureService.findByDataKey(Workbook.SystemConfigure.MAIL_SWITCH.name());
                             if (optionalSystemConfigure.isPresent()) {
@@ -204,7 +215,7 @@ public class PlatformControllerCommon {
                         paramMap.put("own", own.getMobile());
                         paramMap.put("mobile", value);
                         Optional<List<Users>> optionalUsers = usersService.usersNeOwn(paramMap);
-                        if (!optionalUsers.isPresent()) {
+                        if (optionalUsers.isEmpty()) {
                             if (StringUtils.equals(channel, Workbook.channel.WEB.name())) {
                                 // step 2.手机号是否已验证
                                 if (Objects.nonNull(session.getAttribute(value + SystemMobileConfig.MOBILE_VALID))) {
@@ -255,7 +266,7 @@ public class PlatformControllerCommon {
                     paramMap.put("own", own.getIdCard());
                     paramMap.put("idCard", value);
                     Optional<List<Users>> optionalUsers = usersService.usersNeOwn(paramMap);
-                    if (!optionalUsers.isPresent()) {
+                    if (optionalUsers.isEmpty()) {
                         own.setIdCard(value);
                         usersService.update(own);
                         ajaxUtil.success().msg("身份证号更新成功");
@@ -286,5 +297,39 @@ public class PlatformControllerCommon {
             ajaxUtil.fail().msg("未发现更新类型");
         }
         return ajaxUtil;
+    }
+
+    public String personalQrCode(String username, String avatar, int usersTypeId, String realPath) {
+        String lastPath = "";
+        try {
+            String path = Workbook.qrCodePath() + MD5Util.getMD5(username + avatar) + ".jpg";
+            File file = new File(realPath + path);
+            if (!file.exists()) {
+                String logoPath = "";
+                if (!StringUtils.equals(avatar, Workbook.USERS_AVATAR)) {
+                    Optional<Files> optionalFiles = filesService.findById(avatar);
+                    if (optionalFiles.isPresent()) {
+                        Files files = optionalFiles.get();
+                        logoPath = realPath + files.getRelativePath();
+                    }
+                }
+
+                Map<String, Object> info = new HashMap<>();
+                info.put("username", username);
+                info.put("usersTypeId", usersTypeId);
+
+                //生成二维码
+                String text = JSON.toJSONString(info);
+                boolean isOk = QRCodeUtil.encode(text, StringUtils.isBlank(logoPath) ? Workbook.SYSTEM_LOGO_PATH : logoPath, realPath + path, true);
+                if (isOk) {
+                    lastPath = path;
+                }
+            } else {
+                lastPath = path;
+            }
+        } catch (Exception e) {
+            log.error("生成失败", e);
+        }
+        return lastPath;
     }
 }

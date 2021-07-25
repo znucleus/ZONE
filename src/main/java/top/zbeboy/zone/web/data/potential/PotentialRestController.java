@@ -37,6 +37,7 @@ import top.zbeboy.zbase.vo.data.potential.PotentialEditVo;
 import top.zbeboy.zbase.vo.data.potential.PotentialUpgradeStaffVo;
 import top.zbeboy.zbase.vo.data.potential.PotentialUpgradeStudentVo;
 import top.zbeboy.zbase.vo.data.weixin.WeiXinSubscribeSendVo;
+import top.zbeboy.zone.web.platform.common.PlatformControllerCommon;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
@@ -71,6 +72,9 @@ public class PotentialRestController {
     @Resource
     private WeiXinSubscribeService weiXinSubscribeService;
 
+    @Resource
+    private PlatformControllerCommon platformControllerCommon;
+
     /**
      * 临时用户注册
      *
@@ -101,6 +105,8 @@ public class PotentialRestController {
                     potentialAddVo.setLangKey(request.getLocale().toLanguageTag());
                     potentialAddVo.setBaseUrl(RequestUtil.getBaseUrl(request));
                     ajaxUtil = potentialService.save(potentialAddVo);
+
+                    platformControllerCommon.personalQrCode(potentialAddVo.getUsername(), potentialAddVo.getAvatar(), potentialAddVo.getUsersTypeId(), RequestUtil.getRealPath(request));
                 } else {
                     ajaxUtil.fail().msg("未查询到用户类型信息");
                 }

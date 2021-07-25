@@ -1,7 +1,6 @@
 package top.zbeboy.zone.web.platform.users;
 
 
-import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +29,6 @@ import top.zbeboy.zbase.tools.service.util.FilesUtil;
 import top.zbeboy.zbase.tools.service.util.RequestUtil;
 import top.zbeboy.zbase.tools.web.util.AjaxUtil;
 import top.zbeboy.zbase.tools.web.util.MD5Util;
-import top.zbeboy.zbase.tools.web.util.QRCodeUtil;
 import top.zbeboy.zbase.tools.web.util.SmallPropsUtil;
 import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zbase.vo.data.weixin.WeiXinSubscribeSendVo;
@@ -45,7 +43,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.io.File;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -324,7 +321,7 @@ public class UsersRestController {
 
             String path = Workbook.qrCodePath() + MD5Util.getMD5(users.getUsername() + avatar) + ".jpg";
             FilesUtil.deleteFile(RequestUtil.getRealPath(request) + path);
-
+            platformControllerCommon.personalQrCode(users.getUsername(), avatar, users.getUsersTypeId(), RequestUtil.getRealPath(request));
             ajaxUtil.success().msg("更新头像成功");
         } catch (Exception e) {
             log.error("User upload avatar error.", e);
@@ -569,33 +566,11 @@ public class UsersRestController {
         try {
             Users users = SessionUtil.getUserByChannel(channel, principal);
             if (Objects.nonNull(users)) {
-                String realPath = RequestUtil.getRealPath(request);
-                String path = Workbook.qrCodePath() + MD5Util.getMD5(users.getUsername() + users.getAvatar()) + ".jpg";
-                File file = new File(realPath + path);
-                if (!file.exists()) {
-                    String logoPath = "";
-                    if (!StringUtils.equals(users.getAvatar(), Workbook.USERS_AVATAR)) {
-                        Optional<Files> optionalFiles = filesService.findById(users.getAvatar());
-                        if (optionalFiles.isPresent()) {
-                            Files files = optionalFiles.get();
-                            logoPath = RequestUtil.getRealPath(request) + files.getRelativePath();
-                        }
-                    }
-
-                    Map<String, Object> info = new HashMap<>();
-                    info.put("username", users.getUsername());
-                    info.put("usersTypeId", users.getUsersTypeId());
-
-                    //生成二维码
-                    String text = JSON.toJSONString(info);
-                    boolean isOk = QRCodeUtil.encode(text, StringUtils.isBlank(logoPath) ? Workbook.SYSTEM_LOGO_PATH : logoPath, realPath + path, true);
-                    if(isOk){
-                        ajaxUtil.success().msg("获取成功").put("path", path);
-                    } else {
-                        ajaxUtil.fail().msg("获取失败");
-                    }
+                String lastPath = platformControllerCommon.personalQrCode(users.getUsername(), users.getAvatar(), users.getUsersTypeId(), RequestUtil.getRealPath(request));
+                if (StringUtils.isNotBlank(lastPath)) {
+                    ajaxUtil.success().msg("获取成功").put("path", lastPath);
                 } else {
-                    ajaxUtil.success().msg("获取成功").put("path", path);
+                    ajaxUtil.fail().msg("获取失败");
                 }
             } else {
                 ajaxUtil.fail().msg("获取用户信息为空");

@@ -31,6 +31,7 @@ import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zbase.vo.data.student.StudentAddVo;
 import top.zbeboy.zbase.vo.data.student.StudentEditVo;
 import top.zbeboy.zbase.vo.data.weixin.WeiXinSubscribeSendVo;
+import top.zbeboy.zone.web.platform.common.PlatformControllerCommon;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
@@ -70,6 +71,9 @@ public class StudentRestController {
 
     @Resource
     private WeiXinSubscribeService weiXinSubscribeService;
+
+    @Resource
+    private PlatformControllerCommon platformControllerCommon;
 
     /**
      * 检验学号是否被注册
@@ -152,6 +156,8 @@ public class StudentRestController {
                     }
 
                     ajaxUtil = studentService.save(studentAddVo);
+
+                    platformControllerCommon.personalQrCode(studentAddVo.getUsername(), studentAddVo.getAvatar(), studentAddVo.getUsersTypeId(), RequestUtil.getRealPath(request));
                 } else {
                     ajaxUtil.fail().msg("未查询到用户类型信息");
                 }
