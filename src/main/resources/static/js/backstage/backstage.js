@@ -406,7 +406,7 @@ require(["jquery", "requirejs-domready", "moment-with-locales", "handlebars", "a
                     url: ajax_url.personal_qr_code,
                     success: function (data) {
                         if (data.state) {
-                            $('#personalQrCodeImg').attr('src', web_path + '/' + data.path);
+                            $('#personalQrCodeImg').attr('src', web_path + '/' + data.path + '?time=' + new Date().getTime());
                             $('#personalQrCodeModal').modal('show');
                         }
                     },

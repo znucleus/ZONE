@@ -588,9 +588,15 @@ public class UsersRestController {
 
                     //生成二维码
                     String text = JSON.toJSONString(info);
-                    QRCodeUtil.encode(text, StringUtils.isBlank(logoPath) ? Workbook.SYSTEM_LOGO_PATH : logoPath, realPath + path, true);
+                    boolean isOk = QRCodeUtil.encode(text, StringUtils.isBlank(logoPath) ? Workbook.SYSTEM_LOGO_PATH : logoPath, realPath + path, true);
+                    if(isOk){
+                        ajaxUtil.success().msg("获取成功").put("path", path);
+                    } else {
+                        ajaxUtil.fail().msg("获取失败");
+                    }
+                } else {
+                    ajaxUtil.success().msg("获取成功").put("path", path);
                 }
-                ajaxUtil.success().msg("获取成功").put("path", path);
             } else {
                 ajaxUtil.fail().msg("获取用户信息为空");
             }
