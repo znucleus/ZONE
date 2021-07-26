@@ -105,7 +105,7 @@
     <script id="data_template" type="text/x-handlebars-template">
         {{#each listResult}}
         <tr>
-            <td>{{serialNumber}}</td>
+            <td>{{addOne @index}}</td>
             <td>{{courseName}}</td>
             <td>{{courseCode}}</td>
             <td>{{courseTypeOne}}</td>

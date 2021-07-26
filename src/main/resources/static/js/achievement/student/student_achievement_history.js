@@ -106,10 +106,9 @@ require(["jquery", "tools", "handlebars", "nav.active", "messenger"],
          */
         function listData(data) {
             var template = Handlebars.compile($("#data_template").html());
-            var i = 0;
-            Handlebars.registerHelper('serialNumber', function () {
-                i++;
-                return new Handlebars.SafeString(i);
+            Handlebars.registerHelper("addOne", function (index) {
+                //返回+1之后的结果
+                return index + 1;
             });
             tableElement.html(template(data));
         }
