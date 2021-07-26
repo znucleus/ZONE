@@ -321,7 +321,7 @@ public class UsersRestController {
 
             String path = Workbook.qrCodePath() + MD5Util.getMD5(users.getUsername() + avatar) + ".jpg";
             FilesUtil.deleteFile(RequestUtil.getRealPath(request) + path);
-            platformControllerCommon.personalQrCode(users.getUsername(), avatar, users.getUsersTypeId(), RequestUtil.getRealPath(request));
+            platformControllerCommon.personalQrCode(users.getUsername(), users.getAvatar(), users.getUsersTypeId(), RequestUtil.getRealPath(request));
             ajaxUtil.success().msg("更新头像成功");
         } catch (Exception e) {
             log.error("User upload avatar error.", e);
