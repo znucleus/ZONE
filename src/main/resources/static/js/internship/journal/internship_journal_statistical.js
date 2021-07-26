@@ -57,9 +57,9 @@ require(["jquery", "tools", "handlebars", "nav.active", "jquery.address", "messe
          */
         function listData(data) {
             var template = Handlebars.compile($("#journal-template").html());
-            var sequence = 0;
-            Handlebars.registerHelper('sequence', function () {
-                return ++sequence;
+            Handlebars.registerHelper("addOne", function (index) {
+                //返回+1之后的结果
+                return index + 1;
             });
             Handlebars.registerHelper('student_number', function () {
                 var studentNumber = this.studentNumber ? this.studentNumber : '无数据';

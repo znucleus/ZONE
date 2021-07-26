@@ -88,7 +88,7 @@
     <script id="details-template" type="text/x-handlebars-template">
         {{#each listResult}}
         <tr>
-            <td>{{sequence}}</td>
+            <td>{{addOne @index}}</td>
             <td>{{realName}}</td>
             <td>{{studentNumber}}</td>
             <td>

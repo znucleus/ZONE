@@ -243,9 +243,9 @@ require(["jquery", "lodash", "tools", "handlebars", "sweetalert2", "nav.active",
          */
         function listData(data) {
             var template = Handlebars.compile($("#details-template").html());
-            var sequence = 0;
-            Handlebars.registerHelper('sequence', function () {
-                return ++sequence;
+            Handlebars.registerHelper("addOne", function (index) {
+                //返回+1之后的结果
+                return index + 1;
             });
             $('#dataTable > tbody').html(template(data));
             $('#totalSize').text(data.listResult ? data.listResult.length : 0);
