@@ -146,7 +146,7 @@ public class MainController {
 
         }
 
-        platformControllerCommon.personalQrCode(users.getUsername(),users.getAvatar(),users.getUsersTypeId(), RequestUtil.getRealPath(request));
+        platformControllerCommon.personalQrCode(users.getUsername(), users.getAvatar(), users.getUsersTypeId(), RequestUtil.getRealPath(request));
 
         modelMap.addAttribute("isPotential", isPotential);
         modelMap.addAttribute("realName", users.getRealName());

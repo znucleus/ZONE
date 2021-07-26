@@ -102,6 +102,7 @@ public class UsersApiController {
 
                 outPut.put("roles", String.join(",", rList));
             }
+            platformControllerCommon.personalQrCode(users.getUsername(), users.getAvatar(), users.getUsersTypeId(), RequestUtil.getRealPath(request));
             ajaxUtil.success().msg("获取用户信息成功").map(outPut);
         } else {
             ajaxUtil.fail().msg("获取用户信息失败");
