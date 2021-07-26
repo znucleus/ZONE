@@ -34,7 +34,6 @@ import top.zbeboy.zbase.tools.web.util.BooleanUtil;
 import top.zbeboy.zbase.vo.data.student.StudentAddVo;
 import top.zbeboy.zbase.vo.data.student.StudentEditVo;
 import top.zbeboy.zone.annotation.logging.ApiLoggingRecord;
-import top.zbeboy.zone.web.platform.common.PlatformControllerCommon;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
@@ -68,9 +67,6 @@ public class StudentApiController {
 
     @Resource
     private WeiXinService weiXinService;
-
-    @Resource
-    private PlatformControllerCommon platformControllerCommon;
 
     /**
      * API:获取学生信息
@@ -224,7 +220,6 @@ public class StudentApiController {
 
                 ajaxUtil = studentService.save(studentAddVo);
 
-                platformControllerCommon.personalQrCode(studentAddVo.getUsername(), studentAddVo.getAvatar(), studentAddVo.getUsersTypeId(), RequestUtil.getRealPath(request));
                 if (ajaxUtil.getState()) {
                     // 注册微信
                     if (StringUtils.isNotBlank(studentAddVo.getResCode()) && StringUtils.isNotBlank(studentAddVo.getAppId())) {

@@ -157,7 +157,6 @@ public class StudentRestController {
 
                     ajaxUtil = studentService.save(studentAddVo);
 
-                    platformControllerCommon.personalQrCode(studentAddVo.getUsername(), studentAddVo.getAvatar(), studentAddVo.getUsersTypeId(), RequestUtil.getRealPath(request));
                 } else {
                     ajaxUtil.fail().msg("未查询到用户类型信息");
                 }

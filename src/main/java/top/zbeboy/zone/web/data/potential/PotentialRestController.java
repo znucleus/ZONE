@@ -106,7 +106,6 @@ public class PotentialRestController {
                     potentialAddVo.setBaseUrl(RequestUtil.getBaseUrl(request));
                     ajaxUtil = potentialService.save(potentialAddVo);
 
-                    platformControllerCommon.personalQrCode(potentialAddVo.getUsername(), potentialAddVo.getAvatar(), potentialAddVo.getUsersTypeId(), RequestUtil.getRealPath(request));
                 } else {
                     ajaxUtil.fail().msg("未查询到用户类型信息");
                 }

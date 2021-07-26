@@ -35,7 +35,6 @@ import top.zbeboy.zbase.tools.web.util.pagination.DataTablesUtil;
 import top.zbeboy.zbase.vo.data.staff.StaffAddVo;
 import top.zbeboy.zbase.vo.data.staff.StaffEditVo;
 import top.zbeboy.zbase.vo.data.weixin.WeiXinSubscribeSendVo;
-import top.zbeboy.zone.web.platform.common.PlatformControllerCommon;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
@@ -69,9 +68,6 @@ public class StaffRestController {
 
     @Resource
     private WeiXinSubscribeService weiXinSubscribeService;
-
-    @Resource
-    private PlatformControllerCommon platformControllerCommon;
 
     /**
      * 检验工号是否被注册
@@ -128,8 +124,6 @@ public class StaffRestController {
                     staffAddVo.setLangKey(request.getLocale().toLanguageTag());
                     staffAddVo.setBaseUrl(RequestUtil.getBaseUrl(request));
                     ajaxUtil = staffService.save(staffAddVo);
-
-                    platformControllerCommon.personalQrCode(staffAddVo.getUsername(), staffAddVo.getAvatar(), staffAddVo.getUsersTypeId(), RequestUtil.getRealPath(request));
                 } else {
                     ajaxUtil.fail().msg("未查询到用户类型信息");
                 }

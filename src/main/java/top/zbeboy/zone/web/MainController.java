@@ -15,8 +15,10 @@ import top.zbeboy.zbase.feign.platform.RoleService;
 import top.zbeboy.zbase.feign.platform.UsersTypeService;
 import top.zbeboy.zbase.feign.system.FilesService;
 import top.zbeboy.zbase.feign.system.MapKeyService;
+import top.zbeboy.zbase.tools.service.util.RequestUtil;
 import top.zbeboy.zone.annotation.logging.LoginLoggingRecord;
 import top.zbeboy.zone.service.platform.MenuService;
+import top.zbeboy.zone.web.platform.common.PlatformControllerCommon;
 import top.zbeboy.zone.web.util.SessionUtil;
 
 import javax.annotation.Resource;
@@ -44,6 +46,9 @@ public class MainController {
 
     @Resource
     private MapKeyService mapKeyService;
+
+    @Resource
+    private PlatformControllerCommon platformControllerCommon;
 
     private final RequestCache requestCache = new HttpSessionRequestCache();
 
@@ -140,6 +145,8 @@ public class MainController {
             }
 
         }
+
+        platformControllerCommon.personalQrCode(users.getUsername(),users.getAvatar(),users.getUsersTypeId(), RequestUtil.getRealPath(request));
 
         modelMap.addAttribute("isPotential", isPotential);
         modelMap.addAttribute("realName", users.getRealName());
