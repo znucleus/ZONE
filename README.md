@@ -17,7 +17,7 @@
 # 启动
 1.Intellij IDEA Run Application.class 或 Maven .  
 # 参与条件
-1.Known Spring boot 2.4.8;  
+1.Known Spring boot 2.4.9;  
 2.Known Spring cloud 2020.0.2;  
 3.Known Git;  
 4.Known Maven;  
