@@ -6,7 +6,7 @@
 # 开发环境
 1.AdoptOpenJDK 11.0.11;  
 2.Intellij IDEA 2021.1.3;  
-3.MySQL 8.0.11;  
+3.MariaDB 10.6.3;  
 4.Maven 3.6.0 +;  
 5.Node 10 +;  
 6.Redis 5.0.10;  
