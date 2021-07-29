@@ -104,9 +104,18 @@ public class CampusOpensViewController {
         String page;
         Users users = SessionUtil.getUserFromSession();
         if (campusOpensService.opensConditionOperator(users.getUsername(), id)) {
-            modelMap.addAttribute("schoolOpens", campusOpensService.findById(id));
-            modelMap.addAttribute("schoolOpensContent", campusOpensService.content(id));
-            page = "web/campus/opens/opens_edit::#page-wrapper";
+            Optional<SchoolOpens> optionalSchoolOpens = campusOpensService.findById(id);
+            Optional<SchoolOpensContent> optionalSchoolOpensContent = campusOpensService.content(id);
+            if (optionalSchoolOpens.isPresent() && optionalSchoolOpensContent.isPresent()) {
+                modelMap.addAttribute("schoolOpens", optionalSchoolOpens.get());
+                modelMap.addAttribute("schoolOpensContent", optionalSchoolOpensContent.get());
+                page = "web/campus/opens/opens_edit::#page-wrapper";
+            } else {
+                config.buildDangerTip("查询错误", "未查询到开学内容");
+                config.dataMerging(modelMap);
+                page = "inline_tip::#page-wrapper";
+            }
+
         } else {
             config.buildWarningTip("操作警告", "您无权限操作");
             config.dataMerging(modelMap);
