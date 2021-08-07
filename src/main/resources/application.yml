@@ -22,6 +22,11 @@ spring:
       pool:
         max-size: 16
         queue-capacity: 100
+  cloud:
+    circuitbreaker:
+      bulkhead:
+        resilience4j:
+          enabled: false
 
 # project info
 info:
