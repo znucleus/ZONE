@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.*;
 import top.zbeboy.zbase.feign.platform.RoleService;
@@ -165,16 +164,5 @@ public class MainController {
         }
 
         return "backstage";
-    }
-
-    /**
-     * 健康检查
-     *
-     * @return 健康检查
-     */
-    @GetMapping(value = "/anyone/health")
-    @ResponseBody
-    public String health() {
-        return "ok";
     }
 }
