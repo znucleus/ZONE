@@ -184,8 +184,9 @@ public class ExaminationRestController {
      * @param simplePaginationUtil 请求
      * @return 数据
      */
+    @ApiLoggingRecord(remark = "教务考试详情数据", channel = Workbook.channel.WEB, needLogin = true)
     @GetMapping("/web/educational/examination/detail/paging")
-    public ResponseEntity<Map<String, Object>> authorizeData(SimplePaginationUtil simplePaginationUtil) {
+    public ResponseEntity<Map<String, Object>> detailData(SimplePaginationUtil simplePaginationUtil, HttpServletRequest request) {
         Users users = SessionUtil.getUserFromSession();
         simplePaginationUtil.setUsername(users.getUsername());
         AjaxUtil<ExaminationNoticeDetailBean> ajaxUtil = educationalExaminationService.detailData(simplePaginationUtil);
@@ -296,8 +297,9 @@ public class ExaminationRestController {
      * @param id 详情id
      * @return true or false
      */
+    @ApiLoggingRecord(remark = "教务考试短信订阅数据", channel = Workbook.channel.WEB, needLogin = true)
     @PostMapping("/web/educational/examination/sms-subscribe/save")
-    public ResponseEntity<Map<String, Object>> smsSubscribe(@RequestParam("id") String id) {
+    public ResponseEntity<Map<String, Object>> smsSubscribe(@RequestParam("id") String id, HttpServletRequest request) {
         AjaxUtil<Map<String, Object>> ajaxUtil = AjaxUtil.of();
         Users users = SessionUtil.getUserFromSession();
         if (StringUtils.isNotBlank(users.getMobile())) {
