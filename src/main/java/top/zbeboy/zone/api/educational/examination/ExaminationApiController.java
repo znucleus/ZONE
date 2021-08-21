@@ -90,6 +90,8 @@ public class ExaminationApiController {
     @ApiLoggingRecord(remark = "教务考试微信订阅数据", channel = Workbook.channel.API, needLogin = true)
     @PostMapping("/api/educational/examination/wei-xin-subscribe/save")
     public ResponseEntity<Map<String, Object>> weiXinSubscribe(WeiXinSubscribeAddVo weiXinSubscribeAddVo, Principal principal, HttpServletRequest request) {
+        Users users = SessionUtil.getUserFromOauth(principal);
+        weiXinSubscribeAddVo.setUsername(users.getUsername());
         AjaxUtil<Map<String, Object>> ajaxUtil = educationalExaminationService.examinationWeiXinSubscribeSave(weiXinSubscribeAddVo.getParamId(), weiXinSubscribeAddVo.getUsername());
         if (ajaxUtil.getState()) {
             ajaxUtil = weiXinSubscribeService.subscribe(weiXinSubscribeAddVo);
