@@ -1,13 +1,11 @@
 package top.zbeboy.zone.security;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 import top.zbeboy.zbase.config.Workbook;
 import top.zbeboy.zbase.domain.tables.pojos.SystemLoginLog;
 import top.zbeboy.zbase.domain.tables.pojos.Users;
@@ -19,15 +17,12 @@ import top.zbeboy.zbase.tools.service.util.UUIDUtil;
 import top.zbeboy.zbase.tools.web.util.BooleanUtil;
 import top.zbeboy.zone.web.util.SpringBootUtil;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -105,10 +100,14 @@ public class AjaxAuthenticationFailureHandler extends ExceptionMappingAuthentica
             response.getWriter().print(code);
         } else {
             String username = request.getParameter("username");
-            ServletContext context = request.getSession().getServletContext();
-            ApplicationContext ctx = WebApplicationContextUtils
-                    .getWebApplicationContext(context);
-            SystemLoginLog systemLog = new SystemLoginLog(UUIDUtil.getUUID(), "授权登录失败", DateTimeUtil.getNowLocalDateTime(), username, RequestUtil.getIpAddress(request));
+            Map<String, String[]> requestMap = savedRequest.getParameterMap();
+            String logMsg = "授权登录失败";
+            if (Objects.nonNull(requestMap)) {
+                String clientId = Arrays.toString(requestMap.get("client_id"));
+                String grantType = Arrays.toString(requestMap.get("grant_type"));
+                logMsg = "授权登录失败" + grantType + clientId;
+            }
+            SystemLoginLog systemLog = new SystemLoginLog(UUIDUtil.getUUID(), logMsg, DateTimeUtil.getNowLocalDateTime(), username, RequestUtil.getIpAddress(request));
             SystemLogService systemLogService = SpringBootUtil.getBean(SystemLogService.class);
             systemLogService.save(systemLog);
             // 会帮我们跳转到上一次请求的页面上
