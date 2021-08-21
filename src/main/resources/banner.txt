@@ -6,4 +6,4 @@
   ${AnsiColor.GREEN}     ████████   ${AnsiColor.RED}    █████████     ${AnsiColor.BLUE}    █        █   ${AnsiColor.YELLOW} █████
 
 ${AnsiColor.BRIGHT_BLUE}:: ZONE 🤓  :: Running Spring Boot ${spring-boot.version} ::
-:: https://github.com/zbeboy/ZONE ::${AnsiColor.DEFAULT}
+:: https://github.com/znucleus/ZONE ::${AnsiColor.DEFAULT}
