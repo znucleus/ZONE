@@ -1,6 +1,6 @@
 //# sourceURL=calendar_look.js
-require(["jquery", "tools", "nav.active", "jquery.address", "js-year-calendar.zh-CN", "select2-zh-CN"],
-    function ($, tools, navActive) {
+require(["jquery", "tools", "nav.active", "moment", "jquery.address", "select2-zh-CN"],
+    function ($, tools, navActive, moment) {
         /*
          ajax url.
         */
@@ -15,6 +15,8 @@ require(["jquery", "tools", "nav.active", "jquery.address", "js-year-calendar.zh
         };
 
         navActive(ajax_url.page);
+
+        moment.locale('zh-cn');
 
         /*
         参数id
@@ -204,29 +206,59 @@ require(["jquery", "tools", "nav.active", "jquery.address", "js-year-calendar.zh
         }
 
         function initCalendar(calendar) {
-            var nowDateArr = calendar.nowDate.split('-');
-            var startDateArr = calendar.startDate.split('-');
-            var endDateArr = calendar.endDate.split('-');
-            var holidayStartDateArr = calendar.holidayStartDate.split('-');
-            var holidayEndDateArr = calendar.holidayEndDate.split('-');
-            new Calendar('#calendar', {
-                language: 'zh-CN',
-                style: 'background',
-                dataSource: [
-                    {
-                        startDate: new Date(Number(startDateArr[0]), Number(startDateArr[1]) - 1, Number(startDateArr[2])),
-                        endDate: new Date(Number(endDateArr[0]), Number(endDateArr[1]) - 1, Number(endDateArr[2]))
-                    },
-                    {
-                        startDate: new Date(Number(holidayStartDateArr[0]), Number(holidayStartDateArr[1]) - 1, Number(holidayStartDateArr[2])),
-                        endDate: new Date(Number(holidayEndDateArr[0]), Number(holidayEndDateArr[1]) - 1, Number(holidayEndDateArr[2]))
-                    },
-                    {
-                        startDate: new Date(Number(nowDateArr[0]), Number(nowDateArr[1]) - 1, Number(nowDateArr[2])),
-                        endDate: new Date(Number(nowDateArr[0]), Number(nowDateArr[1]) - 1, Number(nowDateArr[2]))
+            $('#data').empty();
+            var weeks = 1;// 周数
+            var m = moment(calendar.startDate);
+            var ms = moment(calendar.startDate);
+            var last = moment(calendar.endDate);
+            var nowDate = moment(calendar.nowDate);
+            var days = last.diff(m, 'days');
+            var weekday = m.weekday();
+
+            var wk = weekday === 0 ? 7 : weekday;
+
+            days += (wk - 1);// 补足第一行天数
+            ms.subtract(wk, 'd');
+            var cols = 7;
+            var rows = Math.ceil(days / cols);
+            var dateStop = false;
+            for (var i = 0; i < rows; i++) {
+                var html = '<tr>';
+                html += '<th scope="row">第' + weeks + '周</th>';
+                for (var j = 0; j < cols; j++) {
+                    if (i === 0 && j === 0) {
+                        for (var k = 0; k < wk - 1; k++) {
+                            ms.add(1, 'd');
+                            html += '<th class="text-muted">' + ms.format('MM.DD') + '</th>';
+                        }
+                        j = wk - 1;
+                    } else {
+                        m.add(1, 'd');
                     }
-                ]
-            });
+
+                    if (dateStop) {
+                        html += '<th class="text-muted">' + m.format('MM.DD') + '</th>';
+                    } else {
+                        dateStop = m.isSame(last);
+                        if(m.isSame(nowDate)){
+                            html += '<th class="text-white bg-primary">' + m.format('MM.DD') + '</th>';
+                        } else {
+                            var lastWeekday = m.weekday();
+                            if(lastWeekday === 6 || lastWeekday === 0){
+                                html += '<th class="text-success">' + m.format('MM.DD') + '</th>';
+                            } else {
+                                html += '<th>' + m.format('MM.DD') + '</th>';
+                            }
+
+                        }
+
+                    }
+                }
+
+                html += '</tr>';
+                $('#data').append(html);
+                weeks++;
+            }
         }
 
 
