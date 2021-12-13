@@ -39,7 +39,6 @@ public class MyUserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        log.debug("Username is {}", s);
         String username = StringUtils.deleteWhitespace(s);
         Optional<Users> result = Optional.empty();
         boolean hasUser = false;
