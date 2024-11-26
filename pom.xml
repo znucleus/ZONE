@@ -58,7 +58,7 @@
         <googleauth.version>1.4.0</googleauth.version>
 
         <commons-collections4.version>4.4</commons-collections4.version>
-        <commons-compress.version>1.19</commons-compress.version>
+        <commons-compress.version>1.21</commons-compress.version>
 
         <!-- webjars properties -->
         <webjars.locator.version>0.37</webjars.locator.version>
